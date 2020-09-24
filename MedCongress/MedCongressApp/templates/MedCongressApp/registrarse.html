@@ -1,0 +1,122 @@
+{% extends "MedCongressApp/base.html"%}
+{% load static %}
+{% block contenido %}
+
+<div class="kode-event-time">
+    <div class="kode-event-contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="kf_heading_3">
+                        <h2>Únete a MedCongress</h2>
+                        <span>Tenga acceso a todos nuestros Congresos</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                    <form class="contactusform" action="" method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-sm-3 ">
+                                <div class="form-group">
+                                    <label for="{{form.user.first_name.id_for_label }}"><b>{{form.user.first_name.label }}</b></label>
+                                    {% if form.user.first_name.errors %} {{ form.user.first_name.errors }} {% endif %}
+                                   {{form.user.first_name }}  {{form.user.first_name.help_text }}
+                                </div>
+                            </div>
+                            <div class="col-sm-3 ">
+                                <div class="form-group">
+                                    <label for="{{form.user.last_name.id_for_label }}"><b>{{form.user.last_name.label }}</b></label>
+                                    {% if form.user.last_name.errors %} {{ form.user.last_name.errors }} {% endif %}
+                                   {{form.user.last_name }} 
+                                </div>
+                            </div>
+                            <div class="col-sm-3 ">
+                                <div class="form-group">
+                                    <label for="{{form.user.username.id_for_label }}"><b>{{form.user.username.label }}</b></label>
+                                    {% if form.user.username.errors %} {{ form.user.username.errors }} {% endif %}
+                                   {{form.user.username }}  
+                                </div>
+                            </div>
+                            <div class="col-sm-3 ">
+                                <div class="form-group">
+                                    <label for="{{form.user.password.id_for_label }}"><b>{{form.user.password.label }}</b></label>
+                                    {% if form.user.password.errors %} {{ form.user.password.errors }} {% endif %}
+                                   {{form.user.password }}  
+                                </div>
+                            </div>
+                            <div class="col-sm-3 ">
+                                <div class="form-group">
+                                    <label for="{{form.user.password1.id_for_label }}"><b>{{form.user.password1.label }}</b></label>
+                                    {% if form.user.password1.errors %} {{ form.user.password1.errors }} {% endif %}
+                                   {{form.user.password1 }} 
+                                </div>
+                            </div>
+                            <div class="col-sm-3 ">
+                                <div class="form-group">
+                                    <label for="{{form.user.email.id_for_label }}"><b>{{form.user.email.label }}</b></label>
+                                    {% if form.user.email.errors %} {{ form.user.email.errors }} {% endif %}
+                                    {{form.user.email }}  
+                                </div>
+                            </div>
+                            <div class="col-sm-3 ">
+                                <div class="form-group">
+                                    <label for="{{form.perfiluser.pais.id_for_label }}"><b>{{form.perfiluser.pais.label }}</b></label>
+                                    {% if form.perfiluser.pais.errors %} {{ form.perfiluser.pais.errors }} {% endif %}
+                                   {{form.perfiluser.pais }} 
+                                </div>
+                            </div>
+                            <div class="col-sm-3 ">
+                                <div class="form-group">
+                                    <label for="{{form.perfiluser.ciudad.id_for_label }}"><b>{{form.perfiluser.ciudad.label }}</b></label>
+                                    {% if form.perfiluser.ciudad.errors %} {{ form.perfiluser.ciudad.errors }} {% endif %}
+                                   {{form.perfiluser.ciudad }} 
+                                </div>
+                            </div> <div class="col-sm-3 ">
+                                <div class="form-group">
+                                    <label for="{{form.perfiluser.estado.id_for_label }}"><b>{{form.perfiluser.estado.label }}</b></label>
+                                    {% if form.perfiluser.estado.errors %} {{ form.perfiluser.estado.errors }} {% endif %}
+                                   {{form.perfiluser.estado }} 
+                                </div>
+                            </div> <div class="col-sm-3 ">
+                                <div class="form-group">
+                                    <label for="{{form.perfiluser.cel_profecional.id_for_label }}"><b>{{form.perfiluser.cel_profecional.label }}</b></label>
+                                    {% if form.perfiluser.cel_profecional.errors %} {{ form.perfiluser.cel_profecional.errors }} {% endif %}
+                                   {{form.perfiluser.cel_profecional }} 
+                                </div>
+                            </div> <div class="col-sm-3 ">
+                                <div class="form-group">
+                                    <label for="{{form.perfiluser.categoria.id_for_label }}"><b>{{form.perfiluser.categoria.label }}</b></label>
+                                    {% if form.perfiluser.categoria.errors %} {{ form.perfiluser.categoria.errors }} {% endif %}
+                                    {{form.perfiluser.categoria }} 
+                                </div>
+                            </div> <div class="col-sm-3 ">
+                                <div class="form-group">
+                                    <label for="{{form.perfiluser.genero.id_for_label }}"><b>{{form.perfiluser.genero.label }}</b></label>
+                                   {{form.perfiluser.genero }} 
+                                </div>
+                            </div>
+                            <div class="col-sm-3 ">
+                                <div class="form-group">
+                                    <label for="{{form.perfiluser.ponente.id_for_label }}"><b>{{form.perfiluser.ponente.label }}</b></label>
+                                   {{form.perfiluser.ponente }} 
+                                </div>
+                            </div>
+                         
+                            <input type="submit" value="Submit" />
+                        </div>
+                    </form>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock%}
+
+

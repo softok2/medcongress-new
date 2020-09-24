@@ -1,0 +1,132 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title> {% block title %}
+
+
+		{% endblock %}</title>
+	<!-- Bootstrap min css -->
+	{% load static%}
+	<link rel="stylesheet" href="{% static 'MedCongressApp/css/bootstrap.min.css'%}" type="text/css" media="all">
+	<!-- bxSlider CSS file -->
+	<link href="{% static 'MedCongressApp/css/jquery.bxslider.css" rel="stylesheet'%}" />
+	<!-- Important Owl stylesheet -->
+	<link rel="stylesheet" href="{% static 'MedCongressApp/css/owl.carousel.css'%}">
+    <!-- Full Calender stylesheet -->
+	<link rel="stylesheet" href="{% static 'MedCongressApp/css/fullcalendar.css'%}">
+	<!-- Typo css -->
+	<link rel="stylesheet" href="{% static 'MedCongressApp/css/typo.css'%}" type="text/css" media="all">
+	<!-- Font Awesome css -->
+	<link rel="stylesheet" href="{% static 'MedCongressApp/css/font-awesome.min.css'%}" type="text/css" media="all">
+	<!-- Ihover css -->
+	<link href="{% static 'MedCongressApp/css/ihover.css'%}" rel="stylesheet">
+    <!-- Widget css -->
+	<link href="{% static 'MedCongressApp/css/widget.css'%}" rel="stylesheet">
+    <!-- Style css -->
+	<link rel="stylesheet" href="{% static 'MedCongressApp/style.css'%}" type="text/css" media="all">
+	<!--Side MENU-->
+    <link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery.sidr.dark.css'%}" type="text/css" media="all">
+	<!-- PrettyPhoto css -->
+	<link rel="stylesheet" href="{% static 'MedCongressApp/css/prettyPhoto.css'%}" type="text/css" media="all">
+    <!-- Responsive css -->
+	<link rel="stylesheet" href="{% static 'MedCongressApp/css/responsive.css'%}" type="text/css" media="all">
+    <!-- Color css -->
+	<link rel="stylesheet" href="{% static 'MedCongressApp/css/color.css'%}" type="text/css" media="all">
+	{% block css %}
+
+
+		{% endblock %}
+</head>
+<body>
+<!-- Wrapper start -->
+<div id="wrapper">
+	<div id="mobile-header">
+        <a id="responsive-menu-button" href="#sidr-main"><i class="fa fa-bars"></i></a>
+    </div>
+	<header id="kode-header" >
+		<strong class="kode-logo">
+			<a href="{% url 'Home' %}"><img src="{% static 'MedCongressApp/images/LOGODOSCOLORESSINFONDO.png'%}" alt=""></a>
+		</strong>
+		
+		<div class="col-right">
+		
+			
+			
+			<nav class="kode-nav" id="navigation">
+				<ul>
+					<li><a href="{% url 'Home' %}">Inicio</a></li>
+					<li><a href="{% url 'List_congreso' %}">Congresos</a></li>
+					<li><a href="#">Galenus</a></li>				
+					<li><a href="#">Contacto</a></li>
+					{% if user.is_authenticated %}
+					
+					<li class="active" ><a href="{% url 'logout' %}" style="padding:37px 30px;">LOGOUT</a></li>
+					{% else %}
+					<li class="active" ><a href="{% url 'login' %}" style="padding:37px 30px;">LOGIN</a></li>
+					<li class="active" ><a href="{% url 'Registrarse' %}" style="padding:37px 30px;">REGISTER</a></li>
+					{% endif %}
+				</ul>
+			</nav>
+			
+		</div>
+	</header>
+	{% block contenido %}
+
+
+		{% endblock %}
+	
+	<footer id="footer">	
+		
+		<div class="footer-copyright">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+						<p>&copy; <a href="#">Med Congress</a> All Rights Reserved</p>
+						<p>Develop by <a href="#">SOFTOK2</a></p>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+		<!--copyright End-->
+	</footer>
+</div>
+
+
+<!--Jquery Lib-->
+<script src="{% static 'MedCongressApp/js/jquery.js'%}"></script>
+<!--Bootstrap Javascript File-->
+<script src="{% static 'MedCongressApp/js/bootstrap.min.js'%}"></script>
+<!-- bxSlider Javascript file -->
+<script src="{% static 'MedCongressApp/js/jquery.bxslider.js'%}"></script>
+<!-- OWL Javascript file -->
+<script src="{% static 'MedCongressApp/js/owl.carousel.min.js'%}"></script>
+<!--Image Filterable Gallery-->
+<script src="{% static 'MedCongressApp/js/jquery-filterable.js'%}"></script>
+<!--Number Count Script-->
+<script src="{% static 'MedCongressApp/js/waypoints-min.js'%}"></script>
+<!--Full Calender Script-->
+<script src="{% static 'MedCongressApp/js/moment.min.js'%}"></script>
+<script src="{% static 'MedCongressApp/js/fullcalendar.min.js'%}"></script>
+<!--Time Counter Script-->
+<script src="{% static 'MedCongressApp/js/jquery.downCount.js'%}"></script>
+<!--Internet Explore Script-->
+<script src="{% static 'MedCongressApp/js/ie.js'%}"></script>
+<!--Accordian Explore Script-->
+<script src="{% static 'MedCongressApp/js/jquery.accordion.js'%}"></script>
+<!--GOOGLE MAP-->
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+<!--RESPONSIVE MENU-->
+<script src="{% static 'MedCongressApp/js/jquery.sidr.min.js'%}"></script>
+<!--PrettyPhoto Js -->
+<script src="{% static 'MedCongressApp/js/jquery.prettyPhoto.js'%}"></script>
+<!--Custom Scripts-->
+<script src="{% static 'MedCongressApp/js/custom.js'%}"></script>
+{% block script %}
+
+
+		{% endblock %}
+</body>
+</html>

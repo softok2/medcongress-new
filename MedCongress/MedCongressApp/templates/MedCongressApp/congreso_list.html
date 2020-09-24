@@ -1,0 +1,71 @@
+
+{% extends "MedCongressApp/base.html"%}
+{% load static %}
+{% block title %}
+Congresos
+{%endblock%}
+{% block contenido %}
+
+
+
+<div class="kode-blog-style-2" style="margin-top: 82px;">
+    <div class="container">
+        <!--FIRST ROW START-->
+        <div class="row">
+            {% for congreso in congreso_list %}
+            <div class="col-md-4">
+                <!--KODE_EVENT_BLOG2 START-->
+                <div class="kode-event-blog3">
+                    <figure>
+                        <img src="{% static 'MedCongressApp/images/Kode-event-shedule-1.jpg'%}" alt=""/>
+                        <div class="kode-fig-capstion">
+                            <a href="{% url 'View_congreso' congreso.id %}">Conference Hall</a>
+                            <p>Lorem ipsum</p>
+                        </div>
+                    </figure>
+                    <div class="kode-thumb-caption">
+                        <a href="{% url 'View_congreso' congreso.id %}"></a> <h4>{{congreso.titulo}}</h4></a>
+                        <ul>
+                            <li><a href="#"><i class="fa fa-calendar"></i>{{congreso.fecha_inicio|date:"M"}} {{congreso.fecha_inicio|date:"d"}} / {{congreso.fecha_inicio|date:"Y"}}</a></li>
+                            <li><a href="#"><i class="fa fa-location-arrow"></i>{{congreso.lugar}}</a></li>
+                        </ul>
+                        <span><a href="{% url 'View_congreso' congreso.id %}">Leer Más</a></span>
+                    </div>
+                </div>
+                <!--KODE_EVENT_BLOG2 START-->
+            </div>
+            {% endfor %}
+            <!--COL-MD-4 END-->
+            
+        <!--THIRD ROW END-->
+        <!--PAGINATION ROW START-->
+        <div class="row">
+            <div class="col-md-12">
+                <!---PAGINATIOn START-->
+                <div class="pag">
+                    <ul class="pagination">
+                        <li>
+                          <a href="#" aria-label="Previous">
+                            <span aria-hidden="true">Prev</span>
+                          </a>
+                        </li>
+                        <li><a href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li>
+                        <li>
+                          <a href="#" aria-label="Next">
+                            <span aria-hidden="true">Next</span>
+                          </a>
+                        </li>
+                    </ul>
+                </div>
+                <!--PAGINATION END-->
+            </div>
+        </div>
+        <!--PAGINATION ROW END-->
+    </div>
+</div>
+
+{% endblock%}

@@ -1,0 +1,180 @@
+{% extends "MedCongressApp/base.html"%}
+{% load static %}
+{% block css %}
+
+{%endblock%}
+
+{% block contenido %}
+
+<div class="kode-event-time">
+    <div class="kode-event-contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="kf_heading_3">
+                        <h2>Tarjeta de crédito o débito</h2>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+
+                    <form id="payment-form" action="" method="POST" class="contactusform">
+                        {% csrf_token %}
+                        <input type="hidden" name="token_id" id="token_id">
+                        <input type="hidden" name="congreso_id" id="congreso_id" value="{{congreso_id}}">
+                        <input type="hidden" name="categoria_id" id="categoria_id" value="{{categoria_id}}">
+                        <div class="pymnt-itm card active">
+
+                            <div class="row">
+
+                                <div class=" col-lg-4 col-md-4 col-sm-4 " style="border-right: 1px solid #ccc;">
+
+                                    <label>Tarjetas de crédito</label>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 ">
+                                    <label>Tarjetas de débito</label>
+
+                                </div>
+                                <div class=" col-lg-4 col-md-4 col-sm-4 " style="border-right: 1px solid #ccc;">
+                                    <img src="{% static 'MedCongressApp/images/cards1.png'%}" alt="">
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 ">
+                                    <img src="{% static 'MedCongressApp/images/cards2.png'%}" alt="">
+                                </div>
+
+
+                                <div class="col-lg-6 col-md-6 col-sm-6 " style="margin-top: 50px;">
+                                    <label>Nombre del titular</label><input type="text"
+                                        placeholder="Como aparece en la tarjeta" autocomplete="off"
+                                        data-openpay-card="holder_name" name="nombre">
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 " style="margin-top: 50px;">
+                                    <label>Número de tarjeta</label><input type="text" autocomplete="off"
+                                        data-openpay-card="card_number" name="numero"> </div>
+
+
+                                <div class="col-lg-6 col-md-6 col-sm-6 ">
+                                    <label>Fecha de expiración</label>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 ">
+                                    <label>Código de seguridad</label>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 ">
+                                    <input type="text" placeholder="Mes" data-openpay-card="expiration_month">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 ">
+                                    <input type="text" placeholder="Año" data-openpay-card="expiration_year">
+                                </div>
+
+
+                                <div class="col-lg-3 col-md-3 col-sm-3 ">
+                                    <input type="text" placeholder="3 dígitos" autocomplete="off"
+                                        data-openpay-card="cvv2" name="cant">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 ">
+                                    <img src="{% static 'MedCongressApp/images/cvv.png'%}" alt="">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-4 " style="border-right: 1px solid #ccc;">
+                                    <label>Transacciones realizadas vía:</label>
+                                </div>
+                                <div class="col-lg-8 col-md-8 col-sm-8 ">
+                                    <label>Sus
+                                        pagos
+                                        se realizan de forma segura con encriptación de 256
+                                        bits </label>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4" style="border-right: 1px solid #ccc;">
+                                    <img src="{% static 'MedCongressApp/images/openpay.png'%}" alt="">
+                                </div>
+                                <div class="col-lg-8 col-md-8 col-sm-8 ">
+                                    <img src="{% static 'MedCongressApp/images/security.png'%}" alt="">
+                                </div>
+                            </div>
+
+
+                            <div class="sctn-row">
+                                <a class="button rght" id="pay-button">Pagar</a>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="text-align: center;">
+                            <div class="kf_heading_3">
+                                <h2>Información</h2>
+        <p>
+            Va a pagar el congreso <b> {{congreso.titulo}} </b> en la categoría de <b> {{categoria.nombre}}</b> con un precio de <b>${{pago.precio}} </b>
+        </p>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock%}
+
+{% block script %}
+
+<script type="text/javascript" src="https://openpay.s3.amazonaws.com/openpay.v1.min.js"></script>
+<script type='text/javascript' src="https://openpay.s3.amazonaws.com/openpay-data.v1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        OpenPay.setId('muq0plqu35rnjyo7sf2v');
+        OpenPay.setApiKey('pk_0c7aea61d0ef4a4f8fdfbd674841981a');
+        OpenPay.setSandboxMode(true);
+        //Se genera el id de dispositivo
+        var deviceSessionId = OpenPay.deviceData.setup("payment-form", "deviceIdHiddenFieldName");
+        const csrftoken = getCookie('csrftoken');
+        $('#pay-button').on('click', function (event) {
+            event.preventDefault();
+            $("#pay-button").prop("disabled", true);
+            OpenPay.token.extractFormAndCreate('payment-form', sucess_callbak, error_callbak);
+        });
+
+        var sucess_callbak = function (response) {
+            var token_id = response.data.id;
+            $('#token_id').val(token_id);
+            $('#payment-form').submit();
+        };
+
+        var error_callbak = function (response) {
+            var desc = response.data.description != undefined ? response.data.description : response.message;
+            alert("ERROR [" + response.status + "] " + desc);
+            $("#pay-button").prop("disabled", false);
+        };
+
+    });
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+</script>
+{% endblock%}
+
+
+

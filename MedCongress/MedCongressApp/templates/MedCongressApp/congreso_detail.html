@@ -1,0 +1,649 @@
+{% extends "MedCongressApp/base.html"%}
+{% load static %}
+{% block title %}
+{{congreso.titulo}}
+{%endblock%}
+{% block contenido %}
+
+
+
+
+div class="content">
+<!-- Kode-Header End -->
+<div class="sub-header">
+    <!-- SUB HEADER -->
+</div>
+<!-- Kode-Slider End -->
+
+<!--Kode-our-speaker-heading start-->
+<div class="Kode-page-heading">
+    <div class="container">
+        <!--ROW START-->
+        <div class="row">
+            <div class="col-md-6 col-sm-6">
+                <h2>Event Detail</h2>
+            </div>
+            <div class="col-md-6 col-sm-6">
+                <ul>
+                    <li>
+                        <a href="#"><i class="fa fa-home"></i>Home</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-angle-right"></i>Event Detail</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--ROW END-->
+    </div>
+</div>
+<!--Kode-our-speaker-heading End-->
+
+<div class="kode-blog-style-2">
+
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-8">
+                <!--KODE-EVENT-CONTER-SECTION START-->
+                <div class="kode_event_counter_section">
+                    <figure>
+                        <img src="{% static 'MedCongressApp/extra-images/img59.jpg'%}" alt="">
+                        <ul class="countdown">
+                            <li>
+                                <span class="days">72</span>
+                                <p class="days_ref">days</p>
+                            </li>
+                            <li>
+                                <span class="hours">13</span>
+                                <p class="hours_ref">hours</p>
+                            </li>
+                            <li>
+                                <span class="minutes">24</span>
+                                <p class="minutes_ref">minute</p>
+                            </li>
+                            <li>
+                                <span class="seconds last">00</span>
+                                <p class="seconds_ref">sec</p>
+                            </li>
+                        </ul>
+                    </figure>
+
+                </div>
+                <!--KODE-EVENT-CONTER-SECTION END-->
+
+                <!--KODE_EVENT_CONTER_CAPSTION START-->
+                <div class="kode_event_conter_capstion">
+                    <h2>{{congreso.titulo}}</h2>
+                    <div class="counter-meta">
+                        <ul class="event-media">
+                            <li><a href="#" data-toggle="tooltip" title="Facebook"><i class="fa fa-facebook"></i></a>
+                            </li>
+                            <li><a href="#" data-toggle="tooltip" title="Twitter"><i class="fa fa-twitter"></i></a></li>
+                            <li><a href="#" data-toggle="tooltip" title="LinkedIn"><i class="fa fa-linkedin"></i></a>
+                            </li>
+                            <li><a href="#" data-toggle="tooltip" title="Google Plus"><i
+                                        class="fa fa-google-plus"></i></a></li>
+                        </ul>
+                        <ul class="info-event">
+
+                            <li><i class="fa fa-clock-o"></i><a href="#"><span>{{congreso.fecha_inicio|date:"M"}}
+                                        {{congreso.fecha_inicio|date:"d"}} /
+                                        {{congreso.fecha_inicio|date:"Y"}}</span></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!--KODE_EVENT_CONTER_CAPSTION END-->
+                <div class="other-events">
+                    <div class="col-md-12">
+                        <div class="kode-event-place-holder-capstion">
+                            <p> {{congreso.detalle}}</p>
+
+                        </div>
+                    </div>
+
+                    <div class="row ">
+                        <div class="col-md-12" style="text-align: center;">
+                            <h3>PONENCIAS</h3>
+                        </div>
+                        {% for ponencia in ponencias %}
+                        <div class="col-md-6">
+                            <!--KODE_EVENT_PLACE_HOLDER START-->
+                            <div class="kode-event-place-holder">
+                                <figure>
+                                    <img src="{% static 'MedCongressApp/extra-images/img60.jpg'%}" alt="">
+                                    <div class="event-frame-over">
+                                        <h2>{{ponencia.titulo}}</h2>
+                                        <ul>
+                                            <li>
+                                                <h3>Start Date:</h3><span>{{ponencia.fecha_inicio|date:"M"}}
+                                                    {{ponencia.fecha_inicio|date:"d"}} /
+                                                    {{ponencia.fecha_inicio|date:"Y"}}</span>
+                                            </li>
+                                            <li>
+                                                <h3>END Date:</h3><span>21-10-15</span>
+                                            </li>
+                                            <li>
+                                                <h3>location:</h3><span>{{ponencia.lugar}}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </figure>
+                                <!--KODE_EVENT_PLACE_HOLDER END-->
+                            </div>
+                        </div>
+                        {%endfor%}
+
+
+
+                        <div class="col-md-12">
+
+                            <div class="ticket-section">
+                                <h3>CATEGORIAS PARA EL PAGO DEL CONGRESO</h3>
+                                <div class="tickets">
+                                    <ul class="kode-tickets-title">
+                                        <li class="col-md-3"><a href="#">Categoría</a></li>
+                                        <li class="col-md-3"><a href="#">Precio</a></li>
+                                        <li class="col-md-3"><a href="#"></a></li>
+                                    </ul>
+                                    {% for categoria in categorias_pago %}
+                                    <ul class="ticket-column secnd">
+                                        <li class="col-md-3"><span>{{categoria.categoria.nombre}}</span></li>
+                                        <li class="col-md-3"><span>{{categoria.precio}}</span></li>
+
+                                        {% if user.is_authenticated %}
+                                            {% if permiso == 0 %}
+
+                                        <li class="col-md-3"><a
+                                                href="{% url 'Pagar_congreso' congreso.id categoria.categoria.id  %}">Comprar</a>
+                                        </li>
+                                        {% endif %}
+                                        {% else %}
+                                        <li class="col-md-3"><a href="{% url 'login' %}">Comprar</a></li>
+
+                                        {% endif %}
+                                    </ul>
+                                    {% endfor %}
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="count-down-timer">
+                                <div class="col-md-8">
+                                    <ul class="countdown">
+                                        <li>
+                                            <span class="days">72</span>
+                                            <p class="days_ref">days</p>
+                                        </li>
+                                        <li>
+                                            <span class="hours">13</span>
+                                            <p class="hours_ref">hours</p>
+                                        </li>
+                                        <li>
+                                            <span class="minutes">24</span>
+                                            <p class="minutes_ref">minute</p>
+                                        </li>
+                                        <li>
+                                            <span class="seconds last">00</span>
+                                            <p class="seconds_ref">sec</p>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-4 caption">
+                                    <div class="caption-info">
+                                        <h5>Time until the next event</h5>
+                                        <span>23 July, Expo 2015 (Dubai Emirates)</span>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="row">
+                                <div class="kode-slider-speaker">
+                                    <div class="col-md-12">
+                                        <h2>speakers of the events</h2>
+                                    </div>
+                                    <div id="kode-speaker-causel" class="owl-carousel">
+                                        <div class="col-md-12">
+                                            <div class="thumb">
+                                                <figure>
+                                                    <img src="{% static 'MedCongressApp/extra-images/img65.jpg'%}"
+                                                        alt="">
+                                                </figure>
+                                                <div class="speaker-event-content">
+                                                    <h3>John Doe</h3>
+                                                    <span>Speaker</span>
+                                                    <strong class="bottom-border"></strong>
+                                                    <ul>
+                                                        <li><a href="#" data-toggle="tooltip" title="Facebook"><i
+                                                                    class="fa fa-facebook"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" title="Twitter"><i
+                                                                    class="fa fa-twitter"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" title="Pintrest"><i
+                                                                    class="fa fa-pinterest-p"></i></a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <div class="thumb">
+                                                <figure>
+                                                    <img src="{% static 'MedCongressApp/extra-images/speakers-2.jpg'%}"
+                                                        alt="">
+                                                </figure>
+                                                <div class="speaker-event-content">
+                                                    <h3>John Doe</h3>
+                                                    <span>Speaker</span>
+                                                    <strong class="bottom-border"></strong>
+                                                    <ul>
+                                                        <li><a href="#" data-toggle="tooltip" title="Facebook"><i
+                                                                    class="fa fa-facebook"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" title="Twitter"><i
+                                                                    class="fa fa-twitter"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" title="Pintrest"><i
+                                                                    class="fa fa-pinterest-p"></i></a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <div class="thumb">
+                                                <figure>
+                                                    <img src="{% static 'MedCongressApp/extra-images/speakers-1.jpg'%}"
+                                                        alt="">
+                                                </figure>
+                                                <div class="speaker-event-content">
+                                                    <h3>John Doe</h3>
+                                                    <span>Speaker</span>
+                                                    <strong class="bottom-border"></strong>
+                                                    <ul>
+                                                        <li><a href="#" data-toggle="tooltip" title="Facebook"><i
+                                                                    class="fa fa-facebook"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" title="Twitter"><i
+                                                                    class="fa fa-twitter"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" title="Pintrest"><i
+                                                                    class="fa fa-pinterest-p"></i></a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="thumb">
+                                                <figure>
+                                                    <img src="{% static 'MedCongressApp/extra-images/img65.jpg'%}"
+                                                        alt="">
+                                                </figure>
+                                                <div class="speaker-event-content">
+                                                    <h3>John Doe</h3>
+                                                    <span>Speaker</span>
+                                                    <strong class="bottom-border"></strong>
+                                                    <ul>
+                                                        <li><a href="#" data-toggle="tooltip" title="Facebook"><i
+                                                                    class="fa fa-facebook"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" title="Twitter"><i
+                                                                    class="fa fa-twitter"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" title="Pintrest"><i
+                                                                    class="fa fa-pinterest-p"></i></a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <div class="thumb">
+                                                <figure>
+                                                    <img src="{% static 'MedCongressApp/extra-images/speakers-2.jpg'%}"
+                                                        alt="">
+                                                </figure>
+                                                <div class="speaker-event-content">
+                                                    <h3>John Doe</h3>
+                                                    <span>Speaker</span>
+                                                    <strong class="bottom-border"></strong>
+                                                    <ul>
+                                                        <li><a href="#" data-toggle="tooltip" title="Facebook"><i
+                                                                    class="fa fa-facebook"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" title="Twitter"><i
+                                                                    class="fa fa-twitter"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" title="Pintrest"><i
+                                                                    class="fa fa-pinterest-p"></i></a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <div class="thumb">
+                                                <figure>
+                                                    <img src="{% static 'MedCongressApp/extra-images/speakers-1.jpg'%}"
+                                                        alt="">
+                                                </figure>
+                                                <div class="speaker-event-content">
+                                                    <h3>John Doe</h3>
+                                                    <span>Speaker</span>
+                                                    <strong class="bottom-border"></strong>
+                                                    <ul>
+                                                        <li><a href="#" data-toggle="tooltip" title="Facebook"><i
+                                                                    class="fa fa-facebook"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" title="Twitter"><i
+                                                                    class="fa fa-twitter"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" title="Pintrest"><i
+                                                                    class="fa fa-pinterest-p"></i></a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="kode-event-recent-heading">
+                                <h2>recent events</h2>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="kode-event-recent-info">
+                                        <div class="newevent-header">
+                                            <img alt=""
+                                                src="{% static 'MedCongressApp/extra-images/recent-event-01.jpg'%}">
+                                            <div class="time-newevent">22 JULY, 2015</div>
+                                        </div>
+                                        <div class="kode-blog-newcontent">
+                                            <h3>Annual Business Conference, 2015</h3>
+                                            <a href="#"><i class="fa fa-map-marker"></i>Western Park Hotel, New York,
+                                                USA</a>
+                                            <p>
+                                                Lorem ipsum dolor sit amet, consectetur elit sed do eiusmod tempor
+                                                incididunt ut labore
+                                                lorem ipsum dolor sit amet.
+                                            </p>
+                                        </div>
+                                        <div class="kode-newblog-footer">
+                                            <a href="#">Read More</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="kode-event-recent-info">
+                                        <div class="newevent-header">
+                                            <img alt=""
+                                                src="{% static 'MedCongressApp/extra-images/recent-event-02.jpg'%}">
+                                            <div class="time-newevent">22 JULY, 2015</div>
+                                        </div>
+                                        <div class="kode-blog-newcontent">
+                                            <h3>Annual Business Conference, 2015</h3>
+                                            <a href="#"><i class="fa fa-map-marker"></i>Western Park Hotel, New York,
+                                                USA</a>
+                                            <p>
+                                                Lorem ipsum dolor sit amet, consectetur elit sed do eiusmod tempor
+                                                incididunt ut labore
+                                                lorem ipsum dolor sit amet.
+                                            </p>
+                                        </div>
+                                        <div class="kode-newblog-footer">
+                                            <a href="#">Read More</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!--Aside Bar Wrap Start-->
+            <div class="col-md-4">
+
+                <div class="kf_connect aside_widget_hdg">
+                    <h6>connect with <span>ME</span></h6>
+                    <ul>
+                        <li class="facebook"><a href="#"><i class="fa fa-facebook"></i></a></li>
+                        <li class="twitter"><a href="#"><i class="fa fa-twitter"></i></a></li>
+                        <li class="youtube"><a href="#"><i class="fa fa-youtube"></i></a></li>
+                        <li class="dribble"><a href="#"><i class="fa fa-life-ring"></i></a></li>
+                        <li class="behance"><a href="#"><i class="fa fa-behance"></i></a></li>
+                        <li class="gplus"><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                    </ul>
+                </div>
+
+                <div class="aside_speaker">
+                    <figure>
+                        <img src="{% static 'MedCongressApp/extra-images/testimonial-01.png'%}" alt="">
+                    </figure>
+
+                    <div class="aside_spekr_des">
+                        <h6>Anna doe</h6>
+                        <span>Speaker</span>
+                    </div>
+
+                    <ul class="kf_conference">
+                        <li>
+                            <span>779</span>
+                            Conferences
+                        </li>
+
+                        <li>
+                            <span>779</span>
+                            Conferences
+                        </li>
+
+                        <li>
+                            <span>779</span>
+                            Conferences
+                        </li>
+                    </ul>
+
+                    <div class="kf_comment_meta">
+                        <span>
+                            <a href="#">View Comment</a>
+                        </span>
+
+                        <span><a href="#"><i class="fa fa-envelope"></i></a></span>
+
+                        <ul class="kf_social_icon">
+                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                            <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                            <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                        </ul>
+
+                    </div>
+
+                </div>
+
+                <div class="kf_aside_twitter">
+                    <h6> <i class="fa fa-twitter"></i> Twitter Feed</h6>
+                    <ul class="aside_tweets">
+                        <li>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                                ut labore et dolore.</p>
+                            <span>10 mint</span>
+                        </li>
+
+                        <li>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                                ut labore et dolore.</p>
+                            <span>10 mint</span>
+                        </li>
+
+                        <li>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                                ut labore et dolore.</p>
+                            <span>10 mint</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="kf_aside_folwer">
+                    <ul>
+                        <li>
+                            <div class="like_fb">
+                                <a class="facebook" href="#"><i class="fa fa-facebook"></i></a>
+                            </div>
+
+                            <div class="like_amount">
+                                <p>35869+</p>
+                                <span>fans</span>
+                            </div>
+
+                            <div class="like_page">
+                                <a href="#">like page</a>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="like_fb">
+                                <a class="twitter" href="#"><i class="fa fa-twitter"></i></a>
+                            </div>
+
+                            <div class="like_amount">
+                                <p>300 k</p>
+                                <span>followers</span>
+                            </div>
+
+                            <div class="like_page">
+                                <a href="#">follow us</a>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="like_fb">
+                                <a class="youtube" href="#"><i class="fa fa-youtube"></i></a>
+                            </div>
+
+                            <div class="like_amount">
+                                <p>32854+</p>
+                                <span>subcribers</span>
+                            </div>
+
+                            <div class="like_page">
+                                <a href="#">subcribe</a>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="like_fb">
+                                <a class="dribble" href="#"><i class="fa fa-dribbble"></i></a>
+                            </div>
+
+                            <div class="like_amount">
+                                <p>1299</p>
+                                <span>followers</span>
+                            </div>
+
+                            <div class="like_page">
+                                <a href="#">follow us</a>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="like_fb">
+                                <a class="behance" href="#"><i class="fa fa-facebook"></i></a>
+                            </div>
+
+                            <div class="like_amount">
+                                <p>1299+</p>
+                                <span>followers</span>
+                            </div>
+
+                            <div class="like_page">
+                                <a href="#">follow us</a>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="like_fb">
+                                <a class="gplus" href="#"><i class="fa fa-facebook"></i></a>
+                            </div>
+
+                            <div class="like_amount">
+                                <p>35869+</p>
+                                <span>fans</span>
+                            </div>
+
+                            <div class="like_page">
+                                <a href="#">like page</a>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="like_fb">
+                                <a class="instagram" href="#"><i class="fa fa-instagram"></i></a>
+                            </div>
+
+                            <div class="like_amount">
+                                <p>256487+</p>
+                                <span>fans</span>
+                            </div>
+
+                            <div class="like_page">
+                                <a href="#">follow us</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="instagram-widget">
+                    <div class="instagram-widget-title">
+                        <h2><i class="fa fa-instagram"></i> <span>instagram feed</span> </h2>
+                    </div>
+
+                    <ul class="instagram_slider">
+                        <li>
+                            <div class="pic-holder">
+                                <img src="{% static 'MedCongressApp/extra-images/instagram-01.jpg'%}" alt="">
+                            </div>
+                            <div class="instagram-over">
+                                <a href="#" class="instagram-link"><i class="fa fa-link"></i></a>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="pic-holder">
+                                <img src="{% static 'MedCongressApp/extra-images/instagram-01.jpg'%}" alt="">
+                            </div>
+                            <div class="instagram-over">
+                                <a href="#" class="instagram-link"><i class="fa fa-link"></i></a>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="pic-holder">
+                                <img src="{% static 'MedCongressApp/extra-images/instagram-01.jpg'%}" alt="">
+                            </div>
+                            <div class="instagram-over">
+                                <a href="#" class="instagram-link"><i class="fa fa-link"></i></a>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="pic-holder">
+                                <img src="{% static 'MedCongressApp/extra-images/instagram-01.jpg'%}" alt="">
+                            </div>
+                            <div class="instagram-over">
+                                <a href="#" class="instagram-link"><i class="fa fa-link"></i></a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="kode_calender">
+                    <div id='calendar'></div>
+                </div>
+
+            </div>
+            <!--Aside Bar Wrap End-->
+
+        </div>
+    </div>
+
+</div>
+
+</div>
+
+{%endblock%}

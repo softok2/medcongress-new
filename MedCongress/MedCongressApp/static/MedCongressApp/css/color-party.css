@@ -1,0 +1,231 @@
+/*
+============================================================
+		  				 Font Color
+ ============================================================
+*/
+/*Header Style*/
+.kf_party_header .kf_party_search a,
+.kf_party_header .kf_party_navigation ul li:hover a,
+.kf_party_header .kf_party_navigation ul ul li a,
+/*Banner Style*/
+/*Great Party Style*/
+/* Main Services Style*/
+.kf_party_service h4,
+.kf_party_service i,
+/* Upcomming Event Style*/
+.kf_party_event_des a:hover,
+.kf_party_address h4 a:hover,
+/* Schedule Style*/
+/* Gallery Style*/
+/* Our Dj Style*/
+/*Counter CSS*/
+.kf_party_seat_des h5:hover,
+.kf_dj_des h4 a:hover,
+/*Party Blog Style*/
+.kf_part_blog_wrap:hover .kf_party_blog_des h5,
+.kf_party_blog_des ul > a:hover,
+.kf_part_blog_wrap:hover .kf_party_blog_des > a,
+/*News and Update Style*/
+.kf_party_news_des h5 > a:hover,
+.kf_party_news_des ul a:hover,
+.kf_party_news_wrap:hover .kf_party_news_des > a,
+.kf_party_news_wrap figcaption a:hover,
+/*Footer Wrap Start*/
+.title,
+.address-nav li:hover a,
+.address-nav .fa,
+.twitterfeed-nav a,
+.twitterfeed-nav li:hover i
+{
+	color: #ff2861;
+}
+/*
+============================================================
+		   			Background Color
+============================================================
+*/
+/*Header Style*/
+.kf_party_header .kf_party_navigation ul li:before,
+.kf_party_header .kf_party_navigation ul ul li:after,
+.search-area input[type="submit"]:hover,
+.search-area button:hover,
+.dl-menuwrapper li:hover a,
+.dl-menuwrapper button:hover, 
+.dl-menuwrapper button.dl-active,
+/*Banner Style*/
+.kf_party_banner_caption a:hover,
+.kf_party_banner .bx-wrapper .bx-controls-direction a,
+/*Great Party Style*/
+.kf_great_party,
+/* Main Services Style*/
+.kf_party_service:hover,
+/* Upcomming Event Style*/
+.kf_party_event_links a:hover,
+.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar,
+.mCSB_horizontal>.mCSB_scrollTools .mCSB_draggerRail,
+/* Schedule Style*/
+.kf_party_schedule_day_2:before,
+.kf_party_schedule_day_2:after,
+.kf_party_schedule_day1 a:hover,
+.kf_schedule_day1_des,
+.kf_party_schedule_day_2 figure:before,
+/* Gallery Style*/
+.kf_party_gallery_nav ul li:before,
+.kf_party_gallery_nav ul li:after,
+.kf_party_gallery_wrap > a,
+.party_style_1 figure:before,
+.party_style_2 figure:before,
+.party_style_3 > a,
+/*Counter CSS*/
+.kf_party_seat_detail:hover a,
+/* Our Dj Style*/
+.kf_dj_des h4 a:before,
+.kf_dj_social_icon ul li:hover a,
+.kf_dj_wrap figure:before,
+#dj_team_wrap .owl-controls .owl-buttons div:hover,
+/*Party Blog Style*/
+/*News and Update Style*/
+.kf_party_news_wrap figure:before,
+/*Footer Wrap Start*/
+.footer-copyright,
+.back-to-top
+{
+	background-color: #ff2861;
+}
+/*
+============================================================
+		   			Border Color
+============================================================
+*/
+/*Header Style*/
+.kf_party_header .kf_party_navigation ul ul,
+/*Banner Style*/
+.kf_party_banner_caption a:hover,
+/*Great Party Style*/
+/* Main Services Style*/
+.kf_party_service:hover i,
+/* Upcomming Event Style*/
+.kf_party_event_des a:hover,
+/* Schedule Style*/
+/* Gallery Style*/
+/*Counter CSS*/
+.kf_party_seat_detail:hover a,
+/* Our Dj Style*/
+/*Party Blog Style*/
+.kf_part_blog_wrap:hover .kf_party_blog_des > a
+/*News and Update Style*/
+/*Footer Wrap Start*/
+{
+	border-color: #ff2861;
+}
+/*
+	  ============================================================
+		   Transaction Effect
+	  ============================================================
+*/
+/*Header Style*/
+.kf_party_header .kf_party_navigation ul ul,
+.kf_party_header .kf_party_navigation ul li:before,
+.kf_party_header .kf_party_navigation ul li a,
+.kf_party_header .kf_party_navigation ul ul li:after,
+.search-area input[type="submit"],
+.search-area button,
+.dl-menuwrapper li a,
+.dl-menuwrapper button, 
+.dl-menuwrapper button.dl-active,
+/*Banner Style*/
+.kf_party_banner_caption a,
+.kf_party_banner .bx-wrapper .bx-controls-direction a,
+/*Great Party Style*/
+/* Main Services Style*/
+.kf_party_service,
+.kf_party_service:before,
+.kf_party_service h4,
+.kf_party_service i,
+.kf_part_service_des p,
+.kf_party_services_list .col-md-6,
+/* Upcomming Event Style*/
+.kf_party_event_des a,
+.kf_party_address h4 a,
+.kf_party_event_links a,
+.mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar,
+/* Schedule Style*/
+.kf_party_schedule_day1 a,
+.kf_party_schedule_day_2:before,
+.kf_party_schedule_day_2:after,
+/* Gallery Style*/
+.kf_party_gallery_nav ul li:before,
+.kf_party_gallery_nav ul li:after,
+.kf_party_gallery_wrap > a,
+/*style 1*/
+.party_style_1 figure:before,
+.party_style1_des,
+.party_style1_des a,
+/*style 3*/
+.party_style_2 figure:before,
+.party_style2_des,
+.party_style2_des a,
+/*style 3*/
+.party_style_3 figure:before,
+.party_style_3 > a,
+.party_style3_des,
+/*Counter CSS*/
+.kf_party_seat_detail a,
+.kf_party_seat_des h5,
+/* Our Dj Style*/
+.kf_dj_social_icon,
+.kf_dj_des h4:before,
+.kf_dj_des h4 a,
+.kf_dj_social_icon ul li a,
+.kf_dj_wrap figure:before,
+#dj_team_wrap .owl-controls .owl-buttons div,
+#dj_team_wrap .owl-controls .owl-buttons div.owl-prev:before,
+#dj_team_wrap .owl-controls .owl-buttons div.owl-next:before,
+/*Party Blog Style*/
+.kf_part_blog_wrap,
+.kf_party_blog_des,
+.kf_party_blog_des h5,
+.kf_party_blog_des h5 > a,
+.kf_party_blog_des ul > a,
+.kf_party_blog_des > a,
+/*News and Update Style*/
+.kf_party_news_wrap figure:before,
+.kf_party_news_wrap figure:after,
+.kf_party_news_wrap figcaption,
+.kf_party_news_wrap figcaption a,
+.kf_party_news_des h5,
+.kf_party_news_des ul > a,
+.kf_party_news_des > a,
+/*Footer Wrap Start*/
+.address-nav li a,
+.twitterfeed-nav li i
+{
+	transition: all 0.3s ease-in-out;
+	-webkit-transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.3s ease-in-out;
+}
+/*
+	  ============================================================
+		   Transform Effect
+	  ============================================================
+*/
+
+/*
+	  ============================================================
+		  Content Selection
+	  ============================================================
+*/
+::selection {
+	background: #ff2861;
+	color: #ffffff;
+}
+::-webkit-selection {
+ background: #ff2861;
+ color: #ffffff;
+}
+::-moz-selection {
+ background: #ff2861;
+ color: #ffffff;
+}
