@@ -1,147 +1,174 @@
 {% extends "MedCongressApp/base.html"%}
 {% load static %}
-{% block title %}
+{% block titulo %}
 Inicio
 {%endblock%}
 {% block contenido %}
-	<div class="kode-event-time">
-			<div class="container">
-				<div class="row">
-					
-					<!-- Event Counter -->
-					<div class="col-lg-8 col-md-8 col-sm-7">
-						<div class="next-event-counter">
-							<h2>BUSCADOR DE CONGRESOS</h2>
-							<form class="subscribe-form" action="#">
-								<input type="email" placeholder="Buscar especialidad">
-								<input type="submit" value="BUSCAR" name="submit">
-							</form>						
-							
+<div class="kode-event-time">
+	<div class="container">
+		<div class="row">
+
+			<!-- Event Counter -->
+			<div class="col-lg-8 col-md-8 col-sm-7">
+
+
+				<div class="next-event-counter">
+					<h2>ENCUENTRA TU CONGRESO</h2>
+					<form class="subscribe-form" action="galeria.html">
+						<input type="email" placeholder="Buscar especialidad">
+						<input type="submit" value="BUSCAR" name="submit">
+					</form>
+					<h2>Siguiente evento:</h2>
+					<ul class="countdown">
+						<li>
+							<span class="days">60</span>
+							<p class="days_ref">días</p>
+						</li>
+						<li>
+							<span class="hours">22</span>
+							<p class="hours_ref">horas</p>
+						</li>
+						<li>
+							<span class="minutes">58</span>
+							<p class="minutes_ref">minutos</p>
+						</li>
+						<li>
+							<span class="seconds last">23</span>
+							<p class="seconds_ref">segundos</p>
+						</li>
+					</ul>
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- kode-event-time End -->
+<div class="content">
+	<div class="kode-overview-holder" style="background-color:#fff">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6 col-md-6">
+					<div class="kf_heading_2">
+						<h3>Somos Med Congress</h3>
+						<span>La medicina un arte sin fronteras</span>
+					</div>
+
+					<p>Somos una empresa tecnológica comprometidos con la educación médica continua, haciéndola más
+						flexible, cómoda y accesible para todo medico en el mundo; dando una experiencia del aprendizaje
+						atractivo, efectivo y convincente.</p>
+					<p>La transformación digital en la educación superior no solo es una solución a los desafíos comunes
+						del sector salud, también es un cambio de mentalidad que crea procesos más eficientes en la
+						gerencia y la experiencia pedagógica.</p>
+
+				</div>
+				<div class="col-lg-6 col-md-6">
+					<div class="event-slider-box">
+						<div class="event-borders">
+						</div>
+						<div class="event-boxslider">
+							<ul class="bxslider-banner">
+								<li><img src="{% static 'MedCongressApp/images/IMG_1.png'%}" alt="" /></li>
+								<li><img src="{% static 'MedCongressApp/images/IMG_2.png'%}" alt="" /></li>
+							</ul>
 						</div>
 					</div>
 				</div>
 			</div>
+
 		</div>
-		<!-- kode-event-time End -->
+	</div>
+	<!-- Kode-Over view holder End -->
 	<div class="content">
-		<div class="kode-overview-holder" style="background-color:#fff">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-6 col-md-6">
-                    	<div class="kf_heading_2">
-                        	<h3>Somos Med Congress</h3>
-                            <span>Ipsum dolor sit amet, consectetuer adipiscing elit consectetuer</span>
-                        </div>
-						
-						<p> <strong class="first-letter">l</strong> orem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,sit amet, consectetur adipisicing elit, sed do eiusmod tempor.
-incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,</p>
-						<p>Sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,sit amet, consectetur adipisicing elit, sed do eiusmod tempor.orem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,sit amet, consectetur adipisicing elit, sed do eiusmod tempor. incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-						<p>consectetur adipisicing elit, sed do eiusmod tempor.orem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,sit amet, consectetur adipisicing elit, sed do eiusmod tempor. incididunt </p>
-					</div>
-					<div class="col-lg-6 col-md-6">
-						<div class="event-slider-box">
-							<div class="event-borders">
-							</div>
-							<div class="event-boxslider">
-								<ul class="bxslider-banner">
-									<li><img src="{% static 'MedCongressApp/images/IMG_1.png'%}" alt="" /></li>
-									<li><img src="{% static 'MedCongressApp/images/IMG_2.png'%}" alt="" /></li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-				
-			</div>
-		</div>
-		<!-- Kode-Over view holder End -->
-		<div class="content">
 		<div class="kode-overview-holder">
 			<div class="container">
 				<div class="row facts-row">
-						<h3>En nuestra plataforma constamos con:</h3>
-						<div class="facts-counter">
-							<div class="col-md-3 col-sm-6 col-xs-6">
-								<strong class="icons-wrap"><i class="fa fa-users"></i></strong>
-                                <div class="kf_counter">
-                                	<strong class="counter"> {{ ponentes }}</strong>
-									<span>Ponentes</span>
-                                </div>
+					<h3>En nuestra plataforma constamos con:</h3>
+					<div class="facts-counter">
+						<div class="col-md-3 col-sm-6 col-xs-6">
+							<strong class="icons-wrap"><i class="fa fa-users"></i></strong>
+							<div class="kf_counter">
+								<strong class="counter"> {{ponentes}}</strong>
+								<span>Ponentes</span>
 							</div>
-                            
-							<div class="col-md-3 col-sm-6 col-xs-6">
-								<strong class="icons-wrap"><i class="fa fa-files-o"></i></strong>
-                                <div class="kf_counter">
-                                	<strong class="counter"> {{ especialidades }}</strong>
-									<span>Especialidades</span>
-                                </div>
-							</div>
-                            
-							<div class="col-md-3 col-sm-6 col-xs-6">
-								<strong class="icons-wrap"><i class="fa fa-hand-paper-o"></i></strong>
-                                <div class="kf_counter">
-                                	<strong class="counter"> {{ afiliados }}</strong>
-                                    <span>Afiliados</span>
-                                </div>
-							</div>
-                            
-							<div class="col-md-3 col-sm-6 col-xs-6">
-								<strong class="icons-wrap"><i class="fa fa-globe"></i></strong>
-                                <div class="kf_counter">
-                                	<strong class="counter"> 11</strong>
-									<span>Países</span>
-                                </div>
-							</div>
-                            
 						</div>
-						<!-- Kode-Fatcs -Counterup End -->
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor
-incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor
-incididunt ut labore et dolore magna aliqua.</p>
-						<a class="button-animate" href="#"><span data-hover="sobre nosotros">ver más</span></a>
+
+						<div class="col-md-3 col-sm-6 col-xs-6">
+							<strong class="icons-wrap"><i class="fa fa-files-o"></i></strong>
+							<div class="kf_counter">
+								<strong class="counter"> {{especialidades}}</strong>
+								<span>Especialidades</span>
+							</div>
+						</div>
+
+						<div class="col-md-3 col-sm-6 col-xs-6">
+							<strong class="icons-wrap"><i class="fa fa-hand-paper-o"></i></strong>
+							<div class="kf_counter">
+								<strong class="counter"> {{afiliados}}</strong>
+								<span>Afiliados</span>
+							</div>
+						</div>
+
+						<div class="col-md-3 col-sm-6 col-xs-6">
+							<strong class="icons-wrap"><i class="fa fa-globe"></i></strong>
+							<div class="kf_counter">
+								<strong class="counter"> 11</strong>
+								<span>Países</span>
+							</div>
+						</div>
+
+					</div>
+					<!-- Kode-Fatcs -Counterup End -->
+
+					<a class="button-animate" href="#"><span data-hover="sobre nosotros">ver más</span></a>
 				</div>
 			</div>
 		</div>
 		<!-- Kode-Over view holder End -->
-	<div class="kode-slider">
-		<ul class="bxslider-banner">		
-			<li>
-				<img src="{% static 'MedCongressApp/images/Slide2.png'%}" alt="" />
-				<div class="kode-content">
-					<div class="container">
-						<div class="row">
-							<div class="kode-slider-content">
-								<h2>1° SIMPOSIO EN CIENCIAS DE LA SALUD AMCIC</h2>								
-								<p>Investigación clínica: de la factibilidad de los estudios clínicos al beneficio terapéutico.</p>
-								<div class="button-holder">
-									<a href="#" class="button">Calendario</a>
-									<a href="#" class="button">Inscripción</a>
+		<div class="kode-slider">
+			<ul class="bxslider-banner">
+				{% for congreso in congresos%}
+				<li>
+					<img src="{% static '/'%}{{congreso.imagen}}" alt="" />
+					<div class="kode-content">
+						<div class="container">
+							<div class="row">
+								<div class="kode-slider-content">
+									<h2>{{congreso.titulo}}</h2>
+
+									<div class="button-holder">
+										<a href="{% url 'View_congreso' congreso.path %}#programas" class="button">Programa</a>
+										<a href="{% url 'View_congreso' congreso.path %}#pagos" class="button">Inscripción</a>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			</li>
-			
-		</ul>
-		
-	</div>
-	<!-- Kode-Slider End -->
-	
+				</li>
+				{%endfor%}
+
+			</ul>
+
+		</div>
+		<!-- Kode-Slider End -->
+
 		<div class="kode-main-services">
 			<div class="container">
 				<div class="kf_heading_1">
-                    <h2>SERVICIOS</h2>               
-                    
+					<h2>Ofrecemos</h2>
+
+				</div>
 				<div class="row">
 					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 						<div class="main-service-box">
 							<div class="icon-srvc">
-								<i class="fa fa-line-chart" aria-hidden="true"></i>
+								<i class="icon-finance-and-business4"></i>
 							</div>
 							<div class="srvc-content">
-								<h3>Análisis y retroalimentación Post-evento</h3>
-								<p>Mediante las evaluaciones de las ponencias de su evento e interacciones de los temas de mayor o menor interés por los usuarios, realizaremos una retroalimentación de las fortalezas y debilidades para la mejora continua de sus futuros congresos.</p>
+								<h3>Pagos electronicos</h3>
+								<p>Realizar pagos de manera segura y sencilla con tarjeta de débito o crédito. Ahorrando
+									tiempo al poder realizarlo desde cualquier lugar de tu comodidad.</p>
 								<strong class="bottom-border"></strong>
 							</div>
 						</div>
@@ -150,11 +177,12 @@ incididunt ut labore et dolore magna aliqua.</p>
 					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 						<div class="main-service-box">
 							<div class="icon-srvc">
-								<i class="fa fa-video-camera" aria-hidden="true"></i>
+								<i class="icon-businessman277"></i>
 							</div>
 							<div class="srvc-content">
-								<h3>Congresos Virtuales</h3>
-								<p>Te proporcionamos accesibilidad y comodidad para las inscripciones a congreso virtuales, brindando una exposición internacional llegando a profesionales médicos del mundo, mediante nuestro sistema de hosting, ofreciendo el conocimiento científico a un clic de distancia.</p>
+								<h3>Fomento a la investigación científica</h3>
+								<p>Generar Conocimiento y competencias en el personal del área médica, a través la
+									investigación y resultados científicos, para el beneficio de la salud.</p>
 								<strong class="bottom-border"></strong>
 							</div>
 						</div>
@@ -165,11 +193,14 @@ incididunt ut labore et dolore magna aliqua.</p>
 					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 						<div class="main-service-box">
 							<div class="icon-srvc">
-								<i class="fa fa-university" aria-hidden="true"></i>
+								<i class="icon-books71"></i>
 							</div>
 							<div class="srvc-content">
-								<h3>Fomento a la investigación científica</h3>
-								<p>Generar Conocimiento y competencias en el personal del área médica, a través la investigación y resultados científicos, para el beneficio de la salud.</p>
+								<h3>Congresos Virtuales</h3>
+								<p>Te proporcionamos accesibilidad y comodidad para las inscripciones a congreso
+									virtuales, brindando una exposición internacional llegando a profesionales médicos
+									del mundo, mediante nuestro sistema de hosting, ofreciendo el conocimiento
+									científico a un clic de distancia.</p>
 								<strong class="bottom-border"></strong>
 							</div>
 						</div>
@@ -181,8 +212,10 @@ incididunt ut labore et dolore magna aliqua.</p>
 								<i class="icon-man161"></i>
 							</div>
 							<div class="srvc-content">
-								<h3>Entrega de constancia electronica</h3>
-								<p>Al término del congreso las constancias estarán disponibles para ser generadas por usted mismo. Donde solo escribirás tu nombre y se enviara a tu correo electrónico.</p>
+								<h3>Publicidad de tu evento</h3>
+								<p>Te ayudamos con la publicidad de forma gratuita creando un impacto visual en tu
+									evento, dando a conocer los temas de actualización con los respectivos ponentes.
+									Diversificando tu evento a todos los campos afines a la medicina.</p>
 								<strong class="bottom-border"></strong>
 							</div>
 						</div>
@@ -192,264 +225,18 @@ incididunt ut labore et dolore magna aliqua.</p>
 			</div>
 		</div>
 		<!-- Kode-main-service End -->
-        
-		<div class="kode-conference-schedule">
-			<div class="container">
-				<div class="kf_heading_1">
-                    <h2>CALENDARIO</h2>
-                    <span>1° SIMPOSIO EN CIENCIAS DE LA SALUD AMCIC</span>
-                </div>
-				<div class="row">
-					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-						<div class="schedule-banner">
-							<img src="{% static 'MedCongressApp/images/backevento.png'%}" alt="">
-							<div class="scheduletabs">
-								<!-- Nav tabs -->
-								<ul class="nav nav-tabs" role="tablist">
-									<li role="presentation" class="active"><a href="#home" role="tab" data-toggle="tab"><span>Día 1</span>30.11.2020</a></li>
-									<li role="presentation"><a href="#profile-1" role="tab" data-toggle="tab"><span>Día 2</span>01.12.2020</a></li>
-									<li role="presentation"><a href="#messages" role="tab" data-toggle="tab"><span>Día 3</span>02.12.2020</a></li>
-									<li role="presentation"><a href="#messages" role="tab" data-toggle="tab"><span>Día 4</span>03.12.2020</a></li>
-									<li role="presentation"><a href="#messages" role="tab" data-toggle="tab"><span>Día 5</span>03.12.2020</a></li>
-								</ul>
-								<!-- Tab panes -->
-								<div class="tab-content">
-                                
-									<div role="tabpanel" class="tab-pane active" id="home">
-										<div class="kf_new_con_wrap">
-                                        	<div class="kf_new_conf_time">
-                                            	<h5>08:00 AM</h5>
-                                            </div>
-                                            <div class="kf_new_conf_des_wrap">
-                                            	<div class="kf_new_conf_hdg" id="conf_accord">
-                                                    <h5>La Pandemia COVID-19 una visión general, los retos y oportunidades en la investigación clínica y salud.
-4 ponentes y moderador </h5>
-                                                    <i class="fa fa-angle-down"></i>
-                                                </div>
-                                                <div class="kf_new_conf_open_wrap">
-                                                    <div class="kf_new_conf_des">
-                                                        <p>Sed non  mauris vitae erat consequat auctor eu in elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos. Mauris in erat justo. Nullam ac urna eu felis dapibus condimentum sit amet a augue. Sed non neque elit. Sed ut imperdiet nisi. Proin Etiam pharetra, erat sed fermentum feugiat, velit mauris egestas quam, ut aliquam massa nisl quis neque. </p>
-                                                    </div>
-                                                
-                                                    <div class="kf_new_conf_orgnizr">
-                                                        <figure>
-                                                            <img src="{% static 'MedCongressApp/extra-images/img06.jpg'%}" alt="image Here">
-                                                        </figure>
-                                                        <div class="kf_new_conf_orgnizr_name">
-                                                            <h6>Alberta Doe</h6>
-                                                            <span>Speaker</span>
-                                                        </div>
-                                                    </div>
-                                                
-                                                    <div class="kf_new_conf_btn_link">
-                                                        <a href="#">10:00AM - 12:00AM</a>
-                                                        <a href="#"><i class="fa fa-play"></i>Details About The Event</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="kf_new_con_wrap">
-                                        	<div class="kf_new_conf_time">
-                                            	<h5>10:00 AM</h5>
-                                            </div>
-                                        	
-                                            <div class="kf_new_conf_des_wrap">
-                                            	<div class="kf_new_conf_hdg" id="conf_accord1">
-                                                    <h5>Ponente 2</h5>
-                                                    <i class="fa fa-angle-down"></i>
-                                                </div>
-                                                
-                                                <div class="kf_new_conf_open_wrap">
-                                                    <div class="kf_new_conf_des">
-                                                        <p>Sed non  mauris vitae erat consequat auctor eu in elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos. Mauris in erat justo. Nullam ac urna eu felis dapibus condimentum sit amet a augue. Sed non neque elit. Sed ut imperdiet nisi. Proin Etiam pharetra, erat sed fermentum feugiat, velit mauris egestas quam, ut aliquam massa nisl quis neque. </p>
-                                                    </div>
-                                                
-                                                    <div class="kf_new_conf_orgnizr">
-                                                        <figure>
-                                                            <img src="{% static 'MedCongressApp/extra-images/img06.jpg'%}" alt="image Here">
-                                                        </figure>
-                                                        <div class="kf_new_conf_orgnizr_name">
-                                                            <h6>Alberta Doe</h6>
-                                                            <span>Ponente</span>
-                                                        </div>
-                                                    </div>
-                                                
-                                                    <div class="kf_new_conf_btn_link">
-                                                        <a href="#">10:00AM - 12:00AM</a>
-                                                        <a href="#"><i class="fa fa-play"></i>VER VIDEO</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                        </div>
-                                        
-                                        <div class="kf_new_con_wrap">
-                                        	<div class="kf_new_conf_time">
-                                            	<h5>10:00 AM</h5>
-                                            </div>
-                                        	
-                                            <div class="kf_new_conf_des_wrap">
-                                            	<div class="kf_new_conf_hdg" id="conf_accord2">
-                                                    <h5>Presentaciòn ponencia 2</h5>
-                                                    <i class="fa fa-angle-down"></i>
-                                                </div>
-                                                
-                                                <div class="kf_new_conf_open_wrap">
-                                                    <div class="kf_new_conf_des">
-                                                        <p>Sed non  mauris vitae erat consequat auctor eu in elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos. Mauris in erat justo. Nullam ac urna eu felis dapibus condimentum sit amet a augue. Sed non neque elit. Sed ut imperdiet nisi. Proin Etiam pharetra, erat sed fermentum feugiat, velit mauris egestas quam, ut aliquam massa nisl quis neque. </p>
-                                                    </div>
-                                                
-                                                    <div class="kf_new_conf_orgnizr">
-                                                        <figure>
-                                                            <img src="{% static 'MedCongressApp/extra-images/img06.jpg'%}" alt="image Here">
-                                                        </figure>
-                                                        <div class="kf_new_conf_orgnizr_name">
-                                                            <h6>Alberta Doe</h6>
-                                                            <span>Speaker</span>
-                                                        </div>
-                                                    </div>
-                                                
-                                                    <div class="kf_new_conf_btn_link">
-                                                        <a href="#">10:00AM - 12:00AM</a>
-                                                        <a href="#"><i class="fa fa-play"></i>Ver video</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                        </div>
-									</div>
-                                    
-                                    <div role="tabpanel" class="tab-pane" id="profile-1">
-										<div class="kf_new_con_wrap">
-                                        	<div class="kf_new_conf_time">
-                                            	<h5>10:00 AM</h5>
-                                            </div>
-                                        	
-                                            <div class="kf_new_conf_des_wrap">
-                                            	<div class="kf_new_conf_hdg" id="conf_accord">
-                                                    <h5>Ponencia 3</h5>
-                                                    <i class="fa fa-angle-down"></i>
-                                                </div>
-                                                
-                                                <div class="kf_new_conf_open_wrap">
-                                                    <div class="kf_new_conf_des">
-                                                        <p>Sed non  mauris vitae erat consequat auctor eu in elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos. Mauris in erat justo. Nullam ac urna eu felis dapibus condimentum sit amet a augue. Sed non neque elit. Sed ut imperdiet nisi. Proin Etiam pharetra, erat sed fermentum feugiat, velit mauris egestas quam, ut aliquam massa nisl quis neque. </p>
-                                                    </div>
-                                                
-                                                    <div class="kf_new_conf_orgnizr">
-                                                        <figure>
-                                                            <img src="{% static 'MedCongressApp/extra-images/img06.jpg'%}" alt="image Here">
-                                                        </figure>
-                                                        <div class="kf_new_conf_orgnizr_name">
-                                                            <h6>Alberta Doe</h6>
-                                                            <span>Speaker</span>
-                                                        </div>
-                                                    </div>
-                                                
-                                                    <div class="kf_new_conf_btn_link">
-                                                        <a href="#">10:00AM - 12:00AM</a>
-                                                        <a href="#"><i class="fa fa-play"></i>Details About The Event</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                        </div>
-                                        
-                                        <div class="kf_new_con_wrap">
-                                        	<div class="kf_new_conf_time">
-                                            	<h5>10:00 AM</h5>
-                                            </div>
-                                        	
-                                            <div class="kf_new_conf_des_wrap">
-                                            	<div class="kf_new_conf_hdg" id="conf_accord1">
-                                                    <h5>Ponencia 4</h5>
-                                                    <i class="fa fa-angle-down"></i>
-                                                </div>
-                                                
-                                                <div class="kf_new_conf_open_wrap">
-                                                    <div class="kf_new_conf_des">
-                                                        <p>Sed non  mauris vitae erat consequat auctor eu in elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos. Mauris in erat justo. Nullam ac urna eu felis dapibus condimentum sit amet a augue. Sed non neque elit. Sed ut imperdiet nisi. Proin Etiam pharetra, erat sed fermentum feugiat, velit mauris egestas quam, ut aliquam massa nisl quis neque. </p>
-                                                    </div>
-                                                
-                                                    <div class="kf_new_conf_orgnizr">
-                                                        <figure>
-                                                            <img src="{% static 'MedCongressApp/extra-images/img06.jpg'%}" alt="image Here">
-                                                        </figure>
-                                                        <div class="kf_new_conf_orgnizr_name">
-                                                            <h6>Alberta Doe</h6>
-                                                            <span>Speaker</span>
-                                                        </div>
-                                                    </div>
-                                                
-                                                    <div class="kf_new_conf_btn_link">
-                                                        <a href="#">10:00AM - 12:00AM</a>
-                                                        <a href="#"><i class="fa fa-play"></i>Details About The Event</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                        </div>
-									</div>
-                                    
-                                    <div role="tabpanel" class="tab-pane" id="messages">
-                                    
-										<div class="kf_new_con_wrap">
-                                        	<div class="kf_new_conf_time">
-                                            	<h5>10:00 AM</h5>
-                                            </div>
-                                        	
-                                            <div class="kf_new_conf_des_wrap">
-                                            	<div class="kf_new_conf_hdg" id="conf_accord">
-                                                    <h5>Ponencia 5</h5>
-                                                    <i class="fa fa-angle-down"></i>
-                                                </div>
-                                                
-                                                <div class="kf_new_conf_open_wrap">
-                                                    <div class="kf_new_conf_des">
-                                                        <p>Sed non  mauris vitae erat consequat auctor eu in elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos. Mauris in erat justo. Nullam ac urna eu felis dapibus condimentum sit amet a augue. Sed non neque elit. Sed ut imperdiet nisi. Proin Etiam pharetra, erat sed fermentum feugiat, velit mauris egestas quam, ut aliquam massa nisl quis neque. </p>
-                                                    </div>
-                                                
-                                                    <div class="kf_new_conf_orgnizr">
-                                                        <figure>
-                                                            <img src="{% static 'MedCongressApp/extra-images/img06.jpg'%}" alt="image Here">
-                                                        </figure>
-                                                        <div class="kf_new_conf_orgnizr_name">
-                                                            <h6>Alberta Doe</h6>
-                                                            <span>Speaker</span>
-                                                        </div>
-                                                    </div>
-                                                
-                                                    <div class="kf_new_conf_btn_link">
-                                                        <a href="#">10:00AM - 12:00AM</a>
-                                                        <a href="#"><i class="fa fa-play"></i>Ver video</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                        </div>
-                                        
-									</div>
-                                    
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- Kode-Conference Schedule End -->
-        
-		        
+
+
+
 		<div class="kode-speaker-frame">
 			<div class="container">
 				<div class="kf_heading_1">
-                    <h2>Nuestros Ponentes</h2>
-                    <span>Ipsum dolor sit amet, consectetuer adipiscing elit consectetuer</span>
-                </div>
+					<h2>GALENUS</h2>
+					<span>Ipsum dolor sit amet, consectetuer adipiscing elit consectetuer</span>
+				</div>
 				<div class="row">
 					<div id="kode-speaker-causel" class="owl-carousel">
-                    
+
 						<div class="kode-newspeaker">
 							<div class="speaker-photo">
 								<img src="{% static 'MedCongressApp/extra-images/img07.jpg'%}" alt="">
@@ -477,7 +264,7 @@ incididunt ut labore et dolore magna aliqua.</p>
 							</div>
 							<!-- kode-new speaker over state End -->
 						</div>
-                        
+
 						<div class="kode-newspeaker">
 							<div class="speaker-photo">
 								<img src="{% static 'MedCongressApp/extra-images/img08.jpg'%}" alt="">
@@ -505,7 +292,7 @@ incididunt ut labore et dolore magna aliqua.</p>
 							</div>
 							<!-- kode-new speaker over state End -->
 						</div>
-                        
+
 						<div class="kode-newspeaker">
 							<div class="speaker-photo">
 								<img src="{% static 'MedCongressApp/extra-images/img09.jpg'%}" alt="">
@@ -533,7 +320,7 @@ incididunt ut labore et dolore magna aliqua.</p>
 							</div>
 							<!-- kode-new speaker over state End -->
 						</div>
-                        
+
 						<div class="kode-newspeaker">
 							<div class="speaker-photo">
 								<img src="{% static 'MedCongressApp/extra-images/img07.jpg'%}" alt="">
@@ -561,118 +348,121 @@ incididunt ut labore et dolore magna aliqua.</p>
 							</div>
 							<!-- kode-new speaker over state End -->
 						</div>
-                        
+
 					</div>
 				</div>
 			</div>
 		</div>
-		<!-- kode-speaker-frame End -->
-        
-		
-        
-        
+
+
+
 		<div class="kode-event-testimonial">
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    	<div class="kf_heading_3">
-                        	<h2 style="color:#fff">Testimonios</h2>
-                            <span style="color:#fff">Ipsum dolor sit amet, consectetuer adipiscing elit consectetuer</span>
-                        </div>
-						
+						<div class="kf_heading_3">
+							<h2 style="color:#fff">Testimonios</h2>
+							<span style="color:#fff">Ipsum dolor sit amet, consectetuer adipiscing elit
+								consectetuer</span>
+						</div>
+
 						<div id="kode-testimonial-causel" class="owl-carousel">
 							<div class="client-holder">
 								<div class="client-content">
 									<blockquote>
-										<q>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore  .</q>
+										<q>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+											tempor incididunt ut labore et dolore .</q>
 									</blockquote>
 								</div>
-                                
-                                <div class="client-header">
+
+								<div class="client-header">
 									<div class="client-pic">
 										<img src="{% static 'MedCongressApp/extra-images/img14.jpg'%}" alt="">
 									</div>
 									<h3>aNNA dOE</h3>
 									<strong>ceo</strong>
 								</div>
-                                
+
 							</div>
 							<!--client post slide-->
-                            
+
 							<div class="client-holder">
 								<div class="client-content">
 									<blockquote>
-										<q>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore  .</q>
+										<q>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+											tempor incididunt ut labore et dolore .</q>
 									</blockquote>
 								</div>
-                                
-                                <div class="client-header">
+
+								<div class="client-header">
 									<div class="client-pic">
 										<img src="{% static 'MedCongressApp/extra-images/testimonial-01.png'%}" alt="">
 									</div>
 									<h3>aNNA dOE</h3>
 									<strong>ceo</strong>
 								</div>
-                                
+
 							</div>
 							<!--client post slide-->
-                            
+
 							<div class="client-holder">
 								<div class="client-content">
 									<blockquote>
-										<q>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore  .</q>
+										<q>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+											tempor incididunt ut labore et dolore .</q>
 									</blockquote>
 								</div>
-                                
-                                <div class="client-header">
+
+								<div class="client-header">
 									<div class="client-pic">
 										<img src="{% static 'MedCongressApp/extra-images/testimonial-02.png'%}" alt="">
 									</div>
 									<h3>aNNA dOE</h3>
 									<strong>ceo</strong>
 								</div>
-                                
+
 							</div>
 							<!--client post slide-->
-                            
-                            <div class="client-holder">
+
+							<div class="client-holder">
 								<div class="client-content">
 									<blockquote>
-										<q>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore  .</q>
+										<q>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+											tempor incididunt ut labore et dolore .</q>
 									</blockquote>
 								</div>
-                                
-                                <div class="client-header">
+
+								<div class="client-header">
 									<div class="client-pic">
 										<img src="{% static 'MedCongressApp/extra-images/img14.jpg'%}" alt="">
 									</div>
 									<h3>aNNA dOE</h3>
 									<strong>ceo</strong>
 								</div>
-                                
+
 							</div>
-                            <!--client post slide-->
+							<!--client post slide-->
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<!--kode-event-testimonial-->
-			
+
 		<div class="kode-event-contact">
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    	<div class="kf_heading_3">
-                        	<h2>Contacto</h2>
-                            <span>Ipsum dolor sit amet, consectetuer adipiscing elit consectetuer</span>
-                        </div>
+						<div class="kf_heading_3">
+							<h2>Contacto</h2>
+							<span>Ipsum dolor sit amet, consectetuer adipiscing elit consectetuer</span>
+						</div>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 						<form class="contactusform" action="#">
-							
+
 							<div class="row">
 								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 									<input type="text" placeholder="Nombre">
@@ -691,4 +481,6 @@ incididunt ut labore et dolore magna aliqua.</p>
 		</div>
 		<!--kode-event-contact-->
 	</div>
+
+
 	{% endblock%}

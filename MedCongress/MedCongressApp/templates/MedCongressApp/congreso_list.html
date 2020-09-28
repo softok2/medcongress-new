@@ -1,12 +1,37 @@
 
 {% extends "MedCongressApp/base.html"%}
 {% load static %}
-{% block title %}
+{% block titulo %}
 Congresos
 {%endblock%}
 {% block contenido %}
 
-
+<div class="sub-header">
+    <!-- SUB HEADER -->
+</div>
+<!-- Kode-Slider End -->
+<!--Kode-our-speaker-heading start-->
+<div class="Kode-page-heading">
+    <div class="container">
+        <!--ROW START-->
+        <div class="row">
+            <div class="col-md-6 col-sm-6">
+                <h2>Congresos</h2>
+            </div>
+            <div class="col-md-6 col-sm-6">
+                <ul>
+                    <li>
+                        <a href="#"><i class="fa fa-home"></i>Home</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-angle-right"></i>Congresos</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--ROW END-->
+    </div>
+</div>
 
 <div class="kode-blog-style-2" style="margin-top: 82px;">
     <div class="container">
@@ -17,19 +42,19 @@ Congresos
                 <!--KODE_EVENT_BLOG2 START-->
                 <div class="kode-event-blog3">
                     <figure>
-                        <img src="{% static 'MedCongressApp/images/Kode-event-shedule-1.jpg'%}" alt=""/>
+                        <img src="{% static '/'%}{{congreso.imagen}}" alt=""/>
                         <div class="kode-fig-capstion">
-                            <a href="{% url 'View_congreso' congreso.id %}">Conference Hall</a>
+                            <a href="{% url 'View_congreso' congreso.path  %}">Conference Hall</a>
                             <p>Lorem ipsum</p>
                         </div>
                     </figure>
                     <div class="kode-thumb-caption">
-                        <a href="{% url 'View_congreso' congreso.id %}"></a> <h4>{{congreso.titulo}}</h4></a>
+                        <a href=""></a> <h4>{{congreso.titulo }}</h4></a>
                         <ul>
                             <li><a href="#"><i class="fa fa-calendar"></i>{{congreso.fecha_inicio|date:"M"}} {{congreso.fecha_inicio|date:"d"}} / {{congreso.fecha_inicio|date:"Y"}}</a></li>
                             <li><a href="#"><i class="fa fa-location-arrow"></i>{{congreso.lugar}}</a></li>
                         </ul>
-                        <span><a href="{% url 'View_congreso' congreso.id %}">Leer Más</a></span>
+                        <span><a href="{% url 'View_congreso' congreso.path %}">Leer Más</a></span>
                     </div>
                 </div>
                 <!--KODE_EVENT_BLOG2 START-->

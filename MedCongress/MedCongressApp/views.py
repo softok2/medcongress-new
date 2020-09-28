@@ -1,11 +1,13 @@
 import json
+from collections import namedtuple
 from datetime import date
 
 import requests
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group, User
-from django.http import HttpResponse,HttpResponseRedirect
+from django.db import connections
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.template.response import TemplateResponse
 from django.urls import reverse, reverse_lazy
@@ -18,7 +20,7 @@ from requests.auth import HTTPBasicAuth
 from .forms import UserPerfilUser
 from .models import (CategoriaPagoCongreso, Congreso, EspecialidadCongreso,
                      Ponencia, Ponente, RelCongresoCategoriaPago,
-                     RelCongresoUser)
+                     RelCongresoUser,RelPonenciaPonente)
 from .pager import Pager
 
 # Create your views here.
@@ -33,13 +35,14 @@ class Home(TemplateView):
         context['ponentes'] = len(Ponente.objects.all())
         context['especialidades'] = len(EspecialidadCongreso.objects.all())
         context['afiliados'] = len(User.objects.all())
+        context['congresos']= Congreso.objects.all().order_by('fecha_inicio')
         return context
 
 ##### Listar Congresos #####
 
 class CongresoListView(ListView):
     model=Congreso
-    queryset=Congreso.objects.all()
+    queryset=Congreso.objects.filter(published=True)
     context_object_name='congreso_list'
     paginate_by = 9
 
@@ -52,24 +55,64 @@ class CongresoListView(ListView):
 
 ##### Visualizar Congreso #####
 
-class CongresoDetail(DetailView):
-    model = Congreso
+class CongresoDetail(TemplateView):
+    template_name= 'MedCongressApp/congreso_detail.html' 
     
+
+    def get(self, request, **kwargs):
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        if congreso is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        return self.render_to_response(self.get_context_data())
+
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        #context['dias_faltan']=date.today()-self.model.fecha_inicio
-        context['categorias_pago']= RelCongresoCategoriaPago.objects.filter(congreso=self.kwargs.get('pk'))
-        context['ponencias']= Ponencia.objects.filter(congreso=self.kwargs.get('pk'))
-       
-        context['permiso']= len(RelCongresoUser.objects.filter(user=self.request.user.pk,congreso=self.kwargs.get('pk'))) 
-        
+        context = super(CongresoDetail, self).get_context_data(**kwargs)
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        if congreso is not None:
+           
+            context['congreso']=congreso
+            #context['dias_faltan']=date.today()-self.model.fecha_inicio
+            with connections['default'].cursor() as cursor:
+                    sql_query = '''SELECT DISTINCT fecha_inicio::date FROM public."MedCongressApp_ponencia" where published is TRUE  and congreso_id= '''+ str(congreso.id) +''' ORDER by fecha_inicio'''
+                    cursor.execute(sql_query)
+                    data = [row[0] for row in cursor.fetchall()]
+            
+            context['fecha_ponencias']= data
+            ponencias_env=[] 
+            ponentes_env=[]
+            for dat in context['fecha_ponencias'] :
+                ponencias=Ponencia.objects.filter(fecha_inicio__date=dat,).order_by('fecha_inicio')
+                for ponencia in ponencias:
+                    ponentes_env.append(Ponente.objects.filter(ponencia_ponente__pk=ponencia.id).distinct()) 
+
+                ponencias_env.append(ponencias)
+            
+            context['ponencias']=ponencias_env
+            prueba_ponecia=Ponencia.objects.filter(congreso=congreso.pk)
+            id=[]
+            for pp in prueba_ponecia:
+                id.append(pp.pk)
+
+            pon=Ponente.objects.filter(ponencia_ponente__in=id).distinct()
+           
+            context['ponentes_congreso']=pon
+            print(context['ponentes_congreso'])
+            pagos = RelCongresoUser.objects.filter(user=self.request.user.pk, congreso=congreso.pk).order_by('precio')
+            cat_pago=RelCongresoCategoriaPago.objects.filter(congreso=congreso.pk)
+           
+            context['categorias_pago']=cat_pago
+            if pagos.exists():
+                context['permiso'] = True
+            else: 
+                context['permiso'] = False                                                                  
+
         return context
 
 ##### Formulario Tarjeta Pagar Congreso #####
 
 @method_decorator(login_required,name='dispatch')
 class CongresoCardForm(TemplateView):
-
+   
     template_name= 'MedCongressApp/tarjeta.html'
 
     def get_context_data(self, **kwargs):
@@ -77,12 +120,16 @@ class CongresoCardForm(TemplateView):
         context['categoria']= CategoriaPagoCongreso.objects.get(id=self.kwargs.get('pk_cat'))
         context['congreso']= Congreso.objects.get(id=self.kwargs.get('pk')) 
         context['pago']= RelCongresoCategoriaPago.objects.get(congreso=self.kwargs.get('pk'),categoria=self.kwargs.get('pk_cat'))
-        
         return context
+
+    def get(self, request, **kwargs):
+        if RelCongresoUser.objects.filter(user=self.request.user.pk,congreso=self.kwargs.get('pk')).exists(): 
+            return HttpResponseRedirect(reverse('View_congreso', kwargs={'pk':self.kwargs.get('pk')}))
+        return self.render_to_response(self.get_context_data())
 
     def post(self, request, **kwargs):
 
-        congreso= RelCongresoCategoriaPago.objects.get(congreso=request.POST["congreso_id"],categoria=request.POST["categoria_id"])
+        congreso= RelCongresoCategoriaPago.objects.get(congreso=self.kwargs.get('pk'),categoria=self.kwargs.get('pk_cat'))
  
         url='https://sandbox-api.openpay.mx/v1/muq0plqu35rnjyo7sf2v/charges'
         params= {
@@ -101,9 +148,12 @@ class CongresoCardForm(TemplateView):
             }
         headers={'Content-type': 'application/json'}
         response=requests.post(url=url,auth=HTTPBasicAuth('sk_d07c7b6ffeeb4acaaa15babdaac4101e:', ''),data=json.dumps(params),headers=headers)
-        pagar_congreso=RelCongresoUser.objects.create(user=self.request.user.id,congreso=request.POST["congreso_id"],categoria_pago=request.POST["categoria_id"])
+        congreso=Congreso.objects.get(id=self.kwargs.get('pk'))
+        categoria=CategoriaPagoCongreso.objects.get(id=self.kwargs.get('pk_cat'))
+        pagar_congreso=RelCongresoUser.objects.create(user=self.request.user,congreso=congreso,categoria_pago=categoria)
         pagar_congreso.save()
-        return HttpResponse(response.content)
+        return HttpResponseRedirect(reverse('View_congreso', kwargs={'pk':self.kwargs.get('pk')}))
+        #return HttpResponse(response.content)
         
        
 
@@ -114,7 +164,7 @@ class CongresoCardForm(TemplateView):
     #     return context
 
 ##### Formulario para registrar usuario #####
-@method_decorator(login_required,name='dispatch')
+
 class PerfilUserCreate(CreateView):
     model=User
     form_class= UserPerfilUser
@@ -153,3 +203,8 @@ class PerfilUserCreate(CreateView):
         # #form.sendEmail(datas)
        
         return HttpResponseRedirect(reverse('Home'))
+
+##### Error 404 #####
+
+class ViewError404(TemplateView):
+    template_name= 'MedCongressApp/404.html' 

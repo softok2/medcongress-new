@@ -156,7 +156,7 @@ h1,h2,h3,h4,h5,h6{
 .kode-slider li:after{
 	position:absolute;
 	content:'';
-	background:rgba(0, 0, 0, .5);
+	
 	left:0;
 	top:0;
 	right:0;
@@ -167,7 +167,7 @@ h1,h2,h3,h4,h5,h6{
 .kode-slider .bx-wrapper .bx-pager,
 .kode-slider .bx-wrapper .bx-controls-auto{
 	z-index:50;
-	bottom:110px;
+	bottom:10px;
 }
 .kode-slider .bx-wrapper .bx-pager.bx-default-pager a{
 	display:inline-block;
@@ -186,7 +186,7 @@ h1,h2,h3,h4,h5,h6{
 	top: 0;
 	width: 100%;
 	z-index: 3;
-	text-align:center;
+	text-align:left;
 }
 .kode-slider-content{
 	max-width:760px;
@@ -194,7 +194,7 @@ h1,h2,h3,h4,h5,h6{
 	overflow:hidden;
 }
 .kode-content h2{
-	margin:0 0 10px;
+	margin:0 0 20px;
 	color:#fff;
 	font-size: 60px;
 	line-height:75px;
@@ -257,7 +257,6 @@ h1,h2,h3,h4,h5,h6{
 */
 #kode-header{
 	position:absolute;
-	background-color:#2a343d;
 	left:0;
 	top:0;
 	right:0;
@@ -489,7 +488,7 @@ h1,h2,h3,h4,h5,h6{
 .kode-overview-holder{
 	position:relative;
 	overflow:hidden;
-	padding:70px 0;
+	padding:70px 0 100px;
 	background-color:#b7c6d2;
 	color:#666;
 	float:left;
@@ -536,7 +535,7 @@ h1,h2,h3,h4,h5,h6{
 	text-transform:uppercase;
 	font-weight:normal;
 }
-.kode-overview-holder p{margin:0 0 20px;}
+.kode-overview-holder p{margin:0 0 20px;font-size:16px}
 /*
 	  ==============================================================
 		   Overview Section CSS End
@@ -620,7 +619,7 @@ h1,h2,h3,h4,h5,h6{
 	padding:0px;	
 }
 .facts-row{
-	padding-top:60px;
+	padding-top:0px;
 	text-align:center;
 }
 .facts-row h3{
@@ -1027,7 +1026,7 @@ h1,h2,h3,h4,h5,h6{
 	background-size:cover;
 	float:left;
 	width:100%;
-	margin-top:90px;
+
 	
 }
 .kode-event-time:after{
@@ -1124,7 +1123,7 @@ h1,h2,h3,h4,h5,h6{
 	overflow:hidden;
 	text-align:left;
 	z-index:3;
-	padding:185px 0;
+	padding:180px 0 85px;
 }
 .next-event-counter h2{
 	color:#fff;
@@ -1139,16 +1138,17 @@ h1,h2,h3,h4,h5,h6{
 	padding: 0;
 	display:inline-block;
 	vertical-align:middle;
-	text-align: center;
+	text-align: left;
 	color:#fff;
 }
 .next-event-counter .countdown li{
-	border:1px solid #fff;
+	
 	padding:15px 0;
 	margin:0 7px;
 	width:100px;
 	background:rgba(255, 255, 255, .1);
 	display:inline-block;
+	text-align: center;
 }
 .next-event-counter .countdown li span{
 	font-size:35px;
@@ -1659,7 +1659,7 @@ h1,h2,h3,h4,h5,h6{
 .kode-event-testimonial:after{
 	position:absolute;
 	content:'';
-	background:rgba(0, 0, 0, .75);
+	background:rgba(42, 52, 61, .75);
 	left:0;
 	top:0;
 	bottom:0;
@@ -1928,7 +1928,7 @@ h1,h2,h3,h4,h5,h6{
 .kode-event-contact{
 	position:relative;
 	overflow:hidden;
-	background-color:#b7c6d2!important;
+	background-color:#fff!important;
 	padding:70px 0;
 	float:left;
 	width:100%;
@@ -1970,14 +1970,12 @@ h1,h2,h3,h4,h5,h6{
 .contactusform input[type="email"],
 .contactusform input[type="text"],
 .contactusform input[type="password"],
-.contactusform textarea
-
-{
+.contactusform textarea{
 	position:relative;
 	display:block;
 	width:100%;
 	padding:0 15px;
-	color:#fff;
+	color:#2a343d;
 	font-size:16px;
 	line-height:56px;
 	outline:none;
@@ -1985,30 +1983,13 @@ h1,h2,h3,h4,h5,h6{
 	margin:0 0 25px;
 	height:48px;
 	background-color:rgba(255,255,255,0);
-	border:solid 1px rgba(255,255,255,0.3);
-}
-.contactusform select
-{
-	position:relative;
-	display:block;
-	width:100%;
-	padding:0 15px;
-	color:rgb(30, 36, 66);
-	font-size:16px;
-	line-height:56px;
-	outline:none;
-	border:none;
-	margin:0 0 25px;
-	height:48px;
-	background-color:rgba(255,255,255,0);
-	border:solid 1px rgba(255,255,255,0.3);
+	border:solid 1px #2a343d;
 }
 .contactusform input[type="email"]:focus,
 .contactusform input[type="text"]:focus,
-.contactusform textarea:focus,
-.contactusform select:focus{
+.contactusform textarea:focus{
 	background-color:rgba(255,255,255,0.1);
-	border:solid 1px rgba(255,255,255,0.5);
+	border:solid 1px #4a5966;
 }
 .contactusform textarea{
 	height:195px;
@@ -2947,7 +2928,7 @@ h1,h2,h3,h4,h5,h6{
 	margin:0;
 	list-style:none;
 	overflow:hidden;
-	font:16px/20px 'Montserrat', Arial, Helvetica, sans-serif;
+	font:14px/20px 'Montserrat', Arial, Helvetica, sans-serif;
 }
 .address-nav li{
 	position:relative;
@@ -2986,7 +2967,7 @@ h1,h2,h3,h4,h5,h6{
 	font-size:14px;
 	padding:30px 10px 15px;
 	text-align:center;
-	background-color:#2a343d!important;
+	background-color:#4a5966!important;
 	font-weight:normal;
 }
 .footer-copyright a{color:#fff;}
@@ -4521,7 +4502,7 @@ h1,h2,h3,h4,h5,h6{
 	font-size:28px;
 	line-height:30px;
 	text-transform:uppercase;
-	color:#010101;	
+	color:#2a343d;	
 }
 .kf_heading_1 span,
 .kf_heading_2 span
@@ -5116,7 +5097,7 @@ ul.kode-tickets-title{
 	line-height:40px;
 	transform:rotate(45deg);
 	position:absolute;
-	background-color:#2a343d!important;
+	background-color:#4a5966!important;
 	top:-20px;
 	left:0px;
 	right:0px;
@@ -6733,7 +6714,7 @@ ul.kode-tickets-title{
 	font-weight:600;	
 }
 .kf_new_conf_btn_link{
-	float:left;
+	
 	width:50%;
 	position:relative;
 	text-align:right;	

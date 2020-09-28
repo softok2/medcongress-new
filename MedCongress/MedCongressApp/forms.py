@@ -40,7 +40,7 @@ class PerfilUserForm(forms.ModelForm):
     queryset=Pais.objects.all().order_by('denominacion')) 
     class Meta:
         model=PerfilUsuario
-        fields=['pais','ciudad','estado','cel_profecional','categoria','genero','ponente']
+        fields=['pais','ciudad','estado','cel_profecional','categoria','genero','is_ponente']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

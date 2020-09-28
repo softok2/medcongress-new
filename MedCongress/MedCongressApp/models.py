@@ -1,5 +1,6 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.core.files.storage import FileSystemStorage
+from django.db import models
 
 # Create your models here.
 
@@ -19,7 +20,7 @@ class CategoriaUsuario(models.Model):
 ##### Tabla País #####
 
 class Pais(models.Model):
-    denominacion= models.CharField(max_length=20)
+    denominacion= models.CharField(max_length=50)
 
     class Meta:
         verbose_name='pais'
@@ -48,15 +49,23 @@ class Genero(models.Model):
 class PerfilUsuario(models.Model):
     ciudad=models.CharField(max_length=50)
     estado=models.CharField(max_length=50)
-    ponente=models.BooleanField()
+    is_ponente=models.BooleanField()
+    path=models.CharField(max_length=50, help_text='campo para identificarlo por la URL')
     cel_profecional=models.CharField(max_length=50)
-    foto=models.ImageField(upload_to='img')
+    foto=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='usuarios' )
     activation_key = models.CharField(max_length=40,blank=True, null=True)
     key_expires = models.DateTimeField(blank=True, null=True)
     usuario=models.OneToOneField(User, on_delete=models.CASCADE)
     categoria=models.ForeignKey(CategoriaUsuario,on_delete=models.DO_NOTHING)
     pais=models.ForeignKey(Pais,on_delete=models.DO_NOTHING)
     genero=models.ForeignKey(Genero,on_delete=models.DO_NOTHING)
+
+    class Meta:
+        verbose_name='Perfil usuario'
+        verbose_name_plural='Perfil de usuarios'
+
+    def __str__(self):
+        return self.usuario.first_name
 
 
 #### Tabla Tipo de Congresos que hay ######
@@ -92,7 +101,8 @@ class EspecialidadCongreso(models.Model):
 class AvalCongreso(models.Model):
     nombre=models.CharField(max_length=50)
     detalle=models.TextField(null=True,blank=True)
-    logo=models.ImageField(upload_to='img')
+    logo=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='patrocinadores' )
+    url= models.CharField(max_length=250)
 
     class Meta:
         verbose_name='aval del congreso'
@@ -105,6 +115,7 @@ class AvalCongreso(models.Model):
 
 class CategoriaPagoCongreso(models.Model):
     nombre=models.CharField(max_length=50)
+    path=models.CharField(max_length=50, help_text='campo para identificarlo por la URL')
     detalle=models.TextField(null=True,blank=True)
 
     class Meta:
@@ -117,20 +128,21 @@ class CategoriaPagoCongreso(models.Model):
 #### Tabla Congresos #######
 
 class Congreso(models.Model):
-    titulo=models.CharField(max_length=50)
-    imagen=models.ImageField(upload_to='img')
+    titulo=models.CharField(max_length=250)
+    imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso' )
     detalle=models.TextField(null=True,blank=True)
     precio=models.IntegerField()
+    path=models.CharField(max_length=50, help_text='campo para identificarlo por la URL')
     lugar=models.CharField(max_length=50)
-    fecha_inicio=models.DateTimeField(null=True)
+    fecha_inicio=models.DateTimeField()
     created=models.DateTimeField(auto_now_add=True)
     updated=models.DateTimeField(null=True, blank=True)
     published=models.BooleanField()
     t_congreso=models.ForeignKey(TipoCongreso,on_delete=models.DO_NOTHING)
     especialidad=models.ForeignKey(EspecialidadCongreso,on_delete=models.DO_NOTHING,null=True)
-    user = models.ManyToManyField(User, through='RelCongresoUser')
-    aval = models.ManyToManyField(AvalCongreso, through='RelCongresoAval')
-    categoria_pago = models.ManyToManyField(CategoriaPagoCongreso, through='RelCongresoCategoriaPago')
+    user = models.ManyToManyField(PerfilUsuario, through='RelCongresoUser',related_name='congreso_perfilusuario')
+    aval = models.ManyToManyField(AvalCongreso, through='RelCongresoAval',related_name='congreso_patrosinador')
+    categoria_pago = models.ManyToManyField(CategoriaPagoCongreso, through='RelCongresoCategoriaPago',related_name='congreso_cat_pago')
 
     class Meta:
         verbose_name='congreso'
@@ -142,10 +154,16 @@ class Congreso(models.Model):
 ##### Tabla pivote Congreso- Usuario #####
 
 class RelCongresoUser(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(PerfilUsuario, on_delete=models.CASCADE)
     congreso = models.ForeignKey(Congreso, on_delete=models.CASCADE)
-    categoria_pago = models.ForeignKey(CategoriaPagoCongreso, on_delete=models.CASCADE,null=True)
+    categoria_pago = models.ForeignKey(CategoriaPagoCongreso, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return '%s->%s->%s'%(self.user.first_name, self.congreso.titulo, self.categoria_pago.nombre)
+
+    class Meta:
+        unique_together = (('user','congreso'),)
 
 ##### Tabla pivote Congreso- Avales #####
 
@@ -154,50 +172,60 @@ class RelCongresoAval(models.Model):
     congreso = models.ForeignKey(Congreso, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        verbose_name='relacion congreso - aval'
+        verbose_name_plural='relaciones congreso - aval'
+        unique_together = (('aval','congreso'),)
+
+    def __str__(self):
+        return 'Relación del congreso %s con el patrocinador %s'%(self.congreso.titulo,self.aval.nombre)
+
 ##### Tabla pivote Congreso- Categorias de Pagos #####
 
 class RelCongresoCategoriaPago(models.Model):
     categoria = models.ForeignKey(CategoriaPagoCongreso, on_delete=models.CASCADE)
     congreso = models.ForeignKey(Congreso, on_delete=models.CASCADE)
     precio=models.FloatField()
+    moneda=models.CharField(max_length=3)
     created_at = models.DateTimeField(auto_now_add=True)
     class Meta:
         verbose_name='Relación Congreso - Categoría de Pago'
         verbose_name_plural='Relaciones Congreso - Categoría de Pago'
+        unique_together = (('categoria','congreso','moneda'),)
 
     def __str__(self):
-        return 'Relación entre el Congreso '+ self.congreso.titulo +' y la Categoría de Pago '+ self.categoria.nombre
+        return 'Relación entre el Congreso %s y la Categoría de Pago %s'%(self.congreso.titulo , self.categoria.nombre)
 
 ##### Tabla  Ponente  #####
 
 class Ponente(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(PerfilUsuario, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     class Meta:
         verbose_name='ponente'
         verbose_name_plural='ponentes'
 
     def __str__(self):
-        return self.user.first_name +' '+self.user.last_name
+        return self.user.usuario.first_name +' '+self.user.usuario.last_name
 
 #### Tabla Ponencia #######
 
 class Ponencia(models.Model):
-    titulo=models.CharField(max_length=50)
+    titulo=models.CharField(max_length=250)
     duracion=models.CharField(max_length=250)
     detalle=models.TextField(null=True,blank=True)
-    imagen=models.ImageField(upload_to='img',null=True,blank=True)
+    cod_video=models.CharField(max_length=10)
+    imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='ponencias')
     fecha_inicio=models.DateTimeField()
+    path=models.CharField(max_length=50, help_text='campo para identificarlo por la URL')
     lugar=models.CharField(max_length=250)
     created=models.DateTimeField(auto_now_add=True)
     updated=models.DateTimeField(null=True, blank=True)
     published=models.BooleanField()
     congreso=models.ForeignKey(Congreso,on_delete=models.DO_NOTHING)
-    ponente = models.ManyToManyField(Ponente, through='RelPonenciaPonente')
+    ponente = models.ManyToManyField(Ponente, through='RelPonenciaPonente',related_name='ponencia_ponente')
     votacion = models.ManyToManyField(User, through='RelPonenciaVotacion')
     
-    
-
     class Meta:
         verbose_name='ponencia'
         verbose_name_plural='ponencias'
@@ -213,6 +241,14 @@ class RelPonenciaPonente(models.Model):
     ponencia = models.ForeignKey(Ponencia, on_delete=models.DO_NOTHING)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        verbose_name='Relación Ponente- Ponencia'
+        verbose_name_plural='Relaciones Ponente - Ponencia'
+        unique_together = (('ponencia','ponente'),)
+
+    def __str__(self):
+        return 'Relación entre la ponencia %s  y el ponente %s ' %(self.ponencia.titulo, self.ponente.user.usuario.first_name)
+
 ##### Tabla pivote Ponencia - Votacion  #####
 
 class RelPonenciaVotacion(models.Model):
@@ -221,14 +257,24 @@ class RelPonenciaVotacion(models.Model):
     votacion=models.IntegerField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        verbose_name='votación ponencia - usuario'
+        verbose_name_plural='votaciones ponencia - usuario'
+        unique_together = (('user','ponencia'),)
+
+    def __str__(self):
+        return ' Votación de la ponencia %s por el usuario %s' %(self.ponencia.titulo, self.user.first_name)
+
 
 #### Tabla Taller #######
 
 class Taller(models.Model):
-    titulo=models.CharField(max_length=50)
+    titulo=models.CharField(max_length=250)
     duracion=models.CharField(max_length=250)
     precio=models.IntegerField()
     fecha_inicio=models.DateTimeField()
+    path=models.CharField(max_length=50, help_text='campo para identificarlo por la URL')
+    imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='talleres',blank=True, null=True )
     lugar=models.CharField(max_length=250)
     created=models.DateTimeField(auto_now_add=True)
     updated=models.DateTimeField(null=True, blank=True)
@@ -254,6 +300,14 @@ class RelTallerPonente(models.Model):
     taller = models.ForeignKey(Taller, on_delete=models.DO_NOTHING)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        verbose_name='Relación Ponente- Taller'
+        verbose_name_plural='Relaciones Ponente - Taller'
+        unique_together = (('ponente','taller'),)
+
+    def __str__(self):
+        return 'Relación entre la taller %s  y el ponente %s ' %(self.taller.titulo, self.ponente.user.first_name)
+
 ##### Tabla pivote Ponencia - Votacion  #####
 
 class RelTallerVotacion(models.Model):
@@ -262,5 +316,11 @@ class RelTallerVotacion(models.Model):
     votacion=models.IntegerField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        verbose_name='votación taller - usuario'
+        verbose_name_plural='votaciones taller - usuario'
+        unique_together = (('user','taller'),)
 
 
+    def __str__(self):
+        return ' Votación del taller %s por el usuario %s' %(self.taller.titulo, self.user.first_name)
