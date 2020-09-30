@@ -157,7 +157,11 @@ class RelCongresoUser(models.Model):
     user = models.ForeignKey(PerfilUsuario, on_delete=models.CASCADE)
     congreso = models.ForeignKey(Congreso, on_delete=models.CASCADE)
     categoria_pago = models.ForeignKey(CategoriaPagoCongreso, on_delete=models.CASCADE)
+    id_transaccion=models.CharField(max_length=20)
+    num_autorizacion_transaccion=models.CharField(max_length=6)
+    num_tarjeta_tranzaccion=models.CharField(max_length=16)
     created_at = models.DateTimeField(auto_now_add=True)
+
 
     def __str__(self):
         return '%s->%s->%s'%(self.user.first_name, self.congreso.titulo, self.categoria_pago.nombre)

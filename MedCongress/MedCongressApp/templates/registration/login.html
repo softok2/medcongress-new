@@ -1,5 +1,8 @@
 {% extends "MedCongressApp/base.html"%}
 {% load static %}
+{% block titulo %}
+Login
+{%endblock%}
 {% block contenido %}
 
 <div class="kode-event-time" >
@@ -29,7 +32,7 @@
                                 <p>Your account doesn't have access to this page. To proceed,
                                     please login with an account that has access.</p>
                                 {% else %}
-                                <p>Please login to see this page.</p>
+                                <p>Por favor debe loguearse para ver esta página.</p>
                                 {% endif %}
                                 {% endif %}
                                 <input type="text" placeholder="Usuario" name="username">

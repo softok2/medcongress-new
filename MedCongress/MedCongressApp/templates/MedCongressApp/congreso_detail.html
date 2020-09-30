@@ -103,7 +103,12 @@
 
                                                     <div class="kf_new_conf_btn_link">
                                                         <a href="#">{{pon.duracion}}</a>
-                                                        <a href="#"><i class="fa fa-play"></i>Ver video</a>
+                                                        {%if permiso %}
+                                                        <a href="{% url 'View_ponencia'%}">
+                                                            {%else %}
+                                                        <a href="#">
+                                                            {%endif%}
+                                                        <i class="fa fa-play"></i>Ver video</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -117,7 +122,7 @@
                                 </div>
 
                                 {%else%}
-                                <span> No un programa establecido aún </span>
+                                <span> No hay un programa establecido aún </span>
                                 {%endif%}
                             </div>
                         </div>
@@ -132,7 +137,7 @@
 			<div class="container">
 				<div class="kf_heading_1">
                     <h2>Ponentes</h2>
-                    <span>Ipsum dolor sit amet, consectetuer adipiscing elit consectetuer</span>
+                    <span>Ponentes de este congreso</span>
                 </div>
 				<div class="row">
 					<div id="kode-speaker-causel" class="owl-carousel">
@@ -201,11 +206,9 @@
                         </div>
 
                         <div class="kode-price-footer">
-                            {% if user.is_authenticated %}
-                            <a href="">Comprar</a>
-                            {%else%}
-                            <a href="{% url 'login' %}">Comprar</a>
-                            {%endif%}
+                            
+                            <a href=" {%url 'Pagar_congreso' congreso.path categoria_pago.categoria.path categoria_pago.moneda %}">Comprar</a>
+                           
                         </div>
                     </div>
                 </div>

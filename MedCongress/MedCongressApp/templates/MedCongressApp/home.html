@@ -89,7 +89,7 @@ Inicio
 						<div class="col-md-3 col-sm-6 col-xs-6">
 							<strong class="icons-wrap"><i class="fa fa-users"></i></strong>
 							<div class="kf_counter">
-								<strong class="counter"> {{ponentes}}</strong>
+								<strong class="counter"> {{ponentes|length}}</strong>
 								<span>Ponentes</span>
 							</div>
 						</div>
@@ -97,7 +97,7 @@ Inicio
 						<div class="col-md-3 col-sm-6 col-xs-6">
 							<strong class="icons-wrap"><i class="fa fa-files-o"></i></strong>
 							<div class="kf_counter">
-								<strong class="counter"> {{especialidades}}</strong>
+								<strong class="counter"> {{especialidades|length}}</strong>
 								<span>Especialidades</span>
 							</div>
 						</div>
@@ -105,7 +105,7 @@ Inicio
 						<div class="col-md-3 col-sm-6 col-xs-6">
 							<strong class="icons-wrap"><i class="fa fa-hand-paper-o"></i></strong>
 							<div class="kf_counter">
-								<strong class="counter"> {{afiliados}}</strong>
+								<strong class="counter"> {{afiliados|length}}</strong>
 								<span>Afiliados</span>
 							</div>
 						</div>
@@ -237,12 +237,13 @@ Inicio
 				<div class="row">
 					<div id="kode-speaker-causel" class="owl-carousel">
 
+						{% for ponente in ponentes%}
 						<div class="kode-newspeaker">
 							<div class="speaker-photo">
-								<img src="{% static 'MedCongressApp/extra-images/img07.jpg'%}" alt="">
+								<img src="{% static '/'  %}{{ponente.user.foto}}" alt="">
 							</div>
 							<div class="new-ourspeaker">
-								<h3>Jonathan Doe / <span>Speaker</span></h3>
+								<h3>{{ponente.user.usuario.first_name}} {{ponente.user.usuario.last_name}} / <span>Ponente</span></h3>
 								<ul class="newpseaker-media">
 									<li><a href="#"><i class="fa fa-facebook"></i></a></li>
 									<li><a href="#"><i class="fa fa-twitter"></i></a></li>
@@ -252,8 +253,8 @@ Inicio
 								</ul>
 							</div>
 							<div class="new-ourspeaker over-state">
-								<h3>Jonathan Doe / <span>Speaker</span></h3>
-								<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem.</p>
+								<h3>{{ponente.user.usuario.first_name}} {{ponente.user.usuario.last_name}} / <span>Ponente</span></h3>
+								<p>Categoría: {{ponente.user.categoria.nombre}}</p>
 								<ul class="newpseaker-media">
 									<li><a href="#"><i class="fa fa-facebook"></i></a></li>
 									<li><a href="#"><i class="fa fa-twitter"></i></a></li>
@@ -264,90 +265,9 @@ Inicio
 							</div>
 							<!-- kode-new speaker over state End -->
 						</div>
-
-						<div class="kode-newspeaker">
-							<div class="speaker-photo">
-								<img src="{% static 'MedCongressApp/extra-images/img08.jpg'%}" alt="">
-							</div>
-							<div class="new-ourspeaker">
-								<h3>Jonathan Doe / <span>Speaker</span></h3>
-								<ul class="newpseaker-media">
-									<li><a href="#"><i class="fa fa-facebook"></i></a></li>
-									<li><a href="#"><i class="fa fa-twitter"></i></a></li>
-									<li><a href="#"><i class="fa fa-linkedin"></i></a></li>
-									<li><a href="#"><i class="fa fa-pinterest-p"></i></a></li>
-									<li><a href="#"><i class="fa fa-life-ring"></i></a></li>
-								</ul>
-							</div>
-							<div class="new-ourspeaker over-state">
-								<h3>Jonathan Doe / <span>Speaker</span></h3>
-								<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem.</p>
-								<ul class="newpseaker-media">
-									<li><a href="#"><i class="fa fa-facebook"></i></a></li>
-									<li><a href="#"><i class="fa fa-twitter"></i></a></li>
-									<li><a href="#"><i class="fa fa-linkedin"></i></a></li>
-									<li><a href="#"><i class="fa fa-pinterest-p"></i></a></li>
-									<li><a href="#"><i class="fa fa-life-ring"></i></a></li>
-								</ul>
-							</div>
-							<!-- kode-new speaker over state End -->
-						</div>
-
-						<div class="kode-newspeaker">
-							<div class="speaker-photo">
-								<img src="{% static 'MedCongressApp/extra-images/img09.jpg'%}" alt="">
-							</div>
-							<div class="new-ourspeaker">
-								<h3>Jonathan Doe / <span>Speaker</span></h3>
-								<ul class="newpseaker-media">
-									<li><a href="#"><i class="fa fa-facebook"></i></a></li>
-									<li><a href="#"><i class="fa fa-twitter"></i></a></li>
-									<li><a href="#"><i class="fa fa-linkedin"></i></a></li>
-									<li><a href="#"><i class="fa fa-pinterest-p"></i></a></li>
-									<li><a href="#"><i class="fa fa-life-ring"></i></a></li>
-								</ul>
-							</div>
-							<div class="new-ourspeaker over-state">
-								<h3>Jonathan Doe / <span>Speaker</span></h3>
-								<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem.</p>
-								<ul class="newpseaker-media">
-									<li><a href="#"><i class="fa fa-facebook"></i></a></li>
-									<li><a href="#"><i class="fa fa-twitter"></i></a></li>
-									<li><a href="#"><i class="fa fa-linkedin"></i></a></li>
-									<li><a href="#"><i class="fa fa-pinterest-p"></i></a></li>
-									<li><a href="#"><i class="fa fa-life-ring"></i></a></li>
-								</ul>
-							</div>
-							<!-- kode-new speaker over state End -->
-						</div>
-
-						<div class="kode-newspeaker">
-							<div class="speaker-photo">
-								<img src="{% static 'MedCongressApp/extra-images/img07.jpg'%}" alt="">
-							</div>
-							<div class="new-ourspeaker">
-								<h3>Jonathan Doe / <span>Speaker</span></h3>
-								<ul class="newpseaker-media">
-									<li><a href="#"><i class="fa fa-facebook"></i></a></li>
-									<li><a href="#"><i class="fa fa-twitter"></i></a></li>
-									<li><a href="#"><i class="fa fa-linkedin"></i></a></li>
-									<li><a href="#"><i class="fa fa-pinterest-p"></i></a></li>
-									<li><a href="#"><i class="fa fa-life-ring"></i></a></li>
-								</ul>
-							</div>
-							<div class="new-ourspeaker over-state">
-								<h3>Jonathan Doe / <span>Speaker</span></h3>
-								<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem.</p>
-								<ul class="newpseaker-media">
-									<li><a href="#"><i class="fa fa-facebook"></i></a></li>
-									<li><a href="#"><i class="fa fa-twitter"></i></a></li>
-									<li><a href="#"><i class="fa fa-linkedin"></i></a></li>
-									<li><a href="#"><i class="fa fa-pinterest-p"></i></a></li>
-									<li><a href="#"><i class="fa fa-life-ring"></i></a></li>
-								</ul>
-							</div>
-							<!-- kode-new speaker over state End -->
-						</div>
+						{%endfor%}
+						
+						
 
 					</div>
 				</div>

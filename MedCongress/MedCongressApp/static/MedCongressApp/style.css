@@ -1970,6 +1970,7 @@ h1,h2,h3,h4,h5,h6{
 .contactusform input[type="email"],
 .contactusform input[type="text"],
 .contactusform input[type="password"],
+.contactusform select,
 .contactusform textarea{
 	position:relative;
 	display:block;
