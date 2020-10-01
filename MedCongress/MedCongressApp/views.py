@@ -1,6 +1,6 @@
 import json
 from collections import namedtuple
-from datetime import date
+from datetime import date,datetime
 
 import requests
 from django.contrib import auth
@@ -36,7 +36,7 @@ class Home(TemplateView):
         context['especialidades'] = EspecialidadCongreso.objects.all()
         context['afiliados'] = User.objects.all()
         context['congresos']= Congreso.objects.all().order_by('fecha_inicio')
-        
+        context['nuevo_congreso'] = Congreso.objects.filter(fecha_inicio__gt=datetime.now()).first()
         return context
 
 ##### Listar Congresos #####
@@ -47,7 +47,16 @@ class CongresoListView(ListView):
     context_object_name='congreso_list'
     paginate_by = 9
 
-    
+    def post(self, request, **kwargs):
+        self.object_list = self.get_queryset()
+        especialidades=EspecialidadCongreso.objects.filter(nombre__icontains=request.POST["especialidad"])
+        id=[]
+        for especialidad in especialidades:
+            id.append(especialidad.pk)
+        print(id)
+        congreso=Congreso.objects.filter(especialidad__in=id)
+        return self.render_to_response(self.get_context_data(object_list=congreso))
+
     # def get_context_data(self, **kwargs):
     #     context = super(CongresoListView, self).get_context_data(**kwargs)
     #     context['pager_url'] = '%sall' % self.request.path
@@ -97,16 +106,21 @@ class CongresoDetail(TemplateView):
             pon=Ponente.objects.filter(ponencia_ponente__in=id).distinct()
            
             context['ponentes_congreso']=pon
-            print(context['ponentes_congreso'])
-            pagos = RelCongresoUser.objects.filter(user=self.request.user.pk, congreso=congreso.pk).order_by('precio')
             cat_pago=RelCongresoCategoriaPago.objects.filter(congreso=congreso.pk)
-           
+            if self.request.user.is_authenticated :
+                user_perfil=PerfilUsuario.objects.filter(usuario=self.request.user.pk).first()
+                pagos = RelCongresoUser.objects.filter(user=user_perfil.pk, congreso=congreso.pk).order_by('precio')
+                
+                
+            
+                
+                if pagos.exists():
+                    context['permiso'] = True
+                else: 
+                    context['permiso'] = False                                                                  
+            else:
+                context['permiso'] = False  
             context['categorias_pago']=cat_pago
-            if pagos.exists():
-                context['permiso'] = True
-            else: 
-                context['permiso'] = False                                                                  
-
         return context
 
 ##### Formulario Tarjeta Pagar Congreso #####
@@ -165,7 +179,7 @@ class CongresoCardForm(TemplateView):
             congreso=Congreso.objects.filter(path=self.kwargs.get('path_congreso')).first()
             categoria=CategoriaPagoCongreso.objects.filter(path=self.kwargs.get('path_categoria')).first()
             user_perfil=PerfilUsuario.objects.filter(usuario=self.request.user.pk).first()
-            print(user_perfil)
+            
             pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],num_autorizacion_transaccion=response_dic['authorization'],num_tarjeta_tranzaccion=response_dic['card']['card_number'])
 
             pagar_congreso.save()
@@ -232,3 +246,17 @@ class ViewError404(TemplateView):
 
 class ViewPonencia(TemplateView):
     template_name= 'MedCongressApp/view_ponencia.html' 
+
+##### Autocompletar Especialidades #####
+
+def EspecialdiadesAutocomplete(request):
+    if request.is_ajax():
+        query = request.GET.get("term", "")
+        especialidades = EspecialidadCongreso.objects.filter(nombre__icontains=query)
+        results = []
+        for especialidad in especialidades:
+            place_json = especialidad.nombre
+            results.append(place_json)
+        data = json.dumps(results)
+    mimetype = "application/json"
+    return HttpResponse(data, mimetype)

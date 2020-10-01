@@ -1022,7 +1022,7 @@ h1,h2,h3,h4,h5,h6{
 .kode-event-time{
 	position:relative;
 	overflow:hidden;
-	background:url(/medcongreshtml/images/Slide1.png) no-repeat 50% 0;
+	
 	background-size:cover;
 	float:left;
 	width:100%;
@@ -1178,7 +1178,8 @@ h1,h2,h3,h4,h5,h6{
 	margin:0 0;
 	font:italic 600 16px/19px 'Montserrat', Arial, Helvetica, sans-serif;
 }
-.subscribe-form input[type='email']{
+.subscribe-form input[type='email'],
+.subscribe-form input[type='text']{
 	float:left;
 	width:100%;
 	border:1px solid #fff;
@@ -2739,7 +2740,7 @@ h1,h2,h3,h4,h5,h6{
     border: 1px solid rgb(185, 193, 204);
     color: #666;
     height: 43px;
-    margin-bottom: 30px;
+   
     padding:8px 10px;
     width: 100%;
 }
@@ -6748,3 +6749,44 @@ ul.kode-tickets-title{
 		   New Conference Schedule Wrap Css End
 	  ==============================================================
 */
+.simply-countdown{
+	overflow:hidden;
+	display:table;
+	font-family:'Arial',sans-serif
+}
+.simply-countdown>.simply-section{
+	width:50px;
+	height:50px;
+	padding:50px;
+	display:-webkit-box;
+	display:-ms-flexbox;
+	display:flex;
+	-webkit-box-align:center;
+	-ms-flex-align:center;
+	align-items:center;
+	-webkit-box-pack:center;
+	-ms-flex-pack:center;
+	justify-content:center;
+	float:left;
+	margin:15px;
+	background:rgba(255, 255, 255, .1);
+	color:#fff;
+	}
+	
+	.simply-countdown>.simply-section .simply-amount,
+	.simply-countdown>.simply-section .simply-word
+	{display:block;
+	text-align:center}
+
+	.simply-amount{
+		font-size: 35px;
+		line-height: 39px;
+		font-weight: bold;
+		padding: 0 20px;
+	}	
+	
+	.simply-word{
+		margin: 10px 0 0;
+font-size: 14px;
+text-transform: uppercase;
+	}

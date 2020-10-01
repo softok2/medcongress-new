@@ -141,9 +141,10 @@
                 </div>
 				<div class="row">
 					<div id="kode-speaker-causel" class="owl-carousel">
-                    
+                      {% if ponentes_congreso %}
 						
                         {%for ponente in ponentes_congreso %}
+                      
 						<div class="kode-newspeaker">
 							<div class="speaker-photo">
 								<img src="{% static '/'%}{{ponente.user.foto}}" alt="">
@@ -171,8 +172,11 @@
 							</div>
 							<!-- kode-new speaker over state End -->
                         </div>
-                        {%endfor%}
                         
+                        {%endfor%}
+                        {%else%}
+                        <span> No hay un ponentes  aún </span>
+                        {%endif%}
 						
                         
 					</div>
@@ -195,6 +199,7 @@
             <h2>Precios</h2>
         </div>
         <div class="row">
+            {%if categorias_pago %}
             {%for categoria_pago in categorias_pago %}
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                 <div class="price-box-frame first-box">
@@ -215,7 +220,9 @@
                 <!-- kode-price-box End -->
             </div>
             {%endfor%}
-
+            {%else%}
+            <span> No tiene establecido los precios aún </span>
+            {%endif%}
         </div>
     </div>
 </div>

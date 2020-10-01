@@ -4,7 +4,7 @@
 Inicio
 {%endblock%}
 {% block contenido %}
-<div class="kode-event-time">
+<div class="kode-event-time" style=" background:url({% static 'MedCongressApp/images/Slide1.png'%}) no-repeat 50% 0; ;">
 	<div class="container">
 		<div class="row">
 
@@ -14,31 +14,40 @@ Inicio
 
 				<div class="next-event-counter">
 					<h2>ENCUENTRA TU CONGRESO</h2>
-					<form class="subscribe-form" action="galeria.html">
-						<input type="email" placeholder="Buscar especialidad">
-						<input type="submit" value="BUSCAR" name="submit">
+					<form class="subscribe-form" method="POST" action="{% url 'List_congreso'%}">
+						{% csrf_token %}
+						<input type="text" name="especialidad" id="especialidad"  placeholder="Buscar especialidad">
+						<input type="submit"  name="submit">
 					</form>
+					{%if nuevo_congreso%}
 					<h2>Siguiente evento:</h2>
-					<ul class="countdown">
-						<li>
-							<span class="days">60</span>
-							<p class="days_ref">días</p>
-						</li>
-						<li>
-							<span class="hours">22</span>
-							<p class="hours_ref">horas</p>
-						</li>
-						<li>
-							<span class="minutes">58</span>
-							<p class="minutes_ref">minutos</p>
-						</li>
-						<li>
-							<span class="seconds last">23</span>
-							<p class="seconds_ref">segundos</p>
-						</li>
-					</ul>
-
-
+					<div id="countdown" class="simply-countdown"></div>
+					<div class="button-holder">
+										<a href="{%url 'View_congreso' nuevo_congreso.path%}" class="button">Más Información</a>
+									
+									</div>
+									{%else%}
+									<h2>Siguiente evento:</h2>
+							<ul class="countdown">
+								<li>
+									<span class="days">00</span>
+									<p class="days_ref">días</p>
+								</li>
+								<li>
+									<span class="hours">00</span>
+									<p class="hours_ref">horas</p>
+								</li>
+								<li>
+									<span class="minutes">00</span>
+									<p class="minutes_ref">minutos</p>
+								</li>
+								<li>
+									<span class="seconds last">00</span>
+									<p class="seconds_ref">segundos</p>
+								</li>
+							</ul>
+							<h4>No hay eventos próximos por el momento</h4>
+									{% endif%}
 				</div>
 			</div>
 		</div>
@@ -401,6 +410,55 @@ Inicio
 		</div>
 		<!--kode-event-contact-->
 	</div>
-
+	
 
 	{% endblock%}
+	{% block script%}
+<script src="{% static 'MedCongressApp/js/plugins/simplyCountdown/simplyCountdown.min.js'%}"></script>
+<link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
+<script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
+
+<script>
+simplyCountdown('#countdown', {
+            year: '{{nuevo_congreso.fecha_inicio|date:"Y"}}' , // required
+            month: '{{nuevo_congreso.fecha_inicio|date:"m"}}', // required
+            day: '{{nuevo_congreso.fecha_inicio|date:"d"}}', // required
+            hours: '{{nuevo_congreso.fecha_inicio|date:"h"}}', // Default is 0 [0-23] integer
+            minutes: '{{nuevo_congreso.fecha_inicio|date:"i"}}', // Default is 0 [0-59] integer
+            seconds: '{{fecha|date:"s"}}', // Default is 0 [0-59] integer
+            words: { //words displayed into the countdown
+                days: 'dia',
+                hours: 'hora',
+                minutes: 'minuto',
+                seconds: 'segundo',
+                pluralLetter: 's'
+            },
+            plural: true, //use plurals
+            inline: false, //set to true to get an inline basic countdown like : 24 days, 4 hours, 2 minutes, 5 seconds
+            inlineClass: 'simply-countdown-inline', //inline css span class in case of inline = true
+            // in case of inline set to false
+            enableUtc: true, //Use UTC as default
+            onEnd: function() { return; }, //Callback on countdown end, put your own function here
+            refresh: 1000, // default refresh every 1s
+            sectionClass: 'simply-section', //section css class
+            amountClass: 'simply-amount', // amount css class
+            wordClass: 'simply-word', // word css class
+            zeroPad: false,
+            countUp: false
+    });
+
+
+</script>
+<script>
+
+	$(function() {
+	  $("#especialidad").autocomplete({
+		source: "{% url 'Especialidades_autocomp'%}",
+		minLength: 2,
+	  });
+	});
+  
+  </script>
+  
+<!--GOOGLE MAP-->
+{%endblock%}

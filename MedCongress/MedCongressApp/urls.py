@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from .views import (Home,CongresoListView,CongresoDetail,CongresoCardForm,PerfilUserCreate,ViewError404,ViewPonencia)
+from .views import (Home,CongresoListView,CongresoDetail,CongresoCardForm,PerfilUserCreate,ViewError404,ViewPonencia,EspecialdiadesAutocomplete)
 
 urlpatterns = [
     
@@ -11,5 +11,6 @@ urlpatterns = [
     path('registrarse', PerfilUserCreate.as_view(), name='Registrarse'),
     path('view_ponencia', ViewPonencia.as_view(), name='View_ponencia'),
     path('error404', ViewError404.as_view(), name='Error404'),
+    path('especialidades_autocomp', EspecialdiadesAutocomplete , name='Especialidades_autocomp'),
   
 ]

@@ -37,6 +37,7 @@ Congresos
     <div class="container">
         <!--FIRST ROW START-->
         <div class="row">
+            {%if congreso_list %}
             {% for congreso in congreso_list %}
             <div class="col-md-4">
                 <!--KODE_EVENT_BLOG2 START-->
@@ -60,6 +61,9 @@ Congresos
                 <!--KODE_EVENT_BLOG2 START-->
             </div>
             {% endfor %}
+            {%else%}
+            <span>No encontro ningún Evento</span>
+            {%endif%}
             <!--COL-MD-4 END-->
             
         <!--THIRD ROW END-->
@@ -69,21 +73,29 @@ Congresos
                 <!---PAGINATIOn START-->
                 <div class="pag">
                     <ul class="pagination">
+                        {% if page_obj.has_previous %}
                         <li>
-                          <a href="#" aria-label="Previous">
+                          <a  href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
                             <span aria-hidden="true">Prev</span>
                           </a>
                         </li>
-                        <li><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
+                        
+                        {%endif%}
+                        {%if paginator.page_range|length > 1 %}
+                        {%for pagina  in  paginator.page_range %}
+                           
+                            <li>
+                            
+                                                       <a href="?page={{forloop.counter}}" >{{forloop.counter}}</a> </li>
+                       {%endfor%}
+                       {%endif%}
+                        {% if page_obj.has_next %}
                         <li>
-                          <a href="#" aria-label="Next">
+                          <a href="?page={{ page_obj.next_page_number }}" aria-label="Next">
                             <span aria-hidden="true">Next</span>
                           </a>
                         </li>
+                        {% endif %}
                     </ul>
                 </div>
                 <!--PAGINATION END-->
