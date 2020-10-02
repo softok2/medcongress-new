@@ -160,12 +160,11 @@ class CongresoCardForm(TemplateView):
                 "method" : "card",
                 "amount" : pago.precio,
                 "currency" : self.kwargs.get('moneda'),
-                "description" : "Pago del Congreso %s con la categoría %s" %(congreso.titulo, congreso.titulo),
+                "description" : "Pago del Congreso %s con la categoría %s" %(congreso.titulo, categoria.titulo),
                 "device_session_id" : request.POST["deviceIdHiddenFieldName"],
                 "customer" : {
                         "name" : self.request.user.first_name,
                         "last_name" : self.request.user.first_name,
-                       
                         "email" : self.request.user.email
                 }
             }
@@ -182,7 +181,9 @@ class CongresoCardForm(TemplateView):
             pagar_congreso.save()
             return HttpResponseRedirect(reverse('View_congreso', kwargs={'path':self.kwargs.get('path_congreso')}))
         else:
-             return HttpResponse(response.json()['error_code'])
+             #return HttpResponse(response.json()['error_code'])
+             return HttpResponse(response.content)
+
         return HttpResponse(response.json())
         
        
@@ -215,7 +216,7 @@ class PerfilUserCreate(CreateView):
         perfiluser = form['perfiluser'].save(commit=False)
         us.first_name=user.first_name
         us.last_name=user.last_name
-        us.is_active = False
+        us.is_active = True
         group= Group.objects.get(name='Cliente')
         us.groups.add(group)
         us.save()
