@@ -35,8 +35,8 @@ class Home(TemplateView):
         context['ponentes'] = Ponente.objects.all()
         context['especialidades'] = EspecialidadCongreso.objects.all()
         context['afiliados'] = User.objects.all()
-        context['congresos']= Congreso.objects.all().order_by('fecha_inicio')
-        context['nuevo_congreso'] = Congreso.objects.filter(fecha_inicio__gt=datetime.now()).first()
+        context['congresos']= Congreso.objects.filter(published=True).order_by('fecha_inicio')
+        context['nuevo_congreso'] = Congreso.objects.filter(fecha_inicio__gt=datetime.now(),published=True).first()
         return context
 
 ##### Listar Congresos #####
@@ -54,7 +54,7 @@ class CongresoListView(ListView):
         for especialidad in especialidades:
             id.append(especialidad.pk)
         print(id)
-        congreso=Congreso.objects.filter(especialidad__in=id)
+        congreso=Congreso.objects.filter(especialidad__in=id,published=True)
         return self.render_to_response(self.get_context_data(object_list=congreso))
 
     # def get_context_data(self, **kwargs):
@@ -110,9 +110,6 @@ class CongresoDetail(TemplateView):
             if self.request.user.is_authenticated :
                 user_perfil=PerfilUsuario.objects.filter(usuario=self.request.user.pk).first()
                 pagos = RelCongresoUser.objects.filter(user=user_perfil.pk, congreso=congreso.pk).order_by('precio')
-                
-                
-            
                 
                 if pagos.exists():
                     context['permiso'] = True
