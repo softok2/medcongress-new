@@ -4,7 +4,7 @@
 Inicio
 {%endblock%}
 {% block contenido %}
-<div class="kode-event-time" style=" background:url({% static '/'%}{{nuevo_congreso.imagen}}) no-repeat 50% 0; ">
+<div class="kode-event-time" style=" background:url({% static '/'%}{{nuevo_congreso.imagencongreso_set.all.0.imagen}}) no-repeat 50% 0; ">
 	<div class="container">
 		<div class="row">
 
@@ -98,7 +98,7 @@ Inicio
 						<div class="col-md-3 col-sm-6 col-xs-6">
 							<strong class="icons-wrap"><i class="fa fa-users"></i></strong>
 							<div class="kf_counter">
-								<strong class="counter"> {{ponentes|length}}</strong>
+								<strong class="counter"> {{ponentes|length|add:datos_ini.ponentes}}</strong>
 								<span>Ponentes</span>
 							</div>
 						</div>
@@ -106,7 +106,7 @@ Inicio
 						<div class="col-md-3 col-sm-6 col-xs-6">
 							<strong class="icons-wrap"><i class="fa fa-files-o"></i></strong>
 							<div class="kf_counter">
-								<strong class="counter"> {{especialidades|length}}</strong>
+								<strong class="counter"> {{especialidades}}</strong>
 								<span>Especialidades</span>
 							</div>
 						</div>
@@ -114,7 +114,7 @@ Inicio
 						<div class="col-md-3 col-sm-6 col-xs-6">
 							<strong class="icons-wrap"><i class="fa fa-hand-paper-o"></i></strong>
 							<div class="kf_counter">
-								<strong class="counter"> {{afiliados|length}}</strong>
+								<strong class="counter"> {{afiliados}}</strong>
 								<span>Afiliados</span>
 							</div>
 						</div>
@@ -122,7 +122,7 @@ Inicio
 						<div class="col-md-3 col-sm-6 col-xs-6">
 							<strong class="icons-wrap"><i class="fa fa-globe"></i></strong>
 							<div class="kf_counter">
-								<strong class="counter"> 11</strong>
+								<strong class="counter"> {{datos_ini.ponentes}}</strong>
 								<span>Países</span>
 							</div>
 						</div>
@@ -137,9 +137,9 @@ Inicio
 		<!-- Kode-Over view holder End -->
 		<div class="kode-slider">
 			<ul class="bxslider-banner">
-				{% for congreso in congresos%}
+				{% for congreso in congresos %}
 				<li>
-					<img src="{% static '/'%}{{congreso.imagen}}" alt="" />
+					<img src="{% static '/'%}{{congreso.imagencongreso_set.all.0.imagen}}" alt="" />
 					<div class="kode-content">
 						<div class="container">
 							<div class="row">
@@ -454,7 +454,7 @@ simplyCountdown('#countdown', {
 	$(function() {
 	  $("#especialidad").autocomplete({
 		source: "{% url 'Especialidades_autocomp'%}",
-		minLength: 2,
+		minLength: 3,
 	  });
 	});
   

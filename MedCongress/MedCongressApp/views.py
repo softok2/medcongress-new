@@ -1,7 +1,7 @@
 import json
 from collections import namedtuple
 from datetime import date,datetime
-
+import openpay
 import requests
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
@@ -20,7 +20,7 @@ from requests.auth import HTTPBasicAuth
 from .forms import UserPerfilUser
 from .models import (CategoriaPagoCongreso, Congreso, EspecialidadCongreso,
                      Ponencia, Ponente, RelCongresoCategoriaPago,
-                     RelCongresoUser,RelPonenciaPonente,PerfilUsuario)
+                     RelCongresoUser,RelPonenciaPonente,PerfilUsuario,ImagenCongreso,Taller,RelTalleresCategoriaPago,RelTallerUser,DatosIniciales)
 from .pager import Pager
 
 # Create your views here.
@@ -32,11 +32,14 @@ class Home(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        datos_in=DatosIniciales.objects.all().first()
+        context['datos_ini']=datos_in
         context['ponentes'] = Ponente.objects.all()
-        context['especialidades'] = EspecialidadCongreso.objects.all()
-        context['afiliados'] = User.objects.all()
+        context['especialidades'] = len(EspecialidadCongreso.objects.all())+datos_in.especialidades
+        context['afiliados'] = len(User.objects.all())+datos_in.afiliados
         context['congresos']= Congreso.objects.filter(published=True).order_by('fecha_inicio')
         context['nuevo_congreso'] = Congreso.objects.filter(fecha_inicio__gt=datetime.now(),published=True).first()
+        
         return context
 
 ##### Listar Congresos #####
@@ -107,8 +110,25 @@ class CongresoDetail(TemplateView):
            
             context['ponentes_congreso']=pon
             cat_pago=RelCongresoCategoriaPago.objects.filter(congreso=congreso.pk)
+            context['cat_ponente']=RelPonenciaPonente.objects.all()
+
+            user_perfil=PerfilUsuario.objects.filter(usuario=self.request.user.pk).first()
+            talleres=Taller.objects.filter(congreso=congreso.pk)
+            ver=[]
+            for taller in talleres:
+                if RelTalleresCategoriaPago.objects.filter(taller=taller).exists():
+                    cat_pa=RelTalleresCategoriaPago.objects.filter(taller=taller)
+                else:
+                    cat_pa=True
+                
+                if RelTallerUser.objects.filter(user=user_perfil.pk, taller=taller.pk).exists():
+                    ver.append([taller])
+                else:
+                    ver.append([taller,cat_pa])  
+            context['talleres']=ver
+            
             if self.request.user.is_authenticated :
-                user_perfil=PerfilUsuario.objects.filter(usuario=self.request.user.pk).first()
+               
                 pagos = RelCongresoUser.objects.filter(user=user_perfil.pk, congreso=congreso.pk).order_by('precio')
                 
                 if pagos.exists():
@@ -133,15 +153,18 @@ class CongresoCardForm(TemplateView):
             context['categoria']= CategoriaPagoCongreso.objects.filter(path=self.kwargs.get('path_categoria')).first()
             context['congreso']= Congreso.objects.filter(path=self.kwargs.get('path_congreso')).first()
             context['pago']= RelCongresoCategoriaPago.objects.filter(congreso=context['congreso'].pk,categoria=context['categoria'].pk,moneda=self.kwargs.get('moneda')).first()
+            context['now']=datetime.now()
+            context['list']=[0,1,2,3,4,5,6,7,8,9,10]
         return context
 
     def get(self, request, **kwargs):
         if CategoriaPagoCongreso.objects.filter(path=self.kwargs.get('path_categoria')).exists() and Congreso.objects.filter(path=self.kwargs.get('path_congreso')).exists():
             congreso= Congreso.objects.filter(path=self.kwargs.get('path_congreso')).first()
             categoria= CategoriaPagoCongreso.objects.filter(path=self.kwargs.get('path_categoria')).first()
+            user_perfil=PerfilUsuario.objects.filter(usuario=self.request.user.pk).first()
             if not RelCongresoCategoriaPago.objects.filter(congreso=congreso.pk,categoria=categoria,moneda=self.kwargs.get('moneda')).exists():
                 return   HttpResponseRedirect(reverse('Error404'))
-            if RelCongresoUser.objects.filter(user=self.request.user.pk,congreso=congreso.pk).exists() : 
+            if RelCongresoUser.objects.filter(user=user_perfil.pk,congreso=congreso.pk).exists() : 
                 return HttpResponseRedirect(reverse('View_congreso', kwargs={'path':self.kwargs.get('path_congreso')}))
 
             return self.render_to_response(self.get_context_data())
@@ -153,39 +176,153 @@ class CongresoCardForm(TemplateView):
         congreso= Congreso.objects.filter(path=self.kwargs.get('path_congreso')).first()
         categoria= CategoriaPagoCongreso.objects.filter(path=self.kwargs.get('path_categoria')).first()
         pago= RelCongresoCategoriaPago.objects.get(congreso=congreso.pk,categoria=categoria.pk,moneda=self.kwargs.get('moneda'))
- 
-        url='https://sandbox-api.openpay.mx/v1/muq0plqu35rnjyo7sf2v/charges'
-        params= {
-                "source_id" : request.POST["token_id"],
-                "method" : "card",
-                "amount" : pago.precio,
-                "currency" : self.kwargs.get('moneda'),
-                "description" : "Pago del Congreso %s con la categoría %s" %(congreso.titulo, categoria.titulo),
-                "device_session_id" : request.POST["deviceIdHiddenFieldName"],
-                "customer" : {
-                        "name" : self.request.user.first_name,
-                        "last_name" : self.request.user.first_name,
-                        "email" : self.request.user.email
+        user_perfil=PerfilUsuario.objects.filter(usuario=self.request.user.pk).first()
+        pagar_efectivo= self.request.POST['pagar_efectivo']
+        print(pagar_efectivo)
+        if pagar_efectivo == '0':
+            url='https://sandbox-api.openpay.mx/v1/muq0plqu35rnjyo7sf2v/charges'
+            params= {
+                    "source_id" : request.POST["token_id"],
+                    "method" : "card",
+                    "amount" : pago.precio,
+                    "currency" : self.kwargs.get('moneda'),
+                    "description" : "Pago del Congreso %s con la categoría %s" %(congreso.titulo, categoria.nombre),
+                    "device_session_id" : request.POST["deviceIdHiddenFieldName"],
+                    "customer" : {
+                            "name" : self.request.user.first_name,
+                            "last_name" : self.request.user.first_name,
+                            "email" : self.request.user.email
+                    }
                 }
-            }
-        headers={'Content-type': 'application/json'}
-        response=requests.post(url=url,auth=HTTPBasicAuth('sk_d07c7b6ffeeb4acaaa15babdaac4101e:', ''),data=json.dumps(params),headers=headers)
-        response_dic=response.json()
-        if response.status_code==200:
-            congreso=Congreso.objects.filter(path=self.kwargs.get('path_congreso')).first()
-            categoria=CategoriaPagoCongreso.objects.filter(path=self.kwargs.get('path_categoria')).first()
-            user_perfil=PerfilUsuario.objects.filter(usuario=self.request.user.pk).first()
-            
-            pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],num_autorizacion_transaccion=response_dic['authorization'],num_tarjeta_tranzaccion=response_dic['card']['card_number'])
+            headers={'Content-type': 'application/json'}
+            response=requests.post(url=url,auth=HTTPBasicAuth('sk_d07c7b6ffeeb4acaaa15babdaac4101e:', ''),data=json.dumps(params),headers=headers)
+            response_dic=response.json()
+            if response.status_code==200:
+                congreso=Congreso.objects.filter(path=self.kwargs.get('path_congreso')).first()
+                categoria=CategoriaPagoCongreso.objects.filter(path=self.kwargs.get('path_categoria')).first()
+                
+                
+                pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],num_autorizacion_transaccion=response_dic['authorization'],num_tarjeta_tranzaccion=response_dic['card']['card_number'])
 
-            pagar_congreso.save()
-            return HttpResponseRedirect(reverse('View_congreso', kwargs={'path':self.kwargs.get('path_congreso')}))
-        else:
-             #return HttpResponse(response.json()['error_code'])
-             return HttpResponse(response.content)
+                pagar_congreso.save()
+                return HttpResponseRedirect(reverse('View_congreso', kwargs={'path':self.kwargs.get('path_congreso')}))
+            else:
+                #return HttpResponse(response.json()['error_code'])
+                return HttpResponse(response.content)
 
-        return HttpResponse(response.json())
+            return HttpResponse(response.json())
         
+        else:
+            openpay.api_key = "sk_d07c7b6ffeeb4acaaa15babdaac4101e"
+            openpay.verify_ssl_certs = False
+            openpay.merchant_id = "muq0plqu35rnjyo7sf2v"
+            
+            if user_perfil.id_openpay is not None:
+                customer = openpay.Customer.retrieve(user_perfil.id_openpay)
+            else:
+                customer = openpay.Customer.create(
+                    name=self.request.user.first_name,
+                    email=self.request.user.email,
+                    last_name=self.request.user.last_name,    
+                )
+                user_perfil.id_openpay=customer.id
+                user_perfil.save()
+
+            ver=customer.charges.create( method="store", amount=pago.precio, description="Pagar el congreso %s"%(congreso.titulo), capture=False)
+            pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,is_pagado=False)
+            pagar_congreso.save()
+            return HttpResponseRedirect('https://sandbox-dashboard.openpay.mx/paynet-pdf/muq0plqu35rnjyo7sf2v/%s'%(ver.payment_method.reference) )
+
+        
+     ##### Formulario Tarjeta Pagar Congreso #####
+
+@method_decorator(login_required,name='dispatch')
+class TallerCardForm(TemplateView):
+   
+    template_name= 'MedCongressApp/tarjeta.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs) 
+        if CategoriaPagoCongreso.objects.filter(path=self.kwargs.get('path_categoria')).exists() and Taller.objects.filter(path=self.kwargs.get('path_taller')).exists():
+            context['categoria']= CategoriaPagoCongreso.objects.filter(path=self.kwargs.get('path_categoria')).first()
+            context['taller']= Taller.objects.filter(path=self.kwargs.get('path_taller')).first()
+            context['pago']= RelTalleresCategoriaPago.objects.filter(taller=context['taller'].pk,categoria=context['categoria'].pk,moneda=self.kwargs.get('moneda')).first()
+            context['now']=datetime.now()
+            context['list']=[0,1,2,3,4,5,6,7,8,9,10]
+        return context
+
+    def get(self, request, **kwargs):
+        if CategoriaPagoCongreso.objects.filter(path=self.kwargs.get('path_categoria')).exists() and Taller.objects.filter(path=self.kwargs.get('path_taller')).exists():
+            taller= Taller.objects.filter(path=self.kwargs.get('path_taller')).first()
+            categoria= CategoriaPagoCongreso.objects.filter(path=self.kwargs.get('path_categoria')).first()
+            user_perfil=PerfilUsuario.objects.filter(usuario=self.request.user.pk).first()
+            if not RelTalleresCategoriaPago.objects.filter(taller=taller.pk,categoria=categoria,moneda=self.kwargs.get('moneda')).exists():
+                return   HttpResponseRedirect(reverse('Error404'))
+            if RelTallerUser.objects.filter(user=user_perfil.pk,taller=taller.pk).exists() : 
+                return HttpResponseRedirect(reverse('Home'))
+
+            return self.render_to_response(self.get_context_data())
+        else:
+             return   HttpResponseRedirect(reverse('Error404'))
+
+    def post(self, request, **kwargs):
+        
+        taller= Taller.objects.filter(path=self.kwargs.get('path_taller')).first()
+        categoria= CategoriaPagoCongreso.objects.filter(path=self.kwargs.get('path_categoria')).first()
+        pago= RelTalleresCategoriaPago.objects.get(taller=taller.pk,categoria=categoria.pk,moneda=self.kwargs.get('moneda'))
+        user_perfil=PerfilUsuario.objects.filter(usuario=self.request.user.pk).first()
+        pagar_efectivo= self.request.POST['pagar_efectivo']
+        if pagar_efectivo == '0':
+            url='https://sandbox-api.openpay.mx/v1/muq0plqu35rnjyo7sf2v/charges'
+            params= {
+                    "source_id" : request.POST["token_id"],
+                    "method" : "card",
+                    "amount" : pago.precio,
+                    "currency" : self.kwargs.get('moneda'),
+                    "description" : "Pago del Taller %s con la categoría %s" %(taller.titulo, categoria.titulo),
+                    "device_session_id" : request.POST["deviceIdHiddenFieldName"],
+                    "customer" : {
+                            "name" : self.request.user.first_name,
+                            "last_name" : self.request.user.first_name,
+                            "email" : self.request.user.email
+                    }
+                }
+            headers={'Content-type': 'application/json'}
+            response=requests.post(url=url,auth=HTTPBasicAuth('sk_d07c7b6ffeeb4acaaa15babdaac4101e:', ''),data=json.dumps(params),headers=headers)
+            response_dic=response.json()
+            if response.status_code==200:
+                pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dic['id'],num_autorizacion_transaccion=response_dic['authorization'],num_tarjeta_tranzaccion=response_dic['card']['card_number'])
+                pagar_congreso.save()
+                return HttpResponseRedirect(reverse('Home'))
+            else:
+                #return HttpResponse(response.json()['error_code'])
+                return HttpResponse(response.content)
+
+            return HttpResponse(response.json())
+        
+        else:
+            openpay.api_key = "sk_d07c7b6ffeeb4acaaa15babdaac4101e"
+            openpay.verify_ssl_certs = False
+            openpay.merchant_id = "muq0plqu35rnjyo7sf2v"
+            
+            if user_perfil.id_openpay is not None:
+                customer = openpay.Customer.retrieve(user_perfil.id_openpay)
+            else:
+                customer = openpay.Customer.create(
+                    name=self.request.user.first_name,
+                    email=self.request.user.email,
+                    last_name=self.request.user.last_name,    
+                )
+                user_perfil.id_openpay=customer.id
+                user_perfil.save()
+
+            ver=customer.charges.create( method="store", amount=pago.precio, description="Pagar el taller %s"%(taller.titulo), capture=False)
+            pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,is_pagado=False)
+            pagar_congreso.save()
+            return HttpResponseRedirect('https://sandbox-dashboard.openpay.mx/paynet-pdf/muq0plqu35rnjyo7sf2v/%s'%(ver.payment_method.reference) )
+
+        
+           
        
 
     # def get_context_data(self, **kwargs):
@@ -258,3 +395,17 @@ def EspecialdiadesAutocomplete(request):
         data = json.dumps(results)
     mimetype = "application/json"
     return HttpResponse(data, mimetype)
+
+##### Pagar en efectivo #####
+@method_decorator(login_required,name='dispatch')
+class PagarEfectivo(TemplateView):
+
+    template_name= 'MedCongressApp/tarjeta.html'
+
+
+    def post(self, request, **kwargs):
+        congreso= Congreso.objects.filter(path=self.kwargs.get('path_congreso')).first()
+        categoria= CategoriaPagoCongreso.objects.filter(path=self.kwargs.get('path_categoria')).first()
+        pago= RelCongresoCategoriaPago.objects.get(congreso=congreso.pk,categoria=categoria.pk,moneda=self.kwargs.get('moneda'))
+        user_perfil=PerfilUsuario.objects.filter(usuario=self.request.user.pk).first()
+        

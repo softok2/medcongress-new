@@ -7,9 +7,11 @@
 
 
 <div class="kode-slider">
+
     <ul class="bxslider-banner">
+        {% for imagen in congreso.imagencongreso_set.all%}
         <li>
-            <img src="{% static '/'%}{{congreso.imagen}}" alt="" />
+            <img src="{% static '/'%}{{imagen.imagen}}" alt="" />
             <div class="kode-content">
                 <div class="container">
                     <div class="row">
@@ -25,7 +27,7 @@
                 </div>
             </div>
         </li>
-
+        {%endfor%}
     </ul>
 
 </div>
@@ -39,7 +41,7 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="schedule-banner">
-                    <img src="images/backevento.png" alt="">
+                    <img src="{% static '/'%}{{congreso.imagen_seg}}" alt="" />
                     <div class="scheduletabs">
                         <!-- Nav tabs -->
                         {% if fecha_ponencias %}
@@ -95,21 +97,16 @@
                                                         <div class="kf_new_conf_orgnizr_name">
                                                             <h6>{{ponente.user.usuario.first_name}}
                                                                 {{ponente.user.usuario.last_name}}</h6>
-                                                            <span>Ponente</span>
+                                                            <span> Ponente</span>
+                                                            <p>
+                                                                {{ponente.user.detalle}}
+                                                            </p>
                                                         </div>
                                                     </div>
 
                                                     {%endfor%}
 
-                                                    <div class="kf_new_conf_btn_link">
-                                                        <a href="#">{{pon.duracion}}</a>
-                                                        {%if permiso %}
-                                                        <a href="{% url 'View_ponencia'%}">
-                                                            {%else %}
-                                                        <a href="#">
-                                                            {%endif%}
-                                                        <i class="fa fa-play"></i>Ver video</a>
-                                                    </div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -134,158 +131,59 @@
 
 
         <div class="kode-speaker-frame">
-			<div class="container">
-				<div class="kf_heading_1">
+            <div class="container">
+                <div class="kf_heading_1">
                     <h2>Ponentes</h2>
                     <span>Ponentes de este congreso</span>
                 </div>
-				<div class="row">
-					<div id="kode-speaker-causel" class="owl-carousel">
-                      {% if ponentes_congreso %}
-						
+                <div class="row">
+                    <div id="kode-speaker-causel" class="owl-carousel">
+                        {% if ponentes_congreso %}
+
                         {%for ponente in ponentes_congreso %}
-                      
-						<div class="kode-newspeaker">
-							<div class="speaker-photo">
-								<img src="{% static '/'%}{{ponente.user.foto}}" alt="">
-							</div>
-							<div class="new-ourspeaker">
-								<h3>{{ponente.user.usuario.first_name}} {{ponente.user.usuario.last_name}}/ <span>Ponente</span></h3>
-								<ul class="newpseaker-media">
-									<li><a href="#"><i class="fa fa-facebook"></i></a></li>
-									<li><a href="#"><i class="fa fa-twitter"></i></a></li>
-									<li><a href="#"><i class="fa fa-linkedin"></i></a></li>
-									<li><a href="#"><i class="fa fa-pinterest-p"></i></a></li>
-									<li><a href="#"><i class="fa fa-life-ring"></i></a></li>
-								</ul>
-							</div>
-							<div class="new-ourspeaker over-state">
-								<h3>{{ponente.user.usuario.first_name}} {{ponente.user.usuario.last_name}}/ <span>Ponente</span></h3>
-								<p>Categoría: {{ponente.user.categoria.nombre}}</p>
-								<ul class="newpseaker-media">
-									<li><a href="#"><i class="fa fa-facebook"></i></a></li>
-									<li><a href="#"><i class="fa fa-twitter"></i></a></li>
-									<li><a href="#"><i class="fa fa-linkedin"></i></a></li>
-									<li><a href="#"><i class="fa fa-pinterest-p"></i></a></li>
-									<li><a href="#"><i class="fa fa-life-ring"></i></a></li>
-								</ul>
-							</div>
-							<!-- kode-new speaker over state End -->
+
+                        <div class="kode-newspeaker">
+                            <div class="speaker-photo">
+                                <img src="{% static '/'%}{{ponente.user.foto}}" alt="">
+                            </div>
+                            <div class="new-ourspeaker">
+                                <h3>{{ponente.user.usuario.first_name}} {{ponente.user.usuario.last_name}}/
+                                    <span>Ponente</span></h3>
+                                <ul class="newpseaker-media">
+                                    <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-pinterest-p"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-life-ring"></i></a></li>
+                                </ul>
+                            </div>
+                            <div class="new-ourspeaker over-state">
+                                <h3>{{ponente.user.usuario.first_name}} {{ponente.user.usuario.last_name}}/
+                                    <span>Ponente</span></h3>
+                                <p>Categoría: {{ponente.user.categoria.nombre}}</p>
+                                <ul class="newpseaker-media">
+                                    <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-pinterest-p"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-life-ring"></i></a></li>
+                                </ul>
+                            </div>
+                            <!-- kode-new speaker over state End -->
                         </div>
-                        
+
                         {%endfor%}
                         {%else%}
-                        <span> No hay un ponentes  aún </span>
+                        <span> No hay un ponentes aún </span>
                         {%endif%}
-						
-                        
-					</div>
-				</div>
-			</div>
-		</div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<!-- kode-speaker-frame End -->
-<div class="kf_heading_1">
-    <div class="container">
-                    <h2>Talleres</h2>
-                    <span>Si desea tener una constancia del taller es necesario que compre su boleto de acreditación al evento.</span>
-                    <p style="text-align:left"><b>Preferente:</b> Socio AMCIC, Miembro  Médica Sur, Estudiante, Miembro IMSS, Miembro ISSSTE-, Institutos Nacionales de Salud, Hospitales de alta especialidad, Hospitales del Sector Público, Universidad Westhill.</p>
-       
-                <div class="kf_faq_accordian">
-                    <div class="kf_accordian_hdg accordion" id="section3">
-                        <h5>Taller #1: Buenas prácticas clínicas GCP E6 R2</h5>
-                    </div>
-                    <div class="kf_accordian_des">
-                        <div class="kode-our-pricing">
-                            <div class="row">
-                                <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
-                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                    <div class="price-box-frame first-box">
-                                        <div class="kode-price-box">
-                                            <div class="kode-price-header">
-                                                <strong>Profesional  General</strong>
-                                                <h3>$ 464.00 MXN</h3>
-                                                <strong>IVA incluído</strong>
-                                            </div>
-                                            
-                                            <div class="kode-price-footer">
-                                                <a href="#">Comprar</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- kode-price-box End -->
-                                </div>
-                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                    <div class="price-box-frame">
-                                        <div class="kode-price-box">
-                                            <div class="kode-price-header">
-                                                <strong>Preferente:</strong>
-                                                <h3>$ 348.00 MXN</h3>
-                                                <strong>IVA incluído</strong>
-                                            </div>
-                                            
-                                            <div class="kode-price-footer">
-                                                <a href="#">Comprar</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- kode-price-box End -->
-                                </div>		
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="kf_faq_accordian">
-                    <div class="kf_accordian_hdg accordion" id="section2">
-                        <h5>Taller #2: Regulación de investigación clínica y salud</h5>
-                    </div>
-                    <div class="kf_accordian_des">
-                        <div class="kode-our-pricing">
-                            <div class="row">
-                                <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
-                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                    <div class="price-box-frame first-box">
-                                        <div class="kode-price-box">
-                                            <div class="kode-price-header">
-                                                <strong>Profesional  General</strong>
-                                                <h3>$ 464.00 MXN</h3>
-                                                <strong>IVA incluído</strong>
-                                            </div>
-                                            
-                                            <div class="kode-price-footer">
-                                                <a href="#">Comprar</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- kode-price-box End -->
-                                </div>
-                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                    <div class="price-box-frame">
-                                        <div class="kode-price-box">
-                                            <div class="kode-price-header">
-                                                <strong>Preferente:</strong>
-                                                <h3>$ 348.00 MXN</h3>
-                                                <strong>IVA incluído</strong>
-                                            </div>
-                                            
-                                            <div class="kode-price-footer">
-                                                <a href="#">Comprar</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- kode-price-box End -->
-                                </div>		
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                
-                
-                
-    </div>
 
 <div class="kode-our-pricing" id="pagos">
     <div class="container">
@@ -294,25 +192,31 @@
             <h2>Usted ya pago este congreso</h2>
         </div>
         {%else%}
-        <div class="kf_heading_1">
-            <h2>Precios</h2>
+        <div class="kf_heading_1" style="text-align:center">
+            <h2>TIPOS DE BOLETOS</h2>
+            <p style="text-align:left"><b>Preferente:</b> Socio AMCIC, Miembro Médica Sur, Estudiante, Miembro IMSS,
+                Miembro ISSSTE-, Institutos Nacionales de Salud, Hospitales de alta especialidad, Hospitales del Sector
+                Público, Universidad Westhill.</p>
         </div>
         <div class="row">
             {%if categorias_pago %}
             {%for categoria_pago in categorias_pago %}
+            <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                 <div class="price-box-frame first-box">
                     <div class="kode-price-box">
                         <div class="kode-price-header">
                             <strong>{{categoria_pago.categoria.nombre}}</strong>
-                            <h3>${{categoria_pago.precio}}</h3>
-                            <strong>{{categoria_pago.moneda}}</strong>
+                            <h3>${{categoria_pago.precio}} {{categoria_pago.moneda}}</h3>
+                            
+                            <strong>IVA incluído</strong>
                         </div>
 
                         <div class="kode-price-footer">
-                            
-                            <a href=" {%url 'Pagar_congreso' congreso.path categoria_pago.categoria.path categoria_pago.moneda %}">Comprar</a>
-                           
+
+                            <a
+                                href=" {%url 'Pagar_congreso' congreso.path categoria_pago.categoria.path categoria_pago.moneda %}">Comprar</a>
+
                         </div>
                     </div>
                 </div>
@@ -323,41 +227,107 @@
             <span> No tiene establecido los precios aún </span>
             {%endif%}
         </div>
+        {%endif%}
     </div>
 </div>
-{%endif%}
 
-<div class="kode-event-contact">
+<!-- Talleres-->
+<div class="kf_heading_1">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="kf_heading_3">
-                    <h2>Contacto</h2>
-                    <span>Ipsum dolor sit amet, consectetuer adipiscing elit consectetuer</span>
+        <h2>Talleres</h2>
+        <span>Si desea tener una constancia del taller es necesario que compre su boleto de acreditación al
+            evento.</span>
+        <p style="text-align:left"><b>Preferente:</b> Socio AMCIC, Miembro Médica Sur, Estudiante, Miembro IMSS, Miembro
+            ISSSTE-, Institutos Nacionales de Salud, Hospitales de alta especialidad, Hospitales del Sector Público,
+            Universidad Westhill.</p>
+
+
+        {% for taller in talleres %}
+        <div class="kf_faq_accordian">
+            <div class="kf_accordian_hdg accordion" id="section3">
+                <h5>Taller #{{forloop.counter}}: {{taller.0.titulo}}</h5>
+            </div>
+            <div class="kf_accordian_des">
+                <div class="kode-our-pricing">
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
+                        {% if taller.1 %}
+                        {%if taller.1 is True%}
+                        <span> No tiene establecido los precios aún </span>
+                        {%else%}
+                        {%for cat in taller.1%}
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <div class="price-box-frame first-box">
+                                <div class="kode-price-box">
+                                    <div class="kode-price-header">
+                                        <strong>{{cat.categoria.nombre}}</strong>
+                                        <h3>$ {{cat.precio}} {{cat.moneda}}</h3>
+                                        <strong>IVA incluído</strong>
+                                    </div>
+
+                                    <div class="kode-price-footer">
+                                        <a
+                                href=" {%url 'Pagar_taller' taller.0.path cat.categoria.path cat.moneda %}">Comprar</a>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- kode-price-box End -->
+                        </div>
+                        {%endfor%}
+                        {%endif%}
+                        {%else%}
+                        
+                            <span>Usted ya pago este congreso</span>
+                        
+                        {%endif%}
+                       
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <form class="contactusform" action="#">
+        {%endfor%}
 
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                            <input type="text" placeholder="Nombre">
-                            <input type="email" placeholder="Email">
-                            <input type="text" placeholder="Asunto">
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                            <textarea name="Message" cols="30" rows="10" placeholder="Mensaje"></textarea>
-                            <input type="submit" value="Enviar" name="submit">
-                        </div>
+
+
+
+
+    </div>
+
+
+
+
+    <div class="kode-event-contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="kf_heading_3">
+                        <h2>Contacto</h2>
+                        <span>Un simposio extraordinario en un año extraordinario</span>
                     </div>
-                </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <form class="contactusform" action="#">
+
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" placeholder="Nombre">
+                                <input type="email" placeholder="Email">
+                                <input type="text" placeholder="Asunto">
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <textarea name="Message" cols="30" rows="10" placeholder="Mensaje"></textarea>
+                                <input type="submit" value="Enviar" name="submit">
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<!--kode-event-contact-->
+    <!--kode-event-contact-->
 </div>
 
 {%endblock%}

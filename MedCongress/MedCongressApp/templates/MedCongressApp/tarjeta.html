@@ -1,7 +1,7 @@
 {% extends "MedCongressApp/base.html"%}
 {% load static %}
 {% block titulo %}
-Registrarse
+Efectuar Pago
 {%endblock%}
 {% block contenido %}
 
@@ -9,100 +9,146 @@ Registrarse
     <div class="kode-event-contact">
         <div class="container">
             <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="kf_heading_3" style="margin-top: 70px;">
+                <div class="kf_heading_3" style="margin-top: 70px;">
+
+                    <div class=" col-sm-7 ">
+
+
                         <h2>Tarjeta de crédito o débito</h2>
 
+                        <form action="" method="POST" id="payment-form" class="contactusform">
+                            {% csrf_token %}
+                            <input type="hidden" name="token_id" id="token_id">
+                            <input type="hidden" name="pagar_efectivo" value="0" id="token_id">
+                            <div class="kf_heading_3">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <span>Tarjetas de crédito</span>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <span>Tarjetas de débito</span>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <img src="{% static 'MedCongressApp/images/cards1.png'%}">
+                                </div>
+
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <img src="{% static 'MedCongressApp/images/cards2.png'%}">
+                                </div>
+
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Nombre del titular</label>
+                                        <input type="text" placeholder="Como aparece en la tarjeta" autocomplete="off"
+                                            data-openpay-card="holder_name" name="nombre">
+                                    </div>
+
+                                </div>
+                                <div class=" col-sm-6">
+                                    <div class="form-group">
+                                        <label>Número de tarjeta</label>
+                                        <input type="text" id="numero" autocomplete="off"  maxlength="19"
+                                            name="numero">
+                                            <input type="hidden" id="numero1" autocomplete="off" data-openpay-card="card_number" maxlength="19"
+                                            name="numero1">
+                                            
+                                    </div>
+
+                                </div>
+
+
+
+                                <div class="col-sm-6 ">
+                                    <div class="form-group">
+                                        <label>Fecha de expiración</label>
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                                <select type="text" placeholder="Mes"
+                                                    data-openpay-card="expiration_month">
+                                                    <option value="01"> Ene</option>
+                                                    <option value="02"> Feb</option>
+                                                    <option value="03"> Mar</option>
+                                                    <option value="04"> Abr</option>
+                                                    <option value="05"> May</option>
+                                                    <option value="06"> Jun</option>
+                                                    <option value="07"> Jul</option>
+                                                    <option value="08"> Ago</option>
+                                                    <option value="09"> Sep</option>
+                                                    <option value="10"> Oct</option>
+                                                    <option value="11"> Nov</option>
+                                                    <option value="12"> Dic</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                                <select type="text" placeholder="Año"
+                                                    data-openpay-card="expiration_year">
+                                                  {% for x in list %}
+                                                <option value='{{ now|date:"y"|add:x }}'>{{ now|date:"Y"|add:x }}</option>
+                                                
+{%endfor%}
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class=" col-sm-6">
+                                    <div class="form-group">
+                                        <label>Código de seguridad</label>
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                                <input type="text" placeholder="3 dígitos" autocomplete="off"
+                                                    data-openpay-card="cvv2" name="cant"></div>
+
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                                <img src="{% static 'MedCongressApp/images/cvv.png'%}">
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class=" col-sm-6" style="margin-top: 50px;">
+                                    Transacciones realizadas vía: <img
+                                        src="{% static 'MedCongressApp/images/openpay.png'%}">
+                                </div>
+                                <div class=" col-sm-6 " style="margin-top: 50px;">
+                                    Tus pagos se realizan de forma segura con encriptación de 256 bits
+                                    <img src="{% static 'MedCongressApp/images/security.png'%}">
+                                </div>
+
+                                <div class="col-sm-6 " style="margin: 50px;">
+                                    <a class="button rght" id="pay-button">Pagar</a>
+                                </div>
+                            </div>
+                        </form>
                     </div>
+                    <div class=" col-sm-5 ">
+                        <h2>Pagar en Efectivo</h2> 
+
+<p class="">Pasos</p>
+                        <ol class="">
+                            <li class="">1. Seleccionar opción <b> Pagar en Efectivo</b> </li>
+                            <li class="">2. Guardar el documento con el código de barra generado </li>
+                            <li class="">3. Presentarse en cualquier tienda donde se pueda efectuar pagos en <b>OpenPay </b> </li>
+                        </ol>
+            <form action="" method="POST" target="_black">
+                {% csrf_token %}
+                <div class="col-sm-6 " style="margin: 50px;">
+                    <input type="hidden" name="pagar_efectivo" value="1" id="token_id">
+                    <button class="button rght" style="color: black;"  type="submit"  id="pay-button">Pagar en Efectivo</button>
                 </div>
-            </div>
-            <div class="row">
-                <div class=" col-sm-8 ">
-                    <form action="" method="POST" id="payment-form" class="contactusform">
-                        {% csrf_token %}
-                        <input type="hidden" name="token_id" id="token_id">
-                        <div class="kf_heading_3">
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                <span>Tarjetas de crédito</span>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                <span>Tarjetas de débito</span>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                <img src="{% static 'MedCongressApp/images/cards1.png'%}">
-                            </div>
+            </form>
 
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                <img src="{% static 'MedCongressApp/images/cards2.png'%}">
-                            </div>
-
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>Nombre del titular</label>
-                                    <input type="text" placeholder="Como aparece en la tarjeta" autocomplete="off"
-                                        data-openpay-card="holder_name" name="nombre">
-                                </div>
-
-                            </div>
-                            <div class=" col-sm-6">
-                                <div class="form-group">
-                                    <label>Número de tarjeta</label>
-                                    <input type="text" autocomplete="off" data-openpay-card="card_number" name="numero">
-                                </div>
-
-                            </div>
-
-
-
-                            <div class="col-sm-6 ">
-                                <div class="form-group">
-                                    <label>Fecha de expiración</label>
-                                    <div class="row">
-                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                            <input type="text" placeholder="Mes" data-openpay-card="expiration_month">
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                            <input type="text" placeholder="Año" data-openpay-card="expiration_year">
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class=" col-sm-6">
-                                <div class="form-group">
-                                    <label>Código de seguridad</label>
-                                    <div class="row">
-                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                            <input type="text" placeholder="3 dígitos" autocomplete="off"
-                                                data-openpay-card="cvv2" name="cant"></div>
-
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                            <img src="{% static 'MedCongressApp/images/cvv.png'%}">
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class=" col-sm-6" style="margin-top: 50px;">
-                                Transacciones realizadas vía: <img
-                                    src="{% static 'MedCongressApp/images/openpay.png'%}">
-                            </div>
-                            <div class=" col-sm-6 " style="margin-top: 50px;">
-                                Tus pagos se realizan de forma segura con encriptación de 256 bits
-                                <img src="{% static 'MedCongressApp/images/security.png'%}">
-                            </div>
-
-                            <div class="col-sm-6 " style="margin: 50px;">
-                                <a class="button rght" id="pay-button">Pagar</a>
-                            </div>
                         </div>
+                        
+
                 </div>
-                </form>
+                
+
             </div>
         </div>
         </body>
@@ -119,7 +165,22 @@ Registrarse
 
         <script type="text/javascript">
             $(document).ready(function () {
+                    $('#numero').keypress(function(){
+                        
+                       $('#numero1').val($('#numero').val().replace(/-/g,''));
 
+                        if( $(this).val().length == 4 || $(this).val().length ==9 || $(this).val().length ==14){
+                       
+                       $('#numero1').val($('#numero').val());
+                        $(this).val($(this).val()+'-');
+                        
+
+                        }
+                            
+                        //$(this).val()=$(this).val().replace(/(.{4})/g, '-').trim()
+  
+                    });
+                   
                 OpenPay.setId('muq0plqu35rnjyo7sf2v');
                 OpenPay.setApiKey('pk_0c7aea61d0ef4a4f8fdfbd674841981a');
                 OpenPay.setSandboxMode(true);
@@ -127,6 +188,7 @@ Registrarse
                 var deviceSessionId = OpenPay.deviceData.setup("payment-form", "deviceIdHiddenFieldName");
                 const csrftoken = getCookie('csrftoken');
                 $('#pay-button').on('click', function (event) {
+                    $('#numero').val($('#numero').val().replace('-',''));
                     event.preventDefault();
                     $("#pay-button").prop("disabled", true);
                     OpenPay.token.extractFormAndCreate('payment-form', sucess_callbak, error_callbak);
@@ -134,7 +196,6 @@ Registrarse
 
                 var sucess_callbak = function (response) {
                     var token_id = response.data.id;
-                    alert(token_id);
                     $('#token_id').val(token_id);
                     $('#payment-form').submit();
                 };

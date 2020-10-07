@@ -43,7 +43,7 @@ Congresos
                 <!--KODE_EVENT_BLOG2 START-->
                 <div class="kode-event-blog3">
                     <figure>
-                        <img src="{% static '/'%}{{congreso.imagen}}" alt=""/>
+                        <img src="{% static '/'%}{{congreso.imagencongreso_set.all.0.imagen}}" alt=""/>
                         <div class="kode-fig-capstion">
                             <a href="{% url 'View_congreso' congreso.path  %}">Conference Hall</a>
                             <p>Lorem ipsum</p>

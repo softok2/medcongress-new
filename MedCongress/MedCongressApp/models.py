@@ -49,6 +49,8 @@ class Genero(models.Model):
 class PerfilUsuario(models.Model):
     ciudad=models.CharField(max_length=50)
     estado=models.CharField(max_length=50)
+    id_openpay=models.CharField(max_length=20,null=True)
+    detalle=models.TextField(null=True,blank=True)
     is_ponente=models.BooleanField()
     path=models.CharField(max_length=50, help_text='campo para identificarlo por la URL')
     cel_profecional=models.CharField(max_length=50)
@@ -66,6 +68,12 @@ class PerfilUsuario(models.Model):
 
     def __str__(self):
         return self.usuario.first_name
+
+    def is_openpay(self):
+        if self.id_openpay :
+            return True
+        else:
+            return False
 
 
 #### Tabla Tipo de Congresos que hay ######
@@ -129,9 +137,7 @@ class CategoriaPagoCongreso(models.Model):
 
 class Congreso(models.Model):
     titulo=models.CharField(max_length=250)
-    imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso' )
-    detalle=models.TextField(null=True,blank=True)
-    precio=models.IntegerField()
+    imagen_seg=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso')
     path=models.CharField(max_length=50, help_text='campo para identificarlo por la URL')
     lugar=models.CharField(max_length=50)
     fecha_inicio=models.DateTimeField()
@@ -151,12 +157,30 @@ class Congreso(models.Model):
     def __str__(self):
         return self.titulo
 
+    # def get_imagen_by_order(self):   
+    #     if self.imagen_set.count():
+    #         return self.downloaditemsample_set.order_by('order')[0]
+
+##### Tabla Imagenes congreso #####
+
+class ImagenCongreso(models.Model):
+    imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso' ,verbose_name='imagen' )
+    congreso=models.ForeignKey(Congreso,on_delete=models.DO_NOTHING)
+
+    class Meta:
+        verbose_name='imagen de congreso'
+        verbose_name_plural='Imagenes de congreso'
+
+    def __str__(self):
+        return 'Imagen del congreso %s'%(self.congreso.titulo)
+
 ##### Tabla pivote Congreso- Usuario #####
 
 class RelCongresoUser(models.Model):
     user = models.ForeignKey(PerfilUsuario, on_delete=models.CASCADE)
     congreso = models.ForeignKey(Congreso, on_delete=models.CASCADE)
     categoria_pago = models.ForeignKey(CategoriaPagoCongreso, on_delete=models.CASCADE)
+    is_pagado=models.BooleanField(default=True)
     id_transaccion=models.CharField(max_length=20)
     num_autorizacion_transaccion=models.CharField(max_length=6)
     num_tarjeta_tranzaccion=models.CharField(max_length=16)
@@ -164,7 +188,7 @@ class RelCongresoUser(models.Model):
 
 
     def __str__(self):
-        return '%s->%s->%s'%(self.user.first_name, self.congreso.titulo, self.categoria_pago.nombre)
+        return '%s->%s->%s'%(self.user.usuario.first_name, self.congreso.titulo, self.categoria_pago.nombre)
 
     class Meta:
         unique_together = (('user','congreso'),)
@@ -200,10 +224,24 @@ class RelCongresoCategoriaPago(models.Model):
     def __str__(self):
         return 'Relación entre el Congreso %s y la Categoría de Pago %s'%(self.congreso.titulo , self.categoria.nombre)
 
+##### Tabla Categoria Ponente  #####
+
+class CategoriaPonente(models.Model):
+    nombre=models.CharField(max_length=50)
+    path=models.CharField(max_length=50, help_text='campo para identificarlo por la URL')
+    detalle=models.TextField(null=True,blank=True)
+   
+    class Meta:
+        verbose_name='categoria de ponente'
+        verbose_name_plural='categorias de los ponentes'
+
+    def __str__(self):
+        return 'Categoría %s'%(self.nombre)
+
 ##### Tabla  Ponente  #####
 
 class Ponente(models.Model):
-    user = models.OneToOneField(PerfilUsuario, on_delete=models.CASCADE)
+    user = models.OneToOneField(PerfilUsuario, on_delete=models.DO_NOTHING)
     created_at = models.DateTimeField(auto_now_add=True)
     class Meta:
         verbose_name='ponente'
@@ -243,6 +281,7 @@ class Ponencia(models.Model):
 class RelPonenciaPonente(models.Model):
     ponente = models.ForeignKey(Ponente, on_delete=models.DO_NOTHING)
     ponencia = models.ForeignKey(Ponencia, on_delete=models.DO_NOTHING)
+    categoria=models.ForeignKey(CategoriaPonente,on_delete=models.DO_NOTHING,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -286,7 +325,7 @@ class Taller(models.Model):
     congreso=models.ForeignKey(Congreso,on_delete=models.DO_NOTHING)
     ponente = models.ManyToManyField(Ponente, through='RelTallerPonente')
     votacion = models.ManyToManyField(User, through='RelTallerVotacion')
-    
+    categoria_pago = models.ManyToManyField(CategoriaPagoCongreso, through='RelTalleresCategoriaPago',related_name='talleres_cat_pago')
     
 
     class Meta:
@@ -297,7 +336,7 @@ class Taller(models.Model):
         return self.titulo
 
 
-##### Tabla pivote Ponencia - Ponente  #####
+##### Tabla pivote Taller - Ponente  #####
 
 class RelTallerPonente(models.Model):
     ponente = models.ForeignKey(Ponente, on_delete=models.DO_NOTHING)
@@ -312,7 +351,7 @@ class RelTallerPonente(models.Model):
     def __str__(self):
         return 'Relación entre la taller %s  y el ponente %s ' %(self.taller.titulo, self.ponente.user.first_name)
 
-##### Tabla pivote Ponencia - Votacion  #####
+##### Tabla pivote Taller - Votacion  #####
 
 class RelTallerVotacion(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
@@ -328,3 +367,49 @@ class RelTallerVotacion(models.Model):
 
     def __str__(self):
         return ' Votación del taller %s por el usuario %s' %(self.taller.titulo, self.user.first_name)
+
+##### Tabla pivote Talleres - Categorias de Pagos #####
+
+class RelTalleresCategoriaPago(models.Model):
+    categoria = models.ForeignKey(CategoriaPagoCongreso, on_delete=models.CASCADE)
+    taller = models.ForeignKey(Taller, on_delete=models.CASCADE)
+    precio=models.FloatField()
+    moneda=models.CharField(max_length=3)
+    created_at = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        verbose_name='Relación Taller - Categoría de Pago'
+        verbose_name_plural='Relaciones Talleres - Categoría de Pago'
+        unique_together = (('categoria','taller','moneda'),)
+
+    def __str__(self):
+        return 'Relación entre el Taller %s y la Categoría de Pago %s'%(self.taller.titulo , self.categoria.nombre)
+
+##### Tabla pivote Taller - Usuario #####
+
+class RelTallerUser(models.Model):
+    user = models.ForeignKey(PerfilUsuario, on_delete=models.CASCADE)
+    taller = models.ForeignKey(Taller, on_delete=models.CASCADE)
+    categoria_pago = models.ForeignKey(CategoriaPagoCongreso, on_delete=models.CASCADE)
+    is_pagado=models.BooleanField(default=True)
+    id_transaccion=models.CharField(max_length=20)
+    num_autorizacion_transaccion=models.CharField(max_length=6)
+    num_tarjeta_tranzaccion=models.CharField(max_length=16)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+    def __str__(self):
+        return '%s->%s->%s'%(self.user.usuario.first_name, self.taller.titulo, self.categoria_pago.nombre)
+
+    class Meta:
+        unique_together = (('user','taller'),)
+
+##### Tabla Datos Iniciales#####
+
+class DatosIniciales(models.Model):
+    ponentes= models.IntegerField(null=True,default=0)
+    ponencias= models.IntegerField(null=True,default=0)
+    eventos= models.IntegerField(null=True,default=0)
+    paises= models.IntegerField(null=True,default=0)
+    especialidades= models.IntegerField(null=True,default=0)
+    afiliados= models.IntegerField(null=True,default=0)
+    talleres= models.IntegerField(null=True,default=0)
