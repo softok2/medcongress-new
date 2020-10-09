@@ -190,9 +190,9 @@
 
 <div class="kode-our-pricing" id="pagos">
     <div class="container">
-        {%if permiso %}
+        {%if permiso.0 %}
         <div class="kf_heading_1">
-            <h2>Usted ya pago este congreso</h2>
+            <h2>{{permiso.1}}</h2>
         </div>
         {%else%}
         <div class="kf_heading_1" style="text-align:center">
@@ -280,7 +280,7 @@
                         {%endif%}
                         {%else%}
 
-                        <span>Usted ya pago este congreso</span>
+                        <span>{{taller.2 }}</span>
 
                         {%endif%}
 

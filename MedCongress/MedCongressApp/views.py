@@ -125,7 +125,10 @@ class CongresoDetail(TemplateView):
                     cat_pa=True
                 
                 if RelTallerUser.objects.filter(user=user_perfil.pk, taller=taller.pk).exists():
-                    ver.append([taller])
+                    if  RelTallerUser.objects.filter(user=user_perfil.pk, taller=taller.pk,is_pagado=True).exists():
+                        ver.append([taller,False,'Usted ya pagó este evento'])
+                    else:
+                        ver.append([taller,False,'Está pendiente el pago de este evento '])
                 else:
                     ver.append([taller,cat_pa])  
             context['talleres']=ver
@@ -135,7 +138,11 @@ class CongresoDetail(TemplateView):
                 pagos = RelCongresoUser.objects.filter(user=user_perfil.pk, congreso=congreso.pk).order_by('precio')
                 
                 if pagos.exists():
-                    context['permiso'] = True
+                    pagos_p = RelCongresoUser.objects.filter(user=user_perfil.pk, congreso=congreso.pk,is_pagado=True).order_by('precio') 
+                    if pagos_p.exists():
+                        context['permiso'] = [True,'Usted ya pagó este evento']
+                    else:
+                        context['permiso'] = [True,'Está pendiente el pago de este evento '] 
                 else: 
                     context['permiso'] = False                                                                  
             else:
@@ -260,11 +267,8 @@ class CongresoCardForm(TemplateView):
                 car=Cart(self.request)
                 car.clear() 
                 return HttpResponseRedirect('https://sandbox-dashboard.openpay.mx/paynet-pdf/muq0plqu35rnjyo7sf2v/%s'%(ver.payment_method.reference) )
-           
-               
-               
-        
-     ##### Formulario Tarjeta Pagar Congreso #####
+     
+##### Formulario Tarjeta Pagar Congreso #####
 
 @method_decorator(login_required,name='dispatch')
 class TallerCardForm(TemplateView):
