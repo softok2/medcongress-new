@@ -1,19 +1,21 @@
 <!DOCTYPE HTML>
 <html>
+
 <head>
 	<meta charset="utf-8">
 	{% load static %}
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>  {% block titulo %}
+	<title> {% block titulo %}
 		{%endblock%}
 	</title>
 	<!-- Bootstrap min css -->
 	<link rel="stylesheet" href="{% static 'MedCongressApp/css/bootstrap.min.css'%}" type="text/css" media="all">
+
 	<!-- bxSlider CSS file -->
 	<link href="{% static 'MedCongressApp/css/jquery.bxslider.css'%}" rel="stylesheet" />
 	<!-- Important Owl stylesheet -->
 	<link rel="stylesheet" href="{% static 'MedCongressApp/css/owl.carousel.css'%}">
-    <!-- Full Calender stylesheet -->
+	<!-- Full Calender stylesheet -->
 	<link rel="stylesheet" href="{% static 'MedCongressApp/css/fullcalendar.css'%}">
 	<!-- Typo css -->
 	<link rel="stylesheet" href="{% static 'MedCongressApp/css/typo.css'%}" type="text/css" media="all">
@@ -21,134 +23,246 @@
 	<link rel="stylesheet" href="{% static 'MedCongressApp/css/font-awesome.min.css'%}" type="text/css" media="all">
 	<!-- Ihover css -->
 	<link href="{% static 'MedCongressApp/css/ihover.css'%}" rel="stylesheet">
-    <!-- Widget css -->
+	<!-- Widget css -->
 	<link href="{% static 'MedCongressApp/css/widget.css'%}" rel="stylesheet">
-    <!-- Style css -->
+	<!-- Style css -->
 	<link rel="stylesheet" href="{% static 'MedCongressApp/style.css'%}" type="text/css" media="all">
 	<!--Side MENU-->
-    <link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery.sidr.dark.css'%}" type="text/css" media="all">
+	<link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery.sidr.dark.css'%}" type="text/css" media="all">
 	<!-- PrettyPhoto css -->
 	<link rel="stylesheet" href="{% static 'MedCongressApp/css/prettyPhoto.css'%}" type="text/css" media="all">
-    <!-- Responsive css -->
+	<!-- Responsive css -->
 	<link rel="stylesheet" href="{% static 'MedCongressApp/css/responsive.css'%}" type="text/css" media="all">
-    <!-- Color css -->
+	<!-- Color css -->
 	<link rel="stylesheet" href="{% static 'MedCongressApp/css/color.css'%}" type="text/css" media="all">
-	
+
 </head>
+
 <body>
-<!-- Wrapper start -->
-<div id="wrapper">
-	<div id="mobile-header">
-        <a id="responsive-menu-button" href="#sidr-main"><i class="fa fa-bars"></i></a>
-    </div>
-	<header id="kode-header" >
-		<strong class="kode-logo">
-			<a href="{% url 'Home'%}"><img src="{% static 'MedCongressApp/images/LOGODOSCOLORESSINFONDO.png'%}" alt=""></a>
-		</strong>
-		
-		<div class="col-right">			
-			<nav class="kode-nav" id="navigation">
-				<ul>
-					<li><a href="{% url 'Home'%}">Inicio</a></li>
-					<li><a href="{% url 'List_congreso'%}">Congresos</a></li>
-					<li><a href="#">Galenus</a></li>				
-					<li><a href="#">Contacto</a></li>
-					{% if user.is_authenticated %}
-					
-					<li class="active" ><a href="{% url 'logout' %}" style="padding:37px 30px;">LOGOUT</a></li>
-					{% else %}
-					<li class="active" ><a href="{% url 'login' %}" style="padding:37px 30px;">LOGIN</a></li>
-					<li class="active" ><a href="{% url 'Registrarse' %}" style="padding:37px 30px;">REGISTER</a></li>
-					{% endif %}
-				</ul>
-			</nav>
-			
+	<!-- Wrapper start -->
+
+	<div id="wrapper">
+		<div id="mobile-header">
+			<a id="responsive-menu-button" href="#sidr-main"><i class="fa fa-bars"></i></a>
 		</div>
-	</header>
-	<!-- Kode-Header End -->
-	
+		<header id="kode-header">
+			<strong class="kode-logo">
+				<a href="{% url 'Home'%}"><img src="{% static 'MedCongressApp/images/LOGODOSCOLORESSINFONDO.png'%}"
+						alt=""></a>
+			</strong>
+
+			<div class="col-right">
+				<nav class="kode-nav" id="navigation">
+					<ul>
+						<li><a href="{% url 'Home'%}">Inicio</a></li>
+						<li><a href="{% url 'List_congreso'%}">Congresos</a></li>
+						<li><a href="#">Galenus</a></li>
+						<li><a href="#">Contacto</a></li>
+						{% if user.is_authenticated %}
+
+						<li class="active"><a href="{% url 'logout' %}" style="padding:37px 30px;">LOGOUT</a></li>
+						<li class="">
+
+							<a class="" data-toggle="modal" data-target=".bs-example-modal-lg" style="padding: 24px;">
+								<span><i class="fa fa-shopping-cart" style="font-size: 46px;"><span
+											class="badge badge-pill badge-default badge-danger badge-default badge-up badge-glow"
+											style="background-color: red;margin-top: -48px;">
+											{%if  request.session.my_car %}{{ request.session.cart.1|length}}
+										{%else%} 0 {%endif%}</span></i></span>
+
+							</a>
+						</li>
+
+						{% else %}
+						<li class="active"><a href="{% url 'login' %}" style="padding:37px 30px;">LOGIN</a></li>
+						<li class="active"><a href="{% url 'Registrarse' %}" style="padding:37px 30px;">REGISTER</a>
+						</li>
+						{% endif %}
+					</ul>
+
+				</nav>
+
+			</div>
+		</header>
+		<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+			<div class="modal-dialog modal-lg">
+			  <div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+								aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="myModalLabel">Mi Carrito de Compra</h4>
+					</div>
+					<div class="modal-body" style="padding: 0px 15px;">
+						<div class="ticket-section" style="margin-top: 20px;">
+							<h5>Comprar boletos para estos eventos</h5>
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>Evento</th>
+										<th>Nombre</th>
+										<th>Cat. de Pago</th>
+										<th>Precio</th>
+										<th>Acción</th>
+									</tr>
+								</thead>
+								<tbody>
+									{%if  request.session.cart.1 %}
+									{%for car in request.session.cart.1 %}
+									<tr>
+										<th scope="row">{{forloop.counter}}</th>
+										<td>{{car.tipo_evento}}</td>
+										<td>{{car.nombre_congreso}}</td>
+										<td>{{car.nombre_cat_pago}}</td>
+										<td>${{car.precio}}</td>
+										<td style="text-align: center;"><a onclick="EliminarCart({{car.id}},'{{car.tipo_evento}}')"> <i class="fa fa-trash" style="color: red;"></i></a></td>
+									</tr>
+									{%endfor%}
+									<tr>
+										<th scope="row" colspan="4">Total a pagar</th>
+										<td><b> ${{request.session.cart.0.cant}}</b></td>
+										<td></td>
+											
+									</tr>
+									{%else%}
+									<li>No ha puesto ningún evento en el carrito</li>
+									{%endif%}
+									
+								</tbody>
+							</table>
+
+						</div>
+
+
+					</div>
+					<div class="modal-footer">
+						<a  type="button" class="btn btn-default" data-dismiss="modal">Cerrar</a>
+						<a href="{%url 'Pagar' %}" type="button" class="btn btn-primary">Pagar</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Kode-Header End -->
+
 		{% block contenido%}
 
 		{% endblock %}
-		<footer id="footer">	
+		<footer id="footer">
 			<div class="event-map">
-			<div id="googleMap" style="width:100%;height:414px;"></div>
+				<div id="googleMap" style="width:100%;height:414px;"></div>
 			</div>
 			<div class="kode-footer-text">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-6 col-md-6 col-sm-9 col-xs-12 footer-cols">
-						<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-							<strong class="title">Contacto</strong>
-							<h3>Med Congress</h3>							
-							<ul class="address-nav">
-								<li><i class="fa fa-map-marker"></i>Belisario Domínguez 2470, Centro, 64000 Monterrey, N.L.</li>
-								<li><i class="fa fa-envelope-o"></i><a href="#">contacto@medcongress.com.mx</a></li>
-								<li><i class="fa fa-phone"></i>  (81) 8864-5328</li>
-							</ul>
-						</div>
-						<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-							<strong class="title">Twitter</strong>
-							<h3>twitter Feed</h3>
-							<ul class="twitterfeed-nav">
-								<li><i class="fa fa-twitter"></i> <a href="#">@orem ipsum</a> dolor sit amet adipi elit sed do eiusmod.</li>
-								<li><i class="fa fa-twitter"></i> <a href="#">@orem ipsum</a> dolor sit amet adipi elit sed do eiusmod.</li>
-								<li><i class="fa fa-twitter"></i> <a href="#">@orem ipsum</a> dolor sit amet adipi elit sed do eiusmod.</li>
-							</ul>
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-6 col-md-6 col-sm-9 col-xs-12 footer-cols">
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+								<strong class="title">Contacto</strong>
+								<h3>Med Congress</h3>
+								<ul class="address-nav">
+									<li><i class="fa fa-map-marker"></i>Belisario Domínguez 2470, Centro, 64000
+										Monterrey, N.L.</li>
+									<li><i class="fa fa-envelope-o"></i><a href="#">contacto@medcongress.com.mx</a></li>
+									<li><i class="fa fa-phone"></i> (81) 8864-5328</li>
+								</ul>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+								<strong class="title">Twitter</strong>
+								<h3>twitter Feed</h3>
+								<ul class="twitterfeed-nav">
+									<li><i class="fa fa-twitter"></i> <a href="#">@orem ipsum</a> dolor sit amet adipi
+										elit sed do eiusmod.</li>
+									<li><i class="fa fa-twitter"></i> <a href="#">@orem ipsum</a> dolor sit amet adipi
+										elit sed do eiusmod.</li>
+									<li><i class="fa fa-twitter"></i> <a href="#">@orem ipsum</a> dolor sit amet adipi
+										elit sed do eiusmod.</li>
+								</ul>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
 			</div>
 			<div class="footer-copyright">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-						<p>&copy; <a href="#">Med Congress</a> All Rights Reserved</p>
-						<p>Develop by <a href="#">SOFTOK2</a></p>
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+							<p>&copy; <a href="#">Med Congress</a> All Rights Reserved</p>
+							<p>Develop by <a href="#">SOFTOK2</a></p>
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="back-to-top">
-				<a href="#"><i class="fa fa-arrow-up"></i></a>
-			</div>
+
+				<div class="back-to-top">
+					<a href="#"><i class="fa fa-arrow-up"></i></a>
+
+
+				</div>
 			</div>
 			<!--copyright End-->
-			</footer>
+		</footer>
 	</div>
 
-</div>
-<!--Jquery Lib-->
-<script src="{% static 'MedCongressApp/js/jquery.js'%}"></script>
-<!--Bootstrap Javascript File-->
-<script src="{% static 'MedCongressApp/js/bootstrap.min.js'%}"></script>
-<!-- bxSlider Javascript file -->
-<script src="{% static 'MedCongressApp/js/jquery.bxslider.js'%}"></script>
-<!-- OWL Javascript file -->
-<script src="{% static 'MedCongressApp/js/owl.carousel.min.js'%}"></script>
-<!--Image Filterable Gallery-->
-<script src="{% static 'MedCongressApp/js/jquery-filterable.js'%}"></script>
-<!--Number Count Script-->
-<script src="{% static 'MedCongressApp/js/waypoints-min.js'%}"></script>
-<!--Full Calender Script-->
-<script src="{% static 'MedCongressApp/js/moment.min.js'%}"></script>
-<script src="{% static 'MedCongressApp/js/fullcalendar.min.js'%}"></script>
-<!--Time Counter Script-->
-<script src="{% static 'MedCongressApp/js/jquery.downCount.js'%}"></script>
-<!--Internet Explore Script-->
-<script src="{% static 'MedCongressApp/js/ie.js'%}"></script>
-<!--Accordian Explore Script-->
-<script src="{% static 'MedCongressApp/js/jquery.accordion.js'%}"></script>
-<!--GOOGLE MAP-->
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyCxDqmPXcY8jAoT1iWgxhzcf81HWnOPGEw"></script>
-<!--RESPONSIVE MENU-->
-<script src="{% static 'MedCongressApp/js/jquery.sidr.min.js'%}"></script>
-<!--PrettyPhoto Js -->
-<script src="{% static 'MedCongressApp/js/jquery.prettyPhoto.js'%}"></script>
-<!--Custom Scripts-->
-<script src="{% static 'MedCongressApp/js/custom.js'%}"></script>
-{% block script%}
+	</div>
+	<!--Jquery Lib-->
+	<script src="{% static 'MedCongressApp/js/jquery.js'%}"></script>
+	<!--Bootstrap Javascript File-->
+	<script src="{% static 'MedCongressApp/js/bootstrap.min.js'%}"></script>
+	<!-- bxSlider Javascript file -->
+	<script src="{% static 'MedCongressApp/js/jquery.bxslider.js'%}"></script>
+	<!-- OWL Javascript file -->
+	<script src="{% static 'MedCongressApp/js/owl.carousel.min.js'%}"></script>
+	<!--Image Filterable Gallery-->
+	<script src="{% static 'MedCongressApp/js/jquery-filterable.js'%}"></script>
+	<!--Number Count Script-->
+	<script src="{% static 'MedCongressApp/js/waypoints-min.js'%}"></script>
+	<!--Full Calender Script-->
+	<script src="{% static 'MedCongressApp/js/moment.min.js'%}"></script>
+	<script src="{% static 'MedCongressApp/js/fullcalendar.min.js'%}"></script>
+	<!--Time Counter Script-->
+	<script src="{% static 'MedCongressApp/js/jquery.downCount.js'%}"></script>
+	<!--Internet Explore Script-->
+	<script src="{% static 'MedCongressApp/js/ie.js'%}"></script>
+	<!--Accordian Explore Script-->
+	<script src="{% static 'MedCongressApp/js/jquery.accordion.js'%}"></script>
+	<!--GOOGLE MAP-->
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyCxDqmPXcY8jAoT1iWgxhzcf81HWnOPGEw"></script>
+	<!--RESPONSIVE MENU-->
+	<script src="{% static 'MedCongressApp/js/jquery.sidr.min.js'%}"></script>
+	<!--PrettyPhoto Js -->
+	<script src="{% static 'MedCongressApp/js/jquery.prettyPhoto.js'%}"></script>
+	<!--Custom Scripts-->
+	<script src="{% static 'MedCongressApp/js/custom.js'%}"></script>
+	{% block script%}
 
-{%endblock%}
+	{%endblock%}
+	<script>
+		$('.botonF1').hover(function () {
+			$('.btn').addClass('animacionVer');
+		})
+		$('.contenedor').mouseleave(function () {
+			$('.btn').removeClass('animacionVer');
+		})
+
+		function EliminarCart(id,evento){
+			$.ajax({
+            type: "GET",
+            url: "{% url 'Deleted_cart'%}",
+            data: {
+                'id': id,
+				'evento': evento, // from form
+            },
+            success: function (data) {
+                if (data['succes']){
+					 
+					alert('Ha eliminado un evento de su carrito');
+					location.reload();
+				}    
+                else
+                    alert('Ya tiene este congreso en el carrito de compra');
+            }
+        });
+
+		}
+	</script>
 </body>
+
 </html>

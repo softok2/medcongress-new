@@ -21,6 +21,7 @@
                             <div class="button-holder">
                                 <a href="#programas" class="button back">Programa</a>
                                 <a href="#pagos" class="button">Inscripción</a>
+
                             </div>
                         </div>
                     </div>
@@ -99,7 +100,9 @@
                                                                 {{ponente.user.usuario.last_name}}</h6>
                                                             <span> Ponente</span>
                                                             <p>
+                                                                {%if ponente.user.detalle %}
                                                                 {{ponente.user.detalle}}
+                                                                {%endif%}
                                                             </p>
                                                         </div>
                                                     </div>
@@ -202,21 +205,20 @@
             <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
             {%if categorias_pago %}
             {%for categoria_pago in categorias_pago %}
-           
+
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                 <div class="price-box-frame first-box">
                     <div class="kode-price-box">
                         <div class="kode-price-header">
                             <strong>{{categoria_pago.categoria.nombre}}</strong>
                             <h3>${{categoria_pago.precio}} {{categoria_pago.moneda}}</h3>
-                            
+
                             <strong>IVA incluído</strong>
                         </div>
 
                         <div class="kode-price-footer">
 
-                            <a
-                                href=" {%url 'Pagar_congreso' congreso.path categoria_pago.categoria.path categoria_pago.moneda %}">Comprar</a>
+                            <a onclick="AgregarCarrito({{categoria_pago.pk}})">Agregar al Carrito</a>
 
                         </div>
                     </div>
@@ -267,8 +269,7 @@
                                     </div>
 
                                     <div class="kode-price-footer">
-                                        <a
-                                href=" {%url 'Pagar_taller' taller.0.path cat.categoria.path cat.moneda %}">Comprar</a>
+                                        <a onclick="AgregarCarritoTaller({{cat.pk}})">Agregar al Carrito</a>
 
                                     </div>
                                 </div>
@@ -278,11 +279,11 @@
                         {%endfor%}
                         {%endif%}
                         {%else%}
-                        
-                            <span>Usted ya pago este congreso</span>
-                        
+
+                        <span>Usted ya pago este congreso</span>
+
                         {%endif%}
-                       
+
                     </div>
                 </div>
             </div>
@@ -340,6 +341,45 @@
             $('html,body').animate({ scrollTop: $(this.hash).offset().top }, 500);
         });
     });
+
+    function AgregarCarritoTaller(id) {
+
+        $.ajax({
+            type: "GET",
+            url: "{% url 'Add_cart_taller'%}",
+            data: {
+                'id': id, // from form
+            },
+            success: function (data) {
+                if (data['succes']){
+                alert('Ha adicionado un evento a su carrito de compra. \n Valla al carrito para efectuar su compra');
+                    location.reload();
+            }
+                else
+                    alert('Ya tiene este Taller en el carrito de compra');
+            }
+        });
+    }
+    function AgregarCarrito(id) {
+
+        $.ajax({
+            type: "GET",
+            url: "{% url 'Add_cart'%}",
+            data: {
+                'id': id, // from form
+            },
+            success: function (data) {
+                if (data['succes']){
+                alert('Ha adicionado un evento a su carrito de compra. \n Valla al carrito para efectuar su compra');
+                    location.reload();
+            }
+                else
+                    alert('Ya tiene este congreso en el carrito de compra');
+            }
+        });
+    }
+
+
 </script>
 
 {%endblock%}

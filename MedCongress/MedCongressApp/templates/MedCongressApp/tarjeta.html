@@ -8,8 +8,48 @@ Efectuar Pago
 <div class="kode-event-time">
     <div class="kode-event-contact">
         <div class="container">
+            <div class="row well" style="margin-top: 70px;">
+                <h4>Desglose de los boletos a comprar</h4>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Evento</th>
+                            <th>Nombre</th>
+                            <th>Cat. de Pago</th>
+                            <th>Precio</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%if  request.session.cart.1 %}
+                        {%for car in request.session.cart.1 %}
+                        <tr>
+                            <th scope="row">{{forloop.counter}}</th>
+                            <td>{{car.tipo_evento}}</td>
+                            <td>{{car.nombre_congreso}}</td>
+                            <td>{{car.nombre_cat_pago}}</td>
+                            <td>${{car.precio}}</td>
+                            <td style="text-align: center;"><i class="fa fa-trash" style="color: red;"></i></td>
+                        </tr>
+                        {%endfor%}
+                        <tr style="background-color: slategray;">
+                            <th scope="row" colspan="4">Total a pagar</th>
+                            <td><b> ${{request.session.cart.0.cant}}</b></td>
+                            <td></td>
+                                
+                        </tr>
+                        {%else%}
+                        <li>No ha puesto ningún evento en el carrito</li>
+                        {%endif%}
+                        
+                    </tbody>
+                </table>
+
+
+            </div>
             <div class="row">
-                <div class="kf_heading_3" style="margin-top: 70px;">
+                <div class="kf_heading_3" >
 
                     <div class=" col-sm-7 ">
 
@@ -82,10 +122,12 @@ Efectuar Pago
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                                 <select type="text" placeholder="Año"
                                                     data-openpay-card="expiration_year">
-                                                  {% for x in list %}
-                                                <option value='{{ now|date:"y"|add:x }}'>{{ now|date:"Y"|add:x }}</option>
-                                                
-{%endfor%}
+                                                    {% now "Y" as current_year %}
+                                                    {% now "y" as current %}
+                                                 {%for x in '0123456789'|make_list %}
+                                                <option value='{{current|add:x}}'>{{current_year|add:x}}</option>
+                                                {%endfor%}
+
                                                 </select>
                                             </div>
 
@@ -121,7 +163,7 @@ Efectuar Pago
                                 </div>
 
                                 <div class="col-sm-6 " style="margin: 50px;">
-                                    <a class="button rght" id="pay-button">Pagar</a>
+                                    <button class="button rght" style="color: black;"  type="submit"  id="pay-button">Pagar </button>
                                 </div>
                             </div>
                         </form>

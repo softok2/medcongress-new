@@ -13,12 +13,13 @@ Inicio
 
 
 				<div class="next-event-counter">
-					<h2>ENCUENTRA TU CONGRESO</h2>
+					<h2>ENCUENTRA TU CONGRESO </h2>
 					<form class="subscribe-form" method="POST" action="{% url 'List_congreso'%}">
 						{% csrf_token %}
 						<input type="text" name="especialidad" id="especialidad"  placeholder="Buscar especialidad">
 						<input type="submit"  name="submit">
 					</form>
+					
 					{%if nuevo_congreso%}
 					<h2>Siguiente evento:</h2>
 					<div id="countdown" class="simply-countdown"></div>
@@ -30,7 +31,7 @@ Inicio
 									<h2>Siguiente evento:</h2>
 							<ul class="countdown">
 								<li>
-									<span class="days">00</span>
+									<span class="days">56</span>
 									<p class="days_ref">días</p>
 								</li>
 								<li>
@@ -130,7 +131,7 @@ Inicio
 					</div>
 					<!-- Kode-Fatcs -Counterup End -->
 
-					<a class="button-animate" href="#"><span data-hover="sobre nosotros">ver más</span></a>
+					<!-- <a class="button-animate" href="#"><span data-hover="sobre nosotros">ver más</span></a> -->
 				</div>
 			</div>
 		</div>
