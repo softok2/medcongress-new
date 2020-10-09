@@ -14,7 +14,7 @@ class Cart:
         if len(self.cart[1])>0:
             
             for car in self.cart[1]:
-                if relCongresoCategoriaPago.congreso.pk == car['id_congreso']:
+                if relCongresoCategoriaPago.congreso.pk == car['id_congreso'] and car['tipo_evento']=='Congreso':
                     exist=True
             
             if exist is False:
@@ -61,7 +61,7 @@ class Cart:
         if len(self.cart[1])>0:
             
             for car in self.cart[1]:
-                if relTallerCategoriaPago.taller.pk == car['id_congreso']:
+                if relTallerCategoriaPago.taller.pk == car['id_congreso'] and car['tipo_evento']=='Taller':
                     exist=True
             
             if exist is False:
