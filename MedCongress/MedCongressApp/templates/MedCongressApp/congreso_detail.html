@@ -211,15 +211,17 @@
                     <div class="kode-price-box">
                         <div class="kode-price-header">
                             <strong>{{categoria_pago.categoria.nombre}}</strong>
-                            <h3>${{categoria_pago.precio}} {{categoria_pago.moneda}}</h3>
+                            <h3>${{categoria_pago.precio}}<br> {{categoria_pago.moneda}}</h3>
 
                             <strong>IVA incluído</strong>
                         </div>
 
                         <div class="kode-price-footer">
-
+                            {% if user.is_authenticated %}
                             <a onclick="AgregarCarrito({{categoria_pago.pk}})">Agregar al Carrito</a>
-
+                            {%else%} 
+                            <a href="{%url 'login'%}">Agregar al Carrito</a>
+                            {%endif%}
                         </div>
                     </div>
                 </div>
@@ -269,8 +271,11 @@
                                     </div>
 
                                     <div class="kode-price-footer">
+                                        {% if user.is_authenticated %}
                                         <a onclick="AgregarCarritoTaller({{cat.pk}})">Agregar al Carrito</a>
-
+{%else%} 
+<a href="{%url 'login'%}">Agregar al Carrito</a>
+{%endif%}
                                     </div>
                                 </div>
                             </div>

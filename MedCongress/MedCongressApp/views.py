@@ -115,26 +115,24 @@ class CongresoDetail(TemplateView):
             cat_pago=RelCongresoCategoriaPago.objects.filter(congreso=congreso.pk)
             context['cat_ponente']=RelPonenciaPonente.objects.all()
 
-            user_perfil=PerfilUsuario.objects.filter(usuario=self.request.user.pk).first()
-            talleres=Taller.objects.filter(congreso=congreso.pk).order_by('fecha_inicio')
-            ver=[]
-            for taller in talleres:
-                if RelTalleresCategoriaPago.objects.filter(taller=taller).exists():
-                    cat_pa=RelTalleresCategoriaPago.objects.filter(taller=taller)
-                else:
-                    cat_pa=True
-                
-                if RelTallerUser.objects.filter(user=user_perfil.pk, taller=taller.pk).exists():
-                    if  RelTallerUser.objects.filter(user=user_perfil.pk, taller=taller.pk,is_pagado=True).exists():
-                        ver.append([taller,False,'Usted ya pagó este evento'])
-                    else:
-                        ver.append([taller,False,'Está pendiente el pago de este evento '])
-                else:
-                    ver.append([taller,cat_pa])  
-            context['talleres']=ver
-            
             if self.request.user.is_authenticated :
-               
+                user_perfil=PerfilUsuario.objects.filter(usuario=self.request.user.pk).first()
+                talleres=Taller.objects.filter(congreso=congreso.pk).order_by('fecha_inicio')
+                ver=[]
+                for taller in talleres:
+                    if RelTalleresCategoriaPago.objects.filter(taller=taller).exists():
+                        cat_pa=RelTalleresCategoriaPago.objects.filter(taller=taller)
+                    else:
+                        cat_pa=True
+                    
+                    if RelTallerUser.objects.filter(user=user_perfil.pk, taller=taller.pk).exists():
+                        if  RelTallerUser.objects.filter(user=user_perfil.pk, taller=taller.pk,is_pagado=True).exists():
+                            ver.append([taller,False,'Usted ya pagó este evento'])
+                        else:
+                            ver.append([taller,False,'Está pendiente el pago de este evento '])
+                    else:
+                        ver.append([taller,cat_pa])  
+                context['talleres']=ver
                 pagos = RelCongresoUser.objects.filter(user=user_perfil.pk, congreso=congreso.pk).order_by('precio')
                 
                 if pagos.exists():
@@ -146,6 +144,15 @@ class CongresoDetail(TemplateView):
                 else: 
                     context['permiso'] = False                                                                  
             else:
+                talleres=Taller.objects.filter(congreso=congreso.pk).order_by('fecha_inicio')
+                ver=[]
+                for taller in talleres:
+                    if RelTalleresCategoriaPago.objects.filter(taller=taller).exists():
+                        cat_pa=RelTalleresCategoriaPago.objects.filter(taller=taller)
+                    else:
+                        cat_pa=True
+                    ver.append([taller,cat_pa])      
+                context['talleres']=ver
                 context['permiso'] = False  
             context['categorias_pago']=cat_pago
         return context
@@ -446,6 +453,7 @@ class PagarEfectivo(TemplateView):
 
 ##### Adicionar Congreso a Carrito de Compra #####
 
+@method_decorator(login_required,name='dispatch')
 class AddCart(TemplateView):
 
     def get(self, request):
@@ -459,8 +467,9 @@ class AddCart(TemplateView):
    
 
 ##### Adicionar Taller a Carrito de Compra #####
-
+@method_decorator(login_required,name='dispatch')
 class AddCartTaller(TemplateView):
+    
 
     def get(self, request):
         if request.is_ajax:
