@@ -26,4 +26,5 @@ admin.site.register(RelTallerUser)
 admin.site.register(RelTalleresCategoriaPago)
 admin.site.register(CategoriaPonente)
 admin.site.register(DatosIniciales)
+admin.site.register(Especialidades)
 

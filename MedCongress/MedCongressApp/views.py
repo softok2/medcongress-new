@@ -9,7 +9,7 @@ from django.contrib.auth.models import Group, User
 from django.db import connections
 from django.http import HttpResponse, HttpResponseRedirect,JsonResponse
 from django.shortcuts import render
-
+from django.core.mail import EmailMessage
 from django.template.response import TemplateResponse
 from django.urls import reverse, reverse_lazy
 from django.utils.crypto import get_random_string
@@ -199,7 +199,7 @@ class CongresoCardForm(TemplateView):
 
         descripcion =''
         for cart in self.request.session["cart"][1]:
-            descripcion= descripcion + 'Pago del %s %s  \n '%(cart['tipo_evento'],cart['nombre_congreso'])
+            descripcion= descripcion + 'Pago del %s %s . '%(cart['tipo_evento'],cart['nombre_congreso'])
         
         if pagar_efectivo == '0':
             url='https://sandbox-api.openpay.mx/v1/muq0plqu35rnjyo7sf2v/charges'
@@ -380,16 +380,11 @@ class PerfilUserCreate(CreateView):
     template_name='MedCongressApp/registrarse.html'
     success_url = reverse_lazy('Home')
     def form_valid(self, form):
-        #email = EmailMessage('Subject', 'Body', to=['dennis.molinetg@gmail.com'])
-        # send_mail(
-        #         'Subject here',
-        #         'Here is the message.',
-        #         'dennis.molinetg@gmail.com',
-        #         ['milenis.morenop@gmail.com'],
-        #         fail_silently=False,
-        #         )
-        #email.send()
+
+        
         user = form['user'].save(commit=False)
+        # email = EmailMessage('Asunto', 'esto es una prueba, como mando correos en Phyton?', to = [user.email])
+        # email.send()
         us=User.objects.create_user(user.username,user.email,user.password)
         perfiluser = form['perfiluser'].save(commit=False)
         us.first_name=user.first_name

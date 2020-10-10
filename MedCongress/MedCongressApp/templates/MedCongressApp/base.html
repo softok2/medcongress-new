@@ -137,7 +137,11 @@
 					</div>
 					<div class="modal-footer">
 						<a  type="button" class="btn btn-default" data-dismiss="modal">Cerrar</a>
+						{%if request.session.cart.1 %}
 						<a href="{%url 'Pagar' %}" type="button" class="btn btn-primary">Pagar</a>
+						{%else%}
+						<a  type="button" class="btn btn-primary" onclick="Mensaje('No tiene nada en el carrito para comprar')">Pagar</a>
+						{%endif%}
 					</div>
 				</div>
 			</div>
@@ -231,16 +235,13 @@
 	<script src="{% static 'MedCongressApp/js/jquery.prettyPhoto.js'%}"></script>
 	<!--Custom Scripts-->
 	<script src="{% static 'MedCongressApp/js/custom.js'%}"></script>
+
+	<script src="{% static 'MedCongressApp/js/sweetalert.min.js' %}"></script>
 	{% block script%}
 
 	{%endblock%}
 	<script>
-		$('.botonF1').hover(function () {
-			$('.btn').addClass('animacionVer');
-		})
-		$('.contenedor').mouseleave(function () {
-			$('.btn').removeClass('animacionVer');
-		})
+		
 
 		function EliminarCart(id,evento){
 			$.ajax({
@@ -252,15 +253,41 @@
             },
             success: function (data) {
                 if (data['succes']){
-					 
-					alert('Ha eliminado un evento de su carrito');
-					location.reload();
-				}    
+					swal({
+            title: "Eliminado",
+            text: "Ha sacado un evento de su carrito de compras",
+            icon: "success",
+            buttons: {
+                cancel: {
+                    text: "ok!",
+                    value: null,
+                    visible: true,
+                    className: "",
+                    closeModal: false,
+                },
+               
+                
+                
+            }
+        })
+        .then((isConfirm) => {
+            if (isConfirm) {
+                
+            }
+            else{
+                location.reload();
+            }
+
+        });
+            }
                 else
-                    alert('Ya tiene este congreso en el carrito de compra');
+                swal("No se pudo eliminar", "Póngase en contacto con el administrador.", "error"); 
             }
         });
 
+		}
+		function Mensaje(mensaje){
+			swal("Atención", mensaje, "warning"); 
 		}
 	</script>
 </body>

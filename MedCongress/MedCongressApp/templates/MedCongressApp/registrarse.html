@@ -24,94 +24,126 @@ Registrarse
                         <div class="row">
                             <div class="col-sm-3 ">
                                 <div class="form-group">
-                                    <label for="{{form.user.first_name.id_for_label }}"><b>{{form.user.first_name.label }}</b></label>
-                                    {% if form.user.first_name.errors %} {{ form.user.first_name.errors }} {% endif %}
-                                   {{form.user.first_name }}  {{form.user.first_name.help_text }}
+                                    <label
+                                        for="{{form.user.first_name.id_for_label }}"><b>{{form.user.first_name.label }}</b>{% if form.user.first_name.errors %} <span style="font-size: 15px; color: red;">{{ form.user.first_name.errors }}  </span>{% endif %} </label>
+                                    
+                                    {{form.user.first_name }} {{form.user.first_name.help_text }}
                                 </div>
                             </div>
                             <div class="col-sm-3 ">
                                 <div class="form-group">
-                                    <label for="{{form.user.last_name.id_for_label }}"><b>{{form.user.last_name.label }}</b></label>
-                                    {% if form.user.last_name.errors %} {{ form.user.last_name.errors }} {% endif %}
-                                   {{form.user.last_name }} 
+                                    <label
+                                        for="{{form.user.last_name.id_for_label }}"><b>{{form.user.last_name.label }}</b>{% if form.user.last_name.errors %} <span style="font-size: 15px; color: red;">{{ form.user.last_name.errors }}  </span>{% endif %} </label>
+                                   
+                                    {{form.user.last_name }}
                                 </div>
                             </div>
                             <div class="col-sm-3 ">
                                 <div class="form-group">
-                                    <label for="{{form.user.username.id_for_label }}"><b>{{form.user.username.label }}</b></label>
-                                    {% if form.user.username.errors %} {{ form.user.username.errors }} {% endif %}
-                                   {{form.user.username }}  
+                                    <label
+                                        for="{{form.user.username.id_for_label }}"><b>{{form.user.username.label }} </b> {% if form.user.username.errors %} <span style="font-size: 15px; color: red;">{{ form.user.username.errors }}  </span>{% endif %} </label>
+                                    
+                                    {{form.user.username }}
                                 </div>
                             </div>
                             <div class="col-sm-3 ">
                                 <div class="form-group">
-                                    <label for="{{form.user.password.id_for_label }}"><b>{{form.user.password.label }}</b></label>
-                                    {% if form.user.password.errors %} {{ form.user.password.errors }} {% endif %}
-                                   {{form.user.password }}  
+                                    <label
+                                        for="{{form.user.password.id_for_label }}"><b>{{form.user.password.label }}</b>{% if form.user.password.errors %} <span style="font-size: 15px; color: red;">{{ form.user.password.errors }}  </span>{% endif %} </label>
+                                    
+                                    {{form.user.password }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3 ">
+                                <div class="form-group">
+                                    <label
+                                        for="{{form.user.password1.id_for_label }}"><b>{{form.user.password1.label }}</b> {% if form.user.password1.errors %} <span style="font-size: 15px; color: red;">{{ form.user.password1.errors }}  </span>{% endif %}  </label>
+                                       
+                                    {{form.user.password1 }} 
+                                   
                                 </div>
                             </div>
                             <div class="col-sm-3 ">
                                 <div class="form-group">
-                                    <label for="{{form.user.password1.id_for_label }}"><b>{{form.user.password1.label }}</b></label>
-                                    {% if form.user.password1.errors %} {{ form.user.password1.errors }} {% endif %}
-                                   {{form.user.password1 }} 
+                                    <label
+                                        for="{{form.user.email.id_for_label }}"><b>{{form.user.email.label }}</b>{% if form.user.email.errors %} <span style="font-size: 15px; color: red;">{{ form.user.email.errors }}  </span>{% endif %} </label>
+                                   
+                                    {{form.user.email }}
                                 </div>
                             </div>
                             <div class="col-sm-3 ">
                                 <div class="form-group">
-                                    <label for="{{form.user.email.id_for_label }}"><b>{{form.user.email.label }}</b></label>
-                                    {% if form.user.email.errors %} {{ form.user.email.errors }} {% endif %}
-                                    {{form.user.email }}  
+                                    <label
+                                        for="{{form.perfiluser.pais.id_for_label }}"><b>{{form.perfiluser.pais.label }}</b> {% if form.perfiluser.pais.errors %} <span style="font-size: 15px; color: red;">{{ form.perfiluser.pais.errors }}  </span>{% endif %} </label>
+                                    
+                                    {{form.perfiluser.pais }}
                                 </div>
                             </div>
                             <div class="col-sm-3 ">
                                 <div class="form-group">
-                                    <label for="{{form.perfiluser.pais.id_for_label }}"><b>{{form.perfiluser.pais.label }}</b></label>
-                                    {% if form.perfiluser.pais.errors %} {{ form.perfiluser.pais.errors }} {% endif %}
-                                   {{form.perfiluser.pais }} 
+                                    <label
+                                        for="{{form.perfiluser.ciudad.id_for_label }}"><b>{{form.perfiluser.ciudad.label }}</b>{% if form.perfiluser.ciudad.errors %} <span style="font-size: 15px; color: red;">{{ form.perfiluser.ciudad.errors }}  </span>{% endif %} </label>
+                                   
+                                    {{form.perfiluser.ciudad }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3 ">
+                                <div class="form-group">
+                                    <label
+                                        for="{{form.perfiluser.estado.id_for_label }}"><b>{{form.perfiluser.estado.label }}</b>{% if form.perfiluser.estado.errors %} <span style="font-size: 15px; color: red;">{{ form.perfiluser.estado.errors }}  </span>{% endif %}</label>
+                            
+                                    {{form.perfiluser.estado }}
                                 </div>
                             </div>
                             <div class="col-sm-3 ">
                                 <div class="form-group">
-                                    <label for="{{form.perfiluser.ciudad.id_for_label }}"><b>{{form.perfiluser.ciudad.label }}</b></label>
-                                    {% if form.perfiluser.ciudad.errors %} {{ form.perfiluser.ciudad.errors }} {% endif %}
-                                   {{form.perfiluser.ciudad }} 
-                                </div>
-                            </div> <div class="col-sm-3 ">
-                                <div class="form-group">
-                                    <label for="{{form.perfiluser.estado.id_for_label }}"><b>{{form.perfiluser.estado.label }}</b></label>
-                                    {% if form.perfiluser.estado.errors %} {{ form.perfiluser.estado.errors }} {% endif %}
-                                   {{form.perfiluser.estado }} 
-                                </div>
-                            </div> <div class="col-sm-3 ">
-                                <div class="form-group">
-                                    <label for="{{form.perfiluser.cel_profecional.id_for_label }}"><b>{{form.perfiluser.cel_profecional.label }}</b></label>
-                                    {% if form.perfiluser.cel_profecional.errors %} {{ form.perfiluser.cel_profecional.errors }} {% endif %}
-                                   {{form.perfiluser.cel_profecional }} 
-                                </div>
-                            </div> <div class="col-sm-3 ">
-                                <div class="form-group">
-                                    <label for="{{form.perfiluser.categoria.id_for_label }}"><b>{{form.perfiluser.categoria.label }}</b></label>
-                                    {% if form.perfiluser.categoria.errors %} {{ form.perfiluser.categoria.errors }} {% endif %}
-                                    {{form.perfiluser.categoria }} 
-                                </div>
-                            </div> <div class="col-sm-3 ">
-                                <div class="form-group">
-                                    <label for="{{form.perfiluser.genero.id_for_label }}"><b>{{form.perfiluser.genero.label }}</b></label>
-                                   {{form.perfiluser.genero }} 
+                                    <label
+                                        for="{{form.perfiluser.cel_profecional.id_for_label }}"><b>{{form.perfiluser.cel_profecional.label }}</b>{% if form.perfiluser.cel_profecional.errors %} <span style="font-size: 15px; color: red;">{{ form.perfiluser.cel_profecional.errors }}  </span>{% endif %}</label>
+                                   
+                                    {{form.perfiluser.cel_profecional }}
                                 </div>
                             </div>
                             <div class="col-sm-3 ">
                                 <div class="form-group">
-                                    <label for="{{form.perfiluser.ponente.id_for_label }}"><b>{{form.perfiluser.ponente.label }}</b></label>
-                                   {{form.perfiluser.ponente }} 
+                                    <label
+                                        for="{{form.perfiluser.categoria.id_for_label }}"><b>{{form.perfiluser.categoria.label }}</b>{% if form.perfiluser.categoria.errors %} <span style="font-size: 15px; color: red;">{{ form.perfiluser.categoria.errors }}  </span>{% endif %}</label>
+                                  
+                                    {{form.perfiluser.categoria }}
                                 </div>
                             </div>
-                         
+                            <div class="col-sm-3 ">
+                                <div class="form-group">
+                                    <label
+                                        for="{{form.perfiluser.genero.id_for_label }}"><b>{{form.perfiluser.genero.label }}</b>{% if form.perfiluser.genero.errors %} <span style="font-size: 15px; color: red;">{{ form.perfiluser.genero.errors }}  </span>{% endif %}</label>
+                                    {{form.perfiluser.genero }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6 ">
+
+                                <label
+                                    for="{{form.perfiluser.is_ponente.id_for_label }}"><b>{{form.perfiluser.is_ponente.label }}</b><{% if form.perfiluser.is_panel.errors %} <span style="font-size: 15px; color: red;">{{ form.perfiluser.is_panel.errors }}  </span>{% endif %}/label>
+                                {{form.perfiluser.is_ponente }}
+
+                            </div>
+                            <div class="col-sm-3 " id="esp_div">
+                                <div class="form-group">
+                                    <label
+                                        for="{{form.perfiluser.especialidad.id_for_label }}"><b>{{form.perfiluser.especialidad.label }}</b>{% if form.perfiluser.especialidad.errors %} <span style="font-size: 15px; color: red;">{{ form.perfiluser.especialidad.errors }}  </span>{% endif %}</label>
+                                    {{form.perfiluser.especialidad }}
+                                </div>
+                            </div>
+                        </div>
+
                             <input type="submit" value="Enviar" />
                         </div>
                     </form>
-                   
+
                 </div>
             </div>
         </div>
@@ -122,4 +154,41 @@ Registrarse
 
 {% endblock%}
 
+{%block script%}
+<script>
+    $(document).ready(function () {
+        $("#esp_div").hide();
+        if ($('#id_perfiluser-categoria option:selected').text() == 'Médico' || $('#id_perfiluser-categoria option:selected').text() == 'Residente') {
 
+            $("#esp_div").slideToggle();
+            $("#id_perfiluser-especialidad").attr('required','True')
+
+        }
+        else{
+             $("#esp_div").hide();
+             $("#id_perfiluser-especialidad").removeAttr('required')
+        }
+           
+
+        $('#id_perfiluser-categoria').change(function () {
+
+            if ($('#id_perfiluser-categoria option:selected').text() == 'Médico' || $('#id_perfiluser-categoria option:selected').text() == 'Residente') {
+
+                $("#esp_div").slideToggle();
+                $("#id_perfiluser-especialidad").attr('required','True')
+            }
+            else {
+                $("#esp_div").val('')
+                $("#esp_div").hide();
+                $("#id_perfiluser-especialidad").removeAttr('required')
+
+            }
+
+        });
+
+    });
+
+
+
+</script>
+{%endblock%}

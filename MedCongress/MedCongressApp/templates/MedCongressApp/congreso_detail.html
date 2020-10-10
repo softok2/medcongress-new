@@ -339,6 +339,7 @@
 
 {%endblock%}
 {% block script%}
+
 <script type="text/javascript">
     jQuery(document).ready(function ($) {
         $(".back").click(function (event) {
@@ -357,11 +358,35 @@
             },
             success: function (data) {
                 if (data['succes']){
-                alert('Ha adicionado un evento a su carrito de compra. \n Valla al carrito para efectuar su compra');
-                    location.reload();
+                    swal({
+            title: "Ha adicionado un evento a su carrito de compra",
+            text: "Valla al carrito para efectuar su compra",
+            icon: "success",
+            buttons: {
+                cancel: {
+                    text: "ok!",
+                    value: null,
+                    visible: true,
+                    className: "",
+                    closeModal: false,
+                },
+               
+                
+                
+            }
+        })
+        .then((isConfirm) => {
+            if (isConfirm) {
+                
+            }
+            else{
+                location.reload();
+            }
+
+        });
             }
                 else
-                    alert('Ya tiene este Taller en el carrito de compra');
+                swal("No se puede", "Ya tiene este Taller en el carrito de compra.", "error"); 
             }
         });
     }
@@ -375,11 +400,39 @@
             },
             success: function (data) {
                 if (data['succes']){
-                alert('Ha adicionado un evento a su carrito de compra. \n Valla al carrito para efectuar su compra');
-                    location.reload();
+                    swal({
+            title: "Ha adicionado un evento a su carrito de compra",
+            text: "Valla al carrito para efectuar su compra",
+            icon: "success",
+            buttons: {
+                cancel: {
+                    text: "ok!",
+                    value: null,
+                    visible: true,
+                    className: "",
+                    closeModal: false,
+                },
+               
+                
+                
+            }
+        })
+        .then((isConfirm) => {
+            if (isConfirm) {
+                
+            }
+            else{
+                location.reload();
+            }
+
+        });
+
+
+                
+                   
             }
                 else
-                    alert('Ya tiene este congreso en el carrito de compra');
+                swal("No se puede", "Ya tiene este Evento en el carrito de compra.", "error"); 
             }
         });
     }

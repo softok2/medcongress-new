@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
+from django.core.validators import RegexValidator
 from django.db import models
 
 # Create your models here.
@@ -17,14 +18,29 @@ class CategoriaUsuario(models.Model):
     def __str__(self):
         return self.nombre
 
+
+##### Tabla Especialidades  ###
+
+class Especialidades(models.Model):
+    nombre=models.CharField(max_length=50)
+    detalle=models.TextField(null=True,blank=True)
+
+    class Meta:
+        verbose_name='especialidad del usuario'
+        verbose_name_plural='especialidades del usuario'
+
+    def __str__(self):
+        return self.nombre
+
 ##### Tabla País #####
 
 class Pais(models.Model):
-    denominacion= models.CharField(max_length=50)
+    denominacion = models.CharField(unique=True, max_length=50, validators=[RegexValidator(
+        r'^[a-zA-Z\s]+$', 'Entre un nombre válido. Ej(México)')])
 
     class Meta:
-        verbose_name='pais'
-        verbose_name_plural='paises'
+        verbose_name = 'pais'
+        verbose_name_plural = 'paises'
 
     def __str__(self):
         return self.denominacion
@@ -51,7 +67,7 @@ class PerfilUsuario(models.Model):
     estado=models.CharField(max_length=50)
     id_openpay=models.CharField(max_length=20,null=True,blank=True)
     detalle=models.TextField(null=True,blank=True)
-    is_ponente=models.BooleanField()
+    is_ponente=models.BooleanField(blank=True, null=True)
     path=models.CharField(max_length=50, help_text='campo para identificarlo por la URL')
     cel_profecional=models.CharField(max_length=50)
     foto=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='usuarios' )
@@ -59,6 +75,7 @@ class PerfilUsuario(models.Model):
     key_expires = models.DateTimeField(blank=True, null=True)
     usuario=models.OneToOneField(User, on_delete=models.CASCADE)
     categoria=models.ForeignKey(CategoriaUsuario,on_delete=models.DO_NOTHING)
+    especialidad=models.ForeignKey(Especialidades,on_delete=models.DO_NOTHING,null=True,blank=True)
     pais=models.ForeignKey(Pais,on_delete=models.DO_NOTHING)
     genero=models.ForeignKey(Genero,on_delete=models.DO_NOTHING)
 
