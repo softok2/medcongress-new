@@ -160,7 +160,7 @@ Registrarse
         $("#esp_div").hide();
         if ($('#id_perfiluser-categoria option:selected').text() == 'Médico' || $('#id_perfiluser-categoria option:selected').text() == 'Residente') {
 
-            $("#esp_div").slideToggle();
+             $("#esp_div").show();
             $("#id_perfiluser-especialidad").attr('required','True')
 
         }
@@ -174,7 +174,7 @@ Registrarse
 
             if ($('#id_perfiluser-categoria option:selected').text() == 'Médico' || $('#id_perfiluser-categoria option:selected').text() == 'Residente') {
 
-                $("#esp_div").slideToggle();
+                 $("#esp_div").show();
                 $("#id_perfiluser-especialidad").attr('required','True')
             }
             else {
