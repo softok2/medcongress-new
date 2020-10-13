@@ -1,5 +1,5 @@
 from django import forms
-from .models import Pais,PerfilUsuario,Ubicacion
+from .models import Pais,PerfilUsuario,Ubicacion,CategoriaUsuario
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
 
@@ -48,6 +48,7 @@ class PerfilUserForm(forms.ModelForm):
                 required=False
                
                )
+    categoria=forms.ModelChoiceField(queryset=CategoriaUsuario.objects.filter(published=True))
    
     class Meta:
         model=PerfilUsuario
@@ -85,9 +86,28 @@ class Ubicacion(forms.ModelForm):
             self.add_error('direccion', 'Debe seleccionar una dirección')
     
 
+class Categoria(forms.ModelForm):
+
+    nombre= forms.CharField(
+        label='Nueva Categoría',
+        required=False
+    )
+
+    class Meta:
+        model=CategoriaUsuario
+        fields=['nombre']
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        self.fields['nombre'].widget.attrs.update({'class': 'form-control'}) 
+       
+
+
+
 class UserPerfilUser(MultiModelForm):
     form_classes = {
         'user': UserForm,
         'perfiluser': PerfilUserForm,
         'ubicacion':Ubicacion,
+        'categoria':Categoria
     }

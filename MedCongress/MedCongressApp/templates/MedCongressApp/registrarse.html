@@ -15,7 +15,7 @@ Registrarse
 {%endblock%}
 {% block contenido %}
 
-<div class="kode-event-time">
+<div class="kode-event-time" style="background-image: ;">
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -43,7 +43,7 @@ Registrarse
                     <h4 class="modal-title" id="myModalLabel">Políticas de privacidad</h4>
                 </div>
                 <div class="modal-body">
-                   
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -161,6 +161,16 @@ Registrarse
                                     {{form.perfiluser.categoria }}
                                 </div>
                             </div>
+                            <div class="col-sm-3 " id="new_cat">
+                                <div class="form-group">
+                                    <label
+                                        for="{{form.categoria.nombre.id_for_label }}"><b>{{form.categoria.nombre.label }}</b>{% if form.categoria.nombre.errors %}
+                                        <span
+                                            style="font-size: 15px; color: red;">{{ form.categoria.nombre.errors }}
+                                        </span>{% endif %}</label>
+                                    {{form.categoria.nombre}}
+                                </div>
+                            </div>
 
                             <div class="col-sm-3 " id="esp_div">
                                 <div class="form-group">
@@ -216,12 +226,11 @@ Registrarse
                         </div>
                         <div class="row">
                             <div class="col-sm-6 ">
-                                <div class="form-group"> 
+                                <div class="form-group">
                                     {{form.perfiluser.is_ponente }}
-                                    <label
-                                        for="{{form.perfiluser.is_ponente.id_for_label }}"><b>{{form.perfiluser.is_ponente.label }}
-                                </label>
-                                           
+                                    <label for="{{form.perfiluser.is_ponente.id_for_label }}"><b>{{form.perfiluser.is_ponente.label }}
+                                    </label>
+
                                 </div>
                             </div>
 
@@ -255,18 +264,19 @@ Registrarse
                             <div class="col-sm-offset-2 col-sm-5">
                                 <div class="">
                                     <label>
-                                        <input  id="pol" type="checkbox">  <button type="button" class="btn btn-link" data-toggle="modal"
-                                        data-target="#my" >
-                                        <span>Acepta política de privacidad </span>
+                                        <input id="pol" type="checkbox"> <button type="button" class="btn btn-link"
+                                            data-toggle="modal" data-target="#my">
+                                            <span>Acepta política de privacidad </span>
 
-                                    </button>
-                                    <button type="submit" class="btn btn-lg btn-primary" id="submit"  disabled="disabled" >Registrarse </button>
+                                        </button>
+                                        <button type="submit" class="btn btn-lg btn-primary" id="submit"
+                                            disabled="disabled">Registrarse </button>
                                     </label>
 
                                 </div>
-                              
+
                             </div>
-                           
+
                         </div>
 
                 </div>
@@ -343,21 +353,35 @@ Registrarse
 
         $("#esp_div").hide();
         $("#cel_prof").hide();
+        $("#new_cat").hide();
         if ($('#id_perfiluser-categoria option:selected').text() == 'Médico' || $('#id_perfiluser-categoria option:selected').text() == 'Residente') {
 
             $("#esp_div").show();
             $("#cel_prof").show();
-            $("#id_perfiluser-especialidad").attr('required', 'True')
-            $("#id_perfiluser-cel_profecional").attr('required', 'True')
+           
+            $("#id_perfiluser-especialidad").attr('required', 'True');
+            $("#id_perfiluser-cel_profecional").attr('required', 'True');
 
 
         }
         else {
             $("#esp_div").hide();
             $("#cel_prof").hide();
+            $("#id_perfiluser-especialidad").val('');
+            $("#id_perfiluser-cel_profecional").val('');
             $("#id_perfiluser-especialidad").removeAttr('required')
             $("#id_perfiluser-cel_profecional").removeAttr('required')
 
+        }
+        if ($('#id_perfiluser-categoria option:selected').text() == 'Otra') {
+            $("#new_cat").show();
+            $("#id_categoria-denominacion").attr('required', 'True');
+
+        }
+        else {
+            $("#new_cat").hide();
+            $("#id_categoria-denominacion").val('')
+            $("#id_categoria-denominacion").removeAttr('required');
         }
 
 
@@ -371,22 +395,32 @@ Registrarse
                 $("#id_perfiluser-cel_profecional").attr('required', 'True')
             }
             else {
-                $("#esp_div").val('')
-                $("#cel_prof").val('')
+                $("#id_perfiluser-especialidad").val('');
+                $("#id_perfiluser-cel_profecional").val('');
                 $("#esp_div").hide();
                 $("#cel_prof").hide();
                 $("#id_perfiluser-especialidad").removeAttr('required')
                 $("#id_perfiluser-cel_profecional").removeAttr('required')
 
             }
+            if ($('#id_perfiluser-categoria option:selected').text() == 'Otra') {
+                $("#new_cat").show();
+                $("#id_categoria-denominacion").attr('required', 'True')
+
+            }
+            else {
+                $("#new_cat").hide();
+                $("#id_categoria-denominacion").val('')
+                $("#id_categoria-denominacion").removeAttr('required')
+            }
 
         });
 
         $('#pol').change(function () {
-            if($('#pol').prop('checked')){
-                $("#submit").removeAttr('disabled') 
+            if ($('#pol').prop('checked')) {
+                $("#submit").removeAttr('disabled')
             }
-            else{
+            else {
                 $("#submit").attr('disabled', 'disabled')
             }
 

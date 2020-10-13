@@ -21,7 +21,8 @@ from requests.auth import HTTPBasicAuth
 from .forms import UserPerfilUser
 from .models import (CategoriaPagoCongreso, Congreso, EspecialidadCongreso,
                      Ponencia, Ponente, RelCongresoCategoriaPago,
-                     RelCongresoUser,RelPonenciaPonente,PerfilUsuario,ImagenCongreso,Taller,RelTalleresCategoriaPago,RelTallerUser,DatosIniciales)
+                     RelCongresoUser,RelPonenciaPonente,PerfilUsuario,ImagenCongreso,Taller,RelTalleresCategoriaPago,RelTallerUser,DatosIniciales,
+                     CategoriaUsuario)
 from .pager import Pager
 from .cart import Cart
 
@@ -388,6 +389,11 @@ class PerfilUserCreate(CreateView):
         us=User.objects.create_user(user.username,user.email,user.password)
         ubicacion= form['ubicacion'].save(commit=True)
         perfiluser = form['perfiluser'].save(commit=False)
+        categoria = form['categoria'].save(commit=False)
+        if categoria.nombre !='':
+            categoria.published=False
+            categoria.save()
+            perfiluser.categoria=categoria
         us.first_name=user.first_name
         us.last_name=user.last_name
         us.is_active = True

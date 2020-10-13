@@ -9,6 +9,7 @@ from django.db import models
 
 class CategoriaUsuario(models.Model):
     nombre=models.CharField(max_length=50)
+    published=models.BooleanField(null=True)
     detalle=models.TextField(null=True,blank=True)
 
     class Meta:
