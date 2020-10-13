@@ -375,13 +375,13 @@ Registrarse
         }
         if ($('#id_perfiluser-categoria option:selected').text() == 'Otra') {
             $("#new_cat").show();
-            $("#id_categoria-denominacion").attr('required', 'True');
+            $("#id_categoria-nombre").attr('required', 'True');
 
         }
         else {
             $("#new_cat").hide();
-            $("#id_categoria-denominacion").val('')
-            $("#id_categoria-denominacion").removeAttr('required');
+            $("#id_categoria-nombre").val('')
+            $("#id_categoria-nombre").removeAttr('required');
         }
 
 
@@ -405,13 +405,13 @@ Registrarse
             }
             if ($('#id_perfiluser-categoria option:selected').text() == 'Otra') {
                 $("#new_cat").show();
-                $("#id_categoria-denominacion").attr('required', 'True')
+                $("#id_categoria-nombre").attr('required', 'True')
 
             }
             else {
                 $("#new_cat").hide();
-                $("#id_categoria-denominacion").val('')
-                $("#id_categoria-denominacion").removeAttr('required')
+                $("#id_categoria-nombre").val('')
+                $("#id_categoria-nombre").removeAttr('required')
             }
 
         });
