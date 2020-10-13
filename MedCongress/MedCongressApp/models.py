@@ -82,7 +82,7 @@ class PerfilUsuario(models.Model):
     detalle=models.TextField(null=True,blank=True)
     is_ponente=models.BooleanField(blank=True, null=True)
     path=models.CharField(max_length=50, help_text='campo para identificarlo por la URL')
-    cel_profecional=models.CharField(max_length=50)
+    cel_profecional=models.CharField(max_length=50,null=True)
     foto=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='usuarios' )
     activation_key = models.CharField(max_length=40,blank=True, null=True)
     key_expires = models.DateTimeField(blank=True, null=True)
