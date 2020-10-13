@@ -3,6 +3,16 @@
 {% block titulo %}
 Registrarse
 {%endblock%}
+
+{%block css%}
+<style>
+    #geomap{
+    width: 100%;
+    height: 400px;
+}
+</style>
+
+{%endblock%}
 {% block contenido %}
 
 <div class="kode-event-time">
@@ -76,32 +86,6 @@ Registrarse
                             <div class="col-sm-3 ">
                                 <div class="form-group">
                                     <label
-                                        for="{{form.perfiluser.pais.id_for_label }}"><b>{{form.perfiluser.pais.label }}</b> {% if form.perfiluser.pais.errors %} <span style="font-size: 15px; color: red;">{{ form.perfiluser.pais.errors }}  </span>{% endif %} </label>
-                                    
-                                    {{form.perfiluser.pais }}
-                                </div>
-                            </div>
-                            <div class="col-sm-3 ">
-                                <div class="form-group">
-                                    <label
-                                        for="{{form.perfiluser.ciudad.id_for_label }}"><b>{{form.perfiluser.ciudad.label }}</b>{% if form.perfiluser.ciudad.errors %} <span style="font-size: 15px; color: red;">{{ form.perfiluser.ciudad.errors }}  </span>{% endif %} </label>
-                                   
-                                    {{form.perfiluser.ciudad }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-3 ">
-                                <div class="form-group">
-                                    <label
-                                        for="{{form.perfiluser.estado.id_for_label }}"><b>{{form.perfiluser.estado.label }}</b>{% if form.perfiluser.estado.errors %} <span style="font-size: 15px; color: red;">{{ form.perfiluser.estado.errors }}  </span>{% endif %}</label>
-                            
-                                    {{form.perfiluser.estado }}
-                                </div>
-                            </div>
-                            <div class="col-sm-3 ">
-                                <div class="form-group">
-                                    <label
                                         for="{{form.perfiluser.cel_profecional.id_for_label }}"><b>{{form.perfiluser.cel_profecional.label }}</b>{% if form.perfiluser.cel_profecional.errors %} <span style="font-size: 15px; color: red;">{{ form.perfiluser.cel_profecional.errors }}  </span>{% endif %}</label>
                                    
                                     {{form.perfiluser.cel_profecional }}
@@ -110,17 +94,48 @@ Registrarse
                             <div class="col-sm-3 ">
                                 <div class="form-group">
                                     <label
+                                        for="{{form.perfiluser.genero.id_for_label }}"><b>{{form.perfiluser.genero.label }}</b>{% if form.perfiluser.genero.errors %} <span style="font-size: 15px; color: red;">{{ form.perfiluser.genero.errors }}  </span>{% endif %}</label>
+                                    {{form.perfiluser.genero }}
+                                </div>
+                            </div>
+                            
+                            
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-sm-3 ">
+                                <div class="form-group">
+                                    <label
                                         for="{{form.perfiluser.categoria.id_for_label }}"><b>{{form.perfiluser.categoria.label }}</b>{% if form.perfiluser.categoria.errors %} <span style="font-size: 15px; color: red;">{{ form.perfiluser.categoria.errors }}  </span>{% endif %}</label>
                                   
                                     {{form.perfiluser.categoria }}
                                 </div>
                             </div>
-                            <div class="col-sm-3 ">
+                            
+                            <div class="col-sm-3 " id="esp_div">
                                 <div class="form-group">
                                     <label
-                                        for="{{form.perfiluser.genero.id_for_label }}"><b>{{form.perfiluser.genero.label }}</b>{% if form.perfiluser.genero.errors %} <span style="font-size: 15px; color: red;">{{ form.perfiluser.genero.errors }}  </span>{% endif %}</label>
-                                    {{form.perfiluser.genero }}
+                                        for="{{form.perfiluser.especialidad.id_for_label }}"><b>{{form.perfiluser.especialidad.label }}</b>{% if form.perfiluser.especialidad.errors %} <span style="font-size: 15px; color: red;">{{ form.perfiluser.especialidad.errors }}  </span>{% endif %}</label>
+                                    {{form.perfiluser.especialidad }}
                                 </div>
+                            </div>
+                            <div class="col-sm-5 ">
+                                <div class="form-group">
+                                    <label
+                                        for="{{form.ubicacion.direccion.id_for_label }}"><b>{{form.ubicacion.direccion.label }}</b> {% if form.ubicacion.direccion.errors %} <span style="font-size: 15px; color: red;">{{ form.ubicacion.direccion.errors }}  </span>{% endif %} </label>
+                                    
+                                    {{form.ubicacion.direccion }}
+                                </div>
+                            </div>
+                            <div class="col-ms-1">
+                                <div class="form-group">
+                                    <label style="display: none;" class="mapa">Ocul. Mapa</label>
+                                    <label  class="mapa">Ver Mapa</label>  
+                                    <a onclick="VerMapa()" type="link"  style="display: block;">  <i class="glyphicon glyphicon-map-marker" style="font-size: 43px;"></i> </a>
+                                    
+                                   
+                                </div>
+                               
                             </div>
                         </div>
                         <div class="row">
@@ -131,19 +146,42 @@ Registrarse
                                 {{form.perfiluser.is_ponente }}
 
                             </div>
-                            <div class="col-sm-3 " id="esp_div">
-                                <div class="form-group">
-                                    <label
-                                        for="{{form.perfiluser.especialidad.id_for_label }}"><b>{{form.perfiluser.especialidad.label }}</b>{% if form.perfiluser.especialidad.errors %} <span style="font-size: 15px; color: red;">{{ form.perfiluser.especialidad.errors }}  </span>{% endif %}</label>
-                                    {{form.perfiluser.especialidad }}
-                                </div>
+                            <div class="col-sm-6 geomap" style="display: none;">
+                                <div id="geomap"> </div>
                             </div>
                         </div>
+                        <div class="row">
+                            
+                           
+                            <div class="col-sm-3 " >
+                                <div class="form-group" style="display: none;">
+                                    <label
+                                        for="{{form.ubicacion.longitud.id_for_label }}"><b>{{form.ubicacion.longitud.label }}</b>{% if form.ubicacion.longitud.errors %} <span style="font-size: 15px; color: red;">{{ form.ubicacion.longitud.errors }}  </span>{% endif %}</label>
+                            
+                                    {{form.ubicacion.longitud }}
+                                </div>
+                            </div>
+                            <div class="col-sm-3 " style="display: none;">
+                                <div class="form-group">
+                                    <label
+                                        for="{{form.ubicacion.latitud.id_for_label }}"><b>{{form.ubicacion.latitud.label }}</b>{% if form.ubicacion.latitud.errors %} <span style="font-size: 15px; color: red;">{{ form.ubicacion.latitud.errors }}  </span>{% endif %} </label>
+                                   
+                                    {{form.ubicacion.latitud }}
+                                </div>
+                            </div>
+                            
+                           
+                            
+                        </div>
 
-                            <input type="submit" value="Enviar" />
+                        <div class="row">
+
+                            <div class="col-lg-2 col-md-2col-sm-2 col-xs-12">  <input type="submit" value="Enviar" /></div>
+                        </div>
+                          
                         </div>
                     </form>
-
+                    
                 </div>
             </div>
         </div>
@@ -155,12 +193,67 @@ Registrarse
 {% endblock%}
 
 {%block script%}
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCf3QdCwg8QDNOS3A2vSQ3DqW2mpJ_gSY8"></script>
+<link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
+<script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
 <script>
+
+var geocoder;
+var map;
+var marker;
+
+
+function initialize() {
+    var initialLat = $('#id_ubicacion-latitud').val();
+    var initialLong = $('#id_ubicacion-longitud').val();
+    initialLat = initialLat?initialLat:0;
+    initialLong = initialLong?initialLong:0;
+
+    var latlng = new google.maps.LatLng(initialLat, initialLong);
+    var options = {
+        zoom: 11,
+        center: latlng,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+
+    map = new google.maps.Map(document.getElementById("geomap"), options);
+
+    geocoder = new google.maps.Geocoder();
+
+    marker = new google.maps.Marker({
+        map: map,
+        draggable: true,
+        position: latlng
+    });
+
+    google.maps.event.addListener(marker, "dragend", function () {
+        var point = marker.getPosition();
+        map.panTo(point);
+        geocoder.geocode({'latLng': marker.getPosition()}, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                map.setCenter(results[0].geometry.location);
+                marker.setPosition(results[0].geometry.location);
+                $('#id_ubicacion-direccion').val(results[0].formatted_address);
+                $('#id_ubicacion-latitud').val(marker.getPosition().lat());
+                $('#id_ubicacion-longitud').val(marker.getPosition().lng());
+            }
+        });
+    });
+
+}
+
+
     $(document).ready(function () {
+        $('#id_ubicacion-direccion').keypress(function(){
+                $('#id_ubicacion-latitud').val('');
+                $('#id_ubicacion-longitud').val('');
+
+        });
+                
         $("#esp_div").hide();
         if ($('#id_perfiluser-categoria option:selected').text() == 'Médico' || $('#id_perfiluser-categoria option:selected').text() == 'Residente') {
 
-             $("#esp_div").show();
+            $("#esp_div").show();
             $("#id_perfiluser-especialidad").attr('required','True')
 
         }
@@ -174,7 +267,7 @@ Registrarse
 
             if ($('#id_perfiluser-categoria option:selected').text() == 'Médico' || $('#id_perfiluser-categoria option:selected').text() == 'Residente') {
 
-                 $("#esp_div").show();
+                $("#esp_div").show();
                 $("#id_perfiluser-especialidad").attr('required','True')
             }
             else {
@@ -186,9 +279,109 @@ Registrarse
 
         });
 
+
+
+//load google map
+initialize();
+    
+    /*
+     * autocomplete location search
+     */
+    var PostCodeid = '#id_ubicacion-direccion';
+    $(function () {
+        $(PostCodeid).autocomplete({
+            source: function (request, response) {
+                geocoder.geocode({
+                    'address': request.term
+                }, function (results, status) {
+                    response($.map(results, function (item) {
+                       console.log(item);
+                        return {
+                            label: item.formatted_address,
+                            value: item.formatted_address,
+                            lat: item.geometry.location.lat(),
+                            lon: item.geometry.location.lng(),
+                         
+                        };
+                    }));
+                });
+            },
+            select: function (event, ui) {
+                
+              
+                $('#id_ubicacion-direccion').val(ui.item.value);
+               
+                $('#id_ubicacion-latitud').val(ui.item.lat);
+                $('#id_ubicacion-longitud').val(ui.item.lon);
+              
+                var latlng = new google.maps.LatLng(ui.item.lat, ui.item.lon);
+                marker.setPosition(latlng);
+                initialize();
+            }
+        });
+    });
+    
+    /*
+     * Point location on google map
+     */
+    // $('#get_map').click(function (e) {
+       
+    //     var address = $(PostCodeid).val();
+    //     geocoder.geocode({'address': address}, function (results, status) {
+    //         if (status == google.maps.GeocoderStatus.OK) {
+    //             map.setCenter(results[0].geometry.location);
+    //             marker.setPosition(results[0].geometry.location);
+    //             $('#id_ubicacion-direccion').val(results[0].formatted_address);
+    //             $('#id_ubicacion-latitud').val(marker.getPosition().lat());
+    //             $('#id_ubicacion-longitud').val(marker.getPosition().lng());
+    //         } else {
+    //             alert("Geocode was not successful for the following reason: " + status);
+    //         }
+    //     });
+    //     e.preventDefault();
+    // });
+
+    //Add listener to marker for reverse geocoding
+
+//     google.maps.event.addListener( map, "click", function(ele) {
+//     // codigo que crea el marcador
+//     new google.maps.Marker({
+//         map: map
+//     })
+// });
+
+
+    // google.maps.event.addListener(map, 'click', function (event) {
+
+    //     marker = new google.maps.Marker({
+    //     map: map,
+    //     draggable: true,
+    //     position: event.latLng
+    // });
+
+    //     geocoder.geocode({'latLng': marker.getPosition()}, function (results, status) {
+    //         if (status == google.maps.GeocoderStatus.OK) {
+    //             if (results[0]) {
+    //                 $('#id_ubicacion-direccion').val(results[0].formatted_address);
+    //                 $('#id_ubicacion-latitud').val(marker.getPosition().lat());
+    //                 $('#id_ubicacion-longitud').val(marker.getPosition().lng());
+    //             }
+    //         }
+    //     });
+    // });
+
+
+
+
+
+
     });
 
-
+function VerMapa(){
+    
+   $('.geomap').slideToggle();
+   $('.mapa').slideToggle(1);
+}
 
 </script>
 {%endblock%}

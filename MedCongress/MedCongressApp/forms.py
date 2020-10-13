@@ -1,5 +1,5 @@
 from django import forms
-from .models import Pais,PerfilUsuario
+from .models import Pais,PerfilUsuario,Ubicacion
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
 
@@ -47,29 +47,46 @@ class PerfilUserForm(forms.ModelForm):
                 required=False
                
                )
-    pais = forms.ModelChoiceField(
-    queryset=Pais.objects.all().order_by('denominacion')) 
+   
     class Meta:
         model=PerfilUsuario
-        fields=['pais','ciudad','estado','cel_profecional','categoria','genero','especialidad','is_ponente']
+        fields=['cel_profecional','categoria','genero','especialidad','is_ponente']
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
-        self.fields['pais'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['ciudad'].widget.attrs.update({'class': 'form-control'})   
-        self.fields['estado'].widget.attrs.update({'class': 'form-control'})   
+         
         self.fields['cel_profecional'].widget.attrs.update({'class': 'form-control'})   
         self.fields['categoria'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['genero'].widget.attrs.update({'class': 'form-control'}) 
        
        
         
-
+class Ubicacion(forms.ModelForm):
+    direccion=forms.CharField(
+               label = 'Localidad',
+               )
+    longitud=forms.FloatField(required=False)
+    latitud=forms.FloatField(required=False)
+    class Meta:
+        model=Ubicacion
+        fields=['direccion','latitud','longitud']
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        self.fields['longitud'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['latitud'].widget.attrs.update({'class': 'form-control'}) 
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(Ubicacion, self).clean(*args, **kwargs)
+        longitud = cleaned_data.get('longitud', None)
+        latitud = cleaned_data.get('latitud', None)
+        print(longitud)
+        if longitud is None :
+            self.add_error('direccion', 'Debe seleccionar una dirección')
     
 
 class UserPerfilUser(MultiModelForm):
     form_classes = {
         'user': UserForm,
         'perfiluser': PerfilUserForm,
+        'ubicacion':Ubicacion,
     }

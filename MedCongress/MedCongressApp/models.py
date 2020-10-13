@@ -57,14 +57,27 @@ class Genero(models.Model):
     def __str__(self):
         return self.denominacion
 
+##### Tabla Ubicacion #####
+
+class Ubicacion(models.Model):
+    direccion= models.CharField(max_length=250)
+    latitud=models.FloatField()
+    longitud=models.FloatField()
+
+    class Meta:
+        verbose_name='ubicacion'
+        verbose_name_plural='ubicaciones'
+        
+    def __str__(self):
+        return self.direccion        
+
 ## cargar valores por defecto en genero##
 
 
 #####  Tabla Perfil Usuario (otros datos de interes del Usuario)
 
 class PerfilUsuario(models.Model):
-    ciudad=models.CharField(max_length=50)
-    estado=models.CharField(max_length=50)
+    
     id_openpay=models.CharField(max_length=20,null=True,blank=True)
     detalle=models.TextField(null=True,blank=True)
     is_ponente=models.BooleanField(blank=True, null=True)
@@ -76,7 +89,7 @@ class PerfilUsuario(models.Model):
     usuario=models.OneToOneField(User, on_delete=models.CASCADE)
     categoria=models.ForeignKey(CategoriaUsuario,on_delete=models.DO_NOTHING)
     especialidad=models.ForeignKey(Especialidades,on_delete=models.DO_NOTHING,null=True,blank=True)
-    pais=models.ForeignKey(Pais,on_delete=models.DO_NOTHING)
+    ubicacion=models.ForeignKey(Ubicacion,on_delete=models.DO_NOTHING,null=True)
     genero=models.ForeignKey(Genero,on_delete=models.DO_NOTHING)
 
     class Meta:

@@ -386,6 +386,7 @@ class PerfilUserCreate(CreateView):
         # email = EmailMessage('Asunto', 'esto es una prueba, como mando correos en Phyton?', to = [user.email])
         # email.send()
         us=User.objects.create_user(user.username,user.email,user.password)
+        ubicacion= form['ubicacion'].save(commit=True)
         perfiluser = form['perfiluser'].save(commit=False)
         us.first_name=user.first_name
         us.last_name=user.last_name
@@ -397,6 +398,8 @@ class PerfilUserCreate(CreateView):
         secret_key = get_random_string(20, chars)
         perfiluser.activation_key=secret_key
         perfiluser.usuario = us
+        perfiluser.ubicacion=ubicacion
+        perfiluser.path=us.username
         perfiluser.save()
         # datas={}
         # datas['activation_key']=secret_key
