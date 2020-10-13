@@ -41,6 +41,7 @@ class UserForm(forms.ModelForm):
 class PerfilUserForm(forms.ModelForm):
     cel_profecional=forms.CharField(
                label = 'Célula Profecional',
+                required=False
                )
     is_ponente=forms.BooleanField(
                 label = 'Desearía ser ponente en un evento   ',
