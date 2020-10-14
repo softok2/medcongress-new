@@ -11,19 +11,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
-            name='Ubicacion',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('direccion', models.CharField(max_length=250)),
-                ('latitud', models.FloatField()),
-                ('longitud', models.FloatField()),
-            ],
-            options={
-                'verbose_name': 'ubicacion',
-                'verbose_name_plural': 'ubicaciones',
-            },
-        ),
+        
         migrations.RemoveField(
             model_name='perfilusuario',
             name='ciudad',
