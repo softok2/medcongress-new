@@ -27,4 +27,5 @@ admin.site.register(RelTalleresCategoriaPago)
 admin.site.register(CategoriaPonente)
 admin.site.register(DatosIniciales)
 admin.site.register(Especialidades)
+admin.site.register(Ubicacion)
 
