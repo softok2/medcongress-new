@@ -168,7 +168,6 @@ class CategoriaPagoCongreso(models.Model):
 
 class Congreso(models.Model):
     titulo=models.CharField(max_length=250)
-    sub_titulo=models.CharField(max_length=250, null=True)
     imagen_seg=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso')
     path=models.CharField(max_length=50, help_text='campo para identificarlo por la URL')
     lugar=models.CharField(max_length=250,null=True)
