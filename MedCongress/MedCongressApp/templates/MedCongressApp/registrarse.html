@@ -297,54 +297,13 @@ Registrarse
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCf3QdCwg8QDNOS3A2vSQ3DqW2mpJ_gSY8"></script>
 <link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
 <script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
+<script src="{% static 'MedCongressApp/js/lugar.js'%}"></script>
 <script>
 
-    var geocoder;
-    var map;
-    var marker;
-
-
-    function initialize() {
-        var initialLat = $('#id_ubicacion-latitud').val();
-        var initialLong = $('#id_ubicacion-longitud').val();
-        initialLat = initialLat ? initialLat : 0;
-        initialLong = initialLong ? initialLong : 0;
-
-        var latlng = new google.maps.LatLng(initialLat, initialLong);
-        var options = {
-            zoom: 11,
-            center: latlng,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-
-        map = new google.maps.Map(document.getElementById("geomap"), options);
-
-        geocoder = new google.maps.Geocoder();
-
-        marker = new google.maps.Marker({
-            map: map,
-            draggable: true,
-            position: latlng
-        });
-
-        google.maps.event.addListener(marker, "dragend", function () {
-            var point = marker.getPosition();
-            map.panTo(point);
-            geocoder.geocode({ 'latLng': marker.getPosition() }, function (results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
-                    map.setCenter(results[0].geometry.location);
-                    marker.setPosition(results[0].geometry.location);
-                    $('#id_ubicacion-direccion').val(results[0].formatted_address);
-                    $('#id_ubicacion-latitud').val(marker.getPosition().lat());
-                    $('#id_ubicacion-longitud').val(marker.getPosition().lng());
-                }
-            });
-        });
-
-    }
-
+    
 
     $(document).ready(function () {
+        FiltrarLugar('#id_ubicacion-direccion','#id_ubicacion-longitud','#id_ubicacion-latitud');
         $('#id_ubicacion-direccion').keypress(function () {
             $('#id_ubicacion-latitud').val('');
             $('#id_ubicacion-longitud').val('');
@@ -426,46 +385,7 @@ Registrarse
 
         });
 
-        //load google map
-        initialize();
-
-        /*
-         * autocomplete location search
-         */
-        var PostCodeid = '#id_ubicacion-direccion';
-        $(function () {
-            $(PostCodeid).autocomplete({
-                source: function (request, response) {
-                    geocoder.geocode({
-                        'address': request.term
-                    }, function (results, status) {
-                        response($.map(results, function (item) {
-                            console.log(item);
-                            return {
-                                label: item.formatted_address,
-                                value: item.formatted_address,
-                                lat: item.geometry.location.lat(),
-                                lon: item.geometry.location.lng(),
-
-                            };
-                        }));
-                    });
-                },
-                select: function (event, ui) {
-
-
-                    $('#id_ubicacion-direccion').val(ui.item.value);
-
-                    $('#id_ubicacion-latitud').val(ui.item.lat);
-                    $('#id_ubicacion-longitud').val(ui.item.lon);
-
-                    var latlng = new google.maps.LatLng(ui.item.lat, ui.item.lon);
-                    marker.setPosition(latlng);
-                    initialize();
-                }
-            });
-        });
-
+        
         /*
          * Point location on google map
          */

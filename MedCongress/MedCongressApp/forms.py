@@ -1,5 +1,5 @@
 from django import forms
-from .models import Pais,PerfilUsuario,Ubicacion,CategoriaUsuario
+from .models import Pais,PerfilUsuario,Ubicacion,CategoriaUsuario,Genero
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
 
@@ -40,7 +40,7 @@ class UserForm(forms.ModelForm):
 
 class PerfilUserForm(forms.ModelForm):
     cel_profecional=forms.CharField(
-               label = 'Célula Profecional',
+               label = 'Cédula Profecional',
                 required=False
                )
     is_ponente=forms.BooleanField(
@@ -48,7 +48,8 @@ class PerfilUserForm(forms.ModelForm):
                 required=False
                
                )
-    categoria=forms.ModelChoiceField(queryset=CategoriaUsuario.objects.filter(published=True))
+    genero=forms.ModelChoiceField(queryset=Genero.objects.all(), label='Género')
+    categoria=forms.ModelChoiceField(queryset=CategoriaUsuario.objects.filter(published=True),label='Categoría')
    
     class Meta:
         model=PerfilUsuario
