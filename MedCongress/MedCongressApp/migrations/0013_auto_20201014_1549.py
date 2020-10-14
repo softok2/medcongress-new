@@ -41,11 +41,7 @@ class Migration(migrations.Migration):
             name='published',
             field=models.BooleanField(null=True),
         ),
-        migrations.AddField(
-            model_name='congreso',
-            name='sub_titulo',
-            field=models.CharField(max_length=250, null=True),
-        ),
+       
         migrations.AlterField(
             model_name='congreso',
             name='lugar',
