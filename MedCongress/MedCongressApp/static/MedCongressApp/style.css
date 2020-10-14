@@ -191,14 +191,13 @@ h1,h2,h3,h4,h5,h6{
 .kode-slider-content{
 	max-width:760px;
 	margin:0 0;
-	overflow:hidden;
+	
 }
 .kode-content h2{
 	margin:0 0 20px;
 	color:#fff;
 	font-size: 60px;
 	line-height:75px;
-	text-transform:uppercase;
 	font-family: 'Gotham-Bold';
 }
 .kode-content .overflow{
