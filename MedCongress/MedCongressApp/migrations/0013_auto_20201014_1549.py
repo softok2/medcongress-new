@@ -12,18 +12,7 @@ class Migration(migrations.Migration):
 
     operations = [
         
-        migrations.RemoveField(
-            model_name='perfilusuario',
-            name='ciudad',
-        ),
-        migrations.RemoveField(
-            model_name='perfilusuario',
-            name='estado',
-        ),
-        migrations.RemoveField(
-            model_name='perfilusuario',
-            name='pais',
-        ),
+       
         migrations.AddField(
             model_name='categoriausuario',
             name='published',
