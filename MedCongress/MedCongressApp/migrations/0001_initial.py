@@ -30,6 +30,19 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
+            name='Ubicacion',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('direccion', models.CharField(max_length=250)),
+                ('latitud', models.FloatField()),
+                ('longitud', models.FloatField()),
+            ],
+            options={
+                'verbose_name': 'ubicacion',
+                'verbose_name_plural': 'ubicaciones',
+            },
+        ),
+        migrations.CreateModel(
             name='CategoriaPagoCongreso',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -48,6 +61,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('nombre', models.CharField(max_length=50)),
                 ('detalle', models.TextField(blank=True, null=True)),
+                ('published',models.BooleanField(null=True)),
             ],
             options={
                 'verbose_name': 'categoria del usuario',
@@ -112,8 +126,6 @@ class Migration(migrations.Migration):
             name='PerfilUsuario',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('ciudad', models.CharField(max_length=50)),
-                ('estado', models.CharField(max_length=50)),
                 ('is_ponente', models.BooleanField()),
                 ('path', models.CharField(help_text='campo para identificarlo por la URL', max_length=50)),
                 ('cel_profecional', models.CharField(max_length=50)),
@@ -122,7 +134,7 @@ class Migration(migrations.Migration):
                 ('key_expires', models.DateTimeField(blank=True, null=True)),
                 ('categoria', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='MedCongressApp.CategoriaUsuario')),
                 ('genero', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='MedCongressApp.Genero')),
-                ('pais', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='MedCongressApp.Pais')),
+                 ('ubicacion', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='MedCongressApp.Ubicacion')),
                 ('usuario', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
             options={
