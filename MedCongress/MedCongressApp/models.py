@@ -171,7 +171,7 @@ class Congreso(models.Model):
     sub_titulo=models.CharField(max_length=250,null=True)
     imagen_seg=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso')
     path=models.CharField(max_length=50, help_text='campo para identificarlo por la URL')
-    lugar=models.ForeignKey(Ubicacion,on_delete=models.DO_NOTHING,null=True)
+    lugar=models.CharField(max_length=250,null=True)
     fecha_inicio=models.DateTimeField()
     created=models.DateTimeField(auto_now_add=True)
     updated=models.DateTimeField(null=True, blank=True)
