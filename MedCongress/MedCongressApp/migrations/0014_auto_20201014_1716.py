@@ -10,11 +10,4 @@ class Migration(migrations.Migration):
         ('MedCongressApp', '0013_auto_20201014_1549'),
     ]
 
-    operations = [
-        migrations.AlterField(
-            model_name='congreso',
-            name='lugar',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='MedCongressApp.Ubicacion'),
-        ),
-       
-    ]
+   
