@@ -16,7 +16,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="kode-slider-content">
-                            <h2>{{congreso.titulo}}</h2>
+                            <h2>{{congreso.titulo}}</h2>{%if congreso.sub_titulo %}<span style="font-size: 30px;font-style: italic;">{{congreso.sub_titulo }}</span> {%endif%}
 
                             <div class="button-holder" style="padding-top: 30px;">
                                 <a href="#programas" class="button back">Programa</a>
@@ -37,7 +37,7 @@
     <div class="container">
         <div class="kf_heading_1">
             <h2>PROGRAMA</h2>
-            <span>{{congreso.titulo}}</span>
+            <span>{{congreso.titulo}}</span>{%if congreso.sub_titulo %}<span style="font-size: 12px;font-style: italic;margin-top: -27px;">{{congreso.sub_titulo }}</span> {%endif%}
         </div>
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
