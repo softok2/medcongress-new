@@ -12,13 +12,6 @@ class Migration(migrations.Migration):
 
     operations = [
         
-       
-        migrations.AddField(
-            model_name='categoriausuario',
-            name='published',
-            field=models.BooleanField(null=True),
-        ),
-       
         migrations.AlterField(
             model_name='congreso',
             name='lugar',
