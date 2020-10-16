@@ -98,7 +98,7 @@ class PerfilUsuario(models.Model):
         verbose_name_plural='Perfil de usuarios'
 
     def __str__(self):
-        return self.usuario.first_name
+        return self.usuario.first_name +' '+self.usuario.last_name
 
     def is_openpay(self):
         if self.id_openpay :
@@ -223,7 +223,9 @@ class RelCongresoUser(models.Model):
         return '%s->%s->%s'%(self.user.usuario.first_name, self.congreso.titulo, self.categoria_pago.nombre)
 
     class Meta:
-        unique_together = (('user','congreso'),)
+        verbose_name='relacion congreso - usuario'
+        verbose_name_plural='relaciones congreso - usuarios'
+        
 
 ##### Tabla pivote Congreso- Avales #####
 
@@ -433,7 +435,9 @@ class RelTallerUser(models.Model):
         return '%s->%s->%s'%(self.user.usuario.first_name, self.taller.titulo, self.categoria_pago.nombre)
 
     class Meta:
-        unique_together = (('user','taller'),)
+        verbose_name='Relación Taller - usuario'
+        verbose_name_plural='Relaciones Talleres - usuarios'
+        
 
 ##### Tabla Datos Iniciales#####
 

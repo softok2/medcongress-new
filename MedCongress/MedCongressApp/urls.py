@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from .views import (Home,CongresoListView,CongresoDetail,CongresoCardForm,PerfilUserCreate,PagarEfectivo,ViewError404,ViewPonencia,EspecialdiadesAutocomplete,TallerCardForm,AddCart,AddCartTaller,DeletedCart)
+from .views import (Home,CongresoListView,CongresoDetail,CongresoCardForm,PerfilUserCreate,PagarEfectivo,ViewError404,ViewPonencia,EspecialdiadesAutocomplete,TallerCardForm,AddCart,AddCartTaller,DeletedCart,ConfCart)
 
 urlpatterns = [
     
@@ -16,5 +16,7 @@ urlpatterns = [
     path('add_cart', AddCart.as_view() , name='Add_cart'),
     path('add_cart_taller', AddCartTaller.as_view() , name='Add_cart_taller'),
     path('deleted_cart',DeletedCart.as_view() , name='Deleted_cart'),
+    path('conf_cart',ConfCart.as_view() , name='Conf_cart'),
+    
   
 ]

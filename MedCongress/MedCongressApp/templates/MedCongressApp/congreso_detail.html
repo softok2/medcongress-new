@@ -1,5 +1,6 @@
 {% extends "MedCongressApp/base.html"%}
 {% load static %}
+{% load filtros %}
 {% block titulo %}
 {{congreso.titulo}}
 {%endblock%}
@@ -218,7 +219,21 @@
 
                         <div class="kode-price-footer">
                             {% if user.is_authenticated %}
-                            <a onclick="AgregarCarrito({{categoria_pago.pk}})">Agregar al Carrito</a>
+                            {% if request.user|has_group:"Laboratorio" %} 
+                            <div class="">
+                                <div class="col-sm-8">
+                                    <a onclick="AgregarCarrito({{categoria_pago.pk}},'cant_{{categoria_pago.id}}')">Agregar al Carrito</a>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control input-lg" type="number" value="1"  style="height: 52px;" id="cant_{{categoria_pago.id}}">
+                                        <!-- <input class="input-qty-type" type="" name="qty" value="1"> -->
+                                   
+                                </div>
+                            </div>
+                            {%else%} 
+                            <a onclick="AgregarCarrito({{categoria_pago.pk}},'cant_{{categoria_pago.id}}')">Agregar al Carrito</a>
+                            <input class="form-control input-lg" type="number" value="1" style="height: 52px;display: none;" id="cant_{{categoria_pago.id}}">
+                            {%endif%}
                             {%else%} 
                             <a href="{%url 'login'%}">Agregar al Carrito</a>
                             {%endif%}
@@ -272,7 +287,22 @@
 
                                     <div class="kode-price-footer">
                                         {% if user.is_authenticated %}
-                                        <a onclick="AgregarCarritoTaller({{cat.pk}})">Agregar al Carrito</a>
+                                        {% if request.user|has_group:"Laboratorio" %} 
+                                        <div class="">
+                                            <div class="col-sm-8">
+                                                <a onclick="AgregarCarritoTaller({{cat.pk}},'cant_{{cat.pk}}')">Agregar al Carrito</a>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <input class="form-control input-lg" type="number" value="1"  style="height: 52px;" id="cant_{{cat.pk}}">
+                                                    <!-- <input class="input-qty-type" type="" name="qty" value="1"> -->
+                                               
+                                            </div>
+                                        </div>
+                                        {%else%} 
+                                        <a onclick="AgregarCarritoTaller({{cat.pk}},'cant_{{cat.pk}}')">Agregar al Carrito</a>
+                            <input class="form-control input-lg" type="number" value="1" style="height: 52px;display: none;" id="cant_{{cat.pk}}">
+                            {%endif%}
+                                        
 {%else%} 
 <a href="{%url 'login'%}">Agregar al Carrito</a>
 {%endif%}
@@ -348,13 +378,14 @@
         });
     });
 
-    function AgregarCarritoTaller(id) {
+    function AgregarCarritoTaller(id,fields) {
 
         $.ajax({
             type: "GET",
             url: "{% url 'Add_cart_taller'%}",
             data: {
                 'id': id, // from form
+                'cant':$('#'+fields).val()// from form
             },
             success: function (data) {
                 if (data['succes']){
@@ -390,13 +421,15 @@
             }
         });
     }
-    function AgregarCarrito(id) {
+    function AgregarCarrito(id,fields) {
 
         $.ajax({
             type: "GET",
             url: "{% url 'Add_cart'%}",
             data: {
-                'id': id, // from form
+                'id': id, 
+                'cant':$('#'+fields).val()// from form
+
             },
             success: function (data) {
                 if (data['succes']){

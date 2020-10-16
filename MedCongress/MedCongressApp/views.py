@@ -463,9 +463,10 @@ class AddCart(TemplateView):
     def get(self, request):
         if request.is_ajax:
             query =request.GET.get("id")
+            cant =request.GET.get("cant")
             prueba=RelCongresoCategoriaPago.objects.filter(id=query).first()
             car=Cart(self.request)
-            result=car.add_evento(relCongresoCategoriaPago=prueba)
+            result=car.add_evento(relCongresoCategoriaPago=prueba,cant=cant)
             return JsonResponse({'succes':result}, safe=False)
         return TemplateResponse(request, reverse('dashboard'))
    
@@ -478,21 +479,35 @@ class AddCartTaller(TemplateView):
     def get(self, request):
         if request.is_ajax:
             query =request.GET.get("id")
+            cant =request.GET.get("cant")
             prueba=RelTalleresCategoriaPago.objects.filter(id=query).first()
             car=Cart(self.request)
-            result=car.add_taller(relTallerCategoriaPago=prueba)
+            result=car.add_taller(relTallerCategoriaPago=prueba,cant=cant)
             return JsonResponse({'succes':result}, safe=False)
         return TemplateResponse(request, reverse('dashboard'))
 
-##### Adicionar Taller a Carrito de Compra #####
+##### Deleted Evento Carrito de Compra #####
 
 class DeletedCart(TemplateView):
 
     def get(self, request):
         if request.is_ajax:
             id =request.GET.get("id")
-            evento =request.GET.get("evento")
+          
             car=Cart(self.request)
-            result=car.remove(id=id,evento=evento) 
+            result=car.remove(id=id) 
+            return JsonResponse({'succes':result}, safe=False)
+        return TemplateResponse(request, reverse('dashboard'))
+
+##### Confirmar Evento Carrito de Compra #####
+
+class ConfCart(TemplateView):
+
+    def get(self, request):
+        if request.is_ajax:
+            id =request.GET.get("id")
+            cant =request.GET.get("cant")
+            car=Cart(self.request)
+            result=car.confirmar(id=id,cant=cant)
             return JsonResponse({'succes':result}, safe=False)
         return TemplateResponse(request, reverse('dashboard'))

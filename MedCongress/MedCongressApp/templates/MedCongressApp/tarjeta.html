@@ -18,7 +18,8 @@ Efectuar Pago
                             <th>Nombre</th>
                             <th>Cat. de Pago</th>
                             <th>Precio</th>
-                            <th>Acción</th>
+                            <th>Cant.</th>
+                            <th>A pagar</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -30,11 +31,13 @@ Efectuar Pago
                             <td>{{car.nombre_congreso}}</td>
                             <td>{{car.nombre_cat_pago}}</td>
                             <td>${{car.precio}}</td>
-                            <td style="text-align: center;"><i class="fa fa-trash" style="color: red;"></i></td>
+                            <td>{{car.cantidad}}</td>
+                            <td>${{car.pagar}}</td>
+                          
                         </tr>
                         {%endfor%}
                         <tr style="background-color: slategray;">
-                            <th scope="row" colspan="4">Total a pagar</th>
+                            <th scope="row" colspan="6">Total a pagar</th>
                             <td><b> ${{request.session.cart.0.cant}}</b></td>
                             <td></td>
                                 

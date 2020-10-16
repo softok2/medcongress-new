@@ -3,6 +3,7 @@
 
 <head>
 	<meta charset="utf-8">
+	{% load filtros %}
 	{% load static %}
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title> {% block titulo %}
@@ -104,6 +105,8 @@
 										<th>Nombre</th>
 										<th>Cat. de Pago</th>
 										<th>Precio</th>
+										<th>Cant.</th>
+										<th>A pagar</th>
 										<th>Acción</th>
 									</tr>
 								</thead>
@@ -116,11 +119,24 @@
 										<td>{{car.nombre_congreso}}</td>
 										<td>{{car.nombre_cat_pago}}</td>
 										<td>${{car.precio}}</td>
-										<td style="text-align: center;"><a onclick="EliminarCart({{car.id}},'{{car.tipo_evento}}')"> <i class="fa fa-trash" style="color: red;"></i></a></td>
+										
+										<th style="display: none;" id="edit_{{car.mi_id}}"> <input class="form-control input-sm" type="number" value="{{car.cantidad}}" style="width: 66px;" id="cantidad_{{car.mi_id}}"></th>
+										<th id="edit_no_{{car.mi_id}}"> {{car.cantidad}}</th>
+									
+										<td>${{car.pagar}}</td>
+										<td style="text-align: center;">
+											{% if request.user|has_group:"Laboratorio" %} 
+											<a id="btn_edit_{{car.mi_id}}" onclick="EditCart({{car.mi_id}}) " title="Editar"> <i class="fa fa-pencil-square" style="color:blue; font-size: 20px;"></i></a>
+											<a id="btn_conf_{{car.mi_id}}"  onclick="ConfCart({{car.mi_id}})" style="display: none;"  title="Confirmar"> <i class="fa fa-check-circle" style="color:green; font-size: 20px;"></i></a>
+											<a id="btn_cancel_{{car.mi_id}}"  onclick="CancelCart({{car.mi_id}})" style="display: none;"  title="Cancelar"> <i class="fa fa-minus-circle" style="color:red; font-size: 20px;"></i></a>
+											{%endif%}
+											<a onclick="EliminarCart({{car.mi_id}})"> <i class="fa fa-trash" style="color: red;font-size: 20px;margin-left: 10px;"  title="Eliminar"></i></a></td>
 									</tr>
 									{%endfor%}
 									<tr>
-										<th scope="row" colspan="4">Total a pagar</th>
+										
+										<th scope="row" colspan="6">Total a pagar</th>
+								
 										<td><b> ${{request.session.cart.0.cant}}</b></td>
 										<td></td>
 											
@@ -244,13 +260,13 @@
 	<script>
 		
 
-		function EliminarCart(id,evento){
+		function EliminarCart(id){
 			$.ajax({
             type: "GET",
             url: "{% url 'Deleted_cart'%}",
             data: {
                 'id': id,
-				'evento': evento, // from form
+				
             },
             success: function (data) {
                 if (data['succes']){
@@ -290,6 +306,69 @@
 		function Mensaje(mensaje){
 			swal("Atención", mensaje, "warning"); 
 		}
+	function EditCart(id){
+$('#edit_'+id).show();
+$('#btn_conf_'+id).show();
+$('#btn_cancel_'+id).show();
+$('#edit_no_'+id).hide();
+$('#btn_edit_'+id).hide();
+		}
+		function CancelCart(id){
+$('#edit_'+id).hide();
+$('#btn_conf_'+id).hide();
+$('#btn_cancel_'+id).hide();
+
+$('#edit_no_'+id).show();
+$('#btn_edit_'+id).show();
+		}
+
+	function ConfCart(id){
+		$.ajax({
+            type: "GET",
+            url: "{% url 'Conf_cart'%}",
+            data: {
+                'id': id,
+				'cant':$('#cantidad_'+id).val(),
+				
+            },
+            success: function (data) {
+                if (data['succes']){
+				
+					swal({
+            title: "Actualizado",
+            text: "Ha actualizado la cantidad de eventos en el carrito",
+            icon: "success",
+            buttons: {
+                cancel: {
+                    text: "ok!",
+                    value: null,
+                    visible: true,
+                    className: "",
+                    closeModal: false,
+                },
+               
+                
+                
+            }
+        })
+        .then((isConfirm) => {
+            if (isConfirm) {
+                
+            }
+            else{
+                location.reload();
+            }
+
+        });
+            }
+                else
+                swal("No se pudo actualizar", "Póngase en contacto con el administrador.", "error"); 
+					 
+            }
+        
+
+	});
+	}
 	</script>
 </body>
 
