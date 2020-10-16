@@ -62,18 +62,10 @@
 						<li><a href="#">Contacto</a></li>
 						{% if user.is_authenticated %}
 
-						<li class="active"><a href="{% url 'logout' %}" style="padding:37px 30px;">LOGOUT</a></li>
-						<li class="">
-
-							<a class="" data-toggle="modal" data-target=".pp" style="padding: 32px;">
-								<span><i class="fa fa-shopping-cart" style="font-size: 30px;"><span
-											class="badge badge-pill badge-default badge-danger badge-default badge-up badge-glow"
-											style="background-color: red;margin-top: -48px;">
-											{%if  request.session.my_car %}{{ request.session.cart.1|length}}
-										{%else%} 0 {%endif%}</span></i></span>
-
-							</a>
+						<li class="active">
+							<a href="{% url 'logout' %}" style="padding:37px 30px;">LOGOUT</a>
 						</li>
+						
 
 						{% else %}
 						<li class="active"><a href="{% url 'login' %}" style="padding:37px 30px;">LOGIN</a></li>
@@ -86,6 +78,16 @@
 
 			</div>
 		</header>
+		<button type="button" class=" flotante btn btn-info btn-circle btn-xl" data-toggle="modal" data-target=".pp"><i class="fa fa-shopping-cart" style="font-size: 40px;"><span
+			class="badge badge-pill badge-default badge-danger badge-default badge-up badge-glow"
+			style="background-color: red;margin-top: -48px;">
+			{%if  request.session.my_car %}{{ request.session.cart.1|length}}
+		{%else%} 0 {%endif%}</span></i>
+		</button>
+		<!-- <button class="flotante btn btn-default btn-circle" data-toggle="modal" data-target=".pp" style="padding: 32px;">
+			<i class="fa fa-shopping-cart" style="font-size: 30px;"></i>
+
+		</button> -->
 		<div class="modal fade bs-example-modal-lg pp" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
 			<div class="modal-dialog modal-lg">
 			  <div class="modal-content">

@@ -193,12 +193,46 @@ h1,h2,h3,h4,h5,h6{
 	margin:0 0;
 	
 }
+.flotante {
+	display:scroll;
+	position:fixed;
+	bottom:320px;
+	right:50px;
+	top: 80%;
+	margin-left: -98px;
+	z-index: 999;
+
+}
+.btn-circle.btn-xl {
+    width: 70px;
+    height: 70px;
+    padding: 10px 16px;
+    border-radius: 35px;
+    font-size: 24px;
+    line-height: 1.33;
+}
+
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    padding: 6px 0px;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.42857;
+}
+
 .kode-content h2{
 	margin:0 0 20px;
 	color:#fff;
 	font-size: 60px;
 	line-height:75px;
 	font-family: 'Gotham-Bold';
+}
+.kode-content h2.mi_h2{
+	font-size:30px;
+	font-style: italic;
+	line-height:50px;
 }
 .kode-content .overflow{
 	margin:-70px 0 20px;

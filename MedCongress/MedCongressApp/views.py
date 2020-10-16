@@ -236,8 +236,10 @@ class CongresoCardForm(TemplateView):
                 car.clear() 
                 return HttpResponseRedirect(reverse('Home'))
             else:
+                self.request.session["error_opempay"]=response.json()['description']
+                return HttpResponseRedirect(reverse('Error404'))
                 #return HttpResponse(response.json()['error_code'])
-                return HttpResponse(response.content)
+                #return HttpResponse(response.content)
 
             return HttpResponse(response.json())
         
@@ -247,7 +249,7 @@ class CongresoCardForm(TemplateView):
                 openpay.verify_ssl_certs = False
                 openpay.merchant_id = "muq0plqu35rnjyo7sf2v"
                 openpay.APIConnectionError(message='ergehrtjhrytyj')
-
+            
                 if user_perfil.id_openpay is not None:
                     customer = openpay.Customer.retrieve(user_perfil.id_openpay)
                 
@@ -275,7 +277,7 @@ class CongresoCardForm(TemplateView):
                 car=Cart(self.request)
                 car.clear() 
                 return HttpResponseRedirect('https://sandbox-dashboard.openpay.mx/paynet-pdf/muq0plqu35rnjyo7sf2v/%s'%(ver.payment_method.reference) )
-     
+            
 ##### Formulario Tarjeta Pagar Congreso #####
 
 @method_decorator(login_required,name='dispatch')

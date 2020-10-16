@@ -26,6 +26,23 @@
 		font-size:48px;
 		line-height:60px;
 	}
+	.kode-content h2.mi_h2{
+		font-size:38px;
+		font-style: italic;
+		line-height:38px;
+	}
+	.flotante {
+		display:scroll;
+			position:fixed;
+			bottom:320px;
+			right:0px;
+	}
+	.kf_new_conf_time h5 {
+		color: #999999;
+		font-size: 18px;
+		font-weight: normal;
+		margin-left: -32px;
+	}
 	.kf_accordian_hdg{
 		padding:15px 20px;
 	}
@@ -168,6 +185,26 @@
 	}
 	.kode-content h2{
 		font-size:30px;
+	}
+	.kode-content h2.mi_h2{
+		font-size:20px;
+		line-height:20px;
+		font-style: italic;
+	}
+	.flotante {
+		display:scroll;
+			position:fixed;
+			bottom:320px;
+			right:0px;
+	}
+	.kf_new_conf_time h5 {
+		color: #999999;
+		font-size: 18px;
+		font-weight: normal;
+		margin-left: -32px;
+	}
+	.kode-content h4{
+		font-size:20px;
 	}
 	.kode-content .overflow{
 		margin:0px 0px 20px 0px;
@@ -375,6 +412,7 @@
 	.kode-content h2{
 		line-height:normal;
 	}
+	
 	.kode-content h3{
 		font-size:16px;
 		line-height:normal;
@@ -546,6 +584,26 @@
 	}
 	.kode-content h2{
 		font-size:20px;
+	}
+	.kode-content h2.mi_h2{
+		font-size:15px;
+		font-style: italic;
+		line-height:15px;
+	}
+	.flotante {
+		display:scroll;
+			position:fixed;
+			bottom:320px;
+			right:0px;
+	}
+	.kf_new_conf_time h5 {
+		color: #999999;
+		font-size: 18px;
+		font-weight: normal;
+		margin-left: -32px;
+	}
+	.kode-content h4{
+		font-size:15px;
 	}
 	.kode-content .overflow{
 		display:none;

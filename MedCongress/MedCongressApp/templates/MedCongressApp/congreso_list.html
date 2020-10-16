@@ -42,21 +42,27 @@ Congresos
             <div class="col-md-4">
                 <!--KODE_EVENT_BLOG2 START-->
                 <div class="kode-event-blog3">
-                    <figure>
+                    <a href="{% url 'View_congreso' congreso.path %}" class="">
+                    <figure >
                         <img src="{% static '/'%}{{congreso.imagencongreso_set.all.0.imagen}}" alt=""/>
-                        <div class="kode-fig-capstion">
-                            <a href="{% url 'View_congreso' congreso.path  %}">Conference Hall</a>
-                            <p>Lorem ipsum</p>
+                       
+                       
+                        <div class="kode-fig-capstion" >
+                            <a href="{% url 'View_congreso' congreso.path  %}">{{congreso.titulo }}</a>
+                           {%if congreso.sub_titulo%} <p style="font-style: italic;"> {{congreso.sub_titulo|truncatewords:10 }}</p>{%endif%}
                         </div>
+                       
                     </figure>
+                </a>
                     <div class="kode-thumb-caption">
-                        <a href=""></a> <h4>{{congreso.titulo }}</h4></a>
+                        <a href="{% url 'View_congreso' congreso.path %}"><h4>{{congreso.titulo }}</h4></a>
                         <ul>
                             <li><a href="#"><i class="fa fa-calendar"></i>{{congreso.fecha_inicio|date:"M"}} {{congreso.fecha_inicio|date:"d"}} / {{congreso.fecha_inicio|date:"Y"}}</a></li>
                             <li><a href="#"><i class="fa fa-location-arrow"></i>{{congreso.lugar.direccion}}</a></li>
                         </ul>
                         <span><a href="{% url 'View_congreso' congreso.path %}">Leer Más</a></span>
                     </div>
+               
                 </div>
                 <!--KODE_EVENT_BLOG2 START-->
             </div>
