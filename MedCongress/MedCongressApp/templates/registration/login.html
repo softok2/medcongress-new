@@ -25,14 +25,27 @@ Login
                             
                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                 {% if form.errors %}
-                                <p>Your username and password didn't match. Please try again.</p>
+                                <div class="kf_heading_3" >
+                                   
+                                    <span style="color: red;"><p>Tu nombre de usuario y contraseña no coinciden. Inténtalo de nuevo.</p></span>
+                                </div>
+                                
                                 {% endif %}
                                 {% if next %}
                                 {% if user.is_authenticated %}
-                                <p>Your account doesn't have access to this page. To proceed,
-                                    please login with an account that has access.</p>
+                                <div class="kf_heading_3" >
+                                   
+                                    <span style="color: red;"><p> Tu cuenta no tiene acceso a esta página. Para proceder,
+                                        inicie sesión con una cuenta que tenga acceso.</p></span>
+                                </div>
+
+                                   
                                 {% else %}
-                                <p>Por favor debe loguearse para ver esta página.</p>
+                                <div class="kf_heading_3" >
+                                   
+                                    <span style="color: red;"><p>Por favor debe loguearse para ver esta página.</p></span>
+                                </div>
+                                
                                 {% endif %}
                                 {% endif %}
                                 <input type="text" placeholder="Usuario" name="username">
