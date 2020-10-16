@@ -233,7 +233,7 @@ class CongresoCardForm(TemplateView):
                 openpay.merchant_id = "m6ftsapwjvmo7j7y8mop"
                 
             
-                if user_perfil.id_openpay is not None:
+                if user_perfil.id_openpay != 'Null':
                     customer = openpay.Customer.retrieve(user_perfil.id_openpay)
                 
                 else:
