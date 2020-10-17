@@ -347,8 +347,7 @@ class RelPonenciaVotacion(models.Model):
 
 class Taller(models.Model):
     titulo=models.CharField(max_length=250)
-    duracion=models.CharField(max_length=250)
-    precio=models.IntegerField()
+    duracion=models.CharField(max_length=250) 
     fecha_inicio=models.DateTimeField()
     path=models.CharField(max_length=50, help_text='campo para identificarlo por la URL')
     imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='talleres',blank=True, null=True )

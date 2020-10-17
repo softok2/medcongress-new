@@ -56,7 +56,6 @@ Efectuar Pago
 
                     <div class=" col-sm-7 ">
 
-
                         <h2>Tarjeta de crédito o débito</h2>
 
                         <form action="" method="POST" id="payment-form" class="contactusform">
@@ -231,13 +230,12 @@ Efectuar Pago
                        
                         $("#pay-button").attr('disabled', 'disabled')   
                     }
+
+                OpenPay.setId('{{id_key}}');
+                OpenPay.setApiKey('{{public_key}}');
+                OpenPay.setSandboxMode(true); 
                    
-                // OpenPay.setId('muq0plqu35rnjyo7sf2v');
-                // OpenPay.setApiKey('pk_0c7aea61d0ef4a4f8fdfbd674841981a');
-                // OpenPay.setSandboxMode(true);
-                OpenPay.setId('m6ftsapwjvmo7j7y8mop');
-                OpenPay.setApiKey('pk_0d4449445a4948899811cea14a469793');
-                OpenPay.setSandboxMode(true);
+                
 
                 //Se genera el id de dispositivo
                 var deviceSessionId = OpenPay.deviceData.setup("payment-form", "deviceIdHiddenFieldName");
@@ -258,30 +256,30 @@ Efectuar Pago
                 var error_callbak = function (response) {
                     var mensaje='';
                     var desc = response.data.description != undefined ? response.data.description : response.message;
-                    switch (response.status) {
-                            case 400:
-                            if( desc.includes('card_number is required'))
-                            mensaje+='El Número de la Tarjeta es requerido '
-                            if( desc.includes('The CVV2 security code is required'))
-                            mensaje+='El Codigo de Seguridad es requerido '
-                            if( desc.includes('holder_name is required'))
-                            mensaje+='El Nombre del Titular es requerido '
-                           if( desc.includes('card_number must contain only digits'))
-                            mensaje+='La Tarjeta solo debe contener Números '
-                             if( desc.includes('cvv2 must contain only digits'))
-                            mensaje+='El Codigo de Seguridad solo debe contener Números '
-                            if( desc.includes('The expiration date has expired'))
-                            mensaje+='La Tarjeta ya expiró '
+                    // switch (response.status) {
+                    //         case 400:
+                    //         if( desc.includes('card_number is required'))
+                    //         mensaje+='El Número de la Tarjeta es requerido '
+                    //         if( desc.includes('The CVV2 security code is required'))
+                    //         mensaje+='El Codigo de Seguridad es requerido '
+                    //         if( desc.includes('holder_name is required'))
+                    //         mensaje+='El Nombre del Titular es requerido '
+                    //        if( desc.includes('card_number must contain only digits'))
+                    //         mensaje+='La Tarjeta solo debe contener Números '
+                    //          if( desc.includes('cvv2 must contain only digits'))
+                    //         mensaje+='El Codigo de Seguridad solo debe contener Números '
+                    //         if( desc.includes('The expiration date has expired'))
+                    //         mensaje+='La Tarjeta ya expiró '
                             
                     
-                            break;
-                             case 422: 
-                             if( desc.includes('The card number verification digit is invalid'))
-                            mensaje+='El numero de verificación es incorrecto'
-                            break;
-                                }
-                   //wal("Error",response.status+desc, "error"); 
-                    swal("Error",mensaje, "error");    
+                    //         break;
+                    //          case 422: 
+                    //          if( desc.includes('The card number verification digit is invalid'))
+                    //         mensaje+='El numero de verificación es incorrecto'
+                    //         break;
+                    //             }
+                   swal("Error",response.status+desc, "error"); 
+                    //swal("Error",mensaje, "error");    
                     // alert("ERROR [" + response.status + "] " + desc);
                     $("#pay-button").prop("disabled", false);
                 };

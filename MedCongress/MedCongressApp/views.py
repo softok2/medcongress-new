@@ -3,6 +3,7 @@ from collections import namedtuple
 from datetime import date,datetime
 import openpay
 import requests
+from django.conf import settings
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group, User
@@ -25,6 +26,7 @@ from .models import (CategoriaPagoCongreso, Congreso, EspecialidadCongreso,
                      CategoriaUsuario)
 from .pager import Pager
 from .cart import Cart
+
 
 # Create your views here.
 
@@ -164,8 +166,11 @@ class CongresoDetail(TemplateView):
 class CongresoCardForm(TemplateView):
    
     template_name= 'MedCongressApp/tarjeta.html'
-
-   
+    def get_context_data(self, **kwargs):
+        context = super(CongresoCardForm, self).get_context_data(**kwargs)
+        context['id_key']=settings.ID_KEY
+        context['public_key']=settings.PUBLIC_KEY
+        return context
 
     def post(self, request, **kwargs):
         
@@ -181,7 +186,11 @@ class CongresoCardForm(TemplateView):
             descripcion= descripcion + 'Pago del %s %s . '%(cart['tipo_evento'],cart['nombre_congreso'])
         
         if pagar_efectivo == '0':
-            url='https://sandbox-api.openpay.mx/v1/m6ftsapwjvmo7j7y8mop/charges'
+            if request.POST["deviceIdHiddenFieldName"] is None:
+                self.request.session["error_opempay"]= 'Error de Conección con Openpay'
+                return HttpResponseRedirect(reverse('Error_openpay'))
+
+            url='https://sandbox-api.openpay.mx/v1/%s/charges'%(settings.ID_KEY)
             params= {
                     "source_id" : request.POST["token_id"],
                     "method" : "card",
@@ -196,7 +205,7 @@ class CongresoCardForm(TemplateView):
                     }
                 }
             headers={'Content-type': 'application/json'}
-            response=requests.post(url=url,auth=HTTPBasicAuth('sk_34664e85b5504ca39cc19d8f9b8df8a2:', ''),data=json.dumps(params),headers=headers)
+            response=requests.post(url=url,auth=HTTPBasicAuth('%s:'%(settings.PRIVATE_KEY), ''),data=json.dumps(params),headers=headers)
             response_dic=response.json()
             if response.status_code==200:
                 for cart in self.request.session["cart"][1]:
@@ -215,7 +224,7 @@ class CongresoCardForm(TemplateView):
                 return HttpResponseRedirect(reverse('Home'))
             else:
                 self.request.session["error_opempay"]=response.json()['description']
-                return HttpResponseRedirect(reverse('Error404'))
+                return HttpResponseRedirect(reverse('Error_openpay'))
                 #return HttpResponse(response.json()['error_code'])
                 #return HttpResponse(response.content)
 
@@ -228,9 +237,9 @@ class CongresoCardForm(TemplateView):
                 # openpay.verify_ssl_certs = False
                 # openpay.merchant_id = "muq0plqu35rnjyo7sf2v"
 
-                openpay.api_key = "sk_34664e85b5504ca39cc19d8f9b8df8a2"
+                openpay.api_key = settings.PRIVATE_KEY
                 openpay.verify_ssl_certs = False
-                openpay.merchant_id = "m6ftsapwjvmo7j7y8mop"
+                openpay.merchant_id = settings.ID_KEY
                 
             
                 if user_perfil.id_openpay != 'Null':
@@ -259,7 +268,7 @@ class CongresoCardForm(TemplateView):
                         pagar_congreso.save()
                 car=Cart(self.request)
                 car.clear() 
-                return HttpResponseRedirect('https://dashboard.openpay.mx/paynet-pdf/m6ftsapwjvmo7j7y8mop/%s'%(ver.payment_method.reference) )
+                return HttpResponseRedirect('%s/paynet-pdf/%s/%s'%(settings.URL_PDF, settings.ID_KEY,ver.payment_method.reference) )
             except openpay.APIConnectionError as e:
                 self.request.session["error_opempay"]='Error de Conección con Openpay'
                 return HttpResponseRedirect(reverse('Error_openpay'))

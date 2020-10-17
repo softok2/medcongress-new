@@ -219,7 +219,7 @@
 
                         <div class="kode-price-footer">
                             {% if user.is_authenticated %}
-                            {% if request.user|has_group:"Laboratorio" %} 
+                            
                             <div class="">
                                 <div class="col-sm-8">
                                     <a onclick="AgregarCarrito({{categoria_pago.pk}},'cant_{{categoria_pago.id}}')">Agregar al Carrito</a>
@@ -230,10 +230,6 @@
                                    
                                 </div>
                             </div>
-                            {%else%} 
-                            <a onclick="AgregarCarrito({{categoria_pago.pk}},'cant_{{categoria_pago.id}}')">Agregar al Carrito</a>
-                            <input class="form-control input-lg" type="number" value="1" style="height: 52px;display: none;" id="cant_{{categoria_pago.id}}">
-                            {%endif%}
                             {%else%} 
                             <a href="{%url 'login'%}">Agregar al Carrito</a>
                             {%endif%}
@@ -287,7 +283,7 @@
 
                                     <div class="kode-price-footer">
                                         {% if user.is_authenticated %}
-                                        {% if request.user|has_group:"Laboratorio" %} 
+                                        
                                         <div class="">
                                             <div class="col-sm-8">
                                                 <a onclick="AgregarCarritoTaller({{cat.pk}},'cant_{{cat.pk}}')">Agregar al Carrito</a>
@@ -298,10 +294,7 @@
                                                
                                             </div>
                                         </div>
-                                        {%else%} 
-                                        <a onclick="AgregarCarritoTaller({{cat.pk}},'cant_{{cat.pk}}')">Agregar al Carrito</a>
-                            <input class="form-control input-lg" type="number" value="1" style="height: 52px;display: none;" id="cant_{{cat.pk}}">
-                            {%endif%}
+                                       
                                         
 {%else%} 
 <a href="{%url 'login'%}">Agregar al Carrito</a>
