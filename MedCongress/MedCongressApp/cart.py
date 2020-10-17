@@ -31,12 +31,12 @@ class Cart:
                         'id_cat_pago':relCongresoCategoriaPago.categoria.pk,
                         'nombre_cat_pago':relCongresoCategoriaPago.categoria.nombre,
                         'precio':relCongresoCategoriaPago.precio,
-                        'pagar':int(relCongresoCategoriaPago.precio)*int(cant),
+                        'pagar':float(relCongresoCategoriaPago.precio)*float(cant),
                         'moneda':relCongresoCategoriaPago.moneda,
                         'cantidad': cant
                     }
                 )
-                self.cart[0]['cant']=self.cart[0]['cant']+int(relCongresoCategoriaPago.precio)*int(cant)
+                self.cart[0]['cant']=self.cart[0]['cant']+float(relCongresoCategoriaPago.precio)*float(cant)
                 self.save()
                 return True
             else:
@@ -53,12 +53,12 @@ class Cart:
                         'id_cat_pago':relCongresoCategoriaPago.categoria.pk,
                         'nombre_cat_pago':relCongresoCategoriaPago.categoria.nombre,
                         'precio':relCongresoCategoriaPago.precio,
-                        'pagar':int(relCongresoCategoriaPago.precio)*int(cant),
+                        'pagar':float(relCongresoCategoriaPago.precio)*float(cant),
                         'moneda':relCongresoCategoriaPago.moneda,
                         'cantidad': cant
                     }
                 )  
-            self.cart[0]['cant']=self.cart[0]['cant']+int(relCongresoCategoriaPago.precio)*int(cant)
+            self.cart[0]['cant']=self.cart[0]['cant']+float(relCongresoCategoriaPago.precio)*float(cant)
             self.save()
             return True
 
@@ -75,7 +75,7 @@ class Cart:
             if exist is False:
                 self.cart[1].append(
                     {
-                        'mi_id':int(self.cart[1][-1]['mi_id'])+1,
+                        'mi_id':float(self.cart[1][-1]['mi_id'])+1,
                         'id':relTallerCategoriaPago.pk,
                         'tipo_evento':'Taller',
                         'id_congreso':relTallerCategoriaPago.taller.pk,
@@ -83,12 +83,12 @@ class Cart:
                         'id_cat_pago':relTallerCategoriaPago.categoria.pk,
                         'nombre_cat_pago':relTallerCategoriaPago.categoria.nombre,
                         'precio':relTallerCategoriaPago.precio,
-                        'pagar':int(relTallerCategoriaPago.precio)*int(cant),
+                        'pagar':float(relTallerCategoriaPago.precio)*float(cant),
                         'moneda':relTallerCategoriaPago.moneda,
                         'cantidad': cant
                     }
                 )
-                self.cart[0]['cant']=self.cart[0]['cant']+int(relTallerCategoriaPago.precio)*int(cant)
+                self.cart[0]['cant']=self.cart[0]['cant']+float(relTallerCategoriaPago.precio)*float(cant)
                 self.save()
                 return True
             else:
@@ -105,12 +105,12 @@ class Cart:
                         'id_cat_pago':relTallerCategoriaPago.categoria.pk,
                         'nombre_cat_pago':relTallerCategoriaPago.categoria.nombre,
                         'precio':relTallerCategoriaPago.precio,
-                        'pagar':int(relTallerCategoriaPago.precio)*int(cant),
+                        'pagar':float(relTallerCategoriaPago.precio)*float(cant),
                         'moneda':relTallerCategoriaPago.moneda,
                         'cantidad': cant
                     }
                 )
-            self.cart[0]['cant']=self.cart[0]['cant']+int(relTallerCategoriaPago.precio)*int(cant)
+            self.cart[0]['cant']=self.cart[0]['cant']+float(relTallerCategoriaPago.precio)*float(cant)
             self.save()
             return True
 
@@ -120,9 +120,9 @@ class Cart:
         for car in self.cart[1]:
             if str(car['mi_id'])==str(id) :
                 self.cart[1][cont]['cantidad']=cant
-                self.cart[0]['cant']=int(self.cart[0]['cant'])-int(car['pagar'])
-                self.cart[1][cont]['pagar']=int(self.cart[1][cont]['precio'])*int(cant)
-                self.cart[0]['cant']=int(self.cart[0]['cant'])+int(self.cart[1][cont]['pagar'])
+                self.cart[0]['cant']=float(self.cart[0]['cant'])-float(car['pagar'])
+                self.cart[1][cont]['pagar']=float(self.cart[1][cont]['precio'])*float(cant)
+                self.cart[0]['cant']=float(self.cart[0]['cant'])+float(self.cart[1][cont]['pagar'])
             cont=cont+1
         self.save()
         return True

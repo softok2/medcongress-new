@@ -223,12 +223,12 @@ class CongresoCardForm(TemplateView):
                     if str(cart['tipo_evento']) == 'Congreso':
                         congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
                         categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                        pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],num_autorizacion_transaccion=response_dic['authorization'],num_tarjeta_tranzaccion=response_dic['card']['card_number'])
+                        pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],num_autorizacion_transaccion=response_dic['authorization'],num_tarjeta_tranzaccion=response_dic['card']['card_number'],is_pagado=True)
                         pagar_congreso.save()
                     if str(cart['tipo_evento']) == 'Taller':
                         taller=Taller.objects.filter(id=cart['id_congreso']).first()
                         categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                        pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dic['id'],num_autorizacion_transaccion=response_dic['authorization'],num_tarjeta_tranzaccion=response_dic['card']['card_number'])
+                        pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dic['id'],num_autorizacion_transaccion=response_dic['authorization'],num_tarjeta_tranzaccion=response_dic['card']['card_number'],is_pagado=True)
                         pagar_congreso.save()
                 car=Cart(self.request)
                 car.clear() 
