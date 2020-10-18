@@ -43,7 +43,7 @@
     }
 
     function FiltrarLugar(PostCodeid,lonid,latid){
-        //load google map
+       
         initialize(PostCodeid,lonid,latid);
 
         /*

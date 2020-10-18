@@ -290,8 +290,6 @@ class CongresoCardForm(TemplateView):
                 self.request.session["error_opempay"]=e.json_body['description']
                 return HttpResponseRedirect(reverse('Error_openpay'))
 
-                
-
 
 ##### Formulario para registrar usuario #####
 
