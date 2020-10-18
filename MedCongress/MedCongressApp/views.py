@@ -140,21 +140,18 @@ class CongresoDetail(TemplateView):
                         cat_pa=True
                     
                     if RelTallerUser.objects.filter(user=user_perfil.pk, taller=taller.pk).exists():
-                        if  RelTallerUser.objects.filter(user=user_perfil.pk, taller=taller.pk,is_pagado=True).exists():
-                            ver.append([taller,False,'Usted ya pagó este evento'])
-                        else:
-                            ver.append([taller,False,'Está pendiente el pago de este evento '])
+                        ver.append([taller,cat_pa,True])
                     else:
-                        ver.append([taller,cat_pa])  
+                        ver.append([taller,cat_pa,False])  
                 context['talleres']=ver
                 pagos = RelCongresoUser.objects.filter(user=user_perfil.pk, congreso=congreso.pk).order_by('precio')
                 
                 if pagos.exists():
                     pagos_p = RelCongresoUser.objects.filter(user=user_perfil.pk, congreso=congreso.pk,is_pagado=True).order_by('precio') 
                     if pagos_p.exists():
-                        context['permiso'] = [True,'Usted ya pagó este evento']
+                        context['permiso'] = True
                     else:
-                        context['permiso'] = [True,'Está pendiente el pago de este evento '] 
+                        context['permiso'] = True
                 else: 
                     context['permiso'] = False                                                                  
             else:
@@ -165,7 +162,7 @@ class CongresoDetail(TemplateView):
                         cat_pa=RelTalleresCategoriaPago.objects.filter(taller=taller)
                     else:
                         cat_pa=True
-                    ver.append([taller,cat_pa])      
+                    ver.append([taller,cat_pa,False])      
                 context['talleres']=ver
                 context['permiso'] = False  
             context['categorias_pago']=cat_pago
