@@ -250,7 +250,7 @@ class CongresoCardForm(TemplateView):
                 openpay.merchant_id = ID_KEY
                 
             
-                if user_perfil.id_openpay != 'Null':
+                if user_perfil.id_openpay :
                     customer = openpay.Customer.retrieve(user_perfil.id_openpay)
                 
                 else:
@@ -287,7 +287,12 @@ class CongresoCardForm(TemplateView):
                 self.request.session["error_opempay"]=e.json_body['description']
                 return HttpResponseRedirect(reverse('Error_openpay'))
             except openpay.InvalidRequestError as e:
-                self.request.session["error_opempay"]=e.json_body['description']
+                
+                if isinstance(e,dict):
+                    self.request.session["error_opempay"]=e.json_body['description']
+                else:
+                    self.request.session["error_opempay"]='Póngase en contacto con el Admin'
+               
                 return HttpResponseRedirect(reverse('Error_openpay'))
 
 
