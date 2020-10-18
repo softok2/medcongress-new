@@ -191,11 +191,7 @@
 
 <div class="kode-our-pricing" id="pagos">
     <div class="container">
-        {%if permiso.0 %}
-        <div class="kf_heading_1">
-            <h2>{{permiso.1}}</h2>
-        </div>
-        {%else%}
+        
         <div class="kf_heading_1" style="text-align:center">
             <h2>TIPOS DE BOLETOS</h2>
             <p style="text-align:left"><b>Preferente:</b> Socio AMCIC, Miembro Médica Sur, Estudiante, Miembro IMSS,
@@ -243,7 +239,7 @@
             <span> No tiene establecido los precios aún </span>
             {%endif%}
         </div>
-        {%endif%}
+       
     </div>
 </div>
 
@@ -267,7 +263,7 @@
                 <div class="kode-our-pricing">
                     <div class="row">
                         <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
-                        {% if taller.1 %}
+                      
                         {%if taller.1 is True%}
                         <span> No tiene establecido los precios aún </span>
                         {%else%}
@@ -306,11 +302,7 @@
                         </div>
                         {%endfor%}
                         {%endif%}
-                        {%else%}
-
-                        <span>{{taller.2 }}</span>
-
-                        {%endif%}
+                        
 
                     </div>
                 </div>
