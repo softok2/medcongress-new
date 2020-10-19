@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from MedCongressApp.models import Ponencia,RelPonenciaPonente
 from MedCongressAdmin.forms.congres_forms import PonenciaForms,PonentePonenciaForm
-
+from django.utils.crypto import get_random_string
 class validarUser(UserPassesTestMixin):
     permission_denied_message = 'No tiene permiso para acceder a la administracion'
     login_url='/admin/login/'
