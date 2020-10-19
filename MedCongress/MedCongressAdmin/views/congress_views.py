@@ -2,6 +2,7 @@ from django import forms
 from django.contrib import messages
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.urls import reverse_lazy,reverse
+from django.utils.crypto import get_random_string
 from django.views.generic import ListView,TemplateView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
@@ -34,7 +35,9 @@ class CongressCreateView(validarUser,CreateView):
         congress=form['congreso'].save(commit=False)
         ubicacion= form['ubicacion'].save(commit=True)
         path=congress.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
-        congress.path=path
+        chars = '0123456789'
+        secret_key = get_random_string(5, chars)
+        congress.path=path+secret_key
         congress.lugar=ubicacion
         congress.save()
         return super(CongressCreateView, self).form_valid(form)

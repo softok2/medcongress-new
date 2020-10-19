@@ -36,7 +36,9 @@ class  TallerCreateView(validarUser,CreateView):
         ubicacion= form['ubicacion'].save(commit=True)
         print(ubicacion)
         path=taller.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
-        taller.path=path
+        chars = '0123456789'
+        secret_key = get_random_string(5, chars)
+        taller.path=path+secret_key
         taller.lugar=ubicacion
         taller.save()
        

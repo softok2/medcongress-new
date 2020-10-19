@@ -34,7 +34,9 @@ class  PonenciaCreateView(validarUser,CreateView):
         ponencia=form['ponencia'].save(commit=False)
         ubicacion= form['ubicacion'].save(commit=True)
         path=ponencia.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
-        ponencia.path=path
+        chars = '0123456789'
+        secret_key = get_random_string(5, chars)
+        ponencia.path=path+secret_key
         ponencia.lugar=ubicacion
         ponencia.save()
         return super(PonenciaCreateView, self).form_valid(form)
