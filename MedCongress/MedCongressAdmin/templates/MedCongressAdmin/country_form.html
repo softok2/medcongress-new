@@ -1,0 +1,114 @@
+{% extends 'MedCongressAdmin/base.html' %}
+{% block title %}MedCongressAdmin | Pais{% endblock %}
+{% load static %}
+{% block styles %}
+{% endblock %}
+{% block content %}
+<section class="multiple-input-with-labels" id="multiple-input-with-labels">
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-header">
+					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
+						{{ form_title }} Pa&iacute;s</h1>
+					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
+					<div class="heading-elements">
+						<ul class="list-inline mb-0">
+							<li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+							<li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+							<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+							<li><a data-action="close"><i class="ft-x"></i></a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="card-content collapse show">
+					<div class="card-body">
+						<form id="country-form" method="POST">
+							{% csrf_token %}
+							<div class="form-body">
+								<div class="row">
+									<div class="col-md-12">
+										{% if messages %}
+										<div class="alert alert-success alert-dismissible mb-2" role="alert">
+											<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+												<span aria-hidden="true">×</span>
+											</button>
+											<strong>En hora buena!. </strong>
+											{% for message in messages %}
+											{% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+											<a href="{{ message }}" class="alert-link">
+												{% endif %}
+												{% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+												{{ message|escape }}</a>
+											{% endif %}
+											{% endfor %}
+											fue agregado correctamente a la base de datos.
+										</div>
+										{% endif %}
+										{% if form.non_field_errors %}
+										<div class="alert alert-danger mb-2" role="alert">
+											<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+												<span aria-hidden="true">×</span>
+											</button>
+											{% for error in form.non_field_errors %}
+											<strong>{{ error|escape }}</strong>
+											{% endfor %}
+										</div>
+										{% endif %}
+										<fieldset class="form-group col-md-4">
+											<label>Denominaci&oacute;n</label>
+											{{ form.denominacion }}
+											{% if form.denominacion.errors %}
+											<p class="text-right">
+												{% for error in form.denominacion.errors %}
+												<small class="danger text-muted">{{ error|escape }}</small>
+												{% endfor %}
+											</p>
+											{% endif %}
+											{% if delete_value %}
+											<input type="text" class="form-control" value="{{ delete_value }}" readonly>
+											{% endif %}
+										</fieldset>
+										<div class="form-actions">
+											<div class="text-right">
+												
+												<button id="save" type="submit" class="btn btn-primary">Guardar
+													<i class="ft-save position-right"></i>
+												</button>
+												{% endif %}
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+	$(document).ready(function () {
+		{% if not delete_url %}
+		$('#save-plus').click(function (event) {
+			event.preventDefault();
+			$('#country-form').attr('action', "{% url 'MedCongressAdmin:country_add_plus' param='+' %}");
+			$('#country-form').submit();
+		});
+		$('#save-edit').click(function (event) {
+			event.preventDefault();
+			$('#country-form').attr('action', "{% url 'MedCongressAdmin:country_add_plus' param='+->' %}");
+			$('#country-form').submit();
+		});
+		{% else %}
+		$('#delete').click(function (event) {
+			event.preventDefault();
+			$('#country-form').attr('action', "{{ delete_url }}");
+			$('#country-form').submit();
+		});
+		{% endif %}
+	});
+</script>
+{% endblock %}

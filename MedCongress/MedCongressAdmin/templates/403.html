@@ -1,0 +1,78 @@
+{% extends "MedCongressApp/base.html"%}
+{% load static %}
+{% block titulo %}
+Error 403
+{%endblock%}
+{% block contenido %}
+<div class="sub-header">
+    <!-- SUB HEADER -->
+</div>
+<div class="content">
+    <!--Kode-our-speaker-strip start-->
+    <div class="Kode-page-heading">
+        <div class="container">
+            <!--ROW START-->
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    <h2>Error 403</h2>
+                </div>
+                <div class="col-md-6 col-sm-6">
+                    <ul>
+                        <li>
+                            <a href="#"><i class="fa fa-home"></i>Home</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-angle-right"></i>Error 403</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!--ROW END-->
+        </div>
+    </div>
+    <!--Kode-our-speaker-strip End-->
+    <!--KODE EVENT BLOG 2 START-->
+    <div class="kode-blog-style-2">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="kode-error">
+                        <h3>403</h3>
+                        <h4>Oops No tiene permiso !</h4>
+                        <h6> Debe acceder con una cuenta admin</h6>
+                        <div id="map-canvas"></div>
+                    </div>
+                </div>
+            </div>
+        </div>	
+    </div>
+<!--KODE EVENT BLOG 2 START-->
+</div>
+{%endblock%}
+{%block script%}
+<script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
+<script>
+    function initialize() {
+        var map = new google.maps.Map(document.getElementById('map-canvas'));
+        var bounds = new google.maps.LatLngBounds();
+
+        function addMarker(lat, lng, title) {
+            var position = new google.maps.LatLng(lat, lng);
+            var marker = new google.maps.Marker({
+                position: position,
+                map: map,
+                title: title
+            });
+            bounds.extend(position);
+        }
+
+        {% for poi in pois %}
+            addMarker({{ poi.position.latitude }}, {{ poi.position.longitude }}, "{{ poi.name }}");
+        {% endfor %}
+
+        map.fitBounds(bounds);
+    }
+
+    google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+{%endblock%}

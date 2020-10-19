@@ -1,0 +1,139 @@
+{% extends 'MedCongressAdmin/base.html' %}
+{% block title %}Ponencias del Congreso {{congres.titulo}}{% endblock %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" type="text/css"
+    href="{% static 'MedCongressAdmin/app-assets/vendors/css/tables/datatable/datatables.min.css' %}">
+<style type="text/css">
+    .custom-select-sm {
+        font-size: 110%;
+    }
+
+    .page-link {
+        padding: 10px 15px;
+    }
+
+    #DataTables_Table_0_length>label {
+        margin-top: 1.2rem;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<section id="configuration">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-10">
+                            <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Listado
+                                de las Imágenes del Congreso </h1>
+                            <h3 style="font-style: italic;">{{congres.titulo}}</h3>
+                        </div>
+                        <!-- <div class="col-2">
+                            <div style="margin-right: 45%; margin-top: 1.5rem;">
+                                <button id="add-btn" type="button" class="btn btn-success" title="Adicionar Taller a este Congreso" onclick="add()"
+                                    style="float:right; padding: 3px;">
+                                    <i class="la la-plus"></i>
+                                </button>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+                <div class="card-content collapse show">
+                    <div class="card-body card-dashboard">
+                        <div class="card-body  my-gallery" itemscope="" itemtype="http://schema.org/ImageGallery" data-pswp-uid="1">
+                            <div class="row">
+                                {% for imagen in imagenes%}
+                              <figure class="col-lg-3 col-md-6 col-12" itemprop="associatedMedia" itemscope="" itemtype="http://schema.org/ImageObject">
+                                <a href="{% static '/'%}{{imagen.imagen}}" itemprop="contentUrl" data-size="480x360">
+                                    <img class="img-thumbnail img-fluid" src="{% static '/'%}{{imagen.imagen}}" itemprop="thumbnail" alt="Image description">
+                                </a> 
+                                <a href="">Eliminar</a>
+                              </figure>
+                             
+                              {%endfor%}
+                              
+                            </div>
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="swal-overlay" tabindex="-1">
+    <form id="swall-modal-form" method="POST" style="display: none;">
+        {% csrf_token %}
+    </form>
+
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/extensions/sweetalert.min.js' %}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/tables/datatable/datatables.min.js' %}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/gallery/masonry/masonry.pkgd.min.js' %}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/gallery/photo-swipe/photoswipe.min.js' %}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/gallery/photo-swipe/photoswipe-ui-default.min.js' %}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/gallery/photo-swipe/photoswipe-script.js'%}"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        });
+
+        $('#add-btn').click(function () {
+            location.href = "{% url 'MedCongressAdmin:congres_add' %}";
+        });
+
+        dataTable = $('.zero-configuration').DataTable();
+    });
+    function deleteItem(pk) {
+        swal({
+            title: "Estas seguro?",
+            text: "No será capaz de recuperar este elemento!",
+            icon: "warning",
+            buttons: {
+                cancel: {
+                    text: "No, cancelar!",
+                    value: null,
+                    visible: true,
+                    className: "",
+                    closeModal: false,
+                },
+                confirm: {
+                    text: "Sí, eliminarlo!",
+                    value: true,
+                    visible: true,
+                    className: "",
+                    closeModal: false
+                }
+            }
+        })
+            .then((isConfirm) => {
+                if (isConfirm) {
+                    url = "{% url 'MedCongressAdmin:country_delete' pk=0 %}";
+                    $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
+                        dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
+                        swal("Eliminado!", "Este elemento ha sido eliminado.", "success");
+                    });
+                } else {
+                    swal("Cancelado", "No se eliminó este elemento.", "error");
+                }
+            });
+    }
+</script>
+{% endblock %}

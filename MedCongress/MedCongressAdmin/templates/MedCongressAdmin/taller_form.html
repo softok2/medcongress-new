@@ -1,0 +1,324 @@
+{% extends 'MedCongressAdmin/base.html' %}
+{% block title %}MedCongressAdmin | Congreso{% endblock %}
+{% load static %}
+{% block styles %}
+
+</head>
+<style>
+	#geomap {
+		width: 100%;
+		height: 400px;
+	}
+</style>
+
+{% endblock %}
+{% block content %}
+<section class="multiple-input-with-labels" id="multiple-input-with-labels">
+
+	<div class="modal fade" id="my" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="myModalLabel">Lugar</h4> <button type="button" class="close"
+						data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+				</div>
+				<div class="modal-body">
+					<div id="geomap"></div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-header">
+					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
+						Adicionar Taller</h1>
+					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
+					<div class="heading-elements">
+						<ul class="list-inline mb-0">
+
+							<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+
+						</ul>
+					</div>
+				</div>
+				<div class="card-content collapse show">
+					<div class="card-body">
+						<form id="congres-form" method="POST" action="" enctype="multipart/form-data">
+							{% csrf_token %}
+							<div class="form-body">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="row">
+											<div class="col-sm-8 ">
+												<div class="form-group">
+													<label
+														for="{{form.taller.titulo.id_for_label }}"><b>{{form.taller.titulo.label }}</b>{% if form.taller.titulo.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.taller.titulo.errors }}
+														</span>{% endif %} </label>
+	
+													{{form.taller.titulo }}
+												</div>
+											</div>
+											<div class="col-sm-4 ">
+												<div class="form-group">
+													<label
+														for="{{form.taller.fecha_inicio.id_for_label }}"><b>{{form.taller.fecha_inicio.label }}</b>{% if form.taller.fecha_inicio.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.taller.fecha_inicio.errors }}
+														</span>{% endif %} </label>
+	
+													{{form.taller.fecha_inicio}}
+												</div>
+											</div>
+										</div>
+										
+										<div class="row">
+	
+											<div class="col-sm-6 ">
+												<div class="form-group">
+													<label
+														for="{{form.taller.duracion.id_for_label }}"><b>{{form.taller.duracion.label }}</b>{% if form.taller.duracion.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.taller.duracion.errors }}
+														</span>{% endif %} </label>
+	
+													{{form.taller.duracion }}
+												</div>
+											</div>
+											
+										</div>
+										<div class="row">
+											<div class="col-sm-6 ">
+												<div class="form-group">
+													<label
+														for="{{form.taller.imagen.id_for_label }}"><b>{{form.taller.imagen.label }}</b>{% if form.taller.imagen.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.taller.imagen.errors }}
+														</span>{% endif %} </label>
+	
+													{{form.taller.imagen }}
+												</div>
+											</div>
+	
+	
+	
+										</div>
+										<div class="row">
+											<div class="col-sm-6 ">
+												<div class="form-group">
+													<label
+														for="{{form.ubicacion.direccion.id_for_label }}"><b>{{form.ubicacion.direccion.label }}</b>
+														{% if form.ubicacion.direccion.errors %} <span
+															style="font-size: 15px; color: red;">{{ form.ubicacion.direccion.errors }}
+														</span>{% endif %} </label>
+													{{form.ubicacion.direccion }}
+												</div>
+											</div>
+											<div class="col-ms-1">
+												<div class="form-group">
+	
+													<label class="mapa">Ver Mapa</label>
+													<!-- <a onclick="VerMapa()" type="link"  style="display: block;">  <i class="" style="font-size: 43px;"></i> </a> -->
+													<button type="button" class="btn btn-link" data-toggle="modal"
+														data-target="#my" style="display: block;">
+														<span><i class="ft ft-map-pin"
+																style="font-size: 30px;display: block;margin-top: -13px;"></i></span>
+	
+													</button>
+	
+												</div>
+	
+											</div>
+											
+											<div class="col-sm-3 " style="display: none;">
+												<div class="form-group">
+													<label
+														for="{{form.ubicacion.longitud.id_for_label }}"><b>{{form.ubicacion.longitud.label }}</b>{% if form.ubicacion.longitud.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.ubicacion.longitud.errors }}
+														</span>{% endif %}</label>
+	
+													{{form.ubicacion.longitud }}
+												</div>
+											</div>
+											<div class="col-sm-3 " style="display: none;">
+												<div class="form-group">
+													<label
+														for="{{form.ubicacion.latitud.id_for_label }}"><b>{{form.ubicacion.latitud.label }}</b>{% if form.ubicacion.latitud.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.ubicacion.latitud.errors }}
+														</span>{% endif %} </label>
+	
+													{{form.ubicacion.latitud }}
+												</div>
+											</div>
+											<div class="col-sm-3 ">
+												<div class="form-group">
+													<label
+														for="{{form.taller.congreso.id_for_label }}"><b>{{form.taller.congreso.label }}</b>{% if form.taller.congreso.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.taller.congreso.errors }}
+														</span>{% endif %} </label>
+	
+													{{form.taller.congreso }}
+												</div>
+											</div>
+										</div>
+										
+	
+	
+	
+										<div class="row">
+											<div class="col-sm-3 ">
+												<div class="form-group">
+													<label
+														for="{{form.ponencia.published.id_for_label }}"><b>{{form.taller.published.label }}</b>{% if form.taller.published.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.taller.published.errors }}
+														</span>{% endif %} </label>
+	
+													{{form.taller.published }}
+												</div>
+											</div>
+										</div>
+	
+										<div class="form-actions">
+											
+												<button id="save" type="submit" class="btn btn-primary">Guardar
+													<i class="ft-save position-right"></i>
+												</button>
+												
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+</section>
+{% endblock %}
+{% block scripts %}
+<link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
+<script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
+
+
+<script type="text/javascript"
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCf3QdCwg8QDNOS3A2vSQ3DqW2mpJ_gSY8"></script>
+<script src="{% static 'MedCongressApp/js/lugar.js'%}"></script>
+
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		$('#id_taller-fecha_inicio').datetimepicker({
+        //language:  'fr',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		forceParse: 0,
+        showMeridian: 1
+    });
+
+
+
+		var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        });
+		FiltrarLugar('#id_ubicacion-direccion', '#id_ubicacion-longitud', '#id_ubicacion-latitud');
+		$('#id_ubicacion-direccion').keypress(function () {
+            $('#id_ubicacion-latitud').val('');
+            $('#id_ubicacion-longitud').val('');
+
+        });
+		{% if not delete_url %}
+		$('#save-plus').click(function (event) {
+			event.preventDefault();
+			$('#country-form').attr('action', "{% url 'MedCongressAdmin:country_add_plus' param='+' %}");
+			$('#country-form').submit();
+		});
+		$('#save-edit').click(function (event) {
+			event.preventDefault();
+			$('#country-form').attr('action', "{% url 'MedCongressAdmin:country_add_plus' param='+->' %}");
+			$('#country-form').submit();
+		});
+		{% else %}
+		$('#delete').click(function (event) {
+			event.preventDefault();
+			$('#country-form').attr('action', "{{ delete_url }}");
+			$('#country-form').submit();
+		});
+		{% endif %}
+	});
+
+	// alert($('#id_imagen_congreso-imagen').val());
+	// 		// $('#id_congreso-imagen_prim').val($('#id_congreso-imagen_prim').val().push($('#id_imagen_congreso-imagen').val()));
+	// 		// $('#id_congreso-imagen_prim').multiselect("refresh");
+	// 		//$("#id_congreso-imagen_prim").val(["130860","130858"]);
+	// 		$('#id_congreso-imagen_prim').append('<option value="' + $('#id_imagen_congreso-imagen').val() + '" selected="selected">' + $('#id_imagen_congreso-imagen').val() + '</option>');
+
+
+	function InsertImagen() {
+		
+
+$.ajax({
+	type: "POST",
+	url: "{% url 'MedCongressAdmin:Add_imagen'%}",
+	data: {
+		'imagen':$('#id_imagen_congreso-imagen').val(), // from form
+	},
+	success: function (data) {
+		if (data['succes']){
+			swal({
+	title: "Ha adicionado un evento a su carrito de compra",
+	text: "Valla al carrito para efectuar su compra",
+	icon: "success",
+	buttons: {
+		cancel: {
+			text: "ok!",
+			value: null,
+			visible: true,
+			className: "",
+			closeModal: false,
+		},
+	   
+		
+		
+	}
+})
+.then((isConfirm) => {
+	if (isConfirm) {
+		
+	}
+	else{
+		location.reload();
+	}
+
+});
+
+
+		
+		   
+	}
+		else
+		swal("No se puede", "Ya tiene este Evento en el carrito de compra.", "error"); 
+	}
+});
+}
+</script>
+{% endblock %}
