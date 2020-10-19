@@ -23,13 +23,13 @@
 		font-size:12px;
 	}
 	.kode-content h2{
-		font-size:48px;
-		line-height:60px;
+		font-size:43px;
+		line-height:50px;
 	}
 	.kode-content h2.mi_h2{
-		font-size:30px;
+		font-size:20px;
 		font-style: italic;
-		line-height:38px;
+		line-height:30px;
 	}
 	.flotante {
 		display:scroll;
@@ -184,11 +184,11 @@
 		width:100%;
 	}
 	.kode-content h2{
-		font-size:30px;
+		font-size:20px;
 	}
 	.kode-content h2.mi_h2{
-		font-size:15px;
-		line-height:20px;
+		font-size:11px;
+		line-height:15px;
 		font-style: italic;
 	}
 	.flotante {
@@ -583,12 +583,12 @@
 		left:20px;
 	}
 	.kode-content h2{
-		font-size:20px;
+		font-size:15px;
 	}
 	.kode-content h2.mi_h2{
-		font-size:11px;
+		font-size:8px;
 		font-style: italic;
-		line-height:15px;
+		line-height:11px;
 	}
 	.flotante {
 		display:scroll;
