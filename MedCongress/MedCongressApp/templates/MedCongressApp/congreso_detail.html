@@ -148,19 +148,22 @@
                     <h2>Ponentes</h2>
                     <span>Ponentes de este congreso</span>
                 </div>
-                <div class="row">
-                    <div id="kode-speaker-causel" class="owl-carousel">
-                        {% if ponentes_congreso %}
+				
+				
+				
+				<div class="row">
+            {% if ponentes_congreso %}
 
                         {%for ponente in ponentes_congreso %}
-
-                        <div class="kode-newspeaker">
+            <div class="col-md-3">
+                <!--KODE_EVENT_BLOG2 START-->
+                <div class="kode-newspeaker">
                             <div class="speaker-photo">
                                 <img src="{% static '/'%}{{ponente.user.foto}}" alt="">
                             </div>
                             <div class="new-ourspeaker">
-                                <h3>{{ponente.user.usuario.first_name}} {{ponente.user.usuario.last_name}}/
-                                    <span>Ponente</span></h3>
+                                <h3>{{ponente.user.usuario.first_name}} {{ponente.user.usuario.last_name}}</h3>
+                                <h3 style="font-style: italic;"> <span>Ponente</span></h3>
                                 <ul class="newpseaker-media">
                                     <li><a href="#"><i class="fa fa-facebook"></i></a></li>
                                     <li><a href="#"><i class="fa fa-twitter"></i></a></li>
@@ -170,8 +173,8 @@
                                 </ul>
                             </div>
                             <div class="new-ourspeaker over-state">
-                                <h3>{{ponente.user.usuario.first_name}} {{ponente.user.usuario.last_name}}/
-                                    <span>Ponente</span></h3>
+                                <h3>{{ponente.user.usuario.first_name}} {{ponente.user.usuario.last_name}}</h3>
+                                   <h3 style="font-style: italic;"> <span>Ponente</span></h3>
                                 <p>Categoría: {{ponente.user.categoria.nombre}}</p>
                                 <ul class="newpseaker-media">
                                     <li><a href="#"><i class="fa fa-facebook"></i></a></li>
@@ -183,12 +186,39 @@
                             </div>
                             <!-- kode-new speaker over state End -->
                         </div>
+                <!--KODE_EVENT_BLOG2 START-->
+            </div>
+            {% endfor %}
+            {%else%}
+            <span>No encontro ningún Ponente</span>
+            {%endif%}
 
-                        {%endfor%}
-                        {%else%}
-                        <span> No hay un ponentes aún </span>
-                        {%endif%}
+            </div>
+        </div>
+    </div>
+    <div class="kode-speaker-frame">
+        <div class="container">
+            <div class="kf_heading_1">
+                <h2>Patrocinadores</h2>
+                <span>Patrocinadores de este congreso</span>
+            </div>
+                <div class="row">
+                    <div id="kode-speaker-causel" class="owl-carousel">
+                       
 
+                        <div class="kode-newspeaker">
+                            <div class="speaker-photo">
+                                <img src="{% static 'patrocinadores/indice.png'%}" alt="">
+                            </div>
+                             
+                            
+                            <!-- kode-new speaker over state End -->
+                        </div>
+                        
+                        
+
+
+                        
 
                     </div>
                 </div>
@@ -214,7 +244,7 @@
                 <div class="price-box-frame first-box">
                     <div class="kode-price-box">
                         <div class="kode-price-header">
-                            <strong>Profecional General</strong>
+                            <strong>Profesional General</strong>
                             <h3>$2668.00<br> MXN</h3>
 
                             <strong>IVA incluído</strong>

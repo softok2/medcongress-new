@@ -70,7 +70,8 @@ class Ubicacion(models.Model):
         verbose_name_plural='ubicaciones'
         
     def __str__(self):
-        return self.direccion        
+        return self.direccion   
+
 
 ## cargar valores por defecto en genero##
 
