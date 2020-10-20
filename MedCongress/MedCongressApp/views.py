@@ -3,13 +3,13 @@ from collections import namedtuple
 from datetime import date,datetime
 import openpay
 import requests
-
+from django.template import RequestContext
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group, User
 from django.db import connections
 from django.http import HttpResponse, HttpResponseRedirect,JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render,render_to_response
 from django.core.mail import EmailMessage
 from django.template.response import TemplateResponse
 from django.urls import reverse, reverse_lazy
@@ -439,43 +439,43 @@ class ConfCart(TemplateView):
 
 
 # HTTP Error 400
-def bad_request(request,exception):
-    response = render_to_response(
-        '400.html',
-        context_instance=RequestContext(request)
-        )
+# def bad_request(request,exception):
+#     response = render_to_response(
+#         '400.html',
+#         context_instance=RequestContext(request)
+#         )
 
-    response.status_code = 400
+#     response.status_code = 400
 
-    return response
+#     return response
 
-def permission_denied(request,exception):
-    response = render_to_response(
-        '403.html',
-        context_instance=RequestContext(request)
-        )
+# def permission_denied(request,exception):
+#     response = render_to_response(
+#         '403.html',
+#         context_instance=RequestContext(request)
+#         )
 
-    response.status_code = 400
+#     response.status_code = 400
 
-    return response
+#     return response
 
-def page_not_found(request,exception):
-    response = render_to_response(
-        '404.html',
-        context_instance=RequestContext(request)
-        )
+# def page_not_found(request,exception):
+#     response = render_to_response(
+#         '404.html',
+#         context_instance=RequestContext(request)
+#         )
 
-    response.status_code = 400
+#     response.status_code = 400
 
-    return response
+#     return response
 
-def server_error(request):
-    response = render_to_response(
-        '400.html',
-        context_instance=RequestContext(request)
-        )
+# def server_error(request):
+#     response = render_to_response(
+#         '400.html',
+#         context_instance=RequestContext(request)
+#         )
 
-    response.status_code = 400
+#     response.status_code = 400
 
-    return response
+#     return response
 

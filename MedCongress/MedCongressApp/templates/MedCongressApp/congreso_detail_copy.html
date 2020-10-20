@@ -208,50 +208,48 @@
         </div>
         <div class="row">
             <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
-           
+            {%if categorias_pago %}
+            {%for categoria_pago in categorias_pago %}
 
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                 <div class="price-box-frame first-box">
                     <div class="kode-price-box">
                         <div class="kode-price-header">
-                            <strong>Profecional General</strong>
-                            <h3>$2668.00<br> MXN</h3>
+                            <strong>{{categoria_pago.categoria.nombre}}</strong>
+                            <h3>${{categoria_pago.precio}}<br> {{categoria_pago.moneda}}</h3>
 
                             <strong>IVA incluído</strong>
                         </div>
 
                         <div class="kode-price-footer">
-                            <noscript><a href="https://www.eventbrite.com.mx/e/1-simposio-en-ciencias-de-la-salud-amcic-profesional-general-tickets-125763585269" rel="noopener noreferrer" target="_blank"></noscript>
-                            <a  id="eventbrite-widget-modal-trigger-125763585269" >Comprar</a>
-                            
-                          
+                            {% if user.is_authenticated %}
+
+                            <div class="">
+                                <div class="col-sm-8">
+                                    <a
+                                        onclick="AgregarCarrito({{categoria_pago.pk}},'cant_{{categoria_pago.id}}','{{permiso}}')">Agregar
+                                        al Carrito</a>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control input-lg" type="number" value="1" style="height: 52px;"
+                                        id="cant_{{categoria_pago.id}}">
+                                    <!-- <input class="input-qty-type" type="" name="qty" value="1"> -->
+
+                                </div>
+                            </div>
+
+                            {%else%}
+                            <a href="{%url 'login'%}">Agregar al Carrito</a>
+                            {%endif%}
                         </div>
                     </div>
                 </div>
                 <!-- kode-price-box End -->
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                <div class="price-box-frame first-box">
-                    <div class="kode-price-box">
-                        <div class="kode-price-header">
-                            <strong>Preferencial</strong>
-                            <h3>$ 1100.00<br> MXN</h3>
-
-                            <strong>IVA incluído</strong>
-                        </div>
-
-                        <div class="kode-price-footer">
-                            <noscript><a href="https://www.eventbrite.com.mx/e/1-simposio-en-ciencias-de-la-salud-amcic-boleto-preferente-tickets-125763553173" rel="noopener noreferrer" target="_blank"></noscript>
-                             
-                            
-                                <a id="eventbrite-widget-modal-trigger-125763553173">Comprar</a>
-                           
-                        </div>
-                    </div>
-                </div>
-                <!-- kode-price-box End -->
-            </div>
-           
+            {%endfor%}
+            {%else%}
+            <span> No tiene establecido los precios aún </span>
+            {%endif%}
         </div>
 
     </div>
@@ -372,7 +370,7 @@
 
 {%endblock%}
 {% block script%}
-<script src="https://www.eventbrite.com.mx/static/widgets/eb_widgets.js"></script>
+
 <script type="text/javascript">
     jQuery(document).ready(function ($) {
         $(".back").click(function (event) {
@@ -381,282 +379,245 @@
         });
     });
 
-    var exampleCallback = function() {
+    function AgregarCarritoTaller(id, fields, msj) {
 
-console.log('Order complete!');
-
-};
-
-
-
-window.EBWidgets.createWidget({
-
-widgetType: 'checkout',
-
-eventId: '125763585269',
-
-modal: true,
-
-modalTriggerElementId: 'eventbrite-widget-modal-trigger-125763585269',
-
-onOrderComplete: exampleCallback
-
-});
-
-window.EBWidgets.createWidget({
-
-widgetType: 'checkout',
-
-eventId: '125763553173',
-
-modal: true,
-
-modalTriggerElementId: 'eventbrite-widget-modal-trigger-125763553173',
-
-onOrderComplete: exampleCallback
-
-});
-
-
-    // function AgregarCarritoTaller(id, fields, msj) {
-
-    //     if (msj == 'False') {
-    //         $.ajax({
-    //             type: "GET",
-    //             url: "{% url 'Add_cart_taller'%}",
-    //             data: {
-    //                 'id': id, // from form
-    //                 'cant': $('#' + fields).val()// from form
-    //             },
-    //             success: function (data) {
-    //                 if (data['succes']) {
-    //                     swal({
-    //                         title: "Ha adicionado un evento a su carrito de compra",
-    //                         text: "Clic al carrito para efectuar compra",
-    //                         icon: "success",
-    //                         buttons: {
-    //                             cancel: {
-    //                                 text: "ok!",
-    //                                 value: null,
-    //                                 visible: true,
-    //                                 className: "",
-    //                                 closeModal: false,
-    //                             },
+        if (msj == 'False') {
+            $.ajax({
+                type: "GET",
+                url: "{% url 'Add_cart_taller'%}",
+                data: {
+                    'id': id, // from form
+                    'cant': $('#' + fields).val()// from form
+                },
+                success: function (data) {
+                    if (data['succes']) {
+                        swal({
+                            title: "Ha adicionado un evento a su carrito de compra",
+                            text: "Clic al carrito para efectuar la compra",
+                            icon: "success",
+                            buttons: {
+                                cancel: {
+                                    text: "ok!",
+                                    value: null,
+                                    visible: true,
+                                    className: "",
+                                    closeModal: false,
+                                },
 
 
 
-    //                         }
-    //                     })
-    //                         .then((isConfirm) => {
-    //                             if (isConfirm) {
+                            }
+                        })
+                            .then((isConfirm) => {
+                                if (isConfirm) {
 
-    //                             }
-    //                             else {
-    //                                 location.reload();
-    //                             }
+                                }
+                                else {
+                                    location.reload();
+                                }
 
-    //                         });
-    //                 }
-    //                 else
-    //                     swal("No se puede", "Ya tiene este Taller en el carrito de compra.", "error");
-    //             }
-    //         });
-    //     }
-    //     else {
-    //         swal({
-    //             title: "Ya usted compró este taller",
-    //             text: ' Desea comprarlo de nuevo?',
-    //             icon: "warning",
-    //             buttons: {
-    //                 cancel: {
-    //                     text: "Cancelar!",
-    //                     value: null,
-    //                     visible: true,
-    //                     className: "",
-    //                     closeModal: false,
-    //                 },
-    //                 confirm: {
-    //                     text: "Aceptar",
-    //                     value: true,
-    //                     visible: true,
-    //                     className: "",
-    //                     closeModal: false
-    //                 }
-    //             }
-    //         })
-    //             .then((isConfirm) => {
-    //                 if (isConfirm) {
-
-
-
-    //                     $.ajax({
-    //                         type: "GET",
-    //                         url: "{% url 'Add_cart_taller'%}",
-    //                         data: {
-    //                             'id': id, // from form
-    //                             'cant': $('#' + fields).val()// from form
-    //                         },
-    //                         success: function (data) {
-    //                             if (data['succes']) {
-    //                                 swal({
-    //                                     title: "Ha adicionado un evento a su carrito de compra",
-    //                                     text: "Clic al carrito para efectuar compra",
-    //                                     icon: "success",
-    //                                     buttons: {
-    //                                         cancel: {
-    //                                             text: "ok!",
-    //                                             value: null,
-    //                                             visible: true,
-    //                                             className: "",
-    //                                             closeModal: false,
-    //                                         },
+                            });
+                    }
+                    else
+                        swal("No se puede", "Ya tiene este Taller en el carrito de compra.", "error");
+                }
+            });
+        }
+        else {
+            swal({
+                title: "Ya usted compró este taller",
+                text: ' Desea comprarlo de nuevo?',
+                icon: "warning",
+                buttons: {
+                    cancel: {
+                        text: "Cancelar!",
+                        value: null,
+                        visible: true,
+                        className: "",
+                        closeModal: false,
+                    },
+                    confirm: {
+                        text: "Aceptar",
+                        value: true,
+                        visible: true,
+                        className: "",
+                        closeModal: false
+                    }
+                }
+            })
+                .then((isConfirm) => {
+                    if (isConfirm) {
 
 
 
-    //                                     }
-    //                                 })
-    //                                     .then((isConfirm) => {
-    //                                         if (isConfirm) {
-
-    //                                         }
-    //                                         else {
-    //                                             location.reload();
-    //                                         }
-
-    //                                     });
-    //                             }
-
-    //                         }
-    //                     });
-    //                 }
-    //                 else {
-    //                     location.reload();
-    //                 }
-    //             });
-
-
-
-    //     }
-    // }
-    // function AgregarCarrito(id, fields, msj) {
-    //     if (msj == 'False') {
-    //         $.ajax({
-    //             type: "GET",
-    //             url: "{% url 'Add_cart'%}",
-    //             data: {
-    //                 'id': id,
-    //                 'cant': $('#' + fields).val()// from form
-
-    //             },
-    //             success: function (data) {
-    //                 if (data['succes']) {
-    //                     swal({
-    //                         title: "Ha adicionado un evento a su carrito de compra",
-    //                         text: "Clic al carrito para efectuar compra",
-    //                         icon: "success",
-    //                         buttons: {
-    //                             cancel: {
-    //                                 text: "ok!",
-    //                                 value: null,
-    //                                 visible: true,
-    //                                 className: "",
-    //                                 closeModal: false,
-    //                             },
+                        $.ajax({
+                            type: "GET",
+                            url: "{% url 'Add_cart_taller'%}",
+                            data: {
+                                'id': id, // from form
+                                'cant': $('#' + fields).val()// from form
+                            },
+                            success: function (data) {
+                                if (data['succes']) {
+                                    swal({
+                                        title: "Ha adicionado un evento a su carrito de compra",
+                                        text: "Clic al carrito para efectuar la compra",
+                                        icon: "success",
+                                        buttons: {
+                                            cancel: {
+                                                text: "ok!",
+                                                value: null,
+                                                visible: true,
+                                                className: "",
+                                                closeModal: false,
+                                            },
 
 
 
-    //                         }
-    //                     })
-    //                         .then((isConfirm) => {
-    //                             if (isConfirm) {
+                                        }
+                                    })
+                                        .then((isConfirm) => {
+                                            if (isConfirm) {
 
-    //                             }
-    //                             else {
-    //                                 location.reload();
-    //                             }
+                                            }
+                                            else {
+                                                location.reload();
+                                            }
 
-    //                         });
+                                        });
+                                }
+
+                            }
+                        });
+                    }
+                    else {
+                        location.reload();
+                    }
+                });
+
+
+
+        }
+    }
+    function AgregarCarrito(id, fields, msj) {
+        if (msj == 'False') {
+            $.ajax({
+                type: "GET",
+                url: "{% url 'Add_cart'%}",
+                data: {
+                    'id': id,
+                    'cant': $('#' + fields).val()// from form
+
+                },
+                success: function (data) {
+                    if (data['succes']) {
+                        swal({
+                            title: "Ha adicionado un evento a su carrito de compra",
+                            text: "Clic al carrito para efectuar la compra",
+                            icon: "success",
+                            buttons: {
+                                cancel: {
+                                    text: "ok!",
+                                    value: null,
+                                    visible: true,
+                                    className: "",
+                                    closeModal: false,
+                                },
+
+
+
+                            }
+                        })
+                            .then((isConfirm) => {
+                                if (isConfirm) {
+
+                                }
+                                else {
+                                    location.reload();
+                                }
+
+                            });
 
 
 
 
-    //                 }
-    //                 else
-    //                     swal("No se puede", "Ya tiene este Evento en el carrito de compra.", "error");
-    //             }
-    //         });
-    //     }
-    //     else {
-    //         swal({
-    //             title: "Ya usted compró este congreso",
-    //             text: ' Desea comprarlo de nuevo?',
-    //             icon: "warning",
-    //             buttons: {
-    //                 cancel: {
-    //                     text: "No",
-    //                     value: null,
-    //                     visible: true,
-    //                     className: "",
-    //                     closeModal: false,
-    //                 },
-    //                 confirm: {
-    //                     text: "Si",
-    //                     value: true,
-    //                     visible: true,
-    //                     className: "",
-    //                     closeModal: false
-    //                 }
-    //             }
-    //         })
-    //             .then((isConfirm) => {
-    //                 if (isConfirm) {
-    //                     $.ajax({
-    //                         type: "GET",
-    //                         url: "{% url 'Add_cart'%}",
-    //                         data: {
-    //                             'id': id,
-    //                             'cant': $('#' + fields).val()// from form
+                    }
+                    else
+                        swal("No se puede", "Ya tiene este Evento en el carrito de compra.", "error");
+                }
+            });
+        }
+        else {
+            swal({
+                title: "Ya usted compró este congreso",
+                text: ' Desea comprarlo de nuevo?',
+                icon: "warning",
+                buttons: {
+                    cancel: {
+                        text: "No",
+                        value: null,
+                        visible: true,
+                        className: "",
+                        closeModal: false,
+                    },
+                    confirm: {
+                        text: "Si",
+                        value: true,
+                        visible: true,
+                        className: "",
+                        closeModal: false
+                    }
+                }
+            })
+                .then((isConfirm) => {
+                    if (isConfirm) {
+                        $.ajax({
+                            type: "GET",
+                            url: "{% url 'Add_cart'%}",
+                            data: {
+                                'id': id,
+                                'cant': $('#' + fields).val()// from form
 
-    //                         },
-    //                         success: function (data) {
-    //                             if (data['succes']) {
-    //                                 swal({
-    //                                     title: "Ha adicionado un evento a su carrito de compra",
-    //                                     text: "Clic al carrito para efectuar compra",
-    //                                     icon: "success",
-    //                                     buttons: {
-    //                                         cancel: {
-    //                                             text: "ok!",
-    //                                             value: null,
-    //                                             visible: true,
-    //                                             className: "",
-    //                                             closeModal: false,
-    //                                         },
+                            },
+                            success: function (data) {
+                                if (data['succes']) {
+                                    swal({
+                                        title: "Ha adicionado un evento a su carrito de compra",
+                                        text: "Clic al carrito para efectuar la compra",
+                                        icon: "success",
+                                        buttons: {
+                                            cancel: {
+                                                text: "ok!",
+                                                value: null,
+                                                visible: true,
+                                                className: "",
+                                                closeModal: false,
+                                            },
 
 
 
-    //                                     }
-    //                                 })
-    //                                     .then((isConfirm) => {
-    //                                         if (isConfirm) {
+                                        }
+                                    })
+                                        .then((isConfirm) => {
+                                            if (isConfirm) {
 
-    //                                         }
-    //                                         else {
-    //                                             location.reload();
-    //                                         }
-    //                                     });
-    //                             }
-    //                             else
-    //                                 swal("No se puede", "Ya tiene este Evento en el carrito de compra.", "error");
-    //                         }
-    //                     });
-    //                 }
-    //                 else {
-    //                     location.reload();
-    //                 }
-    //             });
-    //     }
-    // }
+                                            }
+                                            else {
+                                                location.reload();
+                                            }
+                                        });
+                                }
+                                else
+                                    swal("No se puede", "Ya tiene este Evento en el carrito de compra.", "error");
+                            }
+                        });
+                    }
+                    else {
+                        location.reload();
+                    }
+                });
+        }
+    }
 
 
 </script>

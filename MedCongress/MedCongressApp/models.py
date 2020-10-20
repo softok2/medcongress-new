@@ -82,7 +82,7 @@ class PerfilUsuario(models.Model):
     id_openpay=models.CharField(max_length=20,null=True,blank=True)
     detalle=models.TextField(null=True,blank=True)
     is_ponente=models.BooleanField(blank=True, null=True)
-    path=models.CharField(max_length=50, help_text='campo para identificarlo por la URL')
+    path=models.CharField(max_length=250, help_text='campo para identificarlo por la URL')
     cel_profecional=models.CharField(max_length=50,null=True)
     foto=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='usuarios' )
     activation_key = models.CharField(max_length=40,blank=True, null=True)
@@ -154,7 +154,7 @@ class AvalCongreso(models.Model):
 
 class CategoriaPagoCongreso(models.Model):
     nombre=models.CharField(max_length=50)
-    path=models.CharField(max_length=50, help_text='campo para identificarlo por la URL')
+    path=models.CharField(max_length=250, help_text='campo para identificarlo por la URL')
     detalle=models.TextField(null=True,blank=True)
 
     class Meta:
@@ -170,7 +170,7 @@ class Congreso(models.Model):
     titulo=models.CharField(max_length=250)
     sub_titulo=models.CharField(max_length=250,null=True)
     imagen_seg=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso')
-    path=models.CharField(max_length=50, help_text='campo para identificarlo por la URL')
+    path=models.CharField(max_length=250, help_text='campo para identificarlo por la URL')
     lugar=models.ForeignKey(Ubicacion,on_delete=models.DO_NOTHING)
     fecha_inicio=models.DateTimeField()
     created=models.DateTimeField(auto_now_add=True)
@@ -262,7 +262,7 @@ class RelCongresoCategoriaPago(models.Model):
 
 class CategoriaPonente(models.Model):
     nombre=models.CharField(max_length=50)
-    path=models.CharField(max_length=50, help_text='campo para identificarlo por la URL')
+    path=models.CharField(max_length=250, help_text='campo para identificarlo por la URL')
     detalle=models.TextField(null=True,blank=True)
    
     class Meta:
@@ -293,7 +293,7 @@ class Ponencia(models.Model):
     cod_video=models.CharField(max_length=10,null=True)
     imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='ponencias')
     fecha_inicio=models.DateTimeField()
-    path=models.CharField(max_length=50, help_text='campo para identificarlo por la URL')
+    path=models.CharField(max_length=250, help_text='campo para identificarlo por la URL')
     lugar=models.ForeignKey(Ubicacion,on_delete=models.DO_NOTHING)
     created=models.DateTimeField(auto_now_add=True)
     updated=models.DateTimeField(null=True, blank=True)
@@ -349,7 +349,7 @@ class Taller(models.Model):
     titulo=models.CharField(max_length=250)
     duracion=models.CharField(max_length=250) 
     fecha_inicio=models.DateTimeField()
-    path=models.CharField(max_length=50, help_text='campo para identificarlo por la URL')
+    path=models.CharField(max_length=250, help_text='campo para identificarlo por la URL')
     imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='talleres',blank=True, null=True )
     lugar=models.ForeignKey(Ubicacion,on_delete=models.DO_NOTHING)
     created=models.DateTimeField(auto_now_add=True)
