@@ -162,8 +162,9 @@
                                 <img src="{% static '/'%}{{ponente.user.foto}}" alt="">
                             </div>
                             <div class="new-ourspeaker">
-                                <h3>{{ponente.user.usuario.first_name}} {{ponente.user.usuario.last_name}}</h3>
-                                <h3 style="font-style: italic;"> <span>Ponente</span></h3>
+                                <h3>{{ponente.user.usuario.first_name}}</h3>
+                                <h3>  {{ponente.user.usuario.last_name}}</h3>
+                                       <h6 style="font-style: italic;"> <span>Ponente</span></h6>
                                 <ul class="newpseaker-media">
                                     <li><a href="#"><i class="fa fa-facebook"></i></a></li>
                                     <li><a href="#"><i class="fa fa-twitter"></i></a></li>
@@ -173,8 +174,9 @@
                                 </ul>
                             </div>
                             <div class="new-ourspeaker over-state">
-                                <h3>{{ponente.user.usuario.first_name}} {{ponente.user.usuario.last_name}}</h3>
-                                   <h3 style="font-style: italic;"> <span>Ponente</span></h3>
+                                <h3>{{ponente.user.usuario.first_name}}</h3>
+                            <h3>  {{ponente.user.usuario.last_name}}</h3>
+                                   <h6 style="font-style: italic;"> <span>Ponente</span></h6>
                                 <p>Categoría: {{ponente.user.categoria.nombre}}</p>
                                 <ul class="newpseaker-media">
                                     <li><a href="#"><i class="fa fa-facebook"></i></a></li>
