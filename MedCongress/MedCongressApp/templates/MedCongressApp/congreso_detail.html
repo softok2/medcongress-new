@@ -268,10 +268,10 @@
             Universidad Westhill.</p>
 
 
-        {% for taller in talleres %}
+      
         <div class="kf_faq_accordian">
             <div class="kf_accordian_hdg accordion" id="section3">
-                <h5>Taller #{{forloop.counter}}: {{taller.0.titulo}}</h5>
+                <h5>Taller #1: Buenas prácticas clínicas GCP E6 R2</h5>
             </div>
             <div class="kf_accordian_des">
                 <div class="kode-our-pricing">
@@ -279,54 +279,238 @@
                         <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
 
 
-                        {%if taller.1 is True%}
-                        <span> No tiene establecido los precios aún </span>
-                        {%else%}
-                        {%for cat in taller.1%}
+                       
                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                             <div class="price-box-frame first-box">
                                 <div class="kode-price-box">
                                     <div class="kode-price-header">
-                                        <strong>{{cat.categoria.nombre}}</strong>
-                                        <h3>$ {{cat.precio}} {{cat.moneda}}</h3>
+                                        
+                                        <strong>Profesional General</strong>
+                                        <h3>$ 464,0 MXN</h3>
                                         <strong>IVA incluído</strong>
                                     </div>
 
                                     <div class="kode-price-footer">
-                                        {% if user.is_authenticated %}
+                                        <noscript><a href="https://www.eventbrite.com.mx/e/buenas-practicas-clinicas-ichgcp-e6-r2-entrada-general-tickets-125763998505" rel="noopener noreferrer" target="_blank"></noscript>
+                                        
 
-                                        <div class="">
-                                            <div class="col-sm-8">
-                                                <a
-                                                    onclick="AgregarCarritoTaller({{cat.pk}},'cant_{{cat.pk}}','{{taller.2}}')">Agregar
-                                                    al Carrito</a>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <input class="form-control input-lg" type="number" value="1"
-                                                    style="height: 52px;" id="cant_{{cat.pk}}">
-                                                <!-- <input class="input-qty-type" type="" name="qty" value="1"> -->
-
-                                            </div>
-                                        </div>
-
-
-                                        {%else%}
-                                        <a href="{%url 'login'%}">Agregar al Carrito</a>
-                                        {%endif%}
+                                        <a id="eventbrite-widget-modal-trigger-125763998505">Comprar</a>
+                                        
                                     </div>
                                 </div>
                             </div>
                             <!-- kode-price-box End -->
                         </div>
-                        {%endfor%}
-                        {%endif%}
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <div class="price-box-frame first-box">
+                                <div class="kode-price-box">
+                                    <div class="kode-price-header">
+                                        
+                                        <strong>Preferente</strong>
+                                        <h3>$ 348,0 MXN</h3>
+                                        <strong>IVA incluído</strong>
+                                    </div>
 
+                                    <div class="kode-price-footer">
+                                        <noscript><a href="https://www.eventbrite.com.mx/e/buenas-practicas-clinicas-ichgcp-e6-r2-preferente-credencial-requerida-tickets-125764034613" rel="noopener noreferrer" target="_blank"></noscript>
+                                        
+
+                                        <a id="eventbrite-widget-modal-trigger-125764034613">Comprar</a>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- kode-price-box End -->
+                        </div>
+                       
 
                     </div>
                 </div>
             </div>
         </div>
-        {%endfor%}
+        <div class="kf_faq_accordian">
+            <div class="kf_accordian_hdg accordion" id="section3">
+                <h5>
+                    Taller #2: El impacto de la nueva realidad en la regulación y los procedimientos regulatorios en investigación clínica y salud: “El deber ser y el saber hacer”
+                    </h5>
+            </div>
+            <div class="kf_accordian_des">
+                <div class="kode-our-pricing">
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
+
+
+                       
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <div class="price-box-frame first-box">
+                                <div class="kode-price-box">
+                                    <div class="kode-price-header">
+                                        
+                                        <strong>Profesional General</strong>
+                                        <h3>$ 464,0 MXN</h3>
+                                        <strong>IVA incluído</strong>
+                                    </div>
+
+                                    <div class="kode-price-footer">
+                                        <noscript><a href="https://www.eventbrite.com.mx/e/el-impacto-de-la-nueva-realidad-en-la-regulacion-entrada-general-tickets-125764237219"  rel="noopener noreferrer" target="_blank"></noscript>
+                                        
+
+                                        <a id="eventbrite-widget-modal-trigger-125764237219">Comprar</a>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- kode-price-box End -->
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <div class="price-box-frame first-box">
+                                <div class="kode-price-box">
+                                    <div class="kode-price-header">
+                                        
+                                        <strong>Preferente</strong>
+                                        <h3>$ 348,0 MXN</h3>
+                                        <strong>IVA incluído</strong>
+                                    </div>
+
+                                    <div class="kode-price-footer">
+                                        <noscript><a  href="https://www.eventbrite.com.mx/e/el-impacto-de-la-nueva-realidad-en-la-regulacion-preferente-tickets-125764279345" rel="noopener noreferrer" target="_blank"></noscript>
+                                        
+
+                                        <a id="eventbrite-widget-modal-trigger-125764279345">Comprar</a>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- kode-price-box End -->
+                        </div>
+                       
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="kf_faq_accordian">
+            <div class="kf_accordian_hdg accordion" id="section3">
+                <h5>
+                    Taller #3: Sistemas de Gestión de Calidad para Centros de Investigación Clínica, desde los conceptos básicos, su implementación y seguimiento
+                    </h5>
+            </div>
+            <div class="kf_accordian_des">
+                <div class="kode-our-pricing">
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
+
+
+                       
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <div class="price-box-frame first-box">
+                                <div class="kode-price-box">
+                                    <div class="kode-price-header">
+                                        
+                                        <strong>Profesional General</strong>
+                                        <h3>$ 464,0 MXN</h3>
+                                        <strong>IVA incluído</strong>
+                                    </div>
+
+                                    <div class="kode-price-footer">
+                                        <noscript><a  href="https://www.eventbrite.com.mx/e/sistemas-de-gestion-de-calidad-para-centros-entrada-general-tickets-125764325483"  rel="noopener noreferrer" target="_blank"></noscript>
+                                        
+
+                                        <a id="eventbrite-widget-modal-trigger-125764325483">Comprar</a>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- kode-price-box End -->
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <div class="price-box-frame first-box">
+                                <div class="kode-price-box">
+                                    <div class="kode-price-header">
+                                        
+                                        <strong>Preferente</strong>
+                                        <h3>$ 348,0 MXN</h3>
+                                        <strong>IVA incluído</strong>
+                                    </div>
+
+                                    <div class="kode-price-footer">
+                                        <noscript><a  href="https://www.eventbrite.com.mx/e/sistemas-de-gestion-de-calidad-para-centros-preferente-tickets-125764379645"  rel="noopener noreferrer" target="_blank"></noscript>
+                                        
+
+                                        <a id="eventbrite-widget-modal-trigger-125764379645">Comprar</a>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- kode-price-box End -->
+                        </div>
+                       
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="kf_faq_accordian">
+            <div class="kf_accordian_hdg accordion" id="section3">
+                <h5>
+                    Taller #4: El profesional de salud como emprendedor de un Centro de Investigación Clínica; planeación estratégica: del FODA al tablero de Control.
+                    </h5>
+            </div>
+            <div class="kf_accordian_des">
+                <div class="kode-our-pricing">
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
+
+
+                       
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <div class="price-box-frame first-box">
+                                <div class="kode-price-box">
+                                    <div class="kode-price-header">
+                                        
+                                        <strong>Profesional General</strong>
+                                        <h3>$ 464,0 MXN</h3>
+                                        <strong>IVA incluído</strong>
+                                    </div>
+
+                                    <div class="kode-price-footer">
+                                        <noscript><a  href="https://www.eventbrite.com.mx/e/el-profesional-de-salud-como-emprendedor-entrada-general-tickets-125764415753"   rel="noopener noreferrer" target="_blank"></noscript>
+                                        
+
+                                        <a id="eventbrite-widget-modal-trigger-125764415753">Comprar</a>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- kode-price-box End -->
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <div class="price-box-frame first-box">
+                                <div class="kode-price-box">
+                                    <div class="kode-price-header">
+                                        
+                                        <strong>Preferente</strong>
+                                        <h3>$ 348,0 MXN</h3>
+                                        <strong>IVA incluído</strong>
+                                    </div>
+
+                                    <div class="kode-price-footer">
+                                        <noscript><a   href="https://www.eventbrite.com.mx/e/profesional-de-salud-como-emprendedor-preferente-tickets-125786876935"   rel="noopener noreferrer" target="_blank"></noscript>
+                                        
+
+                                        <a id="eventbrite-widget-modal-trigger-125786876935">Comprar</a>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- kode-price-box End -->
+                        </div>
+                       
+
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
 
@@ -417,248 +601,112 @@ onOrderComplete: exampleCallback
 
 });
 
+window.EBWidgets.createWidget({
 
-    // function AgregarCarritoTaller(id, fields, msj) {
+widgetType: 'checkout',
 
-    //     if (msj == 'False') {
-    //         $.ajax({
-    //             type: "GET",
-    //             url: "{% url 'Add_cart_taller'%}",
-    //             data: {
-    //                 'id': id, // from form
-    //                 'cant': $('#' + fields).val()// from form
-    //             },
-    //             success: function (data) {
-    //                 if (data['succes']) {
-    //                     swal({
-    //                         title: "Ha adicionado un evento a su carrito de compra",
-    //                         text: "Clic al carrito para efectuar compra",
-    //                         icon: "success",
-    //                         buttons: {
-    //                             cancel: {
-    //                                 text: "ok!",
-    //                                 value: null,
-    //                                 visible: true,
-    //                                 className: "",
-    //                                 closeModal: false,
-    //                             },
+eventId: '125763998505',
 
+modal: true,
 
+modalTriggerElementId: 'eventbrite-widget-modal-trigger-125763998505',
 
-    //                         }
-    //                     })
-    //                         .then((isConfirm) => {
-    //                             if (isConfirm) {
+onOrderComplete: exampleCallback
 
-    //                             }
-    //                             else {
-    //                                 location.reload();
-    //                             }
+});
 
-    //                         });
-    //                 }
-    //                 else
-    //                     swal("No se puede", "Ya tiene este Taller en el carrito de compra.", "error");
-    //             }
-    //         });
-    //     }
-    //     else {
-    //         swal({
-    //             title: "Ya usted compró este taller",
-    //             text: ' Desea comprarlo de nuevo?',
-    //             icon: "warning",
-    //             buttons: {
-    //                 cancel: {
-    //                     text: "Cancelar!",
-    //                     value: null,
-    //                     visible: true,
-    //                     className: "",
-    //                     closeModal: false,
-    //                 },
-    //                 confirm: {
-    //                     text: "Aceptar",
-    //                     value: true,
-    //                     visible: true,
-    //                     className: "",
-    //                     closeModal: false
-    //                 }
-    //             }
-    //         })
-    //             .then((isConfirm) => {
-    //                 if (isConfirm) {
+window.EBWidgets.createWidget({
 
+widgetType: 'checkout',
 
+eventId: '125764034613',
 
-    //                     $.ajax({
-    //                         type: "GET",
-    //                         url: "{% url 'Add_cart_taller'%}",
-    //                         data: {
-    //                             'id': id, // from form
-    //                             'cant': $('#' + fields).val()// from form
-    //                         },
-    //                         success: function (data) {
-    //                             if (data['succes']) {
-    //                                 swal({
-    //                                     title: "Ha adicionado un evento a su carrito de compra",
-    //                                     text: "Clic al carrito para efectuar compra",
-    //                                     icon: "success",
-    //                                     buttons: {
-    //                                         cancel: {
-    //                                             text: "ok!",
-    //                                             value: null,
-    //                                             visible: true,
-    //                                             className: "",
-    //                                             closeModal: false,
-    //                                         },
+modal: true,
 
+modalTriggerElementId: 'eventbrite-widget-modal-trigger-125764034613',
 
+onOrderComplete: exampleCallback
 
-    //                                     }
-    //                                 })
-    //                                     .then((isConfirm) => {
-    //                                         if (isConfirm) {
+});
+window.EBWidgets.createWidget({
 
-    //                                         }
-    //                                         else {
-    //                                             location.reload();
-    //                                         }
+widgetType: 'checkout',
 
-    //                                     });
-    //                             }
+eventId: '125764237219',
 
-    //                         }
-    //                     });
-    //                 }
-    //                 else {
-    //                     location.reload();
-    //                 }
-    //             });
+modal: true,
 
+modalTriggerElementId: 'eventbrite-widget-modal-trigger-125764237219',
 
+onOrderComplete: exampleCallback
 
-    //     }
-    // }
-    // function AgregarCarrito(id, fields, msj) {
-    //     if (msj == 'False') {
-    //         $.ajax({
-    //             type: "GET",
-    //             url: "{% url 'Add_cart'%}",
-    //             data: {
-    //                 'id': id,
-    //                 'cant': $('#' + fields).val()// from form
+});
+window.EBWidgets.createWidget({
 
-    //             },
-    //             success: function (data) {
-    //                 if (data['succes']) {
-    //                     swal({
-    //                         title: "Ha adicionado un evento a su carrito de compra",
-    //                         text: "Clic al carrito para efectuar compra",
-    //                         icon: "success",
-    //                         buttons: {
-    //                             cancel: {
-    //                                 text: "ok!",
-    //                                 value: null,
-    //                                 visible: true,
-    //                                 className: "",
-    //                                 closeModal: false,
-    //                             },
+widgetType: 'checkout',
 
+eventId: '125764279345',
 
+modal: true,
 
-    //                         }
-    //                     })
-    //                         .then((isConfirm) => {
-    //                             if (isConfirm) {
+modalTriggerElementId: 'eventbrite-widget-modal-trigger-125764279345',
 
-    //                             }
-    //                             else {
-    //                                 location.reload();
-    //                             }
+onOrderComplete: exampleCallback
 
-    //                         });
+});
+window.EBWidgets.createWidget({
 
+widgetType: 'checkout',
 
+eventId: '125764325483',
 
+modal: true,
 
-    //                 }
-    //                 else
-    //                     swal("No se puede", "Ya tiene este Evento en el carrito de compra.", "error");
-    //             }
-    //         });
-    //     }
-    //     else {
-    //         swal({
-    //             title: "Ya usted compró este congreso",
-    //             text: ' Desea comprarlo de nuevo?',
-    //             icon: "warning",
-    //             buttons: {
-    //                 cancel: {
-    //                     text: "No",
-    //                     value: null,
-    //                     visible: true,
-    //                     className: "",
-    //                     closeModal: false,
-    //                 },
-    //                 confirm: {
-    //                     text: "Si",
-    //                     value: true,
-    //                     visible: true,
-    //                     className: "",
-    //                     closeModal: false
-    //                 }
-    //             }
-    //         })
-    //             .then((isConfirm) => {
-    //                 if (isConfirm) {
-    //                     $.ajax({
-    //                         type: "GET",
-    //                         url: "{% url 'Add_cart'%}",
-    //                         data: {
-    //                             'id': id,
-    //                             'cant': $('#' + fields).val()// from form
+modalTriggerElementId: 'eventbrite-widget-modal-trigger-125764325483',
 
-    //                         },
-    //                         success: function (data) {
-    //                             if (data['succes']) {
-    //                                 swal({
-    //                                     title: "Ha adicionado un evento a su carrito de compra",
-    //                                     text: "Clic al carrito para efectuar compra",
-    //                                     icon: "success",
-    //                                     buttons: {
-    //                                         cancel: {
-    //                                             text: "ok!",
-    //                                             value: null,
-    //                                             visible: true,
-    //                                             className: "",
-    //                                             closeModal: false,
-    //                                         },
+onOrderComplete: exampleCallback
 
+});
+window.EBWidgets.createWidget({
 
+widgetType: 'checkout',
 
-    //                                     }
-    //                                 })
-    //                                     .then((isConfirm) => {
-    //                                         if (isConfirm) {
+eventId: '125764379645',
 
-    //                                         }
-    //                                         else {
-    //                                             location.reload();
-    //                                         }
-    //                                     });
-    //                             }
-    //                             else
-    //                                 swal("No se puede", "Ya tiene este Evento en el carrito de compra.", "error");
-    //                         }
-    //                     });
-    //                 }
-    //                 else {
-    //                     location.reload();
-    //                 }
-    //             });
-    //     }
-    // }
+modal: true,
 
+modalTriggerElementId: 'eventbrite-widget-modal-trigger-125764379645',
 
+onOrderComplete: exampleCallback
+
+});
+window.EBWidgets.createWidget({
+
+widgetType: 'checkout',
+
+eventId: '125764415753',
+
+modal: true,
+
+modalTriggerElementId: 'eventbrite-widget-modal-trigger-125764415753',
+
+onOrderComplete: exampleCallback
+
+});
+
+window.EBWidgets.createWidget({
+
+widgetType: 'checkout',
+
+eventId: '125786876935',
+
+modal: true,
+
+modalTriggerElementId: 'eventbrite-widget-modal-trigger-125786876935',
+
+onOrderComplete: exampleCallback
+
+});
 </script>
 
 {%endblock%}
