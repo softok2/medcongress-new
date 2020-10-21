@@ -10,7 +10,7 @@ from django.contrib.auth.models import Group, User
 from django.db import connections
 from django.http import HttpResponse, HttpResponseRedirect,JsonResponse
 from django.shortcuts import render,render_to_response
-from django.core.mail import EmailMessage
+#from django.core.mail import EmailMessage
 from django.template.response import TemplateResponse
 from django.urls import reverse, reverse_lazy
 from django.utils.crypto import get_random_string
@@ -26,6 +26,10 @@ from .models import (CategoriaPagoCongreso, Congreso, EspecialidadCongreso,
                      CategoriaUsuario)
 from .pager import Pager
 from .cart import Cart
+
+from django.core import mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 
 ###################
@@ -307,8 +311,15 @@ class PerfilUserCreate(CreateView):
 
         
         user = form['user'].save(commit=False)
-        # email = EmailMessage('Asunto', 'esto es una prueba, como mando correos en Phyton?', to = [user.email])
+        # email = EmailMessage('Asunto', 'esto es una prueba, como mando correos en Phyton?', to = ['dennis.molinetg@gmail.com'])
         # email.send()
+        subject = 'HTML EMAIL'
+        html_message = render_to_string('MedCongressApp/404.html', context={})
+        plain_message = strip_tags(html_message)
+        from_email = 'SOFTOK2 ME <amorell@softok2.com>'
+        to = 'dennis.molinetg@gmail.com'
+        mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+
         us=User.objects.create_user(user.username,user.email,user.password)
         ubicacion= form['ubicacion'].save(commit=True)
         perfiluser = form['perfiluser'].save(commit=False)
