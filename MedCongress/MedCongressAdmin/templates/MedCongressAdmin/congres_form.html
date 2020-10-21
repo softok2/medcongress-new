@@ -161,13 +161,21 @@
 
 											<div class="col-sm-3 ">
 												<div class="form-group">
+													{%if imagen_seg_url%}	
+												<label ><b>Imagen Actual </b> </label>		
+												<img src="{{imagen_seg_url}}" alt=""><br>
+
+												<label for=" "> <b>Insertar Nueva Imagen</b> </label>
+												<input type="file" name="congreso-imagen_seg" accept="image/*" class=" form-control " id="id_congreso-imagen_seg">
+												{% else%}
 													<label
 														for="{{form.congreso.imagen_seg.id_for_label }}"><b>{{form.congreso.imagen_seg.label }}</b>{% if form.congreso.imagen_seg.errors %}
 														<span
 															style="font-size: 15px; color: red;">{{ form.congreso.imagen_seg.errors }}
 														</span>{% endif %} </label>
-
+											
 													{{form.congreso.imagen_seg }}
+													{%endif%}
 												</div>
 											</div>
 

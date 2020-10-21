@@ -85,7 +85,8 @@
                                                 <td>{%if ponencia.published%}Si{%else%}No{%endif%}</td>
 
                                                 <td style="text-align: center;">
-                                                    
+                                                    <a href="{% url 'MedCongressAdmin:ponencia_edit' pk=ponencia.pk %}"
+                                                        title="Editar"><i class="la la-pencil-square"></i></a>
                                                     <a id="del_{{ congres.pk }}"
                                                         href="javascript:deleteItem('{{ country.pk }}')"
                                                         title="Eliminar">

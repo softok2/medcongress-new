@@ -12,7 +12,8 @@ from .views.congress_views import (CongressListView,CongressCreateView,CongressU
                                    CongressTalleresListView,CongressPonenciasListView,CongressCategPagosListView,
                                    CongressImagenesListView,AddPonenciaCongreso,CongressCategPagosCreateView)
 from .views.imagen_views import (ImagenCreateView)
-from .views.ponencia_view import (PonenciaListView, PonenciaCreateView,PonenciaPonenteListView,PonenciaPonenteCreateView)
+from .views.ponencia_view import (PonenciaListView, PonenciaCreateView,PonenciaPonenteListView,
+                                   PonencicaUpdateView,PonenciaPonenteCreateView)
 from .views.taller_view import (TalleresListView,TallerCreateView,TallerCategPagosListView,TallerCategPagosCreateView)
 from .views.ponente_view import (PonentesListView,PonentesCreateView)
 from .views.dashboard import DashboardView
@@ -48,7 +49,7 @@ urlpatterns = [
      path('categorias_pago/congres/adicinar/<str:path>', CongressCategPagosCreateView.as_view(), name='congres_cat_pago_add'),
      path('categorias_pago/tall/<str:path>', TallerCategPagosListView.as_view(), name='Taller_pagos'),
      path('categoria_pago/taller/add/<str:path>', TallerCategPagosCreateView.as_view(), name='taller_cat_pago_add'),
-     
+     path('ponencia/editar/<int:pk>', PonencicaUpdateView.as_view(), name='ponencia_edit'),
      
      
      

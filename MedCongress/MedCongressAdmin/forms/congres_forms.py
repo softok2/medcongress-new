@@ -2,6 +2,7 @@ from django import forms
 from  MedCongressApp.models import (Congreso,Ubicacion,ImagenCongreso,TipoCongreso,Ponencia,Taller,
                                     Ponente,PerfilUsuario,RelPonenciaPonente,RelCongresoCategoriaPago,
                                     CategoriaPagoCongreso,RelTalleresCategoriaPago)
+                    
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
 
@@ -26,6 +27,8 @@ class CongresForm(forms.ModelForm):
         self.fields['published'].widget.attrs.update({'class': 'form-control'})   
         self.fields['t_congreso'].widget.attrs.update({'class': 'form-control'})  
         self.fields['especialidad'].widget.attrs.update({'class': 'form-control'})     
+
+   
 
     # def clean(self, *args, **kwargs):
     #     cleaned_data = super(UserForm, self).clean(*args, **kwargs)
@@ -66,7 +69,7 @@ class ImagenCongresoForms(forms.ModelForm):
         super().__init__(*args, **kwargs)
         # self.fields['imagen'].widget.attrs.update({'class': 'form-control'}) 
 
-class Ubicacion(forms.ModelForm):
+class UbicacionForm(forms.ModelForm):
     direccion=forms.CharField(
                label = 'Lugar',
                )
@@ -81,12 +84,12 @@ class Ubicacion(forms.ModelForm):
         self.fields['longitud'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['latitud'].widget.attrs.update({'class': 'form-control'}) 
     def clean(self, *args, **kwargs):
-        cleaned_data = super(Ubicacion, self).clean(*args, **kwargs)
+        cleaned_data = super(UbicacionForm, self).clean(*args, **kwargs)
         longitud = cleaned_data.get('longitud', None)
         latitud = cleaned_data.get('latitud', None)
         if longitud is None :
             self.add_error('direccion', 'Debe seleccionar una dirección')
-    
+
 
 # class Categoria(forms.ModelForm):
 
@@ -109,13 +112,21 @@ class Ubicacion(forms.ModelForm):
 class CongresoForms(MultiModelForm):
     form_classes = {
         'congreso': CongresForm,
-        'ubicacion':Ubicacion,
+        'ubicacion':UbicacionForm,
         'imagen_congreso':ImagenCongresoForms
     }
 
+    # def save(self,commit=True):
+
+    #     ubic =Ubicacion.objects.filter(direccion=self.forms['ubicacion'].direccion)
+    #     if not ubic.exists():
+    #       return  super().save(commit=True)
+    #     else:
+    #        congres=self.forms['congreso'].save(commit=False)
+    #        congres.lugar=ubic
+    #        congres.save()
+
     
-
-
 class PonenciaForm(forms.ModelForm):
     imagen=forms.ImageField(label='Buscar Imagen',required=False)
     titulo=forms.CharField(label='Título')
@@ -158,13 +169,13 @@ class TallerForm(forms.ModelForm):
 class PonenciaForms(MultiModelForm):
     form_classes = {
         'ponencia': PonenciaForm,
-        'ubicacion':Ubicacion,
+        'ubicacion':UbicacionForm,
         
     }
 class TallerForms(MultiModelForm):
     form_classes = {
         'taller': TallerForm,
-        'ubicacion':Ubicacion,
+        'ubicacion':UbicacionForm,
         
     }
 

@@ -186,6 +186,16 @@
 										<div class="row">
 											<div class="col-sm-6 ">
 												<div class="form-group">
+
+													{%if imagen_seg_url%}	
+												<label ><b>Imagen Actual </b> </label>		
+												<img src="{{imagen_seg_url}}" alt=""><br>
+
+												<label for=" "> <b>Insertar Nueva Imagen</b> </label>
+												<input type="file" name="ponencia-imagen" accept="image/*" class=" form-control " id="id_ponencia-imagen">
+												{% else%}
+
+
 													<label
 														for="{{form.ponencia.imagen.id_for_label }}"><b>{{form.ponencia.imagen.label }}</b>{% if form.ponencia.imagen.errors %}
 														<span
@@ -193,6 +203,7 @@
 														</span>{% endif %} </label>
 	
 													{{form.ponencia.imagen }}
+													{%endif%}
 												</div>
 											</div>
 	

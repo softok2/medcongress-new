@@ -5,8 +5,8 @@ from django.urls import reverse_lazy,reverse
 from django.utils.crypto import get_random_string
 from django.views.generic import ListView,TemplateView
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from MedCongressApp.models import Congreso,Taller,Ponencia,RelCongresoCategoriaPago,ImagenCongreso
+from django.views.generic.edit import CreateView, DeleteView, UpdateView,FormView
+from MedCongressApp.models import Congreso,Taller,Ponencia,RelCongresoCategoriaPago,ImagenCongreso,Ubicacion
 from MedCongressAdmin.forms.congres_forms import CongresoForms,PonenciaForms,CongresoCategPagoForm
 
 class validarUser(UserPassesTestMixin):
@@ -25,22 +25,30 @@ class CongressListView(validarUser,ListView):
     context_object_name = 'congress'
     template_name = 'MedCongressAdmin/congress.html'
 
-class CongressCreateView(validarUser,CreateView):
+class CongressCreateView(validarUser,FormView):
     form_class = CongresoForms
     success_url = reverse_lazy('MedCongressAdmin:congress_list')
     template_name = 'MedCongressAdmin/congres_form.html'
 
     def form_valid(self, form):
-        
+    
+       
         congress=form['congreso'].save(commit=False)
-        ubicacion= form['ubicacion'].save(commit=True)
+       
+        ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
+
+        if ubic.exists():
+            congress.lugar=ubic.first()
+        else:
+            ubicacion=form['ubicacion'].save(commit=True)
+            congress.lugar=ubicacion
+               
         path=congress.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
         chars = '0123456789'
         secret_key = get_random_string(5, chars)
-        congress.path=path+secret_key
-        congress.lugar=ubicacion
+        congress.path=path+secret_key  
         congress.save()
-        return super(CongressCreateView, self).form_valid(form)
+        return super().form_valid(form)
     
 
 class CongressUpdateView(validarUser,UpdateView):
@@ -58,6 +66,11 @@ class CongressUpdateView(validarUser,UpdateView):
             'ubicacion': self.object.lugar,
         })
         return kwargs
+
+    def get_context_data(self, **kwargs):
+        context=super().get_context_data(**kwargs)
+        context['imagen_seg_url']='/static/%s'%(self.object.imagen_seg)
+        return context
 
     # def get_context_data(self, **kwargs):
     #     context = super(CountryUpdateView, self).get_context_data(**kwargs)

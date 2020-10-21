@@ -2,10 +2,10 @@ from django import forms
 from django.contrib import messages
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView,TemplateView
+from django.views.generic import ListView,TemplateView,FormView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from MedCongressApp.models import Ponencia,RelPonenciaPonente
+from MedCongressApp.models import Ponencia,RelPonenciaPonente,Ubicacion
 from MedCongressAdmin.forms.congres_forms import PonenciaForms,PonentePonenciaForm
 from django.utils.crypto import get_random_string
 class validarUser(UserPassesTestMixin):
@@ -24,7 +24,7 @@ class PonenciaListView(validarUser,ListView):
     context_object_name = 'ponencias'
     template_name = 'MedCongressAdmin/ponencias.html'
 
-class  PonenciaCreateView(validarUser,CreateView):
+class  PonenciaCreateView(validarUser,FormView):
     form_class = PonenciaForms
     success_url = reverse_lazy('MedCongressAdmin:ponencias_list')
     template_name = 'MedCongressAdmin/ponencia_form.html'
@@ -32,12 +32,17 @@ class  PonenciaCreateView(validarUser,CreateView):
     def form_valid(self, form):
         
         ponencia=form['ponencia'].save(commit=False)
-        ubicacion= form['ubicacion'].save(commit=True)
+        ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
+
+        if ubic.exists():
+            ponencia.lugar=ubic.first()
+        else:
+            ubicacion=form['ubicacion'].save(commit=True)
+            ponencia.lugar=ubicacion
         path=ponencia.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
         chars = '0123456789'
         secret_key = get_random_string(5, chars)
         ponencia.path=path+secret_key
-        ponencia.lugar=ubicacion
         ponencia.save()
         return super(PonenciaCreateView, self).form_valid(form)
 
@@ -86,4 +91,25 @@ class  PonenciaPonenteCreateView(validarUser,CreateView):
         pon=Ponencia.objects.filter(path=self.kwargs.get('path'),published=True).first()
         ctx['pon'] = pon
         return ctx
-        
+
+
+class PonencicaUpdateView(validarUser,UpdateView):
+    form_class = PonenciaForms
+    success_url = reverse_lazy('MedCongressAdmin:ponencias_list')
+    template_name = 'MedCongressAdmin/ponencia_form.html'
+
+    def get_queryset(self, **kwargs):
+        return Ponencia.objects.filter(pk=self.kwargs.get('pk'))
+    
+    def get_form_kwargs(self):
+        kwargs = super(PonencicaUpdateView, self).get_form_kwargs()
+        kwargs.update(instance={
+            'ponencia': self.object,
+            'ubicacion': self.object.lugar,
+        })
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context=super().get_context_data(**kwargs)
+        context['imagen_seg_url']='/static/%s'%(self.object.imagen)
+        return context
