@@ -448,7 +448,8 @@ class ConfCart(TemplateView):
             return JsonResponse({'succes':result}, safe=False)
         return TemplateResponse(request, reverse('dashboard'))
 
-
+class AvisoPrivacidad(TemplateView):
+      template_name= 'MedCongressApp/aviso_privacidad.html' 
 # HTTP Error 400
 # def bad_request(request,exception):
 #     response = render_to_response(
