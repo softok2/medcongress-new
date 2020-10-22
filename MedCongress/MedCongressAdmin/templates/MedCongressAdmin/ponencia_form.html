@@ -260,7 +260,9 @@
 												</div>
 											</div>
 											<div class="col-sm-3 ">
-												<div class="form-group">
+												<div class="form-group" {%if con %}	style="display: none;" {%endif%}>
+													
+													
 													<label
 														for="{{form.ponencia.congreso.id_for_label }}"><b>{{form.ponencia.congreso.label }}</b>{% if form.ponencia.congreso.errors %}
 														<span
@@ -319,6 +321,11 @@
 
 <script type="text/javascript">
 	$(document).ready(function () {
+
+		{%if con %}
+		$("#id_ponencia-congreso option[value='{{con.id}}']").attr("selected",true);
+		{%endif%}
+
 		$('#id_ponencia-fecha_inicio').datetimepicker({
         //language:  'fr',
         weekStart: 1,

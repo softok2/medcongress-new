@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView,TemplateView,FormView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from MedCongressApp.models import Ponencia,RelPonenciaPonente,Ubicacion
+from MedCongressApp.models import Ponencia,RelPonenciaPonente,Ubicacion,Congreso
 from MedCongressAdmin.forms.congres_forms import PonenciaForms,PonentePonenciaForm
 from django.utils.crypto import get_random_string
 class validarUser(UserPassesTestMixin):
@@ -46,6 +46,20 @@ class  PonenciaCreateView(validarUser,FormView):
         ponencia.save()
         return super(PonenciaCreateView, self).form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        
+        context = super(PonenciaCreateView, self).get_context_data(**kwargs)
+        if self.kwargs.get('pk'):
+            
+            context['con']=Congreso.objects.get(pk=self.kwargs.get('pk'))
+        return context 
+    
+    def get_success_url(self):
+        if self.kwargs.get('pk'):
+            congreso=Congreso.objects.get(pk=self.kwargs.get('pk'))
+            self.success_url =  reverse_lazy('MedCongressAdmin:Congres_ponencias',kwargs={'path': congreso.path} )
+        return self.success_url   
+
 ########## Vista de las Categorias de Pago de un Congreso #############
 
 class PonenciaPonenteListView(TemplateView):
@@ -77,6 +91,7 @@ class  PonenciaPonenteCreateView(validarUser,CreateView):
         return super(PonenciaPonenteCreateView, self).form_valid(form)
 
     def get_success_url(self):
+        
            self.success_url =  reverse_lazy('MedCongressAdmin:Ponencia_ponentes',kwargs={'path': self.kwargs.get('path')} )
            return self.success_url
 
@@ -113,3 +128,11 @@ class PonencicaUpdateView(validarUser,UpdateView):
         context=super().get_context_data(**kwargs)
         context['imagen_seg_url']='/static/%s'%(self.object.imagen)
         return context
+
+class PonenciaDeletedView(validarUser,DeleteView):
+    model = Ponencia
+    success_url = reverse_lazy('MedCongressAdmin:ponencias_list')
+
+
+
+

@@ -99,6 +99,14 @@
 										<div class="row">
 											<div class="col-sm-6 ">
 												<div class="form-group">
+													{%if imagen_seg_url%}	
+												<label ><b>Imagen Actual </b> </label>		
+												<img src="{{imagen_seg_url}}" alt=""><br>
+
+												<label for=" "> <b>Insertar Nueva Imagen</b> </label>
+												<input type="file" name="ponencia-imagen" accept="image/*" class=" form-control " id="id_ponencia-imagen">
+												{% else%}
+
 													<label
 														for="{{form.taller.imagen.id_for_label }}"><b>{{form.taller.imagen.label }}</b>{% if form.taller.imagen.errors %}
 														<span
@@ -106,6 +114,7 @@
 														</span>{% endif %} </label>
 	
 													{{form.taller.imagen }}
+													{%endif%}
 												</div>
 											</div>
 	
@@ -162,7 +171,7 @@
 												</div>
 											</div>
 											<div class="col-sm-3 ">
-												<div class="form-group">
+												<div class="form-group" {%if con %}	style="display: none;" {%endif%}>
 													<label
 														for="{{form.taller.congreso.id_for_label }}"><b>{{form.taller.congreso.label }}</b>{% if form.taller.congreso.errors %}
 														<span
@@ -221,6 +230,9 @@
 
 <script type="text/javascript">
 	$(document).ready(function () {
+		{%if con %}
+		$("#id_taller-congreso option[value='{{con.id}}']").attr("selected",true);
+		{%endif%}
 		$('#id_taller-fecha_inicio').datetimepicker({
         //language:  'fr',
         weekStart: 1,

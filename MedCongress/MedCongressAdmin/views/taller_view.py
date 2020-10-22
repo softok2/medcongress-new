@@ -3,10 +3,10 @@ from django.contrib import messages
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.crypto import get_random_string
-from django.views.generic import ListView,TemplateView
+from django.views.generic import ListView,TemplateView,FormView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from MedCongressApp.models import Taller,RelTalleresCategoriaPago
+from MedCongressApp.models import Taller,RelTalleresCategoriaPago,Congreso,Ubicacion
 from MedCongressAdmin.forms.congres_forms import TallerForms,TallerCategPagoForm
 
 class validarUser(UserPassesTestMixin):
@@ -25,26 +25,40 @@ class TalleresListView(validarUser,ListView):
     context_object_name = 'talleres'
     template_name = 'MedCongressAdmin/talleres.html'
 
-class  TallerCreateView(validarUser,CreateView):
+class  TallerCreateView(validarUser,FormView):
     form_class = TallerForms
     success_url = reverse_lazy('MedCongressAdmin:talleres_list')
     template_name = 'MedCongressAdmin/taller_form.html'
 
     def form_valid(self, form):
-       
-        taller=form['taller'].save(commit=False)
         
-        ubicacion= form['ubicacion'].save(commit=True)
-        print(ubicacion)
+        taller=form['taller'].save(commit=False)
+        ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
+
+        if ubic.exists():
+            taller.lugar=ubic.first()
+        else:
+            ubicacion=form['ubicacion'].save(commit=True)
+            taller.lugar=ubicacion
         path=taller.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
         chars = '0123456789'
         secret_key = get_random_string(5, chars)
         taller.path=path+secret_key
-        taller.lugar=ubicacion
         taller.save()
-       
         return super(TallerCreateView, self).form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        
+        context = super(TallerCreateView, self).get_context_data(**kwargs)
+        if self.kwargs.get('pk'):
+            context['con']=Congreso.objects.get(pk=self.kwargs.get('pk'))
+        return context 
+    
+    def get_success_url(self):
+        if self.kwargs.get('pk'):
+            congreso=Congreso.objects.get(pk=self.kwargs.get('pk'))
+            self.success_url =  reverse_lazy('MedCongressAdmin:Congres_talleres',kwargs={'path': congreso.path} )
+        return self.success_url 
 
 ########## Vista de las Categorias de Pago de un Congreso #############
 
@@ -84,6 +98,27 @@ class  TallerCategPagosCreateView(validarUser,CreateView):
         pon=Taller.objects.filter(path=self.kwargs.get('path'),published=True).first()
         ctx['cong'] = pon
         return ctx
+
+class TallerUpdateView(validarUser,UpdateView):
+    form_class = TallerForms
+    success_url = reverse_lazy('MedCongressAdmin:talleres_list')
+    template_name = 'MedCongressAdmin/taller_form.html'
+
+    def get_queryset(self, **kwargs):
+        return Taller.objects.filter(pk=self.kwargs.get('pk'))
+    
+    def get_form_kwargs(self):
+        kwargs = super(TallerUpdateView, self).get_form_kwargs()
+        kwargs.update(instance={
+            'taller': self.object,
+            'ubicacion': self.object.lugar,
+        })
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context=super().get_context_data(**kwargs)
+        context['imagen_seg_url']='/static/%s'%(self.object.imagen)
+        return context
 
 
 

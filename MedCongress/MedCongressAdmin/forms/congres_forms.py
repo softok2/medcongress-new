@@ -10,6 +10,7 @@ from betterforms.multiform import MultiModelForm
 class CongresForm(forms.ModelForm):
     imagen_seg=forms.ImageField(label='Buscar Imagen',required=False)
     titulo=forms.CharField(label='Título')
+    published=forms.BooleanField(label='Publicado',required=False)
     sub_titulo=forms.CharField(label='Título segundario',required=False) 
     t_congreso=forms.ModelChoiceField(queryset=TipoCongreso.objects.all(),label='Tipo de Congreso')
     fecha_inicio=forms.DateTimeField(widget=forms.TextInput())
@@ -132,7 +133,7 @@ class PonenciaForm(forms.ModelForm):
     titulo=forms.CharField(label='Título')
     cod_video=forms.CharField(label='Código del video en Vimeo',required=False)
     fecha_inicio=forms.DateTimeField()
-   
+    published=forms.BooleanField(label='Publicado',required=False)
     class Meta:
         model=Ponencia
         fields=['titulo','duracion','detalle','fecha_inicio','imagen','published','cod_video','congreso']
@@ -152,6 +153,7 @@ class TallerForm(forms.ModelForm):
     imagen=forms.ImageField(label='Buscar Imagen',required=False)
     titulo=forms.CharField(label='Título')
     fecha_inicio=forms.DateTimeField()
+    published=forms.BooleanField(label='Publicado',required=False)
     class Meta:
         model=Taller
         fields=['titulo','duracion','fecha_inicio','imagen','published','congreso']

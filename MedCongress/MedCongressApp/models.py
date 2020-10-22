@@ -198,7 +198,7 @@ class Congreso(models.Model):
 
 class ImagenCongreso(models.Model):
     imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso' ,verbose_name='imagen' )
-    congreso=models.ForeignKey(Congreso,on_delete=models.DO_NOTHING, null=True)
+    congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE, null=True)
 
     class Meta:
         verbose_name='imagen de congreso'
@@ -299,7 +299,7 @@ class Ponencia(models.Model):
     created=models.DateTimeField(auto_now_add=True)
     updated=models.DateTimeField(null=True, blank=True)
     published=models.BooleanField()
-    congreso=models.ForeignKey(Congreso,on_delete=models.DO_NOTHING)
+    congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
     ponente = models.ManyToManyField(Ponente, through='RelPonenciaPonente',related_name='ponencia_ponente')
     votacion = models.ManyToManyField(User, through='RelPonenciaVotacion')
     
@@ -314,8 +314,8 @@ class Ponencia(models.Model):
 ##### Tabla pivote Ponencia - Ponente  #####
 
 class RelPonenciaPonente(models.Model):
-    ponente = models.ForeignKey(Ponente, on_delete=models.DO_NOTHING)
-    ponencia = models.ForeignKey(Ponencia, on_delete=models.DO_NOTHING)
+    ponente = models.ForeignKey(Ponente, on_delete=models.CASCADE)
+    ponencia = models.ForeignKey(Ponencia, on_delete=models.CASCADE)
     categoria=models.ForeignKey(CategoriaPonente,on_delete=models.DO_NOTHING,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -356,7 +356,7 @@ class Taller(models.Model):
     created=models.DateTimeField(auto_now_add=True)
     updated=models.DateTimeField(null=True, blank=True)
     published=models.BooleanField()
-    congreso=models.ForeignKey(Congreso,on_delete=models.DO_NOTHING)
+    congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
     ponente = models.ManyToManyField(Ponente, through='RelTallerPonente')
     votacion = models.ManyToManyField(User, through='RelTallerVotacion')
     categoria_pago = models.ManyToManyField(CategoriaPagoCongreso, through='RelTalleresCategoriaPago',related_name='talleres_cat_pago')

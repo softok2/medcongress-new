@@ -82,7 +82,9 @@
                                                         <i class="la la-dollar "></i>
                                                     </a></td>
                                                 <td style="text-align: center;">
-
+                                                    <a href="{% url 'MedCongressAdmin:taller_edit' pk=taller.pk %}"
+                                                    title="Editar"><i class="la la-pencil-square"></i></a>
+                                               
                                                     <a id="del_{{ congres.pk }}"
                                                         href="javascript:deleteItem('{{ country.pk }}')"
                                                         title="Eliminar">

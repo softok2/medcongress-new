@@ -38,15 +38,15 @@
                                 de los Talleres del Congreso </h1>
                             <h3 style="font-style: italic;">{{congres.titulo}}</h3>
                         </div>
-                        <!-- <div class="col-2">
+                        <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
-                                <button id="add-btn" type="button" class="btn btn-success" title="Adicionar Taller a este Congreso" onclick="add()"
+                                <button id="add-btn" type="button" class="btn btn-success" title="Nuevo" 
                                     style="float:right; padding: 3px;">
                                     <i class="la la-plus"></i>
                                 </button>
                                 <div class="clearfix"></div>
                             </div>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
                 <div class="card-content collapse show">
@@ -78,18 +78,13 @@
                                                 <td>{%if taller.published%}Si{%else%}No{%endif%}</td>
                                                 
                                                 <td style="text-align: center;">
-                                                    <a href="{% url 'MedCongressAdmin:congres_edit' pk=congres.pk %}"
-                                                        title="Editar"><i class="la la-pencil-square"></i></a>
+                                                    
                                                     <a id="del_{{ congres.pk }}"
                                                         href="javascript:deleteItem('{{ country.pk }}')"
                                                         title="Eliminar">
                                                         <i class="la la-trash text-danger"></i>
                                                     </a>
-                                                    <a id="del_{{ country.pk }}"
-                                                        href="javascript:deleteItem('{{ country.pk }}')"
-                                                        title="Categorias de pago">
-                                                        <i class="la la-dollar "></i>
-                                                    </a>
+                                                   
 
                                                    
 
@@ -117,6 +112,9 @@
             </div>
         </div>
     </div>
+    <div style="text-align: right;">  <button id="atras" type="button" class="btn btn-danger " >
+        <i class="ft-skip-back position-right"></i>Atras
+    </button> </div>
 </section>
 <div class="swal-overlay" tabindex="-1">
     <form id="swall-modal-form" method="POST" style="display: none;">
@@ -131,6 +129,12 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $('#atras').click(function () {
+            location.href = "{% url 'MedCongressAdmin:congress_list' %}";
+        });
+        $('#add-btn').click(function () {
+            location.href = "{% url 'MedCongressAdmin:congreso_taller_add' congres.pk  %}";
+        });
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({
             beforeSend: function (xhr, settings) {
@@ -138,9 +142,7 @@
             }
         });
 
-        $('#add-btn').click(function () {
-            location.href = "{% url 'MedCongressAdmin:congres_add' %}";
-        });
+       
 
         dataTable = $('.zero-configuration').DataTable();
     });

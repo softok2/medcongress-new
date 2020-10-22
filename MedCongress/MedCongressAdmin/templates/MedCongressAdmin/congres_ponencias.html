@@ -294,31 +294,20 @@
                 </div>
                 <div class="col-12">
                     <div class="row">
-                        <div class="col-8">
+                        <div class="col-10">
                             <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Listado
                                 de las Ponencias del Congreso </h1>
                             <h3 style="font-style: italic;">{{congres.titulo}}</h3>
                         </div>
-                        <!-- <div class="col-2">
-                            <div style=" margin-top: 1.5rem;">
-                                <button data-toggle="modal" data-target=".pp" id="add-btn" type="button"
-                                    class="btn btn-success" title="Adicionar Ponencia a este Congreso"
-                                    style="float:right; padding: 10px;">
-                                    Adicionar
+                        <div class="col-2">
+                            <div style="margin-right: 45%; margin-top: 1.5rem;">
+                                <button id="add-btn" type="button" class="btn btn-success" title="Nuevo" 
+                                    style="float:right; padding: 3px;">
+                                    <i class="la la-plus"></i>
                                 </button>
                                 <div class="clearfix"></div>
                             </div>
                         </div>
-                        <div class="col-2">
-                            <div style="margin-top: 1.5rem;">
-                                <button id="add-btn" type="button" data-toggle="modal" data-target="#crear"
-                                    class="btn btn-success" title="Adicionar Ponencia a este Congreso"
-                                    style="float:left; padding: 10px;">
-                                    Crear y Adicionar
-                                </button>
-                                <div class="clearfix"></div>
-                            </div>
-                        </div> -->
                     </div>
                 </div>
                 <div class="card-content collapse show">
@@ -333,6 +322,7 @@
                                             <tr role="row" style="font-size: 13px;">
                                                 <th style="width:50%">Nombre</th>
                                                 <th>Lugar</th>
+                                                <th>Ponentes</th>
                                                 <th>Fecha</th>
                                                 <th>Public.</th>
                                                 <th style="width:5%">Operaciones</th>
@@ -344,13 +334,20 @@
                                                 <td class="sorting_1">{{ ponencia.titulo }}</td>
 
                                                 <td>{{ ponencia.lugar }}</td>
+                                                <td style="text-align: center;">
+                                                    
+                                                    <a id=""
+                                                    href="{%url 'MedCongressAdmin:Ponencia_ponentes' ponencia.path%}"
+                                                        title="Ponentes">
+                                                        <i class="la la-user-secret " style= "color: blue;" ></i>
+                                                    </a></td>
                                                 <td>{{ ponencia.fecha_inicio }}</td>
                                                 <td>{%if ponencia.published%}Si{%else%}No{%endif%}</td>
 
                                                 <td style="text-align: center;">
                                                     
-                                                    <a id="del_{{ congres.pk }}"
-                                                        href="javascript:deleteItem('{{ country.pk }}')"
+                                                    <a id="del_{{ ponencia.pk }}"
+                                                        href="javascript:deleteItem('{{ ponencia.pk }}')"
                                                         title="Eliminar">
                                                         <i class="la la-trash text-danger"></i>
                                                     </a>
@@ -363,6 +360,7 @@
                                                 <th style="width:50%">Nombre</th>
 
                                                 <th>Lugar</th>
+                                                <th>Ponentes</th>
                                                 <th>Fecha</th>
                                                 <th>Public.</th>
                                                 <th style="width:5%">Operaciones</th>
@@ -377,6 +375,10 @@
             </div>
         </div>
     </div>
+    <div style="text-align: right;">  <button id="atras" type="button" class="btn btn-danger " >
+    <i class="ft-skip-back position-right"></i>Atras
+</button> </div>
+  
 </section>
 <div class="swal-overlay" tabindex="-1">
     <form id="swall-modal-form" method="POST" style="display: none;">
@@ -384,6 +386,7 @@
     </form>
 
 </div>
+
 {% endblock %}
 {% block scripts %}
 
@@ -395,6 +398,9 @@
 <script src="{% static 'MedCongressApp/js/lugar.js'%}"></script>
 <script type="text/javascript">
     $(document).ready(function () {
+        $('#atras').click(function () {
+            location.href = "{% url 'MedCongressAdmin:congress_list' %}";
+        });
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({
             beforeSend: function (xhr, settings) {
@@ -414,58 +420,10 @@
         dataTable = $('.zero-configuration').DataTable();
     });
 
-
-
-    function AddPonencia(){
-        if($('#ponencias').val()==''){
-           swal("No se puede", "Debe seleccionar una ponencia.", "error"); 
-        }
-        else{
-            
-        
-        $.ajax({
-                            type: "GET",
-                            url: "{% url 'MedCongressAdmin:Add_ponencia'%}",
-                            data: {
-                                'id_ponencia': $('#ponencias').val(),
-                                'congreso': '{{congres.path}}',
-
-                            },
-                            success: function (data) {
-                                if (data['succes']) {
-                                    swal({
-                                        title: "Ha adicionado una ponencia",
-                                        text: "Se actualizaron las ponencias de este congreso",
-                                        icon: "success",
-                                        buttons: {
-                                            cancel: {
-                                                text: "ok!",
-                                                value: null,
-                                                visible: true,
-                                                className: "",
-                                                closeModal: false,
-                                            },
-
-
-
-                                        }
-                                    })
-                                        .then((isConfirm) => {
-                                            if (isConfirm) {
-
-                                            }
-                                            else {
-                                                location.reload();
-                                            }
-                                        });
-                                }
-                                else
-                                    swal("No se puede", "Ya tiene este Evento en el carrito de compra.", "error");
-                            }
-                        });
-                    }
-    }
-    function deleteItem(pk) {
+    $('#add-btn').click(function () {
+            location.href = "{% url 'MedCongressAdmin:ponente_ponencia_add' congres.pk  %}";
+        });
+        function deleteItem(pk) {
         swal({
             title: "Estas seguro?",
             text: "No será capaz de recuperar este elemento!",
@@ -489,7 +447,7 @@
         })
             .then((isConfirm) => {
                 if (isConfirm) {
-                    url = "{% url 'MedCongressAdmin:country_delete' pk=0 %}";
+                    url = "{% url 'MedCongressAdmin:ponencia_delete' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                         dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
                         swal("Eliminado!", "Este elemento ha sido eliminado.", "success");

@@ -193,3 +193,30 @@ class  CongressCategPagosCreateView(validarUser,CreateView):
         ctx['cong'] = pon
         return ctx
 
+class CongressDeletedView(validarUser,DeleteView):
+    model = Congreso
+    success_url = reverse_lazy('MedCongressAdmin:congress_list')
+    # template_name = 'MedCongressAdmin/country_form.html'
+
+   
+class  CongressPonenteCreateView(validarUser,CreateView):
+   
+    form_class = CongresoCategPagoForm
+    # success_url = reverse_lazy('MedCongressAdmin:ponencias_list')
+    template_name = 'MedCongressAdmin/congreso_ponencia_form.html'
+    def form_valid(self, form):
+        ponencia=form.save(commit=False)
+        ponnencia.save()
+        return super(CongressPonenteCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+           self.success_url =  reverse_lazy('MedCongressAdmin:Congres_pagos',kwargs={'id': self.kwargs.get('path')} )
+           return self.success_url
+
+    def get_context_data(self, **kwargs):
+        ctx = super(CongressCategPagosCreateView, self).get_context_data(**kwargs)
+        pon=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        ctx['cong'] = pon
+        return ctx
+
+

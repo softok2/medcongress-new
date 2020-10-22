@@ -173,7 +173,7 @@
 														<span
 															style="font-size: 15px; color: red;">{{ form.congreso.imagen_seg.errors }}
 														</span>{% endif %} </label>
-											s
+											
 													{{form.congreso.imagen_seg }}
 													{%endif%}
 												</div>
@@ -304,6 +304,9 @@
 
 										<div class="form-actions">
 											<div class="text-right">
+												<button id="atras" type="button" class="btn btn-danger ">Cancelar
+													<i class="ft-x position-right"></i>
+												</button>
 												
 												<button id="save" type="submit" class="btn btn-primary">Guardar
 													<i class="ft-save position-right"></i>
@@ -331,6 +334,9 @@
 <script src="{% static 'MedCongressApp/js/lugar.js'%}"></script>
 
 <script type="text/javascript">
+ $('#atras').click(function () {
+            location.href = "{% url 'MedCongressAdmin:congress_list' %}";
+        });
 	$(document).ready(function () {
 		$('#id_congreso-fecha_inicio').datetimepicker({
         //language:  'fr',
