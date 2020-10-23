@@ -103,43 +103,7 @@
 											</div>
 										</div>
 										
-										<div class="row">
-											<div class="col-sm-3 ">
-												<div class="form-group">
-													<label
-														for="{{form.user.password.id_for_label }}"><b>{{form.user.password.label }}</b>{% if form.user.password.errors %}
-														<span style="font-size: 15px; color: red;">{{ form.user.password.errors }}
-														</span>{% endif %} </label>
-				
-													{{form.user.password }}
-												</div>
-											</div>
-											<div class="col-sm-3 ">
-												<div class="form-group">
-													<label
-														for="{{form.user.password1.id_for_label }}"><b>{{form.user.password1.label }}</b>
-														{% if form.user.password1.errors %} <span
-															style="font-size: 15px; color: red;">{{ form.user.password1.errors }}
-														</span>{% endif %} </label>
-				
-													{{form.user.password1 }}
-				
-												</div>
-											</div>
-				
-				
-											<div class="col-sm-3 ">
-												<div class="form-group">
-													<label
-														for="{{form.perfiluser.genero.id_for_label }}"><b>{{form.perfiluser.genero.label }}</b>{% if form.perfiluser.genero.errors %}
-														<span style="font-size: 15px; color: red;">{{ form.perfiluser.genero.errors }}
-														</span>{% endif %}</label>
-													{{form.perfiluser.genero }}
-												</div>
-											</div>
-				
-				
-										</div>
+										
 										<div class="row">
 											<div class="col-sm-3 ">
 												<div class="form-group">
@@ -152,8 +116,20 @@
 													{{form.perfiluser.categoria }}
 												</div>
 											</div>
+											<div class="col-sm-3 ">
+												<div class="form-group">
+													<label
+														for="{{form.perfiluser.genero.id_for_label }}"><b>{{form.perfiluser.genero.label }}</b>{% if form.perfiluser.genero.errors %}
+														<span style="font-size: 15px; color: red;">{{ form.perfiluser.genero.errors }}
+														</span>{% endif %}</label>
+													{{form.perfiluser.genero }}
+												</div>
+											</div>
+				
 											
 				
+										</div>
+										<div class="row">
 											<div class="col-sm-3 " id="esp_div">
 												<div class="form-group">
 													<label
@@ -175,6 +151,9 @@
 													{{form.perfiluser.cel_profecional }}
 												</div>
 											</div>
+										
+											
+				
 				
 										</div>
 										<div class="row">
@@ -226,8 +205,29 @@
 													{{form.ubicacion.latitud }}
 												</div>
 											</div>
+											
+										</div>
+										<div class="row">
 											<div class="col-sm-3 ">
-												<div class="form-group" {%if con %}	style="display: none;" {%endif%}>
+												<div class="form-group">
+													{%if imagen_seg_url%}	
+													<label ><b>Imagen Actual </b> </label>		
+													<figure class="col-lg-3 col-md-6 col-12" itemprop="associatedMedia" itemscope="" ></figure>
+                                <a href="{{imagen_seg_url}}" itemprop="contentUrl" data-size="480x360">
+                                    <img class="img-thumbnail img-fluid" src="{{imagen_seg_url}}" itemprop="thumbnail" alt="Image description">
+                                </a> 
+                                
+                              </figure>
+	
+													<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva Imagen</b> </label>
+													<input type="file" name="perfiluser-foto" accept="image/*" class=" form-control " id="id_perfiluser-foto">
+													
+
+													
+													
+													
+													
+													{% else%}
 													<label
 														for="{{form.taller.congreso.id_for_label }}"><b>{{form.taller.congreso.label }}</b>{% if form.taller.congreso.errors %}
 														<span
@@ -235,10 +235,10 @@
 														</span>{% endif %} </label>
 	
 														{{form.perfiluser.foto }}
+														{%endif%}
 												</div>
 											</div>
 										</div>
-										
 	
 	
 	

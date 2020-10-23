@@ -113,9 +113,14 @@
 												<div class="form-group">
 													{%if imagen_seg_url%}	
 												<label ><b>Imagen Actual </b> </label>		
-												<img src="{{imagen_seg_url}}" alt=""><br>
+												<figure class="col-lg-3 col-md-6 col-12" itemprop="associatedMedia" itemscope="" ></figure>
+                                <a href="{{imagen_seg_url}}" itemprop="contentUrl" data-size="480x360">
+                                    <img class="img-thumbnail img-fluid" src="{{imagen_seg_url}}" itemprop="thumbnail" alt="Image description">
+                                </a> 
+                                
+                              </figure>
 
-												<label for=" "> <b>Insertar Nueva Imagen</b> </label>
+												<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva Imagen</b> </label>
 												<input type="file" name="ponencia-imagen" accept="image/*" class=" form-control " id="id_ponencia-imagen">
 												{% else%}
 

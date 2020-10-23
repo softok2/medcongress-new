@@ -71,7 +71,7 @@
                                         <tbody>
                                             {% for user in users %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
-                                                <td class="sorting_1">{{ user.usuario.first_name }} {{ user.usuario.first_name }}</td>
+                                                <td class="sorting_1">{{ user.usuario.first_name }} {{ user.usuario.last_name }}</td>
                                                 
                                                 <td>{{ user.usuario.email}}</td>
                                                 <td>{{ user.usuario.username}}</td>
@@ -80,7 +80,7 @@
                                                 
                                                 
                                                 <td style="text-align: center;">
-                                                    <a href=""
+                                                    <a href="{% url 'MedCongressAdmin:usuario_edit' pk=user.pk %}"
                                                         title="Editar"><i class="la la-pencil-square"></i></a>
                                                     <a id="del_{{ congres.pk }}"
                                                         href="javascript:deleteItem('{{ congres.pk }}')"

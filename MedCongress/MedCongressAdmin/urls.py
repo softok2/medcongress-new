@@ -18,7 +18,7 @@ from .views.ponencia_view import (PonenciaListView, PonenciaCreateView,PonenciaP
 from .views.taller_view import (TalleresListView,TallerCreateView,TallerCategPagosListView,TallerCategPagosCreateView,
                                    TallerUpdateView,TallerPonenteListView,TallerPonenteCreateView)
 from .views.ponente_view import (PonentesListView,PonentesCreateView)
-from .views.user_views import (UsuariosListView,UsuarioCreateView)
+from .views.user_views import (UsuariosListView,UsuarioCreateView,UsuarioUpdateView)
 from .views.dashboard import DashboardView
 
 
@@ -54,6 +54,7 @@ urlpatterns = [
      #usuarios
      path('usuarios', UsuariosListView.as_view(), name='usuarios_list'),
      path('usuario/adicionar', UsuarioCreateView.as_view(), name='usuario_add'),
+     path('usuario/editar/<int:pk>', UsuarioUpdateView.as_view(), name='usuario_edit'),
 
      
      path('imagen/add', ImagenCreateView.as_view(), name='Add_imagen'),
