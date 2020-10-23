@@ -1,7 +1,8 @@
 from django import forms
 from  MedCongressApp.models import (Congreso,Ubicacion,ImagenCongreso,TipoCongreso,Ponencia,Taller,
                                     Ponente,PerfilUsuario,RelPonenciaPonente,RelCongresoCategoriaPago,
-                                    CategoriaPagoCongreso,RelTalleresCategoriaPago)
+                                    CategoriaPagoCongreso,RelTalleresCategoriaPago,Genero,CategoriaUsuario,
+                                    RelTallerPonente)
                     
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
@@ -156,7 +157,7 @@ class TallerForm(forms.ModelForm):
     published=forms.BooleanField(label='Publicado',required=False)
     class Meta:
         model=Taller
-        fields=['titulo','duracion','fecha_inicio','imagen','published','congreso']
+        fields=['titulo','duracion','fecha_inicio','imagen','published','congreso','detalle']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
@@ -165,7 +166,8 @@ class TallerForm(forms.ModelForm):
         self.fields['duracion'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['congreso'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control'})   
-        self.fields['published'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['published'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['detalle'].widget.attrs.update({'class': 'form-control','rows':'3'})   
         
 
 class PonenciaForms(MultiModelForm):
@@ -206,6 +208,20 @@ class PonentePonenciaForm(forms.ModelForm):
         self.fields['ponente'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['ponencia'].widget.attrs.update({'class': 'form-control','style':'display:none'}) 
 
+class PonenteTallerForm(forms.ModelForm):
+    ponente=forms.ModelChoiceField(queryset=Ponente.objects.all(),label='Ponentes')
+  
+    class Meta:
+        model=RelTallerPonente
+        fields=['ponente','taller']
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+
+        self.fields['ponente'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['taller'].widget.attrs.update({'class': 'form-control','style':'display:none'}) 
+
 #    categoria = models.ForeignKey(CategoriaPagoCongreso, on_delete=models.CASCADE)
 #     congreso = models.ForeignKey(Congreso, on_delete=models.CASCADE)
 #     precio=models.FloatField()
@@ -242,3 +258,70 @@ class TallerCategPagoForm(forms.ModelForm):
         self.fields['taller'].widget.attrs.update({'class': 'form-control','style':'display:none'}) 
         self.fields['precio'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['moneda'].widget.attrs.update({'class': 'form-control'}) 
+
+        
+class UserForm(forms.ModelForm):
+    first_name=forms.CharField(
+               label = 'Nombre',
+               )
+    last_name=forms.CharField(
+                label = 'Apellidos',
+                )
+    username= forms.CharField(
+               label = 'Usuario',
+               )         
+    password = forms.CharField(widget=forms.PasswordInput,label='Contraseña')
+    password1 = forms.CharField(widget=forms.PasswordInput,label='Rectifique contraseña')
+    class Meta:
+        model=User
+        fields=['username','password','password1','first_name','last_name','email']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['username'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['password'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['password1'].widget.attrs.update({'class': 'form-control'}) 
+          
+        self.fields['first_name'].widget.attrs.update({'class': 'form-control','placeholder':'Nombre'})   
+        self.fields['last_name'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['email'].widget.attrs.update({'class': 'form-control'})     
+
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(UserForm, self).clean(*args, **kwargs)
+        password = cleaned_data.get('password', None)
+        password1 = cleaned_data.get('password1', None)
+        if password!=password1 :
+            self.add_error('password1', 'No coinciden los password ')
+
+class PerfilUserForm(forms.ModelForm):
+    cel_profecional=forms.CharField(
+               label = 'Cédula Profecional',
+                required=False
+               )
+    is_ponente=forms.BooleanField(
+                label = 'Desearía ser ponente en un evento   ',
+                required=False
+               
+               )
+    genero=forms.ModelChoiceField(queryset=Genero.objects.all(), label='Género')
+    categoria=forms.ModelChoiceField(queryset=CategoriaUsuario.objects.filter(published=True),label='Categoría')
+   
+    class Meta:
+        model=PerfilUsuario
+        fields=['cel_profecional','categoria','genero','especialidad','is_ponente','foto']
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+         
+        self.fields['cel_profecional'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['categoria'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['genero'].widget.attrs.update({'class': 'form-control'})
+        self.fields['especialidad'].widget.attrs.update({'class': 'form-control'})  
+       
+class UsuarioForms(MultiModelForm):
+    form_classes = {
+        'user': UserForm,
+        'perfiluser': PerfilUserForm,
+        'ubicacion':UbicacionForm,
+    }

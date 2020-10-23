@@ -39,7 +39,7 @@
 			<div class="card">
 				<div class="card-header">
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
-						Adicionar Taller</h1>
+						Adicionar Usuario</h1>
 					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
 					<div class="heading-elements">
 						<ul class="list-inline mb-0">
@@ -57,81 +57,125 @@
 								<div class="row">
 									<div class="col-md-12">
 										<div class="row">
-											<div class="col-sm-8 ">
+											<div class="col-sm-3 ">
 												<div class="form-group">
 													<label
-														for="{{form.taller.titulo.id_for_label }}"><b>{{form.taller.titulo.label }}</b>{% if form.taller.titulo.errors %}
+														for="{{form.user.first_name.id_for_label }}"><b>{{form.user.first_name.label }}</b>{% if form.user.first_name.errors %}
 														<span
-															style="font-size: 15px; color: red;">{{ form.taller.titulo.errors }}
+															style="font-size: 15px; color: red;">{{ form.user.first_name.errors }}
 														</span>{% endif %} </label>
 	
-													{{form.taller.titulo }}
+													{{form.user.first_name }}
 												</div>
 											</div>
-											<div class="col-sm-4 ">
+											<div class="col-sm-3 ">
 												<div class="form-group">
 													<label
-														for="{{form.taller.fecha_inicio.id_for_label }}"><b>{{form.taller.fecha_inicio.label }}</b>{% if form.taller.fecha_inicio.errors %}
+														for="{{form.user.last_name.id_for_label }}"><b>{{form.user.last_name.label }}</b>{% if form.user.last_name.errors %}
 														<span
-															style="font-size: 15px; color: red;">{{ form.taller.fecha_inicio.errors }}
+															style="font-size: 15px; color: red;">{{ form.user.last_name.errors }}
 														</span>{% endif %} </label>
 	
-													{{form.taller.fecha_inicio}}
+													{{form.user.last_name }}
+												</div>
+											</div>
+											<div class="col-sm-3 ">
+												<div class="form-group">
+													<label
+														for="{{form.user.username.id_for_label }}"><b>{{form.user.username.label }}</b>{% if form.user.username.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.user.username.errors }}
+														</span>{% endif %} </label>
+	
+													{{form.user.username }}
+												</div>
+											</div>
+											<div class="col-sm-3 ">
+												<div class="form-group">
+													<label
+														for="{form.user.email.id_for_label }}"><b>{{form.user.email.label }}</b>{% if form.user.email.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.user.email.errors }}
+														</span>{% endif %} </label>
+	
+													{{form.user.email}}
 												</div>
 											</div>
 										</div>
+										
 										<div class="row">
-											<div class="col-sm-12 ">
+											<div class="col-sm-3 ">
 												<div class="form-group">
 													<label
-														for="{{form.taller.detalle.id_for_label }}"><b>{{form.taller.detalle.label }}</b>{% if form.taller.detalle.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.taller.detalle.errors }}
+														for="{{form.user.password.id_for_label }}"><b>{{form.user.password.label }}</b>{% if form.user.password.errors %}
+														<span style="font-size: 15px; color: red;">{{ form.user.password.errors }}
 														</span>{% endif %} </label>
-	
-													{{form.taller.detalle }}
+				
+													{{form.user.password }}
 												</div>
 											</div>
-										</div>
-										<div class="row">
-	
-											<div class="col-sm-6 ">
+											<div class="col-sm-3 ">
 												<div class="form-group">
 													<label
-														for="{{form.taller.duracion.id_for_label }}"><b>{{form.taller.duracion.label }}</b>{% if form.taller.duracion.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.taller.duracion.errors }}
+														for="{{form.user.password1.id_for_label }}"><b>{{form.user.password1.label }}</b>
+														{% if form.user.password1.errors %} <span
+															style="font-size: 15px; color: red;">{{ form.user.password1.errors }}
 														</span>{% endif %} </label>
-	
-													{{form.taller.duracion }}
+				
+													{{form.user.password1 }}
+				
+												</div>
+											</div>
+				
+				
+											<div class="col-sm-3 ">
+												<div class="form-group">
+													<label
+														for="{{form.perfiluser.genero.id_for_label }}"><b>{{form.perfiluser.genero.label }}</b>{% if form.perfiluser.genero.errors %}
+														<span style="font-size: 15px; color: red;">{{ form.perfiluser.genero.errors }}
+														</span>{% endif %}</label>
+													{{form.perfiluser.genero }}
+												</div>
+											</div>
+				
+				
+										</div>
+										<div class="row">
+											<div class="col-sm-3 ">
+												<div class="form-group">
+													<label
+														for="{{form.perfiluser.categoria.id_for_label }}"><b>{{form.perfiluser.categoria.label }}</b>{% if form.perfiluser.categoria.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.perfiluser.categoria.errors }}
+														</span>{% endif %}</label>
+				
+													{{form.perfiluser.categoria }}
 												</div>
 											</div>
 											
-										</div>
-										<div class="row">
-											<div class="col-sm-6 ">
+				
+											<div class="col-sm-3 " id="esp_div">
 												<div class="form-group">
-													{%if imagen_seg_url%}	
-												<label ><b>Imagen Actual </b> </label>		
-												<img src="{{imagen_seg_url}}" alt=""><br>
-
-												<label for=" "> <b>Insertar Nueva Imagen</b> </label>
-												<input type="file" name="ponencia-imagen" accept="image/*" class=" form-control " id="id_ponencia-imagen">
-												{% else%}
-
 													<label
-														for="{{form.taller.imagen.id_for_label }}"><b>{{form.taller.imagen.label }}</b>{% if form.taller.imagen.errors %}
+														for="{{form.perfiluser.especialidad.id_for_label }}"><b>{{form.perfiluser.especialidad.label }}</b>{% if form.perfiluser.especialidad.errors %}
 														<span
-															style="font-size: 15px; color: red;">{{ form.taller.imagen.errors }}
-														</span>{% endif %} </label>
-	
-													{{form.taller.imagen }}
-													{%endif%}
+															style="font-size: 15px; color: red;">{{ form.perfiluser.especialidad.errors }}
+														</span>{% endif %}</label>
+													{{form.perfiluser.especialidad }}
 												</div>
 											</div>
-	
-	
-	
+											<div class="col-sm-3 " id="cel_prof">
+												<div class="form-group">
+													<label
+														for="{{form.perfiluser.cel_profecional.id_for_label }}"><b>{{form.perfiluser.cel_profecional.label }}</b>{% if form.perfiluser.cel_profecional.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.perfiluser.cel_profecional.errors }}
+														</span>{% endif %}</label>
+				
+													{{form.perfiluser.cel_profecional }}
+												</div>
+											</div>
+				
 										</div>
 										<div class="row">
 											<div class="col-sm-6 ">
@@ -190,7 +234,7 @@
 															style="font-size: 15px; color: red;">{{ form.taller.congreso.errors }}
 														</span>{% endif %} </label>
 	
-													{{form.taller.congreso }}
+														{{form.perfiluser.foto }}
 												</div>
 											</div>
 										</div>
@@ -270,24 +314,52 @@
             $('#id_ubicacion-longitud').val('');
 
         });
-		{% if not delete_url %}
-		$('#save-plus').click(function (event) {
-			event.preventDefault();
-			$('#country-form').attr('action', "{% url 'MedCongressAdmin:country_add_plus' param='+' %}");
-			$('#country-form').submit();
-		});
-		$('#save-edit').click(function (event) {
-			event.preventDefault();
-			$('#country-form').attr('action', "{% url 'MedCongressAdmin:country_add_plus' param='+->' %}");
-			$('#country-form').submit();
-		});
-		{% else %}
-		$('#delete').click(function (event) {
-			event.preventDefault();
-			$('#country-form').attr('action', "{{ delete_url }}");
-			$('#country-form').submit();
-		});
-		{% endif %}
+		$("#esp_div").hide();
+        $("#cel_prof").hide();
+      
+        if ($('#id_perfiluser-categoria option:selected').text() == 'Médico' || $('#id_perfiluser-categoria option:selected').text() == 'Residente') {
+
+            $("#esp_div").show();
+            $("#cel_prof").show();
+           
+            $("#id_perfiluser-especialidad").attr('required', 'True');
+            $("#id_perfiluser-cel_profecional").attr('required', 'True');
+
+
+        }
+        else {
+            $("#esp_div").hide();
+            $("#cel_prof").hide();
+            $("#id_perfiluser-especialidad").val('');
+            $("#id_perfiluser-cel_profecional").val('');
+            $("#id_perfiluser-especialidad").removeAttr('required')
+            $("#id_perfiluser-cel_profecional").removeAttr('required')
+
+        }
+        
+
+
+        $('#id_perfiluser-categoria').change(function () {
+
+            if ($('#id_perfiluser-categoria option:selected').text() == 'Médico' || $('#id_perfiluser-categoria option:selected').text() == 'Residente') {
+
+                $("#esp_div").show();
+                $("#cel_prof").show();
+                $("#id_perfiluser-especialidad").attr('required', 'True')
+                $("#id_perfiluser-cel_profecional").attr('required', 'True')
+            }
+            else {
+                $("#id_perfiluser-especialidad").val('');
+                $("#id_perfiluser-cel_profecional").val('');
+                $("#esp_div").hide();
+                $("#cel_prof").hide();
+                $("#id_perfiluser-especialidad").removeAttr('required')
+                $("#id_perfiluser-cel_profecional").removeAttr('required')
+
+            }
+            
+
+        });
 	});
 
 	// alert($('#id_imagen_congreso-imagen').val());

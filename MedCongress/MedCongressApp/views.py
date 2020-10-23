@@ -109,19 +109,51 @@ class CongresoDetail(TemplateView):
             with connections['default'].cursor() as cursor:
                     sql_query = '''SELECT DISTINCT fecha_inicio::date FROM public."MedCongressApp_ponencia" where published is TRUE  and congreso_id= '''+ str(congreso.id) +''' ORDER by fecha_inicio'''
                     cursor.execute(sql_query)
-                    data = [row[0] for row in cursor.fetchall()]
+                    data2 = [row[0] for row in cursor.fetchall()]
+            with connections['default'].cursor() as cursor:
+                    sql_query = '''SELECT DISTINCT fecha_inicio::date FROM public."MedCongressApp_taller" where published is TRUE  and congreso_id= '''+ str(congreso.id) +''' ORDER by fecha_inicio'''
+                    cursor.execute(sql_query)
+                    data1 = [row[0] for row in cursor.fetchall()]
+                    
             
+            data=data2+[i for i in data1 if i not in data2]
+            print(data)
             context['fecha_ponencias']= data
             ponencias_env=[] 
             ponentes_env=[]
             for dat in context['fecha_ponencias'] :
-                ponencias=Ponencia.objects.filter(fecha_inicio__date=dat,).order_by('fecha_inicio')
-                for ponencia in ponencias:
-                    ponentes_env.append(Ponente.objects.filter(ponencia_ponente__pk=ponencia.id).distinct()) 
-
-                ponencias_env.append(ponencias)
+                ponencias=Ponencia.objects.filter(fecha_inicio__date=dat,congreso=congreso,published=True).order_by('fecha_inicio')
+                talleres=Taller.objects.filter(fecha_inicio__date=dat,congreso=congreso,published=True).order_by('fecha_inicio')
+                result=[]
+                for ponencia in ponencias: 
+                    result.append({
+                    'id':ponencia.id,
+                    'titulo': ponencia.titulo,
+                    'fecha_inicio': ponencia.fecha_inicio ,# una relación a otro modelo
+                    'detalle':ponencia.detalle ,
+                    'ponentes':Ponente.objects.filter(ponencia_ponente__pk=ponencia.id).distinct() ,
+                    'tipo':'Ponencia',# la misma relación, otro campo
+                    })
+                for taller in talleres: 
+                    result.append({
+                    'id':taller.id,
+                    'titulo': taller.titulo,
+                    'fecha_inicio': taller.fecha_inicio ,# una relación a otro modelo
+                    'detalle':taller.detalle ,
+                    'ponentes':Ponente.objects.filter(taller_ponente__pk=taller.id).distinct() ,
+                    'tipo':'Taller',# la misma relación, otro campo
+                    })
+                result = sorted(result, key=lambda k: k['fecha_inicio'])
+                print(result)
+                # ponentes_env.append(Ponente.objects.filter(ponencia_ponente__pk=ponencia.id).distinct()) 
+                ponencias_env.append(result)
+                # for taller in talleres:
+                #     ponentes_env.append(Taller.objects.filter(reltallerponente__pk=taller.id).distinct()) 
+             
+                #     ponencias_env.append(talleres)
             
             context['ponencias']=ponencias_env
+
             prueba_ponecia=Ponencia.objects.filter(congreso=congreso.pk)
             id=[]
             for pp in prueba_ponecia:

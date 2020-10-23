@@ -350,6 +350,7 @@ class Taller(models.Model):
     titulo=models.CharField(max_length=250)
     duracion=models.CharField(max_length=250) 
     fecha_inicio=models.DateTimeField()
+    detalle=models.TextField(null=True,blank=True)
     path=models.CharField(max_length=250, help_text='campo para identificarlo por la URL')
     imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='talleres',blank=True, null=True )
     lugar=models.ForeignKey(Ubicacion,on_delete=models.DO_NOTHING)
@@ -357,7 +358,7 @@ class Taller(models.Model):
     updated=models.DateTimeField(null=True, blank=True)
     published=models.BooleanField()
     congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
-    ponente = models.ManyToManyField(Ponente, through='RelTallerPonente')
+    ponente = models.ManyToManyField(Ponente, through='RelTallerPonente',related_name='taller_ponente')
     votacion = models.ManyToManyField(User, through='RelTallerVotacion')
     categoria_pago = models.ManyToManyField(CategoriaPagoCongreso, through='RelTalleresCategoriaPago',related_name='talleres_cat_pago')
     

@@ -84,8 +84,8 @@
                                                 {%else%}
                                                 <div class="kf_new_conf_hdg " id="conf_accord{{forloop.counter0}}">
                                                     {%endif%}
-                                                    <h5>{{pon.titulo}} </h5>
-
+                                                    <h5>{{pon.titulo}} <span style="font-style: italic;"> ( {{pon.tipo}} ) </span> </h5>
+                                                   
                                                     <i class="fa fa-angle-down"></i>
 
                                                 </div>
@@ -95,7 +95,7 @@
                                                         <p>{{pon.detalle}}</p>
                                                         {%endif%}
                                                     </div>
-                                                    {%for ponente in pon.ponente.all %}
+                                                    {%for ponente in pon.ponentes %}
 
                                                     <div class="kf_new_conf_orgnizr">
                                                         <figure>

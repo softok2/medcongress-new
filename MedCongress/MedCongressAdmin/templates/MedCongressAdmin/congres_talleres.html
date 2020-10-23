@@ -62,6 +62,7 @@
                                                 <th style="width:50%">Nombre</th>
                                                
                                                 <th>Lugar</th>
+                                                <th>Ponentes</th>
                                                 <th>Fecha</th>
                                                 <th>Public.</th>
                                                 
@@ -74,6 +75,13 @@
                                                 <td class="sorting_1">{{ taller.titulo }}</td>
                                                 
                                                 <td>{{ taller.lugar }}</td>
+                                                <td style="text-align: center;">
+                                                    
+                                                    <a id=""
+                                                    href="{%url 'MedCongressAdmin:Taller_ponentes' taller.path%}"
+                                                        title="Ponentes">
+                                                        <i class="la la-user-secret " style= "color: blue;" ></i>
+                                                    </a></td>
                                                 <td>{{ taller.fecha_inicio }}</td>
                                                 <td>{%if taller.published%}Si{%else%}No{%endif%}</td>
                                                 
@@ -98,6 +106,7 @@
                                                 <th style="width:50%">Nombre</th>
                                                
                                                 <th>Lugar</th>
+                                                <th>Ponentes</th>
                                                 <th>Fecha</th>
                                                 <th>Public.</th>
                                                 <th style="width:5%">Operaciones</th>

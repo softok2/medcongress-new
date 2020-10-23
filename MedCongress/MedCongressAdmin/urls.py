@@ -16,8 +16,9 @@ from .views.imagen_views import (ImagenCreateView)
 from .views.ponencia_view import (PonenciaListView, PonenciaCreateView,PonenciaPonenteListView,
                                    PonencicaUpdateView,PonenciaPonenteCreateView,PonenciaDeletedView)
 from .views.taller_view import (TalleresListView,TallerCreateView,TallerCategPagosListView,TallerCategPagosCreateView,
-                                   TallerUpdateView,)
+                                   TallerUpdateView,TallerPonenteListView,TallerPonenteCreateView)
 from .views.ponente_view import (PonentesListView,PonentesCreateView)
+from .views.user_views import (UsuariosListView,UsuarioCreateView)
 from .views.dashboard import DashboardView
 
 
@@ -49,8 +50,12 @@ urlpatterns = [
      path('taller/adicionar', TallerCreateView.as_view(), name='taller_add'),
      path('taller/editar/<int:pk>', TallerUpdateView.as_view(), name='taller_edit'),
      path('taller/congreso/add/<int:pk>', TallerCreateView.as_view(), name='congreso_taller_add'),
+
+     #usuarios
+     path('usuarios', UsuariosListView.as_view(), name='usuarios_list'),
+     path('usuario/adicionar', UsuarioCreateView.as_view(), name='usuario_add'),
+
      
-    
      path('imagen/add', ImagenCreateView.as_view(), name='Add_imagen'),
      path('talleres/congreso/<str:path>', CongressTalleresListView.as_view(), name='Congres_talleres'),
      path('ponencias/congreso/<str:path>', CongressPonenciasListView.as_view(), name='Congres_ponencias'),
@@ -60,9 +65,11 @@ urlpatterns = [
      path('ponencia/adicionar', PonenciaCreateView.as_view(), name='ponencia_add'),
      
      path('ponentes/ponencia/<str:path>', PonenciaPonenteListView.as_view(), name='Ponencia_ponentes'),
+     path('ponentes/taller/<str:path>', TallerPonenteListView.as_view(), name='Taller_ponentes'),
      path('ponentes', PonentesListView.as_view(), name='Ponentes_list'),
      path('ponente/adicionar', PonentesCreateView.as_view(), name='ponente_add'),
      path('ponentes/pon/adicionar/<str:path>', PonenciaPonenteCreateView.as_view(), name='ponecia_ponente_add'),
+     path('ponentes/tall/adicionar/<str:path>', TallerPonenteCreateView.as_view(), name='taller_ponente_add'),
      path('categorias_pago/congres/adicinar/<str:path>', CongressCategPagosCreateView.as_view(), name='congres_cat_pago_add'),
      path('categorias_pago/tall/<str:path>', TallerCategPagosListView.as_view(), name='Taller_pagos'),
      path('categoria_pago/taller/add/<str:path>', TallerCategPagosCreateView.as_view(), name='taller_cat_pago_add'),
