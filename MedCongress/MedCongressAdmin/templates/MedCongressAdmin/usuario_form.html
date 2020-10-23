@@ -152,9 +152,19 @@
 												</div>
 											</div>
 										
-											
+										</div>
+										<div class="row">
+											<div class="col-sm-12" >
+												<div class="form-group">
+													<label
+														for="{{form.perfiluser.detalle.id_for_label }}"><b>{{form.perfiluser.detalle.label }}</b>{% if form.perfiluser.detalle.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.perfiluser.detalle.errors }}
+														</span>{% endif %}</label>
 				
-				
+													{{form.perfiluser.detalle }}
+												</div>
+											</div>
 										</div>
 										<div class="row">
 											<div class="col-sm-6 ">
@@ -220,18 +230,17 @@
                               </figure>
 	
 													<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva Imagen</b> </label>
+													{% if form.perfiluser.foto.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.perfiluser.foto.errors }}
+														</span>{% endif %}
 													<input type="file" name="perfiluser-foto" accept="image/*" class=" form-control " id="id_perfiluser-foto">
-													
-
-													
-													
-													
 													
 													{% else%}
 													<label
-														for="{{form.taller.congreso.id_for_label }}"><b>{{form.taller.congreso.label }}</b>{% if form.taller.congreso.errors %}
+														for="{{form.perfiluser.foto.id_for_label }}"><b>{{form.perfiluser.foto.label }}</b>{% if form.taller.congreso.errors %}
 														<span
-															style="font-size: 15px; color: red;">{{ form.taller.congreso.errors }}
+															style="font-size: 15px; color: red;">{{ form.perfiluser.foto.errors }}
 														</span>{% endif %} </label>
 	
 														{{form.perfiluser.foto }}
