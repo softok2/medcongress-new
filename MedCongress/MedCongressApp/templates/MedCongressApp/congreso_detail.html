@@ -84,7 +84,7 @@
                                                 {%else%}
                                                 <div class="kf_new_conf_hdg " id="conf_accord{{forloop.counter0}}">
                                                     {%endif%}
-                                                    <h5>{{pon.titulo}} <span style="font-style: italic;"> ( {{pon.tipo}} ) </span> </h5>
+                                                    <h5>{%if pon.tipo == 'Taller'%}{{pon.tipo|upper}}{%endif%} {{pon.titulo}} <span style="font-style: italic;"> </span> </h5>
                                                    
                                                     <i class="fa fa-angle-down"></i>
 
