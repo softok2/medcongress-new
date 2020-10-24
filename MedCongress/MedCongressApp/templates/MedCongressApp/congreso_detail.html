@@ -61,7 +61,7 @@
                                     data-toggle="tab"><span>Día {{forloop.counter}}</span>{{fecha_ponencia|date:"M"}}
                                     {{fecha_ponencia|date:"d"}} / {{fecha_ponencia|date:"Y"}}</a></li>
                             {% else %}
-                            <li role="presentation"><a href="#home{{forloop.counter}}" style="min-width: 185px;" role="tab"
+                            <li role="presentation"><a href="#home{{forloop.counter}}" style="min-width: inherit" role="tab"
                                     data-toggle="tab"><span>Día {{forloop.counter}}</span>{{fecha_ponencia|date:"M"}}
                                     {{fecha_ponencia|date:"d"}} / {{fecha_ponencia|date:"Y"}}</a></li>
                             {%endif%}
