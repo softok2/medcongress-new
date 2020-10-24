@@ -47,6 +47,10 @@ URL_PDF='https://sandbox-dashboard.openpay.mx'
 
 ##### Inicio #####
 
+class Email(TemplateView):
+    template_name= 'MedCongressApp/email.html' 
+    
+
 class Home(TemplateView):
     template_name= 'MedCongressApp/home.html' 
     
@@ -345,12 +349,7 @@ class PerfilUserCreate(CreateView):
         user = form['user'].save(commit=False)
         # email = EmailMessage('Asunto', 'esto es una prueba, como mando correos en Phyton?', to = ['dennis.molinetg@gmail.com'])
         # email.send()
-        subject = 'HTML EMAIL'
-        html_message = render_to_string('MedCongressApp/404.html', context={})
-        plain_message = strip_tags('Aviso..... Usted se a creado un usuario en MedCongress')
-        from_email = 'SOFTOK2 ME <amorell@softok2.com>'
-        to = user.email
-        mail.send_mail(subject, plain_message, from_email, [to])
+        
 
         us=User.objects.create_user(user.username,user.email,user.password)
         ubicacion= form['ubicacion'].save(commit=True)
@@ -369,6 +368,13 @@ class PerfilUserCreate(CreateView):
         chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
         secret_key = get_random_string(20, chars)
         perfiluser.activation_key=secret_key
+        subject = 'Bienvenido a MedCongress'
+        html_message = render_to_string('MedCongressApp/email.html', context={})
+        plain_message = strip_tags('Aviso..... Usted se a creado un usuario en MedCongress')
+        from_email = ' Contacto MedCongress <contacto@medcongress.com.mx>'
+        to = user.email
+        mail.send_mail(subject, plain_message, from_email, [to],html_message=html_message)
+
         perfiluser.usuario = us
         perfiluser.ubicacion=ubicacion
         perfiluser.path=us.username

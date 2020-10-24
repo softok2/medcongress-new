@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from .views import (Home,CongresoListView,CongresoDetail,CongresoCardForm,PerfilUserCreate,
 ViewErrorOpenpay,PagarEfectivo,ViewError404,ViewPonencia,EspecialdiadesAutocomplete,
-AddCart,AddCartTaller,DeletedCart,ConfCart,AvisoPrivacidad)
+AddCart,AddCartTaller,DeletedCart,ConfCart,AvisoPrivacidad,Email)
 
 urlpatterns = [
     
@@ -21,6 +21,7 @@ urlpatterns = [
     path('deleted_cart',DeletedCart.as_view() , name='Deleted_cart'),
     path('conf_cart',ConfCart.as_view() , name='Conf_cart'),
     path('aviso_privacidad',AvisoPrivacidad.as_view() , name='aviso_privacidad'),
+    path('email',Email.as_view() , name='email'),
 
     
     

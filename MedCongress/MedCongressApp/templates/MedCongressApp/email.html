@@ -1,0 +1,245 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	{% load filtros %}
+	{% load static %}
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title> Nuevo Usuario
+	</title>
+	<!-- Bootstrap min css -->
+	<link rel="stylesheet" href="{% static 'MedCongressApp/css/bootstrap.min.css'%}" type="text/css" media="all">
+
+	<!-- bxSlider CSS file -->
+	<link href="{% static 'MedCongressApp/css/jquery.bxslider.css'%}" rel="stylesheet" />
+	<!-- Important Owl stylesheet -->
+	<link rel="stylesheet" href="{% static 'MedCongressApp/css/owl.carousel.css'%}">
+	<!-- Full Calender stylesheet -->
+	<link rel="stylesheet" href="{% static 'MedCongressApp/css/fullcalendar.css'%}">
+	<!-- Typo css -->
+	<link rel="stylesheet" href="{% static 'MedCongressApp/css/typo.css'%}" type="text/css" media="all">
+	<!-- Font Awesome css -->
+	<link rel="stylesheet" href="{% static 'MedCongressApp/css/font-awesome.min.css'%}" type="text/css" media="all">
+	<!-- Ihover css -->
+	<link href="{% static 'MedCongressApp/css/ihover.css'%}" rel="stylesheet">
+	<!-- Widget css -->
+	<link href="{% static 'MedCongressApp/css/widget.css'%}" rel="stylesheet">
+	<!-- Style css -->
+	<link rel="stylesheet" href="{% static 'MedCongressApp/style.css'%}" type="text/css" media="all">
+	<!--Side MENU-->
+	<link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery.sidr.dark.css'%}" type="text/css" media="all">
+	<!-- PrettyPhoto css -->
+	<link rel="stylesheet" href="{% static 'MedCongressApp/css/prettyPhoto.css'%}" type="text/css" media="all">
+	<!-- Responsive css -->
+	<link rel="stylesheet" href="{% static 'MedCongressApp/css/responsive.css'%}" type="text/css" media="all">
+	<!-- Color css -->
+	<link rel="stylesheet" href="{% static 'MedCongressApp/css/color.css'%}" type="text/css" media="all">
+{% block css%}
+{%endblock%}
+</head>
+
+<body>
+	<!-- Wrapper start -->
+
+	<div id="wrapper">
+		<div id="mobile-header">
+			<a id="responsive-menu-button" href="#sidr-main"><i class="fa fa-bars"></i></a>
+		</div>
+		<header id="kode-header">
+			<strong class="kode-logo">
+				<a style="background-color: black;"><img src="{% static 'MedCongressApp/images/LOGODOSCOLORESSINFONDO.png'%}"
+						alt=""></a>
+			</strong>
+
+		</header>
+		<!-- <button type="button" class=" flotante btn btn-info btn-circle btn-xl" data-toggle="modal" data-target=".pp"><i class="fa fa-shopping-cart" style="font-size: 40px;"><span
+			class="badge badge-pill badge-default badge-danger badge-default badge-up badge-glow"
+			style="background-color: red;margin-top: -48px;">
+			{%if  request.session.my_car %}{{ request.session.cart.1|length}}
+		{%else%} 0 {%endif%}</span></i>
+		</button> -->
+		<!-- <button class="flotante btn btn-default btn-circle" data-toggle="modal" data-target=".pp" style="padding: 32px;">
+			<i class="fa fa-shopping-cart" style="font-size: 30px;"></i>
+
+		</button> -->
+		
+		<!-- Kode-Header End -->
+<div class="kf_content">
+	<div class="container">
+
+		<div class="row">
+
+			<div class="col-md-12">
+				<div style="margin-top:50px;">
+					<div class="kf_blog_detail_des">
+						<h5> Bienvenido la familia Med Congress </h5>
+						<span style="font-style: italic;">  <b>“SOMOS LA TRANSFORMACIÓN DE LA EDUCACIÓN MÉDICA”</b> </span>
+						<p  style="margin-top: 20px;"> Una empresa tecnológica con el propósito de democratizar la educación haciéndola más flexible, cómoda y accesible a cualquier médico en el mundo, 
+							por qué actualizarte nunca había sido tan fácil, con <a href="https://medcongress.com.mx ">medcongress.com.mx </a> todos los eventos médicos a un clic de distancia
+								</p>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+		
+	</div>
+
+	</div>
+	<!--Jquery Lib-->
+	<script src="{% static 'MedCongressApp/js/jquery.js'%}"></script>
+	<!--Bootstrap Javascript File-->
+	<script src="{% static 'MedCongressApp/js/bootstrap.min.js'%}"></script>
+	<!-- bxSlider Javascript file -->
+	<script src="{% static 'MedCongressApp/js/jquery.bxslider.js'%}"></script>
+	<!-- OWL Javascript file -->
+	<script src="{% static 'MedCongressApp/js/owl.carousel.min.js'%}"></script>
+	<!--Image Filterable Gallery-->
+	<script src="{% static 'MedCongressApp/js/jquery-filterable.js'%}"></script>
+	<!--Number Count Script-->
+	<script src="{% static 'MedCongressApp/js/waypoints-min.js'%}"></script>
+	<!--Full Calender Script-->
+	<script src="{% static 'MedCongressApp/js/moment.min.js'%}"></script>
+	<script src="{% static 'MedCongressApp/js/fullcalendar.min.js'%}"></script>
+	<!--Time Counter Script-->
+	<script src="{% static 'MedCongressApp/js/jquery.downCount.js'%}"></script>
+	<!--Internet Explore Script-->
+	<script src="{% static 'MedCongressApp/js/ie.js'%}"></script>
+	<!--Accordian Explore Script-->
+	<script src="{% static 'MedCongressApp/js/jquery.accordion.js'%}"></script>
+	<!--GOOGLE MAP-->
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyCxDqmPXcY8jAoT1iWgxhzcf81HWnOPGEw"></script>
+	<!--RESPONSIVE MENU-->
+	<script src="{% static 'MedCongressApp/js/jquery.sidr.min.js'%}"></script>
+	<!--PrettyPhoto Js -->
+	<script src="{% static 'MedCongressApp/js/jquery.prettyPhoto.js'%}"></script>
+	<!--Custom Scripts-->
+	<script src="{% static 'MedCongressApp/js/custom.js'%}"></script>
+
+	<script src="{% static 'MedCongressApp/js/sweetalert.min.js' %}"></script>
+	{% block script%}
+
+	{%endblock%}
+	<script>
+		
+
+		function EliminarCart(id){
+			$.ajax({
+            type: "GET",
+            url: "{% url 'Deleted_cart'%}",
+            data: {
+                'id': id,
+				
+            },
+            success: function (data) {
+                if (data['succes']){
+					swal({
+            title: "Eliminado",
+            text: "Ha sacado un evento de su carrito de compras",
+            icon: "success",
+            buttons: {
+                cancel: {
+                    text: "ok!",
+                    value: null,
+                    visible: true,
+                    className: "",
+                    closeModal: false,
+                },
+               
+                
+                
+            }
+        })
+        .then((isConfirm) => {
+            if (isConfirm) {
+                
+            }
+            else{
+                location.reload();
+            }
+
+        });
+            }
+                else
+                swal("No se pudo eliminar", "Póngase en contacto con el administrador.", "error"); 
+            }
+        });
+
+		}
+		function Mensaje(mensaje){
+			swal("Atención", mensaje, "warning"); 
+		}
+	function EditCart(id){
+$('#edit_'+id).show();
+$('#btn_conf_'+id).show();
+$('#btn_cancel_'+id).show();
+$('#edit_no_'+id).hide();
+$('#btn_edit_'+id).hide();
+		}
+		function CancelCart(id){
+$('#edit_'+id).hide();
+$('#btn_conf_'+id).hide();
+$('#btn_cancel_'+id).hide();
+
+$('#edit_no_'+id).show();
+$('#btn_edit_'+id).show();
+		}
+
+	function ConfCart(id){
+		$.ajax({
+            type: "GET",
+            url: "{% url 'Conf_cart'%}",
+            data: {
+                'id': id,
+				'cant':$('#cantidad_'+id).val(),
+				
+            },
+            success: function (data) {
+                if (data['succes']){
+				
+					swal({
+            title: "Actualizado",
+            text: "Ha actualizado la cantidad de eventos en el carrito",
+            icon: "success",
+            buttons: {
+                cancel: {
+                    text: "ok!",
+                    value: null,
+                    visible: true,
+                    className: "",
+                    closeModal: false,
+                },
+               
+                
+                
+            }
+        })
+        .then((isConfirm) => {
+            if (isConfirm) {
+                
+            }
+            else{
+                location.reload();
+            }
+
+        });
+            }
+                else
+                swal("No se pudo actualizar", "Póngase en contacto con el administrador.", "error"); 
+					 
+            }
+        
+
+	});
+	}
+	</script>
+</body>
+
+</html>
