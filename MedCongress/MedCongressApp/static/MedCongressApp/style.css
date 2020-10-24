@@ -903,7 +903,7 @@ h1,h2,h3,h4,h5,h6{
 	line-height:30px;
 	margin-right: 0;
 	color:#2a343d;
-	min-width:200px;
+	min-width:180px;
 	position:relative;
 	padding:18px 10px 19px;
 	transition:all 0.5s ease 0s;
