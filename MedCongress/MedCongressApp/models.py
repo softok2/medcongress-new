@@ -86,7 +86,7 @@ class PerfilUsuario(models.Model):
     path=models.CharField(max_length=250, help_text='campo para identificarlo por la URL')
     cel_profecional=models.CharField(max_length=50,null=True)
     foto=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='usuarios' )
-    activation_key = models.CharField(max_length=40,blank=True, null=True)
+    activation_key = models.CharField(max_length=60,blank=True, null=True)
     key_expires = models.DateTimeField(blank=True, null=True)
     usuario=models.OneToOneField(User, on_delete=models.CASCADE)
     categoria=models.ForeignKey(CategoriaUsuario,on_delete=models.DO_NOTHING)

@@ -47,8 +47,10 @@ URL_PDF='https://sandbox-dashboard.openpay.mx'
 
 ##### Inicio #####
 
-class Email(TemplateView):
-    template_name= 'MedCongressApp/email.html' 
+# class Email(TemplateView):
+#     template_name= 'MedCongressApp/email.html' 
+# class ConfigEmail(TemplateView):
+#     template_name= 'MedCongressApp/confic_email.html' 
     
 
 class Home(TemplateView):
@@ -361,15 +363,15 @@ class PerfilUserCreate(CreateView):
             perfiluser.categoria=categoria
         us.first_name=user.first_name
         us.last_name=user.last_name
-        us.is_active = True
+        us.is_active = False
         group= Group.objects.get(name='Cliente')
         us.groups.add(group)
         us.save()
-        chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
-        secret_key = get_random_string(20, chars)
+        chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
+        secret_key = get_random_string(60, chars)
         perfiluser.activation_key=secret_key
         subject = 'Bienvenido a MedCongress'
-        html_message = render_to_string('MedCongressApp/email.html', context={})
+        html_message = render_to_string('MedCongressApp/email.html', context={'token':secret_key})
         plain_message = strip_tags('Aviso..... Usted se a creado un usuario en MedCongress')
         from_email = ' Contacto MedCongress <contacto@medcongress.com.mx>'
         to = user.email
@@ -528,4 +530,16 @@ class AvisoPrivacidad(TemplateView):
 #     response.status_code = 400
 
 #     return response
+
+class HabilitarUser(TemplateView):
+    template_name= 'MedCongressApp/confic_email.html' 
+    def get(self, request, **kwargs):
+        usuario=PerfilUsuario.objects.filter(activation_key=self.kwargs.get('token')).first()
+        if usuario is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        else:
+            usuario.usuario.is_active=True
+            usuario.usuario.save()
+            usuario.save()
+            return self.render_to_response(self.get_context_data()) 
 
