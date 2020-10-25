@@ -38,14 +38,15 @@
 <div class="kode-conference-schedule" id="programas">
     <div class="container">
         <div class="kf_heading_1 col-sm-6">
-            <h2>PROGRAMA  </h2>
+            <h2>PROGRAMA </h2>
             <span>{{congreso.titulo}}</span>
-                
+
         </div>
         <div class="col-sm-6" style="margin-bottom: 20px;">
-            <a href="{% static 'PDF/programa.pdf'%}" style="font-size: 18px;"><i class="fa fa-download" ></i>  Descargar Programa</a>  
+            <a href="{% static 'PDF/programa.pdf'%}" style="font-size: 18px;"><i class="fa fa-download"></i> Descargar
+                Programa</a>
         </div>
-       
+
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="schedule-banner">
@@ -61,8 +62,9 @@
                                     data-toggle="tab"><span>Día {{forloop.counter}}</span>{{fecha_ponencia|date:"M"}}
                                     {{fecha_ponencia|date:"d"}} / {{fecha_ponencia|date:"Y"}}</a></li>
                             {% else %}
-                            <li role="presentation"><a href="#home{{forloop.counter}}" style="min-width: inherit" role="tab"
-                                    data-toggle="tab"><span>Día {{forloop.counter}}</span>{{fecha_ponencia|date:"M"}}
+                            <li role="presentation"><a href="#home{{forloop.counter}}" style="min-width: inherit"
+                                    role="tab" data-toggle="tab"><span>Día
+                                        {{forloop.counter}}</span>{{fecha_ponencia|date:"M"}}
                                     {{fecha_ponencia|date:"d"}} / {{fecha_ponencia|date:"Y"}}</a></li>
                             {%endif%}
                             {%endfor%}
@@ -77,7 +79,8 @@
                                     {%endif%}
 
                                     {% for pon in ponencia%}
-
+                                    {%if pon.tipo == 'Bloque'%}
+                                    <!-----  //////////////////////////////////-->
                                     <div class="kf_new_con_wrap ">
                                         <div class="kf_new_conf_time">
                                             <h5>{{pon.fecha_inicio|date:"H"}}:{{pon.fecha_inicio|date:"i"}}</h5>
@@ -88,8 +91,113 @@
                                                 {%else%}
                                                 <div class="kf_new_conf_hdg " id="conf_accord{{forloop.counter0}}">
                                                     {%endif%}
-                                                    <h5>{%if pon.tipo == 'Taller'%}{{pon.tipo|upper}}{%endif%} {{pon.titulo}} <span style="font-style: italic;"> </span> </h5>
+                                                    <h5>{{pon.tipo|upper}}  {{pon.titulo}} <span style="font-style: italic;"> </span> </h5>
+
+                                                    <i class="fa fa-angle-down"></i>
+
+                                                </div>
+                                                <div class="kf_new_conf_open_wrap">
+                                                    <div class="kf_new_conf_des">
+                                                        {%if pon.detalle%}
+                                                        <p>{{pon.detalle}}</p>
+                                                        {%endif%}
+                                                    </div>
+                                                    <div class="row">
+                                                    {%for mod in pon.modelador %}
+                                                    
                                                    
+                                                    <div class="kf_new_conf_orgnizr">
+                                                        <figure>
+                                                            <img src="{% static '/'%}{{mod.user.foto}}"
+                                                                alt="image Here">
+                                                        </figure>
+                                                        <div class="kf_new_conf_orgnizr_name">
+                                                            <h6>{{mod.user.usuario.first_name}}
+                                                                {{mod.user.usuario.last_name}}</h6>
+                                                            <span> Modelador</span>
+                                                            <p>
+                                                                {%if mod.user.detalle %}
+                                                                {{mod.user.detalle}}
+                                                                {%endif%}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                   
+                                                    {%endfor%}
+                                                </div>
+                                                    
+                                                    {%for evento in pon.eventos %}
+                                                    
+                                                        <div class="kf_new_con_wrap ">
+                                                            <div class="kf_new_conf_time">
+                                                                <h5>{{evento.fecha_inicio|date:"H"}}:{{evento.fecha_inicio|date:"i"}}</h5>
+                                                            </div>
+                                                            <div class="kf_new_conf_des_wrap">
+                                                                {% if forloop.first %}
+                                                                <div class="">
+                                                                    {%else%}
+                                                                    <div class=" " >
+                                                                        {%endif%}
+                                                                        <h5 style="color: #00a4ef; padding: 20px;">{%if evento.tipo == 'Taller'%}{{evento.tipo|upper}}{%endif%}
+                                                                            {{evento.titulo}} <span style="font-style: italic;"> </span> </h5>
+                    
+                                                                       
+                    
+                                                                    </div>
+                                                                    <div class="kf_new_conf_open_wrap">
+                                                                        <div class="kf_new_conf_des">
+                                                                            {%if evento.detalle%}
+                                                                            <p>{{evento.detalle}}</p>
+                                                                            {%endif%}
+                                                                        </div>
+                                                                {%for ponente in evento.ponentes %}
+                                                                    <div class="kf_new_conf_orgnizr">
+                                                                        <figure>
+                                                                            <img src="{% static '/'%}{{ponent.user.foto}}"
+                                                                                alt="image Here">
+                                                                        </figure>
+                                                                        <div class="kf_new_conf_orgnizr_name">
+                                                                            <h6>{{ponente.user.usuario.first_name}}
+                                                                                {{ponente.user.usuario.last_name}}</h6>
+                                                                            <span> Ponente</span>
+                                                                            <p>
+                                                                                {%if ponente.user.detalle %}
+                                                                                {{ponente.user.detalle}}
+                                                                                {%endif%}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    {%endfor%}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                   
+                                             
+                                                       
+    
+                                                       
+    
+                                                    
+                                                    {%endfor%}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    <!-----  //////////////////////////////////-->
+                                    {%else%}
+                                    <div class="kf_new_con_wrap ">
+                                        <div class="kf_new_conf_time">
+                                            <h5>{{pon.fecha_inicio|date:"H"}}:{{pon.fecha_inicio|date:"i"}}</h5>
+                                        </div>
+                                        <div class="kf_new_conf_des_wrap">
+                                            {% if forloop.first %}
+                                            <div class="kf_new_conf_hdg accordion-open" id="conf_accord">
+                                                {%else%}
+                                                <div class="kf_new_conf_hdg " id="conf_accord{{forloop.counter0}}">
+                                                    {%endif%}
+                                                    <h5>{%if pon.tipo == 'Taller'%}{{pon.tipo|upper}}{%endif%}
+                                                        {{pon.titulo}} <span style="font-style: italic;"> </span> </h5>
+
                                                     <i class="fa fa-angle-down"></i>
 
                                                 </div>
@@ -100,7 +208,6 @@
                                                         {%endif%}
                                                     </div>
                                                     {%for ponente in pon.ponentes %}
-
                                                     <div class="kf_new_conf_orgnizr">
                                                         <figure>
                                                             <img src="{% static '/'%}{{ponente.user.foto}}"
@@ -117,15 +224,11 @@
                                                             </p>
                                                         </div>
                                                     </div>
-
-
-
                                                     {%endfor%}
-
-
                                                 </div>
                                             </div>
                                         </div>
+                                        {%endif%}
                                         {%endfor%}
 
                                     </div>
@@ -161,7 +264,7 @@
                 <div class="row">
                     {%endif%}
 
-                
+
 
                     <div class="col-md-3">
                         <!--KODE_EVENT_BLOG2 START-->
@@ -199,614 +302,616 @@
                         <!--KODE_EVENT_BLOG2 START-->
                     </div>
 
-                        {%if forloop.last%}
-                      
-                    </div>
-                    
-                        {%endif%}
-                        {% if forloop.counter|divisibleby:4 %}
-                </div>
-                <div class="row">
-                    {%endif%}
-                        {% endfor %}
-                        {%else%}
-                        <span>No encontro ningún Ponente</span>
-                        {%endif%}
+                    {%if forloop.last%}
 
-                    </div>
                 </div>
-            </div>            
-        </div>
-    </div>
-    <div class="kode-our-pricing" id="pagos">
-        <div class="container">
-            <div class="kf_heading_1" style="text-align:center">
-                <h2>TIPOS DE BOLETOS</h2>
-                <p style="text-align:left"><b>Preferente:</b> Socio AMCIC, Miembro Médica Sur, Estudiante, Miembro IMSS,
-                    Miembro ISSSTE-, Institutos Nacionales de Salud, Hospitales de alta especialidad, Hospitales del
-                    Sector
-                    Público, Universidad Westhill.</p>				
+
+                {%endif%}
+                {% if forloop.counter|divisibleby:4 %}
             </div>
             <div class="row">
-                <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
+                {%endif%}
+                {% endfor %}
+                {%else%}
+                <span>No encontro ningún Ponente</span>
+                {%endif%}
 
-
-                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                    <div class="price-box-frame first-box">
-                        <div class="kode-price-box">
-                            <div class="kode-price-header">
-                                <strong>Profesional General</strong>
-                                <h3>$2668.00<br> MXN</h3>
-
-                                <strong>IVA incluído</strong>
-                            </div>
-
-                            <div class="kode-price-footer">
-                                <noscript><a
-                                        href="https://www.eventbrite.com.mx/e/1-simposio-en-ciencias-de-la-salud-amcic-profesional-general-tickets-125763585269"
-                                        rel="noopener noreferrer" target="_blank"></noscript>
-                                <a id="eventbrite-widget-modal-trigger-125763585269">Comprar</a>
-
-
-                            </div>
-                        </div>
-                    </div>
-                    <!-- kode-price-box End -->
-                </div>
-                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                    <div class="price-box-frame first-box">
-                        <div class="kode-price-box">
-                            <div class="kode-price-header">
-                                <strong>Preferencial</strong>
-                                <h3>$ 1100.00<br> MXN</h3>
-
-                                <strong>IVA incluído</strong>
-                            </div>
-
-                            <div class="kode-price-footer">
-                                <noscript><a
-                                        href="https://www.eventbrite.com.mx/e/1-simposio-en-ciencias-de-la-salud-amcic-boleto-preferente-tickets-125763553173"
-                                        rel="noopener noreferrer" target="_blank"></noscript>
-
-
-                                <a id="eventbrite-widget-modal-trigger-125763553173">Comprar</a>
-
-                            </div>
-                        </div>
-                    </div>
-                    <!-- kode-price-box End -->
-                </div>
-
-            </div>
-            <div class="kf_heading_1" style="text-align:center;margin-top:40px">
-				<h2>PAGOS POR TRANSFERENCIAS</h2>
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-					<p style="text-align:left"><b>NACIONALES</b><br/>
-					Asociación Mexicana de Centros de Investigación Clínica A.C.<br/>
-					Banco Santander, S.A.<br/>
-					Sucursal 5808<br/>
-					Número de Cuenta  65507002292<br/>
-					CLABE     014180655070022926</p>
-				</div>
-				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-					<p style="text-align:left"><b>INTERNACIONALES</b><br/>
-					Asociación Mexicana de Centros de Investigación Clínica A.C.<br/>
-					Banco Santander, S.A.<br/>
-					Sucursal 5808<br/>
-					País México<br/>
-					Ciudad de México<br/>
-					SWIFT  BMSXMXMMXXX</p>
-				</div>
-				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-					<p style="text-align:left;margin-top:10px"><b>Concepto:</b> Nombre Persona o Empresa quien efectúa pago y leyenda “Simposio AMCIC 2020”<br/>
-					<b>Por ejemplo:</b><br/>
-					Estetoscopio investigaciones. Simposio AMCIC 2020 Juanita Pérez. Simposio AMCIC 2020<br/>
-					<b>Enviar comprobante a:</b> <a href="mailto:amcic.profesionalizacion@outlook.com">amcic.profesionalizacion@outlook.com</a></p>
-				</div>
             </div>
         </div>
     </div>
-
-    <!-- Talleres-->
-    <div class="kf_heading_1">
-        <div class="container">
-            <h2>Talleres</h2>
-            <span>Si desea tener una constancia del taller es necesario que compre su boleto de acreditación al
-                evento.</span>
+</div>
+</div>
+<div class="kode-our-pricing" id="pagos">
+    <div class="container">
+        <div class="kf_heading_1" style="text-align:center">
+            <h2>TIPOS DE BOLETOS</h2>
             <p style="text-align:left"><b>Preferente:</b> Socio AMCIC, Miembro Médica Sur, Estudiante, Miembro IMSS,
-                Miembro
-                ISSSTE-, Institutos Nacionales de Salud, Hospitales de alta especialidad, Hospitales del Sector Público,
-                Universidad Westhill.</p>
+                Miembro ISSSTE-, Institutos Nacionales de Salud, Hospitales de alta especialidad, Hospitales del
+                Sector
+                Público, Universidad Westhill.</p>
+        </div>
+        <div class="row">
+            <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
 
 
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <div class="price-box-frame first-box">
+                    <div class="kode-price-box">
+                        <div class="kode-price-header">
+                            <strong>Profesional General</strong>
+                            <h3>$2668.00<br> MXN</h3>
 
-            <div class="kf_faq_accordian">
-                <div class="kf_accordian_hdg accordion" id="section3">
-                    <h5>Taller #1: Buenas prácticas clínicas GCP E6 R2</h5>
-                </div>
-                <div class="kf_accordian_des">
-                    <div class="kode-our-pricing">
-                        <div class="row">
-                            <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
+                            <strong>IVA incluído</strong>
+                        </div>
 
-
-
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <div class="price-box-frame first-box">
-                                    <div class="kode-price-box">
-                                        <div class="kode-price-header">
-
-                                            <strong>Profesional General</strong>
-                                            <h3>$ 464,0 MXN</h3>
-                                            <strong>IVA incluído</strong>
-                                        </div>
-
-                                        <div class="kode-price-footer">
-                                            <noscript><a
-                                                    href="https://www.eventbrite.com.mx/e/buenas-practicas-clinicas-ichgcp-e6-r2-entrada-general-tickets-125763998505"
-                                                    rel="noopener noreferrer" target="_blank"></noscript>
-
-
-                                            <a id="eventbrite-widget-modal-trigger-125763998505">Comprar</a>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- kode-price-box End -->
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <div class="price-box-frame first-box">
-                                    <div class="kode-price-box">
-                                        <div class="kode-price-header">
-
-                                            <strong>Preferente</strong>
-                                            <h3>$ 348,0 MXN</h3>
-                                            <strong>IVA incluído</strong>
-                                        </div>
-
-                                        <div class="kode-price-footer">
-                                            <noscript><a
-                                                    href="https://www.eventbrite.com.mx/e/buenas-practicas-clinicas-ichgcp-e6-r2-preferente-credencial-requerida-tickets-125764034613"
-                                                    rel="noopener noreferrer" target="_blank"></noscript>
-
-
-                                            <a id="eventbrite-widget-modal-trigger-125764034613">Comprar</a>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- kode-price-box End -->
-                            </div>
+                        <div class="kode-price-footer">
+                            <noscript><a
+                                    href="https://www.eventbrite.com.mx/e/1-simposio-en-ciencias-de-la-salud-amcic-profesional-general-tickets-125763585269"
+                                    rel="noopener noreferrer" target="_blank"></noscript>
+                            <a id="eventbrite-widget-modal-trigger-125763585269">Comprar</a>
 
 
                         </div>
                     </div>
                 </div>
+                <!-- kode-price-box End -->
             </div>
-            <div class="kf_faq_accordian">
-                <div class="kf_accordian_hdg accordion" id="section3">
-                    <h5>
-                        Taller #2: El impacto de la nueva realidad en la regulación y los procedimientos regulatorios en
-                        investigación clínica y salud: “El deber ser y el saber hacer”
-                    </h5>
-                </div>
-                <div class="kf_accordian_des">
-                    <div class="kode-our-pricing">
-                        <div class="row">
-                            <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <div class="price-box-frame first-box">
+                    <div class="kode-price-box">
+                        <div class="kode-price-header">
+                            <strong>Preferencial</strong>
+                            <h3>$ 1100.00<br> MXN</h3>
+
+                            <strong>IVA incluído</strong>
+                        </div>
+
+                        <div class="kode-price-footer">
+                            <noscript><a
+                                    href="https://www.eventbrite.com.mx/e/1-simposio-en-ciencias-de-la-salud-amcic-boleto-preferente-tickets-125763553173"
+                                    rel="noopener noreferrer" target="_blank"></noscript>
 
 
-
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <div class="price-box-frame first-box">
-                                    <div class="kode-price-box">
-                                        <div class="kode-price-header">
-
-                                            <strong>Profesional General</strong>
-                                            <h3>$ 464,0 MXN</h3>
-                                            <strong>IVA incluído</strong>
-                                        </div>
-
-                                        <div class="kode-price-footer">
-                                            <noscript><a
-                                                    href="https://www.eventbrite.com.mx/e/el-impacto-de-la-nueva-realidad-en-la-regulacion-entrada-general-tickets-125764237219"
-                                                    rel="noopener noreferrer" target="_blank"></noscript>
-
-
-                                            <a id="eventbrite-widget-modal-trigger-125764237219">Comprar</a>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- kode-price-box End -->
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <div class="price-box-frame first-box">
-                                    <div class="kode-price-box">
-                                        <div class="kode-price-header">
-
-                                            <strong>Preferente</strong>
-                                            <h3>$ 348,0 MXN</h3>
-                                            <strong>IVA incluído</strong>
-                                        </div>
-
-                                        <div class="kode-price-footer">
-                                            <noscript><a
-                                                    href="https://www.eventbrite.com.mx/e/el-impacto-de-la-nueva-realidad-en-la-regulacion-preferente-tickets-125764279345"
-                                                    rel="noopener noreferrer" target="_blank"></noscript>
-
-
-                                            <a id="eventbrite-widget-modal-trigger-125764279345">Comprar</a>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- kode-price-box End -->
-                            </div>
-
+                            <a id="eventbrite-widget-modal-trigger-125763553173">Comprar</a>
 
                         </div>
                     </div>
                 </div>
+                <!-- kode-price-box End -->
             </div>
-            <div class="kf_faq_accordian">
-                <div class="kf_accordian_hdg accordion" id="section3">
-                    <h5>
-                        Taller #3: Sistemas de Gestión de Calidad para Centros de Investigación Clínica, desde los
-                        conceptos básicos, su implementación y seguimiento
-                    </h5>
-                </div>
-                <div class="kf_accordian_des">
-                    <div class="kode-our-pricing">
-                        <div class="row">
-                            <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
-
-
-
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <div class="price-box-frame first-box">
-                                    <div class="kode-price-box">
-                                        <div class="kode-price-header">
-
-                                            <strong>Profesional General</strong>
-                                            <h3>$ 464,0 MXN</h3>
-                                            <strong>IVA incluído</strong>
-                                        </div>
-
-                                        <div class="kode-price-footer">
-                                            <noscript><a
-                                                    href="https://www.eventbrite.com.mx/e/sistemas-de-gestion-de-calidad-para-centros-entrada-general-tickets-125764325483"
-                                                    rel="noopener noreferrer" target="_blank"></noscript>
-
-
-                                            <a id="eventbrite-widget-modal-trigger-125764325483">Comprar</a>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- kode-price-box End -->
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <div class="price-box-frame first-box">
-                                    <div class="kode-price-box">
-                                        <div class="kode-price-header">
-
-                                            <strong>Preferente</strong>
-                                            <h3>$ 348,0 MXN</h3>
-                                            <strong>IVA incluído</strong>
-                                        </div>
-
-                                        <div class="kode-price-footer">
-                                            <noscript><a
-                                                    href="https://www.eventbrite.com.mx/e/sistemas-de-gestion-de-calidad-para-centros-preferente-tickets-125764379645"
-                                                    rel="noopener noreferrer" target="_blank"></noscript>
-
-
-                                            <a id="eventbrite-widget-modal-trigger-125764379645">Comprar</a>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- kode-price-box End -->
-                            </div>
-
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="kf_faq_accordian">
-                <div class="kf_accordian_hdg accordion" id="section3">
-                    <h5>
-                        Taller #4: El profesional de salud como emprendedor de un Centro de Investigación Clínica;
-                        planeación estratégica: del FODA al tablero de Control.
-                    </h5>
-                </div>
-                <div class="kf_accordian_des">
-                    <div class="kode-our-pricing">
-                        <div class="row">
-                            <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
-
-
-
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <div class="price-box-frame first-box">
-                                    <div class="kode-price-box">
-                                        <div class="kode-price-header">
-
-                                            <strong>Profesional General</strong>
-                                            <h3>$ 464,0 MXN</h3>
-                                            <strong>IVA incluído</strong>
-                                        </div>
-
-                                        <div class="kode-price-footer">
-                                            <noscript><a
-                                                    href="https://www.eventbrite.com.mx/e/el-profesional-de-salud-como-emprendedor-entrada-general-tickets-125764415753"
-                                                    rel="noopener noreferrer" target="_blank"></noscript>
-
-
-                                            <a id="eventbrite-widget-modal-trigger-125764415753">Comprar</a>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- kode-price-box End -->
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                <div class="price-box-frame first-box">
-                                    <div class="kode-price-box">
-                                        <div class="kode-price-header">
-
-                                            <strong>Preferente</strong>
-                                            <h3>$ 348,0 MXN</h3>
-                                            <strong>IVA incluído</strong>
-                                        </div>
-
-                                        <div class="kode-price-footer">
-                                            <noscript><a
-                                                    href="https://www.eventbrite.com.mx/e/profesional-de-salud-como-emprendedor-preferente-tickets-125786876935"
-                                                    rel="noopener noreferrer" target="_blank"></noscript>
-
-
-                                            <a id="eventbrite-widget-modal-trigger-125786876935">Comprar</a>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- kode-price-box End -->
-                            </div>
-
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-
-
 
         </div>
+        <div class="kf_heading_1" style="text-align:center;margin-top:40px">
+            <h2>PAGOS POR TRANSFERENCIAS</h2>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <p style="text-align:left"><b>NACIONALES</b><br />
+                    Asociación Mexicana de Centros de Investigación Clínica A.C.<br />
+                    Banco Santander, S.A.<br />
+                    Sucursal 5808<br />
+                    Número de Cuenta 65507002292<br />
+                    CLABE 014180655070022926</p>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <p style="text-align:left"><b>INTERNACIONALES</b><br />
+                    Asociación Mexicana de Centros de Investigación Clínica A.C.<br />
+                    Banco Santander, S.A.<br />
+                    Sucursal 5808<br />
+                    País México<br />
+                    Ciudad de México<br />
+                    SWIFT BMSXMXMMXXX</p>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <p style="text-align:left;margin-top:10px"><b>Concepto:</b> Nombre Persona o Empresa quien efectúa pago
+                    y leyenda “Simposio AMCIC 2020”<br />
+                    <b>Por ejemplo:</b><br />
+                    Estetoscopio investigaciones. Simposio AMCIC 2020 Juanita Pérez. Simposio AMCIC 2020<br />
+                    <b>Enviar comprobante a:</b> <a
+                        href="mailto:amcic.profesionalizacion@outlook.com">amcic.profesionalizacion@outlook.com</a></p>
+            </div>
+        </div>
+    </div>
+</div>
 
-		<div class="kode-speaker-frame">
-                <div class="container">
-                    <div class="kf_heading_1">
-                        <h2>Patrocinadores</h2>
-                        <span>Patrocinadores de este congreso</span>
-                    </div>
+<!-- Talleres-->
+<div class="kf_heading_1">
+    <div class="container">
+        <h2>Talleres</h2>
+        <span>Si desea tener una constancia del taller es necesario que compre su boleto de acreditación al
+            evento.</span>
+        <p style="text-align:left"><b>Preferente:</b> Socio AMCIC, Miembro Médica Sur, Estudiante, Miembro IMSS,
+            Miembro
+            ISSSTE-, Institutos Nacionales de Salud, Hospitales de alta especialidad, Hospitales del Sector Público,
+            Universidad Westhill.</p>
+
+
+
+        <div class="kf_faq_accordian">
+            <div class="kf_accordian_hdg accordion" id="section3">
+                <h5>Taller #1: Buenas prácticas clínicas GCP E6 R2</h5>
+            </div>
+            <div class="kf_accordian_des">
+                <div class="kode-our-pricing">
                     <div class="row">
-                        <div id="kode-speaker-causel" class="owl-carousel">
+                        <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
 
 
-                            <div class="kode-newspeaker">
-                                <div class="speaker-photo">
-                                    <img src="{% static 'patrocinadores/indice.png'%}" alt="">
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <div class="price-box-frame first-box">
+                                <div class="kode-price-box">
+                                    <div class="kode-price-header">
+
+                                        <strong>Profesional General</strong>
+                                        <h3>$ 464,0 MXN</h3>
+                                        <strong>IVA incluído</strong>
+                                    </div>
+
+                                    <div class="kode-price-footer">
+                                        <noscript><a
+                                                href="https://www.eventbrite.com.mx/e/buenas-practicas-clinicas-ichgcp-e6-r2-entrada-general-tickets-125763998505"
+                                                rel="noopener noreferrer" target="_blank"></noscript>
+
+
+                                        <a id="eventbrite-widget-modal-trigger-125763998505">Comprar</a>
+
+                                    </div>
                                 </div>
-
-
-                                <!-- kode-new speaker over state End -->
-
                             </div>
-                            <div class="kode-newspeaker">
-                                <div class="speaker-photo">
-                                    <img src="{% static 'patrocinadores/faicic.png'%}" alt="">
-                                </div>
-
-
-                                <!-- kode-new speaker over state End -->
-                            </div>
+                            <!-- kode-price-box End -->
                         </div>
-                    </div>
-                </div>
-            </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <div class="price-box-frame first-box">
+                                <div class="kode-price-box">
+                                    <div class="kode-price-header">
+
+                                        <strong>Preferente</strong>
+                                        <h3>$ 348,0 MXN</h3>
+                                        <strong>IVA incluído</strong>
+                                    </div>
+
+                                    <div class="kode-price-footer">
+                                        <noscript><a
+                                                href="https://www.eventbrite.com.mx/e/buenas-practicas-clinicas-ichgcp-e6-r2-preferente-credencial-requerida-tickets-125764034613"
+                                                rel="noopener noreferrer" target="_blank"></noscript>
 
 
-        <div class="kode-event-contact">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="kf_heading_3">
-                            <h2>Contacto</h2>
-                            <span>Un simposio extraordinario en un año extraordinario</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <form class="contactusform" action="#">
+                                        <a id="eventbrite-widget-modal-trigger-125764034613">Comprar</a>
 
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" placeholder="Nombre">
-                                    <input type="email" placeholder="Email">
-                                    <input type="text" placeholder="Asunto">
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                    <textarea name="Message" cols="30" rows="10" placeholder="Mensaje"></textarea>
-                                    <input type="submit" value="Enviar" name="submit">
+                                    </div>
                                 </div>
                             </div>
-                        </form>
+                            <!-- kode-price-box End -->
+                        </div>
+
+
                     </div>
                 </div>
             </div>
         </div>
-        <!--kode-event-contact-->
+        <div class="kf_faq_accordian">
+            <div class="kf_accordian_hdg accordion" id="section3">
+                <h5>
+                    Taller #2: El impacto de la nueva realidad en la regulación y los procedimientos regulatorios en
+                    investigación clínica y salud: “El deber ser y el saber hacer”
+                </h5>
+            </div>
+            <div class="kf_accordian_des">
+                <div class="kode-our-pricing">
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
+
+
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <div class="price-box-frame first-box">
+                                <div class="kode-price-box">
+                                    <div class="kode-price-header">
+
+                                        <strong>Profesional General</strong>
+                                        <h3>$ 464,0 MXN</h3>
+                                        <strong>IVA incluído</strong>
+                                    </div>
+
+                                    <div class="kode-price-footer">
+                                        <noscript><a
+                                                href="https://www.eventbrite.com.mx/e/el-impacto-de-la-nueva-realidad-en-la-regulacion-entrada-general-tickets-125764237219"
+                                                rel="noopener noreferrer" target="_blank"></noscript>
+
+
+                                        <a id="eventbrite-widget-modal-trigger-125764237219">Comprar</a>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- kode-price-box End -->
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <div class="price-box-frame first-box">
+                                <div class="kode-price-box">
+                                    <div class="kode-price-header">
+
+                                        <strong>Preferente</strong>
+                                        <h3>$ 348,0 MXN</h3>
+                                        <strong>IVA incluído</strong>
+                                    </div>
+
+                                    <div class="kode-price-footer">
+                                        <noscript><a
+                                                href="https://www.eventbrite.com.mx/e/el-impacto-de-la-nueva-realidad-en-la-regulacion-preferente-tickets-125764279345"
+                                                rel="noopener noreferrer" target="_blank"></noscript>
+
+
+                                        <a id="eventbrite-widget-modal-trigger-125764279345">Comprar</a>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- kode-price-box End -->
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="kf_faq_accordian">
+            <div class="kf_accordian_hdg accordion" id="section3">
+                <h5>
+                    Taller #3: Sistemas de Gestión de Calidad para Centros de Investigación Clínica, desde los
+                    conceptos básicos, su implementación y seguimiento
+                </h5>
+            </div>
+            <div class="kf_accordian_des">
+                <div class="kode-our-pricing">
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
+
+
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <div class="price-box-frame first-box">
+                                <div class="kode-price-box">
+                                    <div class="kode-price-header">
+
+                                        <strong>Profesional General</strong>
+                                        <h3>$ 464,0 MXN</h3>
+                                        <strong>IVA incluído</strong>
+                                    </div>
+
+                                    <div class="kode-price-footer">
+                                        <noscript><a
+                                                href="https://www.eventbrite.com.mx/e/sistemas-de-gestion-de-calidad-para-centros-entrada-general-tickets-125764325483"
+                                                rel="noopener noreferrer" target="_blank"></noscript>
+
+
+                                        <a id="eventbrite-widget-modal-trigger-125764325483">Comprar</a>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- kode-price-box End -->
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <div class="price-box-frame first-box">
+                                <div class="kode-price-box">
+                                    <div class="kode-price-header">
+
+                                        <strong>Preferente</strong>
+                                        <h3>$ 348,0 MXN</h3>
+                                        <strong>IVA incluído</strong>
+                                    </div>
+
+                                    <div class="kode-price-footer">
+                                        <noscript><a
+                                                href="https://www.eventbrite.com.mx/e/sistemas-de-gestion-de-calidad-para-centros-preferente-tickets-125764379645"
+                                                rel="noopener noreferrer" target="_blank"></noscript>
+
+
+                                        <a id="eventbrite-widget-modal-trigger-125764379645">Comprar</a>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- kode-price-box End -->
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="kf_faq_accordian">
+            <div class="kf_accordian_hdg accordion" id="section3">
+                <h5>
+                    Taller #4: El profesional de salud como emprendedor de un Centro de Investigación Clínica;
+                    planeación estratégica: del FODA al tablero de Control.
+                </h5>
+            </div>
+            <div class="kf_accordian_des">
+                <div class="kode-our-pricing">
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
+
+
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <div class="price-box-frame first-box">
+                                <div class="kode-price-box">
+                                    <div class="kode-price-header">
+
+                                        <strong>Profesional General</strong>
+                                        <h3>$ 464,0 MXN</h3>
+                                        <strong>IVA incluído</strong>
+                                    </div>
+
+                                    <div class="kode-price-footer">
+                                        <noscript><a
+                                                href="https://www.eventbrite.com.mx/e/el-profesional-de-salud-como-emprendedor-entrada-general-tickets-125764415753"
+                                                rel="noopener noreferrer" target="_blank"></noscript>
+
+
+                                        <a id="eventbrite-widget-modal-trigger-125764415753">Comprar</a>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- kode-price-box End -->
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <div class="price-box-frame first-box">
+                                <div class="kode-price-box">
+                                    <div class="kode-price-header">
+
+                                        <strong>Preferente</strong>
+                                        <h3>$ 348,0 MXN</h3>
+                                        <strong>IVA incluído</strong>
+                                    </div>
+
+                                    <div class="kode-price-footer">
+                                        <noscript><a
+                                                href="https://www.eventbrite.com.mx/e/profesional-de-salud-como-emprendedor-preferente-tickets-125786876935"
+                                                rel="noopener noreferrer" target="_blank"></noscript>
+
+
+                                        <a id="eventbrite-widget-modal-trigger-125786876935">Comprar</a>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- kode-price-box End -->
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
     </div>
 
-    {%endblock%}
-    {% block script%}
-    <script src="https://www.eventbrite.com.mx/static/widgets/eb_widgets.js"></script>
-    <script type="text/javascript">
-        jQuery(document).ready(function ($) {
-            $(".back").click(function (event) {
-                event.preventDefault();
-                $('html,body').animate({ scrollTop: $(this.hash).offset().top }, 500);
-            });
+    <div class="kode-speaker-frame">
+        <div class="container">
+            <div class="kf_heading_1">
+                <h2>Patrocinadores</h2>
+                <span>Patrocinadores de este congreso</span>
+            </div>
+            <div class="row">
+                <div id="kode-speaker-causel" class="owl-carousel">
+
+
+                    <div class="kode-newspeaker">
+                        <div class="speaker-photo">
+                            <img src="{% static 'patrocinadores/indice.png'%}" alt="">
+                        </div>
+
+
+                        <!-- kode-new speaker over state End -->
+
+                    </div>
+                    <div class="kode-newspeaker">
+                        <div class="speaker-photo">
+                            <img src="{% static 'patrocinadores/faicic.png'%}" alt="">
+                        </div>
+
+
+                        <!-- kode-new speaker over state End -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="kode-event-contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="kf_heading_3">
+                        <h2>Contacto</h2>
+                        <span>Un simposio extraordinario en un año extraordinario</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <form class="contactusform" action="#">
+
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" placeholder="Nombre">
+                                <input type="email" placeholder="Email">
+                                <input type="text" placeholder="Asunto">
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <textarea name="Message" cols="30" rows="10" placeholder="Mensaje"></textarea>
+                                <input type="submit" value="Enviar" name="submit">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--kode-event-contact-->
+</div>
+
+{%endblock%}
+{% block script%}
+<script src="https://www.eventbrite.com.mx/static/widgets/eb_widgets.js"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        $(".back").click(function (event) {
+            event.preventDefault();
+            $('html,body').animate({ scrollTop: $(this.hash).offset().top }, 500);
         });
+    });
 
-        var exampleCallback = function () {
+    var exampleCallback = function () {
 
-            console.log('Order complete!');
+        console.log('Order complete!');
 
-        };
+    };
 
 
 
-        window.EBWidgets.createWidget({
+    window.EBWidgets.createWidget({
 
-            widgetType: 'checkout',
+        widgetType: 'checkout',
 
-            eventId: '125763585269',
+        eventId: '125763585269',
 
-            modal: true,
+        modal: true,
 
-            modalTriggerElementId: 'eventbrite-widget-modal-trigger-125763585269',
+        modalTriggerElementId: 'eventbrite-widget-modal-trigger-125763585269',
 
-            onOrderComplete: exampleCallback
+        onOrderComplete: exampleCallback
 
-        });
+    });
 
-        window.EBWidgets.createWidget({
+    window.EBWidgets.createWidget({
 
-            widgetType: 'checkout',
+        widgetType: 'checkout',
 
-            eventId: '125763553173',
+        eventId: '125763553173',
 
-            modal: true,
+        modal: true,
 
-            modalTriggerElementId: 'eventbrite-widget-modal-trigger-125763553173',
+        modalTriggerElementId: 'eventbrite-widget-modal-trigger-125763553173',
 
-            onOrderComplete: exampleCallback
+        onOrderComplete: exampleCallback
 
-        });
+    });
 
-        window.EBWidgets.createWidget({
+    window.EBWidgets.createWidget({
 
-            widgetType: 'checkout',
+        widgetType: 'checkout',
 
-            eventId: '125763998505',
+        eventId: '125763998505',
 
-            modal: true,
+        modal: true,
 
-            modalTriggerElementId: 'eventbrite-widget-modal-trigger-125763998505',
+        modalTriggerElementId: 'eventbrite-widget-modal-trigger-125763998505',
 
-            onOrderComplete: exampleCallback
+        onOrderComplete: exampleCallback
 
-        });
+    });
 
-        window.EBWidgets.createWidget({
+    window.EBWidgets.createWidget({
 
-            widgetType: 'checkout',
+        widgetType: 'checkout',
 
-            eventId: '125764034613',
+        eventId: '125764034613',
 
-            modal: true,
+        modal: true,
 
-            modalTriggerElementId: 'eventbrite-widget-modal-trigger-125764034613',
+        modalTriggerElementId: 'eventbrite-widget-modal-trigger-125764034613',
 
-            onOrderComplete: exampleCallback
+        onOrderComplete: exampleCallback
 
-        });
-        window.EBWidgets.createWidget({
+    });
+    window.EBWidgets.createWidget({
 
-            widgetType: 'checkout',
+        widgetType: 'checkout',
 
-            eventId: '125764237219',
+        eventId: '125764237219',
 
-            modal: true,
+        modal: true,
 
-            modalTriggerElementId: 'eventbrite-widget-modal-trigger-125764237219',
+        modalTriggerElementId: 'eventbrite-widget-modal-trigger-125764237219',
 
-            onOrderComplete: exampleCallback
+        onOrderComplete: exampleCallback
 
-        });
-        window.EBWidgets.createWidget({
+    });
+    window.EBWidgets.createWidget({
 
-            widgetType: 'checkout',
+        widgetType: 'checkout',
 
-            eventId: '125764279345',
+        eventId: '125764279345',
 
-            modal: true,
+        modal: true,
 
-            modalTriggerElementId: 'eventbrite-widget-modal-trigger-125764279345',
+        modalTriggerElementId: 'eventbrite-widget-modal-trigger-125764279345',
 
-            onOrderComplete: exampleCallback
+        onOrderComplete: exampleCallback
 
-        });
-        window.EBWidgets.createWidget({
+    });
+    window.EBWidgets.createWidget({
 
-            widgetType: 'checkout',
+        widgetType: 'checkout',
 
-            eventId: '125764325483',
+        eventId: '125764325483',
 
-            modal: true,
+        modal: true,
 
-            modalTriggerElementId: 'eventbrite-widget-modal-trigger-125764325483',
+        modalTriggerElementId: 'eventbrite-widget-modal-trigger-125764325483',
 
-            onOrderComplete: exampleCallback
+        onOrderComplete: exampleCallback
 
-        });
-        window.EBWidgets.createWidget({
+    });
+    window.EBWidgets.createWidget({
 
-            widgetType: 'checkout',
+        widgetType: 'checkout',
 
-            eventId: '125764379645',
+        eventId: '125764379645',
 
-            modal: true,
+        modal: true,
 
-            modalTriggerElementId: 'eventbrite-widget-modal-trigger-125764379645',
+        modalTriggerElementId: 'eventbrite-widget-modal-trigger-125764379645',
 
-            onOrderComplete: exampleCallback
+        onOrderComplete: exampleCallback
 
-        });
-        window.EBWidgets.createWidget({
+    });
+    window.EBWidgets.createWidget({
 
-            widgetType: 'checkout',
+        widgetType: 'checkout',
 
-            eventId: '125764415753',
+        eventId: '125764415753',
 
-            modal: true,
+        modal: true,
 
-            modalTriggerElementId: 'eventbrite-widget-modal-trigger-125764415753',
+        modalTriggerElementId: 'eventbrite-widget-modal-trigger-125764415753',
 
-            onOrderComplete: exampleCallback
+        onOrderComplete: exampleCallback
 
-        });
+    });
 
-        window.EBWidgets.createWidget({
+    window.EBWidgets.createWidget({
 
-            widgetType: 'checkout',
+        widgetType: 'checkout',
 
-            eventId: '125786876935',
+        eventId: '125786876935',
 
-            modal: true,
+        modal: true,
 
-            modalTriggerElementId: 'eventbrite-widget-modal-trigger-125786876935',
+        modalTriggerElementId: 'eventbrite-widget-modal-trigger-125786876935',
 
-            onOrderComplete: exampleCallback
+        onOrderComplete: exampleCallback
 
-        });
-    </script>
+    });
+</script>
 
-    {%endblock%}
+{%endblock%}

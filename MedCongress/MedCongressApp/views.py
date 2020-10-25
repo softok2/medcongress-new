@@ -23,7 +23,7 @@ from .forms import UserPerfilUser
 from .models import (CategoriaPagoCongreso, Congreso, EspecialidadCongreso,
                      Ponencia, Ponente, RelCongresoCategoriaPago,
                      RelCongresoUser,RelPonenciaPonente,PerfilUsuario,ImagenCongreso,Taller,RelTalleresCategoriaPago,RelTallerUser,DatosIniciales,
-                     CategoriaUsuario)
+                     CategoriaUsuario,Bloque,Modelador)
 from .pager import Pager
 from .cart import Cart
 
@@ -128,9 +128,42 @@ class CongresoDetail(TemplateView):
             ponencias_env=[] 
             ponentes_env=[]
             for dat in context['fecha_ponencias'] :
-                ponencias=Ponencia.objects.filter(fecha_inicio__date=dat,congreso=congreso,published=True).order_by('fecha_inicio')
-                talleres=Taller.objects.filter(fecha_inicio__date=dat,congreso=congreso,published=True).order_by('fecha_inicio')
+                bloques=Bloque.objects.filter(fecha_inicio__date=dat,congreso=congreso,published=True).order_by('fecha_inicio')
+                ponencias=Ponencia.objects.filter(fecha_inicio__date=dat,congreso=congreso,published=True,bloque=None).order_by('fecha_inicio')
+                talleres=Taller.objects.filter(fecha_inicio__date=dat,congreso=congreso,published=True,bloque=None).order_by('fecha_inicio')
                 result=[]
+                for bloque in bloques: 
+                    bloque_ponencias=Ponencia.objects.filter(bloque=bloque,published=True).order_by('fecha_inicio')
+                    bloque_talleres=Taller.objects.filter(bloque=bloque,published=True).order_by('fecha_inicio')
+                    eventos=[]
+                    for ponencia in bloque_ponencias: 
+                        eventos.append({
+                        'id':ponencia.id,
+                        'titulo': ponencia.titulo,
+                        'fecha_inicio': ponencia.fecha_inicio ,# una relación a otro modelo
+                        'detalle':ponencia.detalle ,
+                        'ponentes':Ponente.objects.filter(ponencia_ponente__pk=ponencia.id).distinct() ,
+                        'tipo':'Ponencia',# la misma relación, otro campo
+                        })
+                    for taller in bloque_talleres: 
+                        eventos.append({
+                        'id':taller.id,
+                        'titulo': taller.titulo,
+                        'fecha_inicio': taller.fecha_inicio ,# una relación a otro modelo
+                        'detalle':taller.detalle ,
+                        'ponentes':Ponente.objects.filter(taller_ponente__pk=taller.id).distinct() ,
+                        'tipo':'Taller',# la misma relación, otro campo
+                        })
+                    eventos = sorted(eventos, key=lambda k: k['fecha_inicio'])
+                    result.append({
+                    'id':bloque.id,
+                    'modelador':Modelador.objects.filter(bloque_modelador__pk=bloque.id).distinct() ,
+                    'titulo': bloque.titulo,
+                    'fecha_inicio': bloque.fecha_inicio ,# una relación a otro modelo
+                    'detalle':bloque.detalle ,
+                    'eventos':eventos,
+                    'tipo':'Bloque',# la misma relación, otro campo
+                    })
                 for ponencia in ponencias: 
                     result.append({
                     'id':ponencia.id,

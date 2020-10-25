@@ -285,6 +285,55 @@ class Ponente(models.Model):
     def __str__(self):
         return self.user.usuario.first_name +' '+self.user.usuario.last_name
 
+##### Tabla  Modelador  #####
+
+class Modelador(models.Model):
+    user = models.OneToOneField(PerfilUsuario, on_delete=models.DO_NOTHING)
+    created_at = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        verbose_name='modelador'
+        verbose_name_plural='modeladores'
+
+    def __str__(self):
+        return self.user.usuario.first_name +' '+self.user.usuario.last_name
+
+#### Tabla Bloque #######
+
+class Bloque(models.Model):
+    titulo=models.CharField(max_length=250)
+    duracion=models.CharField(max_length=250)
+    detalle=models.TextField(null=True,blank=True)
+    fecha_inicio=models.DateTimeField()
+    path=models.CharField(max_length=250, help_text='campo para identificarlo por la URL')
+    created=models.DateTimeField(auto_now_add=True)
+    updated=models.DateTimeField(null=True, blank=True)
+    published=models.BooleanField()
+    modelador = models.ManyToManyField(Modelador, through='RelBloqueModelador',related_name='bloque_modelador')
+    congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
+    
+    class Meta:
+        verbose_name='bloque'
+        verbose_name_plural='bloques'
+
+    def __str__(self):
+        return self.titulo
+
+##### Tabla pivote Bloque - Modelador  #####
+
+class RelBloqueModelador(models.Model):
+    modelador = models.ForeignKey(Modelador, on_delete=models.CASCADE)
+    bloque = models.ForeignKey(Bloque, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name='Relación Madelador - Bloque'
+        verbose_name_plural='Relaciones modelador - bloque'
+        unique_together = (('modelador','bloque'),)
+
+    def __str__(self):
+        return 'Relación entre el bloque %s  y el modelador %s ' %(self.bloque.titulo, self.modelador.user.usuario.first_name)
+
+
 #### Tabla Ponencia #######
 
 class Ponencia(models.Model):
@@ -300,6 +349,7 @@ class Ponencia(models.Model):
     updated=models.DateTimeField(null=True, blank=True)
     published=models.BooleanField()
     congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
+    bloque=models.ForeignKey(Bloque,on_delete=models.CASCADE,null=True)
     ponente = models.ManyToManyField(Ponente, through='RelPonenciaPonente',related_name='ponencia_ponente')
     votacion = models.ManyToManyField(User, through='RelPonenciaVotacion')
     
@@ -311,12 +361,12 @@ class Ponencia(models.Model):
         return self.titulo
 
 
+
 ##### Tabla pivote Ponencia - Ponente  #####
 
 class RelPonenciaPonente(models.Model):
     ponente = models.ForeignKey(Ponente, on_delete=models.CASCADE)
     ponencia = models.ForeignKey(Ponencia, on_delete=models.CASCADE)
-    categoria=models.ForeignKey(CategoriaPonente,on_delete=models.DO_NOTHING,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -358,6 +408,7 @@ class Taller(models.Model):
     updated=models.DateTimeField(null=True, blank=True)
     published=models.BooleanField()
     congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
+    bloque=models.ForeignKey(Bloque,on_delete=models.CASCADE,null=True)
     ponente = models.ManyToManyField(Ponente, through='RelTallerPonente',related_name='taller_ponente')
     votacion = models.ManyToManyField(User, through='RelTallerVotacion')
     categoria_pago = models.ManyToManyField(CategoriaPagoCongreso, through='RelTalleresCategoriaPago',related_name='talleres_cat_pago')
@@ -384,7 +435,7 @@ class RelTallerPonente(models.Model):
         unique_together = (('ponente','taller'),)
 
     def __str__(self):
-        return 'Relación entre la taller %s  y el ponente %s ' %(self.taller.titulo, self.ponente.user.first_name)
+        return 'Relación entre la taller %s  y el ponente %s ' %(self.taller.titulo, self.ponente.user.usuario.first_name)
 
 ##### Tabla pivote Taller - Votacion  #####
 
