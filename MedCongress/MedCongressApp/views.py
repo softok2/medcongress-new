@@ -23,7 +23,7 @@ from .forms import UserPerfilUser
 from .models import (CategoriaPagoCongreso, Congreso, EspecialidadCongreso,
                      Ponencia, Ponente, RelCongresoCategoriaPago,
                      RelCongresoUser,RelPonenciaPonente,PerfilUsuario,ImagenCongreso,Taller,RelTalleresCategoriaPago,RelTallerUser,DatosIniciales,
-                     CategoriaUsuario,Bloque,Modelador)
+                     CategoriaUsuario,Bloque,Moderador)
 from .pager import Pager
 from .cart import Cart
 
@@ -123,7 +123,7 @@ class CongresoDetail(TemplateView):
                     
             
             data=data2+[i for i in data1 if i not in data2]
-            print(data)
+           
             context['fecha_ponencias']= data
             ponencias_env=[] 
             ponentes_env=[]
@@ -157,7 +157,7 @@ class CongresoDetail(TemplateView):
                     eventos = sorted(eventos, key=lambda k: k['fecha_inicio'])
                     result.append({
                     'id':bloque.id,
-                    'modelador':Modelador.objects.filter(bloque_modelador__pk=bloque.id).distinct() ,
+                    'moderador':Moderador.objects.filter(bloque_moderador__pk=bloque.id).distinct() ,
                     'titulo': bloque.titulo,
                     'fecha_inicio': bloque.fecha_inicio ,# una relación a otro modelo
                     'detalle':bloque.detalle ,
@@ -183,7 +183,7 @@ class CongresoDetail(TemplateView):
                     'tipo':'Taller',# la misma relación, otro campo
                     })
                 result = sorted(result, key=lambda k: k['fecha_inicio'])
-                print(result)
+              
                 # ponentes_env.append(Ponente.objects.filter(ponencia_ponente__pk=ponencia.id).distinct()) 
                 ponencias_env.append(result)
                 # for taller in talleres:
@@ -193,6 +193,14 @@ class CongresoDetail(TemplateView):
             
             context['ponencias']=ponencias_env
 
+            prueba_ponecia=Ponencia.objects.filter(congreso=congreso.pk)
+            id=[]
+            for pp in prueba_ponecia:
+                id.append(pp.pk)
+
+            pon=Ponente.objects.filter(ponencia_ponente__in=id).distinct()
+           
+            context['ponentes_congreso']=pon
             prueba_ponecia=Ponencia.objects.filter(congreso=congreso.pk)
             id=[]
             for pp in prueba_ponecia:

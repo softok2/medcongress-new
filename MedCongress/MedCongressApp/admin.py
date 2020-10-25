@@ -29,6 +29,6 @@ admin.site.register(DatosIniciales)
 admin.site.register(Especialidades)
 admin.site.register(Ubicacion)
 admin.site.register(Bloque)
-admin.site.register(Modelador)
-admin.site.register(RelBloqueModelador)
+admin.site.register(Moderador)
+admin.site.register(RelBloqueModerador)
 

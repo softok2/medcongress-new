@@ -104,7 +104,7 @@
                                                         {%endif%}
                                                     </div>
                                                     <div class="row">
-                                                    {%for mod in pon.modelador %}
+                                                    {%for mod in pon.moderador %}
                                                     
                                                    
                                                     <div class="kf_new_conf_orgnizr col-sm-6">
@@ -115,7 +115,7 @@
                                                         <div class="kf_new_conf_orgnizr_name">
                                                             <h6>{{mod.user.usuario.first_name}}
                                                                 {{mod.user.usuario.last_name}}</h6>
-                                                            <span> Modelador</span>
+                                                            <span> Moderador</span>
                                                             <p>
                                                                 {%if mod.user.detalle %}
                                                                 {{mod.user.detalle}}
@@ -129,7 +129,7 @@
                                                     {%for evento in pon.eventos %}
                                                     
                                                     {%for ponente in evento.ponentes %}
-                                                   {%if pon.modelador|length|divisibleby:2 %}
+                                                   {%if pon.moderador|length|divisibleby:2 %}
                                                     </div>
                                                     <div class="row">
                                                    {%endif%}
@@ -152,7 +152,7 @@
                                                         <h5 style="color: #00a4ef;padding-bottom: 61px;font-size: 14px;">{%if evento.tipo == 'Taller'%}{{evento.tipo|upper}}{%endif%}
                                                             {{evento.titulo}} <span style="font-style: italic;"> </span> </h5>     
                                                     </div>
-                                                    {%if pon.modelador|length|divisibleby:2%}
+                                                    {%if pon.moderador|length|divisibleby:2%}
                                                     
                                                    
                                                 {% if forloop.counter|divisibleby:2 %}

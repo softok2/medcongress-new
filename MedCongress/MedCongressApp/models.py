@@ -285,14 +285,14 @@ class Ponente(models.Model):
     def __str__(self):
         return self.user.usuario.first_name +' '+self.user.usuario.last_name
 
-##### Tabla  Modelador  #####
+##### Tabla  moderador  #####
 
-class Modelador(models.Model):
+class Moderador(models.Model):
     user = models.OneToOneField(PerfilUsuario, on_delete=models.DO_NOTHING)
     created_at = models.DateTimeField(auto_now_add=True)
     class Meta:
-        verbose_name='modelador'
-        verbose_name_plural='modeladores'
+        verbose_name='moderador'
+        verbose_name_plural='moderadores'
 
     def __str__(self):
         return self.user.usuario.first_name +' '+self.user.usuario.last_name
@@ -308,7 +308,7 @@ class Bloque(models.Model):
     created=models.DateTimeField(auto_now_add=True)
     updated=models.DateTimeField(null=True, blank=True)
     published=models.BooleanField()
-    modelador = models.ManyToManyField(Modelador, through='RelBloqueModelador',related_name='bloque_modelador')
+    moderador = models.ManyToManyField(Moderador, through='RelBloqueModerador',related_name='bloque_moderador')
     congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
     
     class Meta:
@@ -318,20 +318,20 @@ class Bloque(models.Model):
     def __str__(self):
         return self.titulo
 
-##### Tabla pivote Bloque - Modelador  #####
+##### Tabla pivote Bloque - moderador  #####
 
-class RelBloqueModelador(models.Model):
-    modelador = models.ForeignKey(Modelador, on_delete=models.CASCADE)
+class RelBloqueModerador(models.Model):
+    moderador = models.ForeignKey(Moderador, on_delete=models.CASCADE)
     bloque = models.ForeignKey(Bloque, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name='Relación Madelador - Bloque'
-        verbose_name_plural='Relaciones modelador - bloque'
-        unique_together = (('modelador','bloque'),)
+        verbose_name='Relación Maderador - Bloque'
+        verbose_name_plural='Relaciones moderador - bloque'
+        unique_together = (('moderador','bloque'),)
 
     def __str__(self):
-        return 'Relación entre el bloque %s  y el modelador %s ' %(self.bloque.titulo, self.modelador.user.usuario.first_name)
+        return 'Relación entre el bloque %s  y el moderador %s ' %(self.bloque.titulo, self.moderador.user.usuario.first_name)
 
 
 #### Tabla Ponencia #######
