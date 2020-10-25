@@ -91,7 +91,8 @@
                                                 {%else%}
                                                 <div class="kf_new_conf_hdg " id="conf_accord{{forloop.counter0}}">
                                                     {%endif%}
-                                                    <h5>{{pon.tipo|upper}}  {{pon.titulo}} <span style="font-style: italic;"> </span> </h5>
+                                                    <h5>{%if pon.tipo == 'Taller'%}{{pon.tipo|upper}}{%endif%}
+                                                        {{pon.titulo}} <span style="font-style: italic;"> </span> </h5>
 
                                                     <i class="fa fa-angle-down"></i>
 
@@ -106,7 +107,7 @@
                                                     {%for mod in pon.modelador %}
                                                     
                                                    
-                                                    <div class="kf_new_conf_orgnizr">
+                                                    <div class="kf_new_conf_orgnizr col-sm-6">
                                                         <figure>
                                                             <img src="{% static '/'%}{{mod.user.foto}}"
                                                                 alt="image Here">
@@ -124,61 +125,50 @@
                                                     </div>
                                                    
                                                     {%endfor%}
-                                                </div>
-                                                    
+                                                
                                                     {%for evento in pon.eventos %}
                                                     
-                                                        <div class="kf_new_con_wrap ">
-                                                            <div class="kf_new_conf_time">
-                                                                <h5>{{evento.fecha_inicio|date:"H"}}:{{evento.fecha_inicio|date:"i"}}</h5>
-                                                            </div>
-                                                            <div class="kf_new_conf_des_wrap">
-                                                                {% if forloop.first %}
-                                                                <div class="">
-                                                                    {%else%}
-                                                                    <div class=" " >
-                                                                        {%endif%}
-                                                                        <h5 style="color: #00a4ef; padding: 20px;">{%if evento.tipo == 'Taller'%}{{evento.tipo|upper}}{%endif%}
-                                                                            {{evento.titulo}} <span style="font-style: italic;"> </span> </h5>
-                    
-                                                                       
-                    
-                                                                    </div>
-                                                                    <div class="kf_new_conf_open_wrap">
-                                                                        <div class="kf_new_conf_des">
-                                                                            {%if evento.detalle%}
-                                                                            <p>{{evento.detalle}}</p>
-                                                                            {%endif%}
-                                                                        </div>
-                                                                {%for ponente in evento.ponentes %}
-                                                                    <div class="kf_new_conf_orgnizr">
-                                                                        <figure>
-                                                                            <img src="{% static '/'%}{{ponent.user.foto}}"
-                                                                                alt="image Here">
-                                                                        </figure>
-                                                                        <div class="kf_new_conf_orgnizr_name">
-                                                                            <h6>{{ponente.user.usuario.first_name}}
-                                                                                {{ponente.user.usuario.last_name}}</h6>
-                                                                            <span> Ponente</span>
-                                                                            <p>
-                                                                                {%if ponente.user.detalle %}
-                                                                                {{ponente.user.detalle}}
-                                                                                {%endif%}
-                                                                            </p>
-                                                                        </div>
-                                                                    </div>
-                                                                    {%endfor%}
-                                                                </div>
-                                                            </div>
+                                                    {%for ponente in evento.ponentes %}
+                                                   {%if pon.modelador|length|divisibleby:2 %}
+                                                    </div>
+                                                    <div class="row">
+                                                   {%endif%}
+                                                        
+                                                    <div class="kf_new_conf_orgnizr col-sm-6">
+                                                        <figure>
+                                                            <img src="{% static '/'%}{{ponente.user.foto}}"
+                                                                alt="image Here">
+                                                        </figure>
+                                                        <div class="kf_new_conf_orgnizr_name">
+                                                            <h6>{{ponente.user.usuario.first_name}}
+                                                                {{ponente.user.usuario.last_name}}</h6>
+                                                            <span> Ponente</span>
+                                                            <p>
+                                                                {%if ponente.user.detalle %}
+                                                                {{ponente.user.detalle}}
+                                                                {%endif%}
+                                                            </p>
                                                         </div>
+                                                        <h5 style="color: #00a4ef;padding-bottom: 61px;font-size: 14px;">{%if evento.tipo == 'Taller'%}{{evento.tipo|upper}}{%endif%}
+                                                            {{evento.titulo}} <span style="font-style: italic;"> </span> </h5>     
+                                                    </div>
+                                                    {%if pon.modelador|length|divisibleby:2%}
+                                                    
                                                    
-                                             
-                                                       
-    
+                                                {% if forloop.counter|divisibleby:2 %}
+                                            </div>
+                                            <div class="row">
+                                                {%endif%}
+                                                
+                                                {%endif%}
+                                                    {%endfor%}
+                                                    
+                                              
                                                        
     
                                                     
                                                     {%endfor%}
+                                                  </div>
                                                 </div>
                                             </div>
                                         </div>

@@ -349,7 +349,7 @@ class Ponencia(models.Model):
     updated=models.DateTimeField(null=True, blank=True)
     published=models.BooleanField()
     congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
-    bloque=models.ForeignKey(Bloque,on_delete=models.CASCADE,null=True)
+    bloque=models.ForeignKey(Bloque,on_delete=models.CASCADE,null=True,blank=True)
     ponente = models.ManyToManyField(Ponente, through='RelPonenciaPonente',related_name='ponencia_ponente')
     votacion = models.ManyToManyField(User, through='RelPonenciaVotacion')
     
@@ -408,7 +408,7 @@ class Taller(models.Model):
     updated=models.DateTimeField(null=True, blank=True)
     published=models.BooleanField()
     congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
-    bloque=models.ForeignKey(Bloque,on_delete=models.CASCADE,null=True)
+    bloque=models.ForeignKey(Bloque,on_delete=models.CASCADE,null=True,blank=True)
     ponente = models.ManyToManyField(Ponente, through='RelTallerPonente',related_name='taller_ponente')
     votacion = models.ManyToManyField(User, through='RelTallerVotacion')
     categoria_pago = models.ManyToManyField(CategoriaPagoCongreso, through='RelTalleresCategoriaPago',related_name='talleres_cat_pago')
