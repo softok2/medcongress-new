@@ -192,10 +192,16 @@
 		font-style: italic;
 	}
 	.flotante {
-		display:scroll;
+			display:scroll;
 			position:fixed;
 			bottom:320px;
 			right:0px;
+	}
+	.kode-newspeaker{
+		margin-top: 94px;
+	}
+	.kf_new_conf_orgnizr{
+		width: 100%;
 	}
 	.kf_new_conf_time h5 {
 		color: #999999;
@@ -417,9 +423,9 @@
 		font-size:16px;
 		line-height:normal;
 	}
-	.button-holder{
+	/* .button-holder{
 		display:none;
-	}
+	} */
 	.register-content{
 		float:left;
 		padding:20px 20px 18px;
