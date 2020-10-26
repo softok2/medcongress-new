@@ -77,15 +77,20 @@
                                                 <td>{{ congres.t_congreso.nombre }}</td>
                                                 <td>{{ congres.especialidad.nombre }}</td>
                                                 <td>{%if congres.published%}Si{%else%}No{%endif%}</td>
-                                                <td>  <a id=""
+                                                <td> 
+                                                    <a id=""
                                                     href="{%url 'MedCongressAdmin:Congres_ponencias' congres.path%}"
-                                                    title="Ponencias ">
-                                                    <i class="la la-graduation-cap " style="color:yellowgreen;"> </i>
+                                                    title="Bloques ">
+                                                    <i class="ft ft-package" style="color:brown;font-size: 18px;"> </i>
+                                                </a> <a id=""
+                                                    href="{%url 'MedCongressAdmin:Congres_ponencias' congres.path%}"
+                                                    title="Ponencias " style="margin-left: 5px;">
+                                                    <i class="la la-graduation-cap " style="color:yellowgreen;font-size: 26px;"> </i>
                                                 </a>
                                                 <a id=""
                                                      href="{%url 'MedCongressAdmin:Congres_talleres' congres.path %}"
-                                                    title="Talleres " style="margin-left: 10px;">
-                                                    <i class="la la-hdd-o " style="color:rgb(40, 4, 124);"> </i>
+                                                    title="Talleres " style="margin-left: 5px;">
+                                                    <i class="la la-hdd-o " style="color:rgb(40, 4, 124);font-size: 22px;"> </i>
                                                 </a></td>
                                                 <td><a id=""
                                                     href="{%url 'MedCongressAdmin:Congres_imagenes' congres.path%}"

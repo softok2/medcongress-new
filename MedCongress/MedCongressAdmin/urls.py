@@ -16,9 +16,10 @@ from .views.imagen_views import (ImagenCreateView)
 from .views.ponencia_view import (PonenciaListView, PonenciaCreateView,PonenciaPonenteListView,
                                    PonencicaUpdateView,PonenciaPonenteCreateView,PonenciaDeletedView)
 from .views.taller_view import (TalleresListView,TallerCreateView,TallerCategPagosListView,TallerCategPagosCreateView,
-                                   TallerUpdateView,TallerPonenteListView,TallerPonenteCreateView)
-from .views.ponente_view import (PonentesListView,PonentesCreateView)
+                                   TallerUpdateView,TallerPonenteListView,TallerPonenteCreateView,TallerDeletedView)
+from .views.ponente_view import (PonentesListView,PonentesCreateView,PonenteDeletedView)
 from .views.user_views import (UsuariosListView,UsuarioCreateView,UsuarioUpdateView)
+from .views.bloque_views import (BloquesListView,BloqueCreateView)
 from .views.dashboard import DashboardView
 
 
@@ -50,13 +51,18 @@ urlpatterns = [
      path('taller/adicionar', TallerCreateView.as_view(), name='taller_add'),
      path('taller/editar/<int:pk>', TallerUpdateView.as_view(), name='taller_edit'),
      path('taller/congreso/add/<int:pk>', TallerCreateView.as_view(), name='congreso_taller_add'),
-
+     path('taller/eliminar/<int:pk>', TallerDeletedView.as_view(), name='taller_delete'),
      #usuarios
      path('usuarios', UsuariosListView.as_view(), name='usuarios_list'),
      path('usuario/adicionar', UsuarioCreateView.as_view(), name='usuario_add'),
      path('usuario/editar/<int:pk>', UsuarioUpdateView.as_view(), name='usuario_edit'),
-
-     
+     #ponentes
+     path('ponentes', PonentesListView.as_view(), name='Ponentes_list'),
+     path('ponente/adicionar', PonentesCreateView.as_view(), name='ponente_add'),
+     path('ponente/eliminar/<int:pk>', PonenteDeletedView.as_view(), name='ponente_delete'),
+     #bloques
+     path('bloques', BloquesListView.as_view(), name='bloques_list'),
+     path('bloque/adicionar', BloqueCreateView.as_view(), name='bloque_add'), 
      path('imagen/add', ImagenCreateView.as_view(), name='Add_imagen'),
      path('talleres/congreso/<str:path>', CongressTalleresListView.as_view(), name='Congres_talleres'),
      path('ponencias/congreso/<str:path>', CongressPonenciasListView.as_view(), name='Congres_ponencias'),

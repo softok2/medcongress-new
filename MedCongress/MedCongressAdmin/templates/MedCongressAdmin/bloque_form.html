@@ -1,0 +1,244 @@
+{% extends 'MedCongressAdmin/base.html' %}
+{% block title %}MedCongressAdmin | Congreso{% endblock %}
+{% load static %}
+{% block styles %}
+
+<style>
+	#geomap {
+		width: 100%;
+		height: 400px;
+	}
+</style>
+
+{% endblock %}
+{% block content %}
+<section class="multiple-input-with-labels" id="multiple-input-with-labels">
+
+	
+	
+	
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-header">
+					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
+						Adicionar Bloque</h1>
+					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
+					<div class="heading-elements">
+						<ul class="list-inline mb-0">
+
+							<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+
+						</ul>
+					</div>
+				</div>
+				<div class="card-content collapse show">
+					<div class="card-body">
+						<form id="congres-form" method="POST" action="" enctype="multipart/form-data">
+							{% csrf_token %}
+							<div class="form-body">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="row">
+											<div class="col-sm-4 ">
+												<div class="form-group">
+													<label
+														for="{{form.titulo.id_for_label }}"><b>{{form.titulo.label }}</b>{% if form.titulo.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.titulo.errors }}
+														</span>{% endif %} </label>
+
+													{{form.titulo }}
+												</div>
+											</div>
+											
+											<div class="col-sm-4 ">
+												<div class="form-group">
+													<label
+														for="{{form.duracion.id_for_label }}"><b>{{form.duracion.label }}</b>{% if form.duracion %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.duracion.errors }}
+														</span>{% endif %} </label>
+
+													{{form.duracion}}
+												</div>
+											</div>
+											<div class="col-sm-4 ">
+												<div class="form-group">
+													<label
+														for="{{form.fecha_inicio.id_for_label }}"><b>{{form.fecha_inicio.label }}</b>{% if form.fecha_final %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.fecha_inicio.errors }}
+														</span>{% endif %} </label>
+
+													{{form.fecha_inicio}}
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-12 ">
+												<div class="form-group">
+													<label
+														for="{{form.detalle.id_for_label }}"><b>{{form.detalle.label }}</b>{% if form.detalle.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.detalle.errors }}
+														</span>{% endif %} </label>
+
+													{{form.detalle }}
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-6 ">
+												<div class="form-group">
+													<label
+														for="{{form.published.id_for_label }}"><b>{{form.published.label }}</b>{% if form.published.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.published.errors }}
+														</span>{% endif %} </label>
+
+													{{form.published }}
+												</div
+											
+
+										</div>
+								
+										
+										<div class="form-actions">
+											<div class="text-right">
+												<button id="atras" type="button" class="btn btn-danger ">Cancelar
+													<i class="ft-x position-right"></i>
+												</button>
+												
+												<button id="save" type="submit" class="btn btn-primary">Guardar
+													<i class="ft-save position-right"></i>
+												</button>
+												
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+</section>
+{% endblock %}
+{% block scripts %}
+<link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
+<script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
+
+
+<script type="text/javascript"
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCf3QdCwg8QDNOS3A2vSQ3DqW2mpJ_gSY8"></script>
+<script src="{% static 'MedCongressApp/js/lugar.js'%}"></script>
+
+<script type="text/javascript">
+ $('#atras').click(function () {
+            location.href = "{% url 'MedCongressAdmin:congress_list' %}";
+        });
+	$(document).ready(function () {
+		$('#id_congreso-fecha_inicio').datetimepicker({
+        //language:  'fr',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		forceParse: 0,
+        showMeridian: 1
+    });
+
+
+
+
+		var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        });
+		FiltrarLugar('#id_ubicacion-direccion', '#id_ubicacion-longitud', '#id_ubicacion-latitud');
+		$('#id_ubicacion-direccion').keypress(function () {
+            $('#id_ubicacion-latitud').val('');
+            $('#id_ubicacion-longitud').val('');
+
+        });
+		{% if not delete_url %}
+		$('#save-plus').click(function (event) {
+			event.preventDefault();
+			$('#country-form').attr('action', "{% url 'MedCongressAdmin:country_add_plus' param='+' %}");
+			$('#country-form').submit();
+		});
+		$('#save-edit').click(function (event) {
+			event.preventDefault();
+			$('#country-form').attr('action', "{% url 'MedCongressAdmin:country_add_plus' param='+->' %}");
+			$('#country-form').submit();
+		});
+		{% else %}
+		$('#delete').click(function (event) {
+			event.preventDefault();
+			$('#country-form').attr('action', "{{ delete_url }}");
+			$('#country-form').submit();
+		});
+		{% endif %}
+	});
+
+	// alert($('#id_imagen_congreso-imagen').val());
+	// 		// $('#id_congreso-imagen_prim').val($('#id_congreso-imagen_prim').val().push($('#id_imagen_congreso-imagen').val()));
+	// 		// $('#id_congreso-imagen_prim').multiselect("refresh");
+	// 		//$("#id_congreso-imagen_prim").val(["130860","130858"]);
+	// 		$('#id_congreso-imagen_prim').append('<option value="' + $('#id_imagen_congreso-imagen').val() + '" selected="selected">' + $('#id_imagen_congreso-imagen').val() + '</option>');
+
+
+	function InsertImagen() {
+		
+
+$.ajax({
+	type: "POST",
+	url: "{% url 'MedCongressAdmin:Add_imagen'%}",
+	data: {
+		'imagen':$('#id_imagen_congreso-imagen').val(), // from form
+	},
+	success: function (data) {
+		if (data['succes']){
+			swal({
+	title: "Ha adicionado un evento a su carrito de compra",
+	text: "Valla al carrito para efectuar su compra",
+	icon: "success",
+	buttons: {
+		cancel: {
+			text: "ok!",
+			value: null,
+			visible: true,
+			className: "",
+			closeModal: false,
+		},
+	   
+		
+		
+	}
+})
+.then((isConfirm) => {
+	if (isConfirm) {
+		
+	}
+	else{
+		location.reload();
+	}
+
+});
+
+
+		
+		   
+	}
+		else
+		swal("No se puede", "Ya tiene este Evento en el carrito de compra.", "error"); 
+	}
+});
+}
+</script>
+{% endblock %}

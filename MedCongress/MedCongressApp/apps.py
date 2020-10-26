@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class MedcongressappConfig(AppConfig):
-    name = 'MedCongressApp'
+class MedcongressadminConfig(AppConfig):
+    name = 'medCongressAdmin'

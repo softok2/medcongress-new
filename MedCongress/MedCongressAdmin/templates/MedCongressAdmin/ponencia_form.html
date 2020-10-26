@@ -297,10 +297,14 @@
 										</div>
 	
 										<div class="form-actions">
-											
+											<div class="text-right">
+												<button id="atras" type="button" class="btn btn-danger ">Cancelar
+													<i class="ft-x position-right"></i>
+												</button>
 												<button id="save" type="submit" class="btn btn-primary">Guardar
 													<i class="ft-save position-right"></i>
 												</button>
+											</div>
 											
 											</div>
 										</div>
@@ -326,7 +330,13 @@
 
 <script type="text/javascript">
 	$(document).ready(function () {
-
+		$('#atras').click(function () {
+			{%if con %}
+			location.href = "{% url 'MedCongressAdmin:Congres_ponencias' con.path %}";
+			{%else%}
+			location.href = "{% url 'MedCongressAdmin:ponencias_list' %}";
+			{%endif%}
+        });
 		{%if con %}
 		$("#id_ponencia-congreso option[value='{{con.id}}']").attr("selected",true);
 		{%endif%}

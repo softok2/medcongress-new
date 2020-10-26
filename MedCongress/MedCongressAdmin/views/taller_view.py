@@ -165,4 +165,8 @@ class  TallerPonenteCreateView(validarUser,CreateView):
         ctx['pon'] = pon
         return ctx
 
+class TallerDeletedView(validarUser,DeleteView):
+    model = Taller
+    success_url = reverse_lazy('MedCongressAdmin:talleres_list')
+
 

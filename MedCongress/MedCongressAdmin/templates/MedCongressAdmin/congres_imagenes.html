@@ -54,7 +54,7 @@
                         <div class="card-body  my-gallery" itemscope="" itemtype="http://schema.org/ImageGallery" data-pswp-uid="1">
                             <div class="row">
                                 {% for imagen in imagenes%}
-                              <figure class="col-lg-3 col-md-6 col-12" itemprop="associatedMedia" itemscope="" itemtype="http://schema.org/ImageObject">
+                              <figure class="col-lg-3 col-md-6 col-12" itemprop="associatedMedia" itemscope="" ></figure>
                                 <a href="{% static '/'%}{{imagen.imagen}}" itemprop="contentUrl" data-size="480x360">
                                     <img class="img-thumbnail img-fluid" src="{% static '/'%}{{imagen.imagen}}" itemprop="thumbnail" alt="Image description">
                                 </a> 

@@ -35,3 +35,9 @@ class  PonentesCreateView(validarUser,CreateView):
         taller.save()
        
         return super(PonentesCreateView, self).form_valid(form)
+
+class PonenteDeletedView(validarUser,DeleteView):
+    model = Ponente
+    success_url = reverse_lazy('MedCongressAdmin:talleres_list')
+
+

@@ -2,7 +2,7 @@ from django import forms
 from  MedCongressApp.models import (Congreso,Ubicacion,ImagenCongreso,TipoCongreso,Ponencia,Taller,
                                     Ponente,PerfilUsuario,RelPonenciaPonente,RelCongresoCategoriaPago,
                                     CategoriaPagoCongreso,RelTalleresCategoriaPago,Genero,CategoriaUsuario,
-                                    RelTallerPonente)
+                                    RelTallerPonente,Bloque)
                     
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
@@ -28,7 +28,7 @@ class CongresForm(forms.ModelForm):
         self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control'})   
         self.fields['published'].widget.attrs.update({'class': 'form-control'})   
         self.fields['t_congreso'].widget.attrs.update({'class': 'form-control'})  
-        self.fields['especialidad'].widget.attrs.update({'class': 'form-control'})     
+        self.fields['especialidad'].widget.attrs.update({'class': 'form-control'})                    
 
    
 
@@ -324,3 +324,26 @@ class UsuarioForms(MultiModelForm):
         'perfiluser': PerfilUserForm,
         'ubicacion':UbicacionForm,
     }
+
+class BloqueForms(forms.ModelForm):
+    
+    titulo=forms.CharField(label='Título')
+    duracion=forms.CharField(label='Duración')
+    published=forms.BooleanField(label='Publicado')
+    congreso=forms.ModelChoiceField(queryset=Congreso.objects.filter(published=True),label='Congreso')
+   
+    
+    class Meta:
+        model=Bloque
+        fields=['titulo','duracion','detalle','fecha_inicio','published','congreso']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+
+        self.fields['titulo'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['duracion'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['detalle'].widget.attrs.update({'class': 'form-control','rows':'3'})   
+        self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['published'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['congreso'].widget.attrs.update({'class': 'form-control'})  
+          
