@@ -260,12 +260,12 @@
                         <!--KODE_EVENT_BLOG2 START-->
                         <div class="kode-newspeaker">
                             <div class="speaker-photo">
-                                <img src="{% static '/'%}{{ponente.user.foto}}" alt="">
+                                <img src="{% static '/'%}{{ponente.foto}}" alt="">
                             </div>
                             <div class="new-ourspeaker">
-                                <h3>{{ponente.user.usuario.first_name}}</h3>
-                                <h3> {{ponente.user.usuario.last_name}}</h3>
-                                <h6 style="font-style: italic;"> <span>Ponente</span></h6>
+                                <h3>{{ponente.nombre}}</h3>
+                                <h3> {{ponente.apellido}}</h3>
+                                <h6 style="font-style: italic;"> <span>{{ponente.tipo}}</span></h6>
                                 <!-- <ul class="newpseaker-media">
                                     <li><a href="#"><i class="fa fa-facebook"></i></a></li>
                                     <li><a href="#"><i class="fa fa-twitter"></i></a></li>

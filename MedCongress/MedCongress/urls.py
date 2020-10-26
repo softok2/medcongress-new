@@ -16,9 +16,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from django.utils.functional import curry
-from django.conf.urls import handler403
+
 from django.views.defaults import permission_denied
-handler403 = curry(permission_denied, template_name='403.html')
+from django.conf.urls import (
+handler400, handler403, handler404, handler500
+)
+# from MedCongressApp.views import bad_request,permission_denied,page_not_found,server_error
+
+# handler400 = bad_request
+# handler403 = permission_denied
+# handler404 = page_not_found
+# handler500 = server_error
+
 
 
 
