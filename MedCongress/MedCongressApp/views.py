@@ -225,7 +225,22 @@ class CongresoDetail(TemplateView):
                 'tipo':'Ponente',# la misma relación, otro campo
                 })
             
-            
+            bloques=Bloque.objects.filter(congreso=congreso.pk)
+            id=[]
+            for pp in bloques:
+                id.append(pp.pk)
+            moderadores=Moderador.objects.filter(bloque_moderador__in=id).distinct()
+
+            for moderador in moderadores: 
+                ponentes_env.append({
+                'id':moderador.id,
+                'nombre': moderador.user.usuario.first_name,
+                'apellido': moderador.user.usuario.last_name ,# una relación a otro modelo
+                'foto':moderador.user.foto,
+                'tipo':'Moderador',# la misma relación, otro campo
+                })
+
+
             context['ponentes_congreso']=ponentes_env
             cat_pago=RelCongresoCategoriaPago.objects.filter(congreso=congreso.pk)
             context['cat_ponente']=RelPonenciaPonente.objects.all()
