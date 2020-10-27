@@ -36,8 +36,18 @@
 	<link rel="stylesheet" href="{% static 'MedCongressApp/css/responsive.css'%}" type="text/css" media="all">
 	<!-- Color css -->
 	<link rel="stylesheet" href="{% static 'MedCongressApp/css/color.css'%}" type="text/css" media="all">
+	
 {% block css%}
 {%endblock%}
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5Z8DCMG1HQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5Z8DCMG1HQ');
+</script>
 </head>
 
 <body>
