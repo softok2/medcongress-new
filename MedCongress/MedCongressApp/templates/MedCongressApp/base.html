@@ -38,6 +38,15 @@
 	<link rel="stylesheet" href="{% static 'MedCongressApp/css/color.css'%}" type="text/css" media="all">
 {% block css%}
 {%endblock%}
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5Z8DCMG1HQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5Z8DCMG1HQ');
+</script>
 </head>
 
 <body>
@@ -202,7 +211,7 @@
 					<div class="row">
 						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 							<p>&copy; <a href="#">Med Congress</a> All Rights Reserved</p>
-							<p>Develop by <a href="#">SOFTOK2</a></p>
+							<p style="font-size:10px">Develop by <a href="#">SOFTOK2</a></p>
 						</div>
 					</div>
 				</div>
