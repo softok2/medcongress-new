@@ -203,6 +203,7 @@ class CongresoDetail(TemplateView):
             for ponente in ponentes: 
                 ponentes_env.append({
                 'id':ponente.id,
+                'id_user':ponente.user.usuario.pk,
                 'nombre': ponente.user.usuario.first_name,
                 'apellido': ponente.user.usuario.last_name ,# una relación a otro modelo
                 'foto':ponente.user.foto,
@@ -219,15 +220,16 @@ class CongresoDetail(TemplateView):
             for ponente in ponentes: 
                 var=False
                 for pon in ponentes_env:
-                    if pon['id']==ponente.pk:
+                    if pon['id_user']==ponente.user.usuario.pk:
                         var=True
                 if not var:
                     ponentes_env.append({
                     'id':ponente.id,
+                    'id_user':ponente.user.usuario.pk,
                     'nombre': ponente.user.usuario.first_name,
                     'apellido': ponente.user.usuario.last_name ,# una relación a otro modelo
                     'foto':ponente.user.foto,
-                    'tipo':'Ponente Taller',# la misma relación, otro campo
+                    'tipo':'Ponente',# la misma relación, otro campo
                     })
             
             bloques=Bloque.objects.filter(congreso=congreso.pk)
@@ -238,13 +240,19 @@ class CongresoDetail(TemplateView):
             moderadores=Moderador.objects.filter(bloque_moderador__in=id_b).distinct()
 
             for moderador in moderadores: 
-                ponentes_env.append({
-                'id':moderador.id,
-                'nombre': moderador.user.usuario.first_name,
-                'apellido': moderador.user.usuario.last_name ,# una relación a otro modelo
-                'foto':moderador.user.foto,
-                'tipo':'Moderador',# la misma relación, otro campo
-                })
+                var=False
+                for pon in ponentes_env:
+                    if pon['id_user']==moderador.user.usuario.pk:
+                        var=True
+                if not var:
+                    ponentes_env.append({
+                    'id':moderador.id,
+                    'id_user':moderador.user.usuario.pk,
+                    'nombre': moderador.user.usuario.first_name,
+                    'apellido': moderador.user.usuario.last_name ,# una relación a otro modelo
+                    'foto':moderador.user.foto,
+                    'tipo':'Moderador',# la misma relación, otro campo
+                    })
 
 
             context['ponentes_congreso']=ponentes_env
