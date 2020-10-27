@@ -2,7 +2,7 @@ from django import forms
 from  MedCongressApp.models import (Congreso,Ubicacion,ImagenCongreso,TipoCongreso,Ponencia,Taller,
                                     Ponente,PerfilUsuario,RelPonenciaPonente,RelCongresoCategoriaPago,
                                     CategoriaPagoCongreso,RelTalleresCategoriaPago,Genero,CategoriaUsuario,
-                                    RelTallerPonente,Bloque)
+                                    RelTallerPonente,Bloque,DatosIniciales)
                     
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
@@ -346,4 +346,25 @@ class BloqueForms(forms.ModelForm):
         self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control'})   
         self.fields['published'].widget.attrs.update({'class': 'form-control'})   
         self.fields['congreso'].widget.attrs.update({'class': 'form-control'})  
-          
+
+
+class OtrosForm(forms.ModelForm):
+
+    class Meta:
+        model=DatosIniciales
+        fields=['ponentes','ponencias','paises','especialidades','eventos','afiliados','talleres','aviso_privacidad']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+
+        self.fields['ponentes'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['ponencias'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['paises'].widget.attrs.update({'class': 'form-control','rows':'3'})   
+        self.fields['especialidades'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['eventos'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['afiliados'].widget.attrs.update({'class': 'form-control'})  
+        self.fields['talleres'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['aviso_privacidad'].widget.attrs.update({'class': 'form-control ckeditor'})  
+        
+
+     

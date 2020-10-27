@@ -194,11 +194,11 @@ class CongresoDetail(TemplateView):
             context['ponencias']=ponencias_env
 
             prueba_ponecia=Ponencia.objects.filter(congreso=congreso.pk)
-            id=[]
+            id_p=[]
             for pp in prueba_ponecia:
-                id.append(pp.pk)
+                id_p.append(pp.pk)
 
-            ponentes=Ponente.objects.filter(ponencia_ponente__in=id).distinct()
+            ponentes=Ponente.objects.filter(ponencia_ponente__in=id_p).distinct()
             ponentes_env=[]
             for ponente in ponentes: 
                 ponentes_env.append({
@@ -210,26 +210,32 @@ class CongresoDetail(TemplateView):
                 })
 
             prueba_taller=Taller.objects.filter(congreso=congreso.pk)
-            id=[]
+            id_t=[]
             for pp in prueba_taller:
-                id.append(pp.pk)
+                id_t.append(pp.pk)
 
-            ponentes=Ponente.objects.filter(taller_ponente__in=id).distinct()
+            ponentes=Ponente.objects.filter(taller_ponente__in=id_t).distinct()
 
             for ponente in ponentes: 
-                ponentes_env.append({
-                'id':ponente.id,
-                'nombre': ponente.user.usuario.first_name,
-                'apellido': ponente.user.usuario.last_name ,# una relación a otro modelo
-                'foto':ponente.user.foto,
-                'tipo':'Ponente',# la misma relación, otro campo
-                })
+                var=False
+                for pon in ponentes_env:
+                    if pon['id']==ponente.pk:
+                        var=True
+                if not var:
+                    ponentes_env.append({
+                    'id':ponente.id,
+                    'nombre': ponente.user.usuario.first_name,
+                    'apellido': ponente.user.usuario.last_name ,# una relación a otro modelo
+                    'foto':ponente.user.foto,
+                    'tipo':'Ponente Taller',# la misma relación, otro campo
+                    })
             
             bloques=Bloque.objects.filter(congreso=congreso.pk)
-            id=[]
+            id_b=[]
             for pp in bloques:
-                id.append(pp.pk)
-            moderadores=Moderador.objects.filter(bloque_moderador__in=id).distinct()
+              
+                id_b.append(pp.pk)
+            moderadores=Moderador.objects.filter(bloque_moderador__in=id_b).distinct()
 
             for moderador in moderadores: 
                 ponentes_env.append({
@@ -419,6 +425,10 @@ class PerfilUserCreate(CreateView):
     form_class= UserPerfilUser
     template_name='MedCongressApp/registrarse.html'
     success_url = reverse_lazy('Home')
+    def get_context_data(self, **kwargs):
+        context = super(PerfilUserCreate, self).get_context_data(**kwargs)
+        context['aviso_privacidad']=DatosIniciales.objects.all().first()
+        return context
     def form_valid(self, form):
 
         
@@ -563,7 +573,11 @@ class ConfCart(TemplateView):
         return TemplateResponse(request, reverse('dashboard'))
 
 class AvisoPrivacidad(TemplateView):
-      template_name= 'MedCongressApp/aviso_privacidad.html' 
+    template_name= 'MedCongressApp/aviso_privacidad.html' 
+    def get_context_data(self, **kwargs):
+        context = super(AvisoPrivacidad, self).get_context_data(**kwargs)
+        context['aviso_privacidad']=DatosIniciales.objects.all().first()
+        return context
 # HTTP Error 400
 # def bad_request(request,exception):
 #     response = render_to_response(

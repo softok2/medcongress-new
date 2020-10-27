@@ -501,3 +501,4 @@ class DatosIniciales(models.Model):
     especialidades= models.IntegerField(null=True,default=0)
     afiliados= models.IntegerField(null=True,default=0)
     talleres= models.IntegerField(null=True,default=0)
+    aviso_privacidad=models.TextField(null=True)

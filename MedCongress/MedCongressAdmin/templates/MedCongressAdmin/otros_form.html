@@ -1,0 +1,170 @@
+{% extends 'MedCongressAdmin/base.html' %}
+{% block title %}MedCongressAdmin | Otros Datos{% endblock %}
+{% load static %}
+{% block styles %}
+{% endblock %}
+{% block content %}
+<section class="multiple-input-with-labels" id="multiple-input-with-labels">
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-header">
+					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
+						Actualizar Datos</h1>
+					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
+					<div class="heading-elements">
+						<ul class="list-inline mb-0">
+							<li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+							<li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+							<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+							<li><a data-action="close"><i class="ft-x"></i></a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="card-content collapse show">
+					<div class="card-body">
+						<form id="country-form" method="POST">
+							{% csrf_token %}
+							<div class="form-body">
+								<div class="row">
+									
+										
+										<div class="col-sm-1 ">
+											<div class="form-group">
+												<label
+													for="{{form.ponentes.id_for_label }}"><b>{{form.ponentes.label }}</b>{% if form.ponentes.errors %}
+													<span
+														style="font-size: 15px; color: red;">{{ form.ponentes.errors }}
+													</span>{% endif %} </label>
+
+												{{form.ponentes }}
+											</div>
+										</div>
+										<div class="col-sm-1 ">
+											<div class="form-group">
+												<label
+													for="{{form.ponencias.id_for_label }}"><b>{{form.ponencias.label }}</b>{% if form.ponencias.errors %}
+													<span
+														style="font-size: 15px; color: red;">{{ form.ponencias.errors }}
+													</span>{% endif %} </label>
+
+												{{form.ponencias }}
+											</div>
+										</div>	
+										<div class="col-sm-1 ">
+											<div class="form-group">
+												<label
+													for="{{form.paises.id_for_label }}"><b>{{form.paises.label }}</b>{% if form.paises.errors %}
+													<span
+														style="font-size: 15px; color: red;">{{ form.paises.errors }}
+													</span>{% endif %} </label>
+
+												{{form.paises }}
+											</div>
+										</div>
+										<div class="col-sm-1 ">
+											<div class="form-group">
+												<label
+													for="{{form.eventos.id_for_label }}"><b>{{form.eventos.label }}</b>{% if form.eventos.errors %}
+													<span
+														style="font-size: 15px; color: red;">{{ form.eventos.errors }}
+													</span>{% endif %} </label>
+
+												{{form.eventos }}
+											</div>
+										</div>	
+										<div class="col-sm-1 ">
+											<div class="form-group">
+												<label
+													for="{{form.especialidades.id_for_label }}"><b>{{form.especialidades.label }}</b>{% if form.especialidades.errors %}
+													<span
+														style="font-size: 15px; color: red;">{{ form.especialidades.errors }}
+													</span>{% endif %} </label>
+
+												{{form.especialidades }}
+											</div>
+										</div>
+										<div class="col-sm-1 ">
+											<div class="form-group">
+												<label
+													for="{{form.talleres.id_for_label }}"><b>{{form.talleres.label }}</b>{% if form.talleres.errors %}
+													<span
+														style="font-size: 15px; color: red;">{{ form.talleres.errors }}
+													</span>{% endif %} </label>
+
+												{{form.talleres }}
+											</div>
+										</div>	
+										<div class="col-sm-1 ">
+											<div class="form-group">
+												<label
+													for="{{form.afiliados.id_for_label }}"><b>{{form.afiliados.label }}</b>{% if form.afiliados.errors %}
+													<span
+														style="font-size: 15px; color: red;">{{ form.afiliados.errors }}
+													</span>{% endif %} </label>
+
+												{{form.afiliados }}
+											</div>
+										</div>
+											
+								</div>	
+								<div class="row">
+									<div class="col-sm-12 ">
+										<div class="form-group">
+											<label
+												for="{{form.aviso_privacidad.id_for_label }}"><b>{{form.aviso_privacidad.label }}</b>{% if form.aviso_privacidad.errors %}
+												<span
+													style="font-size: 15px; color: red;">{{ form.aviso_privacidad.errors }}
+												</span>{% endif %} </label>
+
+											{{form.aviso_privacidad }}
+										</div>
+									</div>
+
+								</div>	
+										</fieldset>
+										<div class="form-actions">
+											<div class="text-right">
+												
+												<button id="save" type="submit" class="btn btn-primary">Guardar
+													<i class="ft-save position-right"></i>
+												</button>
+												
+											</div>
+										</div>
+									
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/editors/ckeditor/ckeditor.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/editors/editor-ckeditor.js'%}"></script>
+<script type="text/javascript">
+	$(document).ready(function () {
+		{% if not delete_url %}
+		$('#save-plus').click(function (event) {
+			event.preventDefault();
+			$('#country-form').attr('action', "{% url 'MedCongressAdmin:country_add_plus' param='+' %}");
+			$('#country-form').submit();
+		});
+		$('#save-edit').click(function (event) {
+			event.preventDefault();
+			$('#country-form').attr('action', "{% url 'MedCongressAdmin:country_add_plus' param='+->' %}");
+			$('#country-form').submit();
+		});
+		{% else %}
+		$('#delete').click(function (event) {
+			event.preventDefault();
+			$('#country-form').attr('action', "{{ delete_url }}");
+			$('#country-form').submit();
+		});
+		{% endif %}
+	});
+</script>
+{% endblock %}

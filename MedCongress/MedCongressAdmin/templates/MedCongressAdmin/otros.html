@@ -1,0 +1,139 @@
+{% extends 'MedCongressAdmin/base.html' %}
+{% block title %}Congresos{% endblock %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" type="text/css"
+    href="{% static 'MedCongressAdmin/app-assets/vendors/css/tables/datatable/datatables.min.css' %}">
+<style type="text/css">
+    .custom-select-sm {
+        font-size: 110%;
+    }
+
+    .page-link {
+        padding: 10px 15px;
+    }
+
+    #DataTables_Table_0_length>label {
+        margin-top: 1.2rem;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<section id="configuration">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-10">
+                            <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Otros Datos</h1>
+                            <p class="card-text">Datos necesarios para el sistema.</p>
+                        </div>
+                        <div class="col-2">
+                            <div style="margin-right: 45%; margin-top: 1.5rem;">
+                                
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-content collapse show">
+                    <div class="card-body card-dashboard">
+                        <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    {%for dato in datos_iniciales%}
+                                    <h4> <b>Ponentes</b>  <small>{{dato.ponentes}}</small></h4>
+                                    <h4> <b>Ponencias</b>  <small>{{dato.ponencias}}</small></h4>
+                                    <h4> <b>Eventos</b>  <small>{{dato.eventos}}</small></h4>
+                                    <h4> <b>Paises</b>  <small>{{dato.paises}}</small></h4>
+                                    <h4> <b>Especialidades</b>  <small>{{dato.especialidades}}</small></h4>
+                                    <h4> <b>Afiliados</b>  <small>{{dato.afiliados}}</small></h4>
+                                    <h4> <b>Talleres</b>  <small>{{dato.talleres}}</small></h4>
+                                    <h4> <b>Aviso de Privacidad</b>  <label >{{dato.aviso_privacidad|safe|truncatewords_html:200}}</label></h4>
+
+                                    <a id="edit-btn" type="button" class="btn btn-success" title="Editar Valores" href=" {% url 'MedCongressAdmin:otro_edit' pk=dato.pk %}"
+                                    style="float: left; padding:7px;font-size: 20px; margin-top: 30px;">
+                                    <i class="ft ft-edit"></i> Editar
+                                </a>
+                                   
+                                    {%endfor%}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="swal-overlay" tabindex="-1">
+    <form id="swall-modal-form" method="POST" style="display: none;">
+        {% csrf_token %}
+    </form>
+
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/extensions/sweetalert.min.js' %}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/tables/datatable/datatables.min.js' %}"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        });
+
+        // $('#add-btn').click(function () {
+        //     location.href = "";
+        // });
+
+        dataTable = $('.zero-configuration').DataTable();
+    });
+    function deleteItem(pk) {
+        swal({
+            title: "Estas seguro?",
+            text: "Eliminará todo lo referente a este evento",
+            icon: "warning",
+            buttons: {
+                cancel: {
+                    text: "No, cancelar!",
+                    value: null,
+                    visible: true,
+                    className: "",
+                    closeModal: false,
+                },
+                confirm: {
+                    text: "Sí, eliminarlo!",
+                    value: true,
+                    visible: true,
+                    className: "",
+                    closeModal: false
+                }
+            }
+        })
+            .then((isConfirm) => {
+                if (isConfirm) {
+                    url = "{% url 'MedCongressAdmin:congress_delete' pk=0 %}";
+                    $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
+                        dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
+                        swal("Eliminado!", "Este elemento ha sido eliminado.", "success");
+                    });
+                } else {
+                    swal("Cancelado", "No se eliminó este elemento.", "error");
+                }
+            });
+    }
+</script>
+{% endblock %}

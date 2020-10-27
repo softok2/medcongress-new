@@ -20,6 +20,8 @@ from .views.taller_view import (TalleresListView,TallerCreateView,TallerCategPag
 from .views.ponente_view import (PonentesListView,PonentesCreateView,PonenteDeletedView)
 from .views.user_views import (UsuariosListView,UsuarioCreateView,UsuarioUpdateView)
 from .views.bloque_views import (BloquesListView,BloqueCreateView)
+from .views.otros_views import (OtrosListView,OtroUpdateView)
+
 from .views.dashboard import DashboardView
 
 
@@ -63,6 +65,10 @@ urlpatterns = [
      #bloques
      path('bloques', BloquesListView.as_view(), name='bloques_list'),
      path('bloque/adicionar', BloqueCreateView.as_view(), name='bloque_add'), 
+
+     #otros
+     path('otros', OtrosListView.as_view(), name='otros_list'),
+     path('otro/editar/<int:pk>', OtroUpdateView.as_view(), name='otro_edit'),
      path('imagen/add', ImagenCreateView.as_view(), name='Add_imagen'),
      path('talleres/congreso/<str:path>', CongressTalleresListView.as_view(), name='Congres_talleres'),
      path('ponencias/congreso/<str:path>', CongressPonenciasListView.as_view(), name='Congres_ponencias'),
