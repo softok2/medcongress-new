@@ -72,24 +72,7 @@
 <script type="text/javascript">
 	$(document).ready(function () {
 		$("#id_taller option[value='{{pon.id}}']").attr("selected",true);
-		{% if not delete_url %}
-		$('#save-plus').click(function (event) {
-			event.preventDefault();
-			$('#country-form').attr('action', "{% url 'MedCongressAdmin:country_add_plus' param='+' %}");
-			$('#country-form').submit();
-		});
-		$('#save-edit').click(function (event) {
-			event.preventDefault();
-			$('#country-form').attr('action', "{% url 'MedCongressAdmin:country_add_plus' param='+->' %}");
-			$('#country-form').submit();
-		});
-		{% else %}
-		$('#delete').click(function (event) {
-			event.preventDefault();
-			$('#country-form').attr('action', "{{ delete_url }}");
-			$('#country-form').submit();
-		});
-		{% endif %}
+		
 	});
 </script>
 {% endblock %}

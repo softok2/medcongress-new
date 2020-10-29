@@ -396,52 +396,6 @@
 	// 		$('#id_congreso-imagen_prim').append('<option value="' + $('#id_imagen_congreso-imagen').val() + '" selected="selected">' + $('#id_imagen_congreso-imagen').val() + '</option>');
 
 
-	function InsertImagen() {
-		
-
-$.ajax({
-	type: "POST",
-	url: "{% url 'MedCongressAdmin:Add_imagen'%}",
-	data: {
-		'imagen':$('#id_imagen_congreso-imagen').val(), // from form
-	},
-	success: function (data) {
-		if (data['succes']){
-			swal({
-	title: "Ha adicionado un evento a su carrito de compra",
-	text: "Valla al carrito para efectuar su compra",
-	icon: "success",
-	buttons: {
-		cancel: {
-			text: "ok!",
-			value: null,
-			visible: true,
-			className: "",
-			closeModal: false,
-		},
-	   
-		
-		
-	}
-})
-.then((isConfirm) => {
-	if (isConfirm) {
-		
-	}
-	else{
-		location.reload();
-	}
-
-});
-
-
-		
-		   
-	}
-		else
-		swal("No se puede", "Ya tiene este Evento en el carrito de compra.", "error"); 
-	}
-});
-}
+	
 </script>
 {% endblock %}

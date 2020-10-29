@@ -367,24 +367,7 @@
 			$('#id_ubicacion-longitud').val('');
 
 		});
-		{% if not delete_url %}
-		$('#save-plus').click(function (event) {
-			event.preventDefault();
-			$('#country-form').attr('action', "{% url 'MedCongressAdmin:country_add_plus' param='+' %}");
-			$('#country-form').submit();
-		});
-		$('#save-edit').click(function (event) {
-			event.preventDefault();
-			$('#country-form').attr('action', "{% url 'MedCongressAdmin:country_add_plus' param='+->' %}");
-			$('#country-form').submit();
-		});
-		{% else %}
-		$('#delete').click(function (event) {
-			event.preventDefault();
-			$('#country-form').attr('action', "{{ delete_url }}");
-			$('#country-form').submit();
-		});
-		{% endif %}
+		
 	});
 
 	// alert($('#id_imagen_congreso-imagen').val());
@@ -394,9 +377,6 @@
 	// 		$('#id_congreso-imagen_prim').append('<option value="' + $('#id_imagen_congreso-imagen').val() + '" selected="selected">' + $('#id_imagen_congreso-imagen').val() + '</option>');
 
 
-	function InsertImagen() {
-
-
-	}
+	
 </script>
 {% endblock %}
