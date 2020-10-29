@@ -18,7 +18,7 @@ from .views.ponencia_view import (PonenciaListView, PonenciaCreateView,PonenciaP
                                    PonencicaUpdateView,PonenciaPonenteCreateView,PonenciaDeletedView)
 from .views.taller_view import (TalleresListView,TallerCreateView,TallerCategPagosListView,TallerCategPagosCreateView,
                                    TallerUpdateView,TallerPonenteListView,TallerPonenteCreateView,TallerDeletedView,AsignarTalleresListView,
-                                   AsignarTallerAddViews,GetPagos,AsignarTallerDeletedViews)
+                                   AsignarTallerAddViews,GetPagosT,AsignarTallerDeletedViews)
 from .views.ponente_view import (PonentesListView,PonentesCreateView,PonenteDeletedView)
 from .views.user_views import (UsuariosListView,UsuarioCreateView,UsuarioUpdateView,UsuarioDeletedView)
 from .views.bloque_views import (BloquesListView,BloqueCreateView,BloqueDeletedView,BloquePonenciasListView,BloqueTalleresListView,
@@ -111,7 +111,7 @@ urlpatterns = [
 
      path('get_bloques', GetBloques, name='Get_Bloque'),
      path('get_pago', GetPagos, name='Get_Pago'),
-     path('get_pago_taller', GetPagos, name='Get_Pago_taller'),
+     path('get_pago_taller', GetPagosT, name='Get_Pago_taller'),
      
      path('ponencias/congreso/<str:path>', CongressPonenciasListView.as_view(), name='Congres_ponencias'),
     

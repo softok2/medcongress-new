@@ -189,7 +189,7 @@ class AsignarTallerAddViews(validarUser,FormView):
     def form_valid(self, form):
         congress=form.save(commit=True)
         return super().form_valid(form)
-def GetPagos(request):
+def GetPagosT(request):
     if request.is_ajax():
         query = request.POST['taller_id']
         categoria=RelTalleresCategoriaPago.objects.filter(taller=Taller.objects.get(pk=query))
