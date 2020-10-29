@@ -14,9 +14,9 @@
 {% block content %}
 <section class="multiple-input-with-labels" id="multiple-input-with-labels">
 
-	
-	
-	
+
+
+
 	<div class="row">
 		<div class="col-12">
 			<div class="card">
@@ -51,7 +51,7 @@
 													{{form.titulo }}
 												</div>
 											</div>
-											
+
 											<div class="col-sm-4 ">
 												<div class="form-group">
 													<label
@@ -98,27 +98,40 @@
 														</span>{% endif %} </label>
 
 													{{form.published }}
-												</div
-											
+												</div>
 
-										</div>
-								
-										
-										<div class="form-actions">
-											<div class="text-right">
-												<button id="atras" type="button" class="btn btn-danger ">Cancelar
-													<i class="ft-x position-right"></i>
-												</button>
-												
-												<button id="save" type="submit" class="btn btn-primary">Guardar
-													<i class="ft-save position-right"></i>
-												</button>
-												
+
+											</div>
+											<div class="col-sm-6 ">
+												<div class="form-group" {%if con %}	style="display: none;" {%endif%}>
+													<label
+														for="{{form.congreso.id_for_label }}"><b>{{form.congreso.label }}</b>{% if form.congreso.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.congreso.errors }}
+														</span>{% endif %} </label>
+
+													{{form.congreso }}
+												</div>
+
+
+											</div>
+
+</div>
+											<div class="form-actions">
+												<div class="text-right">
+													<button id="atras" type="button" class="btn btn-danger ">Cancelar
+														<i class="ft-x position-right"></i>
+													</button>
+
+													<button id="save" type="submit" class="btn btn-primary">Guardar
+														<i class="ft-save position-right"></i>
+													</button>
+
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
 						</form>
 					</div>
 				</div>
@@ -131,59 +144,42 @@
 <script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
 
 
-<script type="text/javascript"
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCf3QdCwg8QDNOS3A2vSQ3DqW2mpJ_gSY8"></script>
-<script src="{% static 'MedCongressApp/js/lugar.js'%}"></script>
+
 
 <script type="text/javascript">
- $('#atras').click(function () {
-            location.href = "{% url 'MedCongressAdmin:congress_list' %}";
+	$('#atras').click(function () {
+			{%if con %}
+			location.href = "{% url 'MedCongressAdmin:Congres_bloques' con.path %}";
+			{%else%}
+			location.href = "{% url 'MedCongressAdmin:bloques_list' %}";
+			{%endif%}
         });
+		{%if con %}
+		$("#id_congreso option[value='{{con.id}}']").attr("selected",true);
+		{%endif%}
 	$(document).ready(function () {
 		$('#id_congreso-fecha_inicio').datetimepicker({
-        //language:  'fr',
-        weekStart: 1,
-        todayBtn:  1,
-		autoclose: 1,
-		todayHighlight: 1,
-		startView: 2,
-		forceParse: 0,
-        showMeridian: 1
-    });
+			//language:  'fr',
+			weekStart: 1,
+			todayBtn: 1,
+			autoclose: 1,
+			todayHighlight: 1,
+			startView: 2,
+			forceParse: 0,
+			showMeridian: 1
+		});
 
 
 
 
 		var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
-        $.ajaxSetup({
-            beforeSend: function (xhr, settings) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
-            }
-        });
-		FiltrarLugar('#id_ubicacion-direccion', '#id_ubicacion-longitud', '#id_ubicacion-latitud');
-		$('#id_ubicacion-direccion').keypress(function () {
-            $('#id_ubicacion-latitud').val('');
-            $('#id_ubicacion-longitud').val('');
-
-        });
-		{% if not delete_url %}
-		$('#save-plus').click(function (event) {
-			event.preventDefault();
-			$('#country-form').attr('action', "{% url 'MedCongressAdmin:country_add_plus' param='+' %}");
-			$('#country-form').submit();
+		$.ajaxSetup({
+			beforeSend: function (xhr, settings) {
+				xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			}
 		});
-		$('#save-edit').click(function (event) {
-			event.preventDefault();
-			$('#country-form').attr('action', "{% url 'MedCongressAdmin:country_add_plus' param='+->' %}");
-			$('#country-form').submit();
-		});
-		{% else %}
-		$('#delete').click(function (event) {
-			event.preventDefault();
-			$('#country-form').attr('action', "{{ delete_url }}");
-			$('#country-form').submit();
-		});
-		{% endif %}
+		
+		
 	});
 
 	// alert($('#id_imagen_congreso-imagen').val());
@@ -193,52 +189,6 @@
 	// 		$('#id_congreso-imagen_prim').append('<option value="' + $('#id_imagen_congreso-imagen').val() + '" selected="selected">' + $('#id_imagen_congreso-imagen').val() + '</option>');
 
 
-	function InsertImagen() {
-		
-
-$.ajax({
-	type: "POST",
-	url: "{% url 'MedCongressAdmin:Add_imagen'%}",
-	data: {
-		'imagen':$('#id_imagen_congreso-imagen').val(), // from form
-	},
-	success: function (data) {
-		if (data['succes']){
-			swal({
-	title: "Ha adicionado un evento a su carrito de compra",
-	text: "Valla al carrito para efectuar su compra",
-	icon: "success",
-	buttons: {
-		cancel: {
-			text: "ok!",
-			value: null,
-			visible: true,
-			className: "",
-			closeModal: false,
-		},
-	   
-		
-		
-	}
-})
-.then((isConfirm) => {
-	if (isConfirm) {
-		
-	}
-	else{
-		location.reload();
-	}
-
-});
-
-
-		
-		   
-	}
-		else
-		swal("No se puede", "Ya tiene este Evento en el carrito de compra.", "error"); 
-	}
-});
-}
+	
 </script>
 {% endblock %}

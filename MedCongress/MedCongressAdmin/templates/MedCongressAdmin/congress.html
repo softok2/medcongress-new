@@ -64,9 +64,9 @@
                                                 <th>T. de Congreso</th>
                                                 <th>Especialidad</th>
                                                 <th>Public.</th>
-                                                <th>Programa</th>
+                                                <th style="width:12%">Programa</th>
                                                 <th>Otros &nbsp;&nbsp;  </th>
-                                                <th style="width:50%">Operaciones</th>
+                                                <th >Operaciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -79,7 +79,7 @@
                                                 <td>{%if congres.published%}Si{%else%}No{%endif%}</td>
                                                 <td> 
                                                     <a id=""
-                                                    href="{%url 'MedCongressAdmin:Congres_ponencias' congres.path%}"
+                                                    href="{%url 'MedCongressAdmin:Congres_bloques' congres.path%}"
                                                     title="Bloques ">
                                                     <i class="ft ft-package" style="color:brown;font-size: 18px;"> </i>
                                                 </a> <a id=""

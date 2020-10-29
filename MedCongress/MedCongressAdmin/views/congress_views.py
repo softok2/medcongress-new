@@ -1,13 +1,16 @@
+import json
 from django import forms
 from django.contrib import messages
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.urls import reverse_lazy,reverse
 from django.utils.crypto import get_random_string
+from django.http import HttpResponse, HttpResponseRedirect,JsonResponse
 from django.views.generic import ListView,TemplateView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView,FormView
-from MedCongressApp.models import Congreso,Taller,Ponencia,RelCongresoCategoriaPago,ImagenCongreso,Ubicacion
-from MedCongressAdmin.forms.congres_forms import CongresoForms,PonenciaForms,CongresoCategPagoForm
+from MedCongressApp.models import (Congreso,Taller,Ponencia,RelCongresoCategoriaPago,ImagenCongreso,Ubicacion
+                                    ,Bloque,RelCongresoUser,RelCongresoCategoriaPago)
+from MedCongressAdmin.forms.congres_forms import CongresoForms,PonenciaForms,CongresoCategPagoForm,AsignarCongresoForms
 
 class validarUser(UserPassesTestMixin):
     permission_denied_message = 'No tiene permiso para acceder a la administracion'
@@ -101,6 +104,7 @@ class CongressTalleresListView(validarUser,TemplateView):
         context['congres']=congreso
         context['talleres']=Taller.objects.filter(congreso=congreso,published=True)
         return context
+
 
 ########## Vista de las Ponencias de un Congreso #############
 
@@ -219,4 +223,62 @@ class  CongressPonenteCreateView(validarUser,CreateView):
         ctx['cong'] = pon
         return ctx
 
+class CongressBloquesListView(validarUser,TemplateView):
+    template_name= 'MedCongressAdmin/congres_bloques.html'  
 
+    def get(self, request, **kwargs):
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        if congreso is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        return self.render_to_response(self.get_context_data())    
+    def get_context_data(self, **kwargs):
+        context = super(CongressBloquesListView, self).get_context_data(**kwargs)
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        context['congres']=congreso
+        context['bloques']=Bloque.objects.filter(congreso=congreso,published=True)
+        return context
+
+def GetBloques(request):
+    if request.is_ajax():
+        query = request.POST['congreso_id']
+        bloques=Bloque.objects.filter(congreso=Congreso.objects.get(pk=query))
+        results = []
+        for bloque in bloques:
+            results.append({'titulo':bloque.titulo,'id':bloque.pk})
+            data = json.dumps(results)
+    mimetype = "application/json"
+    return HttpResponse(data, mimetype)
+def GetPagos(request):
+    if request.is_ajax():
+        query = request.POST['congreso_id']
+        categoria=RelCongresoCategoriaPago.objects.filter(congreso=Congreso.objects.get(pk=query))
+       
+        results = []
+        for cat in categoria:
+            results.append({'nombre':cat.categoria.nombre,'id':cat.categoria.pk})
+            data = json.dumps(results)
+    mimetype = "application/json"
+    return HttpResponse(data, mimetype)   
+
+class AsignarCongressListView(validarUser,ListView):
+    model = RelCongresoUser
+    context_object_name = 'congress'
+    template_name = 'MedCongressAdmin/asignar_congreso.html'
+
+
+class AsignarCongressAddViews(validarUser,FormView):
+    form_class = AsignarCongresoForms
+    success_url = reverse_lazy('MedCongressAdmin:asig_congress_list')
+    template_name = 'MedCongressAdmin/asig_congress_form.html'
+
+    def form_valid(self, form):
+        congress=form.save(commit=True)
+        return super().form_valid(form)
+
+class AsignarCongressDeletedViews(validarUser,DeleteView):
+    model = RelCongresoUser
+    success_url = reverse_lazy('MedCongressAdmin:asig_congress_list')
+    
+
+
+    

@@ -33,7 +33,7 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="row">
 		<div class="col-12">
 			<div class="card">
@@ -64,7 +64,7 @@
 														<span
 															style="font-size: 15px; color: red;">{{ form.taller.titulo.errors }}
 														</span>{% endif %} </label>
-	
+
 													{{form.taller.titulo }}
 												</div>
 											</div>
@@ -75,7 +75,7 @@
 														<span
 															style="font-size: 15px; color: red;">{{ form.taller.fecha_inicio.errors }}
 														</span>{% endif %} </label>
-	
+
 													{{form.taller.fecha_inicio}}
 												</div>
 											</div>
@@ -88,13 +88,13 @@
 														<span
 															style="font-size: 15px; color: red;">{{ form.taller.detalle.errors }}
 														</span>{% endif %} </label>
-	
+
 													{{form.taller.detalle }}
 												</div>
 											</div>
 										</div>
 										<div class="row">
-	
+
 											<div class="col-sm-6 ">
 												<div class="form-group">
 													<label
@@ -102,41 +102,46 @@
 														<span
 															style="font-size: 15px; color: red;">{{ form.taller.duracion.errors }}
 														</span>{% endif %} </label>
-	
+
 													{{form.taller.duracion }}
 												</div>
 											</div>
-											
+
 										</div>
 										<div class="row">
 											<div class="col-sm-6 ">
 												<div class="form-group">
-													{%if imagen_seg_url%}	
-												<label ><b>Imagen Actual </b> </label>		
-												<figure class="col-lg-3 col-md-6 col-12" itemprop="associatedMedia" itemscope="" ></figure>
-                                <a href="{{imagen_seg_url}}" itemprop="contentUrl" data-size="480x360">
-                                    <img class="img-thumbnail img-fluid" src="{{imagen_seg_url}}" itemprop="thumbnail" alt="Image description">
-                                </a> 
-                                
-                              </figure>
+													{%if imagen_seg_url%}
+													<label><b>Imagen Actual </b> </label>
+													<figure class="col-lg-3 col-md-6 col-12" itemprop="associatedMedia"
+														itemscope=""></figure>
+													<a href="{{imagen_seg_url}}" itemprop="contentUrl"
+														data-size="480x360">
+														<img class="img-thumbnail img-fluid" src="{{imagen_seg_url}}"
+															itemprop="thumbnail" alt="Image description">
+													</a>
 
-												<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva Imagen</b> </label>
-												<input type="file" name="ponencia-imagen" accept="image/*" class=" form-control " id="id_ponencia-imagen">
-												{% else%}
+													</figure>
+
+													<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva
+															Imagen</b> </label>
+													<input type="file" name="ponencia-imagen" accept="image/*"
+														class=" form-control " id="id_ponencia-imagen">
+													{% else%}
 
 													<label
 														for="{{form.taller.imagen.id_for_label }}"><b>{{form.taller.imagen.label }}</b>{% if form.taller.imagen.errors %}
 														<span
 															style="font-size: 15px; color: red;">{{ form.taller.imagen.errors }}
 														</span>{% endif %} </label>
-	
+
 													{{form.taller.imagen }}
 													{%endif%}
 												</div>
 											</div>
-	
-	
-	
+
+
+
 										</div>
 										<div class="row">
 											<div class="col-sm-6 ">
@@ -151,20 +156,20 @@
 											</div>
 											<div class="col-ms-1">
 												<div class="form-group">
-	
+
 													<label class="mapa">Ver Mapa</label>
 													<!-- <a onclick="VerMapa()" type="link"  style="display: block;">  <i class="" style="font-size: 43px;"></i> </a> -->
 													<button type="button" class="btn btn-link" data-toggle="modal"
 														data-target="#my" style="display: block;">
 														<span><i class="ft ft-map-pin"
 																style="font-size: 30px;display: block;margin-top: -13px;"></i></span>
-	
+
 													</button>
-	
+
 												</div>
-	
+
 											</div>
-											
+
 											<div class="col-sm-3 " style="display: none;">
 												<div class="form-group">
 													<label
@@ -172,7 +177,7 @@
 														<span
 															style="font-size: 15px; color: red;">{{ form.ubicacion.longitud.errors }}
 														</span>{% endif %}</label>
-	
+
 													{{form.ubicacion.longitud }}
 												</div>
 											</div>
@@ -183,26 +188,51 @@
 														<span
 															style="font-size: 15px; color: red;">{{ form.ubicacion.latitud.errors }}
 														</span>{% endif %} </label>
-	
+
 													{{form.ubicacion.latitud }}
 												</div>
 											</div>
 											<div class="col-sm-3 ">
-												<div class="form-group" {%if con %}	style="display: none;" {%endif%}>
+												<div class="form-group" {%if con %} style="display: none;" {%endif%}>
 													<label
 														for="{{form.taller.congreso.id_for_label }}"><b>{{form.taller.congreso.label }}</b>{% if form.taller.congreso.errors %}
 														<span
 															style="font-size: 15px; color: red;">{{ form.taller.congreso.errors }}
 														</span>{% endif %} </label>
-	
+
 													{{form.taller.congreso }}
 												</div>
 											</div>
+											<div class="col-sm-3 ">
+												<div class="form-group" {%if bloque %} style="display: none;" {%endif%}>
+
+
+													<label
+														for="{{form.taller.bloque.id_for_label }}"><b>{{form.taller.bloque.label }}</b>{% if form.taller.bloque.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.taller.bloque.errors }}
+														</span>{% endif %} </label>
+
+													{%if blo %}
+													<select name="taller-bloque" class="form-control"
+														id="id_taller-bloque">
+														<option value="" selected="">---------</option>
+														{%for b in blo%}
+														<option value="{{b.id}}">{{b.titulo}}</option>
+														{%endfor%}
+
+													</select>
+													{%else%}
+													{{form.taller.bloque }}
+													{% endif %}
+
+												</div>
+											</div>
 										</div>
-										
-	
-	
-	
+
+
+
+
 										<div class="row">
 											<div class="col-sm-3 ">
 												<div class="form-group">
@@ -211,28 +241,28 @@
 														<span
 															style="font-size: 15px; color: red;">{{ form.taller.published.errors }}
 														</span>{% endif %} </label>
-	
+
 													{{form.taller.published }}
 												</div>
 											</div>
 										</div>
-	
+
 										<div class="form-actions">
-											
-												<button id="save" type="submit" class="btn btn-primary">Guardar
-													<i class="ft-save position-right"></i>
-												</button>
-												
-											</div>
+
+											<button id="save" type="submit" class="btn btn-primary">Guardar
+												<i class="ft-save position-right"></i>
+											</button>
+
 										</div>
 									</div>
 								</div>
 							</div>
-						</form>
 					</div>
+					</form>
 				</div>
 			</div>
 		</div>
+	</div>
 </section>
 {% endblock %}
 {% block scripts %}
@@ -247,34 +277,96 @@
 
 <script type="text/javascript">
 	$(document).ready(function () {
+
+
+		$('#id_taller-congreso').change(function () {
+				$('#id_taller-bloque').empty();
+				$('#id_taller-bloque').append($("<option></option").attr('value', '').text('----------'));
+			if ($('#id_taller-congreso').val()) {
+			
+				$.ajax({
+					type: "POST",
+					url: "{% url 'MedCongressAdmin:Get_Bloque' %}",
+					data: {
+						'congreso_id': $('#id_taller-congreso').val(), // from form
+					},
+					success: function (data) {
+
+						for (var i = 0; i < data.length; i++) {
+
+							$('#id_taller-bloque').append($("<option></option").attr('value', data[i].id).text(data[i].titulo))
+						}
+						console.log(data);
+					}
+				});
+
+
+			}
+
+
+
+		});
+		$('#id_taller-congreso').ready(function () {
+				$('#id_taller-bloque').empty();
+				$('#id_taller-bloque').append($("<option></option").attr('value', '').text('----------'));
+			if ($('#id_taller-congreso').val()) {
+			
+				$.ajax({
+					type: "POST",
+					url: "{% url 'MedCongressAdmin:Get_Bloque' %}",
+					data: {
+						'congreso_id': $('#id_taller-congreso').val(), // from form
+					},
+					success: function (data) {
+
+						for (var i = 0; i < data.length; i++) {
+
+							$('#id_taller-bloque').append($("<option></option").attr('value', data[i].id).text(data[i].titulo))
+						}
+						console.log(data);
+					}
+				});
+
+
+			}
+
+
+
+		});
+
+
+
 		{%if con %}
-		$("#id_taller-congreso option[value='{{con.id}}']").attr("selected",true);
-		{%endif%}
+		$("#id_taller-congreso option[value='{{con.id}}']").attr("selected", true);
+		{% endif %}
+		{%if bloque %}
+		$("#id_taller-bloque option[value='{{bloque.id}}']").attr("selected", true);
+		{% endif %}
 		$('#id_taller-fecha_inicio').datetimepicker({
-        //language:  'fr',
-        weekStart: 1,
-        todayBtn:  1,
-		autoclose: 1,
-		todayHighlight: 1,
-		startView: 2,
-		forceParse: 0,
-        showMeridian: 1
-    });
+			//language:  'fr',
+			weekStart: 1,
+			todayBtn: 1,
+			autoclose: 1,
+			todayHighlight: 1,
+			startView: 2,
+			forceParse: 0,
+			showMeridian: 1
+		});
 
 
 
 		var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
-        $.ajaxSetup({
-            beforeSend: function (xhr, settings) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
-            }
-        });
+		$.ajaxSetup({
+			beforeSend: function (xhr, settings) {
+				xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			}
+		});
 		FiltrarLugar('#id_ubicacion-direccion', '#id_ubicacion-longitud', '#id_ubicacion-latitud');
 		$('#id_ubicacion-direccion').keypress(function () {
-            $('#id_ubicacion-latitud').val('');
-            $('#id_ubicacion-longitud').val('');
+			$('#id_ubicacion-latitud').val('');
+			$('#id_ubicacion-longitud').val('');
 
-        });
+		});
 		{% if not delete_url %}
 		$('#save-plus').click(function (event) {
 			event.preventDefault();
@@ -303,51 +395,8 @@
 
 
 	function InsertImagen() {
-		
-
-$.ajax({
-	type: "POST",
-	url: "{% url 'MedCongressAdmin:Add_imagen'%}",
-	data: {
-		'imagen':$('#id_imagen_congreso-imagen').val(), // from form
-	},
-	success: function (data) {
-		if (data['succes']){
-			swal({
-	title: "Ha adicionado un evento a su carrito de compra",
-	text: "Valla al carrito para efectuar su compra",
-	icon: "success",
-	buttons: {
-		cancel: {
-			text: "ok!",
-			value: null,
-			visible: true,
-			className: "",
-			closeModal: false,
-		},
-	   
-		
-		
-	}
-})
-.then((isConfirm) => {
-	if (isConfirm) {
-		
-	}
-	else{
-		location.reload();
-	}
-
-});
 
 
-		
-		   
 	}
-		else
-		swal("No se puede", "Ya tiene este Evento en el carrito de compra.", "error"); 
-	}
-});
-}
 </script>
 {% endblock %}

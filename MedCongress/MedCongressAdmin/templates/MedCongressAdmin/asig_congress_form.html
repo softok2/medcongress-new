@@ -1,0 +1,132 @@
+{% extends 'MedCongressAdmin/base.html' %}
+{% block title %}MedCongressAdmin | Asignar Congreso{% endblock %}
+{% load static %}
+{% block styles %}
+{% endblock %}
+{% block content %}
+<section class="multiple-input-with-labels" id="multiple-input-with-labels">
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-header">
+					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
+						Asignar Congreso a un Usuario </h1>
+						<h3>(Comprarlo)</h3>
+					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
+					<div class="heading-elements">
+						<ul class="list-inline mb-0">
+							<li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+							<li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+							<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+							<li><a data-action="close"><i class="ft-x"></i></a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="card-content collapse show">
+					<div class="card-body">
+						<form id="country-form" method="POST">
+							{% csrf_token %}
+							<div class="form-body">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="row">
+										<div class="col-sm-4 ">
+											<div class="form-group">
+												<label
+													for="{{form.user.id_for_label }}"><b>{{form.user.label }}</b>{% if form.user.errors %}
+													<span style="font-size: 15px; color: red;">{{ form.user.errors }}
+													</span>{% endif %} </label>
+
+												{{form.user }}
+											</div>
+										</div>
+										<div class="col-sm-2">
+											<div class="form-group">
+												<label
+													for="{{form.congreso.id_for_label }}"><b>{{form.congreso.label }}</b>{% if form.congreso.errors %}
+													<span style="font-size: 15px; color: red;">{{ form.congreso.errors }}
+													</span>{% endif %} </label>
+
+												{{form.congreso }}
+											</div>
+										</div>
+										
+										<div class="col-sm-2 ">
+											<div class="form-group">
+												<label
+													for="{{form.categoria_pago.id_for_label }}"><b>{{form.categoria_pago.label }}</b>{% if form.categoria_pago.errors %}
+													<span style="font-size: 15px; color: red;">{{ form.categoria_pago.errors }}
+													</span>{% endif %} </label>
+
+												{{form.categoria_pago }}
+											</div>
+										</div>
+										<div class="col-sm-2 ">
+											<div class="form-group">
+												<label
+													for="{{form.is_pagado.id_for_label }}"><b>{{form.is_pagado.label }}</b>{% if form.is_pagado.errors %}
+													<span style="font-size: 15px; color: red;">{{ form.is_pagado.errors }}
+													</span>{% endif %} </label>
+											
+												{{form.is_pagado }}
+											</div>
+										</div>
+									</div>
+										<div class="form-actions">
+											<div class="text-right">
+												
+												<button id="save" type="submit" class="btn btn-primary">Guardar
+													<i class="ft-save position-right"></i>
+												</button>
+												
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+	$(document).ready(function () {
+		var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+		$.ajaxSetup({
+			beforeSend: function (xhr, settings) {
+				xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			}
+		});
+		$('#id_congreso').change(function () {
+				$('#id_categoria_pago').empty();
+				$('#id_categoria_pago').append($("<option></option").attr('value', '').text('----------'));
+			if ($('#id_congreso').val()) {
+			
+				$.ajax({
+					type: "POST",
+					url: "{% url 'MedCongressAdmin:Get_Pago' %}",
+					data: {
+						'congreso_id': $('#id_congreso').val(), // from form
+					},
+					success: function (data) {
+
+						for (var i = 0; i < data.length; i++) {
+
+							$('#id_categoria_pago').append($("<option></option").attr('value', data[i].id).text(data[i].nombre))
+						}
+						console.log(data);
+					}
+				});
+
+
+			}
+
+
+
+		});
+	});
+</script>
+{% endblock %}

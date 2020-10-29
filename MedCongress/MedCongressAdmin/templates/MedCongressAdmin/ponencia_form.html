@@ -129,7 +129,7 @@
 														<span
 															style="font-size: 15px; color: red;">{{ form.ponencia.titulo.errors }}
 														</span>{% endif %} </label>
-	
+
 													{{form.ponencia.titulo }}
 												</div>
 											</div>
@@ -140,7 +140,7 @@
 														<span
 															style="font-size: 15px; color: red;">{{ form.ponencia.fecha_inicio.errors }}
 														</span>{% endif %} </label>
-	
+
 													{{form.ponencia.fecha_inicio}}
 												</div>
 											</div>
@@ -153,13 +153,13 @@
 														<span
 															style="font-size: 15px; color: red;">{{ form.ponencia.detalle.errors }}
 														</span>{% endif %} </label>
-	
+
 													{{form.ponencia.detalle }}
 												</div>
 											</div>
 										</div>
 										<div class="row">
-	
+
 											<div class="col-sm-6 ">
 												<div class="form-group">
 													<label
@@ -167,7 +167,7 @@
 														<span
 															style="font-size: 15px; color: red;">{{ form.ponencia.duracion.errors }}
 														</span>{% endif %} </label>
-	
+
 													{{form.ponencia.duracion }}
 												</div>
 											</div>
@@ -178,7 +178,7 @@
 														<span
 															style="font-size: 15px; color: red;">{{ form.ponencia.cod_video.errors }}
 														</span>{% endif %} </label>
-	
+
 													{{form.ponencia.cod_video }}
 												</div>
 											</div>
@@ -187,18 +187,23 @@
 											<div class="col-sm-6 ">
 												<div class="form-group">
 
-													{%if imagen_seg_url%}	
-												<label ><b>Imagen Actual </b> </label>		
-												<figure class="col-lg-3 col-md-6 col-12" itemprop="associatedMedia" itemscope="" ></figure>
-                                <a href="{{imagen_seg_url}}" itemprop="contentUrl" data-size="480x360">
-                                    <img class="img-thumbnail img-fluid" src="{{imagen_seg_url}}" itemprop="thumbnail" alt="Image description">
-                                </a> 
-                                
-                              </figure>
+													{%if imagen_seg_url%}
+													<label><b>Imagen Actual </b> </label>
+													<figure class="col-lg-3 col-md-6 col-12" itemprop="associatedMedia"
+														itemscope=""></figure>
+													<a href="{{imagen_seg_url}}" itemprop="contentUrl"
+														data-size="480x360">
+														<img class="img-thumbnail img-fluid" src="{{imagen_seg_url}}"
+															itemprop="thumbnail" alt="Image description">
+													</a>
 
-												<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva Imagen</b> </label>
-												<input type="file" name="ponencia-imagen" accept="image/*" class=" form-control " id="id_ponencia-imagen">
-												{% else%}
+													</figure>
+
+													<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva
+															Imagen</b> </label>
+													<input type="file" name="ponencia-imagen" accept="image/*"
+														class=" form-control " id="id_ponencia-imagen">
+													{% else%}
 
 
 													<label
@@ -206,14 +211,14 @@
 														<span
 															style="font-size: 15px; color: red;">{{ form.ponencia.imagen.errors }}
 														</span>{% endif %} </label>
-	
+
 													{{form.ponencia.imagen }}
 													{%endif%}
 												</div>
 											</div>
-	
-	
-	
+
+
+
 										</div>
 										<div class="row">
 											<div class="col-sm-6 ">
@@ -228,20 +233,20 @@
 											</div>
 											<div class="col-ms-1">
 												<div class="form-group">
-	
+
 													<label class="mapa">Ver Mapa</label>
 													<!-- <a onclick="VerMapa()" type="link"  style="display: block;">  <i class="" style="font-size: 43px;"></i> </a> -->
 													<button type="button" class="btn btn-link" data-toggle="modal"
 														data-target="#my" style="display: block;">
 														<span><i class="ft ft-map-pin"
 																style="font-size: 30px;display: block;margin-top: -13px;"></i></span>
-	
+
 													</button>
-	
+
 												</div>
-	
+
 											</div>
-											
+
 											<div class="col-sm-3 " style="display: none;">
 												<div class="form-group">
 													<label
@@ -249,7 +254,7 @@
 														<span
 															style="font-size: 15px; color: red;">{{ form.ubicacion.longitud.errors }}
 														</span>{% endif %}</label>
-	
+
 													{{form.ubicacion.longitud }}
 												</div>
 											</div>
@@ -260,28 +265,52 @@
 														<span
 															style="font-size: 15px; color: red;">{{ form.ubicacion.latitud.errors }}
 														</span>{% endif %} </label>
-	
+
 													{{form.ubicacion.latitud }}
 												</div>
 											</div>
 											<div class="col-sm-3 ">
-												<div class="form-group" {%if con %}	style="display: none;" {%endif%}>
-													
-													
+												<div class="form-group" {%if con %} style="display: none;" {%endif%}>
+
+
 													<label
 														for="{{form.ponencia.congreso.id_for_label }}"><b>{{form.ponencia.congreso.label }}</b>{% if form.ponencia.congreso.errors %}
 														<span
 															style="font-size: 15px; color: red;">{{ form.ponencia.congreso.errors }}
 														</span>{% endif %} </label>
-	
+
 													{{form.ponencia.congreso }}
 												</div>
 											</div>
+											<div class="col-sm-3 ">
+												<div class="form-group" {%if bloque %} style="display: none;" {%endif%}>
+
+
+													<label
+														for="{{form.ponencia.bloque.id_for_label }}"><b>{{form.ponencia.bloque.label }}</b>{% if form.ponencia.bloque.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.ponencia.bloque.errors }}
+														</span>{% endif %} </label>
+													
+														{%if blo %}
+														<select name="ponencia-bloque" class="form-control" id="id_ponencia-bloque">
+															<option value="" selected="">---------</option>
+														  {%for b in blo%}
+															<option value="{{b.id}}">{{b.titulo}}</option>
+														  {%endfor%}
+														  
+														  </select>
+														{%else%}
+													{{form.ponencia.bloque }}
+													{% endif %}
+
+												</div>
+											</div>
 										</div>
-										
-	
-	
-	
+
+
+
+
 										<div class="row">
 											<div class="col-sm-3 ">
 												<div class="form-group">
@@ -290,12 +319,13 @@
 														<span
 															style="font-size: 15px; color: red;">{{ form.ponencia.published.errors }}
 														</span>{% endif %} </label>
-	
+														
 													{{form.ponencia.published }}
+												
 												</div>
 											</div>
 										</div>
-	
+
 										<div class="form-actions">
 											<div class="text-right">
 												<button id="atras" type="button" class="btn btn-danger ">Cancelar
@@ -305,17 +335,17 @@
 													<i class="ft-save position-right"></i>
 												</button>
 											</div>
-											
-											</div>
+
 										</div>
 									</div>
 								</div>
 							</div>
-						</form>
 					</div>
+					</form>
 				</div>
 			</div>
 		</div>
+	</div>
 </section>
 {% endblock %}
 {% block scripts %}
@@ -330,42 +360,114 @@
 
 <script type="text/javascript">
 	$(document).ready(function () {
+		$('#id_ponencia-congreso').ready(function () {
+				$('#id_ponencia-bloque').empty();
+				$('#id_ponencia-bloque').append($("<option></option").attr('value', '').text('----------'));
+			if ($('#id_ponencia-congreso').val()) {
+			
+				$.ajax({
+					type: "POST",
+					url: "{% url 'MedCongressAdmin:Get_Bloque' %}",
+					data: {
+						'congreso_id': $('#id_ponencia-congreso').val(), // from form
+					},
+					success: function (data) {
+
+						for (var i = 0; i < data.length; i++) {
+
+							$('#id_ponencia-bloque').append($("<option></option").attr('value', data[i].id).text(data[i].titulo))
+						}
+						console.log(data);
+					}
+				});
+
+
+			}
+
+
+
+		});
+		$('#id_ponencia-congreso').change(function () {
+				$('#id_ponencia-bloque').empty();
+				$('#id_ponencia-bloque').append($("<option></option").attr('value', '').text('----------'));
+			if ($('#id_ponencia-congreso').val()) {
+			
+				$.ajax({
+					type: "POST",
+					url: "{% url 'MedCongressAdmin:Get_Bloque' %}",
+					data: {
+						'congreso_id': $('#id_ponencia-congreso').val(), // from form
+					},
+					success: function (data) {
+
+						for (var i = 0; i < data.length; i++) {
+
+							$('#id_ponencia-bloque').append($("<option></option").attr('value', data[i].id).text(data[i].titulo))
+						}
+						console.log(data);
+					}
+				});
+
+
+			}
+
+
+
+		});
+
+	
+			
+		
+
+
+
+
 		$('#atras').click(function () {
-			{%if con %}
-			location.href = "{% url 'MedCongressAdmin:Congres_ponencias' con.path %}";
+			{%if con %} {
+				{%if bloque %}
+				location.href = "{% url 'MedCongressAdmin:Bloque_ponencias' bloque.path %}";
+				{%else%}
+				location.href = "{% url 'MedCongressAdmin:Congres_ponencias' con.path %}";
+				{% endif %}
+			}
+
 			{%else%}
 			location.href = "{% url 'MedCongressAdmin:ponencias_list' %}";
-			{%endif%}
-        });
+			{% endif %}
+		});
 		{%if con %}
-		$("#id_ponencia-congreso option[value='{{con.id}}']").attr("selected",true);
-		{%endif%}
+		$("#id_ponencia-congreso option[value='{{con.id}}']").attr("selected", true);
+		
+		{% endif %}
+		{%if bloque %}
+		$("#id_ponencia-bloque option[value='{{bloque.id}}']").attr("selected", true);
+		{% endif %}
 
 		$('#id_ponencia-fecha_inicio').datetimepicker({
-        //language:  'fr',
-        weekStart: 1,
-        todayBtn:  1,
-		autoclose: 1,
-		todayHighlight: 1,
-		startView: 2,
-		forceParse: 0,
-        showMeridian: 1
-    });
+			language: 'es',
+			weekStart: 1,
+			todayBtn: 1,
+			autoclose: 1,
+			todayHighlight: 1,
+			startView: 2,
+			forceParse: 0,
+			showMeridian: 1
+		});
 
 
 
 		var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
-        $.ajaxSetup({
-            beforeSend: function (xhr, settings) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
-            }
-        });
+		$.ajaxSetup({
+			beforeSend: function (xhr, settings) {
+				xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			}
+		});
 		FiltrarLugar('#id_ubicacion-direccion', '#id_ubicacion-longitud', '#id_ubicacion-latitud');
 		$('#id_ubicacion-direccion').keypress(function () {
-            $('#id_ubicacion-latitud').val('');
-            $('#id_ubicacion-longitud').val('');
+			$('#id_ubicacion-latitud').val('');
+			$('#id_ubicacion-longitud').val('');
 
-        });
+		});
 		{% if not delete_url %}
 		$('#save-plus').click(function (event) {
 			event.preventDefault();
@@ -393,52 +495,10 @@
 	// 		$('#id_congreso-imagen_prim').append('<option value="' + $('#id_imagen_congreso-imagen').val() + '" selected="selected">' + $('#id_imagen_congreso-imagen').val() + '</option>');
 
 
-	function InsertImagen() {
-		
 
-$.ajax({
-	type: "POST",
-	url: "{% url 'MedCongressAdmin:Add_imagen'%}",
-	data: {
-		'imagen':$('#id_imagen_congreso-imagen').val(), // from form
-	},
-	success: function (data) {
-		if (data['succes']){
-			swal({
-	title: "Ha adicionado un evento a su carrito de compra",
-	text: "Valla al carrito para efectuar su compra",
-	icon: "success",
-	buttons: {
-		cancel: {
-			text: "ok!",
-			value: null,
-			visible: true,
-			className: "",
-			closeModal: false,
-		},
-	   
-		
-		
-	}
-})
-.then((isConfirm) => {
-	if (isConfirm) {
-		
-	}
-	else{
-		location.reload();
-	}
-
-});
 
 
 		
-		   
-	}
-		else
-		swal("No se puede", "Ya tiene este Evento en el carrito de compra.", "error"); 
-	}
-});
-}
+
 </script>
 {% endblock %}

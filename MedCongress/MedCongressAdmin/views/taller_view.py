@@ -1,13 +1,15 @@
+import json
 from django import forms
 from django.contrib import messages
-from django.http import HttpResponseBadRequest, HttpResponseRedirect
+from django.http import HttpResponseBadRequest, HttpResponseRedirect,HttpResponse
 from django.urls import reverse_lazy,reverse
 from django.utils.crypto import get_random_string
 from django.views.generic import ListView,TemplateView,FormView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from MedCongressApp.models import Taller,RelTalleresCategoriaPago,Congreso,Ubicacion,RelTallerPonente
-from MedCongressAdmin.forms.congres_forms import TallerForms,TallerCategPagoForm,PonenteTallerForm
+from MedCongressApp.models import (Taller,RelTalleresCategoriaPago,Congreso,Ubicacion,RelTallerPonente,Bloque,
+                                    RelTallerUser)
+from MedCongressAdmin.forms.congres_forms import TallerForms,TallerCategPagoForm,PonenteTallerForm,AsignarTallerForms
 
 class validarUser(UserPassesTestMixin):
     permission_denied_message = 'No tiene permiso para acceder a la administracion'
@@ -52,8 +54,12 @@ class  TallerCreateView(validarUser,FormView):
         context = super(TallerCreateView, self).get_context_data(**kwargs)
         if self.kwargs.get('pk'):
             context['con']=Congreso.objects.get(pk=self.kwargs.get('pk'))
+            context['blo']=Bloque.objects.filter(congreso=context['con'])
+        if self.kwargs.get('pk_block'):
+            context['bloque']=Bloque.objects.get(pk=self.kwargs.get('pk_block'))
+            context['con']=context['bloque'].congreso
+            context['blo']= None
         return context 
-    
     def get_success_url(self):
         if self.kwargs.get('pk'):
             congreso=Congreso.objects.get(pk=self.kwargs.get('pk'))
@@ -169,4 +175,36 @@ class TallerDeletedView(validarUser,DeleteView):
     model = Taller
     success_url = reverse_lazy('MedCongressAdmin:talleres_list')
 
+class AsignarTalleresListView(validarUser,ListView):
+    model = RelTallerUser
+    context_object_name = 'talleres'
+    template_name = 'MedCongressAdmin/asignar_taller.html'
 
+
+class AsignarTallerAddViews(validarUser,FormView):
+    form_class = AsignarTallerForms
+    success_url = reverse_lazy('MedCongressAdmin:asig_talleres_list')
+    template_name = 'MedCongressAdmin/asig_taller_form.html'
+
+    def form_valid(self, form):
+        congress=form.save(commit=True)
+        return super().form_valid(form)
+def GetPagos(request):
+    if request.is_ajax():
+        query = request.POST['taller_id']
+        categoria=RelTalleresCategoriaPago.objects.filter(taller=Taller.objects.get(pk=query))
+        
+        results = []
+        for cat in categoria:
+            results.append({'nombre':cat.categoria.nombre,'id':cat.categoria.pk})
+            data = json.dumps(results)
+    mimetype = "application/json"
+    return HttpResponse(data, mimetype) 
+
+class AsignarTallerDeletedViews(validarUser,DeleteView):
+    model = RelTallerUser
+    success_url = reverse_lazy('MedCongressAdmin:asig_talleres_list')
+
+   
+   
+    

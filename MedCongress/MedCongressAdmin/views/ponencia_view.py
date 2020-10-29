@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView,TemplateView,FormView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from MedCongressApp.models import Ponencia,RelPonenciaPonente,Ubicacion,Congreso
+from MedCongressApp.models import Ponencia,RelPonenciaPonente,Ubicacion,Congreso,Bloque
 from MedCongressAdmin.forms.congres_forms import PonenciaForms,PonentePonenciaForm
 from django.utils.crypto import get_random_string
 class validarUser(UserPassesTestMixin):
@@ -28,7 +28,6 @@ class  PonenciaCreateView(validarUser,FormView):
     form_class = PonenciaForms
     success_url = reverse_lazy('MedCongressAdmin:ponencias_list')
     template_name = 'MedCongressAdmin/ponencia_form.html'
-
     def form_valid(self, form):
         
         ponencia=form['ponencia'].save(commit=False)
@@ -50,16 +49,23 @@ class  PonenciaCreateView(validarUser,FormView):
         
         context = super(PonenciaCreateView, self).get_context_data(**kwargs)
         if self.kwargs.get('pk'):
-            
             context['con']=Congreso.objects.get(pk=self.kwargs.get('pk'))
+            context['blo']=Bloque.objects.filter(congreso=context['con'])
+        if self.kwargs.get('pk_block'):
+            context['bloque']=Bloque.objects.get(pk=self.kwargs.get('pk_block'))
+            context['con']=context['bloque'].congreso
+            context['blo']= None
         return context 
     
     def get_success_url(self):
         if self.kwargs.get('pk'):
             congreso=Congreso.objects.get(pk=self.kwargs.get('pk'))
             self.success_url =  reverse_lazy('MedCongressAdmin:Congres_ponencias',kwargs={'path': congreso.path} )
+        if self.kwargs.get('pk_block'):
+            block=Bloque.objects.get(pk=self.kwargs.get('pk_block'))
+            self.success_url =  reverse_lazy('MedCongressAdmin:Bloque_ponencias',kwargs={'path': block.path} )
         return self.success_url   
-
+ 
 ########## Vista de las Categorias de Pago de un Congreso #############
 
 class PonenciaPonenteListView(TemplateView):

@@ -2,7 +2,7 @@ from django import forms
 from  MedCongressApp.models import (Congreso,Ubicacion,ImagenCongreso,TipoCongreso,Ponencia,Taller,
                                     Ponente,PerfilUsuario,RelPonenciaPonente,RelCongresoCategoriaPago,
                                     CategoriaPagoCongreso,RelTalleresCategoriaPago,Genero,CategoriaUsuario,
-                                    RelTallerPonente,Bloque,DatosIniciales)
+                                    RelTallerPonente,Bloque,DatosIniciales,RelCongresoUser,RelTallerUser)
                     
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
@@ -137,14 +137,15 @@ class PonenciaForm(forms.ModelForm):
     published=forms.BooleanField(label='Publicado',required=False)
     class Meta:
         model=Ponencia
-        fields=['titulo','duracion','detalle','fecha_inicio','imagen','published','cod_video','congreso']
+        fields=['titulo','duracion','detalle','fecha_inicio','imagen','published','cod_video','congreso','bloque']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
 
         self.fields['titulo'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['duracion'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['congreso'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['congreso'].widget.attrs.update({'class': 'form-control'})
+        self.fields['bloque'].widget.attrs.update({'class': 'form-control'})  
         self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control'})   
         self.fields['published'].widget.attrs.update({'class': 'form-control'})   
         self.fields['cod_video'].widget.attrs.update({'class': 'form-control'}) 
@@ -157,7 +158,7 @@ class TallerForm(forms.ModelForm):
     published=forms.BooleanField(label='Publicado',required=False)
     class Meta:
         model=Taller
-        fields=['titulo','duracion','fecha_inicio','imagen','published','congreso','detalle']
+        fields=['titulo','duracion','fecha_inicio','imagen','published','congreso','detalle','bloque']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
@@ -165,6 +166,7 @@ class TallerForm(forms.ModelForm):
         self.fields['titulo'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['duracion'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['congreso'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['bloque'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control'})   
         self.fields['published'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['detalle'].widget.attrs.update({'class': 'form-control','rows':'3'})   
@@ -365,6 +367,39 @@ class OtrosForm(forms.ModelForm):
         self.fields['afiliados'].widget.attrs.update({'class': 'form-control'})  
         self.fields['talleres'].widget.attrs.update({'class': 'form-control'})   
         self.fields['aviso_privacidad'].widget.attrs.update({'class': 'form-control ckeditor'})  
-        
+
+
+class AsignarCongresoForms(forms.ModelForm):
+    user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Usuario')
+    categoria_pago=forms.ModelChoiceField(queryset=CategoriaPagoCongreso.objects.all(),label='Categoría de Pago')
+    is_pagado=forms.BooleanField(label='Se Pagó el Congreso')
+    class Meta:
+        model=RelCongresoUser
+        fields=['user','congreso','categoria_pago','is_pagado']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+
+        self.fields['user'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['congreso'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['categoria_pago'].widget.attrs.update({'class': 'form-control','rows':'3'})   
+        self.fields['is_pagado'].widget.attrs.update({'class': 'form-control'})   
+         
+class AsignarTallerForms(forms.ModelForm):
+    user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Usuario')
+    categoria_pago=forms.ModelChoiceField(queryset=CategoriaPagoCongreso.objects.all(),label='Categoría de Pago')
+    is_pagado=forms.BooleanField(label='Se Pagó el Congreso')
+    class Meta:
+        model=RelTallerUser
+        fields=['user','taller','categoria_pago','is_pagado']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+
+        self.fields['user'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['taller'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['categoria_pago'].widget.attrs.update({'class': 'form-control','rows':'3'})   
+        self.fields['is_pagado'].widget.attrs.update({'class': 'form-control'})   
+          
 
      

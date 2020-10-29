@@ -276,7 +276,7 @@ class CategoriaPonente(models.Model):
 ##### Tabla  Ponente  #####
 
 class Ponente(models.Model):
-    user = models.OneToOneField(PerfilUsuario, on_delete=models.DO_NOTHING)
+    user = models.OneToOneField(PerfilUsuario, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     class Meta:
         verbose_name='ponente'
@@ -288,7 +288,7 @@ class Ponente(models.Model):
 ##### Tabla  moderador  #####
 
 class Moderador(models.Model):
-    user = models.OneToOneField(PerfilUsuario, on_delete=models.DO_NOTHING)
+    user = models.OneToOneField(PerfilUsuario, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     class Meta:
         verbose_name='moderador'

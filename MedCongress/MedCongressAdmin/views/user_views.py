@@ -77,4 +77,8 @@ class UsuarioUpdateView(validarUser,UpdateView):
         context['imagen_seg_url']='/static/%s'%(self.object.foto)
         return context
 
+class UsuarioDeletedView(validarUser,DeleteView):
+    model = PerfilUsuario
+    success_url = reverse_lazy('MedCongressAdmin:usuarios_list')
+
 
