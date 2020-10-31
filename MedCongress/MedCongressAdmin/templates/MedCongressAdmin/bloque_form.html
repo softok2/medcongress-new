@@ -156,8 +156,9 @@
 		{%if con %}
 		$("#id_congreso option[value='{{con.id}}']").attr("selected",true);
 		{%endif%}
+
 	$(document).ready(function () {
-		$('#id_congreso-fecha_inicio').datetimepicker({
+		$('#id_fecha_inicio').datetimepicker({
 			//language:  'fr',
 			weekStart: 1,
 			todayBtn: 1,

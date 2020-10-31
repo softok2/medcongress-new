@@ -306,6 +306,7 @@
 
 
 		});
+		
 		$('#id_taller-congreso').ready(function () {
 				$('#id_taller-bloque').empty();
 				$('#id_taller-bloque').append($("<option></option").attr('value', '').text('----------'));
@@ -322,6 +323,13 @@
 						for (var i = 0; i < data.length; i++) {
 
 							$('#id_taller-bloque').append($("<option></option").attr('value', data[i].id).text(data[i].titulo))
+							{%if update%}
+								$("#id_taller-bloque option[value='{{update.id}}']").attr("selected", true);
+							{%endif%}
+
+							{%if bloque %}
+								$("#id_taller-bloque option[value='{{bloque.id}}']").attr("selected", true);
+							{% endif %}
 						}
 					
 					}
@@ -340,6 +348,7 @@
 		$("#id_taller-congreso option[value='{{con.id}}']").attr("selected", true);
 		{% endif %}
 		{%if bloque %}
+
 		$("#id_taller-bloque option[value='{{bloque.id}}']").attr("selected", true);
 		{% endif %}
 		$('#id_taller-fecha_inicio').datetimepicker({

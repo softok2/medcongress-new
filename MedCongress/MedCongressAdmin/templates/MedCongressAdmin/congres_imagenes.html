@@ -38,23 +38,23 @@
                                 de las Imágenes del Congreso </h1>
                             <h3 style="font-style: italic;">{{congres.titulo}}</h3>
                         </div>
-                        <!-- <div class="col-2">
+                         <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
-                                <button id="add-btn" type="button" class="btn btn-success" title="Adicionar Taller a este Congreso" onclick="add()"
+                                <button id="add-btn" type="button" class="btn btn-success" title="Adicionar Imagen a este Congreso" 
                                     style="float:right; padding: 3px;">
                                     <i class="la la-plus"></i>
                                 </button>
                                 <div class="clearfix"></div>
                             </div>
-                        </div> -->
+                        </div> 
                     </div>
                 </div>
                 <div class="card-content collapse show">
                     <div class="card-body card-dashboard">
-                        <div class="card-body  my-gallery" itemscope="" itemtype="http://schema.org/ImageGallery" data-pswp-uid="1">
+                        <div class="card-body  my-gallery" itemscope=""  data-pswp-uid="1">
                             <div class="row">
                                 {% for imagen in imagenes%}
-                              <figure class="col-lg-3 col-md-6 col-12" itemprop="associatedMedia" itemscope="" ></figure>
+                              <figure class="col-lg-3 col-md-6 col-12" itemprop="associatedMedia" itemscope="" >
                                 <a href="{% static '/'%}{{imagen.imagen}}" itemprop="contentUrl" data-size="480x360">
                                     <img class="img-thumbnail img-fluid" src="{% static '/'%}{{imagen.imagen}}" itemprop="thumbnail" alt="Image description">
                                 </a> 
@@ -102,7 +102,7 @@
         });
 
         $('#add-btn').click(function () {
-            location.href = "{% url 'MedCongressAdmin:congres_add' %}";
+            location.href = "{% url 'MedCongressAdmin:imagen_congress_add' congres.pk  %}";
         });
 
         dataTable = $('.zero-configuration').DataTable();

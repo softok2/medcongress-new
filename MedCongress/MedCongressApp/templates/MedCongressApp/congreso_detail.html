@@ -105,8 +105,13 @@
                                                    
                                                     <div class="kf_new_conf_orgnizr col-sm-6">
                                                         <figure>
+                                                            {% if mod.user.foto%}
                                                             <img src="{% static '/'%}{{mod.user.foto}}"
-                                                                alt="image Here">
+                                                                alt="image de {{mod.user.usuario.username}}">
+                                                                {%else%}
+                                                            <img src="{% static 'MedCongressApp/images/defaulthombre.png' %}"
+                                                            alt="image de {{mod.user.usuario.username}}">
+                                                                {%endif%}
                                                         </figure>
                                                         <div class="kf_new_conf_orgnizr_name">
                                                             <h6>{{mod.user.usuario.first_name}}
@@ -132,8 +137,14 @@
                                                         
                                                     <div class="kf_new_conf_orgnizr col-sm-6">
                                                         <figure>
+                                                            {% if ponente.user.foto%}
+                                                          
                                                             <img src="{% static '/'%}{{ponente.user.foto}}"
-                                                                alt="image Here">
+                                                                alt="image de {{ponente.user.usuario.username}}">
+                                                                {%else%}
+                                                            <img src="{% static 'MedCongressApp/images/defaulthombre.png' %}"
+                                                            alt="image de {{ponente.user.usuario.username}}">
+                                                                {%endif%}
                                                         </figure>
                                                         <div class="kf_new_conf_orgnizr_name">
                                                             <h6>{{ponente.user.usuario.first_name}}
@@ -196,8 +207,13 @@
                                                     {%for ponente in pon.ponentes %}
                                                     <div class="kf_new_conf_orgnizr">
                                                         <figure>
+                                                            {% if ponente.user.foto%}
                                                             <img src="{% static '/'%}{{ponente.user.foto}}"
-                                                                alt="image Here">
+                                                                alt="image de {{ponente.user.usuario.username}}">
+                                                                {%else%}
+                                                            <img src="{% static 'MedCongressApp/images/defaulthombre.png' %}"
+                                                            alt="image de {{ponente.user.usuario.username}}">
+                                                                {%endif%}
                                                         </figure>
                                                         <div class="kf_new_conf_orgnizr_name">
                                                             <h6>{{ponente.user.usuario.first_name}}
@@ -256,7 +272,15 @@
                         <!--KODE_EVENT_BLOG2 START-->
                         <div class="kode-newspeaker">
                             <div class="speaker-photo">
-                                <img src="{% static '/'%}{{ponente.foto}}" alt="">
+                                {% if ponente.foto%}
+                                                          
+                                <img src="{% static '/'%}{{ponente.foto}}"
+                                    alt="image de {{ponente.usuario.username}}">
+                                    {%else%}
+                                <img src="{% static 'MedCongressApp/images/defaulthombre.png' %}"
+                                alt="image de {{ponente.usuario.username}}">
+                                    {%endif%}
+                              
                             </div>
                             <div class="new-ourspeaker">
                                 <h3>{{ponente.nombre}}</h3>

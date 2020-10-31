@@ -105,12 +105,7 @@
                                                         title="Eliminar">
                                                         <i class="la la-trash text-danger"></i>
                                                     </a>
-                                                    
-                                                    
-
-                                                   
-
-                                                    
+                                                       
                                                 </td>
                                             </tr>
                                             {% endfor %}
@@ -150,6 +145,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({
             beforeSend: function (xhr, settings) {
@@ -163,6 +159,7 @@
 
         dataTable = $('.zero-configuration').DataTable();
     });
+    
     function deleteItem(pk) {
         swal({
             title: "Estas seguro?",

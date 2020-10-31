@@ -171,6 +171,9 @@
 											  </figure>
 
 												<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva Imagen</b> </label>
+												{% if form.congreso.imagen_seg.errors %}<span
+												style="font-size: 15px; color: red;">{{ form.congreso.imagen_seg.errors }}
+											</span>{% endif %}
 												<input type="file" name="congreso-imagen_seg" accept="image/*" class=" form-control " id="id_congreso-imagen_seg">
 												{% else%}
 													<label
@@ -224,12 +227,12 @@
 													{{form.congreso.t_congreso }}
 												</div>
 											</div>
-											<div class="col-ms-1">
+											<!-- <div class="col-ms-1">
 												<div class="form-group">
 
 													<label></label>
-													<!-- <a onclick="VerMapa()" type="link"  style="display: block;">  <i class="" style="font-size: 43px;"></i> </a> -->
-													<button type="button" class="btn btn-link" data-toggle="modal"
+													<a onclick="VerMapa()" type="link"  style="display: block;">  <i class="" style="font-size: 43px;"></i> </a> -->
+													<!-- <button type="button" class="btn btn-link" data-toggle="modal"
 														data-target="#add_tipo" style="display: block;">
 														<span><i class="ft ft-plus"
 																style="font-size: 30px;display: block;margin-top: -13px;"></i></span>
@@ -238,7 +241,7 @@
 
 												</div>
 
-											</div>
+											</div> --> 
 											<div class="col-sm-3 " style="display: none;">
 												<div class="form-group">
 													<label
@@ -274,11 +277,11 @@
 													{{form.congreso.especialidad }}
 												</div>
 											</div>
-											<div class="col-ms-1">
+											<!-- <div class="col-ms-1">
 												<div class="form-group">
 
 													<label></label>
-													<!-- <a onclick="VerMapa()" type="link"  style="display: block;">  <i class="" style="font-size: 43px;"></i> </a> -->
+													
 													<button type="button" class="btn btn-link" data-toggle="modal"
 														data-target="#add_esp" style="display: block;">
 														<span><i class="ft ft-plus"
@@ -288,7 +291,7 @@
 
 												</div>
 
-											</div>
+											</div> -->
 										</div>
 
 

@@ -160,12 +160,10 @@
 {% endblock %}
 {% block scripts %}
 
-<script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
+
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/extensions/sweetalert.min.js' %}"></script>
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/tables/datatable/datatables.min.js' %}"></script>
-<script type="text/javascript"
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCf3QdCwg8QDNOS3A2vSQ3DqW2mpJ_gSY8"></script>
-<script src="{% static 'MedCongressApp/js/lugar.js'%}"></script>
+
 <script type="text/javascript">
     $(document).ready(function () {
         $('#atras').click(function () {
@@ -177,15 +175,6 @@
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
         });
-        FiltrarLugar('#id_ubicacion-direccion', '#id_ubicacion-longitud', '#id_ubicacion-latitud');
-		$('#id_ubicacion-direccion').keypress(function () {
-            $('#id_ubicacion-latitud').val('');
-            $('#id_ubicacion-longitud').val('');
-
-        });
-        // $('#add-btn').click(function () {
-        //     location.href = "{% url 'MedCongressAdmin:congres_add' %}";
-        // });
 
         dataTable = $('.zero-configuration').DataTable();
     });

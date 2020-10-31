@@ -73,8 +73,16 @@
 						<li><a >Contacto</a></li> -->
 						
 						{% if user.is_authenticated %}
-						<li ><a href="#" style=""> <figure><img src="{% static '/'%}{{request.user.perfilusuario.foto}}"
-							alt="{{request.user.perfilusuario.path}}" class='imagen_menu'> </figure></a>
+						<li ><a href="#" style=""> <figure>
+							{%if request.user.perfilusuario.foto%}
+							<img src="{% static '/'%}{{request.user.perfilusuario.foto}}"
+							alt="{{request.user.username}}" class='imagen_menu'>
+							{%else%}
+							<img src="{% static 'MedCongressApp/images/defaulthombre.png' %}"
+							alt="{{request.user.username}}" class='imagen_menu'>
+							{%endif%}
+						
+						</figure></a>
 							<ul class="my_ul">
 								<li><a href="" style="padding:37px 30px;">PERFIL</a></li>
 								<li><a href="{% url 'logout' %}" style="padding:37px 30px;">LOGOUT</a></li>

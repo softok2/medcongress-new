@@ -1,9 +1,11 @@
 from django import forms
+from datetime import date
+from django.core.files.images import get_image_dimensions
 from  MedCongressApp.models import (Congreso,Ubicacion,ImagenCongreso,TipoCongreso,Ponencia,Taller,
                                     Ponente,PerfilUsuario,RelPonenciaPonente,RelCongresoCategoriaPago,
                                     CategoriaPagoCongreso,RelTalleresCategoriaPago,Genero,CategoriaUsuario,
                                     RelTallerPonente,Bloque,DatosIniciales,RelCongresoUser,RelTallerUser,
-                                    Moderador,RelBloqueModerador)
+                                    Moderador,RelBloqueModerador,ImagenCongreso)
                     
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
@@ -31,6 +33,12 @@ class CongresForm(forms.ModelForm):
         self.fields['t_congreso'].widget.attrs.update({'class': 'form-control'})  
         self.fields['especialidad'].widget.attrs.update({'class': 'form-control'})                    
 
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(CongresForm, self).clean(*args, **kwargs)
+        imagen = cleaned_data.get('imagen_seg', None)
+        w, h = get_image_dimensions(imagen)
+        if w != 1140 or h != 240:
+            self.add_error('imagen_seg',"Esta imagen tiene %s X %s pixel. Debe ser de 1140 X 240 pixel" %(w,h) )
    
 
     # def clean(self, *args, **kwargs):
@@ -151,6 +159,16 @@ class PonenciaForm(forms.ModelForm):
         self.fields['published'].widget.attrs.update({'class': 'form-control'})   
         self.fields['cod_video'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['detalle'].widget.attrs.update({'class': 'form-control','rows':'3'})  
+    
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(PonenciaForm, self).clean(*args, **kwargs)
+        fecha_inicio = cleaned_data.get('fecha_inicio', None)
+        bloq = cleaned_data.get('bloque', None)
+        # bloque=Bloque.objects.get(pk=int(bloq))
+
+        if bloq and fecha_inicio.date() != bloq.fecha_inicio.date():
+            self.add_error('fecha_inicio', 'La fecha de inicio no coincide  con las del bloque que pertenece %s '%(bloq.fecha_inicio.date()))
+    
 
 class TallerForm(forms.ModelForm):
     imagen=forms.ImageField(label='Buscar Imagen',required=False)
@@ -170,8 +188,16 @@ class TallerForm(forms.ModelForm):
         self.fields['bloque'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control'})   
         self.fields['published'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['detalle'].widget.attrs.update({'class': 'form-control','rows':'3'})   
-        
+        self.fields['detalle'].widget.attrs.update({'class': 'form-control','rows':'3'}) 
+
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(TallerForm, self).clean(*args, **kwargs)
+        fecha_inicio = cleaned_data.get('fecha_inicio', None)
+        bloq = cleaned_data.get('bloque', None)
+        # bloque=Bloque.objects.get(pk=int(bloq))
+
+        if bloq and fecha_inicio.date() != bloq.fecha_inicio.date():
+            self.add_error('fecha_inicio', 'La fecha de inicio no coincide  con las del bloque que pertenece %s '%(bloq.fecha_inicio.date()))
 
 class PonenciaForms(MultiModelForm):
     form_classes = {
@@ -427,3 +453,29 @@ class ModeradorBloqueForm(forms.ModelForm):
 
         self.fields['moderador'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['bloque'].widget.attrs.update({'class': 'form-control','style':'display:none'}) 
+
+class ImagenCongForms(forms.ModelForm):
+    imagen=forms.ImageField(label='Buscar Imagen')
+    class Meta:
+        model=ImagenCongreso
+        fields=['imagen','congreso']
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+
+        self.fields['imagen'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['congreso'].widget.attrs.update({'class': 'form-control'}) 
+
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(ImagenCongForms, self).clean(*args, **kwargs)
+        imagen = cleaned_data.get('imagen', None)
+        w, h = get_image_dimensions(imagen)
+        if w != 1920 or h != 1080:
+            self.add_error('imagen',"Esta imagen tiene %s X %s pixel. Debe ser de 1920 X 1080 pixel" %(w,h) )
+        
+       
+
+
+
+

@@ -61,7 +61,6 @@ class Home(TemplateView):
         
         context = super().get_context_data(**kwargs)
         datos_in=DatosIniciales.objects.all().first()
-       
         context['datos_ini']=datos_in
         context['ponentes'] = Ponente.objects.all()
         context['especialidades'] = len(EspecialidadCongreso.objects.all())+datos_in.especialidades

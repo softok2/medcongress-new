@@ -360,6 +360,7 @@
 
 <script type="text/javascript">
 	$(document).ready(function () {
+	
 		$('#id_ponencia-congreso').ready(function () {
 				$('#id_ponencia-bloque').empty();
 				$('#id_ponencia-bloque').append($("<option></option").attr('value', '').text('----------'));
@@ -376,8 +377,14 @@
 						for (var i = 0; i < data.length; i++) {
 
 							$('#id_ponencia-bloque').append($("<option></option").attr('value', data[i].id).text(data[i].titulo))
+							{%if update%}
+							$("#id_ponencia-bloque option[value='{{update.id}}']").attr("selected", true);
+							{%endif%}
+							{%if bloque %}
+							$("#id_ponencia-bloque option[value='{{bloque.id}}']").attr("selected", true);
+							{% endif %}
 						}
-						console.log(data);
+					
 					}
 				});
 
@@ -385,8 +392,11 @@
 			}
 
 
-
+	
 		});
+		//alert('{{update.id}}');
+	
+	
 		$('#id_ponencia-congreso').change(function () {
 				$('#id_ponencia-bloque').empty();
 				$('#id_ponencia-bloque').append($("<option></option").attr('value', '').text('----------'));
@@ -404,7 +414,7 @@
 
 							$('#id_ponencia-bloque').append($("<option></option").attr('value', data[i].id).text(data[i].titulo))
 						}
-						console.log(data);
+					
 					}
 				});
 
@@ -414,12 +424,6 @@
 
 
 		});
-
-	
-			
-		
-
-
 
 
 		$('#atras').click(function () {
@@ -435,6 +439,8 @@
 			location.href = "{% url 'MedCongressAdmin:ponencias_list' %}";
 			{% endif %}
 		});
+
+		
 		{%if con %}
 		$("#id_ponencia-congreso option[value='{{con.id}}']").attr("selected", true);
 		
@@ -468,31 +474,9 @@
 			$('#id_ubicacion-longitud').val('');
 
 		});
-		{% if not delete_url %}
-		$('#save-plus').click(function (event) {
-			event.preventDefault();
-			$('#country-form').attr('action', "{% url 'MedCongressAdmin:country_add_plus' param='+' %}");
-			$('#country-form').submit();
-		});
-		$('#save-edit').click(function (event) {
-			event.preventDefault();
-			$('#country-form').attr('action', "{% url 'MedCongressAdmin:country_add_plus' param='+->' %}");
-			$('#country-form').submit();
-		});
-		{% else %}
-		$('#delete').click(function (event) {
-			event.preventDefault();
-			$('#country-form').attr('action', "{{ delete_url }}");
-			$('#country-form').submit();
-		});
-		{% endif %}
+		
 	});
 
-	// alert($('#id_imagen_congreso-imagen').val());
-	// 		// $('#id_congreso-imagen_prim').val($('#id_congreso-imagen_prim').val().push($('#id_imagen_congreso-imagen').val()));
-	// 		// $('#id_congreso-imagen_prim').multiselect("refresh");
-	// 		//$("#id_congreso-imagen_prim").val(["130860","130858"]);
-	// 		$('#id_congreso-imagen_prim').append('<option value="' + $('#id_imagen_congreso-imagen').val() + '" selected="selected">' + $('#id_imagen_congreso-imagen').val() + '</option>');
 
 
 

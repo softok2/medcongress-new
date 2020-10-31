@@ -10,7 +10,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView,FormView
 from MedCongressApp.models import (Congreso,Taller,Ponencia,RelCongresoCategoriaPago,ImagenCongreso,Ubicacion
                                     ,Bloque,RelCongresoUser,RelCongresoCategoriaPago)
-from MedCongressAdmin.forms.congres_forms import CongresoForms,PonenciaForms,CongresoCategPagoForm,AsignarCongresoForms
+from MedCongressAdmin.forms.congres_forms import CongresoForms,PonenciaForms,CongresoCategPagoForm,AsignarCongresoForms,ImagenCongForms
 
 class validarUser(UserPassesTestMixin):
     permission_denied_message = 'No tiene permiso para acceder a la administracion'
@@ -210,7 +210,7 @@ class  CongressPonenteCreateView(validarUser,CreateView):
     template_name = 'MedCongressAdmin/congreso_ponencia_form.html'
     def form_valid(self, form):
         ponencia=form.save(commit=False)
-        ponnencia.save()
+        ponencia.save()
         return super(CongressPonenteCreateView, self).form_valid(form)
 
     def get_success_url(self):
@@ -279,6 +279,24 @@ class AsignarCongressDeletedViews(validarUser,DeleteView):
     model = RelCongresoUser
     success_url = reverse_lazy('MedCongressAdmin:asig_congress_list')
     
+class CongressImagenCreateView(validarUser,FormView):
+    form_class = ImagenCongForms
+    success_url = reverse_lazy('MedCongressAdmin:Congres_imagenes')
+    template_name = 'MedCongressAdmin/imagen_congress_form.html'
 
+    def form_valid(self, form):
+        imagen=form.save(commit=True)
+
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        ctx = super(CongressImagenCreateView, self).get_context_data(**kwargs)
+        cong=Congreso.objects.filter(pk=self.kwargs.get('pk'),published=True).first()
+        ctx['cong'] = cong
+        return ctx
+    def get_success_url(self):
+        congreso=Congreso.objects.get(pk=self.kwargs.get('pk'))
+        self.success_url =  reverse_lazy('MedCongressAdmin:Congres_imagenes',kwargs={'path': congreso.path} )
+        return self.success_url
 
     

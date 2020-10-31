@@ -157,7 +157,7 @@ class  BloqueModeradoresCreateView(validarUser,CreateView):
     def get_context_data(self, **kwargs):
         ctx = super(BloqueModeradoresCreateView, self).get_context_data(**kwargs)
         bloq=Bloque.objects.filter(path=self.kwargs.get('path'),published=True).first()
-        moderadores=RelBloqueModerador.objects.all()
+        moderadores=RelBloqueModerador.objects.filter(bloque=bloq)
         id=[]
         for ponente in moderadores:
             id.append(ponente.moderador.pk)
