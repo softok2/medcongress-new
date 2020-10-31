@@ -1,15 +1,22 @@
 from django import forms
 from django.contrib import messages
+from django.shortcuts import get_object_or_404
+from django.views.defaults import page_not_found
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.crypto import get_random_string
 from django.views.generic import CreateView, ListView, TemplateView
 from django.views.generic.edit import DeleteView, FormView, UpdateView
-from MedCongressAdmin.forms.congres_forms import BloqueForms
-from MedCongressApp.models import Bloque, Congreso, Ponencia, Taller
+from MedCongressAdmin.forms.congres_forms import BloqueForms,ModeradorBloqueForm
+from MedCongressApp.models import Bloque, Congreso, Ponencia, Taller, RelBloqueModerador,Moderador
 
 
+def page_not_found(request,exception):
+    response = render_to_response(
+        'MedCongressAdmin/404.html',
+        context_instance=RequestContext(request)
+        )
 class validarUser(UserPassesTestMixin):
     permission_denied_message = 'No tiene permiso para acceder a la administracion'
     login_url='/admin/login/'
@@ -118,5 +125,50 @@ class BloqueUpdateView(validarUser,UpdateView):
     def get_queryset(self, **kwargs):
         return Bloque.objects.filter(pk=self.kwargs.get('pk'))
 
+class BloqueModeradoresListView(TemplateView):
+    template_name= 'MedCongressAdmin/bloque_moderadores.html' 
+    def get(self, request, **kwargs):
+        bloque=Bloque.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        if bloque is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        return self.render_to_response(self.get_context_data())   
+
+    def get_context_data(self, **kwargs):
+        context = super(BloqueModeradoresListView, self).get_context_data(**kwargs)
+        bloque=Bloque.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        context['bloque']=bloque
+        context['moderadores']=RelBloqueModerador.objects.filter(bloque=bloque)
+        return context   
+
+class  BloqueModeradoresCreateView(validarUser,CreateView):
+    
+    form_class = ModeradorBloqueForm
+    # success_url = reverse_lazy('MedCongressAdmin:ponencias_list')
+    template_name = 'MedCongressAdmin/bloque_moderador_form.html'
+
+    def form_valid(self, form):
+        ponencia=form.save(commit=False)
+        ponencia.save()
+        return super(BloqueModeradoresCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+           self.success_url =  reverse_lazy('MedCongressAdmin:Moderadores_bloque',kwargs={'path': self.kwargs.get('path')} )
+           return self.success_url
+    def get_context_data(self, **kwargs):
+        ctx = super(BloqueModeradoresCreateView, self).get_context_data(**kwargs)
+        bloq=Bloque.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        moderadores=RelBloqueModerador.objects.all()
+        id=[]
+        for ponente in moderadores:
+            id.append(ponente.moderador.pk)
+        ctx['moderadores']=Moderador.objects.exclude(id__in=id)
+        ctx['bloq'] = bloq
+        return ctx
+
+class BloqueModeradoresDeletedView(validarUser,DeleteView):
+    model = RelBloqueModerador
+    success_url = reverse_lazy('MedCongressAdmin:Moderadores_list')
+
+    
 
 

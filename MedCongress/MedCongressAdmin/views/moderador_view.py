@@ -1,12 +1,13 @@
 from django import forms
+from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from MedCongressApp.models import Moderador
-from MedCongressAdmin.forms.congres_forms import PonenteForm
+from MedCongressApp.models import Moderador,PerfilUsuario
+from MedCongressAdmin.forms.congres_forms import ModeradorForm
 
 class validarUser(UserPassesTestMixin):
     permission_denied_message = 'No tiene permiso para acceder a la administracion'
@@ -21,23 +22,32 @@ class validarUser(UserPassesTestMixin):
 
 class ModeradoresListView(validarUser,ListView):
     model = Moderador
-    context_object_name = 'moderador'
+    context_object_name = 'moderadores'
     template_name = 'MedCongressAdmin/moderadores.html'
 
-# class  PonentesCreateView(validarUser,CreateView):
-#     form_class = PonenteForm
-#     success_url = reverse_lazy('MedCongressAdmin:Ponentes_list')
-#     template_name = 'MedCongressAdmin/ponente_form.html'
+class  ModeradorCreateView(validarUser,CreateView):
+    form_class = ModeradorForm
+    success_url = reverse_lazy('MedCongressAdmin:Moderadores_list')
+    template_name = 'MedCongressAdmin/moderador_form.html'
 
-#     def form_valid(self, form):
+    def form_valid(self, form):
        
-#         taller=form.save(commit=False)
-#         taller.save()
+        taller=form.save(commit=False)
+        taller.save()
        
-#         return super(PonentesCreateView, self).form_valid(form)
+        return super(ModeradorCreateView, self).form_valid(form)
 
-# class PonenteDeletedView(validarUser,DeleteView):
-#     model = Ponente
-#     success_url = reverse_lazy('MedCongressAdmin:talleres_list')
+    def get_context_data(self, **kwargs):
+        
+        context = super(ModeradorCreateView, self).get_context_data(**kwargs)
+        moderadores=Moderador.objects.all()
+        id=[]
+        for moderador in moderadores:
+            id.append(moderador.user.pk)
+        context['users']=PerfilUsuario.objects.exclude(id__in=id)
+        return context
+class ModeradorDeletedView(validarUser,DeleteView):
+    model = Moderador
+    success_url = reverse_lazy('MedCongressAdmin:Moderadores_list')
 
 

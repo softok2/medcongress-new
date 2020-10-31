@@ -36,14 +36,14 @@
                         <div class="col-10">
                             <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Listado
                                 de Moderadores</h1>
-                            <p class="card-text">Mostrando todos los Moderadores almbacfded1´1ljknNBbnados.</p>
+                            <p class="card-text">Mostrando todos los Moderadores </p>
                         </div>
                         <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
-                                <button id="add-btn" type="button" class="btn btn-success" title="Nuevo" 
+                                <a id="add-btn" type="button" class="btn btn-success" title="Nuevo" href="{% url 'MedCongressAdmin:moderador_add' %}"
                                     style="float:right; padding: 3px;">
                                     <i class="la la-plus"></i>
-                                </button>
+                            </a>
                                 <div class="clearfix"></div>
                             </div>
                         </div>
@@ -119,10 +119,6 @@
             }
         });
 
-        $('#add-btn').click(function () {
-            location.href = "{% url 'MedCongressAdmin:ponente_add' %}";
-        });
-
         dataTable = $('.zero-configuration').DataTable();
     });
     function deleteItem(pk) {
@@ -149,7 +145,7 @@
         })
             .then((isConfirm) => {
                 if (isConfirm) {
-                    url = "{% url 'MedCongressAdmin:ponente_delete' pk=0 %}";
+                    url = "{% url 'MedCongressAdmin:moderador_delete' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                         dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
                         swal("Eliminado!", "Este elemento ha sido eliminado.", "success");

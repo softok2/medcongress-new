@@ -147,6 +147,30 @@ h1,h2,h3,h4,h5,h6{
 	background-size:cover;
 	background-position:center;
 }
+.imagen_menu {
+	position: relative;
+	display: inline-block;
+	width: 30px;
+	vertical-align: bottom;
+	white-space: nowrap;
+	border-radius: 1000px;
+	width: 36px;
+	margin-top: -11px;
+}
+.my_ul{
+	margin-left: -184px !important;
+}
+.sidr-class-imagen_menu
+{
+	position: relative;
+	display: inline-block;
+	width: 30px;
+	vertical-align: bottom;
+	white-space: nowrap;
+	border-radius: 1000px;
+	width: 36px;
+	margin-top: -11px;
+}
 
 .kode-slider{
 	position:relative;

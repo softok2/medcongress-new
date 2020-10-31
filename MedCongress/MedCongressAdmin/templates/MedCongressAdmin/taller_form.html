@@ -309,7 +309,7 @@
 		$('#id_taller-congreso').ready(function () {
 				$('#id_taller-bloque').empty();
 				$('#id_taller-bloque').append($("<option></option").attr('value', '').text('----------'));
-			if ($('#id_taller-congreso').val()) {
+			if ($('#id_taller-congreso').val() ) {
 			
 				$.ajax({
 					type: "POST",
@@ -323,10 +323,10 @@
 
 							$('#id_taller-bloque').append($("<option></option").attr('value', data[i].id).text(data[i].titulo))
 						}
-						console.log(data);
+					
 					}
 				});
-
+			
 
 			}
 
@@ -369,12 +369,6 @@
 		});
 		
 	});
-
-	// alert($('#id_imagen_congreso-imagen').val());
-	// 		// $('#id_congreso-imagen_prim').val($('#id_congreso-imagen_prim').val().push($('#id_imagen_congreso-imagen').val()));
-	// 		// $('#id_congreso-imagen_prim').multiselect("refresh");
-	// 		//$("#id_congreso-imagen_prim").val(["130860","130858"]);
-	// 		$('#id_congreso-imagen_prim').append('<option value="' + $('#id_imagen_congreso-imagen').val() + '" selected="selected">' + $('#id_imagen_congreso-imagen').val() + '</option>');
 
 
 	

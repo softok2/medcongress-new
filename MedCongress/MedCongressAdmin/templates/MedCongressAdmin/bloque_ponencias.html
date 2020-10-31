@@ -1,5 +1,5 @@
 {% extends 'MedCongressAdmin/base.html' %}
-{% block title %}Ponencias del Bloque {{bloque.titulo}}{% endblock %}
+{% block title %}Ponencias{% endblock %}
 {% load static %}
 {% block styles %}
 <link rel="stylesheet" type="text/css"
@@ -36,7 +36,8 @@
                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                     <div class="heading-elements">
                         <ul class="list-inline mb-0">
-                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+							<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
                         </ul>
                     </div>
                 </div>
@@ -49,7 +50,7 @@
                         </div>
                         <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
-                                <button id="add-btn" type="button" class="btn btn-success" title="Nuevo" 
+                                <button id="add-btn" type="button" class="btn btn-success" title="Adicionar Ponencia a este Bloque" 
                                     style="float:right; padding: 3px;">
                                     <i class="la la-plus"></i>
                                 </button>
@@ -93,7 +94,11 @@
                                                 <td>{%if ponencia.published%}Si{%else%}No{%endif%}</td>
 
                                                 <td style="text-align: center;">
-                                                    
+                                                    <a id="del_block{{ taller.pk }}"
+                                                    href="javascript:deleteItemBlock('{{ ponencia.pk }}')"
+                                                    title="Sacar Taller del Bloque">
+                                                    <i class="la la-close "></i>
+                                                </a>
                                                     <a id="del_{{ ponencia.pk }}"
                                                         href="javascript:deleteItem('{{ ponencia.pk }}')"
                                                         title="Eliminar">
@@ -155,11 +160,6 @@
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
         });
-       
-        // $('#add-btn').click(function () {
-        //     location.href = "{% url 'MedCongressAdmin:congres_add' %}";
-        // });
-
         dataTable = $('.zero-configuration').DataTable();
     });
 
@@ -199,6 +199,45 @@
                     swal("Cancelado", "No se eliminó este elemento.", "error");
                 }
             });
+    }
+    function deleteItemBlock(pk) {
+        swal({
+            title: "Estas seguro?",
+            text: "Eliminará esta Ponencia del Bloque!",
+            icon: "warning",
+            buttons: {
+                cancel: {
+                    text: "No, cancelar!",
+                    value: null,
+                    visible: true,
+                    className: "",
+                    closeModal: false,
+                },
+                confirm: {
+                    text: "Sí, eliminarla!",
+                    value: true,
+                    visible: true,
+                    className: "",
+                    closeModal: false
+                }
+            }
+        })
+            .then((isConfirm) => {
+                if (isConfirm) {
+                    $.post("{% url 'MedCongressAdmin:ponencia_block_delete'%}", { 'ponencia_id': pk }, function (data) {
+                            swal("Eliminado!", "Esta Ponencia se eliminó de este Bloque.", "success");
+                            location.reload(); 
+				
+                       
+                    });
+                } else {
+                    swal("Cancelado", "No se eliminó este elemento.", "error");
+                }
+            });
+                   
+                       
+               
+              
     }
 </script>
 {% endblock %}

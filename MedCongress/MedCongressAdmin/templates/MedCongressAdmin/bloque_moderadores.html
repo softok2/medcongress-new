@@ -1,5 +1,5 @@
 {% extends 'MedCongressAdmin/base.html' %}
-{% block title %}Usuarios que han pagado Talleres{% endblock %}
+{% block title %}Moderadores{% endblock %}
 {% load static %}
 {% block styles %}
 <link rel="stylesheet" type="text/css"
@@ -28,7 +28,7 @@
                     <div class="heading-elements">
                         <ul class="list-inline mb-0">
                             <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
-                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+							<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
                         </ul>
                     </div>
                 </div>
@@ -36,12 +36,12 @@
                     <div class="row">
                         <div class="col-10">
                             <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Listado
-                                del los Usuarios que han pagado Talleres </h1>
-                            
+                                de los Moderadores del Bloque </h1>
+                            <h3 style="font-style: italic;">{{bloque.titulo}}</h3>
                         </div>
                         <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
-                                <button id="add-btn" type="button" class="btn btn-success" title="Asignar pago de un Taller a un Usuario" 
+                                <button id="add-btn" type="button" class="btn btn-success" title="Adicionar Moderador a este Bloque" 
                                     style="float:right; padding: 3px;">
                                     <i class="la la-plus"></i>
                                 </button>
@@ -59,39 +59,33 @@
                                         style="margin-top: 5px!important; margin-bottom: 15px!important;"
                                         id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
                                         <thead>
-                                            <th style="width:50%">Usuario</th>
-                                                <th>Taller</th>
-                                                <th>Categoría de Pago</th>
-                                                <th>Pagado</th>
+                                            <tr role="row" style="font-size: 13px;">
+                                                <th style="width:50%">Nombre</th>
+                                                <th>Email</th>
                                                 <th style="width:5%">Operaciones</th>
+                                            </tr>
                                         </thead>
                                         <tbody>
-                                            {% for taller in talleres %}
+                                            {% for moderador in moderadores %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
-                                                <td class="sorting_1">{{ taller.user.usuario.first_name }} {{ taller.user.usuario.last_name}}</td>
+                                                <td class="sorting_1">{{ moderador.moderador.user.usuario.first_name }} {{ moderador.moderador.user.usuario.last_name}}</td>
                                                 
-                                                <td>{{ taller.taller.titulo}}</td>
-                                                <td>{{ taller.categoria_pago.nombre}}</td>
-                                                <td>{%if taller.is_pagado%}Si{%else%}No{%endif%}</td>
-                                                  <td>  <a id="del_{{ taller.pk }}"
-                                                        href="javascript:deleteItem('{{ taller.pk }}')"
+                                                <td>{{ moderador.moderador.user.usuario.email}}</td>
+                                                  <td>  <a id="del_{{ moderador.pk }}"
+                                                        href="javascript:deleteItem('{{ moderador.pk }}')"
                                                         title="Eliminar">
                                                         <i class="la la-trash "></i>
-                                                    </a>
-
-                                                   
-
-                                                    
+                                                    </a>   
                                                 </td>
                                             </tr>
                                             {% endfor %}
                                         </tbody>
                                         <tfoot>
-                                            <th style="width:50%">Usuario</th>
-                                                <th>Taller</th>
-                                                <th>Categoría de Pago</th>
-                                                <th>Pagado</th>
+                                            <tr style="font-size: 13px;">
+                                                <th style="width:50%">Nombre</th>
+                                                <th>Email</th>
                                                 <th style="width:5%">Operaciones</th>
+                                            </tr>
                                         </tfoot>
                                     </table>
                                 </div>
@@ -116,7 +110,6 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({
             beforeSend: function (xhr, settings) {
@@ -125,7 +118,7 @@
         });
 
         $('#add-btn').click(function () {
-            location.href = "{% url 'MedCongressAdmin:asignar_taller_add'   %}";
+            location.href = "{% url 'MedCongressAdmin:bloque_moderador_add' bloque.path %}";
         });
 
         dataTable = $('.zero-configuration').DataTable();
@@ -154,10 +147,9 @@
         })
             .then((isConfirm) => {
                 if (isConfirm) {
-                    url = "{% url 'MedCongressAdmin:asig_taller_delete' pk=0 %}";
+                    url = "{% url 'MedCongressAdmin:moderador_block_delete' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                         dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
-
                         swal("Eliminado!", "Este elemento ha sido eliminado.", "success");
                     });
                 } else {

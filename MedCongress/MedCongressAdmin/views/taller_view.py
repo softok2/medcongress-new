@@ -8,7 +8,7 @@ from django.views.generic import ListView,TemplateView,FormView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from MedCongressApp.models import (Taller,RelTalleresCategoriaPago,Congreso,Ubicacion,RelTallerPonente,Bloque,
-                                    RelTallerUser)
+                                    RelTallerUser,Ponente)
 from MedCongressAdmin.forms.congres_forms import TallerForms,TallerCategPagoForm,PonenteTallerForm,AsignarTallerForms
 
 class validarUser(UserPassesTestMixin):
@@ -169,6 +169,11 @@ class  TallerPonenteCreateView(validarUser,CreateView):
         ctx = super(TallerPonenteCreateView, self).get_context_data(**kwargs)
         pon=Taller.objects.filter(path=self.kwargs.get('path'),published=True).first()
         ctx['pon'] = pon
+        ponentes=RelTallerPonente.objects.all()
+        id=[]
+        for ponente in ponentes:
+            id.append(ponente.ponente.pk)
+        ctx['ponentes']=Ponente.objects.exclude(id__in=id)
         return ctx
 
 class TallerDeletedView(validarUser,DeleteView):
@@ -205,6 +210,20 @@ class AsignarTallerDeletedViews(validarUser,DeleteView):
     model = RelTallerUser
     success_url = reverse_lazy('MedCongressAdmin:asig_talleres_list')
 
-   
-   
+class TallerPonenteDeletedView(validarUser,DeleteView):
+    model = RelTallerPonente
+    success_url = reverse_lazy('MedCongressAdmin:talleres_list')
+
+
+
+def TallerBloqueDeleted(request):
+    if request.is_ajax():
+        query = request.POST['taller_id']
+        taller=Taller.objects.get(id=query)
+        taller.bloque=None
+        taller.save()
+        data = json.dumps([{'titulo':taller.titulo}])
+        
+        mimetype = "application/json"
+    return HttpResponse(data, mimetype)   
     

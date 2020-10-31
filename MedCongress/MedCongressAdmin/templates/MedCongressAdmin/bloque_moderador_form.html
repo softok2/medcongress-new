@@ -1,5 +1,5 @@
 {% extends 'MedCongressAdmin/base.html' %}
-{% block title %}MedCongressAdmin | Ponente{% endblock %}
+{% block title %}Adicionar Moderadores{% endblock %}
 {% load static %}
 {% block styles %}
 {% endblock %}
@@ -10,14 +10,13 @@
 			<div class="card">
 				<div class="card-header">
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
-						Adicionar Ponentes</h1>
+						Adicionar Moderadores</h1>
 					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
 					<div class="heading-elements">
 						<ul class="list-inline mb-0">
 							<li><a data-action="collapse"><i class="ft-minus"></i></a></li>
-							<li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
 							<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
-							<li><a data-action="close"><i class="ft-x"></i></a></li>
+
 						</ul>
 					</div>
 				</div>
@@ -32,21 +31,22 @@
 										<div class="col-sm-6 ">
 											<div class="form-group">
 												<label
-													for="{{form.ponente.id_for_label }}"><b>{{form.ponente.label }}</b>{% if form.ponente.errors %}
-													<span style="font-size: 15px; color: red;">{{ form.ponente.errors }}
+													for="{{form.moderador.id_for_label }}"><b>{{form.moderador.label }}</b>{% if form.moderador.errors %}
+													<span style="font-size: 15px; color: red;">{{ form.moderador.errors }}
 													</span>{% endif %} </label>
 
-													<select name="ponente" class="form-control" required="" id="id_ponente">
+													<select name="moderador" class="form-control" required="" id="id_moderador">
 														<option value="" selected="">---------</option>
-													  {%for ponente in ponentes%}
-														<option value="{{ponente.id}}">{{ponente.user.usuario.first_name}} {{ponente.user.usuario.last_name}}</option>
-													  {%endfor%}
+													  
+														{%for moderador in moderadores%}
+														<option value="{{moderador.id}}" selected="">{{moderador.user.usuario.first_name}} {{moderador.user.usuario.last_name}}</option>
+														{%endfor%}
 													  </select>
 											</div>
 											<div class="col-sm-6 " >
 												<div class="form-group">
 													
-													{{form.ponencia }}
+													{{form.bloque }}
 													<!-- <input type="text" id="id_ponencia" name="id_ponencia" value="{{pon.id}}"> -->
 												</div>
 											</div>
@@ -76,7 +76,7 @@
 {% block scripts %}
 <script type="text/javascript">
 	$(document).ready(function () {
-		$("#id_ponencia option[value='{{pon.id}}']").attr("selected",true);
+		$("#id_bloque option[value='{{bloq.id}}']").attr("selected",true);
 		
 	});
 </script>

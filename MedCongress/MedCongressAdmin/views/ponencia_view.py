@@ -1,11 +1,12 @@
+import json
 from django import forms
 from django.contrib import messages
-from django.http import HttpResponseBadRequest, HttpResponseRedirect
-from django.urls import reverse_lazy
+from django.http import HttpResponseBadRequest, HttpResponseRedirect, HttpResponse
+from django.urls import reverse_lazy,reverse
 from django.views.generic import ListView,TemplateView,FormView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from MedCongressApp.models import Ponencia,RelPonenciaPonente,Ubicacion,Congreso,Bloque
+from MedCongressApp.models import Ponencia,RelPonenciaPonente,Ubicacion,Congreso,Bloque,Ponente
 from MedCongressAdmin.forms.congres_forms import PonenciaForms,PonentePonenciaForm
 from django.utils.crypto import get_random_string
 class validarUser(UserPassesTestMixin):
@@ -111,6 +112,11 @@ class  PonenciaPonenteCreateView(validarUser,CreateView):
         ctx = super(PonenciaPonenteCreateView, self).get_context_data(**kwargs)
         pon=Ponencia.objects.filter(path=self.kwargs.get('path'),published=True).first()
         ctx['pon'] = pon
+        ponentes=RelPonenciaPonente.objects.all()
+        id=[]
+        for ponente in ponentes:
+            id.append(ponente.ponente.pk)
+        ctx['ponentes']=Ponente.objects.exclude(id__in=id)
         return ctx
 
 
@@ -138,6 +144,22 @@ class PonencicaUpdateView(validarUser,UpdateView):
 class PonenciaDeletedView(validarUser,DeleteView):
     model = Ponencia
     success_url = reverse_lazy('MedCongressAdmin:ponencias_list')
+
+class PonenciaPonenteDeletedView(validarUser,DeleteView):
+    model = RelPonenciaPonente
+    success_url = reverse_lazy('MedCongressAdmin:ponencias_list')
+   
+def PonenciaBloqueDeleted(request):
+    if request.is_ajax():
+        query = request.POST['ponencia_id']
+        ponencia=Ponencia.objects.get(id=query)
+        ponencia.bloque=None
+        ponencia.save()
+        data = json.dumps([{'titulo':ponencia.titulo}])
+        
+        mimetype = "application/json"
+    return HttpResponse(data, mimetype)  
+
 
 
 

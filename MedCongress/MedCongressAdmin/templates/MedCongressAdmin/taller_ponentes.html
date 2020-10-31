@@ -70,8 +70,8 @@
                                                 <td class="sorting_1">{{ ponente.ponente.user.usuario.first_name }} {{ ponente.ponente.user.usuario.last_name}}</td>
                                                 
                                                 <td>{{ ponente.ponente.user.usuario.email}}</td>
-                                                  <td>  <a id="del_{{ country.pk }}"
-                                                        href="javascript:deleteItem('{{ country.pk }}')"
+                                                  <td>  <a id="del_{{ ponente.pk }}"
+                                                        href="javascript:deleteItem('{{ ponente.pk }}')"
                                                         title="Eliminar">
                                                         <i class="la la-trash "></i>
                                                     </a>
@@ -150,7 +150,7 @@
         })
             .then((isConfirm) => {
                 if (isConfirm) {
-                    url = "{% url 'MedCongressAdmin:country_delete' pk=0 %}";
+                    url = "{% url 'MedCongressAdmin:taller_ponente_delete' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                         dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
                         swal("Eliminado!", "Este elemento ha sido eliminado.", "success");

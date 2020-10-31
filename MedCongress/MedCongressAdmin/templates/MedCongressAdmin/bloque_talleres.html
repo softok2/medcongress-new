@@ -1,5 +1,5 @@
 {% extends 'MedCongressAdmin/base.html' %}
-{% block title %}Talleres del Bloque {{bloque.titulo}}{% endblock %}
+{% block title %}Talleres {% endblock %}
 {% load static %}
 {% block styles %}
 <link rel="stylesheet" type="text/css"
@@ -36,7 +36,8 @@
                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                     <div class="heading-elements">
                         <ul class="list-inline mb-0">
-                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+							<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
                         </ul>
                     </div>
                 </div>
@@ -49,7 +50,7 @@
                         </div>
                         <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
-                                <button id="add-btn" type="button" class="btn btn-success" title="Nuevo" 
+                                <button id="add-btn" type="button" class="btn btn-success" title="Adicionar Taller a este Bloque" 
                                     style="float:right; padding: 3px;">
                                     <i class="la la-plus"></i>
                                 </button>
@@ -93,10 +94,14 @@
                                                 <td>{%if taller.published%}Si{%else%}No{%endif%}</td>
 
                                                 <td style="text-align: center;">
-                                                    
+                                                    <a id="del_block{{ taller.pk }}"
+                                                        href="javascript:deleteItemBlock('{{ taller.pk }}')"
+                                                        title="Sacar Taller del Bloque">
+                                                        <i class="la la-close "></i>
+                                                    </a>
                                                     <a id="del_{{ taller.pk }}"
                                                         href="javascript:deleteItem('{{ taller.pk }}')"
-                                                        title="Eliminar">
+                                                        title="Eliminar Taller" style="margin-left: 10px;">
                                                         <i class="la la-trash text-danger"></i>
                                                     </a>
                                                 </td>
@@ -141,9 +146,8 @@
 <script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/extensions/sweetalert.min.js' %}"></script>
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/tables/datatable/datatables.min.js' %}"></script>
-<script type="text/javascript"
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCf3QdCwg8QDNOS3A2vSQ3DqW2mpJ_gSY8"></script>
-<script src="{% static 'MedCongressApp/js/lugar.js'%}"></script>
+
+
 <script type="text/javascript">
     $(document).ready(function () {
         $('#atras').click(function () {
@@ -155,16 +159,6 @@
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
         });
-        FiltrarLugar('#id_ubicacion-direccion', '#id_ubicacion-longitud', '#id_ubicacion-latitud');
-		$('#id_ubicacion-direccion').keypress(function () {
-            $('#id_ubicacion-latitud').val('');
-            $('#id_ubicacion-longitud').val('');
-
-        });
-        // $('#add-btn').click(function () {
-        //     location.href = "{% url 'MedCongressAdmin:congres_add' %}";
-        // });
-
         dataTable = $('.zero-configuration').DataTable();
     });
 
@@ -195,7 +189,7 @@
         })
             .then((isConfirm) => {
                 if (isConfirm) {
-                    url = "{% url 'MedCongressAdmin:ponencia_delete' pk=0 %}";
+                    url = "{% url 'MedCongressAdmin:taller_delete' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                         dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
                         swal("Eliminado!", "Este elemento ha sido eliminado.", "success");
@@ -204,6 +198,45 @@
                     swal("Cancelado", "No se eliminó este elemento.", "error");
                 }
             });
+    }
+    function deleteItemBlock(pk) {
+        swal({
+            title: "Estas seguro?",
+            text: "Eliminará este Taller del Bloque!",
+            icon: "warning",
+            buttons: {
+                cancel: {
+                    text: "No, cancelar!",
+                    value: null,
+                    visible: true,
+                    className: "",
+                    closeModal: false,
+                },
+                confirm: {
+                    text: "Sí, eliminarlo!",
+                    value: true,
+                    visible: true,
+                    className: "",
+                    closeModal: false
+                }
+            }
+        })
+            .then((isConfirm) => {
+                if (isConfirm) {
+                    $.post("{% url 'MedCongressAdmin:taller_block_delete'%}", { 'taller_id': pk }, function (data) {
+                            swal("Eliminado!", "Este Taller se eliminó de este Bloque.", "success");
+                            location.reload(); 
+				
+                       
+                    });
+                } else {
+                    swal("Cancelado", "No se eliminó este elemento.", "error");
+                }
+            });
+                   
+                       
+               
+              
     }
 </script>
 {% endblock %}

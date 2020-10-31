@@ -62,7 +62,7 @@
                                                 <th >Nombre</th>
                                                
                                                 <th>Congreso</th>
-                                               
+                                               <th>Moderadores</th>
                                                 <th>Fecha Inicio</th>
                                                 <th>Programa</th>
                                                 
@@ -75,6 +75,13 @@
                                                 <td class="sorting_1">{{ bloque.titulo }}</td>
                                                 
                                                 <td>{{ bloque.congreso.titulo }}</td>
+                                                <td style="text-align: center;">
+                                                    
+                                                    <a id=""
+                                                    href="{%url 'MedCongressAdmin:Moderadores_bloque' bloque.path%}"
+                                                        title="Ponentes">
+                                                        <i class="la la-user-secret " style= "color: blue;" ></i>
+                                                    </a></td>
                                                 <td>{{ bloque.fecha_inicio }}</td>
                                                 
                                                 <td>  <a id=""
@@ -113,7 +120,7 @@
                                                 <th >Nombre</th>
                                                
                                                 <th>Congreso</th>
-                                               
+                                               <th>Moderadores</th>
                                                 <th>Fecha Inicio</th>
                                                 <th>Programa</th>
                                                 

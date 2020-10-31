@@ -1,5 +1,5 @@
 {% extends 'MedCongressAdmin/base.html' %}
-{% block title %}Ponentes{% endblock %}
+{% block title %}Usuarios que han pagado Congresos{% endblock %}
 {% load static %}
 {% block styles %}
 <link rel="stylesheet" type="text/css"
@@ -27,6 +27,7 @@
                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                     <div class="heading-elements">
                         <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
                             <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
                         </ul>
                     </div>
@@ -40,7 +41,7 @@
                         </div>
                         <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
-                                <button id="add-btn" type="button" class="btn btn-success" title="Adicionar Ponente a esta ponencia" onclick="add()"
+                                <button id="add-btn" type="button" class="btn btn-success" title="Asignar pago de un Congreso a un Usuario" 
                                     style="float:right; padding: 3px;">
                                     <i class="la la-plus"></i>
                                 </button>

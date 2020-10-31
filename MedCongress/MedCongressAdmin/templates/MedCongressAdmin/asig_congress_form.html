@@ -1,5 +1,5 @@
 {% extends 'MedCongressAdmin/base.html' %}
-{% block title %}MedCongressAdmin | Asignar Congreso{% endblock %}
+{% block title %} Validar Pago de Congreso {% endblock %}
 {% load static %}
 {% block styles %}
 {% endblock %}
@@ -10,15 +10,13 @@
 			<div class="card">
 				<div class="card-header">
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
-						Asignar Congreso a un Usuario </h1>
-						<h3>(Comprarlo)</h3>
+						Validar Pago de un Congreso  por Usuario </h1>
+						
 					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
 					<div class="heading-elements">
 						<ul class="list-inline mb-0">
 							<li><a data-action="collapse"><i class="ft-minus"></i></a></li>
-							<li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
 							<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
-							<li><a data-action="close"><i class="ft-x"></i></a></li>
 						</ul>
 					</div>
 				</div>
@@ -117,7 +115,6 @@
 
 							$('#id_categoria_pago').append($("<option></option").attr('value', data[i].id).text(data[i].nombre))
 						}
-						console.log(data);
 					}
 				});
 

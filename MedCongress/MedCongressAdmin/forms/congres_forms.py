@@ -2,7 +2,8 @@ from django import forms
 from  MedCongressApp.models import (Congreso,Ubicacion,ImagenCongreso,TipoCongreso,Ponencia,Taller,
                                     Ponente,PerfilUsuario,RelPonenciaPonente,RelCongresoCategoriaPago,
                                     CategoriaPagoCongreso,RelTalleresCategoriaPago,Genero,CategoriaUsuario,
-                                    RelTallerPonente,Bloque,DatosIniciales,RelCongresoUser,RelTallerUser)
+                                    RelTallerPonente,Bloque,DatosIniciales,RelCongresoUser,RelTallerUser,
+                                    Moderador,RelBloqueModerador)
                     
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
@@ -186,7 +187,7 @@ class TallerForms(MultiModelForm):
     }
 
 class PonenteForm(forms.ModelForm):
-    user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Usuario')
+
     class Meta:
         model=Ponente
         fields=['user']
@@ -195,6 +196,18 @@ class PonenteForm(forms.ModelForm):
         super().__init__(*args, **kwargs) 
 
         self.fields['user'].widget.attrs.update({'class': 'form-control'}) 
+
+class ModeradorForm(forms.ModelForm):
+   
+    class Meta:
+        model=Moderador
+        fields=['user']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+
+        self.fields['user'].widget.attrs.update({'class': 'form-control'}) 
+         
          
 class PonentePonenciaForm(forms.ModelForm):
     ponente=forms.ModelChoiceField(queryset=Ponente.objects.all(),label='Ponentes')
@@ -372,7 +385,7 @@ class OtrosForm(forms.ModelForm):
 class AsignarCongresoForms(forms.ModelForm):
     user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Usuario')
     categoria_pago=forms.ModelChoiceField(queryset=CategoriaPagoCongreso.objects.all(),label='Categoría de Pago')
-    is_pagado=forms.BooleanField(label='Se Pagó el Congreso')
+    is_pagado=forms.BooleanField(label='Pagó el Congreso')
     class Meta:
         model=RelCongresoUser
         fields=['user','congreso','categoria_pago','is_pagado']
@@ -388,7 +401,7 @@ class AsignarCongresoForms(forms.ModelForm):
 class AsignarTallerForms(forms.ModelForm):
     user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Usuario')
     categoria_pago=forms.ModelChoiceField(queryset=CategoriaPagoCongreso.objects.all(),label='Categoría de Pago')
-    is_pagado=forms.BooleanField(label='Se Pagó el Congreso')
+    is_pagado=forms.BooleanField(label='Pagó el Taller')
     class Meta:
         model=RelTallerUser
         fields=['user','taller','categoria_pago','is_pagado']
@@ -401,5 +414,16 @@ class AsignarTallerForms(forms.ModelForm):
         self.fields['categoria_pago'].widget.attrs.update({'class': 'form-control','rows':'3'})   
         self.fields['is_pagado'].widget.attrs.update({'class': 'form-control'})   
           
+class ModeradorBloqueForm(forms.ModelForm):
+    moderador=forms.ModelChoiceField(queryset=Moderador.objects.all(),label='Moderador')
+  
+    class Meta:
+        model=RelBloqueModerador
+        fields=['moderador','bloque']
 
-     
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+
+        self.fields['moderador'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['bloque'].widget.attrs.update({'class': 'form-control','style':'display:none'}) 
