@@ -182,6 +182,9 @@ class Congreso(models.Model):
     user = models.ManyToManyField(PerfilUsuario, through='RelCongresoUser',related_name='congreso_perfilusuario')
     aval = models.ManyToManyField(AvalCongreso, through='RelCongresoAval',related_name='congreso_patrosinador')
     categoria_pago = models.ManyToManyField(CategoriaPagoCongreso, through='RelCongresoCategoriaPago',related_name='congreso_cat_pago')
+    is_openpay=models.BooleanField(null=True)
+    template=models.CharField(max_length=50,null=True)
+
 
     class Meta:
         verbose_name='congreso'

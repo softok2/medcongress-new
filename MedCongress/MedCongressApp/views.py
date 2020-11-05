@@ -96,7 +96,7 @@ class CongresoListView(ListView):
 ##### Visualizar Congreso #####
 
 class CongresoDetail(TemplateView):
-    template_name= 'MedCongressApp/congreso_detail.html' 
+    # template_name= 'MedCongressApp/congreso_detail.html' 
     
 
     def get(self, request, **kwargs):
@@ -104,6 +104,14 @@ class CongresoDetail(TemplateView):
         if congreso is None:
             return   HttpResponseRedirect(reverse('Error404'))
         return self.render_to_response(self.get_context_data())
+
+    def get_template_names(self):
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        if congreso.is_openpay:
+            template_name= 'MedCongressApp/congreso_detail_openpay.html'
+        else:
+            template_name= 'MedCongressApp/%s'%(congreso.template)
+        return template_name
 
     def get_context_data(self, **kwargs):
         context = super(CongresoDetail, self).get_context_data(**kwargs)
