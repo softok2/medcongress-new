@@ -1,0 +1,318 @@
+{% extends "MedCongressApp/base.html"%}
+{% load static %}
+{%block css%}
+
+    {%endblock%}
+{% block titulo %}
+Aviso de Privacidad
+{%endblock%}
+{% block contenido %}
+<div class="sub-header">
+    <!-- SUB HEADER -->
+</div>
+    
+<div class="Kode-page-heading">
+    <div class="container">
+        <!--ROW START-->
+        <div class="row">
+            <div class="col-md-6 col-sm-6">
+                <h2>Detalles del Perfil</h2>
+            </div>
+            <div class="col-md-6 col-sm-6">
+                <ul>
+                    <li>
+                        <a href="#"><i class="fa fa-home"></i>Home</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-angle-right"></i>Detalles del Perfil</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--ROW END-->
+    </div>
+</div>
+<!--Top Heading And Breadcrumb Wrap End-->
+
+
+<!--Our Speaker Wrap Start-->
+<div class="kf_content">
+    <div class="container">
+        <div class="row">
+        
+            <div class="col-md-8">
+                <!--Who Am I Wrap Start-->
+                <div class="kf_who_am">
+                    <figure>
+                        {%if request.user.perfilusuario.foto%}
+                        <img src="{% static '/'%}{{request.user.perfilusuario.foto}}"
+                        alt="{{request.user.username}}" >
+                         <figcaption class="kf_speaker_socil">
+                            <ul>
+                                <li><a href="#" data-toggle="tooltip" >Editar Foto</a></li>
+                                
+                            </ul>
+                        </figcaption>
+                        {%else%}
+                        <img src="{% static 'MedCongressApp/images/defaulthombre.png' %}"
+                        alt="{{request.user.username}}" >
+                        {%endif%}
+                       
+                    </figure>
+                    
+                    <div class="kf_who_am_des">
+                        <div class="kf_heading_1">
+                            <h5>Mi perfil <i class="fa fa-calendar"></i></h5>
+                            
+                        </div>
+                        
+                        <h4> {{request.user.first_name}} {{request.user.last_name}}<a href='' style="margin-left:10px;font-size:50%"><i class="fa fa-edit"></i> Editar</a></h4>
+                        
+                        <ul>
+                            <li>
+                                <strong>Dirección</strong>
+                                <span>123 street, USA</span>
+                            </li>
+                            <li>
+                                <strong>Email</strong>
+                                <a href="#">Email@gmail.com</a>
+                            </li>
+                            <li>
+                                <strong>Categoría</strong>
+                                <span>Médico</span>
+                            </li>
+                            <li>
+                                <strong>Especialidad</strong>
+                                <span>Anatomía Patológica</span>
+                            </li>
+                            <li>
+                                <strong>Cédula Profecional</strong>
+                                <span>EF8965</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                </div>
+                <!--Who Am I Wrap End-->
+                
+                
+                <!--Yearly Expercience Wrap Start-->
+                <div class='row'>
+                <div class='col-md-6'>
+                <div class="kf_experience">
+                
+                    <div class="kf_heading_1">
+                            <h5>Congresos Pagados</h5>
+                            
+                        </div>
+                        
+                    <div class="kf_experience_logo">
+                        <i class="fa fa-briefcase"></i>
+                    </div>
+                    
+                    <ul>
+                        <li>
+                            <div class="kf_experience_list">
+                                <h6>Congreso 1</h6>
+                                <a href="#"><i class="fa fa-calendar"></i> Mar 2015 -</a>
+                                <span>current</span>
+                                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <div class="kf_experience_list">
+                                <h6>Congreso 2</h6>
+                                <a href="#"><i class="fa fa-calendar"></i> Mar 2015 - Nov 2015</a>
+                                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <div class="kf_experience_list">
+                                <h6>Congreso 3</h6>
+                                <a href="#"><i class="fa fa-calendar"></i>Mar 2015 - Nov 2015</a>
+                                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                            </div>
+                        </li>
+                    </ul>
+                     </div>
+                     </div>
+                     <div class='col-md-6'>
+                <div class="kf_experience">
+                
+                    <div class="kf_heading_1">
+                            <h5>Talleres Comprado</h5>
+                            
+                        </div>
+                        
+                    <div class="kf_experience_logo">
+                        <i class="fa fa-hdd-o"></i>
+                    </div>
+                    
+                    <ul>
+                        <li>
+                            <div class="kf_experience_list">
+                                <h6>Congreso 1</h6>
+                                <a href="#"><i class="fa fa-calendar"></i> Mar 2015 -</a>
+                                <span>current</span>
+                                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <div class="kf_experience_list">
+                                <h6>Congreso 2</h6>
+                                <a href="#"><i class="fa fa-calendar"></i> Mar 2015 - Nov 2015</a>
+                                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <div class="kf_experience_list">
+                                <h6>Congreso 3</h6>
+                                <a href="#"><i class="fa fa-calendar"></i>Mar 2015 - Nov 2015</a>
+                                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                            </div>
+                        </li>
+                    </ul>
+                     </div>
+                        
+                </div>
+                
+                 </div>
+                
+                <!--Yearly Expercience Wrap End-->
+                
+                
+              
+                <!--Education Wrap End-->
+                
+                <!--Testimonial Wrap Start-->
+                
+                <!--Testimonial Wrap End-->
+                
+                
+            </div>
+            
+            <div class="col-md-4">
+            
+                
+                
+                
+                <div class="kf_aside_folwer">
+                <h6 style="text-align:center; padding:20px;border-bottom: 1px solid #e6e6e6;
+background-color: #e6e6e6;"> <b> Mis Contacias</b></h6>
+                    <ul>
+                        
+                        
+                        <li>
+                            <div class="like_fb">
+                                <a class="youtube" href="#"><i class="fa fa-file-pdf-o"></i></a>
+                            </div>
+                            
+                            <div class="like_amount">
+                                <p>Constacia 1</p>
+                                <span>Congreso 1</span>
+                            </div>
+                            
+                           
+                        </li>
+                         <li>
+                            <div class="like_fb">
+                                <a class="youtube" href="#"><i class="fa fa-file-pdf-o"></i></a>
+                            </div>
+                            
+                            <div class="like_amount">
+                                <p>Constacia 2</p>
+                                <span>Congreso 2</span>
+                            </div>
+                            
+                           
+                        </li>
+                         <li>
+                            <div class="like_fb">
+                                <a class="youtube" href="#"><i class="fa fa-file-pdf-o"></i></a>
+                            </div>
+                            
+                            <div class="like_amount">
+                                <p>Constacia 3</p>
+                                <span>Congreso 3</span>
+                            </div>
+                            
+                            
+                        </li>
+                         
+                        
+                        
+                    </ul>
+                </div>
+                <div class="kf_aside_folwer">
+                <h6 style="text-align:center; padding:20px;border-bottom: 1px solid #e6e6e6;
+background-color: #e6e6e6;"> <b> Mis Ponencias</b></h6>
+                    <ul>
+                        
+                        
+                        <li>
+
+                            <div class="like_amount">
+                                <p>Ponencia 1</p>
+                                <span>Congreso 1</span>
+                            </div>
+                            
+                           
+                        </li>
+                         <li>
+                            
+                            
+                            <div class="like_amount">
+                                <p>Ponencia 2</p>
+                                <span>Congreso 1</span>
+                            </div>
+                            
+                           
+                        </li>
+                         
+                        
+                    </ul>
+                </div>
+               <div class="kf_aside_folwer">
+                <h6 style="text-align:center; padding:20px;border-bottom: 1px solid #e6e6e6;
+background-color: #e6e6e6;"> <b> Mis Talleres</b></h6>
+                    <ul>
+                        
+                        
+                        <li>
+
+                            <div class="like_amount">
+                                <p>Taller 7 </p>
+                                <span>Congreso 2</span>
+                            </div>
+                            
+                           
+                        </li>
+                         <li>
+                            
+                            
+                            <div class="like_amount">
+                                <p>Taller 2</p>
+                                <span>Congreso 3</span>
+                            </div>
+                            
+                           
+                        </li>
+                         
+                        
+                    </ul>
+                </div> 
+                
+                
+               
+                         
+            </div>
+            
+        </div>    
+    </div>
+    
+</div>
+{%endblock%}

@@ -57,8 +57,6 @@ class Home(TemplateView):
     template_name= 'MedCongressApp/home.html' 
     
     def get_context_data(self, **kwargs):
-        self.request.session['my_car'] = [{'tipo':'congreso','id':'23','cat_pago':'21','precio':'250','nombre':'Nombre','cantidad':'2'},{'tipo':'Taller','id':'23','cat_pago':'21','precio':'250','nombre':'Nombre Taller','cantidad':'1'},{'total':'500'}]
-        
         context = super().get_context_data(**kwargs)
         datos_in=DatosIniciales.objects.all().first()
         context['datos_ini']=datos_in
@@ -69,6 +67,20 @@ class Home(TemplateView):
         context['nuevo_congreso'] = Congreso.objects.filter(fecha_inicio__gt=datetime.now(),published=True).first()
         return context
 
+class Perfil(TemplateView):
+    template_name= 'MedCongressApp/perfil.html' 
+    
+    def get_context_data(self, **kwargs):
+
+        context = super().get_context_data(**kwargs)
+        # datos_in=DatosIniciales.objects.all().first()
+        # context['datos_ini']=datos_in
+        # context['ponentes'] = Ponente.objects.all()
+        # context['especialidades'] = len(EspecialidadCongreso.objects.all())+datos_in.especialidades
+        # context['afiliados'] = len(User.objects.all())+datos_in.afiliados
+        # context['congresos']= Congreso.objects.filter(published=True).order_by('fecha_inicio')
+        # context['nuevo_congreso'] = Congreso.objects.filter(fecha_inicio__gt=datetime.now(),published=True).first()
+        return context
 ##### Listar Congresos #####
 
 class CongresoListView(ListView):
