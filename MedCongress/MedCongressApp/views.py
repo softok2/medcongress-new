@@ -353,7 +353,7 @@ class CongresoCardForm(TemplateView):
                     "source_id" : request.POST["token_id"],
                     "method" : "card",
                     "amount" : self.request.session["cart"][0]['cant'],
-                    "currency" : self.kwargs.get('moneda'),
+                    "currency" : 'MXN',
                     "description" :  descripcion,
                     "device_session_id" : request.POST["deviceIdHiddenFieldName"],
                     "customer" : {
