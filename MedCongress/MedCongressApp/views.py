@@ -360,7 +360,8 @@ class CongresoCardForm(TemplateView):
                             "name" : self.request.user.first_name,
                             "last_name" : self.request.user.last_name,
                             "email" : self.request.user.email
-                    }
+                    },
+                    "use_3d_secure":True
                 }
 
                 
