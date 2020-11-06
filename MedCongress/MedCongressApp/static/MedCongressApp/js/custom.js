@@ -498,13 +498,13 @@ $(document).ready(function(){
 	  ==============================================================
 		 Google Map
 	  ============================================================== */
-	/*	google.maps.event.addDomListener(window, 'load', initialize);
+		google.maps.event.addDomListener(window, 'load', initialize);
 		google.maps.event.addDomListener(window, 'load', initialize_new);
 
 /* ---------------------------------------------------------------------- */
 /*	Google Map Function for Custom Style
 /* ---------------------------------------------------------------------- */
-/*
+
 function initialize() {
 	var MY_MAPTYPE_ID = 'custom_style';
 	var map;
@@ -535,7 +535,7 @@ function initialize() {
 
 	map.mapTypes.set(MY_MAPTYPE_ID, customMapType);
 }
-*/
+
 /* ---------------------------------------------------------------------- */
 /*	Google Map Function for Custom Style
 /* ---------------------------------------------------------------------- */
