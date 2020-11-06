@@ -37,17 +37,22 @@ from django.utils.html import strip_tags
 ###################
 
 
-ID_KEY='m6ftsapwjvmo7j7y8mop'
-PUBLIC_KEY='pk_0d4449445a4948899811cea14a469793'
-PRIVATE_KEY='sk_34664e85b5504ca39cc19d8f9b8df8a2'
+# ID_KEY='m6ftsapwjvmo7j7y8mop'
+# PUBLIC_KEY='pk_0d4449445a4948899811cea14a469793'
+# PRIVATE_KEY='sk_34664e85b5504ca39cc19d8f9b8df8a2'
+# URL_PDF='https://sandbox-dashboard.openpay.mx'
+
+ID_KEY='muq0plqu35rnjyo7sf2v'
+PUBLIC_KEY='pk_0c7aea61d0ef4a4f8fdfbd674841981a'
+PRIVATE_KEY='sk_d07c7b6ffeeb4acaaa15babdaac4101e'
 URL_PDF='https://sandbox-dashboard.openpay.mx'
 
 # Create your views here.
 
 ##### Inicio #####
 
-# class Email(TemplateView):
-#     template_name= 'MedCongressApp/email.html' 
+class Email(TemplateView):
+   template_name= 'MedCongressApp/recibo_pago.html' 
 # class ConfigEmail(TemplateView):
 #     template_name= 'MedCongressApp/confic_email.html' 
     
@@ -371,6 +376,14 @@ class CongresoCardForm(TemplateView):
             response=requests.post(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(params),headers=headers)
             response_dic=response.json()
             if response.status_code==200:
+                ##### EMAIL #####
+                subject = 'Comprobante de Pago de MedCongress'
+                html_message = render_to_string('MedCongressApp/recibo_pago.html', context={'car':self.request.session["cart"],'date':response_dic['operation_date'],'numero':response_dic['authorization'],'importe':response_dic['amount'],'card':response_dic['card']['card_number'],'orden_id':response_dic['order_id']})
+                plain_message = strip_tags('Aviso..... Usted se a comprado eventos en MedCongres')
+                from_email = ' Contacto MedCongress <contacto@medcongress.com.mx>'
+                to = self.request.user.email
+                mail.send_mail(subject, plain_message, from_email, [to],html_message=html_message)
+                ####END EMAIL ######
                 for cart in self.request.session["cart"][1]:
                     if str(cart['tipo_evento']) == 'Congreso':
                         congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
@@ -385,6 +398,7 @@ class CongresoCardForm(TemplateView):
                 car=Cart(self.request)
                 car.clear() 
                 return HttpResponseRedirect(reverse('transaccion_exitosa'))
+
             else:
                 self.request.session["error_opempay"]=response.json()['description']
                 return HttpResponseRedirect(reverse('Error_openpay'))
@@ -482,6 +496,7 @@ class PerfilUserCreate(CreateView):
         chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
         secret_key = get_random_string(60, chars)
         perfiluser.activation_key=secret_key
+
         subject = 'Bienvenido a MedCongress'
         html_message = render_to_string('MedCongressApp/email.html', context={'token':secret_key})
         plain_message = strip_tags('Aviso..... Usted se a creado un usuario en MedCongress')
