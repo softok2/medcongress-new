@@ -221,6 +221,7 @@ class RelCongresoUser(models.Model):
     num_autorizacion_transaccion=models.CharField(max_length=6)
     num_tarjeta_tranzaccion=models.CharField(max_length=16)
     created_at = models.DateTimeField(auto_now_add=True)
+    cantidad=models.IntegerField(null=True)
 
 
     def __str__(self):
@@ -484,6 +485,7 @@ class RelTallerUser(models.Model):
     num_autorizacion_transaccion=models.CharField(max_length=6)
     num_tarjeta_tranzaccion=models.CharField(max_length=16)
     created_at = models.DateTimeField(auto_now_add=True)
+    cantidad=models.IntegerField(null=True)
 
 
     def __str__(self):
