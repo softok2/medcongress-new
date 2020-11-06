@@ -63,22 +63,21 @@ Efectuar Pago
                             <input type="hidden" name="token_id" id="token_id">
                             <input type="hidden" name="pagar_efectivo" value="0" id="token_id">
                             <div class="kf_heading_3">
-                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                               <div class="row"><div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                     <span>Tarjetas de crédito</span>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                     <span>Tarjetas de débito</span>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                </div> </div>
+                                <div class="row"> <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                     <img src="{% static 'MedCongressApp/images/cards1.png'%}">
                                 </div>
 
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                    <img src="{% static 'MedCongressApp/images/cards2.png'%}">
-                                </div>
-
-
-                                <div class="col-sm-6">
+                                    <img class="img-responsive" src="{% static 'MedCongressApp/images/cards22.png'%}">
+                                </div> </div>
+                               <div class="row">
+                                   <div class="col-sm-6">
                                     <div class="form-group">
                                         <label>Nombre del titular</label>
                                         <input type="text" placeholder="Como aparece en la tarjeta" autocomplete="off"
@@ -89,7 +88,7 @@ Efectuar Pago
                                 <div class=" col-sm-6">
                                     <div class="form-group">
                                         <label>Número de tarjeta</label>
-                                        <input type="text" id="numero" autocomplete="off"  maxlength="19"
+                                        <input type="text" id="numero" autocomplete="off"  maxlength="19" placeholder="****-****-****-****"
                                             name="numero">
                                             <input type="hidden" id="numero1" autocomplete="off" data-openpay-card="card_number" maxlength="19"
                                             name="numero1">
@@ -97,6 +96,10 @@ Efectuar Pago
                                     </div>
 
                                 </div>
+                               </div>
+
+
+                                
 
 
 
@@ -141,8 +144,8 @@ Efectuar Pago
                                         <label>Código de seguridad</label>
                                         <div class="row">
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                                <input type="text" placeholder="3 dígitos" autocomplete="off"
-                                                    data-openpay-card="cvv2" name="cant"></div>
+                                                <input type="text" placeholder="CVV" autocomplete="off"
+                                                    data-openpay-card="cvv2" name="cant" maxlength="4"></div>
 
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                                 <img src="{% static 'MedCongressApp/images/cvv.png'%}">
@@ -175,9 +178,9 @@ Efectuar Pago
 
 <p class="">Pasos</p>
                         <ol class="">
-                            <li class="">1. Seleccionar opción <b> Pagar en Efectivo</b> </li>
-                            <li class="">2. Guardar el documento con el código de barra generado </li>
-                            <li class="">3. Presentarse en cualquier tienda donde se pueda efectuar pagos en <b>OpenPay </b> </li>
+                            <li class="">Seleccionar opción <b> Pagar en Efectivo</b> </li>
+                            <li class="">Guardar el documento con el código de barra generado </li>
+                            <li class="">Presentarse en cualquier tienda donde se pueda efectuar pagos en <b>OpenPay </b> </li>
                         </ol>
             <form action="" method="POST" target="_black">
                 {% csrf_token %}
