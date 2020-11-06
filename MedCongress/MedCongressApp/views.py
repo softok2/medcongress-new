@@ -42,7 +42,6 @@ PUBLIC_KEY='pk_0d4449445a4948899811cea14a469793'
 PRIVATE_KEY='sk_34664e85b5504ca39cc19d8f9b8df8a2'
 URL_PDF='https://sandbox-dashboard.openpay.mx'
 
-
 # Create your views here.
 
 ##### Inicio #####
@@ -67,6 +66,8 @@ class Home(TemplateView):
         context['nuevo_congreso'] = Congreso.objects.filter(fecha_inicio__gt=datetime.now(),published=True).first()
         return context
 
+class PagoExitoso(TemplateView):
+    template_name= 'MedCongressApp/pago_satifactorio.html' 
 class Perfil(TemplateView):
     template_name= 'MedCongressApp/perfil.html' 
     
@@ -361,7 +362,8 @@ class CongresoCardForm(TemplateView):
                             "last_name" : self.request.user.last_name,
                             "email" : self.request.user.email
                     },
-                    "use_3d_secure":True
+                    "use_3d_secure":True,
+                    "redirect_url":'https://medcongress.com.mx/transaccion_exitosa',
                 }
 
                 
@@ -382,7 +384,7 @@ class CongresoCardForm(TemplateView):
                         pagar_congreso.save()
                 car=Cart(self.request)
                 car.clear() 
-                return HttpResponseRedirect(reverse('Home'))
+                return HttpResponseRedirect(reverse('transaccion_exitosa'))
             else:
                 self.request.session["error_opempay"]=response.json()['description']
                 return HttpResponseRedirect(reverse('Error_openpay'))
