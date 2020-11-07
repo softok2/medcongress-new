@@ -3230,7 +3230,11 @@ h1,h2,h3,h4,h5,h6{
 	width:100%;
 	margin-bottom:15px;	
 }
-.kf_heading_1 h5{
+.kf_heading_1 h5 {
+	text-transform:uppercase;
+	margin-bottom:15px;	
+}
+.kf_heading_1_my h5{
 	text-transform:uppercase;
 	margin-bottom:15px;	
 }
@@ -3373,6 +3377,12 @@ h1,h2,h3,h4,h5,h6{
 	  ==============================================================
 */
 .kf_experience{
+	float:left;
+	width:100%;
+	border-bottom:1px solid #d6d6d6;
+	padding:40px 0px;	
+}
+.kf_experience_my{
 	float:left;
 	width:100%;
 	border-bottom:1px solid #d6d6d6;
@@ -4547,7 +4557,8 @@ h1,h2,h3,h4,h5,h6{
 */
 .kf_heading_1,
 .kf_heading_2,
-.kf_heading_3
+.kf_heading_3,
+.kf_heading_1_my
 {
 	float:left;
 	width:100%;

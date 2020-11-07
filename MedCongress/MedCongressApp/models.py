@@ -93,7 +93,7 @@ class PerfilUsuario(models.Model):
     especialidad=models.ForeignKey(Especialidades,on_delete=models.DO_NOTHING,null=True,blank=True)
     ubicacion=models.ForeignKey(Ubicacion,on_delete=models.DO_NOTHING,null=True)
     genero=models.ForeignKey(Genero,on_delete=models.DO_NOTHING)
-
+    datos_interes=models.TextField(null=True)
     class Meta:
         verbose_name='Perfil usuario'
         verbose_name_plural='Perfil de usuarios'
@@ -184,6 +184,7 @@ class Congreso(models.Model):
     categoria_pago = models.ManyToManyField(CategoriaPagoCongreso, through='RelCongresoCategoriaPago',related_name='congreso_cat_pago')
     is_openpay=models.BooleanField(null=True)
     template=models.CharField(max_length=50,null=True)
+    
 
 
     class Meta:

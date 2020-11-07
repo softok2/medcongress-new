@@ -352,7 +352,7 @@ class PerfilUserForm(forms.ModelForm):
    
     class Meta:
         model=PerfilUsuario
-        fields=['cel_profecional','categoria','genero','especialidad','is_ponente','foto','detalle']
+        fields=['cel_profecional','categoria','genero','especialidad','is_ponente','foto','detalle','datos_interes']
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -361,7 +361,9 @@ class PerfilUserForm(forms.ModelForm):
         self.fields['categoria'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['genero'].widget.attrs.update({'class': 'form-control'})
         self.fields['especialidad'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['detalle'].widget.attrs.update({'class': 'form-control','rows':'3'})   
+        self.fields['detalle'].widget.attrs.update({'class': 'form-control ckeditor'}) 
+        self.fields['datos_interes'].widget.attrs.update({'class': 'form-control ckeditor'})   
+        
        
 class UsuarioForms(MultiModelForm):
     form_classes = {

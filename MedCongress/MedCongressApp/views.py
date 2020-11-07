@@ -23,7 +23,7 @@ from .forms import UserPerfilUser
 from .models import (CategoriaPagoCongreso, Congreso, EspecialidadCongreso,
                      Ponencia, Ponente, RelCongresoCategoriaPago,
                      RelCongresoUser,RelPonenciaPonente,PerfilUsuario,ImagenCongreso,Taller,RelTalleresCategoriaPago,RelTallerUser,DatosIniciales,
-                     CategoriaUsuario,Bloque,Moderador)
+                     CategoriaUsuario,Bloque,Moderador,RelTallerPonente)
 from .pager import Pager
 from .cart import Cart
 
@@ -75,8 +75,20 @@ class Perfil(TemplateView):
     def get_context_data(self, **kwargs):
 
         context = super().get_context_data(**kwargs)
+        congresos=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,is_pagado=True).distinct('congreso')
+        context['congresos']=congresos
+        congresos_pendientes=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,is_pagado=False).distinct('congreso')
+        context['congresos_pendientes']=congresos_pendientes
+        talleres=RelTallerUser.objects.filter(user=self.request.user.perfilusuario,is_pagado=True).distinct('taller')
+        context['talleres']=talleres
+        talleres_pendientes=RelTallerUser.objects.filter(user=self.request.user.perfilusuario,is_pagado=False).distinct('taller')
+        context['talleres_pendientes']=talleres_pendientes
+        ponencias=RelPonenciaPonente.objects.filter(ponente=self.request.user.perfilusuario.ponente)
+        context['ponencias']=ponencias
+        talleres_pon=RelTallerPonente.objects.filter(ponente=self.request.user.perfilusuario.ponente)
+        context['talleres_pon']=talleres_pon
         # datos_in=DatosIniciales.objects.all().first()
-        # context['datos_ini']=datos_in
+        # 
         # context['ponentes'] = Ponente.objects.all()
         # context['especialidades'] = len(EspecialidadCongreso.objects.all())+datos_in.especialidades
         # context['afiliados'] = len(User.objects.all())+datos_in.afiliados

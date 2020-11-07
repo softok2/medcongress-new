@@ -4,7 +4,7 @@
 
     {%endblock%}
 {% block titulo %}
-Aviso de Privacidad
+Detalles del Perfil
 {%endblock%}
 {% block contenido %}
 <div class="sub-header">
@@ -47,12 +47,7 @@ Aviso de Privacidad
                         {%if request.user.perfilusuario.foto%}
                         <img src="{% static '/'%}{{request.user.perfilusuario.foto}}"
                         alt="{{request.user.username}}" >
-                         <figcaption class="kf_speaker_socil">
-                            <ul>
-                                <li><a href="#" data-toggle="tooltip" >Editar Foto</a></li>
-                                
-                            </ul>
-                        </figcaption>
+                        
                         {%else%}
                         <img src="{% static 'MedCongressApp/images/defaulthombre.png' %}"
                         alt="{{request.user.username}}" >
@@ -66,35 +61,69 @@ Aviso de Privacidad
                             
                         </div>
                         
-                        <h4> {{request.user.first_name}} {{request.user.last_name}}<a href='' style="margin-left:10px;font-size:50%"><i class="fa fa-edit"></i> Editar</a></h4>
+                        <h4> {{request.user.first_name}} {{request.user.last_name}}<a href='' style="margin-left:10px;font-size:50%"> <br><i class="fa fa-edit"></i> Editar</a></h4>
                         
-                        <ul>
-                            <li>
-                                <strong>Dirección</strong>
-                                <span>123 street, USA</span>
-                            </li>
-                            <li>
-                                <strong>Email</strong>
-                                <a href="#">Email@gmail.com</a>
-                            </li>
-                            <li>
-                                <strong>Categoría</strong>
-                                <span>Médico</span>
-                            </li>
-                            <li>
-                                <strong>Especialidad</strong>
-                                <span>Anatomía Patológica</span>
-                            </li>
-                            <li>
-                                <strong>Cédula Profecional</strong>
-                                <span>EF8965</span>
-                            </li>
-                        </ul>
+                        <table class="table table-bordered">
+                            <tr>
+                                <td align="center"> <b>Localidad</b> </td>
+                                <td>{{request.user.perfilusuario.ubicacion}}</td>
+                               
+                              </tr>
+                             
+                              <tr>
+                                <td align="center"> <b>Email</b> </td>
+                                <td>{{request.user.email}}</td>
+                               
+                              </tr>
+                              <tr>
+                                <td align="center"> <b>Categoría</b> </td>
+                                <td>{{request.user.perfilusuario.categoria}}</td>
+                               
+                              </tr>
+                              {%if request.user.perfilusuario.especialidad%}
+                              <tr>
+                                <td align="center"> <b>Especialidad</b> </td>
+                                <td>{{request.user.perfilusuario.especialidad}}</td>
+                               
+                              </tr>
+                              {%endif%}
+                              {%if request.user.perfilusuario.cel_profecional%}
+                              <tr>
+                                <td align="center"> <b>Cédula Profecional</b> </td>
+                                <td>{{request.user.perfilusuario.cel_profecional}}</td>
+                               
+                              </tr>
+                              {%endif%}
+                          </table>
+                        
                     </div>
                     
                 </div>
                 <!--Who Am I Wrap End-->
-                
+                <div class="row">
+                    <div class="kf_experience_my">
+                        <div class="kf_heading_1_my">
+                            <h5>Mis Constancias</h5> 
+                            {% if request.user.perfilusuario.detalle %}
+                            <p>{{request.user.perfilusuario.detalle|safe}}</p>
+                            {%else%}
+                            <p>No tiene ninguna constancia a mostrar</p>
+                            {%endif%}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="kf_experience_my">
+                        <div class="kf_heading_1_my">
+                            <h5>Datos de Interes</h5> 
+                            {% if request.user.perfilusuario.datos_interes %}
+                            <p>{{request.user.perfilusuario.datos_interes|safe}}</p>
+                            {%else%}
+                            <p>No tiene ningún Dato de Interes que mostrar</p>
+                            {%endif%}
+                        </div>
+                    </div>
+                </div>
                 
                 <!--Yearly Expercience Wrap Start-->
                 <div class='row'>
@@ -111,30 +140,26 @@ Aviso de Privacidad
                     </div>
                     
                     <ul>
+                        {%if congresos%}
+                        {%for congreso in congresos%}
                         <li>
                             <div class="kf_experience_list">
-                                <h6>Congreso 1</h6>
-                                <a href="#"><i class="fa fa-calendar"></i> Mar 2015 -</a>
-                                <span>current</span>
-                                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                                <h6>{{congreso.congreso.titulo}}</h6>
+                                <a href="#"><i class="fa fa-calendar"></i> {{congreso.congreso.fecha_inicio|date:"M"}} {{congreso.congreso.fecha_inicio|date:"d"}} / {{congreso.congreso.fecha_inicio|date:"Y"}}</a>
+                                <p>{{congreso.congreso.sub_titulo}}</p>
                             </div>
                         </li>
+                        {%endfor%}
+                        {%else%}
+                        <li>
+                            <div class="kf_experience_list">
+                                <h6>No tiene ningún Congreso comprado</h6>
+                                
+                            </div>
+                        </li>
+                        {%endif%}
+
                         
-                        <li>
-                            <div class="kf_experience_list">
-                                <h6>Congreso 2</h6>
-                                <a href="#"><i class="fa fa-calendar"></i> Mar 2015 - Nov 2015</a>
-                                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-                            </div>
-                        </li>
-                        
-                        <li>
-                            <div class="kf_experience_list">
-                                <h6>Congreso 3</h6>
-                                <a href="#"><i class="fa fa-calendar"></i>Mar 2015 - Nov 2015</a>
-                                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-                            </div>
-                        </li>
                     </ul>
                      </div>
                      </div>
@@ -142,7 +167,7 @@ Aviso de Privacidad
                 <div class="kf_experience">
                 
                     <div class="kf_heading_1">
-                            <h5>Talleres Comprado</h5>
+                            <h5>Talleres Pagados</h5>
                             
                         </div>
                         
@@ -151,55 +176,112 @@ Aviso de Privacidad
                     </div>
                     
                     <ul>
+                        {%if talleres%}
+                        {%for taller in talleres%}
                         <li>
                             <div class="kf_experience_list">
-                                <h6>Congreso 1</h6>
-                                <a href="#"><i class="fa fa-calendar"></i> Mar 2015 -</a>
-                                <span>current</span>
-                                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                                <h6>{{taller.taller.titulo}}</h6>
+                                <a href="#"><i class="fa fa-calendar"></i> {{taller.taller.fecha_inicio|date:"M"}} {{taller.taller.fecha_inicio|date:"d"}} / {{taller.taller.fecha_inicio|date:"Y"}}</a>
+                                <p> <b> CONGRESO:  {{taller.taller.congreso.titulo}}</b></p>
+                                <p>{{taller.taller.detalle}}</p>
                             </div>
                         </li>
-                        
+                        {%endfor%}
+                        {%else%}
                         <li>
                             <div class="kf_experience_list">
-                                <h6>Congreso 2</h6>
-                                <a href="#"><i class="fa fa-calendar"></i> Mar 2015 - Nov 2015</a>
-                                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                                <h6>No tiene ningún Taller comprado</h6>
+                                
                             </div>
                         </li>
-                        
-                        <li>
-                            <div class="kf_experience_list">
-                                <h6>Congreso 3</h6>
-                                <a href="#"><i class="fa fa-calendar"></i>Mar 2015 - Nov 2015</a>
-                                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-                            </div>
-                        </li>
+                        {%endif%}
+
                     </ul>
                      </div>
                         
                 </div>
                 
                  </div>
-                
-                <!--Yearly Expercience Wrap End-->
-                
+                 <div class='row'>
+                    <div class='col-md-6'>
+                    <div class="kf_experience">
+                    
+                        <div class="kf_heading_1">
+                                <h5>Congresos pendientes de Pago</h5>
+                                
+                            </div>
+                            
+                        <div class="kf_experience_logo">
+                            <i class="fa fa-briefcase"></i>
+                        </div>
+                        
+                        <ul>
+                            {%if congresos_pendientes%}
+                            {%for congreso in congresos_pendientes%}
+                            <li>
+                                <div class="kf_experience_list">
+                                    <h6>{{congreso.congreso.titulo}}</h6>
+                                    <a href="#"><i class="fa fa-calendar"></i> {{congreso.congreso.fecha_inicio|date:"M"}} {{congreso.congreso.fecha_inicio|date:"d"}} / {{congreso.congreso.fecha_inicio|date:"Y"}}</a>
+                                    <p>{{congreso.congreso.sub_titulo}}</p>
+                                </div>
+                            </li>
+                            {%endfor%}
+                            {%else%}
+                            <li>
+                                <div class="kf_experience_list">
+                                    <h6>No tiene ningún Congreso pendiente de pago</h6>
+                                    
+                                </div>
+                            </li>
+                            {%endif%}
+    
+                            
+                        </ul>
+                         </div>
+                         </div>
+                         <div class='col-md-6'>
+                    <div class="kf_experience">
+                    
+                        <div class="kf_heading_1">
+                                <h5>Talleres Pendientes de Pago</h5>
+                                
+                            </div>
+                            
+                        <div class="kf_experience_logo">
+                            <i class="fa fa-hdd-o"></i>
+                        </div>
+                        
+                        <ul>
+                            {%if talleres_pendientes%}
+                            {%for talleres in talleres_pendientes%}
+                            <li>
+                                <div class="kf_experience_list">
+                                    <h6>{{talleres.talleres.titulo}}</h6>
+                                    <a href="#"><i class="fa fa-calendar"></i> {{talleres.talleres.fecha_inicio|date:"M"}} {{talleres.talleres.fecha_inicio|date:"d"}} / {{talleres.talleres.fecha_inicio|date:"Y"}}</a>
+                                    <p> <b> CONGRESO:  {{talleres.talleres.congreso.titulo}}</b></p>
+                                    <p>{{talleres.talleres.detalle}}</p>
+                                </div>
+                            </li>
+                            {%endfor%}
+                            {%else%}
+                            <li>
+                                <div class="kf_experience_list">
+                                    <h6>No tiene ningún Taller pendiente de pago</h6>
+                                    
+                                </div>
+                            </li>
+                            {%endif%}
+                        </ul>
+                         </div>
+                            
+                    </div>
+                    
+                     </div>
                 
               
-                <!--Education Wrap End-->
-                
-                <!--Testimonial Wrap Start-->
-                
-                <!--Testimonial Wrap End-->
-                
-                
             </div>
             
             <div class="col-md-4">
-            
-                
-                
-                
                 <div class="kf_aside_folwer">
                 <h6 style="text-align:center; padding:20px;border-bottom: 1px solid #e6e6e6;
 background-color: #e6e6e6;"> <b> Mis Contacias</b></h6>
@@ -251,28 +333,26 @@ background-color: #e6e6e6;"> <b> Mis Contacias</b></h6>
                 <h6 style="text-align:center; padding:20px;border-bottom: 1px solid #e6e6e6;
 background-color: #e6e6e6;"> <b> Mis Ponencias</b></h6>
                     <ul>
-                        
-                        
+                       {%if ponencias%} 
+                        {%for ponencia in ponencias%}
                         <li>
 
                             <div class="like_amount">
-                                <p>Ponencia 1</p>
-                                <span>Congreso 1</span>
+                                <p>{{ponencia.ponencia.titulo}}</p>
+                                <span> <b>Congreso: </b> {{ponencia.ponencia.congreso.titulo}}</span>
                             </div>
                             
                            
                         </li>
-                         <li>
-                            
-                            
+                        {%endfor%}
+                        {%else%}
+                         <li>  
                             <div class="like_amount">
-                                <p>Ponencia 2</p>
-                                <span>Congreso 1</span>
-                            </div>
-                            
-                           
+                                <p>No es Ponente en ninguna Ponencia</p>
+                               
+                            </div>   
                         </li>
-                         
+                         {%endif%}
                         
                     </ul>
                 </div>
@@ -282,26 +362,26 @@ background-color: #e6e6e6;"> <b> Mis Talleres</b></h6>
                     <ul>
                         
                         
+                        {%if talleres_pon%} 
+                        {%for taller in talleres_pon%}
                         <li>
 
                             <div class="like_amount">
-                                <p>Taller 7 </p>
-                                <span>Congreso 2</span>
+                                <p>{{taller.taller.titulo}}</p>
+                                <span> <b>Congreso: </b> {{taller.taller.congreso.titulo}}</span>
                             </div>
                             
                            
                         </li>
-                         <li>
-                            
-                            
+                        {%endfor%}
+                        {%else%}
+                         <li>  
                             <div class="like_amount">
-                                <p>Taller 2</p>
-                                <span>Congreso 3</span>
-                            </div>
-                            
-                           
+                                <p>No es Ponente en ningún Taller</p>
+                               
+                            </div>   
                         </li>
-                         
+                         {%endif%}
                         
                     </ul>
                 </div> 

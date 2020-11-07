@@ -167,6 +167,19 @@
 											</div>
 										</div>
 										<div class="row">
+											<div class="col-sm-12" >
+												<div class="form-group">
+													<label
+														for="{{form.perfiluser.datos_interes.id_for_label }}"><b>Otros Datos de Interes</b>{% if form.perfiluser.datos_interes.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.perfiluser.datos_interes.errors }}
+														</span>{% endif %}</label>
+				
+													{{form.perfiluser.datos_interes }}
+												</div>
+											</div>
+										</div>
+										<div class="row">
 											<div class="col-sm-6 ">
 												<div class="form-group">
 													<label
@@ -286,7 +299,8 @@
 {% block scripts %}
 <link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
 <script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
-
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/editors/ckeditor/ckeditor.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/editors/editor-ckeditor.js'%}"></script>
 
 <script type="text/javascript"
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCf3QdCwg8QDNOS3A2vSQ3DqW2mpJ_gSY8"></script>
@@ -370,13 +384,6 @@
 
         });
 	});
-
-	// alert($('#id_imagen_congreso-imagen').val());
-	// 		// $('#id_congreso-imagen_prim').val($('#id_congreso-imagen_prim').val().push($('#id_imagen_congreso-imagen').val()));
-	// 		// $('#id_congreso-imagen_prim').multiselect("refresh");
-	// 		//$("#id_congreso-imagen_prim").val(["130860","130858"]);
-	// 		$('#id_congreso-imagen_prim').append('<option value="' + $('#id_imagen_congreso-imagen').val() + '" selected="selected">' + $('#id_imagen_congreso-imagen').val() + '</option>');
-
 
 	
 </script>
