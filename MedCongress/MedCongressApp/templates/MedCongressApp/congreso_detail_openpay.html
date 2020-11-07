@@ -6,7 +6,129 @@
 {%endblock%}
 {% block contenido %}
 
+<div class="modal fade bs-example-modal-lg tt" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Perfil del Ponente</h4>
+            </div>
+            <div class="modal-body" style="padding: 0px 15px;">
+              <!-- //////////////////   -->
+              <div class="kf_content">
+                <div class="container">
+                    <div class="row">
+                    
+                        <div class="col-md-9">
+                            <!--Who Am I Wrap Start-->
+                            <div class="kf_who_am">
+                                <figure id="foto">
+                                  
+                                   
+                                </figure>
+                                
+                                <div class="kf_who_am_des">
+                                   
+                                    
+                                    <h4 id="nombre"> </h4>
+                                    
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <td align="center"> <b>Localidad</b> </td>
+                                            <td id="localidad"></td>
+                                           
+                                          </tr>
+                                         
+                                          <tr>
+                                            <td align="center"> <b>Email</b> </td>
+                                            <td id="email"></td>
+                                           
+                                          </tr>
+                                          <tr>
+                                            <td align="center"> <b>Categoría</b> </td>
+                                            <td id="categoria"></td>
+                                           
+                                          </tr>
+                                          {%if request.user.perfilusuario.especialidad%}
+                                          <tr>
+                                            <td align="center"> <b>Especialidad</b> </td>
+                                            <td id="especialidad"></td>
+                                           
+                                          </tr>
+                                          {%endif%}
+                                          {%if request.user.perfilusuario.cel_profecional%}
+                                          <tr>
+                                            <td align="center"> <b>Cédula Profecional</b> </td>
+                                            <td id="ced"></td>
+                                           
+                                          </tr>
+                                          {%endif%}
+                                      </table>
+                                    
+                                </div>
+                                
+                            </div>
+                            <!--Who Am I Wrap End-->
+                            <div class="row">
+                                <div class="kf_experience_my" style="padding:31px;">
+                                    <div class="kf_heading_1_my">
+                                        <h5>Constancias</h5> 
+                                        
+                                        <p id="constancia"></p>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="kf_experience_my" style="padding:31px;">
+                                    <div class="kf_heading_1_my">
+                                        <h5>Datos de Interes</h5> 
+                                       
+                                        <p id="datos"></p>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!--Yearly Expercience Wrap Start-->
+                           
+                            <div class="kf_aside_folwer" style="margin-top: 35px;">
+                            <h6 style="text-align:center; padding:20px;border-bottom: 1px solid #e6e6e6;
+            background-color: #e6e6e6;"> <b> Ponencias</b></h6>
+                                <ul id="ponencias">
+                                  
+                                    
+                                </ul>
+                            </div>
+                           <div class="kf_aside_folwer">
+                            <h6 style="text-align:center; padding:20px;border-bottom: 1px solid #e6e6e6;
+            background-color: #e6e6e6;"> <b> Talleres</b></h6>
+                                <ul id="talleres">
+                                 
+                                </ul>
+                            </div> 
+                            
+                            
+                           
+                                     
+                        </div>
+                        
+                    </div>    
+                </div>
+                
+            </div>
 
+
+              <!-- /////////////////////////// -->
+            </div>
+            <div class="modal-footer">
+                <a  type="button" class="btn btn-default" data-dismiss="modal">Cerrar</a>
+               
+            </div>
+        </div>
+    </div>
+</div>
 <div class="kode-slider">
 
     <ul class="bxslider-banner">
@@ -71,9 +193,10 @@
                                 {% else %}
                                 <div role="tabpanel" class="tab-pane " id="home{{forloop.counter}}">
                                     {%endif%}
-                                    
-                                    {% for pon in ponencia%}
 
+                                    {% for pon in ponencia%}
+                                    {%if pon.tipo == 'Bloque'%}
+                                    <!-----  //////////////////////////////////-->
                                     <div class="kf_new_con_wrap ">
                                         <div class="kf_new_conf_time">
                                             <h5>{{pon.fecha_inicio|date:"H"}}:{{pon.fecha_inicio|date:"i"}}</h5>
@@ -84,7 +207,8 @@
                                                 {%else%}
                                                 <div class="kf_new_conf_hdg " id="conf_accord{{forloop.counter0}}">
                                                     {%endif%}
-                                                    <h5>{{pon.titulo}} </h5>
+                                                    <h5>{%if pon.tipo == 'Taller'%}{{pon.tipo|upper}}{%endif%}
+                                                        {{pon.titulo}} <span style="font-style: italic;"> </span> </h5>
 
                                                     <i class="fa fa-angle-down"></i>
 
@@ -92,36 +216,142 @@
                                                 <div class="kf_new_conf_open_wrap">
                                                     <div class="kf_new_conf_des">
                                                         {%if pon.detalle%}
-                                                        <p>{{pon.detalle}}</p>
+                                                        <p>{{pon.detalle|safe}}</p>
                                                         {%endif%}
                                                     </div>
-                                                    {%for ponente in pon.ponente.all %}
+                                                    <div class="row">
+                                                    {%for mod in pon.moderador %}
                                                     
-                                                    <div class="kf_new_conf_orgnizr">
+                                                   
+                                                    <div class="kf_new_conf_orgnizr col-sm-6">
                                                         <figure>
-                                                            <img src="{% static '/'%}{{ponente.user.foto}}"
-                                                                alt="image Here">
+                                                            {% if mod.user.foto%}
+                                                            <img src="{% static '/'%}{{mod.user.foto}}"
+                                                                alt="image de {{mod.user.usuario.username}}">
+                                                                {%else%}
+                                                            <img src="{% static 'MedCongressApp/images/defaulthombre.png' %}"
+                                                            alt="image de {{mod.user.usuario.username}}">
+                                                                {%endif%}
                                                         </figure>
                                                         <div class="kf_new_conf_orgnizr_name">
-                                                            <h6>{{ponente.user.usuario.first_name}}
-                                                                {{ponente.user.usuario.last_name}}</h6>
-                                                            <span> Ponente</span>
-                                                            <p>
-                                                                {%if ponente.user.detalle %}
-                                                                {{ponente.user.detalle}}
+                                                            <button type="button" class="btn btn-link" data-toggle="modal" data-target=".tt" onclick="VerPerfil('{{mod.user.pk}}')"><h6>{{mod.user.usuario.first_name}}
+                                                                {{mod.user.usuario.last_name}}</h6></button>
+                                                            <span> Moderador</span>
+                                                            
+                                                        </div>
+                                                        <p>
+                                                                {%if mod.user.detalle %}
+                                                                {{mod.user.detalle|safe}}
                                                                 {%endif%}
                                                             </p>
-                                                        </div>
                                                     </div>
                                                    
+                                                    {%endfor%}
+                                                
+                                                    {%for evento in pon.eventos %}
                                                     
+                                                    {%for ponente in evento.ponentes %}
+                                                   {%if pon.moderador|length|divisibleby:2 %}
+                                                    </div>
+                                                    <div class="row">
+                                                   {%endif%}
+                                                        
+                                                    <div class="kf_new_conf_orgnizr col-sm-6">
+                                                        <figure>
+                                                            {% if ponente.user.foto%}
+                                                          
+                                                            <img src="{% static '/'%}{{ponente.user.foto}}"
+                                                                alt="image de {{ponente.user.usuario.username}}">
+                                                                {%else%}
+                                                            <img src="{% static 'MedCongressApp/images/defaulthombre.png' %}"
+                                                            alt="image de {{ponente.user.usuario.username}}">
+                                                                {%endif%}
+                                                        </figure>
+                                                        <div class="kf_new_conf_orgnizr_name">
+                                                            <button type="button" class="btn btn-link" data-toggle="modal" data-target=".tt" onclick="VerPerfil('{{ponente.user.pk}}')"><h6>{{ponente.user.usuario.first_name}}
+                                                                {{ponente.user.usuario.last_name}}</h6></button>
+                                                            <span> Ponente</span>
+                                                           
+                                                        </div> <p>
+                                                                {%if ponente.user.detalle %}
+                                                                {{ponente.user.detalle|safe}}
+                                                                {%endif%}
+                                                            </p>
+                                                        <h5 style="color: #00a4ef;padding-bottom: 61px;font-size: 14px;">{%if evento.tipo == 'Taller'%}{{evento.tipo|upper}}{%endif%}
+                                                            {{evento.titulo}} <span style="font-style: italic;"> </span> </h5>     
+                                                    </div>
+                                                    {%if pon.moderador|length|divisibleby:2%}
+                                                    
+                                                   
+                                                {% if forloop.counter|divisibleby:2 %}
+                                            </div>
+                                            <div class="row">
+                                                {%endif%}
+                                                
+                                                {%endif%}
+                                                    {%endfor%}
+                                                    
+                                              
+                                                       
+    
                                                     
                                                     {%endfor%}
-
-
+                                                  </div>
                                                 </div>
                                             </div>
                                         </div>
+
+                                    <!-----  //////////////////////////////////-->
+                                    {%else%}
+                                    <div class="kf_new_con_wrap ">
+                                        <div class="kf_new_conf_time">
+                                            <h5>{{pon.fecha_inicio|date:"H"}}:{{pon.fecha_inicio|date:"i"}}</h5>
+                                        </div>
+                                        <div class="kf_new_conf_des_wrap">
+                                            {% if forloop.first %}
+                                            <div class="kf_new_conf_hdg accordion-open" id="conf_accord">
+                                                {%else%}
+                                                <div class="kf_new_conf_hdg " id="conf_accord{{forloop.counter0}}">
+                                                    {%endif%}
+                                                    <h5>{%if pon.tipo == 'Taller'%}{{pon.tipo|upper}}{%endif%}
+                                                        {{pon.titulo}} <span style="font-style: italic;"> </span> </h5>
+
+                                                    <i class="fa fa-angle-down"></i>
+
+                                                </div>
+                                                <div class="kf_new_conf_open_wrap">
+                                                    <div class="kf_new_conf_des">
+                                                        {%if pon.detalle%}
+                                                        <p>{{pon.detalle|safe}}</p>
+                                                        {%endif%}
+                                                    </div>
+                                                    {%for ponente in pon.ponentes %}
+                                                    <div class="kf_new_conf_orgnizr">
+                                                        <figure>
+                                                            {% if ponente.user.foto%}
+                                                            <img src="{% static '/'%}{{ponente.user.foto}}"
+                                                                alt="image de {{ponente.user.usuario.username}}">
+                                                                {%else%}
+                                                            <img src="{% static 'MedCongressApp/images/defaulthombre.png' %}"
+                                                            alt="image de {{ponente.user.usuario.username}}">
+                                                                {%endif%}
+                                                        </figure>
+                                                        <div class="kf_new_conf_orgnizr_name">
+                                                            <button type="button" class="btn btn-link" data-toggle="modal" data-target=".tt" onclick="VerPerfil('{{ponente.user.pk}}')"><h6>{{ponente.user.usuario.first_name}}
+                                                                {{ponente.user.usuario.last_name}}</h6></button>
+                                                            <span> Ponente</span>
+                                                            
+                                                        </div><p>
+                                                                {%if ponente.user.detalle %}
+                                                                {{ponente.user.detalle|safe}}
+                                                                {%endif%}
+                                                            </p>
+                                                    </div>
+                                                    {%endfor%}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {%endif%}
                                         {%endfor%}
 
                                     </div>
@@ -135,6 +365,7 @@
                                 {%endif%}
                             </div>
                         </div>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -160,6 +391,7 @@
 
 
                     <div class="col-md-3">
+                        <button type="button" class="btn btn-link" data-toggle="modal" data-target=".tt" onclick="VerPerfil('{{ponente.id_user}}')"> 
                         <!--KODE_EVENT_BLOG2 START-->
                         <div class="kode-newspeaker">
                             <div class="speaker-photo">
@@ -202,7 +434,7 @@
                         </div>
                         <!--KODE_EVENT_BLOG2 START-->
                     </div>
-
+                </button>
                     {%if forloop.last%}
 
                 </div>
@@ -643,7 +875,51 @@
                 });
         }
     }
+function VerPerfil(pk){
+    url = "{% url 'GetPerfil'%}";
+                    $.get(url, { 'pk': pk }, function (data) {
+                    $('#nombre').html(data.nombre) ;
+                    if(data.foto)
+                        $('#foto').html('<img src="{% static '/'%}'+data.foto+'" alt=" foto '+ data.nombre+'" >');
+                    else
+                        $('#foto').html('<img src="{% static 'MedCongressApp/images/defaulthombre.png' %}" alt="{{request.user.username}}" >');
+                    
+                    $('#localidad').html(data.lugar) ;
+                    $('#email').html(data.email) ;
+                    $('#categoria').html(data.categoria) ;
+                    $('#especialidad').html(data.especialidad);
+                    $('#ced').html(data.ced);
+                    $('#constancia').html(data.constancia);
+                    $('#datos').html(data.datos);
+                    
+                    if(data.ponencias.length==0){
+                        ponencias='<li><div class="like_amount"> <b>No es Ponente en ninguna Ponencia </b></div> </li>';
+                    }
+                    else{
+                       ponencias='';
+                        for (let i = 0; i < data.ponencias.length; i++) {
+                            ponencias+='<li><div class="like_amount"><p>'+data.ponencias[i].nombre+'</p><span> <b>Congreso: </b> '+data.ponencias[i].congreso+'</span></div></li>'
+                            
+                        } 
+                    }
+                        
+                    $('#ponencias').html(ponencias)
 
+                    if(data.talleres.length==0){
+                        talleres='<li><div class="like_amount"> <b>No es Ponente en ningún Taller </b></div> </li>';
+                    }
+                    else{
+                        talleres='';
+                        for (let i = 0; i < data.talleres.length; i++) {
+                            talleres+='<li><div class="like_amount"><p>'+data.talleres[i].nombre+'</p><span> <b>Congreso: </b> '+data.talleres[i].congreso+'</span></div></li>'
+                            
+                        } 
+                    }
+                        
+                    $('#talleres').html(talleres)
+                    
+                    });
+}
 
 </script>
 

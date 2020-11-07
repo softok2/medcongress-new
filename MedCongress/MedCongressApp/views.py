@@ -237,7 +237,7 @@ class CongresoDetail(TemplateView):
             for ponente in ponentes: 
                 ponentes_env.append({
                 'id':ponente.id,
-                'id_user':ponente.user.usuario.pk,
+                'id_user':ponente.user.pk,
                 'nombre': ponente.user.usuario.first_name,
                 'apellido': ponente.user.usuario.last_name ,# una relación a otro modelo
                 'foto':ponente.user.foto,
@@ -254,12 +254,12 @@ class CongresoDetail(TemplateView):
             for ponente in ponentes: 
                 var=False
                 for pon in ponentes_env:
-                    if pon['id_user']==ponente.user.usuario.pk:
+                    if pon['id_user']==ponente.user.pk:
                         var=True
                 if not var:
                     ponentes_env.append({
                     'id':ponente.id,
-                    'id_user':ponente.user.usuario.pk,
+                    'id_user':ponente.user.pk,
                     'nombre': ponente.user.usuario.first_name,
                     'apellido': ponente.user.usuario.last_name ,# una relación a otro modelo
                     'foto':ponente.user.foto,
@@ -276,12 +276,12 @@ class CongresoDetail(TemplateView):
             for moderador in moderadores: 
                 var=False
                 for pon in ponentes_env:
-                    if pon['id_user']==moderador.user.usuario.pk:
+                    if pon['id_user']==moderador.user.pk:
                         var=True
                 if not var:
                     ponentes_env.append({
                     'id':moderador.id,
-                    'id_user':moderador.user.usuario.pk,
+                    'id_user':moderador.user.pk,
                     'nombre': moderador.user.usuario.first_name,
                     'apellido': moderador.user.usuario.last_name ,# una relación a otro modelo
                     'foto':moderador.user.foto,
@@ -567,7 +567,6 @@ class PagarEfectivo(TemplateView):
         
 
 ##### Adicionar Congreso a Carrito de Compra #####
-
 @method_decorator(login_required,name='dispatch')
 class AddCart(TemplateView):
 
@@ -682,3 +681,51 @@ class HabilitarUser(TemplateView):
             usuario.save()
             return self.render_to_response(self.get_context_data()) 
 
+class GetPerfil(TemplateView):
+    def get(self, request):
+        if request.is_ajax:
+            query =request.GET.get("pk")
+            usuario=PerfilUsuario.objects.get(pk=query)
+            especialidad_env='No tiene Especialidad'
+            if usuario.especialidad:
+                especialidad_env=usuario.especialidad.nombre
+            ced_env='No tiene Cédula Profecional'
+            if usuario.cel_profecional:
+                ced_env=usuario.cel_profecional
+            constancia_env='No tiene Constancias a Mostrar'
+            if usuario.detalle:
+                constancia_env=usuario.detalle
+            datos_env='No tiene Datos de Interes a Mostrar'
+            if usuario.datos_interes:
+                datos_env=usuario.datos_interes 
+            ######### Ponencias #######
+            ponencias_env=[]
+            if Ponente.objects.filter(user=usuario).exists():
+                ponencias=Ponencia.objects.filter(ponente=usuario.ponente)
+                for ponencia in ponencias:
+                    ponencias_env.append({'nombre':ponencia.titulo,
+                                            'congreso':ponencia.congreso.titulo})
+            
+            ###### END Ponencias#######
+             ######### Talleres#######
+            talleres_env=[]
+            if Ponente.objects.filter(user=usuario).exists():
+                talleres=Taller.objects.filter(ponente=usuario.ponente)
+                for taller in talleres:
+                    talleres_env.append({'nombre':taller.titulo,
+                                            'congreso':taller.congreso.titulo})
+            
+            ###### END Talleres#######
+            usuario_json={'nombre':usuario.usuario.first_name+' '+usuario.usuario.last_name,
+                            'foto':str(usuario.foto),
+                            'lugar':usuario.ubicacion.direccion,
+                            'email':usuario.usuario.email,
+                            'categoria':usuario.categoria.nombre,
+                            'especialidad':especialidad_env,
+                            'ced':ced_env,
+                            'constancia':constancia_env,
+                            'datos':datos_env,
+                            'ponencias':ponencias_env,
+                            'talleres':talleres_env}
+            return JsonResponse(usuario_json, safe=False)
+        return TemplateResponse(request, reverse('dashboard'))

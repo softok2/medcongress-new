@@ -173,7 +173,7 @@ class  TallerPonenteCreateView(validarUser,CreateView):
         ctx = super(TallerPonenteCreateView, self).get_context_data(**kwargs)
         pon=Taller.objects.filter(path=self.kwargs.get('path'),published=True).first()
         ctx['pon'] = pon
-        ponentes=RelTallerPonente.objects.all()
+        ponentes=RelTallerPonente.objects.filter(taller=pon)
         id=[]
         for ponente in ponentes:
             id.append(ponente.ponente.pk)

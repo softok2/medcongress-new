@@ -112,7 +112,7 @@ class  PonenciaPonenteCreateView(validarUser,CreateView):
         ctx = super(PonenciaPonenteCreateView, self).get_context_data(**kwargs)
         pon=Ponencia.objects.filter(path=self.kwargs.get('path'),published=True).first()
         ctx['pon'] = pon
-        ponentes=RelPonenciaPonente.objects.all()
+        ponentes=RelPonenciaPonente.objects.filter(ponencia=pon)
         id=[]
         for ponente in ponentes:
             id.append(ponente.ponente.pk)
