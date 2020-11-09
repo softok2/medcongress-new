@@ -83,10 +83,12 @@ class Perfil(TemplateView):
         context['talleres']=talleres
         talleres_pendientes=RelTallerUser.objects.filter(user=self.request.user.perfilusuario,is_pagado=False).distinct('taller')
         context['talleres_pendientes']=talleres_pendientes
-        ponencias=RelPonenciaPonente.objects.filter(ponente=self.request.user.perfilusuario.ponente)
-        context['ponencias']=ponencias
-        talleres_pon=RelTallerPonente.objects.filter(ponente=self.request.user.perfilusuario.ponente)
-        context['talleres_pon']=talleres_pon
+       
+        if Ponente.objects.filter(user=self.request.user.perfilusuario).exists():
+            ponencias=RelPonenciaPonente.objects.filter(ponente=self.request.user.perfilusuario.ponente)
+            context['ponencias']=ponencias
+            talleres_pon=RelTallerPonente.objects.filter(ponente=self.request.user.perfilusuario.ponente)
+            context['talleres_pon']=talleres_pon
         # datos_in=DatosIniciales.objects.all().first()
         # 
         # context['ponentes'] = Ponente.objects.all()
