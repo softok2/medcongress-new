@@ -253,13 +253,13 @@ Detalles del Perfil
                         
                         <ul>
                             {%if talleres_pendientes%}
-                            {%for talleres in talleres_pendientes%}
+                            {%for taller in talleres_pendientes%}
                             <li>
                                 <div class="kf_experience_list">
-                                    <h6>{{talleres.talleres.titulo}}</h6>
-                                    <a href="#"><i class="fa fa-calendar"></i> {{talleres.talleres.fecha_inicio|date:"M"}} {{talleres.talleres.fecha_inicio|date:"d"}} / {{talleres.talleres.fecha_inicio|date:"Y"}}</a>
-                                    <p> <b> CONGRESO:  {{talleres.talleres.congreso.titulo}}</b></p>
-                                    <p>{{talleres.talleres.detalle}}</p>
+                                    <h6>{{taller.taller.titulo}}</h6>
+                                    <a href="#"><i class="fa fa-calendar"></i> {{taller.taller.fecha_inicio|date:"M"}} {{taller.taller.fecha_inicio|date:"d"}} / {{taller.taller.fecha_inicio|date:"Y"}}</a>
+                                    <p> <b> CONGRESO:  {{taller.taller.congreso.titulo}}</b></p>
+                                    <p>{{taller.taller.detalle}}</p>
                                 </div>
                             </li>
                             {%endfor%}
