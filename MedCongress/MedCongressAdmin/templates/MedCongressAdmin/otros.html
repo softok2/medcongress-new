@@ -59,6 +59,7 @@
                                     <h4> <b>Afiliados</b>  <small>{{dato.afiliados}}</small></h4>
                                     <h4> <b>Talleres</b>  <small>{{dato.talleres}}</small></h4>
                                     <h4> <b>Aviso de Privacidad</b>  <label >{{dato.aviso_privacidad|safe|truncatewords_html:200}}</label></h4>
+                                    <h4> <b>Términos y Condiciones</b>  <label  style="margin-top: 20px;">{{dato.terminos_condiciones|safe|truncatewords_html:200}}</label></h4>
 
                                     <a id="edit-btn" type="button" class="btn btn-success" title="Editar Valores" href=" {% url 'MedCongressAdmin:otro_edit' pk=dato.pk %}"
                                     style="float: left; padding:7px;font-size: 20px; margin-top: 30px;">
