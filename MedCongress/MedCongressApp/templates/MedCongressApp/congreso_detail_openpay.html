@@ -4,6 +4,9 @@
 {% block titulo %}
 {{congreso.titulo}}
 {%endblock%}
+{%block css%}
+<link rel="stylesheet" href="{% static 'MedCongressApp/css/bootstrap-rating.css'%}" type="text/css" media="all">
+{%endblock%}
 {% block contenido %}
 
 <div class="modal fade bs-example-modal-lg tt" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
@@ -22,58 +25,47 @@
                     
                         <div class="col-md-9">
                             <!--Who Am I Wrap Start-->
-                            <div class="kf_who_am">
-                                <figure id="foto">
+                            <div class="row">
+                                <div class="col-md-4">
+                                   <figure id="foto">
                                   
-                                   
-                                </figure>
-                                
-                                <div class="kf_who_am_des">
-                                   
                                     
+                                </figure> 
+                              <div style="text-align: center;">   <input id="rating" type="hidden" class="rating" data-readonly value="1"/></div>  
+                                </div>
+                                <!-- <div style="text-align: center;">  <input type="hidden" id="rating2" class="rating check" /> </div>   -->
+                           
+                                
+                                <div class="col-md-8">
                                     <h4 id="nombre"> </h4>
                                     
-                                    <table class="table table-bordered">
+                                    <table class="table ">
                                         <tr>
-                                            <td align="center"> <b>Localidad</b> </td>
-                                            <td id="localidad"></td>
+                                            
+                                            <td align="center"> <b id="especialidad"></b> </td>
+                                            <td align="center"> <b id="localidad"></b> </td>
+                                            <td align="center"id="bandera"> </td>
                                            
                                           </tr>
-                                         
-                                          <tr>
-                                            <td align="center"> <b>Email</b> </td>
-                                            <td id="email"></td>
-                                           
-                                          </tr>
-                                          <tr>
-                                            <td align="center"> <b>Categoría</b> </td>
-                                            <td id="categoria"></td>
-                                           
-                                          </tr>
-                                          {%if request.user.perfilusuario.especialidad%}
-                                          <tr>
-                                            <td align="center"> <b>Especialidad</b> </td>
-                                            <td id="especialidad"></td>
-                                           
-                                          </tr>
-                                          {%endif%}
-                                          {%if request.user.perfilusuario.cel_profecional%}
-                                          <tr>
-                                            <td align="center"> <b>Cédula Profecional</b> </td>
-                                            <td id="ced"></td>
-                                           
-                                          </tr>
-                                          {%endif%}
+                                          
                                       </table>
-                                    
+
+                                    <div class="row" >
+                                        <div class="col-md-2"></div>
+                                        <div class="col-md-8" id="redes_sociales"></div>
+                                    </div>
                                 </div>
-                                
+
+                            </div>
+                           
+                            <div class="row">
+                               
                             </div>
                             <!--Who Am I Wrap End-->
                             <div class="row">
                                 <div class="kf_experience_my" style="padding:31px;">
                                     <div class="kf_heading_1_my">
-                                        <h5>Constancias</h5> 
+                                        <h5>Logros Académicos</h5> 
                                         
                                         <p id="constancia"></p>
                                         
@@ -83,9 +75,19 @@
                             <div class="row">
                                 <div class="kf_experience_my" style="padding:31px;">
                                     <div class="kf_heading_1_my">
-                                        <h5>Datos de Interes</h5> 
+                                        <h5>Publicaciones</h5> 
                                        
-                                        <p id="datos"></p>
+                                        <p id="publicaciones"></p>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="kf_experience_my" style="padding:31px;">
+                                    <div class="kf_heading_1_my">
+                                        <h5>Futuras Conferencias</h5> 
+                                       
+                                        <p id=""></p>
                                        
                                     </div>
                                 </div>
@@ -93,21 +95,8 @@
                             
                             <!--Yearly Expercience Wrap Start-->
                            
-                            <div class="kf_aside_folwer" style="margin-top: 35px;">
-                            <h6 style="text-align:center; padding:20px;border-bottom: 1px solid #e6e6e6;
-            background-color: #e6e6e6;"> <b> Ponencias</b></h6>
-                                <ul id="ponencias">
-                                  
-                                    
-                                </ul>
-                            </div>
-                           <div class="kf_aside_folwer">
-                            <h6 style="text-align:center; padding:20px;border-bottom: 1px solid #e6e6e6;
-            background-color: #e6e6e6;"> <b> Talleres</b></h6>
-                                <ul id="talleres">
-                                 
-                                </ul>
-                            </div> 
+                        
+                        
                             
                             
                            
@@ -627,9 +616,11 @@
 
 {%endblock%}
 {% block script%}
-
+<script src="{% static 'MedCongressApp/js/bootstrap-rating.js' %}"></script>
 <script type="text/javascript">
     jQuery(document).ready(function ($) {
+        
+
         $(".back").click(function (event) {
             event.preventDefault();
             $('html,body').animate({ scrollTop: $(this.hash).offset().top }, 500);
@@ -880,17 +871,37 @@ function VerPerfil(pk){
                     $.get(url, { 'pk': pk }, function (data) {
                     $('#nombre').html(data.nombre) ;
                     if(data.foto)
-                        $('#foto').html('<img src="{% static '/'%}'+data.foto+'" alt=" foto '+ data.nombre+'" >');
+                        $('#foto').html('<img class="img-responsive" src="{% static '/'%}'+data.foto+'" alt=" foto '+ data.nombre+'" ><figcaption class="kf_speaker_socil">'+
+                                '<ul>'+
+                                    '<li>'+ data.puesto+'</li>'+
+                                 
+                                '</ul>'+'</figcaption>'
+                            );
                     else
-                        $('#foto').html('<img src="{% static 'MedCongressApp/images/defaulthombre.png' %}" alt="{{request.user.username}}" >');
-                    
+                        $('#foto').html('<img class="img-responsive" src="{% static 'MedCongressApp/images/defaulthombre.png' %}" alt="{{request.user.username}}" >');
+                    if(data.bandera)
+                        $('#bandera').html('<img style="width: 116px;" class="img-responsive" src="{% static '/'%}'+data.bandera+'" alt=" bandera" >');
+                    else
+                        $('#bandera').html('Este País no tiene bandera en la BD');
+
+                    redes='';
+                    if(data.facebook)
+                    redes+='<div class="like_fb"><a class="facebook" href="'+data.facebook+'"><i class="fa fa-facebook"></i></a> </div>'
+                    if(data.twitter)
+                    redes+='<div class="like_fb"><a class="twitter" href="'+data.twitter+'"><i class="fa fa-twitter"></i></a> </div>'
+                    if(data.youtube)
+                    redes+='<div class="like_fb"><a class="youtube" href="'+data.youtube+'"><i class="fa fa-youtube"></i></a> </div>'
+                    if(data.linkedin)
+                    redes+='<div class="like_fb"><a class="facebook" href="'+data.linkedin+'"><i class="fa fa-linkedin"></i></a> </div>'
+                    $('#redes_sociales').html(redes) ;
                     $('#localidad').html(data.lugar) ;
                     $('#email').html(data.email) ;
                     $('#categoria').html(data.categoria) ;
                     $('#especialidad').html(data.especialidad);
                     $('#ced').html(data.ced);
-                    $('#constancia').html(data.constancia);
-                    $('#datos').html(data.datos);
+                    $('#constancia').html(data.constancias);
+                    $('#publicaciones').html(data.publicaciones);
+                    
                     
                     if(data.ponencias.length==0){
                         ponencias='<li><div class="like_amount"> <b>No es Ponente en ninguna Ponencia </b></div> </li>';
@@ -917,7 +928,14 @@ function VerPerfil(pk){
                     }
                         
                     $('#talleres').html(talleres)
-                    
+                    $('#rating').rating('rate', 4.5);
+//                     $('#rating2').rating({
+//   filled: 'glyphicon glyphicon-heart-empty',
+//   filledSelected: 'glyphicon glyphicon-heart',
+//   empty: 'glyphicon glyphicon-heart-empty'
+// });
+
+
                     });
 }
 

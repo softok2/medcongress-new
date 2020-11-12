@@ -37,7 +37,8 @@ class Especialidades(models.Model):
 
 class Pais(models.Model):
     denominacion = models.CharField(unique=True, max_length=50, validators=[RegexValidator(
-        r'^[a-zA-Z\s]+$', 'Entre un nombre válido. Ej(México)')])
+        r'^[a-zA-Záéíóúñ\s]+$', 'Entre un nombre válido. Ej(México)')])
+    banderas=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='banderas',blank=True, null=True )
 
     class Meta:
         verbose_name = 'pais'
@@ -94,6 +95,12 @@ class PerfilUsuario(models.Model):
     ubicacion=models.ForeignKey(Ubicacion,on_delete=models.DO_NOTHING,null=True)
     genero=models.ForeignKey(Genero,on_delete=models.DO_NOTHING)
     datos_interes=models.TextField(null=True)
+    linkedin=models.CharField(max_length=50,null=True)
+    facebook=models.CharField(max_length=50,null=True)
+    twitter=models.CharField(max_length=50,null=True)
+    youtube=models.CharField(max_length=50,null=True)
+    publicaciones=models.TextField(null=True,blank=True)
+    puesto=models.CharField(max_length=100,null=True)
     class Meta:
         verbose_name='Perfil usuario'
         verbose_name_plural='Perfil de usuarios'
@@ -508,3 +515,25 @@ class DatosIniciales(models.Model):
     afiliados= models.IntegerField(null=True,default=0)
     talleres= models.IntegerField(null=True,default=0)
     aviso_privacidad=models.TextField(null=True)
+
+##### Tabla Cuestionarios-Preguntas#####
+
+class CuestionarioPregunta(models.Model):
+    congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
+    pregunta= models.CharField(max_length=250)
+    published=models.BooleanField(null=True)
+    def __str__(self):
+        return pregunta
+
+    class Meta:
+        verbose_name='Pregunta del Cuestionario'
+        verbose_name_plural='Preguntas del Cuestionario'
+##### Tabla Cuestionarios-Respuestas#####
+
+class CuestionarioRespuestas(models.Model):
+    pregunta=models.ForeignKey(CuestionarioPregunta,on_delete=models.CASCADE)
+    respuesta= models.CharField(max_length=250)
+    is_correcto=models.BooleanField()
+    published=models.BooleanField(null=True)
+
+   

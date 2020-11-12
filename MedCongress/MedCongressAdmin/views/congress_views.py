@@ -9,7 +9,7 @@ from django.views.generic import ListView,TemplateView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView,FormView
 from MedCongressApp.models import (Congreso,Taller,Ponencia,RelCongresoCategoriaPago,ImagenCongreso,Ubicacion
-                                    ,Bloque,RelCongresoUser,RelCongresoCategoriaPago)
+                                    ,Bloque,RelCongresoUser,RelCongresoCategoriaPago,CuestionarioPregunta)
 from MedCongressAdmin.forms.congres_forms import CongresoForms,PonenciaForms,CongresoCategPagoForm,AsignarCongresoForms,ImagenCongForms
 
 class validarUser(UserPassesTestMixin):
@@ -111,14 +111,33 @@ class CongressTalleresListView(validarUser,TemplateView):
 class CongressPonenciasListView(validarUser,CreateView):
     template_name= 'MedCongressAdmin/congres_ponencias.html' 
     form_class = PonenciaForms
-
-     
+    def get(self, request, **kwargs):
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        if congreso is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        return self.render_to_response(self.get_context_data()) 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
         context['congres']=congreso
         context['ponencias']=Ponencia.objects.filter(congreso=congreso,published=True)
         context['all_ponencias']=Ponencia.objects.filter(published=True).exclude(congreso=congreso)
+        return context
+
+########## Vista del cuestionario de un Congreso #############
+
+class CongressCuestionarioListView(validarUser,TemplateView):
+    template_name= 'MedCongressAdmin/cuestionarios.html' 
+    def get(self, request, **kwargs):
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        if congreso is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        return self.render_to_response(self.get_context_data()) 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        context['cuestionarios']=CuestionarioPregunta.objects.filter(congreso=congreso)
+       
         return context
     
 ########## Vista de las Categorias de Pago de un Congreso #############

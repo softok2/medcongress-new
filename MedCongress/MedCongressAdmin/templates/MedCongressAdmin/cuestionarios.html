@@ -1,5 +1,5 @@
 {% extends 'MedCongressAdmin/base.html' %}
-{% block title %}Congresos{% endblock %}
+{% block title %}Cuestionario{% endblock %}
 {% load static %}
 {% block styles %}
 <link rel="stylesheet" type="text/css"
@@ -35,8 +35,8 @@
                     <div class="row">
                         <div class="col-10">
                             <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Listado
-                                de congresos</h1>
-                            <p class="card-text">Mostrando todos los congresos almacenados.</p>
+                                preguntas del Cuestionario</h1>
+                            <p class="card-text">Mostrando todas las Preguntas del Cuestionario.</p>
                         </div>
                         <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
@@ -59,65 +59,22 @@
                                         id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
                                         <thead>
                                             <tr role="row" style="font-size: 13px;">
-                                                <th style="width:50%">Nombre</th>
+                                                <th style="width:50%">Pregunta</th>
+                                                <th>Respuestas</th>
                                                
-                                                <th>T. de Congreso</th>
-                                                <th>Especialidad</th>
-                                                <th>Public.</th>
-                                                <th style="width:12%">Programa</th>
-                                                <th>Otros &nbsp;&nbsp;  </th>
-                                                <th >Operaciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for congres in congress %}
+                                            {% for cuestionario in cuestionarios %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
-                                                <td class="sorting_1">{{ congres.titulo }}</td>
+                                                <td class="sorting_1">{{ cuestionario.pregunta }} </td>
                                                 
-                                                <td>{{ congres.t_congreso.nombre }}</td>
-                                                <td>{{ congres.especialidad.nombre }}</td>
-                                                <td>{%if congres.published%}Si{%else%}No{%endif%}</td>
-                                                <td> 
-                                                    <a id=""
-                                                    href="{%url 'MedCongressAdmin:Congres_bloques' congres.path%}"
-                                                    title="Bloques ">
-                                                    <i class="ft ft-package" style="color:brown;font-size: 18px;"> </i>
-                                                </a> <a id=""
-                                                    href="{%url 'MedCongressAdmin:Congres_ponencias' congres.path%}"
-                                                    title="Ponencias " style="margin-left: 5px;">
-                                                    <i class="la la-graduation-cap " style="color:yellowgreen;font-size: 26px;"> </i>
-                                                </a>
-                                                <a id=""
-                                                     href="{%url 'MedCongressAdmin:Congres_talleres' congres.path %}"
-                                                    title="Talleres " style="margin-left: 5px;">
-                                                    <i class="la la-hdd-o " style="color:rgb(40, 4, 124);font-size: 22px;"> </i>
-                                                </a>
-                                                <a id=""
-                                                href="{%url 'MedCongressAdmin:Congres_cuestionario' congres.path %}"
-                                               title="Cuestionario " style="margin-left: 5px;">
-                                               <i class="la la-graduation-cap " style="color:rgb(40, 4, 124);font-size: 22px;"> </i>
-                                           </a>
-                                            </td>
-                                                <td><a id=""
-                                                    href="{%url 'MedCongressAdmin:Congres_imagenes' congres.path%}"
-                                                        title="Imagenes">
-                                                        <i class="la la-image "></i>
-                                                    </a> 
-                                                    <a id=""
-                                                    href="{%url 'MedCongressAdmin:Congres_pagos' congres.path%}"
-                                                        title="Categorias de pago" >
-                                                        <i class="la la-dollar "></i>
-                                                    </a></td>
-                                                <td style="text-align: center;">
-                                                    <a href="{% url 'MedCongressAdmin:congres_edit' pk=congres.pk %}"
-                                                        title="Editar"><i class="la la-pencil-square"></i></a>
-                                                    <a id="del_{{ congres.pk }}"
-                                                        href="javascript:deleteItem('{{ congres.pk }}')"
+                                                <td></td>
+                                                  <td>  <a id="del_{{ cuestionario.pk }}"
+                                                        href="javascript:deleteItem('{{ cuestionario.pk }}')"
                                                         title="Eliminar">
-                                                        <i class="la la-trash text-danger"></i>
+                                                        <i class="la la-trash "></i>
                                                     </a>
-                                                    
-                                                    
 
                                                    
 
@@ -128,13 +85,8 @@
                                         </tbody>
                                         <tfoot>
                                             <tr style="font-size: 13px;">
-                                                <th>Nombre</th>
-                                                
-                                                <th>T. de Congreso</th>
-                                                <th>Especialidad</th>
-                                                <th>Public.</th>
-                                                <th>Programa</th>
-                                                 <th>Otros</th>
+                                                <th style="width:50%">Nombre</th>
+                                                <th>Email</th>
                                                 <th style="width:5%">Operaciones</th>
                                             </tr>
                                         </tfoot>
@@ -152,11 +104,11 @@
     <form id="swall-modal-form" method="POST" style="display: none;">
         {% csrf_token %}
     </form>
-
+    
 </div>
 {% endblock %}
 {% block scripts %}
-<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/extensions/sweetalert.min.js' %}"></script>
+
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/tables/datatable/datatables.min.js' %}"></script>
 
 <script type="text/javascript">
@@ -169,7 +121,7 @@
         });
 
         $('#add-btn').click(function () {
-            location.href = "{% url 'MedCongressAdmin:congres_add' %}";
+            location.href = "{% url 'MedCongressAdmin:cuestionario_pregunta_add' %}";
         });
 
         dataTable = $('.zero-configuration').DataTable();
@@ -177,7 +129,7 @@
     function deleteItem(pk) {
         swal({
             title: "Estas seguro?",
-            text: "Eliminará todo lo referente a este evento",
+            text: "No será capaz de recuperar este elemento!",
             icon: "warning",
             buttons: {
                 cancel: {
@@ -198,7 +150,7 @@
         })
             .then((isConfirm) => {
                 if (isConfirm) {
-                    url = "{% url 'MedCongressAdmin:congress_delete' pk=0 %}";
+                    url = "{% url 'MedCongressAdmin:ponente_delete' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                         dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
                         swal("Eliminado!", "Este elemento ha sido eliminado.", "success");

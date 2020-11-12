@@ -154,15 +154,41 @@
 										
 										</div>
 										<div class="row">
+											<div class="col-sm-8" >
+												<div class="form-group">
+													<label
+														for="{{form.perfiluser.puesto.id_for_label }}"><b>Puesto Actual</b>{% if form.perfiluser.puesto.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.perfiluser.puesto.errors }}
+														</span>{% endif %}</label>
+				
+													{{form.perfiluser.puesto }}
+												</div>
+											</div>
+										</div>
+										<div class="row">
 											<div class="col-sm-12" >
 												<div class="form-group">
 													<label
-														for="{{form.perfiluser.detalle.id_for_label }}"><b>Constancias</b>{% if form.perfiluser.detalle.errors %}
+														for="{{form.perfiluser.detalle.id_for_label }}"><b>Logros Académicos</b>{% if form.perfiluser.detalle.errors %}
 														<span
 															style="font-size: 15px; color: red;">{{ form.perfiluser.detalle.errors }}
 														</span>{% endif %}</label>
 				
 													{{form.perfiluser.detalle }}
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-12" >
+												<div class="form-group">
+													<label
+														for="{{form.perfiluser.publicaciones.id_for_label }}"><b>Publicaciones</b>{% if form.perfiluser.publicaciones.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.perfiluser.publicaciones.errors }}
+														</span>{% endif %}</label>
+				
+													{{form.perfiluser.publicaciones }}
 												</div>
 											</div>
 										</div>
@@ -179,6 +205,7 @@
 												</div>
 											</div>
 										</div>
+										
 										<div class="row">
 											<div class="col-sm-6 ">
 												<div class="form-group">
@@ -261,19 +288,49 @@
 												</div>
 											</div>
 										</div>
-	
-	
-	
+<div class="row">
+	<h4 style="margin-left: 15px;"> <b>Redes Sociales </b> </h4>
+</div>
 										<div class="row">
+											
 											<div class="col-sm-3 ">
-												<div class="form-group">
-													<label
-														for="{{form.ponencia.published.id_for_label }}"><b>{{form.taller.published.label }}</b>{% if form.taller.published.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.taller.published.errors }}
-														</span>{% endif %} </label>
+												<div class="input-group form-group">
+													<div class="input-group-prepend">
+														<button class="btn btn-primary" type="button" style="height: 41px;
+														width: 48px;"><i class="la la-linkedin" style="font-size: 34px;margin-top: -8px;margin-left: -8px;"></i></button>
+													</div>
 	
-													{{form.taller.published }}
+													{{form.perfiluser.linkedin }}
+												</div>
+											</div>
+											<div class="col-sm-3 ">
+												<div class="input-group form-group">
+													<div class="input-group-prepend">
+														<button class="btn btn-danger" type="button" style="height: 41px;
+														width: 48px;"><i class="la la-youtube" style="font-size: 34px;margin-top: -8px;margin-left: -8px;"></i></button>
+													</div>
+	
+													{{form.perfiluser.youtube }}
+												</div>
+											</div>
+											<div class="col-sm-3 ">
+												<div class="input-group form-group">
+													<div class="input-group-prepend">
+														<button class="btn btn-primary" type="button" style="height: 41px;
+														width: 48px;"><i class="la la-facebook" style="font-size: 34px;margin-top: -8px;margin-left: -8px;"></i></button>
+													</div>
+	
+													{{form.perfiluser.facebook }}
+												</div>
+											</div>
+											<div class="col-sm-3 ">
+												<div class="input-group form-group">
+													<div class="input-group-prepend">
+														<button class="btn btn-info" type="button" style="height: 41px;
+														width: 48px;"><i class="la la-twitter" style="font-size: 34px;margin-top: -8px;margin-left: -8px;"></i></button>
+													</div>
+	
+													{{form.perfiluser.twitter }}
 												</div>
 											</div>
 										</div>

@@ -23,7 +23,7 @@ from .forms import UserPerfilUser
 from .models import (CategoriaPagoCongreso, Congreso, EspecialidadCongreso,
                      Ponencia, Ponente, RelCongresoCategoriaPago,
                      RelCongresoUser,RelPonenciaPonente,PerfilUsuario,ImagenCongreso,Taller,RelTalleresCategoriaPago,RelTallerUser,DatosIniciales,
-                     CategoriaUsuario,Bloque,Moderador,RelTallerPonente)
+                     CategoriaUsuario,Bloque,Moderador,RelTallerPonente,Pais)
 from .pager import Pager
 from .cart import Cart
 
@@ -694,12 +694,18 @@ class GetPerfil(TemplateView):
             ced_env='No tiene Cédula Profecional'
             if usuario.cel_profecional:
                 ced_env=usuario.cel_profecional
+            publicaciones_env='No tiene Publicaciones a Mostrar'
+            if usuario.publicaciones:
+                publicaciones_env=usuario.publicaciones
             constancia_env='No tiene Constancias a Mostrar'
             if usuario.detalle:
                 constancia_env=usuario.detalle
             datos_env='No tiene Datos de Interes a Mostrar'
             if usuario.datos_interes:
                 datos_env=usuario.datos_interes 
+            puesto_env='No tiene ningún Puesto Actualmente'
+            if usuario.puesto:
+                puesto_env=usuario.puesto 
             ######### Ponencias #######
             ponencias_env=[]
             if Ponente.objects.filter(user=usuario).exists():
@@ -718,15 +724,22 @@ class GetPerfil(TemplateView):
                                             'congreso':taller.congreso.titulo})
             
             ###### END Talleres#######
+            bandera=''
+            if Pais.objects.filter(denominacion=(usuario.ubicacion.direccion.split(',')[-1]).strip()).exists():
+                pais=Pais.objects.filter(denominacion=(usuario.ubicacion.direccion.split(',')[-1]).strip()).first()
+                bandera=str(pais.banderas)
             usuario_json={'nombre':usuario.usuario.first_name+' '+usuario.usuario.last_name,
                             'foto':str(usuario.foto),
-                            'lugar':usuario.ubicacion.direccion,
-                            'email':usuario.usuario.email,
-                            'categoria':usuario.categoria.nombre,
+                            'lugar':usuario.ubicacion.direccion.split(',')[-1],
+                            'bandera':bandera,
+                            'constancias':constancia_env,
+                            'publicaciones':publicaciones_env,
                             'especialidad':especialidad_env,
-                            'ced':ced_env,
-                            'constancia':constancia_env,
-                            'datos':datos_env,
+                            'youtube':usuario.youtube,
+                            'linkedin':usuario.linkedin,
+                            'twitter':usuario.twitter,
+                            'facebook':usuario.facebook,
+                            'puesto':puesto_env,
                             'ponencias':ponencias_env,
                             'talleres':talleres_env}
             return JsonResponse(usuario_json, safe=False)

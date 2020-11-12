@@ -23,38 +23,12 @@
 				</div>
 				<div class="card-content collapse show">
 					<div class="card-body">
-						<form id="country-form" method="POST">
+						<form id="country-form" method="POST" enctype="multipart/form-data"> 
 							{% csrf_token %}
 							<div class="form-body">
 								<div class="row">
 									<div class="col-md-12">
-										{% if messages %}
-										<div class="alert alert-success alert-dismissible mb-2" role="alert">
-											<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-												<span aria-hidden="true">×</span>
-											</button>
-											<strong>En hora buena!. </strong>
-											{% for message in messages %}
-											{% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
-											<a href="{{ message }}" class="alert-link">
-												{% endif %}
-												{% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-												{{ message|escape }}</a>
-											{% endif %}
-											{% endfor %}
-											fue agregado correctamente a la base de datos.
-										</div>
-										{% endif %}
-										{% if form.non_field_errors %}
-										<div class="alert alert-danger mb-2" role="alert">
-											<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-												<span aria-hidden="true">×</span>
-											</button>
-											{% for error in form.non_field_errors %}
-											<strong>{{ error|escape }}</strong>
-											{% endfor %}
-										</div>
-										{% endif %}
+									
 										<fieldset class="form-group col-md-4">
 											<label>Denominaci&oacute;n</label>
 											{{ form.denominacion }}
@@ -64,10 +38,17 @@
 												<small class="danger text-muted">{{ error|escape }}</small>
 												{% endfor %}
 											</p>
-											{% endif %}
-											{% if delete_value %}
-											<input type="text" class="form-control" value="{{ delete_value }}" readonly>
-											{% endif %}
+										{%endif%}
+										<label>Bandera</label>
+											{{ form.banderas }}
+											{% if form.banderas.errors %}
+											<p class="text-right">
+												{% for error in form.banderas.errors %}
+												<small class="danger text-muted">{{ error|escape }}</small>
+												{% endfor %}
+											</p>
+										{%endif%}
+											
 										</fieldset>
 										<div class="form-actions">
 											<div class="text-right">
@@ -75,7 +56,7 @@
 												<button id="save" type="submit" class="btn btn-primary">Guardar
 													<i class="ft-save position-right"></i>
 												</button>
-												{% endif %}
+											
 											</div>
 										</div>
 									</div>

@@ -29,7 +29,7 @@ class CountryForm(validarUser,forms.ModelForm):
 
     class Meta:
         model = Pais
-        fields = '__all__'
+        fields = ['denominacion','banderas']
         widgets = {'denominacion': forms.TextInput(
             attrs={'class': 'form-control'})}
         error_messages = {
@@ -55,23 +55,8 @@ class CountryCreateView(validarUser,CreateView):
         return super(CountryCreateView, self).form_invalid(form)
 
     def form_valid(self, form):
-        param = self.kwargs.get('param', None)
-        if param:
-            if param == '+':
-                self.object = form.save()
-                messages.info(self.request, reverse_lazy(
-                    'MedCongressAdmin:country_edit', kwargs={'pk': self.object.pk}))
-                messages.success(self.request, self.object.denominacion)
-                self.success_url = reverse_lazy('MedCongressAdmin:country_add')
-            elif param == '+->':
-                self.object = form.save()
-                messages.info(self.request, reverse_lazy(
-                    'MedCongressAdmin:country_edit', kwargs={'pk': self.object.pk}))
-                messages.success(self.request, self.object.denominacion)
-                return HttpResponseRedirect(reverse_lazy('MedCongressAdmin:country_edit', kwargs={'pk': self.object.pk}))
-            else:
-                return HttpResponseBadRequest()
-        return super(CountryCreateView, self).form_valid(form)
+        pais=form.save(commit=True)
+        return super().form_valid(form)
 
 
 class CountryUpdateView(validarUser,UpdateView):

@@ -12,7 +12,7 @@ from .views.congress_views import (CongressListView,CongressCreateView,CongressU
                                    CongressTalleresListView,CongressPonenciasListView,CongressCategPagosListView,
                                    CongressImagenesListView,AddPonenciaCongreso,CongressCategPagosCreateView,
                                    CongressDeletedView,CongressBloquesListView,GetBloques,AsignarCongressListView,AsignarCongressAddViews,GetPagos,
-                                   AsignarCongressDeletedViews,CongressImagenCreateView)
+                                   AsignarCongressDeletedViews,CongressImagenCreateView,CongressCuestionarioListView)
 from .views.imagen_views import (ImagenCreateView)
 from .views.ponencia_view import (PonenciaListView, PonenciaCreateView,PonenciaPonenteListView,
                                    PonencicaUpdateView,PonenciaPonenteCreateView,PonenciaDeletedView,
@@ -25,6 +25,7 @@ from .views.user_views import (UsuariosListView,UsuarioCreateView,UsuarioUpdateV
 from .views.bloque_views import (BloquesListView,BloqueCreateView,BloqueDeletedView,BloquePonenciasListView,BloqueTalleresListView,
                                    BloqueUpdateView,BloqueModeradoresListView,page_not_found,BloqueModeradoresCreateView,BloqueModeradoresDeletedView)
 from .views.otros_views import (OtrosListView,OtroUpdateView)
+from .views.cuestionario_views import (PreguntaCreateView)
 from .views.moderador_view import ModeradoresListView,ModeradorCreateView,ModeradorDeletedView
 from .views.dashboard import DashboardView
 from django.conf.urls import handler404
@@ -56,6 +57,11 @@ urlpatterns = [
      # Congreso-Ponencias
      path('ponencias/congreso/<str:path>', CongressPonenciasListView.as_view(), name='Congres_ponencias'),
      path('ponencia/congreso/add/<int:pk>', PonenciaCreateView.as_view(), name='ponente_ponencia_add'),
+
+     # Congreso-Cuestionarios
+     path('cuestionario/congreso/<str:path>', CongressCuestionarioListView.as_view(), name='Congres_cuestionario'),
+     path('cuestionario_pregunta/congreso/add', PreguntaCreateView.as_view(), name='cuestionario_pregunta_add'),
+
 
      # Congreso-Talleres
      path('talleres/congreso/<str:path>', CongressTalleresListView.as_view(), name='Congres_talleres'),
