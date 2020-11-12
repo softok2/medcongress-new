@@ -122,6 +122,20 @@
 									</div>
 
 								</div>	
+								<div class="row">
+									<div class="col-sm-12 ">
+										<div class="form-group">
+											<label
+												for="{{form.terminos_condiciones.id_for_label }}"><b>{{form.terminos_condiciones.label }}</b>{% if form.terminos_condiciones.errors %}
+												<span
+													style="font-size: 15px; color: red;">{{ form.terminos_condiciones.errors }}
+												</span>{% endif %} </label>
+
+											{{form.terminos_condiciones }}
+										</div>
+									</div>
+
+								</div>	
 										</fieldset>
 										<div class="form-actions">
 											<div class="text-right">

@@ -52,29 +52,6 @@ class CongresForm(forms.ModelForm):
     #     if password!=password1 :
     #         self.add_error('password1', 'No coinciden los password ')
 
-# class PerfilUserForm(forms.ModelForm):
-#     cel_profecional=forms.CharField(
-#                label = 'Célula Profecional',
-#                 required=False
-#                )
-#     is_ponente=forms.BooleanField(
-#                 label = 'Desearía ser ponente en un evento   ',
-#                 required=False
-               
-#                )
-#     categoria=forms.ModelChoiceField(queryset=CategoriaUsuario.objects.filter(published=True))
-   
-#     class Meta:
-#         model=PerfilUsuario
-#         fields=['cel_profecional','categoria','genero','especialidad','is_ponente']
-        
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-         
-#         self.fields['cel_profecional'].widget.attrs.update({'class': 'form-control'})   
-#         self.fields['categoria'].widget.attrs.update({'class': 'form-control'}) 
-#         self.fields['genero'].widget.attrs.update({'class': 'form-control'}) 
-       
 class ImagenCongresoForms(forms.ModelForm):
     imagen=forms.ImageField(required=False)
     class Meta:
@@ -105,43 +82,13 @@ class UbicacionForm(forms.ModelForm):
         if longitud is None :
             self.add_error('direccion', 'Debe seleccionar una dirección')
 
-
-# class Categoria(forms.ModelForm):
-
-#     nombre= forms.CharField(
-#         label='Nueva Categoría',
-#         required=False
-#     )
-
-#     class Meta:
-#         model=CategoriaUsuario
-#         fields=['nombre']
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-        
-#         self.fields['nombre'].widget.attrs.update({'class': 'form-control'}) 
-       
-
-
-
 class CongresoForms(MultiModelForm):
     form_classes = {
         'congreso': CongresForm,
         'ubicacion':UbicacionForm,
         'imagen_congreso':ImagenCongresoForms
     }
-
-    # def save(self,commit=True):
-
-    #     ubic =Ubicacion.objects.filter(direccion=self.forms['ubicacion'].direccion)
-    #     if not ubic.exists():
-    #       return  super().save(commit=True)
-    #     else:
-    #        congres=self.forms['congreso'].save(commit=False)
-    #        congres.lugar=ubic
-    #        congres.save()
-
-    
+  
 class PonenciaForm(forms.ModelForm):
     imagen=forms.ImageField(label='Buscar Imagen',required=False)
     titulo=forms.CharField(label='Título')
@@ -173,7 +120,6 @@ class PonenciaForm(forms.ModelForm):
         if bloq and fecha_inicio.date() != bloq.fecha_inicio.date():
             self.add_error('fecha_inicio', 'La fecha de inicio no coincide  con las del bloque que pertenece %s '%(bloq.fecha_inicio.date()))
     
-
 class TallerForm(forms.ModelForm):
     imagen=forms.ImageField(label='Buscar Imagen',required=False)
     titulo=forms.CharField(label='Título')
@@ -209,6 +155,7 @@ class PonenciaForms(MultiModelForm):
         'ubicacion':UbicacionForm,
         
     }
+
 class TallerForms(MultiModelForm):
     form_classes = {
         'taller': TallerForm,
@@ -237,8 +184,7 @@ class ModeradorForm(forms.ModelForm):
         super().__init__(*args, **kwargs) 
 
         self.fields['user'].widget.attrs.update({'class': 'form-control'}) 
-         
-         
+                
 class PonentePonenciaForm(forms.ModelForm):
     ponente=forms.ModelChoiceField(queryset=Ponente.objects.all(),label='Ponentes')
   
@@ -266,11 +212,6 @@ class PonenteTallerForm(forms.ModelForm):
 
         self.fields['ponente'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['taller'].widget.attrs.update({'class': 'form-control','style':'display:none'}) 
-
-#    categoria = models.ForeignKey(CategoriaPagoCongreso, on_delete=models.CASCADE)
-#     congreso = models.ForeignKey(Congreso, on_delete=models.CASCADE)
-#     precio=models.FloatField()
-#     moneda=models.CharField(max_length=3)
 
 class CongresoCategPagoForm(forms.ModelForm):
     categoria=forms.ModelChoiceField(queryset=CategoriaPagoCongreso.objects.all(),label='Categoría de Pago')
@@ -303,8 +244,7 @@ class TallerCategPagoForm(forms.ModelForm):
         self.fields['taller'].widget.attrs.update({'class': 'form-control','style':'display:none'}) 
         self.fields['precio'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['moneda'].widget.attrs.update({'class': 'form-control'}) 
-
-        
+      
 class UserForm(forms.ModelForm):
     first_name=forms.CharField(
                label = 'Nombre',
@@ -392,12 +332,11 @@ class BloqueForms(forms.ModelForm):
         self.fields['published'].widget.attrs.update({'class': 'form-control'})   
         self.fields['congreso'].widget.attrs.update({'class': 'form-control'})  
 
-
 class OtrosForm(forms.ModelForm):
 
     class Meta:
         model=DatosIniciales
-        fields=['ponentes','ponencias','paises','especialidades','eventos','afiliados','talleres','aviso_privacidad']
+        fields=['ponentes','ponencias','paises','especialidades','eventos','afiliados','talleres','aviso_privacidad','terminos_condiciones']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
@@ -410,6 +349,7 @@ class OtrosForm(forms.ModelForm):
         self.fields['afiliados'].widget.attrs.update({'class': 'form-control'})  
         self.fields['talleres'].widget.attrs.update({'class': 'form-control'})   
         self.fields['aviso_privacidad'].widget.attrs.update({'class': 'form-control ckeditor'})  
+        self.fields['terminos_condiciones'].widget.attrs.update({'class': 'form-control ckeditor'})  
 
 
 class AsignarCongresoForms(forms.ModelForm):

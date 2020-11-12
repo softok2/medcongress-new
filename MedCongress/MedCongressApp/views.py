@@ -606,6 +606,14 @@ class AvisoPrivacidad(TemplateView):
         context = super(AvisoPrivacidad, self).get_context_data(**kwargs)
         context['aviso_privacidad']=DatosIniciales.objects.all().first()
         return context
+
+class TermCondiciones(TemplateView):
+    template_name= 'MedCongressApp/term_condiciones.html' 
+    def get_context_data(self, **kwargs):
+        context = super(TermCondiciones, self).get_context_data(**kwargs)
+        context['term_condiciones']=DatosIniciales.objects.all().first()
+        return context
+        
 # HTTP Error 400
 # def bad_request(request,exception):
 #     response = render_to_response(
