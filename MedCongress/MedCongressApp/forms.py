@@ -40,7 +40,7 @@ class UserForm(forms.ModelForm):
 
 class PerfilUserForm(forms.ModelForm):
     cel_profecional=forms.CharField(
-               label = 'Cédula Profecional',
+               label = 'Cédula Profesional',
                 required=False
                )
     is_ponente=forms.BooleanField(
