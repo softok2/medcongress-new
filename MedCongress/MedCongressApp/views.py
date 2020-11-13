@@ -728,9 +728,12 @@ class GetPerfil(TemplateView):
             if Pais.objects.filter(denominacion=(usuario.ubicacion.direccion.split(',')[-1]).strip()).exists():
                 pais=Pais.objects.filter(denominacion=(usuario.ubicacion.direccion.split(',')[-1]).strip()).first()
                 bandera=str(pais.banderas)
-            usuario_json={'nombre':usuario.usuario.first_name+' '+usuario.usuario.last_name,
+            usuario_json={'nombre_completo':usuario.usuario.first_name+' '+usuario.usuario.last_name,
+                            'nombre':usuario.usuario.first_name,
+                            'email':usuario.usuario.email,
                             'foto':str(usuario.foto),
-                            'lugar':usuario.ubicacion.direccion.split(',')[-1],
+                            'pais':usuario.ubicacion.direccion.split(',')[-1],
+                            'localidad':usuario.ubicacion.direccion,
                             'bandera':bandera,
                             'constancias':constancia_env,
                             'publicaciones':publicaciones_env,

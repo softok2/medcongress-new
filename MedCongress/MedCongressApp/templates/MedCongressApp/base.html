@@ -38,6 +38,21 @@
 	<link rel="stylesheet" href="{% static 'MedCongressApp/css/responsive.css'%}" type="text/css" media="all">
 	<!-- Color css -->
 	<link rel="stylesheet" href="{% static 'MedCongressApp/css/color.css'%}" type="text/css" media="all">
+<style>
+#kode-header {
+  background: rgba(0,0,0,0.9);
+  width: 100%;
+  position: fixed;
+  z-index: 9999999;
+}
+#mobile-header{
+
+  position: fixed;
+  z-index: 99999;
+}
+</style>
+	
+
 {% block css%}
 {%endblock%}
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -54,11 +69,11 @@
 <body>
 	<!-- Wrapper start -->
 
-	<div id="wrapper">
+	<div id="wrapper" >
 		<div id="mobile-header">
 			<a id="responsive-menu-button" href="#sidr-main"><i class="fa fa-bars"></i></a>
 		</div>
-		<header id="kode-header">
+		<header id="kode-header" style="background-color: #00a4ef;height: 93px;">
 			<strong class="kode-logo">
 				<a href="{% url 'Home'%}"><img src="{% static 'MedCongressApp/images/LOGODOSCOLORESSINFONDO.png'%}"
 						alt=""></a>
@@ -69,6 +84,15 @@
 					<ul>
 						<li><a href="{% url 'Home'%}">Inicio</a></li>
 						<li><a href="{% url 'List_congreso'%}">Congresos</a></li>
+						<li class="nav-item">
+							<a href="#!" data-toggle="modal" data-target=".pp"><i class="fa fa-shopping-cart" style="font-size: 18px;"><span
+								class="badge badge-pill badge-default badge-danger badge-default badge-up badge-glow"
+								style="background-color: red;margin-top: -48px;">
+								{%if  request.session.cart.1 %}{{ request.session.cart.1|length}}
+							{%else%} 0 {%endif%}</span></i>
+							</a>
+						  </li>
+
 						<!-- <li><a >Galenus</a></li>
 						<li><a >Contacto</a></li> -->
 						
@@ -102,17 +126,17 @@
 
 			</div>
 		</header>
-		<button type="button" class=" flotante btn btn-info btn-circle btn-xl" data-toggle="modal" data-target=".pp"><i class="fa fa-shopping-cart" style="font-size: 40px;"><span
+		<!-- <button type="button" class=" flotante btn btn-info btn-circle btn-xl" data-toggle="modal" data-target=".pp"><i class="fa fa-shopping-cart" style="font-size: 40px;"><span
 			class="badge badge-pill badge-default badge-danger badge-default badge-up badge-glow"
 			style="background-color: red;margin-top: -48px;">
 			{%if  request.session.cart.1 %}{{ request.session.cart.1|length}}
 		{%else%} 0 {%endif%}</span></i>
-		</button>
+		</button> -->
 		<!-- <button class="flotante btn btn-default btn-circle" data-toggle="modal" data-target=".pp" style="padding: 32px;">
 			<i class="fa fa-shopping-cart" style="font-size: 30px;"></i>
 
 		</button> -->
-		<div class="modal fade bs-example-modal-lg pp" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+		<div class="modal fade bs-example-modal-lg pp" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="margin-top: 72px;">
 			<div class="modal-dialog modal-lg">
 			  <div class="modal-content">
 					<div class="modal-header">

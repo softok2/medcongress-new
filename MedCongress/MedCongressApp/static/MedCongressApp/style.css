@@ -146,6 +146,7 @@ h1,h2,h3,h4,h5,h6{
 	background-image:url(images/our-speaker.jpg);
 	background-size:cover;
 	background-position:center;
+	margin-top: 93px;
 }
 .imagen_menu {
 	position: relative;
@@ -1083,6 +1084,7 @@ h1,h2,h3,h4,h5,h6{
 	background-size:cover;
 	float:left;
 	width:100%;
+	margin-top: 91px;
 
 	
 }
@@ -1175,12 +1177,15 @@ h1,h2,h3,h4,h5,h6{
 		   Next Event Counter CSS Start
 	  ==============================================================
 */
+
+
+
 .next-event-counter{
 	position:relative;
 	overflow:hidden;
 	text-align:left;
 	z-index:3;
-	padding:180px 0 85px;
+	padding:38px 0 85px;
 }
 .next-event-counter h2{
 	color:#fff;

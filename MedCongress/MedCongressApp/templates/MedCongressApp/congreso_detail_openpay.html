@@ -60,7 +60,7 @@ box-shadow: none!important;
 {%endblock%}
 {% block contenido %}
 
-<div class="modal fade bs-example-modal-lg tt" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+<div class="modal fade bs-example-modal-lg tt" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="margin-top: 72px;">
     <div class="modal-dialog modal-lg">
       <div class="modal-content" style="background-color: #edecee;">
             <div class="modal-header">
@@ -83,150 +83,93 @@ box-shadow: none!important;
                                           <div class="card">
                                             <div class="card-body">
                                               <div class="d-flex flex-column align-items-center text-center">
-                                                <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150">
+                                               <span id="foto"> </span> 
                                                 <div class="mt-3">
-                                                  <h4>John Doe</h4>
-                                                  <p class="text-secondary mb-1">Full Stack Developer</p>
-                                                  <p class="text-muted font-size-sm">Bay Area, San Francisco, CA</p>
-                                                  <button class="btn btn-primary">Follow</button>
-                                                  <button class="btn btn-outline-primary">Message</button>
+                                                  <h4 id="nombre">John Doe</h4>
+                                                  <p id="puesto" class="text-secondary mb-1"></p>
+                                                 <div style="text-align: center;"> <p class="text-muted font-size-sm" id="bandera"></p></div>
+                                                  <input type="hidden" id="rating" class="rating" data-readonly value="3"/>
                                                 </div>
                                               </div>
                                             </div>
                                           </div>
-                                          <div class="card mt-3" style="margin-top: 1rem !important;">
-                                            <ul class="list-group list-group-flush">
-                                              <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-globe mr-2 icon-inline"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>Website</h6>
-                                                <span class="text-secondary">https://bootdey.com</span>
-                                              </li>
-                                              <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github mr-2 icon-inline"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>Github</h6>
-                                                <span class="text-secondary">bootdey</span>
-                                              </li>
-                                              <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-twitter mr-2 icon-inline text-info"><path d="M150.65,100.682c0,27.992-22.508,50.683-50.273,50.683c-27.765,0-50.273-22.691-50.273-50.683
-                                                    C50.104,72.691,72.612,50,100.377,50C128.143,50,150.65,72.691,150.65,100.682z M143.294,187.333H58.277V462h85.017V187.333z
-                                                    M279.195,187.333h-81.541V462h81.541c0,0,0-101.877,0-144.181c0-38.624,17.779-61.615,51.807-61.615
-                                                    c31.268,0,46.289,22.071,46.289,61.615c0,39.545,0,144.181,0,144.181h84.605c0,0,0-100.344,0-173.915
-                                                    s-41.689-109.131-99.934-109.131s-82.768,45.369-82.768,45.369V187.333z"></path></svg>Twitter</h6>
-                                                <span class="text-secondary">@bootdey</span>
-                                              </li>
-                                              <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-instagram mr-2 icon-inline text-danger"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>Instagram</h6>
-                                                <span class="text-secondary">bootdey</span>
-                                              </li>
-                                              <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-facebook mr-2 icon-inline text-primary"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>Facebook</h6>
-                                                <span class="text-secondary">bootdey</span>
-                                              </li>
-                                            </ul>
+                                          <div class="card mt-3" style="margin-top: 1rem !important;" id="redes_sociales">
+                                               
                                           </div>
                                         </div>
                                         <div class="col-md-8">
                                           <div class="card mb-3">
                                             <div class="card-body">
                                               <div class="row" style="margin-top: 10px;">
-                                                <div class="col-sm-3">
-                                                  <h6 class="mb-0">Full Name</h6>
+                                                <div class="col-sm-4">
+                                                  <h6 class="mb-0">Nombre Completo</h6>
                                                 </div>
-                                                <div class="col-sm-9 text-secondary">
-                                                  Kenneth Valdez
+                                                <div class="col-sm-8 text-secondary" style="color: #6c757d !important;" id="nombre_completo">
+                                                 
                                                 </div>
                                               </div>
                                               <hr>
-                                              <div class="row">
-                                                <div class="col-sm-3">
+                                              <div class="row" >
+                                                <div class="col-sm-4">
                                                   <h6 class="mb-0">Email</h6>
                                                 </div>
-                                                <div class="col-sm-9 text-secondary">
-                                                  fip@jukmuh.al
+                                                <div class="col-sm-8 text-secondary"  style="color: #6c757d !important;" id="email">
+                                                  
                                                 </div>
                                               </div>
                                               <hr>
                                               <div class="row">
-                                                <div class="col-sm-3">
-                                                  <h6 class="mb-0">Phone</h6>
+                                                <div class="col-sm-4">
+                                                  <h6 class="mb-0">Especialidad</h6>
                                                 </div>
-                                                <div class="col-sm-9 text-secondary">
-                                                  (239) 816-9029
-                                                </div>
-                                              </div>
-                                              <hr>
-                                              <div class="row">
-                                                <div class="col-sm-3">
-                                                  <h6 class="mb-0">Mobile</h6>
-                                                </div>
-                                                <div class="col-sm-9 text-secondary">
-                                                  (320) 380-4539
+                                                <div class="col-sm-8 text-secondary" style="color: #6c757d !important;" id="especialidad">
+                                                  
                                                 </div>
                                               </div>
                                               <hr>
-                                              <div class="row">
-                                                <div class="col-sm-3">
-                                                  <h6 class="mb-0">Address</h6>
+                                              
+                                              <div class="row" style="margin-bottom: 20px;">
+                                                <div class="col-sm-4">
+                                                  <h6 class="mb-0">Localidad</h6>
                                                 </div>
-                                                <div class="col-sm-9 text-secondary">
-                                                  Bay Area, San Francisco, CA
+                                                <div class="col-sm-8 text-secondary" style="color: #6c757d !important;" id="localidad">
+                                                
                                                 </div>
                                               </div>
                                             </div>
                                           </div>
-                                          <div class="row gutters-sm">
-                                            <div class="col-sm-6 mb-3">
+                                          <div class="row gutters-sm mb-3">
+                                            <div class="col-sm-12" >
                                               <div class="card h-100">
-                                                <div class="card-body">
-                                                  <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">assignment</i>Project Status</h6>
-                                                  <small>Web Design</small>
-                                                  <div class="progress mb-3" style="height: 5px">
-                                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                                                  </div>
-                                                  <small>Website Markup</small>
-                                                  <div class="progress mb-3" style="height: 5px">
-                                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 72%" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
-                                                  </div>
-                                                  <small>One Page</small>
-                                                  <div class="progress mb-3" style="height: 5px">
-                                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 89%" aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
-                                                  </div>
-                                                  <small>Mobile Template</small>
-                                                  <div class="progress mb-3" style="height: 5px">
-                                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 55%" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
-                                                  </div>
-                                                  <small>Backend API</small>
-                                                  <div class="progress mb-3" style="height: 5px">
-                                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 66%" aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
-                                                  </div>
+                                                <h6 class="mb-0" style="padding: 20px;">Logros Académicos</h6>
+                                                <div class="card-body" id="constancia">
+                                                  
                                                 </div>
                                               </div>
                                             </div>
-                                            <div class="col-sm-6 mb-3">
+                                           
+                                          </div>
+                                          <div class="row gutters-sm mb-3">
+                                            <div class="col-sm-12" >
                                               <div class="card h-100">
-                                                <div class="card-body">
-                                                  <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">assignment</i>Project Status</h6>
-                                                  <small>Web Design</small>
-                                                  <div class="progress mb-3" style="height: 5px">
-                                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                                                  </div>
-                                                  <small>Website Markup</small>
-                                                  <div class="progress mb-3" style="height: 5px">
-                                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 72%" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
-                                                  </div>
-                                                  <small>One Page</small>
-                                                  <div class="progress mb-3" style="height: 5px">
-                                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 89%" aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
-                                                  </div>
-                                                  <small>Mobile Template</small>
-                                                  <div class="progress mb-3" style="height: 5px">
-                                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 55%" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
-                                                  </div>
-                                                  <small>Backend API</small>
-                                                  <div class="progress mb-3" style="height: 5px">
-                                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 66%" aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
-                                                  </div>
+                                                <h6 class="mb-0" style="padding: 20px;">Publicaciones</h6>
+                                                <div class="card-body" id="publicaciones">
+                                                  
                                                 </div>
                                               </div>
                                             </div>
+                                           
+                                          </div>
+                                          <div class="row gutters-sm mb-3">
+                                            <div class="col-sm-12" >
+                                              <div class="card h-100">
+                                                <h6 class="mb-0" style="padding: 20px;">Futuras Conferencias</h6>
+                                                <div class="card-body" id="publicaciones">
+                                                  
+                                                </div>
+                                              </div>
+                                            </div>
+                                           
                                           </div>
                                         </div>
                                       </div>
@@ -1005,30 +948,25 @@ function VerPerfil(pk){
                     $.get(url, { 'pk': pk }, function (data) {
                     $('#nombre').html(data.nombre) ;
                     if(data.foto)
-                        $('#foto').html('<img class="img-responsive" src="{% static '/'%}'+data.foto+'" alt=" foto '+ data.nombre+'" ><figcaption class="kf_speaker_socil">'+
-                                '<ul>'+
-                                    '<li>'+ data.puesto+'</li>'+
-                                 
-                                '</ul>'+'</figcaption>'
-                            );
+                        $('#foto').html('<img class="img-responsive" src="{% static '/'%}'+data.foto+'" alt=" foto '+ data.nombre+'" >');
                     else
                         $('#foto').html('<img class="img-responsive" src="{% static 'MedCongressApp/images/defaulthombre.png' %}" alt="{{request.user.username}}" >');
                     if(data.bandera)
-                        $('#bandera').html('<img style="width: 116px;" class="img-responsive" src="{% static '/'%}'+data.bandera+'" alt=" bandera" >');
+                        $('#bandera').html('<img style="width: 100px; display:block;margin:auto;" class="img-responsive" src="{% static '/'%}'+data.bandera+'" alt=" bandera" >');
                     else
                         $('#bandera').html('Este País no tiene bandera en la BD');
 
                     redes='';
                     if(data.facebook)
-                    redes+='<div class="like_fb"><a class="facebook" href="'+data.facebook+'"><i class="fa fa-facebook"></i></a> </div>'
+                    redes+='<div class="row" style="padding: 20px;" > <div class="like_fb"> <a class="facebook" href="#"><i class="fa fa-facebook"></i></a> </div><div class="like_amount"><p>'+ data.facebook+'</p></div>  </div>'
                     if(data.twitter)
-                    redes+='<div class="like_fb"><a class="twitter" href="'+data.twitter+'"><i class="fa fa-twitter"></i></a> </div>'
+                    redes+='  <div class="row" style="padding: 20px;"><div class="like_fb"><a class="facebook" style="background-color: #00adf2 ;"  href="#"><i class="fa fa-twitter"></i></a> </div><div class="like_amount">'+data.twitter+'</p></div>  </div>'
                     if(data.youtube)
-                    redes+='<div class="like_fb"><a class="youtube" href="'+data.youtube+'"><i class="fa fa-youtube"></i></a> </div>'
+                    redes+=' <div class="row" style="padding: 20px;"><div class="like_fb"><a class="facebook" href="#" style="background-color: #d70a0a;"><i class="fa fa-youtube"></i></a> </div><div class="like_amount"><p>'+data.youtube+'</p></div> </div>'
                     if(data.linkedin)
-                    redes+='<div class="like_fb"><a class="facebook" href="'+data.linkedin+'"><i class="fa fa-linkedin"></i></a> </div>'
+                    redes+='<div class="row" style="padding: 20px;"><div class="like_fb"> <a class="facebook" style="background-color: #2962ff;"    href="#"><i class="fa fa-linkedin"></i></a></div><div class="like_amount"><p>'+data.linkedin+'</p></div> </div>'
                     $('#redes_sociales').html(redes) ;
-                    $('#localidad').html(data.lugar) ;
+                    $('#localidad').html(data.localidad) ;
                     $('#email').html(data.email) ;
                     $('#categoria').html(data.categoria) ;
                     $('#especialidad').html(data.especialidad);
@@ -1062,6 +1000,8 @@ function VerPerfil(pk){
                     }
                         
                     $('#talleres').html(talleres)
+                    $('#puesto').html(data.puesto)
+                    $('#nombre_completo').html(data.nombre_completo)
                     $('#rating').rating('rate', 4.5);
 //                     $('#rating2').rating({
 //   filled: 'glyphicon glyphicon-heart-empty',

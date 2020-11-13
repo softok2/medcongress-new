@@ -8,95 +8,122 @@
 <link rel="stylesheet" href="{% static 'MedCongressApp/css/bootstrap-rating.css'%}" type="text/css" media="all">
 {%endblock%}
 {% block contenido %}
-<div class="modal fade bs-example-modal-lg tt" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+
+<div class="modal fade bs-example-modal-lg tt" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="margin-top: 72px;">
     <div class="modal-dialog modal-lg">
-      <div class="modal-content">
+      <div class="modal-content" style="background-color: #edecee;">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel">Perfil del Ponente</h4>
             </div>
-            <div class="modal-body" style="padding: 0px 15px;">
+            <div class="modal-body" >
               <!-- //////////////////   -->
-              <div class="kf_content">
+              <div class="">
                 <div class="container">
                     <div class="row">
                     
                         <div class="col-md-9">
-                            <!--Who Am I Wrap Start-->
-                            <div class="row">
-                                <div class="col-md-4">
-                                   <figure id="foto">
-                                  
-                                    
-                                </figure> 
-                              <div style="text-align: center;">   <input id="rating" type="hidden" class="rating" data-readonly value="1"/></div>  
-                                </div>
-                                <!-- <div style="text-align: center;">  <input type="hidden" id="rating2" class="rating check" /> </div>   -->
-                           
-                                
-                                <div class="col-md-8">
-                                    <h4 id="nombre"> </h4>
-                                    
-                                    <table class="table ">
-                                        <tr>
-                                            
-                                            <td align="center"> <b id="especialidad"></b> </td>
-                                            <td align="center"> <b id="localidad"></b> </td>
-                                            <td align="center"id="bandera"> </td>
+                            <div class="">
+                                <div class="main-body">
+
+                                      <div class="row gutters-sm">
+                                        <div class="col-md-4 mb-3">
+                                          <div class="card">
+                                            <div class="card-body">
+                                              <div class="d-flex flex-column align-items-center text-center">
+                                               <span id="foto"> </span> 
+                                                <div class="mt-3">
+                                                  <h4 id="nombre">John Doe</h4>
+                                                  <p id="puesto" class="text-secondary mb-1"></p>
+                                                 <div style="text-align: center;"> <p class="text-muted font-size-sm" id="bandera"></p></div>
+                                                  <input type="hidden" id="rating" class="rating" data-readonly value="3"/>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <div class="card mt-3" style="margin-top: 1rem !important;" id="redes_sociales">
+                                               
+                                          </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                          <div class="card mb-3">
+                                            <div class="card-body">
+                                              <div class="row" style="margin-top: 10px;">
+                                                <div class="col-sm-4">
+                                                  <h6 class="mb-0">Nombre Completo</h6>
+                                                </div>
+                                                <div class="col-sm-8 text-secondary" style="color: #6c757d !important;" id="nombre_completo">
+                                                 
+                                                </div>
+                                              </div>
+                                              <hr>
+                                              <div class="row" >
+                                                <div class="col-sm-4">
+                                                  <h6 class="mb-0">Email</h6>
+                                                </div>
+                                                <div class="col-sm-8 text-secondary"  style="color: #6c757d !important;" id="email">
+                                                  
+                                                </div>
+                                              </div>
+                                              <hr>
+                                              <div class="row">
+                                                <div class="col-sm-4">
+                                                  <h6 class="mb-0">Especialidad</h6>
+                                                </div>
+                                                <div class="col-sm-8 text-secondary" style="color: #6c757d !important;" id="especialidad">
+                                                  
+                                                </div>
+                                              </div>
+                                              <hr>
+                                              
+                                              <div class="row" style="margin-bottom: 20px;">
+                                                <div class="col-sm-4">
+                                                  <h6 class="mb-0">Localidad</h6>
+                                                </div>
+                                                <div class="col-sm-8 text-secondary" style="color: #6c757d !important;" id="localidad">
+                                                
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <div class="row gutters-sm mb-3">
+                                            <div class="col-sm-12" >
+                                              <div class="card h-100">
+                                                <h6 class="mb-0" style="padding: 20px;">Logros Académicos</h6>
+                                                <div class="card-body" id="constancia">
+                                                  
+                                                </div>
+                                              </div>
+                                            </div>
                                            
-                                          </tr>
-                                          
-                                      </table>
-
-                                    <div class="row" >
-                                        <div class="col-md-2"></div>
-                                        <div class="col-md-8" id="redes_sociales"></div>
+                                          </div>
+                                          <div class="row gutters-sm mb-3">
+                                            <div class="col-sm-12" >
+                                              <div class="card h-100">
+                                                <h6 class="mb-0" style="padding: 20px;">Publicaciones</h6>
+                                                <div class="card-body" id="publicaciones">
+                                                  
+                                                </div>
+                                              </div>
+                                            </div>
+                                           
+                                          </div>
+                                          <div class="row gutters-sm mb-3">
+                                            <div class="col-sm-12" >
+                                              <div class="card h-100">
+                                                <h6 class="mb-0" style="padding: 20px;">Futuras Conferencias</h6>
+                                                <div class="card-body" id="publicaciones">
+                                                  
+                                                </div>
+                                              </div>
+                                            </div>
+                                           
+                                          </div>
+                                        </div>
+                                      </div>
                                     </div>
                                 </div>
-
-                            </div>
-                           
-                            <div class="row">
-                               
-                            </div>
-                            <!--Who Am I Wrap End-->
-                            <div class="row">
-                                <div class="kf_experience_my" style="padding:31px;">
-                                    <div class="kf_heading_1_my">
-                                        <h5>Logros Académicos</h5> 
-                                        
-                                        <p id="constancia"></p>
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="kf_experience_my" style="padding:31px;">
-                                    <div class="kf_heading_1_my">
-                                        <h5>Publicaciones</h5> 
-                                       
-                                        <p id="publicaciones"></p>
-                                       
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="kf_experience_my" style="padding:31px;">
-                                    <div class="kf_heading_1_my">
-                                        <h5>Futuras Conferencias</h5> 
-                                       
-                                        <p id=""></p>
-                                       
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!--Yearly Expercience Wrap Start-->
-                           
-                        
-                        
-                            
                             
                            
                                      
@@ -117,7 +144,6 @@
         </div>
     </div>
 </div>
-
 <div class="kode-slider">
 
     <ul class="bxslider-banner">
@@ -1058,30 +1084,25 @@
                     $.get(url, { 'pk': pk }, function (data) {
                     $('#nombre').html(data.nombre) ;
                     if(data.foto)
-                        $('#foto').html('<img class="img-responsive" src="{% static '/'%}'+data.foto+'" alt=" foto '+ data.nombre+'" ><figcaption class="kf_speaker_socil">'+
-                                '<ul>'+
-                                    '<li>'+ data.puesto+'</li>'+
-                                 
-                                '</ul>'+'</figcaption>'
-                            );
+                        $('#foto').html('<img class="img-responsive" src="{% static '/'%}'+data.foto+'" alt=" foto '+ data.nombre+'" >');
                     else
                         $('#foto').html('<img class="img-responsive" src="{% static 'MedCongressApp/images/defaulthombre.png' %}" alt="{{request.user.username}}" >');
                     if(data.bandera)
-                        $('#bandera').html('<img style="width: 116px;" class="img-responsive" src="{% static '/'%}'+data.bandera+'" alt=" bandera" >');
+                        $('#bandera').html('<img style="width: 100px; display:block;margin:auto;" class="img-responsive" src="{% static '/'%}'+data.bandera+'" alt=" bandera" >');
                     else
                         $('#bandera').html('Este País no tiene bandera en la BD');
 
                     redes='';
                     if(data.facebook)
-                    redes+='<div class="like_fb"><a class="facebook" href="'+data.facebook+'"><i class="fa fa-facebook"></i></a> </div>'
+                    redes+='<div class="row" style="padding: 20px;" > <div class="like_fb"> <a class="facebook" href="#"><i class="fa fa-facebook"></i></a> </div><div class="like_amount"><p>'+ data.facebook+'</p></div>  </div>'
                     if(data.twitter)
-                    redes+='<div class="like_fb"><a class="twitter" href="'+data.twitter+'"><i class="fa fa-twitter"></i></a> </div>'
+                    redes+='  <div class="row" style="padding: 20px;"><div class="like_fb"><a class="facebook" style="background-color: #00adf2 ;"  href="#"><i class="fa fa-twitter"></i></a> </div><div class="like_amount">'+data.twitter+'</p></div>  </div>'
                     if(data.youtube)
-                    redes+='<div class="like_fb"><a class="youtube" href="'+data.youtube+'"><i class="fa fa-youtube"></i></a> </div>'
+                    redes+=' <div class="row" style="padding: 20px;"><div class="like_fb"><a class="facebook" href="#" style="background-color: #d70a0a;"><i class="fa fa-youtube"></i></a> </div><div class="like_amount"><p>'+data.youtube+'</p></div> </div>'
                     if(data.linkedin)
-                    redes+='<div class="like_fb"><a class="facebook" href="'+data.linkedin+'"><i class="fa fa-linkedin"></i></a> </div>'
+                    redes+='<div class="row" style="padding: 20px;"><div class="like_fb"> <a class="facebook" style="background-color: #2962ff;"    href="#"><i class="fa fa-linkedin"></i></a></div><div class="like_amount"><p>'+data.linkedin+'</p></div> </div>'
                     $('#redes_sociales').html(redes) ;
-                    $('#localidad').html(data.lugar) ;
+                    $('#localidad').html(data.localidad) ;
                     $('#email').html(data.email) ;
                     $('#categoria').html(data.categoria) ;
                     $('#especialidad').html(data.especialidad);
@@ -1115,6 +1136,8 @@
                     }
                         
                     $('#talleres').html(talleres)
+                    $('#puesto').html(data.puesto)
+                    $('#nombre_completo').html(data.nombre_completo)
                     $('#rating').rating('rate', 4.5);
 //                     $('#rating2').rating({
 //   filled: 'glyphicon glyphicon-heart-empty',
