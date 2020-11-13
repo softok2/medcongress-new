@@ -39,17 +39,127 @@
 	<!-- Color css -->
 	<link rel="stylesheet" href="{% static 'MedCongressApp/css/color.css'%}" type="text/css" media="all">
 <style>
-#kode-header {
-  background: rgba(0,0,0,0.9);
-  width: 100%;
-  position: fixed;
-  z-index: 9999999;
-}
-#mobile-header{
 
-  position: fixed;
-  z-index: 99999;
+.navbar-icon-top .navbar-nav .nav-link > .fa {
+  position: relative;
+  width: 36px;
+  font-size: 24px;
 }
+
+.navbar-icon-top .navbar-nav .nav-link > .fa > .badge {
+  font-size: 0.75rem;
+  position: absolute;
+  right: 0;
+  font-family: sans-serif;
+}
+
+.navbar-icon-top .navbar-nav .nav-link > .fa {
+  top: 3px;
+  line-height: 12px;
+}
+
+.navbar-icon-top .navbar-nav .nav-link > .fa > .badge {
+  top: -10px;
+}
+
+@media (min-width: 576px) {
+  .navbar-icon-top.navbar-expand-sm .navbar-nav .nav-link {
+    text-align: center;
+    display: table-cell;
+    height: 70px;
+    vertical-align: middle;
+    padding-top: 0;
+	padding-bottom: 0;
+	color: #6a6767;
+  }
+
+  .navbar-icon-top.navbar-expand-sm .navbar-nav .nav-link > .fa {
+    display: block;
+    width: 48px;
+    margin: 2px auto 4px auto;
+    top: 0;
+    line-height: 24px;
+  }
+
+  .navbar-icon-top.navbar-expand-sm .navbar-nav .nav-link > .fa > .badge {
+    top: -7px;
+  }
+}
+
+@media (min-width: 768px) {
+  .navbar-icon-top.navbar-expand-md .navbar-nav .nav-link {
+    text-align: center;
+    display: table-cell;
+    height: 70px;
+    vertical-align: middle;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .navbar-icon-top.navbar-expand-md .navbar-nav .nav-link > .fa {
+    display: block;
+    width: 48px;
+    margin: 2px auto 4px auto;
+    top: 0;
+    line-height: 24px;
+  }
+
+  .navbar-icon-top.navbar-expand-md .navbar-nav .nav-link > .fa > .badge {
+    top: -7px;
+  }
+}
+
+@media (min-width: 992px) {
+  .navbar-icon-top.navbar-expand-lg .navbar-nav .nav-link {
+    text-align: center;
+display: table-cell;
+height: 1px;
+vertical-align: middle;
+padding-top: 15px;
+padding-bottom: 0;
+color: #6a6767;
+line-height: 28px;
+
+  }
+
+  .navbar-icon-top.navbar-expand-lg .navbar-nav .nav-link > .fa {
+    display: block;
+    width: 85px;
+    margin: 2px auto 4px auto;
+    top: 0;
+    line-height: 0px;
+  }
+
+  .navbar-icon-top.navbar-expand-lg .navbar-nav .nav-link > .fa > .badge {
+	top: -15px;
+	right: 11px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .navbar-icon-top.navbar-expand-xl .navbar-nav .nav-link {
+    text-align: center;
+    display: table-cell;
+    height: 70px;
+    vertical-align: middle;
+    padding-top: 0;
+	padding-bottom: 0;
+	color: #6a6767;
+  }
+
+  .navbar-icon-top.navbar-expand-xl .navbar-nav .nav-link > .fa {
+    display: block;
+    width: 48px;
+    margin: 2px auto 4px auto;
+    top: 0;
+    line-height: 24px;
+  }
+
+  .navbar-icon-top.navbar-expand-xl .navbar-nav .nav-link > .fa > .badge {
+    top: -7px;
+  }
+}
+
 </style>
 	
 
@@ -70,34 +180,46 @@
 	<!-- Wrapper start -->
 
 	<div id="wrapper" >
-		<div id="mobile-header">
-			<a id="responsive-menu-button" href="#sidr-main"><i class="fa fa-bars"></i></a>
-		</div>
-		<header id="kode-header" style="background-color: #00a4ef;height: 93px;">
+		
+		<header id="kode-header" >
 			<strong class="kode-logo">
 				<a href="{% url 'Home'%}"><img src="{% static 'MedCongressApp/images/LOGODOSCOLORESSINFONDO.png'%}"
 						alt=""></a>
 			</strong>
-
+			<div id="mobile-header">
+				<a id="responsive-menu-button" href="#sidr-main"><i class="fa fa-bars"></i></a>
+			</div>
+			
+			
 			<div class="col-right">
-				<nav class="kode-nav" id="navigation">
-					<ul>
-						<li><a href="{% url 'Home'%}">Inicio</a></li>
-						<li><a href="{% url 'List_congreso'%}">Congresos</a></li>
-						<li class="nav-item">
-							<a href="#!" data-toggle="modal" data-target=".pp"><i class="fa fa-shopping-cart" style="font-size: 18px;"><span
-								class="badge badge-pill badge-default badge-danger badge-default badge-up badge-glow"
-								style="background-color: red;margin-top: -48px;">
-								{%if  request.session.cart.1 %}{{ request.session.cart.1|length}}
-							{%else%} 0 {%endif%}</span></i>
-							</a>
-						  </li>
-
-						<!-- <li><a >Galenus</a></li>
-						<li><a >Contacto</a></li> -->
+				<nav class="navbar navbar-icon-top navbar-expand-lg navbar-dark bg-dark" id="navigation">
+					<ul class="navbar-nav mr-auto">
+						<li class="nav-item active">
 						
+							<a href="{% url 'Home'%}" class="nav-link">
+								<i class="fa fa-home"></i>
+								    Inicio
+								
+							</a>
+						
+						</li>
+						<li class="nav-item">
+						  <a class="nav-link" href="{% url 'List_congreso'%}">
+							<i class="fa fa-envelope-o"></i>
+							   Congresos
+						  </a>
+						</li>
+						<li class="nav-item" data-toggle="modal" data-target=".pp">
+						  <a class="nav-link disabled" href="#">
+							<i class="fa fa-shopping-cart">
+							  <span class="badge badge-warning"  style="background-color: #00a4ef;">{%if  request.session.cart.1 %}{{ request.session.cart.1|length}}
+								{%else%} 0 {%endif%}</span>
+							</i>
+							Compra
+						  </a>
+						</li>
 						{% if user.is_authenticated %}
-						<li ><a href="#" style=""> <figure>
+						<li class="" ><a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false""> <figure>
 							{%if request.user.perfilusuario.foto%}
 							<img src="{% static '/'%}{{request.user.perfilusuario.foto}}"
 							alt="{{request.user.username}}" class='imagen_menu'>
@@ -107,20 +229,30 @@
 							{%endif%}
 						
 						</figure></a>
-							<ul class="my_ul">
-								<li><a href="{% url 'perfil' %}" style="padding:37px 30px;">PERFIL</a></li>
-								<li><a href="{% url 'logout' %}" style="padding:37px 30px;">LOGOUT</a></li>
+							
+							<ul class="dropdown-menu my_dropdown-menu" aria-labelledby="navbarDropdown">
+								<li class=" nav-item"> <a class="my_dropdown-menu-a" href="{% url 'perfil' %}"><i class="fa fa-user"></i>Perfil</a> </li> 
+								<li class=" nav-item"> <a class="my_dropdown-menu-a" href="{% url 'logout' %}"><i class="fa fa-sign-out"></i>Logout</a> </li> 
 							</ul>
 						</li>
 						
 						
 
 						{% else %}
-						<li class="active"><a href="{% url 'login' %}" style="padding:37px 30px;">LOGIN</a></li>
-						<li class="active"><a href="{% url 'Registrarse' %}" style="padding:37px 30px;">REGISTRARSE</a>
-						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{% url 'login' %}">
+							  <i class="fa fa-sign-in"></i>
+								 Login
+							</a>
+						  </li>
+						  <li class="nav-item">
+							<a class="nav-link" href="{% url 'Registrarse' %}">
+							  <i class="fa fa-key"></i>
+								 Registrarse
+							</a>
+						  </li>
 						{% endif %}
-					</ul>
+					  </ul>
 
 				</nav>
 
@@ -292,8 +424,7 @@
 	<script src="{% static 'MedCongressApp/js/ie.js'%}"></script>
 	<!--Accordian Explore Script-->
 	<script src="{% static 'MedCongressApp/js/jquery.accordion.js'%}"></script>
-	<!--GOOGLE MAP-->
-	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyCxDqmPXcY8jAoT1iWgxhzcf81HWnOPGEw"></script>
+	
 	<!--RESPONSIVE MENU-->
 	<script src="{% static 'MedCongressApp/js/jquery.sidr.min.js'%}"></script>
 	<!--PrettyPhoto Js -->

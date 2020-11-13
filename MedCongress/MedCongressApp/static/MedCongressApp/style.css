@@ -146,20 +146,25 @@ h1,h2,h3,h4,h5,h6{
 	background-image:url(images/our-speaker.jpg);
 	background-size:cover;
 	background-position:center;
-	margin-top: 93px;
+	
 }
 .imagen_menu {
 	position: relative;
-	display: inline-block;
-	width: 30px;
 	vertical-align: bottom;
 	white-space: nowrap;
 	border-radius: 1000px;
-	width: 36px;
-	margin-top: -11px;
+
+	padding: 1px;
+	display: block;
+	width: 41px;
+	margin: -17px 12px 4px 17px;
+	top: 0;
+	line-height: 0px;
 }
 .my_ul{
-	margin-left: -184px !important;
+	margin-left: -138px !important;
+background-color: #00a4ef;
+
 }
 .sidr-class-imagen_menu
 {
@@ -314,11 +319,15 @@ h1,h2,h3,h4,h5,h6{
 	  ==============================================================
 */
 #kode-header{
-	position:absolute;
-	left:0;
-	top:0;
-	right:0;
-	z-index:999;
+
+left: 0;
+top: 0;
+right: 0;
+position: fixed;
+height:50px;
+background: rgba(172, 170, 170, 0.9);
+width: 100%;
+z-index: 999;
 	
 }
 #kode-header:after{
@@ -327,17 +336,21 @@ h1,h2,h3,h4,h5,h6{
 	content:'';
 }
 .kode-logo{
-	float:left;
-	max-width:200px;
-	margin:0 60px;
-	padding:20px 0;
+    float: left;
+    max-width: 104px;
+    margin: 0px 25px;
+    padding: 10px 0px;
+}
 }
 .kode-logo a{display:block;}
 .kode-logo img{
 	display:block;
 	width:100%;
 }
-.col-right{float:right;}
+.col-right{
+	float:right;
+	margin-right: 50px;
+}
 .header-social{
 	padding:31px 50px 0 0;
 	margin:0;
@@ -1077,6 +1090,26 @@ h1,h2,h3,h4,h5,h6{
 		   Events timer CSS Start
 	  ==============================================================
 */
+
+.my_dropdown-menu{
+	left: 89px;
+	top: 49px;
+	background-color: rgba(172, 170, 170, 0.9);
+	width: 244px;
+	z-index: 99999;
+}
+.my_dropdown-menu-a{
+	padding: 16px 20px !important;
+	color: #6a6767 !important;
+}
+.nav-item :hover{
+	
+	background: #8a8787 !important;
+}
+.my_dropdown-menu-a i{
+	font-size: 25px;
+	padding: 0 10px;
+}
 .kode-event-time{
 	position:relative;
 	overflow:hidden;
@@ -1084,7 +1117,7 @@ h1,h2,h3,h4,h5,h6{
 	background-size:cover;
 	float:left;
 	width:100%;
-	margin-top: 91px;
+
 
 	
 }
@@ -5125,8 +5158,8 @@ ul.kode-tickets-title{
 #mobile-header {
     display: none;
 	position:absolute;
-	left:30px;
-	top:30px;
+	left:80%;
+	top:2px;
 	border:solid 2px #fff;
 	z-index:1000;
 	overflow:hidden;
@@ -5134,6 +5167,9 @@ ul.kode-tickets-title{
 	width:40px;
 	border-radius:100%;
 	text-align:center;
+	position: fixed;
+	z-index: 99999;
+	background-color: #333;
 }
 #mobile-header a{
 	color:#fff;
