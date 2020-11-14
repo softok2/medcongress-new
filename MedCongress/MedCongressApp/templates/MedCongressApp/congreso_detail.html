@@ -6,6 +6,56 @@
 {%endblock%}
 {%block css%}
 <link rel="stylesheet" href="{% static 'MedCongressApp/css/bootstrap-rating.css'%}" type="text/css" media="all">
+<style>
+.main-body {
+    padding: 15px;
+    }
+    .card {
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,.1), 0 1px 2px 0 rgba(0,0,0,.06);
+    }
+    
+    .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 0 solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+    }
+    
+    .card-body {
+    flex: 1 1 auto;
+    min-height: 1px;
+    padding: 1rem;
+    }
+    
+    .gutters-sm {
+    margin-right: -8px;
+    margin-left: -8px;
+    }
+    
+    .gutters-sm>.col, .gutters-sm>[class*=col-] {
+    padding-right: 8px;
+    padding-left: 8px;
+    }
+    .mb-3, .my-3 {
+    margin-bottom: 1rem!important;
+    }
+    
+    .bg-gray-300 {
+    background-color: #e2e8f0;
+    }
+    .h-100 {
+    height: 100%!important;
+    }
+    .shadow-none {
+    box-shadow: none!important;
+    }
+    
+    </style>
 {%endblock%}
 {% block contenido %}
 
@@ -34,7 +84,6 @@
                                               <div class="d-flex flex-column align-items-center text-center">
                                                <span id="foto"> </span> 
                                                 <div class="mt-3">
-                                                  <h4 id="nombre">John Doe</h4>
                                                   <p id="puesto" class="text-secondary mb-1"></p>
                                                  <div style="text-align: center;"> <p class="text-muted font-size-sm" id="bandera"></p></div>
                                                   <input type="hidden" id="rating" class="rating" data-readonly value="3"/>
@@ -50,66 +99,32 @@
                                           <div class="card mb-3">
                                             <div class="card-body">
                                               <div class="row" style="margin-top: 10px;">
-                                                <div class="col-sm-4">
-                                                  <h6 class="mb-0">Nombre Completo</h6>
+                                                <div class="col-sm-12">
+                                                  <h4 class="mb-0"  style="font-weight: bold;" id="nombre_completo"></h4>
                                                 </div>
-                                                <div class="col-sm-8 text-secondary" style="color: #6c757d !important;" id="nombre_completo">
-                                                 
-                                                </div>
+                                               
                                               </div>
                                               <hr>
-                                              <div class="row" >
-                                                <div class="col-sm-4">
-                                                  <h6 class="mb-0">Email</h6>
-                                                </div>
-                                                <div class="col-sm-8 text-secondary"  style="color: #6c757d !important;" id="email">
-                                                  
-                                                </div>
-                                              </div>
-                                              <hr>
+                                             
+                                             
                                               <div class="row">
-                                                <div class="col-sm-4">
-                                                  <h6 class="mb-0">Especialidad</h6>
+                                                <div class="col-sm-12">
+                                                  <h5 class="mb-0" id="especialidad" style="font-style: italic;"></h5>
                                                 </div>
-                                                <div class="col-sm-8 text-secondary" style="color: #6c757d !important;" id="especialidad">
-                                                  
-                                                </div>
-                                              </div>
-                                              <hr>
                                               
-                                              <div class="row" style="margin-bottom: 20px;">
-                                                <div class="col-sm-4">
-                                                  <h6 class="mb-0">Localidad</h6>
-                                                </div>
-                                                <div class="col-sm-8 text-secondary" style="color: #6c757d !important;" id="localidad">
-                                                
-                                                </div>
                                               </div>
+
                                             </div>
                                           </div>
-                                          <div class="row gutters-sm mb-3">
-                                            <div class="col-sm-12" >
-                                              <div class="card h-100">
-                                                <h6 class="mb-0" style="padding: 20px;">Logros Académicos</h6>
-                                                <div class="card-body" id="constancia">
-                                                  
-                                                </div>
-                                              </div>
-                                            </div>
-                                           
+                                          <div id="constancia">
+                                             
                                           </div>
-                                          <div class="row gutters-sm mb-3">
-                                            <div class="col-sm-12" >
-                                              <div class="card h-100">
-                                                <h6 class="mb-0" style="padding: 20px;">Publicaciones</h6>
-                                                <div class="card-body" id="publicaciones">
-                                                  
-                                                </div>
-                                              </div>
-                                            </div>
-                                           
-                                          </div>
-                                          <div class="row gutters-sm mb-3">
+                                          <div id="publicaciones">
+                                             
+                                        </div>
+                                          
+                                          
+                                          <!-- <div class="row gutters-sm mb-3">
                                             <div class="col-sm-12" >
                                               <div class="card h-100">
                                                 <h6 class="mb-0" style="padding: 20px;">Futuras Conferencias</h6>
@@ -119,7 +134,7 @@
                                               </div>
                                             </div>
                                            
-                                          </div>
+                                          </div> -->
                                         </div>
                                       </div>
                                     </div>
@@ -144,7 +159,7 @@
         </div>
     </div>
 </div>
-<div class="kode-slider" style="margin-top: 92px;">
+<div class="kode-slider" >
 
     <ul class="bxslider-banner">
         {% for imagen in congreso.imagencongreso_set.all%}
@@ -1082,16 +1097,15 @@
     function VerPerfil(pk){
     url = "{% url 'GetPerfil'%}";
                     $.get(url, { 'pk': pk }, function (data) {
-                    $('#nombre').html(data.nombre) ;
+                  
                     if(data.foto)
                         $('#foto').html('<img class="img-responsive" src="{% static '/'%}'+data.foto+'" alt=" foto '+ data.nombre+'" >');
                     else
                         $('#foto').html('<img class="img-responsive" src="{% static 'MedCongressApp/images/defaulthombre.png' %}" alt="{{request.user.username}}" >');
                     if(data.bandera)
-                        $('#bandera').html('<img style="width: 100px; display:block;margin:auto;" class="img-responsive" src="{% static '/'%}'+data.bandera+'" alt=" bandera" >');
+                        $('#bandera').html('<img style="width: 100px; display:block;margin:auto;" class="img-responsive" src="{% static '/'%}'+data.bandera+'" >');
                     else
-                        $('#bandera').html('Este País no tiene bandera en la BD');
-
+                        $('#bandera').html();
                     redes='';
                     if(data.facebook)
                     redes+='<div class="row" style="padding: 20px;" > <div class="like_fb"> <a class="facebook" href="#"><i class="fa fa-facebook"></i></a> </div><div class="like_amount"><p>'+ data.facebook+'</p></div>  </div>'
@@ -1102,13 +1116,24 @@
                     if(data.linkedin)
                     redes+='<div class="row" style="padding: 20px;"><div class="like_fb"> <a class="facebook" style="background-color: #2962ff;"    href="#"><i class="fa fa-linkedin"></i></a></div><div class="like_amount"><p>'+data.linkedin+'</p></div> </div>'
                     $('#redes_sociales').html(redes) ;
-                    $('#localidad').html(data.localidad) ;
-                    $('#email').html(data.email) ;
-                    $('#categoria').html(data.categoria) ;
+                 
                     $('#especialidad').html(data.especialidad);
-                    $('#ced').html(data.ced);
-                    $('#constancia').html(data.constancias);
-                    $('#publicaciones').html(data.publicaciones);
+                  
+                    constancia='';
+                    if(data.constancias){
+                    constancia='<div class="row gutters-sm mb-3"><div class="col-sm-12" ><div class="card h-100" ><h6 class="mb-0" style="padding: 20px;"><b>Logros Académicos</b></h6><div class="card-body" >'+data.constancias+'</div> </div> </div></div> ';
+                    $('#constancia').html(constancia);
+                    }
+                   else
+                   $('#constancia').html();
+                    publicaciones='';
+                    if(data.publicaciones){
+                        publicaciones='<div class="row gutters-sm mb-3"><div class="col-sm-12" ><div class="card h-100" ><h6 class="mb-0" style="padding: 20px;"><b>Publicaciones</b></h6><div class="card-body" >'+data.publicaciones+'</div> </div> </div></div> ';
+                    $('#publicaciones').html(publicaciones);
+                    }
+                    else
+                   $('#publicaciones').html();
+                   
                     
                     
                     if(data.ponencias.length==0){
@@ -1148,6 +1173,7 @@
 
                     });
 }
+
 </script>
 
 {%endblock%}

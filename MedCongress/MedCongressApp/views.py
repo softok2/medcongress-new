@@ -688,22 +688,22 @@ class GetPerfil(TemplateView):
         if request.is_ajax:
             query =request.GET.get("pk")
             usuario=PerfilUsuario.objects.get(pk=query)
-            especialidad_env='No tiene Especialidad'
+            especialidad_env=''
             if usuario.especialidad:
                 especialidad_env=usuario.especialidad.nombre
-            ced_env='No tiene Cédula Profecional'
+            ced_env=''
             if usuario.cel_profecional:
                 ced_env=usuario.cel_profecional
-            publicaciones_env='No tiene Publicaciones a Mostrar'
+            publicaciones_env=''
             if usuario.publicaciones:
                 publicaciones_env=usuario.publicaciones
-            constancia_env='No tiene Constancias a Mostrar'
+            constancia_env=''
             if usuario.detalle:
                 constancia_env=usuario.detalle
-            datos_env='No tiene Datos de Interes a Mostrar'
+            datos_env=''
             if usuario.datos_interes:
                 datos_env=usuario.datos_interes 
-            puesto_env='No tiene ningún Puesto Actualmente'
+            puesto_env=''
             if usuario.puesto:
                 puesto_env=usuario.puesto 
             ######### Ponencias #######
