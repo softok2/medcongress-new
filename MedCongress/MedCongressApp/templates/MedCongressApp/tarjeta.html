@@ -244,7 +244,7 @@ Efectuar Pago
                 const csrftoken = getCookie('csrftoken');
                 $('#pay-button').on('click', function (event) {
                 
-                   alert($('#numero').val())
+                  
                     event.preventDefault();
                     $("#pay-button").prop("disabled", true);
                     OpenPay.token.extractFormAndCreate('payment-form', sucess_callbak, error_callbak);
