@@ -88,10 +88,10 @@ Efectuar Pago
                                 <div class=" col-sm-6">
                                     <div class="form-group">
                                         <label>Número de tarjeta</label>
-                                        <input type="text" id="numero" autocomplete="off"  maxlength="19" placeholder="****-****-****-****"
+                                         <input type="text" id="numero1" autocomplete="off"   maxlength="19" placeholder="****-****-****-****"
+                                            > 
+                                            <input type="hidden" id="numero" autocomplete="off"  maxlength="19" data-openpay-card="card_number"
                                             name="numero">
-                                            <input type="hidden" id="numero1" autocomplete="off" data-openpay-card="card_number" maxlength="19"
-                                            name="numero1">
                                             
                                     </div>
 
@@ -209,21 +209,20 @@ Efectuar Pago
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
         <script type="text/javascript" src="https://openpay.s3.amazonaws.com/openpay.v1.min.js"></script>
         <script type='text/javascript' src="https://openpay.s3.amazonaws.com/openpay-data.v1.min.js"></script>
-
+        <script src="{% static 'MedCongressApp/js/extended/form-card.js'%}"></script>
         <script type="text/javascript">
             $(document).ready(function () {
-                    $('#numero').keypress(function(){
-                        
-                       $('#numero1').val($('#numero').val().replace(/-/g,''));
+                    $('#numero1').keyup(function(){
+                         
+                       $('#numero').val($('#numero1').val().replace(/-/g,''));
 
                         if( $(this).val().length == 4 || $(this).val().length ==9 || $(this).val().length ==14){
                        
-                       $('#numero1').val($('#numero').val());
                         $(this).val($(this).val()+'-');
                         
 
                         }
-                            
+                        
                         
   
                     });
@@ -244,7 +243,8 @@ Efectuar Pago
                 var deviceSessionId = OpenPay.deviceData.setup("payment-form", "deviceIdHiddenFieldName");
                 const csrftoken = getCookie('csrftoken');
                 $('#pay-button').on('click', function (event) {
-                    $('#numero').val($('#numero').val().replace('-',''));
+                
+                   alert($('#numero').val())
                     event.preventDefault();
                     $("#pay-button").prop("disabled", true);
                     OpenPay.token.extractFormAndCreate('payment-form', sucess_callbak, error_callbak);
