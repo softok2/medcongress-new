@@ -27,6 +27,7 @@ from .views.bloque_views import (BloquesListView,BloqueCreateView,BloqueDeletedV
 from .views.otros_views import (OtrosListView,OtroUpdateView)
 from .views.cuestionario_views import (PreguntaCreateView)
 from .views.moderador_view import ModeradoresListView,ModeradorCreateView,ModeradorDeletedView
+from .views.meta_views import MetaPagInicioView,MetaPagInicioUpdateView
 from .views.dashboard import DashboardView
 from django.conf.urls import handler404
 
@@ -60,7 +61,7 @@ urlpatterns = [
 
      # Congreso-Cuestionarios
      path('cuestionario/congreso/<str:path>', CongressCuestionarioListView.as_view(), name='Congres_cuestionario'),
-     path('cuestionario_pregunta/congreso/add', PreguntaCreateView.as_view(), name='cuestionario_pregunta_add'),
+     path('cuestionario_pregunta/congreso/add/<str:path>', PreguntaCreateView.as_view(), name='congreso_cuestionario_pregunta_add'),
 
 
      # Congreso-Talleres
@@ -158,6 +159,12 @@ urlpatterns = [
      path('imagenes/congreso/<str:path>', CongressImagenesListView.as_view(), name='Congres_imagenes'),
      path('imagen-congreso/adicinar/<int:pk>', CongressImagenCreateView.as_view(), name='imagen_congress_add'),
      
+     #Cuestionarios
+     path('cuestionario_pregunta/congreso/add/', PreguntaCreateView.as_view(), name='cuestionario_pregunta_add'),
+     
+     #Metadatos
+     path('meta_pagina_inicio', MetaPagInicioView.as_view(), name='meta_pag_inicio'),
+     path('meta_pagina_inicio/editar/<int:pk>', MetaPagInicioUpdateView.as_view(), name='meta_pag_inicio_edit'),
      
    
      

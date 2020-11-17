@@ -101,6 +101,17 @@ class PerfilUsuario(models.Model):
     youtube=models.CharField(max_length=50,null=True)
     publicaciones=models.TextField(null=True,blank=True)
     puesto=models.CharField(max_length=100,null=True)
+    meta_og_title=models.CharField(max_length=50,null=True)
+    meta_description=models.CharField(max_length=160,null=True)
+    meta_og_description=models.CharField(max_length=160,null=True)
+    meta_og_type=models.CharField(max_length=50,null=True)
+    meta_og_url=models.CharField(max_length=50,null=True)
+    meta_twitter_card=models.CharField(max_length=50,null=True)
+    meta_twitter_site=models.CharField(max_length=50,null=True)
+    meta_twitter_creator=models.CharField(max_length=50,null=True)
+    meta_keywords=models.CharField(max_length=250,null=True)
+    meta_og_imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='metas',blank=True, null=True )
+    meta_title=models.CharField(max_length=250,null=True)
     class Meta:
         verbose_name='Perfil usuario'
         verbose_name_plural='Perfil de usuarios'
@@ -191,6 +202,17 @@ class Congreso(models.Model):
     categoria_pago = models.ManyToManyField(CategoriaPagoCongreso, through='RelCongresoCategoriaPago',related_name='congreso_cat_pago')
     is_openpay=models.BooleanField(null=True)
     template=models.CharField(max_length=50,null=True)
+    meta_og_title=models.CharField(max_length=50,null=True)
+    meta_description=models.CharField(max_length=160,null=True)
+    meta_og_description=models.CharField(max_length=160,null=True)
+    meta_og_type=models.CharField(max_length=50,null=True)
+    meta_og_url=models.CharField(max_length=50,null=True)
+    meta_twitter_card=models.CharField(max_length=50,null=True)
+    meta_twitter_site=models.CharField(max_length=50,null=True)
+    meta_twitter_creator=models.CharField(max_length=50,null=True)
+    meta_keywords=models.CharField(max_length=250,null=True)
+    meta_og_imagen=models.CharField(max_length=250,null=True)
+    meta_title=models.CharField(max_length=250,null=True)
     
 
 
@@ -364,6 +386,17 @@ class Ponencia(models.Model):
     bloque=models.ForeignKey(Bloque,on_delete=models.CASCADE,null=True,blank=True)
     ponente = models.ManyToManyField(Ponente, through='RelPonenciaPonente',related_name='ponencia_ponente')
     votacion = models.ManyToManyField(User, through='RelPonenciaVotacion')
+    meta_og_title=models.CharField(max_length=50,null=True)
+    meta_description=models.CharField(max_length=160,null=True)
+    meta_og_description=models.CharField(max_length=160,null=True)
+    meta_og_type=models.CharField(max_length=50,null=True)
+    meta_og_url=models.CharField(max_length=50,null=True)
+    meta_twitter_card=models.CharField(max_length=50,null=True)
+    meta_twitter_site=models.CharField(max_length=50,null=True)
+    meta_twitter_creator=models.CharField(max_length=50,null=True)
+    meta_keywords=models.CharField(max_length=250,null=True)
+    meta_og_imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='metas',blank=True, null=True )
+    meta_title=models.CharField(max_length=250,null=True)
     
     class Meta:
         verbose_name='ponencia'
@@ -424,6 +457,17 @@ class Taller(models.Model):
     ponente = models.ManyToManyField(Ponente, through='RelTallerPonente',related_name='taller_ponente')
     votacion = models.ManyToManyField(User, through='RelTallerVotacion')
     categoria_pago = models.ManyToManyField(CategoriaPagoCongreso, through='RelTalleresCategoriaPago',related_name='talleres_cat_pago')
+    meta_og_title=models.CharField(max_length=50,null=True)
+    meta_description=models.CharField(max_length=160,null=True)
+    meta_og_description=models.CharField(max_length=160,null=True)
+    meta_og_type=models.CharField(max_length=50,null=True)
+    meta_og_url=models.CharField(max_length=50,null=True)
+    meta_twitter_card=models.CharField(max_length=50,null=True)
+    meta_twitter_site=models.CharField(max_length=50,null=True)
+    meta_twitter_creator=models.CharField(max_length=50,null=True)
+    meta_keywords=models.CharField(max_length=250,null=True)
+    meta_og_imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='metas',blank=True, null=True )
+    meta_title=models.CharField(max_length=250,null=True)
     
 
     class Meta:
@@ -536,4 +580,46 @@ class CuestionarioRespuestas(models.Model):
     is_correcto=models.BooleanField()
     published=models.BooleanField(null=True)
 
+#####  Tabla metadatos de la pagina Inicio 
+
+class MetaPagInicio(models.Model): 
+    meta_og_title=models.CharField(max_length=50,null=True)
+    meta_description=models.CharField(max_length=160,null=True)
+    meta_og_description=models.CharField(max_length=160,null=True)
+    meta_og_type=models.CharField(max_length=50,null=True)
+    meta_og_url=models.CharField(max_length=50,null=True)
+    meta_twitter_card=models.CharField(max_length=50,null=True)
+    meta_twitter_site=models.CharField(max_length=50,null=True)
+    meta_twitter_creator=models.CharField(max_length=50,null=True)
+    meta_keywords=models.CharField(max_length=250,null=True)
+    meta_og_imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='metas',blank=True, null=True )
+    meta_title=models.CharField(max_length=250,null=True)
+    class Meta:
+        verbose_name='El Meta de la Página Inicio'
+        verbose_name_plural='Los Metas de la Página de Inicio'
+
+    def __str__(self):
+        return self.meta_title 
+   
+
+#####  Tabla metadatos de la pagina Listar Congreso 
+
+class MetaPagListCongreso(models.Model): 
+    meta_og_title=models.CharField(max_length=50,null=True)
+    meta_description=models.CharField(max_length=160,null=True)
+    meta_og_description=models.CharField(max_length=160,null=True)
+    meta_og_type=models.CharField(max_length=50,null=True)
+    meta_og_url=models.CharField(max_length=50,null=True)
+    meta_twitter_card=models.CharField(max_length=50,null=True)
+    meta_twitter_site=models.CharField(max_length=50,null=True)
+    meta_twitter_creator=models.CharField(max_length=50,null=True)
+    meta_keywords=models.CharField(max_length=250,null=True)
+    meta_og_imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='metas',blank=True, null=True )
+    meta_title=models.CharField(max_length=250,null=True)
+    class Meta:
+        verbose_name='El Meta de la Página Listar Congresos'
+        verbose_name_plural='Los Metas de la Página Listar Congresos'
+
+    def __str__(self):
+        return self.meta_title 
    

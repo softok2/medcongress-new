@@ -36,7 +36,11 @@
                         <div class="col-10">
                             <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Listado
                                 preguntas del Cuestionario</h1>
+                                {%if congreso%}
+                                <p class="card-text"><b> Congreso:</b>  {{congreso.titulo}}</p>
+                                {%else%}
                             <p class="card-text">Mostrando todas las Preguntas del Cuestionario.</p>
+                            {%endif%}
                         </div>
                         <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
@@ -61,15 +65,26 @@
                                             <tr role="row" style="font-size: 13px;">
                                                 <th style="width:50%">Pregunta</th>
                                                 <th>Respuestas</th>
-                                               
+                                                <th>Publicada</th>
+
+                                                <th style="width:5%">Operaciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for cuestionario in cuestionarios %}
+                                            {% for pregunta in preguntas %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
-                                                <td class="sorting_1">{{ cuestionario.pregunta }} </td>
+                                                <td class="sorting_1">{{ pregunta.texto }} </td>
                                                 
-                                                <td></td>
+                                                <td>
+                                                    {%for respuesta in pregunta.respuestas %}
+                                                    <p>{%if respuesta.is_correcta%}<b> {{respuesta.texto}} ({%if respuesta.publicada%}Publicada{%else%}No Publicada{%endif%})</b> </p>
+                                                    {%else%} 
+                                                   <p> {{respuesta.texto}}  ({%if respuesta.publicada%}Publicada{%else%}No Publicada{%endif%})</p> 
+                                                   {%endif%}
+                                                    {%endfor%}
+
+                                                </td>
+                                                <td>{%if pregunta.publicada%}Si{%else%}No{%endif%}</td>
                                                   <td>  <a id="del_{{ cuestionario.pk }}"
                                                         href="javascript:deleteItem('{{ cuestionario.pk }}')"
                                                         title="Eliminar">
@@ -85,8 +100,9 @@
                                         </tbody>
                                         <tfoot>
                                             <tr style="font-size: 13px;">
-                                                <th style="width:50%">Nombre</th>
-                                                <th>Email</th>
+                                                <th style="width:50%">Pregunta</th>
+                                                <th>Respuestas</th>
+                                                <th>Publicada</th>
                                                 <th style="width:5%">Operaciones</th>
                                             </tr>
                                         </tfoot>
@@ -121,6 +137,9 @@
         });
 
         $('#add-btn').click(function () {
+            if('{{congreso}}')
+            location.href = "{% url 'MedCongressAdmin:congreso_cuestionario_pregunta_add' congreso.path %}";
+            else
             location.href = "{% url 'MedCongressAdmin:cuestionario_pregunta_add' %}";
         });
 

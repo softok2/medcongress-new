@@ -51,7 +51,7 @@
 												</div>
 											</div>
 
-											<div class="col-sm-4 ">
+											<div class="col-sm-3 " style="display: none;">
 												<div class="form-group">
 													<label
 														for="{{form.congreso.id_for_label }}"><b>{{form.congreso.label }}</b>{% if form.congreso %}
@@ -62,18 +62,59 @@
 													{{form.congreso}}
 												</div>
 											</div>
+											<div class="col-sm-1 ">
+												<div class="form-group">
+													<label
+														for="{{form.published.id_for_label }}"><b>{{form.published.label }}</b>{% if form.published %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.published.errors }}
+														</span>{% endif %} </label>
+
+													{{form.published}}
+												</div>
+											</div>
 
 										</div>
-										<div class="row">
+										<h4> <b> Posibles Respuestas</b></h4>
+										<div class="respuestas">
+											<div class="row respuesta">
 											<div class="col-sm-8 ">
 												<div class="form-group">
 
 
-													{{form.respuesta}}
+													<input type="text" name="respuesta" maxlength="250" class="form-control" required="">
 												</div>
 											</div>
-										</div>
+											<div class="col-sm-3 ">
+												<div class="form-group">
 
+
+													<select name="is_correcto" class="form-control" id="">
+														<option value="True">Correcta</option>
+														<option value="False" selected>Incorrecta</option>
+													</select>
+												</div>
+											</div>
+											<div class="col-sm-1 ">
+												<div class="form-group">
+
+
+													<select name="published_resp" class="form-control" id="">
+														<option value="True">Si</option>
+														<option value="False" selected>No</option>
+													</select>
+												</div>
+											</div>
+										
+										</div>
+											
+										</div>
+										
+											<div class="text-right">
+										<button type="button" class="btn btn-sm " title="Agregar Respuesta" onclick="AddRespuesta();">+</button>
+										<button type="button" class="btn btn-sm"  id="del" title="Eliminar Respuesta" onclick="DeletedRespuesta();" disabled>-</button>
+								
+									</div>
 
 									<div class="form-actions">
 										<div class="text-right">
@@ -106,27 +147,19 @@
 
 <script type="text/javascript">
 	$('#atras').click(function () {
-		{%if con %}
-		location.href = "{% url 'MedCongressAdmin:Congres_bloques' con.path %}";
+		{%if congreso %}
+		location.href = "{% url 'MedCongressAdmin:Congres_cuestionario' congreso.path %}";
 		{%else%}
 		location.href = "{% url 'MedCongressAdmin:bloques_list' %}";
 		{% endif %}
 	});
-	{%if con %}
-	$("#id_congreso option[value='{{con.id}}']").attr("selected", true);
+	{%if congreso %}
+	$("#id_congreso option[value='{{congreso.id}}']").attr("selected", true);
 	{% endif %}
 
 	$(document).ready(function () {
-		$('#id_fecha_inicio').datetimepicker({
-			//language:  'fr',
-			weekStart: 1,
-			todayBtn: 1,
-			autoclose: 1,
-			todayHighlight: 1,
-			startView: 2,
-			forceParse: 0,
-			showMeridian: 1
-		});
+		
+
 
 
 
@@ -140,6 +173,44 @@
 
 
 	});
+	function AddRespuesta(){
+		jQuery('.respuestas').append(`<div class="row respuesta">
+											<div class="col-sm-8 ">
+												<div class="form-group">
 
+
+													<input type="text" name="respuesta" maxlength="250" class="form-control" required="">
+												</div>
+											</div>
+											<div class="col-sm-3 ">
+												<div class="form-group">
+
+
+													<select name="is_correcto" class="form-control" id="">
+														<option value="True">Correcta</option>
+														<option value="False" selected>Incorrecta</option>
+													</select>
+												</div>
+											</div>
+											<div class="col-sm-1 ">
+												<div class="form-group">
+
+
+													<select name="published_resp" class="form-control" id="">
+														<option value="True">Si</option>
+														<option value="False" selected>No</option>
+													</select>
+												</div>
+											</div>
+										
+										</div>`);
+										$('#del').removeAttr('disabled');
+
+	}
+function DeletedRespuesta(){
+	$('.respuesta').last().remove();
+	if($('.respuesta').length==1)
+	$('#del').attr('disabled','disabled');
+}
 </script>
 {% endblock %}

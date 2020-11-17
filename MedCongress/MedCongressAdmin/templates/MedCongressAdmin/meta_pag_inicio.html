@@ -1,0 +1,118 @@
+{% extends 'MedCongressAdmin/base.html' %}
+{% block title %}Congresos{% endblock %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" type="text/css"
+    href="{% static 'MedCongressAdmin/app-assets/vendors/css/tables/datatable/datatables.min.css' %}">
+<style type="text/css">
+    .custom-select-sm {
+        font-size: 110%;
+    }
+
+    .page-link {
+        padding: 10px 15px;
+    }
+
+    #DataTables_Table_0_length>label {
+        margin-top: 1.2rem;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<section id="configuration">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-10">
+                            <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Meta Datos de la Página de Inicio</h1>
+                            
+                        </div>
+                        <div class="col-2">
+                            <div style="margin-right: 45%; margin-top: 1.5rem;">
+                                
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-content collapse show">
+                    <div class="card-body card-dashboard">
+                        <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                            <div class="row">{%for meta_pag_inicio in metas_pag_inicio%}
+                                <div class="col-sm-4">
+                                    <h3  style="margin-bottom: 30px;"><b>Metas Principales </b> </h3>
+                                    <h4> <b>Título</b>  <small>{{meta_pag_inicio.meta_title}}</small></h4>
+                                    <h4> <b>Descripción</b>  <small>{{meta_pag_inicio.meta_description}}</small></h4>
+                                    <h4> <b>Palabras Claves</b>  <small>{{meta_pag_inicio.meta_keywords}}</small></h4>  
+                                </div>
+                                <div class="col-sm-4"> 
+                                    <h3  style="margin-bottom: 30px;"><b>Metas para FaceBook </b> </h3>
+                                    <h4> <b>Título</b>  <small>{{meta_pag_inicio.meta_og_title}}</small></h4>
+                                    <h4> <b>Descripción</b>  <small>{{meta_pag_inicio.meta_og_description}}</small></h4>
+                                    <h4> <b>Tipo</b>  <small>{{meta_pag_inicio.meta_og_type}}</small></h4>
+                                    <h4> <b>URL</b>  <small>{{meta_pag_inicio.meta_og_url}}</small></h4>
+                                    <h4> <b>Imagen</b>  <small>{{meta_pag_inicio.meta_og_imagen}}</small></h4>
+                                    <a id="edit-btn" type="button" class="btn btn-success" title="Editar Valores" href=" {% url 'MedCongressAdmin:meta_pag_inicio_edit' pk=meta_pag_inicio.pk %}"
+                                    style="float: left; padding:7px;font-size: 20px; margin-top: 30px;">
+                                    <i class="ft ft-edit"></i> Editar
+                                </a>
+                                </div>
+                                    <div class="col-sm-4">
+                                    <h3 style="margin-bottom: 30px;"> <b> Metas para Redes Sociales</b> </h3>
+
+                                    <h4> <b>Card</b>  <small>{{meta_pag_inicio.meta_twitter_card}}</small></h4>
+                                    <h4> <b>Site</b>  <small>{{meta_pag_inicio.meta_twitter_site}}</small></h4>
+                                    <h4> <b>Creador</b>  <small>{{meta_pag_inicio.meta_twitter_creator}}</small></h4>
+                                    
+
+                                   
+                                   
+                                    {%endfor%}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="swal-overlay" tabindex="-1">
+    <form id="swall-modal-form" method="POST" style="display: none;">
+        {% csrf_token %}
+    </form>
+
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/extensions/sweetalert.min.js' %}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/tables/datatable/datatables.min.js' %}"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        });
+
+        // $('#add-btn').click(function () {
+        //     location.href = "";
+        // });
+
+        dataTable = $('.zero-configuration').DataTable();
+    });
+   
+</script>
+{% endblock %}

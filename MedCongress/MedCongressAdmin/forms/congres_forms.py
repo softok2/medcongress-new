@@ -5,7 +5,8 @@ from  MedCongressApp.models import (Congreso,Ubicacion,ImagenCongreso,TipoCongre
                                     Ponente,PerfilUsuario,RelPonenciaPonente,RelCongresoCategoriaPago,
                                     CategoriaPagoCongreso,RelTalleresCategoriaPago,Genero,CategoriaUsuario,
                                     RelTallerPonente,Bloque,DatosIniciales,RelCongresoUser,RelTallerUser,
-                                    Moderador,RelBloqueModerador,ImagenCongreso,CuestionarioPregunta,CuestionarioRespuestas)
+                                    Moderador,RelBloqueModerador,ImagenCongreso,CuestionarioPregunta,CuestionarioRespuestas,
+                                    MetaPagInicio,MetaPagListCongreso)
                     
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
@@ -433,7 +434,7 @@ class ImagenCongForms(forms.ModelForm):
 
 class PreguntaForm(forms.ModelForm):
     congreso=forms.ModelChoiceField(queryset=Congreso.objects.filter(published=True),label='Congreso')
-    respuesta=forms.MultiValueField(fields=[forms.CharField(max_length=20),forms.TimeField()])
+    published=forms.BooleanField(label='Publicada',required=False)
 
 
     def __init__(self, *args, **kwargs):
@@ -441,10 +442,11 @@ class PreguntaForm(forms.ModelForm):
 
         self.fields['congreso'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['pregunta'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['respuesta'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['published'].widget.attrs.update({'class': 'form-control'}) 
+     
     class Meta:
         model=CuestionarioPregunta
-        fields=['congreso','pregunta','respuesta']
+        fields=['congreso','pregunta','published']
 class RespuestasForm(forms.ModelForm):
     
     respuesta=forms.MultipleChoiceField(widget=forms.TextInput())
@@ -468,7 +470,28 @@ class CuestionarioForms(MultiModelForm):
         
     }
 
+class MetaPagInicioForm(forms.ModelForm):
 
+    class Meta:
+        model=MetaPagInicio
+        fields=['meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
+        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+
+        self.fields['meta_og_title'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['meta_description'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['meta_og_description'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['meta_og_type'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['meta_og_url'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['meta_twitter_card'].widget.attrs.update({'class': 'form-control'})  
+        self.fields['meta_twitter_site'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['meta_twitter_creator'].widget.attrs.update({'class': 'form-control '})  
+        self.fields['meta_keywords'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['meta_og_imagen'].widget.attrs.update({'class': 'form-control '}) 
+        self.fields['meta_title'].widget.attrs.update({'class': 'form-control'})   
+          
 
 
 

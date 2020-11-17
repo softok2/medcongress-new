@@ -9,7 +9,7 @@ from django.views.generic import ListView,TemplateView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView,FormView
 from MedCongressApp.models import (Congreso,Taller,Ponencia,RelCongresoCategoriaPago,ImagenCongreso,Ubicacion
-                                    ,Bloque,RelCongresoUser,RelCongresoCategoriaPago,CuestionarioPregunta)
+                                    ,Bloque,RelCongresoUser,RelCongresoCategoriaPago,CuestionarioPregunta,CuestionarioRespuestas)
 from MedCongressAdmin.forms.congres_forms import CongresoForms,PonenciaForms,CongresoCategPagoForm,AsignarCongresoForms,ImagenCongForms
 
 class validarUser(UserPassesTestMixin):
@@ -133,10 +133,24 @@ class CongressCuestionarioListView(validarUser,TemplateView):
         if congreso is None:
             return   HttpResponseRedirect(reverse('Error404'))
         return self.render_to_response(self.get_context_data()) 
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
-        context['cuestionarios']=CuestionarioPregunta.objects.filter(congreso=congreso)
+        preguntas_env=[]
+        preguntas=CuestionarioPregunta.objects.filter(congreso=congreso)
+        for pregunta in preguntas:
+            respuesta_list=[]
+            respuestas=CuestionarioRespuestas.objects.filter(pregunta=pregunta)
+            for respuesta in respuestas:
+                respuesta_list.append({'texto':respuesta.respuesta,
+                                        'is_correcta':respuesta.is_correcto,
+                                        'publicada':respuesta.published})
+            preguntas_env.append({'texto':pregunta.pregunta,
+                                    'publicada':pregunta.published,
+                                    'respuestas':respuesta_list,})
+        context['preguntas']=preguntas_env
+        context['congreso']=congreso
        
         return context
     
