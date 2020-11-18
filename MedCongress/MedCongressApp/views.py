@@ -384,7 +384,9 @@ class CongresoCardForm(TemplateView):
                         pagar_congreso.save()
                 car=Cart(self.request)
                 car.clear() 
-                return HttpResponseRedirect(reverse('transaccion_exitosa'))
+                return HttpResponseRedirect(response.json()['payment_method']['url'])
+                # return HttpResponseRedirect(reverse('transaccion_exitosa'))
+                return HttpResponse(response)
             else:
                 self.request.session["error_opempay"]=response.json()['description']
                 return HttpResponseRedirect(reverse('Error_openpay'))
