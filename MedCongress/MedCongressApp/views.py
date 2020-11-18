@@ -71,6 +71,7 @@ class Home(TemplateView):
         return context
 
 class PagoExitoso(TemplateView):
+    
     template_name= 'MedCongressApp/pago_satifactorio.html' 
 
     def get_context_data(self, **kwargs):
