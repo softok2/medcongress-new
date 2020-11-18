@@ -376,6 +376,7 @@ class CongresoCardForm(TemplateView):
                     },
                     "use_3d_secure":True,
                     "redirect_url":'https://medcongress.com.mx/ver_transaccion',
+                    
                 }
 
                 
@@ -701,19 +702,22 @@ class VerTransaccion(TemplateView):
                     pagar_congreso.save()
             return HttpResponseRedirect(reverse('transaccion_exitosa'))
         if response_dict['status'] =="failed": 
-            if response_dict['error_code'] == 3001:
-                self.request.session["error_opempay"]='La tarjeta fue rechazada.'
-            if response_dict['error_code'] == 3002:
-                self.request.session["error_opempay"]='La tarjeta ha expirado.'
-            if response_dict['error_code'] == 3003:
-                self.request.session["error_opempay"]='La tarjeta no tiene fondos suficientes.'
-            if response_dict['error_code'] == 3004:
-                self.request.session["error_opempay"]='La tarjeta ha sido identificada como una tarjeta robada.'
-            if response_dict['error_code'] == 3005:
-                self.request.session["error_opempay"]='La tarjeta ha sido rechazada por el sistema antifraudes.'    
+            # if response_dict['error_code'] == 3001:
+            #     self.request.session["error_opempay"]='La tarjeta fue rechazada.'
+            # if response_dict['error_code'] == 3002:
+            #     self.request.session["error_opempay"]='La tarjeta ha expirado.'
+            # if response_dict['error_code'] == 3003:
+            #     self.request.session["error_opempay"]='La tarjeta no tiene fondos suficientes.'
+            # if response_dict['error_code'] == 3004:
+            #     self.request.session["error_opempay"]='La tarjeta ha sido identificada como una tarjeta robada.'
+            # if response_dict['error_code'] == 3005:
+            #     self.request.session["error_opempay"]='La tarjeta ha sido rechazada por el sistema antifraudes.'  
+            #   
+            self.request.session["error_opempay"]='Código de error %s  Transacción no exitosa.'%(response_dict['error_code'])  
             return HttpResponseRedirect(reverse('Error_openpay'))
 
-        return HttpResponse(response)
+        self.request.session["error_opempay"]='Transacción no Completada'  
+        return HttpResponseRedirect(reverse('Error_openpay'))
 
        
 
