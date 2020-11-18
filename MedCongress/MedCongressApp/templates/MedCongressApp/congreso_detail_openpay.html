@@ -73,9 +73,10 @@
                                 {% else %}
                                 <div role="tabpanel" class="tab-pane " id="home{{forloop.counter}}">
                                     {%endif%}
-                                    
-                                    {% for pon in ponencia%}
 
+                                    {% for pon in ponencia%}
+                                    {%if pon.tipo == 'Bloque'%}
+                                    <!-----  //////////////////////////////////-->
                                     <div class="kf_new_con_wrap ">
                                         <div class="kf_new_conf_time">
                                             <h5>{{pon.fecha_inicio|date:"H"}}:{{pon.fecha_inicio|date:"i"}}</h5>
@@ -86,7 +87,8 @@
                                                 {%else%}
                                                 <div class="kf_new_conf_hdg " id="conf_accord{{forloop.counter0}}">
                                                     {%endif%}
-                                                    <h5>{{pon.titulo}} </h5>
+                                                    <h5>{%if pon.tipo == 'Taller'%}{{pon.tipo|upper}}{%endif%}
+                                                        {{pon.titulo}} <span style="font-style: italic;"> </span> </h5>
 
                                                     <i class="fa fa-angle-down"></i>
 
@@ -97,12 +99,121 @@
                                                         <p>{{pon.detalle}}</p>
                                                         {%endif%}
                                                     </div>
-                                                    {%for ponente in pon.ponente.all %}
+                                                    <div class="row">
+                                                    {%for mod in pon.moderador %}
                                                     
+                                                   
+                                                    <div class="kf_new_conf_orgnizr col-sm-6">
+                                                        <figure>
+                                                            {% if mod.user.foto%}
+                                                            <img src="{% static '/'%}{{mod.user.foto}}"
+                                                                alt="image de {{mod.user.usuario.username}}">
+                                                                {%else%}
+                                                            <img src="{% static 'MedCongressApp/images/defaulthombre.png' %}"
+                                                            alt="image de {{mod.user.usuario.username}}">
+                                                                {%endif%}
+                                                        </figure>
+                                                        <div class="kf_new_conf_orgnizr_name">
+                                                            <h6>{{mod.user.usuario.first_name}}
+                                                                {{mod.user.usuario.last_name}}</h6>
+                                                            <span> Moderador</span>
+                                                            <p>
+                                                                {%if mod.user.detalle %}
+                                                                {{mod.user.detalle}}
+                                                                {%endif%}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                   
+                                                    {%endfor%}
+                                                
+                                                    {%for evento in pon.eventos %}
+                                                    
+                                                    {%for ponente in evento.ponentes %}
+                                                   {%if pon.moderador|length|divisibleby:2 %}
+                                                    </div>
+                                                    <div class="row">
+                                                   {%endif%}
+                                                        
+                                                    <div class="kf_new_conf_orgnizr col-sm-6">
+                                                        <figure>
+                                                            {% if ponente.user.foto%}
+                                                          
+                                                            <img src="{% static '/'%}{{ponente.user.foto}}"
+                                                                alt="image de {{ponente.user.usuario.username}}">
+                                                                {%else%}
+                                                            <img src="{% static 'MedCongressApp/images/defaulthombre.png' %}"
+                                                            alt="image de {{ponente.user.usuario.username}}">
+                                                                {%endif%}
+                                                        </figure>
+                                                        <div class="kf_new_conf_orgnizr_name">
+                                                            <h6>{{ponente.user.usuario.first_name}}
+                                                                {{ponente.user.usuario.last_name}}</h6>
+                                                            <span> Ponente</span>
+                                                            <p>
+                                                                {%if ponente.user.detalle %}
+                                                                {{ponente.user.detalle}}
+                                                                {%endif%}
+                                                            </p>
+                                                        </div>
+                                                        <h5 style="color: #00a4ef;padding-bottom: 61px;font-size: 14px;">{%if evento.tipo == 'Taller'%}{{evento.tipo|upper}}{%endif%}
+                                                            {{evento.titulo}} <span style="font-style: italic;"> </span> </h5>     
+                                                    </div>
+                                                    {%if pon.moderador|length|divisibleby:2%}
+                                                    
+                                                   
+                                                {% if forloop.counter|divisibleby:2 %}
+                                            </div>
+                                            <div class="row">
+                                                {%endif%}
+                                                
+                                                {%endif%}
+                                                    {%endfor%}
+                                                    
+                                              
+                                                       
+    
+                                                    
+                                                    {%endfor%}
+                                                  </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    <!-----  //////////////////////////////////-->
+                                    {%else%}
+                                    <div class="kf_new_con_wrap ">
+                                        <div class="kf_new_conf_time">
+                                            <h5>{{pon.fecha_inicio|date:"H"}}:{{pon.fecha_inicio|date:"i"}}</h5>
+                                        </div>
+                                        <div class="kf_new_conf_des_wrap">
+                                            {% if forloop.first %}
+                                            <div class="kf_new_conf_hdg accordion-open" id="conf_accord">
+                                                {%else%}
+                                                <div class="kf_new_conf_hdg " id="conf_accord{{forloop.counter0}}">
+                                                    {%endif%}
+                                                    <h5>{%if pon.tipo == 'Taller'%}{{pon.tipo|upper}}{%endif%}
+                                                        {{pon.titulo}} <span style="font-style: italic;"> </span> </h5>
+
+                                                    <i class="fa fa-angle-down"></i>
+
+                                                </div>
+                                                <div class="kf_new_conf_open_wrap">
+                                                    <div class="kf_new_conf_des">
+                                                        {%if pon.detalle%}
+                                                        <p>{{pon.detalle}}</p>
+                                                        {%endif%}
+                                                    </div>
+                                                    {%for ponente in pon.ponentes %}
                                                     <div class="kf_new_conf_orgnizr">
                                                         <figure>
+                                                            {% if ponente.user.foto%}
                                                             <img src="{% static '/'%}{{ponente.user.foto}}"
-                                                                alt="image Here">
+                                                                alt="image de {{ponente.user.usuario.username}}">
+                                                                {%else%}
+                                                            <img src="{% static 'MedCongressApp/images/defaulthombre.png' %}"
+                                                            alt="image de {{ponente.user.usuario.username}}">
+                                                                {%endif%}
                                                         </figure>
                                                         <div class="kf_new_conf_orgnizr_name">
                                                             <h6>{{ponente.user.usuario.first_name}}
@@ -115,15 +226,11 @@
                                                             </p>
                                                         </div>
                                                     </div>
-                                                   
-                                                    
-                                                    
                                                     {%endfor%}
-
-
                                                 </div>
                                             </div>
                                         </div>
+                                        {%endif%}
                                         {%endfor%}
 
                                     </div>
@@ -137,6 +244,7 @@
                                 {%endif%}
                             </div>
                         </div>
+                    </div>
                     </div>
                 </div>
             </div>
