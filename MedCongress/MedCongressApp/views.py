@@ -37,9 +37,13 @@ from django.utils.html import strip_tags
 ###################
 
 
-ID_KEY='m6ftsapwjvmo7j7y8mop'
-PUBLIC_KEY='pk_0d4449445a4948899811cea14a469793'
-PRIVATE_KEY='sk_34664e85b5504ca39cc19d8f9b8df8a2'
+# ID_KEY='m6ftsapwjvmo7j7y8mop'
+# PUBLIC_KEY='pk_0d4449445a4948899811cea14a469793'
+# PRIVATE_KEY='sk_34664e85b5504ca39cc19d8f9b8df8a2'
+# URL_PDF='https://sandbox-dashboard.openpay.mx'
+ID_KEY='muq0plqu35rnjyo7sf2v'
+PUBLIC_KEY='pk_0c7aea61d0ef4a4f8fdfbd674841981a'
+PRIVATE_KEY='sk_d07c7b6ffeeb4acaaa15babdaac4101e'
 URL_PDF='https://sandbox-dashboard.openpay.mx'
 
 # Create your views here.
@@ -363,7 +367,7 @@ class CongresoCardForm(TemplateView):
                             "email" : self.request.user.email
                     },
                     "use_3d_secure":True,
-                    "redirect_url":'https://medcongress.com.mx/transaccion_exitosa',
+                    "redirect_url":'https://medcongress.com.mx/ver_transaccion',
                 }
 
                 
@@ -384,9 +388,8 @@ class CongresoCardForm(TemplateView):
                         pagar_congreso.save()
                 car=Cart(self.request)
                 car.clear() 
-                return HttpResponseRedirect(response.json()['payment_method']['url'])
-                # return HttpResponseRedirect(reverse('transaccion_exitosa'))
-                return HttpResponse(response)
+                #prueba= requests.post(url=response.json()['payment_method']['url'])
+                return HttpResponseRedirect(response.json()['payment_method']['url']) 
             else:
                 self.request.session["error_opempay"]=response.json()['description']
                 return HttpResponseRedirect(reverse('Error_openpay'))
@@ -668,4 +671,33 @@ class HabilitarUser(TemplateView):
             usuario.usuario.save()
             usuario.save()
             return self.render_to_response(self.get_context_data()) 
+
+class VerTransaccion(TemplateView):
+    template_name= 'MedCongressApp/confic_email.html' 
+    def get(self, request, **kwargs):
+        
+        # #  url='https://sandbox-api.openpay.mx/v1/%s/charges'
+        url=' https://sandbox-api.openpay.mx/v1/%s/charges/%s'%(ID_KEY,self.request.GET['id'])
+    
+        headers={'Content-type': 'application/json'}
+        response=requests.get(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
+        response_dict=response.json()
+        if response_dict['status'] =="completed":
+            return HttpResponseRedirect(reverse('transaccion_exitosa'))
+        if response_dict['status'] =="failed": 
+            if response_dict['error_code'] == 3001:
+                self.request.session["error_opempay"]='La tarjeta fue rechazada.'
+            if response_dict['error_code'] == 3002:
+                self.request.session["error_opempay"]='La tarjeta ha expirado.'
+            if response_dict['error_code'] == 3003:
+                self.request.session["error_opempay"]='La tarjeta no tiene fondos suficientes.'
+            if response_dict['error_code'] == 3004:
+                self.request.session["error_opempay"]='La tarjeta ha sido identificada como una tarjeta robada.'
+            if response_dict['error_code'] == 3005:
+                self.request.session["error_opempay"]='La tarjeta ha sido rechazada por el sistema antifraudes.'    
+            return HttpResponseRedirect(reverse('Error_openpay'))
+
+        return HttpResponse(response)
+
+       
 
