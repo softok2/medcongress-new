@@ -39,13 +39,13 @@ Efectuar Pago
                             <td>{{car.nombre_cat_pago}}</td>
                             <td>${{car.precio}}</td>
                             <td>{{car.cantidad}}</td>
-                            <td>${{car.pagar}}</td>
+                            <td>${{car.pagar|floatformat:2}}</td>
                           
                         </tr>
                         {%endfor%}
                         <tr style="background-color: slategray;">
                             <th scope="row" colspan="6">Total a pagar</th>
-                            <td><b> ${{request.session.cart.0.cant}}</b></td>
+                            <td><b> ${{request.session.cart.0.cant|floatformat:2}}</b></td>
                             <td></td>
                                 
                         </tr>
