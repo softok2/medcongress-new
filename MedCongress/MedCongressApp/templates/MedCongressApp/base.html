@@ -149,7 +149,7 @@
 										<th style="display: none;" id="edit_{{car.mi_id}}"> <input class="form-control input-sm" type="number" value="{{car.cantidad}}" style="width: 66px;" id="cantidad_{{car.mi_id}}"></th>
 										<th id="edit_no_{{car.mi_id}}"> {{car.cantidad}}</th>
 									
-										<td>${{car.pagar}}</td>
+										<td>${{car.pagar|floatformat:2}}</td>
 										<td style="text-align: center;">
 											
 											<a id="btn_edit_{{car.mi_id}}" onclick="EditCart({{car.mi_id}}) " title="Editar"> <i class="fa fa-pencil-square" style="color:blue; font-size: 20px;"></i></a>
@@ -163,7 +163,7 @@
 										
 										<th scope="row" colspan="6">Total a pagar</th>
 								
-										<td><b> ${{request.session.cart.0.cant}}</b></td>
+										<td><b> ${{request.session.cart.0.cant|floatformat:2}}</b></td>
 										<td></td>
 											
 									</tr>

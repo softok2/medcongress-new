@@ -58,13 +58,13 @@
 				<td style="padding: 10px;">{{ca.nombre_cat_pago}}</td>
 				<td style="padding: 10px;">${{ca.precio}}</td>
 				<td style="padding: 10px;">{{ca.cantidad}}</td>
-				<td style="padding: 10px;">${{ca.pagar}}</td>
+				<td style="padding: 10px;">${{ca.pagar|floatformat:2}}</td>
 			  
 			</tr>
 			{%endfor%}
 			<tr style="background-color: slategray;">
 				<th scope="row" colspan="6">Total a pagar</th>
-				<td><b> ${{car.0.cant}}</b></td>
+				<td><b> ${{car.0.cant|floatformat:2}}</b></td>
 				
 					
 			</tr>
