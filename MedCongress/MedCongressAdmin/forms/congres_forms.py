@@ -472,6 +472,8 @@ class CuestionarioForms(MultiModelForm):
 
 class MetaPagInicioForm(forms.ModelForm):
 
+    
+
     class Meta:
         model=MetaPagInicio
         fields=['meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
@@ -481,14 +483,14 @@ class MetaPagInicioForm(forms.ModelForm):
         super().__init__(*args, **kwargs) 
 
         self.fields['meta_og_title'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['meta_description'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['meta_og_description'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['meta_description'].widget.attrs.update({'class': 'form-control','rows':'3'}) 
+        self.fields['meta_og_description'].widget.attrs.update({'class': 'form-control','rows':'3'})   
         self.fields['meta_og_type'].widget.attrs.update({'class': 'form-control'})   
         self.fields['meta_og_url'].widget.attrs.update({'class': 'form-control'})   
         self.fields['meta_twitter_card'].widget.attrs.update({'class': 'form-control'})  
         self.fields['meta_twitter_site'].widget.attrs.update({'class': 'form-control'})   
         self.fields['meta_twitter_creator'].widget.attrs.update({'class': 'form-control '})  
-        self.fields['meta_keywords'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['meta_keywords'].widget.attrs.update({'class': 'form-control','rows':'3'})   
         self.fields['meta_og_imagen'].widget.attrs.update({'class': 'form-control '}) 
         self.fields['meta_title'].widget.attrs.update({'class': 'form-control'})   
           

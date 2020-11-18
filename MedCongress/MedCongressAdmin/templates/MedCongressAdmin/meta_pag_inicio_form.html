@@ -1,5 +1,5 @@
 {% extends 'MedCongressAdmin/base.html' %}
-{% block title %}Congresos{% endblock %}
+{% block title %}Metas Página de Inicio{% endblock %}
 {% load static %}
 {% block styles %}
 <link rel="stylesheet" type="text/css"
@@ -48,25 +48,27 @@
                 </div>
                 <div class="card-content collapse show">
                     <div class="card-body card-dashboard">
-                        <form id="congres-form" method="POST" action="" enctype="multipart/form-data"></form>
-
+                        <form id="congres-form" method="POST" action="" enctype="multipart/form-data">
+                            {% csrf_token %}
                         <div class="row">
                             <div class="col-sm-4">
                                 <h3 style="margin-bottom: 30px;"><b>Metas Principales </b> </h3>
                                 <h4> <b>Título</b></h4>
-                                {% if form.meta_title %}<span
+                                {% if form.meta_title.errors %}<span
                                     style="font-size: 15px; color: red;">{{ form.meta_title.errors }}
                                 </span>{% endif %} </label>
 
                                 {{form.meta_title}}
                                 <h4> <b>Descripción</b> </h4>
-                                {% if form.meta_description %}<span
+                                {% if form.meta_description.errors %}<span
                                     style="font-size: 15px; color: red;">{{ form.meta_description.errors }}
                                 </span>{% endif %} </label>
 
                                 {{form.meta_description}}
-                                <h4> <b>Palabras Claves</b> </h4>
-                                {% if form.meta_keywords %}<span
+                                <h4> <b>Palabras Claves</b><span   id="toggle-method" data-toggle="tooltip" data-placement="top" data-original-title="Palabras separadas por coma(,)" >
+                                     <i class="ft ft-info"></i>
+                                </span>  </h4>
+                                {% if form.meta_keywords.errors %}<span 
                                     style="font-size: 15px; color: red;">{{ form.meta_keywords.errors }}
                                 </span>{% endif %} </label>
 
@@ -75,31 +77,31 @@
                             <div class="col-sm-4">
                                 <h3 style="margin-bottom: 30px;"><b>Metas para FaceBook </b> </h3>
                                 <h4> <b>Título</b> </h4>
-                                {% if form.meta_og_title %}<span
+                                {% if form.meta_og_title.errors %}<span
                                     style="font-size: 15px; color: red;">{{ form.meta_og_title.errors }}
                                 </span>{% endif %} </label>
 
                                 {{form.meta_og_title}}
                                 <h4> <b>Descripción</b> </h4>
-                                {% if form.meta_og_description %}<span
+                                {% if form.meta_og_description.errors %}<span
                                     style="font-size: 15px; color: red;">{{ form.meta_og_description.errors }}
                                 </span>{% endif %} </label>
 
                                 {{form.meta_og_description}}
                                 <h4> <b>Tipo</b> </h4>
-                                {% if form.meta_og_type %}<span
+                                {% if form.meta_og_type.errors %}<span
                                     style="font-size: 15px; color: red;">{{ form.meta_og_type.errors }}
                                 </span>{% endif %} </label>
 
                                 {{form.meta_og_type}}
                                 <h4> <b>URL</b> </h4>
-                                {% if form.meta_og_url %}<span
+                                {% if form.meta_og_url.errors %}<span
                                     style="font-size: 15px; color: red;">{{ form.meta_og_url.errors }}
                                 </span>{% endif %} </label>
 
                                 {{form.meta_og_url}}
                                 <h4> <b>Imagen</b> </h4>
-                                {% if form.meta_og_imagen %}<span
+                                {% if form.meta_og_imagen.errors %}<span
                                     style="font-size: 15px; color: red;">{{ form.meta_og_imagen.errors }}
                                 </span>{% endif %} </label>
 
@@ -110,23 +112,23 @@
                                 <h3 style="margin-bottom: 30px;"> <b> Metas para Redes Sociales</b> </h3>
 
                                 <h4> <b>Card</b> </h4>
-                                {% if form.meta_twitter_card %}<span
+                                {% if form.meta_twitter_card.errors %}<span
                                     style="font-size: 15px; color: red;">{{ form.meta_twitter_card.errors }}
                                 </span>{% endif %} </label>
 
                                 {{form.meta_twitter_card}}
                                 <h4> <b>Site</b> </h4>
-                                {% if form.meta_twitter_site %}<span
+                                {% if form.meta_twitter_site.errors %}<span
                                     style="font-size: 15px; color: red;">{{ form.meta_twitter_site.errors }}
                                 </span>{% endif %} </label>
 
                                 {{form.meta_twitter_site}}
                                 <h4> <b>Creador</b> </h4>
 
-                                {% if form.meta_twitter_site %}<span
-                                    style="font-size: 15px; color: red;">{{ form.meta_twitter_site.errors }}
+                                {% if form.meta_twitter_creator.errors %}<span
+                                    style="font-size: 15px; color: red;">{{ form.meta_twitter_creator.errors }}
                                 </span>{% endif %} </label>
-                                {{form.meta_twitter_card}}
+                                {{form.meta_twitter_creator}}
 
 
 
@@ -166,7 +168,7 @@
 {% block scripts %}
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/extensions/sweetalert.min.js' %}"></script>
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/tables/datatable/datatables.min.js' %}"></script>
-
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/tooltip/tooltip.js'%}"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();

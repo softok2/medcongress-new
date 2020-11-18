@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.urls import path
 from .views import (Home,CongresoListView,CongresoDetail,CongresoCardForm,PerfilUserCreate,
 ViewErrorOpenpay,PagarEfectivo,ViewError404,ViewPonencia,EspecialdiadesAutocomplete,
-AddCart,AddCartTaller,DeletedCart,ConfCart,AvisoPrivacidad,HabilitarUser,Perfil,PagoExitoso,Email,GetPerfil)
+AddCart,AddCartTaller,DeletedCart,ConfCart,AvisoPrivacidad,HabilitarUser,Perfil,PagoExitoso,Email,GetPerfil,
+GetFactura)
 
 urlpatterns = [
     
@@ -27,6 +28,7 @@ urlpatterns = [
     path('perfil',Perfil.as_view() , name='perfil'),
     path('transaccion_exitosa',PagoExitoso.as_view() , name='transaccion_exitosa'),
     path('get_perfil', GetPerfil.as_view() , name='GetPerfil'),
+    path('get_factura', GetFactura , name='Factura'),
     
     
   

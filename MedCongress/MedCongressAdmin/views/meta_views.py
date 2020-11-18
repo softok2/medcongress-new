@@ -27,7 +27,7 @@ class MetaPagInicioView(validarUser,ListView):
 
 class MetaPagInicioUpdateView(validarUser,UpdateView):
     form_class = MetaPagInicioForm
-    success_url = reverse_lazy('MedCongressAdmin:otros_list')
+    success_url = reverse_lazy('MedCongressAdmin:meta_pag_inicio')
     template_name = 'MedCongressAdmin/meta_pag_inicio_form.html'
 
     def get_queryset(self, **kwargs):

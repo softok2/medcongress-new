@@ -24,7 +24,7 @@ word-wrap: break-word;
 background-color: #fff;
 background-clip: border-box;
 border: 0 solid rgba(0,0,0,.125);
-border-radius: .25rem;
+border-radius: .50rem;
 }
 
 .card-body {
@@ -71,10 +71,10 @@ box-shadow: none!important;
             <div class="modal-body" >
               <!-- //////////////////   -->
               <div class="">
-                <div class="container">
+                <div class="row">
                     <div class="row">
                     
-                        <div class="col-md-9">
+                        <div class="col-md-12">
                             <div class="">
                                 <div class="main-body">
 
@@ -246,8 +246,8 @@ box-shadow: none!important;
                                                 </div>
                                                 <div class="kf_new_conf_open_wrap">
                                                     <div class="kf_new_conf_des">
-                                                        {%if pon.detalle%}
-                                                        <p>{{pon.detalle|safe}}</p>
+                                                        {%if pon.puesto%}
+                                                        <p>{{pon.puesto|safe}}</p>
                                                         {%endif%}
                                                     </div>
                                                     <div class="row">
@@ -271,8 +271,8 @@ box-shadow: none!important;
                                                             
                                                         </div>
                                                         <p>
-                                                                {%if mod.user.detalle %}
-                                                                {{mod.user.detalle|safe}}
+                                                                {%if mod.user.puesto %}
+                                                                {{mod.user.puesto|safe}}
                                                                 {%endif%}
                                                             </p>
                                                     </div>
@@ -304,8 +304,8 @@ box-shadow: none!important;
                                                             <span> Ponente</span>
                                                            
                                                         </div> <p>
-                                                                {%if ponente.user.detalle %}
-                                                                {{ponente.user.detalle|safe}}
+                                                                {%if ponente.user.puesto %}
+                                                                {{ponente.user.puesto|safe}}
                                                                 {%endif%}
                                                             </p>
                                                         <h5 style="color: #00a4ef;padding-bottom: 61px;font-size: 14px;">{%if evento.tipo == 'Taller'%}{{evento.tipo|upper}}{%endif%}
@@ -352,8 +352,8 @@ box-shadow: none!important;
                                                 </div>
                                                 <div class="kf_new_conf_open_wrap">
                                                     <div class="kf_new_conf_des">
-                                                        {%if pon.detalle%}
-                                                        <p>{{pon.detalle|safe}}</p>
+                                                        {%if pon.puesto%}
+                                                        <p>{{pon.puesto|safe}}</p>
                                                         {%endif%}
                                                     </div>
                                                     {%for ponente in pon.ponentes %}
@@ -373,8 +373,8 @@ box-shadow: none!important;
                                                             <span> Ponente</span>
                                                             
                                                         </div><p>
-                                                                {%if ponente.user.detalle %}
-                                                                {{ponente.user.detalle|safe}}
+                                                                {%if ponente.user.puesto %}
+                                                                {{ponente.user.puesto|safe}}
                                                                 {%endif%}
                                                             </p>
                                                     </div>
