@@ -673,12 +673,12 @@ class VerTransaccion(TemplateView):
     def get(self, request, **kwargs):
         
         # #  url='https://sandbox-api.openpay.mx/v1/%s/charges'
-        url=' https://sandbox-api.openpay.mx/v1/%s/charges/%s'%(ID_KEY,self.request.GET['id'])
+        url=' https://%s/v1/%s/charges/%s'%(URL_PDF,ID_KEY,self.request.GET['id'])
     
         headers={'Content-type': 'application/json'}
         response=requests.get(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
         response_dict=response.json()
-        if response_dict['status'] =="completed":
+        ÑV                               
             user_perfil=PerfilUsuario.objects.filter(usuario=self.request.user.pk).first()
             enviar=self.request.session["cart"]
                 ##### EMAIL #####
