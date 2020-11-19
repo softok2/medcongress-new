@@ -343,11 +343,11 @@
 
 													<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva
 															Imagen</b> </label>
-													{% if form.congreso.imagen_seg.errors %}<span
-														style="font-size: 15px; color: red;">{{ form.congreso.imagen_seg.errors }}
+													{% if form.congreso.foto_constancia.errors %}<span
+														style="font-size: 15px; color: red;">{{ form.congreso.foto_constancia.errors }}
 													</span>{% endif %}
-													<input type="file" name="congreso-imagen_seg" accept="image/*"
-														class=" form-control " id="id_congreso-imagen_seg">
+													<input type="file" name="congreso-foto_constancia" accept="image/*"
+														class=" form-control " id="id_congreso-foto_constancia">
 													{% else%}
 													<label
 														for="{{form.congreso.foto_constancia.id_for_label }}"><b>Imagen de la Constancia</b>{% if form.congreso.foto_constancia.errors %}

@@ -18,12 +18,14 @@ from django.utils.decorators import method_decorator
 from django.views.generic import (CreateView, DetailView, FormView, ListView,
                                   TemplateView, View)
 from requests.auth import HTTPBasicAuth
+from random import sample
+from PIL import Image, ImageDraw, ImageFont
 
 from .forms import UserPerfilUser
 from .models import (CategoriaPagoCongreso, Congreso, EspecialidadCongreso,
                      Ponencia, Ponente, RelCongresoCategoriaPago,
                      RelCongresoUser,RelPonenciaPonente,PerfilUsuario,ImagenCongreso,Taller,RelTalleresCategoriaPago,RelTallerUser,DatosIniciales,
-                     CategoriaUsuario,Bloque,Moderador,RelTallerPonente,Pais)
+                     CategoriaUsuario,Bloque,Moderador,RelTallerPonente,Pais,CuestionarioPregunta,CuestionarioRespuestas)
 from .pager import Pager
 from .cart import Cart
 from django_xhtml2pdf.views import PdfMixin
@@ -150,9 +152,14 @@ class CongresoDetail(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(CongresoDetail, self).get_context_data(**kwargs)
         congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
-        pagado=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario,is_pagado=True).first()
-        if pagado :
-            context['pagado']=True
+        if self.request.user.is_authenticated:
+            pagado=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario,is_pagado=True).first()
+            if pagado :
+                context['pagado']=True
+                constancia=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario).first()
+                if constancia.is_constancia:
+                    context['constancia']=True
+                
         if congreso is not None:
            
             context['congreso']=congreso
@@ -758,6 +765,61 @@ class GetPerfil(TemplateView):
         return TemplateResponse(request, reverse('dashboard'))
 
 
+class GetCuestionario(TemplateView):
+    template_name= 'MedCongressApp/congreso_cuestionario.html' 
+
+    def get(self, request, **kwargs):
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        if congreso is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        return self.render_to_response(self.get_context_data())
+
+    def get_context_data(self, **kwargs):
+        context = super(GetCuestionario, self).get_context_data(**kwargs)
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        context['congreso']=congreso
+        cuestionario=[]
+        preguntas=CuestionarioPregunta.objects.filter(congreso=congreso,published=True)
+        for pregunta in preguntas:
+            respuestas=CuestionarioRespuestas.objects.filter(pregunta=pregunta,published=True)
+            cuestionario.append({'pregunta':pregunta.pregunta,
+                                'respuestas':respuestas})
+        con=congreso.cant_preguntas
+        if len(preguntas)<con:
+            con=len(preguntas)
+        preg=sample(cuestionario,con)
+        context['preguntas']=preg
+       
+        return context
+
+    def post(self, request, **kwargs):
+
+        cant=0
+        total=0
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        preguntas=CuestionarioPregunta.objects.filter(congreso=congreso,published=True)
+        for resp in self.request.POST:
+            if cant != 0:
+                respuesta=CuestionarioRespuestas.objects.get(pk=self.request.POST[resp])
+                if respuesta.is_correcto:
+                    total=total+1
+                
+            cant=cant+1
+        con=congreso.cant_preguntas
+        if len(preguntas)<con:
+            con=len(preguntas)
+        if total/con*100>congreso.aprobado:
+
+            constancia=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario).first()
+            constancia.is_constancia=True
+            constancia.fecha_constancia=datetime.now()
+            constancia.save()
+
+            return HttpResponse('Aprobado %s/%s*100'%(total,con))
+        else:
+             return HttpResponse('Suspenso %s/%s*100'%(total,con))
+
+
 def GetFactura(request):
    
     # url='https://sandbox-api.openpay.mx/v1/%s/invoices/v33'%(ID_KEY)
@@ -843,3 +905,22 @@ def GetFactura(request):
     headers={'Content-type': 'application/json'}
     response1=requests.get(url=url1,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
     return HttpResponse(response1)
+
+
+class GetConstancia(PdfMixin,TemplateView):
+    template_name= 'MedCongressApp/congreso_constancia.html' 
+    def get_context_data(self, **kwargs):
+        
+        context = super(GetConstancia, self).get_context_data(**kwargs)
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        context['congreso']=congreso
+        # base=Image.open('static/%s'%(congreso.foto_constancia)).convert('RGBA')
+        # text=Image.new('RGBA',base.size,(255,255,255,0))
+        # fnt=ImageFont.truetype('arial.ttf',40)
+        # d=ImageDraw.Draw(text)
+        # d.text((10,10),'Holaaaa',font=fnt,fill=(255,255,255,128))
+        # d.text((10,60),'World',font=fnt,fill=(255,255,255,255))
+        # out=Image.alpha_composite(base,txt)
+        # out.save('static/congreso/img_constancia/ppp.png')
+
+        return context

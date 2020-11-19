@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="utf-8">
+	<title>MedCongress</title>
+	{% load static %}
+
+
+<style>
+@page{
+    size: letter landscape;
+    margin:0.5cm;
+}
+
+</style>
+
+</head>
+<body style="background-color: white ">
+<div class="">
+<img style="width: 100%; position: absolute;" src="{% static '/' %}{{congreso.foto_constancia}}" width="100%">
+<div  style="     text-align: center;
+position: absolute;
+top: 65%;
+right: 39%;
+}">
+
+	<h1>{{request.user.first_name}} {{request.user.last_name}}</h1>
+</div>
+
+<!--Copia desde aquí-->
+
+<!--hasta aquí-->
+
+</body>
+</html>

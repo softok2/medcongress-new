@@ -146,9 +146,11 @@ class CongressCuestionarioListView(validarUser,TemplateView):
             for respuesta in respuestas:
                 respuesta_list.append({'texto':respuesta.respuesta,
                                         'is_correcta':respuesta.is_correcto,
-                                        'publicada':respuesta.published})
+                                        'publicada':respuesta.published,
+                                        })
             preguntas_env.append({'texto':pregunta.pregunta,
                                     'publicada':pregunta.published,
+                                    'id':pregunta.pk,
                                     'respuestas':respuesta_list,})
         context['preguntas']=preguntas_env
         context['congreso']=congreso

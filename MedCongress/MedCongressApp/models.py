@@ -256,6 +256,7 @@ class RelCongresoUser(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     cantidad=models.IntegerField(null=True)
     is_constancia=models.BooleanField(null=True)
+    fecha_constancia=models.DateField(null=True)
 
 
     def __str__(self):

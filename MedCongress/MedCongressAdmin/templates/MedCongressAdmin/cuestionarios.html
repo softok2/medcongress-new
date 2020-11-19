@@ -85,7 +85,9 @@
 
                                                 </td>
                                                 <td>{%if pregunta.publicada%}Si{%else%}No{%endif%}</td>
-                                                  <td>  <a id="del_{{ cuestionario.pk }}"
+                                                  <td>  <a href="{% url 'MedCongressAdmin:cuestionario_edit' pk=pregunta.id %}"
+                                                    title="Editar"><i class="la la-pencil-square"></i></a> 
+                                                    <a id="del_{{ cuestionario.pk }}"
                                                         href="javascript:deleteItem('{{ cuestionario.pk }}')"
                                                         title="Eliminar">
                                                         <i class="la la-trash "></i>

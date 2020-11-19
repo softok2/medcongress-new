@@ -25,7 +25,7 @@ from .views.user_views import (UsuariosListView,UsuarioCreateView,UsuarioUpdateV
 from .views.bloque_views import (BloquesListView,BloqueCreateView,BloqueDeletedView,BloquePonenciasListView,BloqueTalleresListView,
                                    BloqueUpdateView,BloqueModeradoresListView,page_not_found,BloqueModeradoresCreateView,BloqueModeradoresDeletedView)
 from .views.otros_views import (OtrosListView,OtroUpdateView)
-from .views.cuestionario_views import (PreguntaCreateView)
+from .views.cuestionario_views import (PreguntaCreateView,CustionarioUpdateView)
 from .views.moderador_view import ModeradoresListView,ModeradorCreateView,ModeradorDeletedView
 from .views.meta_views import MetaPagInicioView,MetaPagInicioUpdateView
 from .views.dashboard import DashboardView
@@ -161,7 +161,8 @@ urlpatterns = [
      
      #Cuestionarios
      path('cuestionario_pregunta/congreso/add/', PreguntaCreateView.as_view(), name='cuestionario_pregunta_add'),
-     
+     path('cuestionario/editar/<int:pk>', CustionarioUpdateView.as_view(), name='cuestionario_edit'),
+  
      #Metadatos
      path('meta_pagina_inicio', MetaPagInicioView.as_view(), name='meta_pag_inicio'),
      path('meta_pagina_inicio/editar/<int:pk>', MetaPagInicioUpdateView.as_view(), name='meta_pag_inicio_edit'),

@@ -1,0 +1,94 @@
+{% extends "MedCongressApp/base.html"%}
+{% load static %}
+{% block titulo %}
+Ver Video
+{%endblock%}
+{% block contenido %}
+
+
+<div class="kode-conference-schedule" id="programas">
+    <div class="container">
+        <div class="kf_heading_3">
+            <h2>Cuestionario</h2>
+            <span>Debe llenar este cuestionario para que se le otorgue la Constancia de haber participado en este Congreso</span>
+        </div>
+
+        
+    </div>
+    <div class="container" >
+        <form  action="" method="POST" id="form" name="miform">
+            {% csrf_token %}
+        <table class="table table-responsive">
+    {%for pregunta in preguntas%}
+        <tr style="background-color: beige;"> 
+            <th style="width: 5%;"></th>
+            <th>{{forloop.counter}}.- {{pregunta.pregunta}}</th>
+      
+        </tr>
+        {%for respuesta in pregunta.respuestas%}
+        <tr>
+            <td style="text-align: center;"> <input type="radio" name="respuesta_{{forloop.parentloop.counter}}" value="{{respuesta.id}}" ></td> 
+            <td> {{respuesta.respuesta}}</td>
+      
+        </tr>
+        {%endfor%}
+
+       
+        {%endfor%}
+    </table>
+    <button type="button" class="btn btn-lg btn-primary" >Atras </button>
+    <a class="btn btn-lg btn-primary" id="button"  role="button" >Enviar</a>
+   
+</form></div>
+</div>
+
+{%endblock%}
+
+{%block script%}
+
+<script>
+
+$('#button').click(function(event){
+    swal({
+                title: "Se enviará el Cuestionario",
+                text: 'Desea enviarlo?',
+                icon: "warning",
+                buttons: {
+                    cancel: {
+                        text: "No!",
+                        value: null,
+                        visible: true,
+                        className: "",
+                        closeModal: false,
+                    },
+                    confirm: {
+                        text: "Si",
+                        value: true,
+                        visible: true,
+                        className: "",
+                        closeModal: false
+                    }
+                }
+            })
+                .then((isConfirm) => {
+                    if (isConfirm) {
+                       
+                        $('#form').submit();
+                    }
+                    else {
+                        location.reload();
+                    }
+                });
+
+})
+
+
+
+    function EnviarCuestionario(id){
+        
+
+
+
+		}
+</script>
+{%endblock%}
