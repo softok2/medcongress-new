@@ -361,7 +361,7 @@ class CongresoCardForm(TemplateView):
                 self.request.session["error_opempay"]= 'Error de Conección con Openpay'
                 return HttpResponseRedirect(reverse('Error_openpay'))
 
-            url='https://sandbox-api.openpay.mx/v1/%s/charges'%(ID_KEY)
+            url='https://%s/v1/%s/charges'%(URL_PDF,ID_KEY)
             params= {
                     "source_id" : request.POST["token_id"],
                     "method" : "card",
@@ -393,7 +393,7 @@ class CongresoCardForm(TemplateView):
         else:
             
             try:
-                url='https://sandbox-api.openpay.mx/v1/%s/charges'%(ID_KEY)
+                url='https://%s/v1/%s/charges'%(URL_PDF,ID_KEY)
                 params= {
                         
                         "method" : "store",
