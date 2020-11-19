@@ -44,7 +44,7 @@ from django.utils.html import strip_tags
 ID_KEY='mrkdgemoa3sig3imqehg'
 PUBLIC_KEY='pk_644303cc7033454298d199d1464b740f'
 PRIVATE_KEY='sk_77e831c6a9db4dae8eb25a5ed9c1bbdf'
-URL_PDF='https://api.openpay.mx'
+URL_PDF='api.openpay.mx'
 
 # Create your views here.
 
@@ -424,7 +424,7 @@ class CongresoCardForm(TemplateView):
                             pagar_congreso.save()
                     car=Cart(self.request)
                     car.clear() 
-                    return HttpResponseRedirect('%s/paynet-pdf/%s/%s'%(URL_PDF,ID_KEY,response_dic['payment_method']['reference']) )
+                    return HttpResponseRedirect('https://dashboard.openpay.mx/paynet-pdf/%s/%s'%(ID_KEY,response_dic['payment_method']['reference']) )
                 else:
                     self.request.session["error_opempay"]=response.json()['description']
                     return HttpResponseRedirect(reverse('Error_openpay'))
