@@ -213,6 +213,9 @@ class Congreso(models.Model):
     meta_keywords=models.TextField(max_length=250,null=True)
     meta_og_imagen=models.CharField(max_length=250,null=True)
     meta_title=models.CharField(max_length=250,null=True)
+    foto_constancia=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso/img_constancia',null=True)
+    aprobado=models.IntegerField(null=True)
+    cant_preguntas=models.IntegerField(null=True)
     
 
 
@@ -252,6 +255,7 @@ class RelCongresoUser(models.Model):
     num_tarjeta_tranzaccion=models.CharField(max_length=16)
     created_at = models.DateTimeField(auto_now_add=True)
     cantidad=models.IntegerField(null=True)
+    is_constancia=models.BooleanField(null=True)
 
 
     def __str__(self):

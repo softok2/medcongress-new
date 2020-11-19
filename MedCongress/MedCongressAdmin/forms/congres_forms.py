@@ -23,7 +23,7 @@ class CongresForm(forms.ModelForm):
     fecha_inicio=forms.DateTimeField(widget=forms.TextInput())
     class Meta:
         model=Congreso
-        fields=['titulo','sub_titulo','imagen_seg','fecha_inicio','published','t_congreso','especialidad','is_openpay','template']
+        fields=['titulo','sub_titulo','imagen_seg','fecha_inicio','published','t_congreso','especialidad','is_openpay','template','foto_constancia','aprobado','cant_preguntas']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
@@ -36,7 +36,10 @@ class CongresForm(forms.ModelForm):
         self.fields['t_congreso'].widget.attrs.update({'class': 'form-control'})  
         self.fields['especialidad'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['is_openpay'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['template'].widget.attrs.update({'class': 'form-control',})                      
+        self.fields['template'].widget.attrs.update({'class': 'form-control',})
+        self.fields['foto_constancia'].widget.attrs.update({'class': 'form-control',}) 
+        self.fields['aprobado'].widget.attrs.update({'class': 'form-control',})  
+        self.fields['cant_preguntas'].widget.attrs.update({'class': 'form-control',})                        
 
     def clean(self, *args, **kwargs):
         cleaned_data = super(CongresForm, self).clean(*args, **kwargs)

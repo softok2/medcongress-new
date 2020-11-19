@@ -299,21 +299,18 @@
 													{{form.congreso.especialidad }}
 												</div>
 											</div>
-											<!-- <div class="col-ms-1">
+											<div class="col-sm-3">
 												<div class="form-group">
+													<label
+														for="{{form.congreso.especialidad.id_for_label }}"><b>% Para Obtener Constancia</b>{% if form.congreso.aprobado.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.congreso.aprobado.errors }}
+														</span>{% endif %} </label>
 
-													<label></label>
-													
-													<button type="button" class="btn btn-link" data-toggle="modal"
-														data-target="#add_esp" style="display: block;">
-														<span><i class="ft ft-plus"
-																style="font-size: 30px;display: block;margin-top: -13px;"></i></span>
-
-													</button>
-
+													{{form.congreso.aprobado }}
 												</div>
-
-											</div> -->
+											</div>
+											
 										</div>
 
 
