@@ -4,163 +4,10 @@
 {% block titulo %}
 {{congreso.titulo}}
 {%endblock%}
-{%block css%}
-<link rel="stylesheet" href="{% static 'MedCongressApp/css/bootstrap-rating.css'%}" type="text/css" media="all">
-<style type="text/css">
-
-.main-body {
-padding: 15px;
-}
-.card {
-box-shadow: 0 1px 3px 0 rgba(0,0,0,.1), 0 1px 2px 0 rgba(0,0,0,.06);
-}
-
-.card {
-position: relative;
-display: flex;
-flex-direction: column;
-min-width: 0;
-word-wrap: break-word;
-background-color: #fff;
-background-clip: border-box;
-border: 0 solid rgba(0,0,0,.125);
-border-radius: .50rem;
-}
-
-.card-body {
-flex: 1 1 auto;
-min-height: 1px;
-padding: 1rem;
-}
-
-.gutters-sm {
-margin-right: -8px;
-margin-left: -8px;
-}
-
-.gutters-sm>.col, .gutters-sm>[class*=col-] {
-padding-right: 8px;
-padding-left: 8px;
-}
-.mb-3, .my-3 {
-margin-bottom: 1rem!important;
-}
-
-.bg-gray-300 {
-background-color: #e2e8f0;
-}
-.h-100 {
-height: 100%!important;
-}
-.shadow-none {
-box-shadow: none!important;
-}
-
-</style>
-{%endblock%}
 {% block contenido %}
 
-<div class="modal fade bs-example-modal-lg tt" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="margin-top: 72px;">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content" style="background-color: #edecee;">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Perfil del Ponente</h4>
-            </div>
-            <div class="modal-body" >
-              <!-- //////////////////   -->
-              <div class="">
-                <div class="row">
-                    <div class="row">
-                    
-                        <div class="col-md-12">
-                            <div class="">
-                                <div class="main-body">
 
-                                      <div class="row gutters-sm">
-                                        <div class="col-md-4 mb-3">
-                                          <div class="card">
-                                            <div class="card-body">
-                                              <div class="d-flex flex-column align-items-center text-center">
-                                               <span id="foto"> </span> 
-                                                <div class="mt-3">
-                                                  <p id="puesto" class="text-secondary mb-1"></p>
-                                                 <div style="text-align: center;"> <p class="text-muted font-size-sm" id="bandera"></p></div>
-                                                  <input type="hidden" id="rating" class="rating" data-readonly value="3"/>
-                                                </div>
-                                              </div>
-                                            </div>
-                                          </div>
-                                          <div class="card mt-3" style="margin-top: 1rem !important;" id="redes_sociales">
-                                               
-                                          </div>
-                                        </div>
-                                        <div class="col-md-8">
-                                          <div class="card mb-3">
-                                            <div class="card-body">
-                                              <div class="row" style="margin-top: 10px;">
-                                                <div class="col-sm-12">
-                                                  <h4 class="mb-0"  style="font-weight: bold;" id="nombre_completo"></h4>
-                                                </div>
-                                               
-                                              </div>
-                                              <hr>
-                                             
-                                             
-                                              <div class="row">
-                                                <div class="col-sm-12">
-                                                  <h5 class="mb-0" id="especialidad" style="font-style: italic;"></h5>
-                                                </div>
-                                              
-                                              </div>
-
-                                            </div>
-                                          </div>
-                                          <div id="constancia">
-                                             
-                                          </div>
-                                          <div id="publicaciones">
-                                             
-                                        </div>
-                                          
-                                          
-                                          <!-- <div class="row gutters-sm mb-3">
-                                            <div class="col-sm-12" >
-                                              <div class="card h-100">
-                                                <h6 class="mb-0" style="padding: 20px;">Futuras Conferencias</h6>
-                                                <div class="card-body" id="publicaciones">
-                                                  
-                                                </div>
-                                              </div>
-                                            </div>
-                                           
-                                          </div> -->
-                                        </div>
-                                      </div>
-                                    </div>
-                                </div>
-                            
-                           
-                                     
-                        </div>
-                        
-                    </div>    
-                </div>
-                
-            </div>
-
-
-              <!-- /////////////////////////// -->
-            </div>
-            <div class="modal-footer">
-                <a  type="button" class="btn btn-default" data-dismiss="modal">Cerrar</a>
-               
-            </div>
-        </div>
-    </div>
-</div>
-<div class="kode-slider" >
+<div class="kode-slider">
 
     <ul class="bxslider-banner">
         {% for imagen in congreso.imagencongreso_set.all%}
@@ -195,8 +42,10 @@ box-shadow: none!important;
             <span>{{congreso.titulo}}</span>{%if congreso.sub_titulo %}<span
                 style="font-size:80%;font-style: italic;">{{congreso.sub_titulo }}</span>{%endif%}
         </div>
-        <div class="row">
+		 <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<div style='padding:56.25% 0 0 0;position:relative;margin:25px 0'><iframe src='https://vimeo.com/showcase/6787538/embed' allowfullscreen frameborder='0' style='position:absolute;top:0;left:0;width:100%;height:100%;'></iframe></div>
+       
                 <div class="schedule-banner">
                     <img src="{% static '/'%}{{congreso.imagen_seg}}" alt="" />
                     <div class="scheduletabs">
@@ -246,8 +95,8 @@ box-shadow: none!important;
                                                 </div>
                                                 <div class="kf_new_conf_open_wrap">
                                                     <div class="kf_new_conf_des">
-                                                        {%if pon.puesto%}
-                                                        <p>{{pon.puesto|safe}}</p>
+                                                        {%if pon.detalle%}
+                                                        <p>{{pon.detalle}}</p>
                                                         {%endif%}
                                                     </div>
                                                     <div class="row">
@@ -265,16 +114,15 @@ box-shadow: none!important;
                                                                 {%endif%}
                                                         </figure>
                                                         <div class="kf_new_conf_orgnizr_name">
-                                                            <button type="button" class="btn btn-link" data-toggle="modal" data-target=".tt" onclick="VerPerfil('{{mod.user.pk}}')"><h6>{{mod.user.usuario.first_name}}
-                                                                {{mod.user.usuario.last_name}}</h6></button>
+                                                            <h6>{{mod.user.usuario.first_name}}
+                                                                {{mod.user.usuario.last_name}}</h6>
                                                             <span> Moderador</span>
-                                                            
-                                                        </div>
-                                                        <p>
-                                                                {%if mod.user.puesto %}
-                                                                {{mod.user.puesto|safe}}
+                                                            <p>
+                                                                {%if mod.user.detalle %}
+                                                                {{mod.user.detalle}}
                                                                 {%endif%}
                                                             </p>
+                                                        </div>
                                                     </div>
                                                    
                                                     {%endfor%}
@@ -299,15 +147,15 @@ box-shadow: none!important;
                                                                 {%endif%}
                                                         </figure>
                                                         <div class="kf_new_conf_orgnizr_name">
-                                                            <button type="button" class="btn btn-link" data-toggle="modal" data-target=".tt" onclick="VerPerfil('{{ponente.user.pk}}')"><h6>{{ponente.user.usuario.first_name}}
-                                                                {{ponente.user.usuario.last_name}}</h6></button>
+                                                            <h6>{{ponente.user.usuario.first_name}}
+                                                                {{ponente.user.usuario.last_name}}</h6>
                                                             <span> Ponente</span>
-                                                           
-                                                        </div> <p>
-                                                                {%if ponente.user.puesto %}
-                                                                {{ponente.user.puesto|safe}}
+                                                            <p>
+                                                                {%if ponente.user.detalle %}
+                                                                {{ponente.user.detalle}}
                                                                 {%endif%}
                                                             </p>
+                                                        </div>
                                                         <h5 style="color: #00a4ef;padding-bottom: 61px;font-size: 14px;">{%if evento.tipo == 'Taller'%}{{evento.tipo|upper}}{%endif%}
                                                             {{evento.titulo}} <span style="font-style: italic;"> </span> </h5>     
                                                     </div>
@@ -352,8 +200,8 @@ box-shadow: none!important;
                                                 </div>
                                                 <div class="kf_new_conf_open_wrap">
                                                     <div class="kf_new_conf_des">
-                                                        {%if pon.puesto%}
-                                                        <p>{{pon.puesto|safe}}</p>
+                                                        {%if pon.detalle%}
+                                                        <p>{{pon.detalle}}</p>
                                                         {%endif%}
                                                     </div>
                                                     {%for ponente in pon.ponentes %}
@@ -368,15 +216,15 @@ box-shadow: none!important;
                                                                 {%endif%}
                                                         </figure>
                                                         <div class="kf_new_conf_orgnizr_name">
-                                                            <button type="button" class="btn btn-link" data-toggle="modal" data-target=".tt" onclick="VerPerfil('{{ponente.user.pk}}')"><h6>{{ponente.user.usuario.first_name}}
-                                                                {{ponente.user.usuario.last_name}}</h6></button>
+                                                            <h6>{{ponente.user.usuario.first_name}}
+                                                                {{ponente.user.usuario.last_name}}</h6>
                                                             <span> Ponente</span>
-                                                            
-                                                        </div><p>
-                                                                {%if ponente.user.puesto %}
-                                                                {{ponente.user.puesto|safe}}
+                                                            <p>
+                                                                {%if ponente.user.detalle %}
+                                                                {{ponente.user.detalle}}
                                                                 {%endif%}
                                                             </p>
+                                                        </div>
                                                     </div>
                                                     {%endfor%}
                                                 </div>
@@ -422,7 +270,6 @@ box-shadow: none!important;
 
 
                     <div class="col-md-3">
-                        <button type="button" class="btn btn-link" data-toggle="modal" data-target=".tt" onclick="VerPerfil('{{ponente.id_user}}')"> 
                         <!--KODE_EVENT_BLOG2 START-->
                         <div class="kode-newspeaker">
                             <div class="speaker-photo">
@@ -465,7 +312,7 @@ box-shadow: none!important;
                         </div>
                         <!--KODE_EVENT_BLOG2 START-->
                     </div>
-                </button>
+
                     {%if forloop.last%}
 
                 </div>
@@ -491,8 +338,10 @@ box-shadow: none!important;
         <div class="kf_heading_1" style="text-align:center">
             <h2>TIPOS DE BOLETOS</h2>
             <p style="text-align:left"><b>Preferente:</b> Socio AMCIC, Miembro Médica Sur, Estudiante, Miembro IMSS,
-                Miembro ISSSTE-, Institutos Nacionales de Salud, Hospitales de alta especialidad, Hospitales del Sector
-                Público, Universidad Westhill.</p>
+                Miembro ISSSTE-, Institutos Nacionales de Salud, Hospitales de alta especialidad, Hospitales del
+                Sector
+                Público, Universidad Westhill,Profesores universitarios, Miembros del Sistema Nacional de Investigadores (SNI), Socios ACROM.</p>
+			<p style="margin-top:20px">Información de registro o dudas al <b>WhatsApp</b> <a target="_blank" href=" https://wa.me/525537345007">5537345007</a></p>
         </div>
         <div class="row">
             <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
@@ -539,7 +388,61 @@ box-shadow: none!important;
             <span> No tiene establecido los precios aún </span>
             {%endif%}
         </div>
+        <div class="kf_heading_1" style="text-align:center;margin-top:40px">
+            <h2>PAGOS POR TRANSFERENCIAS Y DEPÓSITO BANCARIO</h2>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <p style="text-align:left"><b>NACIONALES</b><br />
+                    Asociación Mexicana de Centros de Investigación Clínica A.C.<br />
+                    Banco Santander, S.A.<br />
+                    Sucursal 5808<br />
+                    Número de Cuenta 65507002292<br />
+                    CLABE 014180655070022926</p>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <p style="text-align:left"><b>INTERNACIONALES</b><br />
+                    Asociación Mexicana de Centros de Investigación Clínica A.C.<br />
+                    Banco Santander (México) S.A.<br />
+                    Sucursal 5808<br />
+                    Número de Cuenta 65507002292<br />
+                    País México<br />
+                    Ciudad de México<br />
+                    SWIFT BMSXMXMMXXX</p>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <p style="text-align:left;margin-top:10px">
+                    <b>Instrucciones:</b><br>
 
+
+
+                    1. Los pagos por transferencia bancaria, deben de tener el concepto de: Inscripción Simposio AMCIC,
+                    más el nombre de la persona, institución o empresa. Pago por depósito bancario escanear
+                    comprobante.<br>
+
+                    2. Enviar a <a
+                        href="mailto:amcic.profesionalización@outlook.com">amcic.profesionalización@outlook.com</a> lo
+                    siguiente:<br>
+
+                    &nbsp;&nbsp;&nbsp; a. Comprobante de transferencia o depósito bancario<br>
+
+                    &nbsp;&nbsp;&nbsp; b. Nombre completo, celular, correo electrónico, institución, profesión y
+                    posición laboral de la persona o personas a inscribir.<br>
+
+                    &nbsp;&nbsp;&nbsp; c. Productos comprados: Simposio, nombre del taller de interés, conversatorio de
+                    interés, por persona si son varias las inscritas.<br>
+
+                    &nbsp;&nbsp;&nbsp; d. Datos de Facturación:<br>
+
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i. Nombre o Razón Social<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ii. RFC<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iii. Dirección<br>
+
+                    3. Se confirmará recepción de correo, si en 24 horas no se recibe recepción, enviar WhatsApp al <a
+                        target="_blank" href=" https://wa.me/525537345007">5537345007</a><br>
+
+                    4. Una vez realizada la inscripción recibirá sus boletos de acceso.
+                </p>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -549,9 +452,12 @@ box-shadow: none!important;
         <h2>Talleres</h2>
         <span>Si desea tener una constancia del taller es necesario que compre su boleto de acreditación al
             evento.</span>
-        <p style="text-align:left"><b>Preferente:</b> Socio AMCIC, Miembro Médica Sur, Estudiante, Miembro IMSS, Miembro
+        <p style="text-align:left"><b>Preferente:</b> Socio AMCIC, Miembro Médica Sur, Estudiante, Miembro IMSS,
+            Miembro
             ISSSTE-, Institutos Nacionales de Salud, Hospitales de alta especialidad, Hospitales del Sector Público,
-            Universidad Westhill.</p>
+            Universidad Westhill, Profesores universitarios, Miembros del Sistema Nacional de Investigadores (SNI).</p>
+
+
 
 
         {% for taller in talleres %}
@@ -619,6 +525,120 @@ box-shadow: none!important;
 
 
     </div>
+<div class="kode-speaker-frame">
+        <div class="container">
+            <div class="kf_heading_1">
+                <h2>Patrocinadores</h2>
+                <span>Patrocinadores de este congreso</span>
+            </div>
+            <div class="row">
+                <div id="kode-speaker-causel" class="owl-carousel">
+
+
+                    <div class="kode-newspeaker">
+                        <div class="speaker-photo">
+                            <img src="{% static 'patrocinadores/indice.png'%}" alt="">
+                        </div>
+
+
+                        <!-- kode-new speaker over state End -->
+
+                    </div>
+                    <div class="kode-newspeaker">
+                        <div class="speaker-photo">
+                            <img src="{% static 'patrocinadores/faicic.png'%}" alt="">
+                        </div>
+
+
+                        <!-- kode-new speaker over state End -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="kode-speaker-frame">
+        <div class="container">
+            <div class="kf_heading_1">
+                <h2>Socios AMCIC</h2>
+            </div>
+            <div class="row">
+                <div id="kode-speaker-causel2">
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <img class="img-responsive" src="{% static 'socios/1.png'%}" alt="">
+                    </div>
+                    <!-- kode-new speaker over state End -->
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <img class="img-responsive" src="{% static 'socios/2.png'%}" alt="">
+                    </div>
+                    <!-- kode-new speaker over state End -->
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <img class="img-responsive" src="{% static 'socios/3.png'%}" alt="">
+                    </div>
+                    <!-- kode-new speaker over state End -->
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <img class="img-responsive" src="{% static 'socios/4.png'%}" alt="">
+                    </div>
+                    <!-- kode-new speaker over state End -->
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <img class="img-responsive" src="{% static 'socios/5.png'%}" alt="">
+                    </div>
+                    <!-- kode-new speaker over state End -->
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <img class="img-responsive" src="{% static 'socios/6.png'%}" alt="">
+                    </div>
+                    <!-- kode-new speaker over state End -->
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <img class="img-responsive" src="{% static 'socios/7.png'%}" alt="">
+                    </div>
+                    <!-- kode-new speaker over state End -->
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <img class="img-responsive" src="{% static 'socios/8.png'%}" alt="">
+                    </div>
+                    <!-- kode-new speaker over state End -->
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <img class="img-responsive" src="{% static 'socios/9.png'%}" alt="">
+                    </div>
+                    <!-- kode-new speaker over state End -->
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <img class="img-responsive" src="{% static 'socios/10.jpg'%}" alt="">
+                    </div>
+                    <!-- kode-new speaker over state End -->
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <img class="img-responsive" src="{% static 'socios/11.jpg'%}" alt="">
+                    </div>
+                    <!-- kode-new speaker over state End -->
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <img class="img-responsive" src="{% static 'socios/12.jpg'%}" alt="">
+                    </div>
+                    <!-- kode-new speaker over state End -->
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <img class="img-responsive" src="{% static 'socios/13.jpg'%}" alt="">
+                    </div>
+                    <!-- kode-new speaker over state End -->
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <img class="img-responsive" src="{% static 'socios/14.jpg'%}" alt="">
+                    </div>
+                    <!-- kode-new speaker over state End -->
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <img class="img-responsive" src="{% static 'socios/15.jpg'%}" alt="">
+                    </div>
+                    <!-- kode-new speaker over state End -->
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <img class="img-responsive" src="{% static 'socios/16.jpg'%}" alt="">
+                    </div>
+                    <!-- kode-new speaker over state End -->
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <img class="img-responsive" src="{% static 'socios/17.jpg'%}" alt="">
+                    </div>
+                    <!-- kode-new speaker over state End -->
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <img class="img-responsive" src="{% static 'socios/18.jpg'%}" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 
@@ -658,11 +678,9 @@ box-shadow: none!important;
 
 {%endblock%}
 {% block script%}
-<script src="{% static 'MedCongressApp/js/bootstrap-rating.js' %}"></script>
+
 <script type="text/javascript">
     jQuery(document).ready(function ($) {
-        
-
         $(".back").click(function (event) {
             event.preventDefault();
             $('html,body').animate({ scrollTop: $(this.hash).offset().top }, 500);
@@ -908,85 +926,7 @@ box-shadow: none!important;
                 });
         }
     }
-function VerPerfil(pk){
-    url = "{% url 'GetPerfil'%}";
-                    $.get(url, { 'pk': pk }, function (data) {
-                  
-                    if(data.foto)
-                        $('#foto').html('<img class="img-responsive" src="{% static '/'%}'+data.foto+'" alt=" foto '+ data.nombre+'" >');
-                    else
-                        $('#foto').html('<img class="img-responsive" src="{% static 'MedCongressApp/images/defaulthombre.png' %}" alt="{{request.user.username}}" >');
-                    if(data.bandera)
-                        $('#bandera').html('<img style="width: 100px; display:block;margin:auto;" class="img-responsive" src="{% static '/'%}'+data.bandera+'" >');
-                   
 
-                    redes='';
-                    if(data.facebook)
-                    redes+='<div class="row" style="padding: 20px;" > <div class="like_fb"> <a class="facebook" href="#"><i class="fa fa-facebook"></i></a> </div><div class="like_amount"><p>'+ data.facebook+'</p></div>  </div>'
-                    if(data.twitter)
-                    redes+='  <div class="row" style="padding: 20px;"><div class="like_fb"><a class="facebook" style="background-color: #00adf2 ;"  href="#"><i class="fa fa-twitter"></i></a> </div><div class="like_amount">'+data.twitter+'</p></div>  </div>'
-                    if(data.youtube)
-                    redes+=' <div class="row" style="padding: 20px;"><div class="like_fb"><a class="facebook" href="#" style="background-color: #d70a0a;"><i class="fa fa-youtube"></i></a> </div><div class="like_amount"><p>'+data.youtube+'</p></div> </div>'
-                    if(data.linkedin)
-                    redes+='<div class="row" style="padding: 20px;"><div class="like_fb"> <a class="facebook" style="background-color: #2962ff;"    href="#"><i class="fa fa-linkedin"></i></a></div><div class="like_amount"><p>'+data.linkedin+'</p></div> </div>'
-                    $('#redes_sociales').html(redes) ;
-                 
-                    $('#especialidad').html(data.especialidad);
-                  
-                    constancia='';
-                    if(data.constancias){
-                    constancia='<div class="row gutters-sm mb-3"><div class="col-sm-12" ><div class="card h-100" ><h6 class="mb-0" style="padding: 20px;"><b>Logros Académicos</b></h6><div class="card-body" >'+data.constancias+'</div> </div> </div></div> ';
-                    $('#constancia').html(constancia);
-                    }
-                   else
-                   $('#constancia').html();
-                    publicaciones='';
-                    if(data.publicaciones){
-                        publicaciones='<div class="row gutters-sm mb-3"><div class="col-sm-12" ><div class="card h-100" ><h6 class="mb-0" style="padding: 20px;"><b>Publicaciones</b></h6><div class="card-body" >'+data.publicaciones+'</div> </div> </div></div> ';
-                    $('#publicaciones').html(publicaciones);
-                    }
-                    else
-                   $('#publicaciones').html();
-                   
-                    
-                    
-                    if(data.ponencias.length==0){
-                        ponencias='<li><div class="like_amount"> <b>No es Ponente en ninguna Ponencia </b></div> </li>';
-                    }
-                    else{
-                       ponencias='';
-                        for (let i = 0; i < data.ponencias.length; i++) {
-                            ponencias+='<li><div class="like_amount"><p>'+data.ponencias[i].nombre+'</p><span> <b>Congreso: </b> '+data.ponencias[i].congreso+'</span></div></li>'
-                            
-                        } 
-                    }
-                        
-                    $('#ponencias').html(ponencias)
-
-                    if(data.talleres.length==0){
-                        talleres='<li><div class="like_amount"> <b>No es Ponente en ningún Taller </b></div> </li>';
-                    }
-                    else{
-                        talleres='';
-                        for (let i = 0; i < data.talleres.length; i++) {
-                            talleres+='<li><div class="like_amount"><p>'+data.talleres[i].nombre+'</p><span> <b>Congreso: </b> '+data.talleres[i].congreso+'</span></div></li>'
-                            
-                        } 
-                    }
-                        
-                    $('#talleres').html(talleres)
-                    $('#puesto').html(data.puesto)
-                    $('#nombre_completo').html(data.nombre_completo)
-                    $('#rating').rating('rate', 4.5);
-//                     $('#rating2').rating({
-//   filled: 'glyphicon glyphicon-heart-empty',
-//   filledSelected: 'glyphicon glyphicon-heart',
-//   empty: 'glyphicon glyphicon-heart-empty'
-// });
-
-
-                    });
-}
 
 </script>
 
