@@ -37,14 +37,14 @@ from django.utils.html import strip_tags
 ###################
 
 
-ID_KEY='m6ftsapwjvmo7j7y8mop'
-PUBLIC_KEY='pk_0d4449445a4948899811cea14a469793'
-PRIVATE_KEY='sk_34664e85b5504ca39cc19d8f9b8df8a2'
-URL_PDF='https://sandbox-dashboard.openpay.mx'
-# ID_KEY='muq0plqu35rnjyo7sf2v'
-# PUBLIC_KEY='pk_0c7aea61d0ef4a4f8fdfbd674841981a'
-# PRIVATE_KEY='sk_d07c7b6ffeeb4acaaa15babdaac4101e'
+# ID_KEY='m6ftsapwjvmo7j7y8mop'
+# PUBLIC_KEY='pk_0d4449445a4948899811cea14a469793'
+# PRIVATE_KEY='sk_34664e85b5504ca39cc19d8f9b8df8a2'
 # URL_PDF='https://sandbox-dashboard.openpay.mx'
+ID_KEY='mrkdgemoa3sig3imqehg'
+PUBLIC_KEY='pk_644303cc7033454298d199d1464b740f'
+PRIVATE_KEY='sk_77e831c6a9db4dae8eb25a5ed9c1bbdf'
+URL_PDF='https://api.openpay.mx'
 
 # Create your views here.
 
