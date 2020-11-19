@@ -678,7 +678,7 @@ class VerTransaccion(TemplateView):
         headers={'Content-type': 'application/json'}
         response=requests.get(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
         response_dict=response.json()
-        ÑV                               
+        if response_dict['status'] =="completed":
             user_perfil=PerfilUsuario.objects.filter(usuario=self.request.user.pk).first()
             enviar=self.request.session["cart"]
                 ##### EMAIL #####
