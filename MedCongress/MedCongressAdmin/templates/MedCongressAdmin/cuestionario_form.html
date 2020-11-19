@@ -75,7 +75,18 @@
 											</div>
 
 										</div>
-										<h4> <b> Posibles Respuestas</b></h4>
+										<div class="row">
+											<div class="col-sm-8 ">
+											<b> Posibles Respuestas</b>	
+											</div>
+											<div class="col-sm-2">
+												 <b> V o F</b>
+												</div>
+												<div class="col-sm-2 ">
+													 <b> Publicada</b>
+													</div>
+										</div>
+										
 										<div class="respuestas">
 											<div class="row respuesta">
 											<div class="col-sm-8 ">
@@ -85,17 +96,17 @@
 													<input type="text" name="respuesta" maxlength="250" class="form-control" required="">
 												</div>
 											</div>
-											<div class="col-sm-3 ">
+											<div class="col-sm-2 ">
 												<div class="form-group">
 
 
 													<select name="is_correcto" class="form-control" id="">
-														<option value="True">Correcta</option>
-														<option value="False" selected>Incorrecta</option>
+														<option value="True">Verdadera</option>
+														<option value="False" selected>Falsa</option>
 													</select>
 												</div>
 											</div>
-											<div class="col-sm-1 ">
+											<div class="col-sm-2 ">
 												<div class="form-group">
 
 
@@ -107,7 +118,36 @@
 											</div>
 										
 										</div>
-											
+										<div class="row respuesta">
+											<div class="col-sm-8 ">
+												<div class="form-group">
+
+
+													<input type="text" name="respuesta" maxlength="250" class="form-control" required="">
+												</div>
+											</div>
+											<div class="col-sm-2 ">
+												<div class="form-group">
+
+
+													<select name="is_correcto" class="form-control" id="">
+														<option value="True">Verdadera</option>
+														<option value="False" selected>Falsa</option>
+													</select>
+												</div>
+											</div>
+											<div class="col-sm-2 ">
+												<div class="form-group">
+
+
+													<select name="published_resp" class="form-control" id="">
+														<option value="True">Si</option>
+														<option value="False" selected>No</option>
+													</select>
+												</div>
+											</div>
+										
+										</div>	
 										</div>
 										
 											<div class="text-right">
@@ -182,17 +222,17 @@
 													<input type="text" name="respuesta" maxlength="250" class="form-control" required="">
 												</div>
 											</div>
-											<div class="col-sm-3 ">
+											<div class="col-sm-2 ">
 												<div class="form-group">
 
 
 													<select name="is_correcto" class="form-control" id="">
-														<option value="True">Correcta</option>
-														<option value="False" selected>Incorrecta</option>
+														<option value="True">Verdadera</option>
+														<option value="False" selected>Falsa</option>
 													</select>
 												</div>
 											</div>
-											<div class="col-sm-1 ">
+											<div class="col-sm-2 ">
 												<div class="form-group">
 
 
@@ -209,7 +249,7 @@
 	}
 function DeletedRespuesta(){
 	$('.respuesta').last().remove();
-	if($('.respuesta').length==1)
+	if($('.respuesta').length==2)
 	$('#del').attr('disabled','disabled');
 }
 </script>

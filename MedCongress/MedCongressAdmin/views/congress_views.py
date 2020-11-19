@@ -73,6 +73,7 @@ class CongressUpdateView(validarUser,UpdateView):
     def get_context_data(self, **kwargs):
         context=super().get_context_data(**kwargs)
         context['imagen_seg_url']='/static/%s'%(self.object.imagen_seg)
+        context['foto_constancia']='/static/%s'%(self.object.foto_constancia)
         return context
 
     # def get_context_data(self, **kwargs):

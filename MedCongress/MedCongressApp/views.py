@@ -53,7 +53,7 @@ URL_PDF='https://sandbox-dashboard.openpay.mx'
 
 ##### Inicio #####
 
-class Email(PdfMixin, TemplateView):
+class Email( TemplateView):
    template_name= 'MedCongressApp/recibo_pago.html' 
 # class ConfigEmail(TemplateView):
 #     template_name= 'MedCongressApp/confic_email.html' 
@@ -150,6 +150,9 @@ class CongresoDetail(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(CongresoDetail, self).get_context_data(**kwargs)
         congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        pagado=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario,is_pagado=True).first()
+        if pagado :
+            context['pagado']=True
         if congreso is not None:
            
             context['congreso']=congreso
