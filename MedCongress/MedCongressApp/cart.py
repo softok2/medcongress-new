@@ -75,7 +75,7 @@ class Cart:
             if exist is False:
                 self.cart[1].append(
                     {
-                        'mi_id':float(self.cart[1][-1]['mi_id'])+1,
+                        'mi_id':int(self.cart[1][-1]['mi_id'])+1,
                         'id':relTallerCategoriaPago.pk,
                         'tipo_evento':'Taller',
                         'id_congreso':relTallerCategoriaPago.taller.pk,
