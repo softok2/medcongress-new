@@ -331,7 +331,7 @@ z-index: 999;
 	
 }
 
-.colorazul{color:#00a4ef}
+.colorazul{color:#00a4ef!important}
 
 #kode-header:after{
 	display:block;
