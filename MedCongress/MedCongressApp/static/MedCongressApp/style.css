@@ -325,7 +325,7 @@ top: 0;
 right: 0;
 position: fixed;
 height:70px;
-background: rgba(255, 255, 255, 0.9);
+background: #fff;
 width: 100%;
 z-index: 999;
 	
@@ -340,7 +340,7 @@ z-index: 999;
 }
 .kode-logo{
     float: left;
-    max-width: 104px;
+    max-width: 124px;
     margin: 0px 25px;
     padding: 10px 0px;
 }
