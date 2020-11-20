@@ -330,6 +330,9 @@ width: 100%;
 z-index: 999;
 	
 }
+
+.colorazul{color:#00a4ef}
+
 #kode-header:after{
 	display:block;
 	clear:both;
