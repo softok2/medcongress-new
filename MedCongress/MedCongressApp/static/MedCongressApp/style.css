@@ -1096,8 +1096,8 @@ z-index: 999;
 
 .my_dropdown-menu{
 	left: 89px;
-	top: 49px;
-	background-color: rgba(172, 170, 170, 0.9);
+	top: 55px;
+	background-color: #fff;
 	width: 244px;
 	z-index: 99999;
 }
