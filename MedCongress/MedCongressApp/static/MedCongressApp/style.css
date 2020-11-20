@@ -324,8 +324,8 @@ left: 0;
 top: 0;
 right: 0;
 position: fixed;
-height:50px;
-background: rgba(172, 170, 170, 0.9);
+height:70px;
+background: rgba(255, 255, 255, 0.9);
 width: 100%;
 z-index: 999;
 	
