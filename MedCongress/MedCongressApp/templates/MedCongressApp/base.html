@@ -194,7 +194,7 @@ line-height: 28px;
 		
 		<header id="kode-header" >
 			<strong class="kode-logo">
-				<a href="{% url 'Home'%}"><img src="{% static 'MedCongressApp/images/LOGODOSCOLORESSINFONDO.png'%}"
+				<a href="{% url 'Home'%}"><img src="{% static 'MedCongressApp/images/LOGO_FINAL.png'%}"
 						alt=""></a>
 			</strong>
 			<div id="mobile-header">
@@ -208,7 +208,7 @@ line-height: 28px;
 						<li class="nav-item active">
 						
 							<a href="{% url 'Home'%}" class="nav-link">
-								<i class="fa fa-home"></i>
+								<i class="fa colorazul fa-home"></i>
 								    Inicio
 								
 							</a>
@@ -216,13 +216,13 @@ line-height: 28px;
 						</li>
 						<li class="nav-item">
 						  <a class="nav-link" href="{% url 'List_congreso'%}">
-							<i class="fa fa-envelope-o"></i>
+							<i class="fa colorazul fa-envelope-o"></i>
 							   Congresos
 						  </a>
 						</li>
 						<li class="nav-item" data-toggle="modal" data-target=".pp">
 						  <a class="nav-link disabled" href="#">
-							<i class="fa fa-shopping-cart">
+							<i class="fa colorazul fa-shopping-cart">
 							  <span class="badge badge-warning"  style="background-color: #00a4ef;">{%if  request.session.cart.1 %}{{ request.session.cart.1|length}}
 								{%else%} 0 {%endif%}</span>
 							</i>
@@ -242,8 +242,8 @@ line-height: 28px;
 						</figure></a>
 							
 							<ul class="dropdown-menu my_dropdown-menu" aria-labelledby="navbarDropdown">
-								<li class=" nav-item"> <a class="my_dropdown-menu-a" href="{% url 'perfil' %}"><i class="fa fa-user"></i>Perfil</a> </li> 
-								<li class=" nav-item"> <a class="my_dropdown-menu-a" href="{% url 'logout' %}"><i class="fa fa-sign-out"></i>Logout</a> </li> 
+								<li class=" nav-item"> <a class="my_dropdown-menu-a" href="{% url 'perfil' %}"><i class="fa colorazul fa-user"></i>Perfil</a> </li> 
+								<li class=" nav-item"> <a class="my_dropdown-menu-a" href="{% url 'logout' %}"><i class="fa colorazul fa-sign-out"></i>Logout</a> </li> 
 							</ul>
 						</li>
 						
@@ -252,7 +252,7 @@ line-height: 28px;
 						{% else %}
 						<li class="nav-item">
 							<a class="nav-link" href="{% url 'login' %}">
-							  <i class="fa fa-sign-in"></i>
+							  <i class="fa colorazul fa-sign-in"></i>
 								 Login
 							</a>
 						  </li>
