@@ -1,4 +1,5 @@
 import json
+import os
 from collections import namedtuple
 from datetime import date,datetime
 import openpay
@@ -944,14 +945,20 @@ class GetConstancia(TemplateView):
         context = super(GetConstancia, self).get_context_data(**kwargs)
         congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
         context['congreso']=congreso
-        # base=Image.open('.\static\congreso\img_constancia\cosntancia.JPG).convert('RGBA')
-        # text=Image.new('RGBA',base.size,(255,255,255,0))
-        # fnt=ImageFont.truetype('arial.ttf',40)
-        # d=ImageDraw.Draw(text)
-        # d.text((10,10),'Holaaaa',font=fnt,fill=(255,255,255,128))
-        # d.text((10,60),'World',font=fnt,fill=(255,255,255,255))
-        # out=Image.alpha_composite(base,txt)
-        # out.save('static\congreso\img_constancia\ppp.png')
+        # print( os.listdir(''))
+        nombre='%s %s'%(self.request.user.first_name,self.request.user.last_name)
+        cont=len(nombre)
+        comienzo=630-(cont/2*18)
+        base=Image.open('MedCongressApp/static/congreso/img_constancia/cosntancia.jpeg').convert('RGBA')
+        text=Image.new('RGBA',base.size,(255,255,255,0))
+        fnt=ImageFont.truetype('bahnschrift.ttf',40)
+        cong=ImageFont.truetype('bahnschrift.ttf',30)
+        cong.set_variation_by_name('Italic')
+        d=ImageDraw.Draw(text)
+        d.text((comienzo,400),nombre,font=fnt,fill=(89, 85, 85))
+        d.text((440,470),'Ha concluido satisfactoriamente',font=cong,fill=(94,196,234,255))
+        out=Image.alpha_composite(base,text)
+        out.save('MedCongressApp/static/congreso/img_constancia/ppp.png')
 
         return context
 class EvaluarPonencia(TemplateView):
