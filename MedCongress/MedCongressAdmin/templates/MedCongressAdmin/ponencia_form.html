@@ -201,6 +201,10 @@
 
 													<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva
 															Imagen</b> </label>
+															{% if form.ponencia.imagen.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.ponencia.imagen.errors }}
+														</span>{% endif %}
 													<input type="file" name="ponencia-imagen" accept="image/*"
 														class=" form-control " id="id_ponencia-imagen">
 													{% else%}

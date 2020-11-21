@@ -1090,7 +1090,11 @@ z-index: 999;
 		   Events timer CSS Start
 	  ==============================================================
 */
-
+.ponencia{
+	position: absolute; 
+	margin-left: 10%;
+	width: 90%;
+}
 .my_dropdown-menu{
 	left: 89px;
 	top: 49px;

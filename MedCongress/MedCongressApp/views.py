@@ -25,7 +25,7 @@ from .forms import UserPerfilUser
 from .models import (CategoriaPagoCongreso, Congreso, EspecialidadCongreso,
                      Ponencia, Ponente, RelCongresoCategoriaPago,
                      RelCongresoUser,RelPonenciaPonente,PerfilUsuario,ImagenCongreso,Taller,RelTalleresCategoriaPago,RelTallerUser,DatosIniciales,
-                     CategoriaUsuario,Bloque,Moderador,RelTallerPonente,Pais,CuestionarioPregunta,CuestionarioRespuestas)
+                     CategoriaUsuario,Bloque,Moderador,RelTallerPonente,Pais,CuestionarioPregunta,CuestionarioRespuestas,RelPonenciaVotacion)
 from .pager import Pager
 from .cart import Cart
 from django_xhtml2pdf.views import PdfMixin
@@ -153,12 +153,13 @@ class CongresoDetail(TemplateView):
         context = super(CongresoDetail, self).get_context_data(**kwargs)
         congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
         if self.request.user.is_authenticated:
-            pagado=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario,is_pagado=True).first()
+            pagado=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario,is_pagado=True)
             if pagado :
                 context['pagado']=True
-                constancia=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario).first()
-                if constancia.is_constancia:
-                    context['constancia']=True
+                constancias=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario)
+                for constancia in constancias:
+                    if constancia.is_constancia:
+                        context['constancia']=True
                 
         if congreso is not None:
            
@@ -191,6 +192,7 @@ class CongresoDetail(TemplateView):
                     for ponencia in bloque_ponencias: 
                         eventos.append({
                         'id':ponencia.id,
+                        'path':ponencia.path,
                         'titulo': ponencia.titulo,
                         'fecha_inicio': ponencia.fecha_inicio ,# una relación a otro modelo
                         'detalle':ponencia.detalle ,
@@ -200,6 +202,7 @@ class CongresoDetail(TemplateView):
                     for taller in bloque_talleres: 
                         eventos.append({
                         'id':taller.id,
+                        'path':ponencia.path,
                         'titulo': taller.titulo,
                         'fecha_inicio': taller.fecha_inicio ,# una relación a otro modelo
                         'detalle':taller.detalle ,
@@ -209,6 +212,7 @@ class CongresoDetail(TemplateView):
                     eventos = sorted(eventos, key=lambda k: k['fecha_inicio'])
                     result.append({
                     'id':bloque.id,
+                    'path':ponencia.path,
                     'moderador':Moderador.objects.filter(bloque_moderador__pk=bloque.id).distinct() ,
                     'titulo': bloque.titulo,
                     'fecha_inicio': bloque.fecha_inicio ,# una relación a otro modelo
@@ -219,6 +223,7 @@ class CongresoDetail(TemplateView):
                 for ponencia in ponencias: 
                     result.append({
                     'id':ponencia.id,
+                    'path':ponencia.path,
                     'titulo': ponencia.titulo,
                     'fecha_inicio': ponencia.fecha_inicio ,# una relación a otro modelo
                     'detalle':ponencia.detalle ,
@@ -228,6 +233,7 @@ class CongresoDetail(TemplateView):
                 for taller in talleres: 
                     result.append({
                     'id':taller.id,
+                    'path':taller.path,
                     'titulo': taller.titulo,
                     'fecha_inicio': taller.fecha_inicio ,# una relación a otro modelo
                     'detalle':taller.detalle ,
@@ -556,6 +562,26 @@ class ViewErrorOpenpay(TemplateView):
 class ViewPonencia(TemplateView):
     template_name= 'MedCongressApp/view_ponencia.html' 
 
+    def get(self, request, **kwargs):
+        ponencia=Ponencia.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        if ponencia is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        return self.render_to_response(self.get_context_data())    
+
+    def get_context_data(self, **kwargs):
+        context = super(ViewPonencia, self).get_context_data(**kwargs)
+        ponencia=Ponencia.objects.filter(path=self.kwargs.get('path'),published=True).first() 
+        if self.request.user.is_authenticated:
+            context['is_pagado']=RelCongresoUser.objects.filter(congreso=ponencia.congreso,user=self.request.user.perfilusuario,is_pagado=True).exists()
+        else:
+            context['is_pagado']=False
+        context['ponencia']=ponencia
+        if RelPonenciaVotacion.objects.filter(ponencia=ponencia,user=self.request.user).exists():
+            votacio=RelPonenciaVotacion.objects.filter(ponencia=ponencia,user=self.request.user).first()
+            context['is_evaluado']=votacio.votacion
+        return context
+
+
 ##### Autocompletar Especialidades #####
 
 def EspecialdiadesAutocomplete(request):
@@ -615,7 +641,7 @@ class AddCartTaller(TemplateView):
         return TemplateResponse(request, reverse('dashboard'))
 
 ##### Deleted Evento Carrito de Compra #####
-
+@method_decorator(login_required,name='dispatch')
 class DeletedCart(TemplateView):
 
     def get(self, request):
@@ -628,7 +654,7 @@ class DeletedCart(TemplateView):
         return TemplateResponse(request, reverse('dashboard'))
 
 ##### Confirmar Evento Carrito de Compra #####
-
+@method_decorator(login_required,name='dispatch')
 class ConfCart(TemplateView):
 
     def get(self, request):
@@ -764,13 +790,16 @@ class GetPerfil(TemplateView):
             return JsonResponse(usuario_json, safe=False)
         return TemplateResponse(request, reverse('dashboard'))
 
-
+@method_decorator(login_required,name='dispatch')
 class GetCuestionario(TemplateView):
     template_name= 'MedCongressApp/congreso_cuestionario.html' 
 
     def get(self, request, **kwargs):
         congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
         if congreso is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        constancia=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario,is_constancia=True).first()
+        if  constancia :
             return   HttpResponseRedirect(reverse('Error404'))
         return self.render_to_response(self.get_context_data())
 
@@ -810,10 +839,11 @@ class GetCuestionario(TemplateView):
             con=len(preguntas)
         if total/con*100>congreso.aprobado:
 
-            constancia=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario).first()
-            constancia.is_constancia=True
-            constancia.fecha_constancia=datetime.now()
-            constancia.save()
+            constancias=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario)
+            for constancia in constancias:
+                constancia.is_constancia=True
+                constancia.fecha_constancia=datetime.now()
+                constancia.save()
 
             return HttpResponse('Aprobado %s/%s*100'%(total,con))
         else:
@@ -907,20 +937,35 @@ def GetFactura(request):
     return HttpResponse(response1)
 
 
-class GetConstancia(PdfMixin,TemplateView):
+class GetConstancia(TemplateView):
     template_name= 'MedCongressApp/congreso_constancia.html' 
     def get_context_data(self, **kwargs):
         
         context = super(GetConstancia, self).get_context_data(**kwargs)
         congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
         context['congreso']=congreso
-        # base=Image.open('static/%s'%(congreso.foto_constancia)).convert('RGBA')
+        # base=Image.open('.\static\congreso\img_constancia\cosntancia.JPG).convert('RGBA')
         # text=Image.new('RGBA',base.size,(255,255,255,0))
         # fnt=ImageFont.truetype('arial.ttf',40)
         # d=ImageDraw.Draw(text)
         # d.text((10,10),'Holaaaa',font=fnt,fill=(255,255,255,128))
         # d.text((10,60),'World',font=fnt,fill=(255,255,255,255))
         # out=Image.alpha_composite(base,txt)
-        # out.save('static/congreso/img_constancia/ppp.png')
+        # out.save('static\congreso\img_constancia\ppp.png')
 
         return context
+class EvaluarPonencia(TemplateView):
+    template_name= 'MedCongressApp/pago_satifactorio.html'
+
+    def get(self, request):
+        if request.is_ajax:
+            puntuacion =request.GET.get("puntuacion")
+            usuario=request.GET.get("usuario")
+            ponencia_id=request.GET.get("ponencia")
+            ponencia=Ponencia.objects.get(pk=ponencia_id)
+            votacion=RelPonenciaVotacion(user=self.request.user,ponencia=ponencia,votacion=puntuacion)
+            votacion.save()
+            usuario_json={'succes':'True'}
+            return JsonResponse(usuario_json, safe=False)
+        return TemplateResponse(request, reverse('dashboard')) 
+

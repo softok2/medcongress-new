@@ -115,12 +115,17 @@ class PonenciaForm(forms.ModelForm):
         self.fields['published'].widget.attrs.update({'class': 'form-control'})   
         self.fields['cod_video'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['detalle'].widget.attrs.update({'class': 'form-control','rows':'3'})  
+       
     
     def clean(self, *args, **kwargs):
         cleaned_data = super(PonenciaForm, self).clean(*args, **kwargs)
         fecha_inicio = cleaned_data.get('fecha_inicio', None)
         bloq = cleaned_data.get('bloque', None)
-        # bloque=Bloque.objects.get(pk=int(bloq))
+        imagen = cleaned_data.get('imagen', None)
+        w, h = get_image_dimensions(imagen)
+        if w != 1920 or h != 1080:
+            self.add_error('imagen',"Esta imagen tiene %s X %s pixel. Debe ser de 1920 X 1080 pixel" %(w,h) )
+   
 
         if bloq and fecha_inicio.date() != bloq.fecha_inicio.date():
             self.add_error('fecha_inicio', 'La fecha de inicio no coincide  con las del bloque que pertenece %s '%(bloq.fecha_inicio.date()))

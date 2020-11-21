@@ -109,14 +109,15 @@ class CongressTalleresListView(validarUser,TemplateView):
 
 ########## Vista de las Ponencias de un Congreso #############
 
-class CongressPonenciasListView(validarUser,CreateView):
+class CongressPonenciasListView(validarUser,TemplateView):
     template_name= 'MedCongressAdmin/congres_ponencias.html' 
     form_class = PonenciaForms
     def get(self, request, **kwargs):
         congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
         if congreso is None:
             return   HttpResponseRedirect(reverse('Error404'))
-        return self.render_to_response(self.get_context_data()) 
+        return self.render_to_response(self.get_context_data())
+         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()

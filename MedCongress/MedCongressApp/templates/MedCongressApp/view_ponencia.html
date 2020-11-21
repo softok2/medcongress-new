@@ -1,40 +1,333 @@
 {% extends "MedCongressApp/base.html"%}
 {% load static %}
 {% block titulo %}
-Ver Video
+Ver Ponencia
+{%endblock%}
+{%block css%}
+
+<link rel="stylesheet" href="{% static 'MedCongressApp/css/bootstrap-rating.css'%}" type="text/css" media="all">
+
+<style>
+	.simply-section {
+		color: #e5e5e7 !important;
+		background-color: #39393a60 !important;
+
+	}
+
+	.glyphicon {
+		color: yellow;
+		font-size: 40px;
+
+	}
+
+	.glyphicon-star-empty {
+		color: rgb(85, 84, 84);
+	}
+</style>
 {%endblock%}
 {% block contenido %}
-<div class="sub-header">
-    <!-- SUB HEADER -->
-</div>
-<!-- Kode-Slider End -->
-<!--Kode-our-speaker-heading start-->
-<div class="Kode-page-heading">
-    <div class="container">
-        <!--ROW START-->
-        <div class="row">
-            <div class="col-md-6 col-sm-6">
-                <h2>Congresos</h2>
-            </div>
-            <div class="col-md-6 col-sm-6">
-                <ul>
-                    <li>
-                        <a href="#"><i class="fa fa-home"></i>Home</a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-angle-right"></i>Congresos</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!--ROW END-->
-    </div>
-</div>
-<div class="kode-blog-style-2" style="margin-top: 82px;">
-    <div class="container">
-<iframe src="http://player.vimeo.com/video/463582604?api=1" width="400" height="225" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
-<a href="#">STOP</a>
-    </div>
-</div>
+{%if ponencia.cod_video and is_pagado%}
+<div class="container">
+	<div class="row" style="margin-top: 5%; margin-bottom: 50px;">
+		<div class="col-md-2"></div>
+		<div class="col-md-8">
+			<iframe src='https://vimeo.com/showcase/{{ponencia.cod_video}}/embed' allowfullscreen frameborder='0'
+				style="width: 100%;height:400px;"></iframe>
+			<div>
+				<h4 style="margin: 0 0 15px;
+		font-size: 14px;
+		line-height: 30px;
+		text-transform: uppercase;
+		font-family: 'Gotham-Bold';
+		color: #565657;">{{ponencia.titulo}}</h4>
+				{%for ponente in ponencia.ponente.all%}
+				<div class="kf_new_conf_orgnizr ">
+					<figure>
+						{% if ponente.user.foto%}
+						<img src="{% static '/'%}{{ponente.user.foto}}" alt="image de {{mod.user.usuario.username}}">
+						{%else%}
+						<img src="{% static 'MedCongressApp/images/defaulthombre.png' %}"
+							alt="image de {{mod.user.usuario.username}}">
+						{%endif%}
+					</figure>
+					<div class="kf_new_conf_orgnizr_name">
+						<span> Ponente</span>
+						<h6>{{ponente.user.usuario.first_name}}
+							{{ponente.user.usuario.last_name}}</h6>
+						<p>
+							{%if ponente.user.puesto %}
+							{{ponente.user.puesto}}
+							{%endif%}
+						</p>
+					</div>
+				</div>
+				<div class="kf_new_conf_orgnizr ">
 
+					<div class="">
+						{%if is_evaluado%}
+						<h6 style="margin: 0 0 15px;
+				font-size: 14px;
+				line-height: 30px;
+				text-transform: uppercase;
+				font-family: 'Gotham-Bold';
+				color: #565657;">Su evaluación fue</h6>
+
+						<input type="hidden" class="rating" id="rating" data-readonly value="{{is_evaluado}}" />
+						{%else%}
+						<h6 style="margin: 0 0 15px;
+				font-size: 14px;
+				line-height: 30px;
+				text-transform: uppercase;
+				font-family: 'Gotham-Bold';
+				color: #565657;">Evalue esta Ponencia</h6>
+
+						<input type="hidden" class="rating check rating-tooltip" id="rating" />
+						{%endif%}
+					</div>
+				</div>
+
+
+
+				{%endfor%}
+			</div>
+		</div>
+	</div>
+</div>
+{%else%}
+<div style="background-color: rgb(99, 97, 97);">
+	<div class="kode-event-time" id="div"
+		style=" background:url({% static '/'%}{{ponencia.imagen}})  no-repeat 100% 0; opacity: 0.5;  height: 100%; ">
+		<div class="container">
+
+		</div>
+	</div>
+	<div class="ponencia " style="margin-top:10%;" id="">
+
+		<!-- Event Counter -->
+		<div class="col-md-12">
+
+			<h4 style="margin: 0 0 15px;
+			font-size: 28px;
+			line-height: 30px;
+			text-transform: uppercase;
+			font-family: 'Gotham-Bold';
+			color: #565657;">{{ponencia.titulo}}</h4>
+			{%for ponente in ponencia.ponente.all%}
+			<div class="kf_new_conf_orgnizr ">
+				<figure>
+					{% if ponente.user.foto%}
+					<img src="{% static '/'%}{{ponente.user.foto}}" alt="image de {{mod.user.usuario.username}}">
+					{%else%}
+					<img src="{% static 'MedCongressApp/images/defaulthombre.png' %}"
+						alt="image de {{mod.user.usuario.username}}">
+					{%endif%}
+				</figure>
+				<div class="kf_new_conf_orgnizr_name">
+					<span> Ponente</span>
+					<h6>{{ponente.user.usuario.first_name}}
+						{{ponente.user.usuario.last_name}}</h6>
+					<p>
+						{%if ponente.user.puesto %}
+						{{ponente.user.puesto}}
+						{%endif%}
+					</p>
+				</div>
+			</div>
+			{%endfor%}
+
+		</div>
+
+		<div class="col-md-12" style="margin-top: 40px;">
+			<h4 style="margin: 0 0 15px;
+			font-size: 14px;
+			line-height: 30px;
+			font-style: italic;
+			font-family: 'Gotham-Bold';
+			color: #565657;">
+				{%if is_pagado%}
+				Por favor este pendiente a inicio de la Ponencia
+				{%else%}
+				Debe pagar el Congreso para poder acceder a esta Ponencia
+				{%endif%}</h4>
+		</div>
+		<div class="col-md-6"></div>
+		<div class=" col-md-6" style="margin-top: -50px;">
+
+			<h2 style="color: #565657;
+							font-size: 30px;
+							margin: 50px 0 30px;
+							text-transform: uppercase;
+							font-family: 'Gotham-Bold';">Comienza en:</h2>
+			<div id="countdown" class="simply-countdown"></div>
+			<!-- <ul class="countdown">
+						<li>
+							<span class="days">00</span>
+							<p class="days_ref">días</p>
+						</li>
+						<li>
+							<span class="hours">00</span>
+							<p class="hours_ref">horas</p>
+						</li>
+						<li>
+							<span class="minutes">00</span>
+							<p class="minutes_ref">minutos</p>
+						</li>
+						<li>
+							<span class="seconds last">00</span>
+							<p class="seconds_ref">segundos</p>
+						</li>
+					</ul> -->
+
+
+		</div>
+	</div>
+</div>
+</div>
+{%endif%}
+{%endblock%}
+
+{% block script%}
+<script src="{% static 'MedCongressApp/js/bootstrap-rating.js' %}"></script>
+
+<script src="{% static 'MedCongressApp/js/plugins/simplyCountdown/simplyCountdown.min.js'%}"></script>
+<script>
+	$(document).ready(function () {
+		$('#rating').rating({
+			filled: 'glyphicon glyphicon-heart',
+			empty: 'glyphicon glyphicon-heart-empty'
+		});
+		$('#rating').rating('rate', '{{is_evaluado}}');
+		var height = $(window).height();
+		$('#div').height(height);
+	});
+
+
+	simplyCountdown('#countdown', {
+		year: '{{ponencia.fecha_inicio|date:"Y"}}', // required
+		month: '{{ponencia.fecha_inicio|date:"m"}}', // required
+		day: '{{ponencia.fecha_inicio|date:"d"}}', // required
+		hours: '{{ponencia.fecha_inicio|date:"h"}}', // Default is 0 [0-23] integer
+		minutes: '{{ponencia.fecha_inicio|date:"i"}}', // Default is 0 [0-59] integer
+		seconds: '{{fecha|date:"s"}}', // Default is 0 [0-59] integer
+		words: { //words displayed into the countdown
+			days: 'dia',
+			hours: 'hora',
+			minutes: 'minuto',
+			seconds: 'segundo',
+			pluralLetter: 's'
+		},
+		plural: true, //use plurals
+		inline: false, //set to true to get an inline basic countdown like : 24 days, 4 hours, 2 minutes, 5 seconds
+		inlineClass: 'simply-countdown-inline', //inline css span class in case of inline = true
+		// in case of inline set to false
+		enableUtc: true, //Use UTC as default
+		onEnd: function () { return; }, //Callback on countdown end, put your own function here
+		refresh: 1000, // default refresh every 1s
+		sectionClass: 'simply-section', //section css class
+		amountClass: 'simply-amount', // amount css class
+		wordClass: 'simply-word', // word css class
+		zeroPad: false,
+		countUp: false
+	});
+	$(function () {
+		
+		$('input.check').on('change', function () {
+
+			swal({
+				title: "Le dará una Evaluación de " + $(this).val() + ' puntos a esta Ponencia',
+				text: "Si Acepta no podra dar otra puntuación",
+				icon: "success",
+				buttons: {
+					cancel: {
+						text: "No!",
+						value: null,
+						visible: true,
+						className: "",
+						closeModal: false,
+					},
+					confirm: {
+						text: "Si",
+						value: true,
+						visible: true,
+						className: "",
+						closeModal: false
+					}
+
+
+
+				}
+			})
+				.then((isConfirm) => {
+					if (isConfirm) {
+						$.ajax({
+							type: "GET",
+							url: "{% url 'EvaluarPonencia'%}",
+							data: {
+								'puntuacion': $(this).val(), // from form
+								'usuario': '{{request.user.pk}}',// from form
+								'ponencia': '{{ponencia.pk}}',// from form
+							},
+							success: function (data) {
+								alert(data.succes)
+								location.reload();
+							}
+						});
+					}
+					else {
+						location.reload();
+					}
+
+				});
+
+		});
+
+
+{%if is_evaluado %}
+		$('.rating').each(function () {
+			$('<span class="label label-default"></span>')
+			
+			.text('{{is_evaluado}}' || ' ')
+			
+		
+			
+            .insertAfter(this);
+		});
+		{% endif %}
+		$('.rating-tooltip').rating({
+			extendSymbol: function (rate) {
+				$(this).tooltip({
+					container: 'body',
+					placement: 'bottom',
+					title: 'Rate ' + rate
+				});
+			}
+		});
+		$('.rating-tooltip').rating({
+			extendSymbol: function () {
+				var title;
+				$(this).tooltip({
+					container: 'body',
+					placement: 'bottom',
+					trigger: 'manual',
+					title: function () {
+						return title;
+					}
+				});
+				$(this).on('mouseenter', function (e, rate) {
+					title = rate;
+					$(this).tooltip('show');
+				})
+				$(this).on('mouseleave', function () {
+					$(this).tooltip('hide');
+				});
+			}
+		});
+
+		$('.rating').on('change', function () {
+			$(this).next('.label').text($(this).val());
+		});
+
+	});
+
+</script>
 {%endblock%}
