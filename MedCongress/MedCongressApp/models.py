@@ -257,7 +257,8 @@ class RelCongresoUser(models.Model):
     cantidad=models.IntegerField(null=True)
     is_constancia=models.BooleanField(null=True)
     fecha_constancia=models.DateField(null=True)
-
+    cuestionario=models.CharField(null=True,max_length=250)
+    foto_constancia=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso/img_constancia',null=True)
 
     def __str__(self):
         return '%s->%s->%s'%(self.user.usuario.first_name, self.congreso.titulo, self.categoria_pago.nombre)

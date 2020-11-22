@@ -19,6 +19,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import (CreateView, DetailView, FormView, ListView,
                                   TemplateView, View)
 from requests.auth import HTTPBasicAuth
+from django.contrib.auth.views import PasswordResetView
 from random import sample
 from PIL import Image, ImageDraw, ImageFont
 
@@ -78,11 +79,12 @@ class Home(TemplateView):
 
 class PagoExitoso(TemplateView):
     template_name= 'MedCongressApp/pago_satifactorio.html' 
+@method_decorator(login_required,name='dispatch')   
 class Perfil(TemplateView):
     template_name= 'MedCongressApp/perfil.html' 
     
     def get_context_data(self, **kwargs):
-
+        
         context = super().get_context_data(**kwargs)
         congresos=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,is_pagado=True).distinct('congreso')
         context['congresos']=congresos
@@ -98,8 +100,13 @@ class Perfil(TemplateView):
             context['ponencias']=ponencias
             talleres_pon=RelTallerPonente.objects.filter(ponente=self.request.user.perfilusuario.ponente)
             context['talleres_pon']=talleres_pon
-        # datos_in=DatosIniciales.objects.all().first()
-        # 
+        constancias=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,is_constancia=True).values('congreso','foto_constancia').distinct()
+        constancias_env=[]
+        for constancia in constancias:
+            congreso=Congreso.objects.get(pk=constancia['congreso'])
+            constancias_env.append({'congreso':congreso})
+        context['constancias']=constancias_env
+        
         # context['ponentes'] = Ponente.objects.all()
         # context['especialidades'] = len(EspecialidadCongreso.objects.all())+datos_in.especialidades
         # context['afiliados'] = len(User.objects.all())+datos_in.afiliados
@@ -673,46 +680,7 @@ class AvisoPrivacidad(TemplateView):
         context = super(AvisoPrivacidad, self).get_context_data(**kwargs)
         context['aviso_privacidad']=DatosIniciales.objects.all().first()
         return context
-# HTTP Error 400
-# def bad_request(request,exception):
-#     response = render_to_response(
-#         '400.html',
-#         context_instance=RequestContext(request)
-#         )
 
-#     response.status_code = 400
-
-#     return response
-
-# def permission_denied(request,exception):
-#     response = render_to_response(
-#         '403.html',
-#         context_instance=RequestContext(request)
-#         )
-
-#     response.status_code = 400
-
-#     return response
-
-# def page_not_found(request,exception):
-#     response = render_to_response(
-#         '404.html',
-#         context_instance=RequestContext(request)
-#         )
-
-#     response.status_code = 400
-
-#     return response
-
-# def server_error(request):
-#     response = render_to_response(
-#         '400.html',
-#         context_instance=RequestContext(request)
-#         )
-
-#     response.status_code = 400
-
-#     return response
 
 class HabilitarUser(TemplateView):
     template_name= 'MedCongressApp/confic_email.html' 
@@ -813,6 +781,7 @@ class GetCuestionario(TemplateView):
         for pregunta in preguntas:
             respuestas=CuestionarioRespuestas.objects.filter(pregunta=pregunta,published=True)
             cuestionario.append({'pregunta':pregunta.pregunta,
+                                'id':pregunta.pk,
                                 'respuestas':respuestas})
         con=congreso.cant_preguntas
         if len(preguntas)<con:
@@ -828,8 +797,19 @@ class GetCuestionario(TemplateView):
         total=0
         congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
         preguntas=CuestionarioPregunta.objects.filter(congreso=congreso,published=True)
+        
+        cuestionario=[]
+        preg=1
+        for pregunta in self.request.POST.getlist('pregunta'):
+            if self.request.POST.get('respuesta_%s'%(preg)):
+                respuesta=self.request.POST['respuesta_%s'%(preg)]
+            else:
+                respuesta=0
+            cuestionario.append('%s-%s'%(pregunta,respuesta))
+            preg=preg+1
+        
         for resp in self.request.POST:
-            if cant != 0:
+            if cant > 1:
                 respuesta=CuestionarioRespuestas.objects.get(pk=self.request.POST[resp])
                 if respuesta.is_correcto:
                     total=total+1
@@ -838,17 +818,19 @@ class GetCuestionario(TemplateView):
         con=congreso.cant_preguntas
         if len(preguntas)<con:
             con=len(preguntas)
+        
+        preguntas=self.request.POST[resp]
         if total/con*100>congreso.aprobado:
 
             constancias=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario)
             for constancia in constancias:
                 constancia.is_constancia=True
                 constancia.fecha_constancia=datetime.now()
+                constancia.cuestionario=(','.join(cuestionario))
                 constancia.save()
 
-            return HttpResponse('Aprobado %s/%s*100'%(total,con))
-        else:
-             return HttpResponse('Suspenso %s/%s*100'%(total,con))
+        return  HttpResponseRedirect(reverse('Resultado_Cuestionario',kwargs={'path': congreso.path}))
+        
 
 
 def GetFactura(request):
@@ -938,29 +920,76 @@ def GetFactura(request):
     return HttpResponse(response1)
 
 
-class GetConstancia(TemplateView):
+class SetConstancia(TemplateView):
+
     template_name= 'MedCongressApp/congreso_constancia.html' 
     def get_context_data(self, **kwargs):
         
-        context = super(GetConstancia, self).get_context_data(**kwargs)
+        context = super(SetConstancia, self).get_context_data(**kwargs)
         congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        constancias=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario,is_constancia=True)
         context['congreso']=congreso
-        # print( os.listdir(''))
         nombre='%s %s'%(self.request.user.first_name,self.request.user.last_name)
+        congreso_t= congreso.titulo
         cont=len(nombre)
         comienzo=630-(cont/2*18)
+        cont=len(congreso_t)
+        comienzo_t=640-(cont/2*10)
         base=Image.open('MedCongressApp/static/congreso/img_constancia/cosntancia.jpeg').convert('RGBA')
         text=Image.new('RGBA',base.size,(255,255,255,0))
-        fnt=ImageFont.truetype('bahnschrift.ttf',40)
-        cong=ImageFont.truetype('bahnschrift.ttf',30)
-        cong.set_variation_by_name('Italic')
+        nombre_font=ImageFont.truetype('bahnschrift.ttf',40)
+        congreso_font=ImageFont.truetype('calibri.ttf',25)
+        fecha_font=ImageFont.truetype('calibri.ttf',25)
+        # cong.set_variation_by_name('Italic')
         d=ImageDraw.Draw(text)
-        d.text((comienzo,400),nombre,font=fnt,fill=(89, 85, 85))
-        d.text((440,470),'Ha concluido satisfactoriamente',font=cong,fill=(94,196,234,255))
+        d.text((comienzo,400),nombre,font=nombre_font,fill=(89, 85, 85))
+        d.text((430,470),'Ha concluido satisfactoriamente el Congreso',font=congreso_font,fill=(94,196,234,255))
+        d.text((comienzo_t,500),congreso_t,font=congreso_font,fill=(14,138,184,255))
+        d.text((555,775),constancias.first().fecha_constancia.strftime('%d/%m/%Y'),font=fecha_font,fill=(89, 85, 85))
         out=Image.alpha_composite(base,text)
-        out.save('MedCongressApp/static/congreso/img_constancia/ppp.png')
+        tit=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
+       
+        nombre_img='constancia_%s_%s'%(self.request.user.first_name,tit) 
+        for constancia in constancias:
+            constancia.foto_constancia='congreso/img_constancia/%s.png'%(nombre_img)
+            constancia.save()
+
+        out.save('MedCongressApp/static/congreso/img_constancia/%s.png'%(nombre_img))
 
         return context
+
+    def get(self, request, **kwargs):
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        if congreso is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        constancia=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario,is_constancia=True).count()
+        if  constancia is None :
+            return   HttpResponseRedirect(reverse('Error404'))
+        return self.render_to_response(self.get_context_data())
+
+class Get_Constancia(PdfMixin,TemplateView):
+
+    template_name= 'MedCongressApp/congreso_constancia.html' 
+    def get_context_data(self, **kwargs):
+        
+        context = super(Get_Constancia, self).get_context_data(**kwargs)
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        constancia=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario,is_constancia=True).first()
+        print(constancia)
+        context['congreso']=congreso
+        context['constancia']=constancia
+        return context
+
+    def get(self, request, **kwargs):
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        if congreso is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        constancia=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario,is_constancia=True).count()
+        if  constancia is None :
+            return   HttpResponseRedirect(reverse('Error404'))
+        return self.render_to_response(self.get_context_data())
+
+
 class EvaluarPonencia(TemplateView):
     template_name= 'MedCongressApp/pago_satifactorio.html'
 
@@ -976,3 +1005,20 @@ class EvaluarPonencia(TemplateView):
             return JsonResponse(usuario_json, safe=False)
         return TemplateResponse(request, reverse('dashboard')) 
 
+class Resultado_Cuestionario(TemplateView):
+    template_name='MedCongressApp/resultado_cuestionario.html'
+
+    def get(self, request, **kwargs):
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        if congreso is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+       
+        return self.render_to_response(self.get_context_data())
+
+    def get_context_data(self, **kwargs):
+        context = super(Resultado_Cuestionario, self).get_context_data(**kwargs)
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        context['congreso']=congreso
+        context['aprobado']=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario,is_constancia=True).exists()
+
+        return context

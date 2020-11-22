@@ -37,6 +37,12 @@ class UserForm(forms.ModelForm):
         password1 = cleaned_data.get('password1', None)
         if password!=password1 :
             self.add_error('password1', 'No coinciden los password ')
+        email = cleaned_data.get('email', None)
+        username= cleaned_data.get('username',None)
+        if User.objects.filter(email=email).exclude(username=username).count():
+            self.add_error('email', 'Ese Email ya existe! ')
+            
+       
 
 class PerfilUserForm(forms.ModelForm):
     cel_profecional=forms.CharField(

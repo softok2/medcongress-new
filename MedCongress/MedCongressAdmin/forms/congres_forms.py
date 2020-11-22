@@ -280,12 +280,12 @@ class UserForm(forms.ModelForm):
         self.fields['last_name'].widget.attrs.update({'class': 'form-control'})   
         self.fields['email'].widget.attrs.update({'class': 'form-control'})     
 
-    # def clean(self, *args, **kwargs):
-    #     cleaned_data = super(UserForm, self).clean(*args, **kwargs)
-    #     password = cleaned_data.get('password', None)
-    #     password1 = cleaned_data.get('password1', None)
-    #     if password!=password1 :
-    #         self.add_error('password1', 'No coinciden los password ')
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(UserForm, self).clean(*args, **kwargs)
+        email = cleaned_data.get('email', None)
+        username= cleaned_data.get('username',None)
+        if User.objects.filter(email=email).exclude(username=username).count():
+            self.add_error('email', 'Ese Email ya existe! ')
 
 class PerfilUserForm(forms.ModelForm):
     cel_profecional=forms.CharField(

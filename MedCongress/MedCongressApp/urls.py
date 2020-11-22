@@ -3,7 +3,7 @@ from django.urls import path
 from .views import (Home,CongresoListView,CongresoDetail,CongresoCardForm,PerfilUserCreate,
 ViewErrorOpenpay,PagarEfectivo,ViewError404,ViewPonencia,EspecialdiadesAutocomplete,
 AddCart,AddCartTaller,DeletedCart,ConfCart,AvisoPrivacidad,HabilitarUser,Perfil,PagoExitoso,Email,GetPerfil,
-GetFactura,GetCuestionario,GetConstancia,EvaluarPonencia)
+GetFactura,GetCuestionario,SetConstancia,EvaluarPonencia,Resultado_Cuestionario,Get_Constancia)
 
 urlpatterns = [
     
@@ -30,8 +30,12 @@ urlpatterns = [
     path('get_perfil', GetPerfil.as_view() , name='GetPerfil'),
     path('get_factura', GetFactura , name='Factura'),
     path('cuestionario/congreso/<str:path>',GetCuestionario.as_view() , name='Cuestionario'),
-    path('constancia/congreso/<str:path>',GetConstancia.as_view() , name='Constancia'),
+    path('constancia/congreso/<str:path>',SetConstancia.as_view() , name='Constancia'),
     path('evaluar/ponencia',EvaluarPonencia.as_view() , name='EvaluarPonencia'),
+    path('cuestionario/resultado/<str:path>',Resultado_Cuestionario.as_view() , name='Resultado_Cuestionario'),
+    path('ver_constancia/congreso/<str:path>',Get_Constancia.as_view() , name='Get_Constancia'),
+    
+    
     
     
   

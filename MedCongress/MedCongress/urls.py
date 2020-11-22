@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from django.utils.functional import curry
-
+from django.contrib.auth.views import *
 from django.views.defaults import permission_denied
 
 
@@ -26,7 +26,13 @@ from django.views.defaults import permission_denied
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('MedCongressApp.urls')),
-    path('accounts/', include('django.contrib.auth.urls')),
+
     path('administration/', include('MedCongressAdmin.urls')),
-]
+    
+    path('accounts/password_reset/', PasswordResetView.as_view(template_name='registration/password_reset_form.html'), name='password_reset'),
+    path('accounts/password_reset/done/', PasswordResetDoneView.as_view(template_name='registration/password_reset_done.html'), name='password_reset_done'),
+    path('accounts/reset/<uidb64>/<token>/', PasswordResetConfirmView.as_view(template_name='registration/password_reset_confirm.html'), name='password_reset_confirm'),
+    path('accounts/reset/done/', PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'), name='password_reset_complete'),
+    path('accounts/', include('django.contrib.auth.urls')),
+]   
 

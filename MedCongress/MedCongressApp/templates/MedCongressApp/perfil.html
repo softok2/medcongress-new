@@ -287,45 +287,59 @@ Detalles del Perfil
 background-color: #e6e6e6;"> <b> MedCongress Constacias</b></h6>
                     <ul>
                         
+                        {% if constancias %}
+                        {%for constancia in constancias%}
+                        <li >
+                          <a href="{%url 'Get_Constancia' path=constancia.congreso.path%}">
+                            <div class="row">
+                                <div class="col-md-3">
+                                
                         
-                        <li>
-                            <div class="like_fb">
-                                <a class="youtube" href="#"><i class="fa fa-file-pdf-o"></i></a>
+                                </div>
+                                <div class="col-md-9">
+                                    <h6><b>Congreso</b> </h6>
+                            </div>
+                                </div>
+
+                     
+       
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="like_fb" style="float: left;">
+                                <span style="display: inline-block;
+                                width: 40px;
+                                height: 40px;
+                                color: #fff;
+                                font-size: 20px;
+                                line-height: 38px;
+                                text-align: center;background-color: #dd332c;"><i class="fa fa-file-pdf-o"></i> </span>
+
+                            </div>
+                                </div>
+                                <div class="col-md-9">
+                                   
+                                
+                                <p>{{constancia.congreso.titulo}}</p>
+                           
+                                </div>
+
                             </div>
                             
-                            <div class="like_amount">
-                                <p>Constacia 1</p>
-                                <span>Congreso 1</span>
-                            </div>
                             
+                            
+                        </a> 
                            
                         </li>
-                         <li>
-                            <div class="like_fb">
-                                <a class="youtube" href="#"><i class="fa fa-file-pdf-o"></i></a>
-                            </div>
-                            
+                        {%endfor%}
+                        {%else%}
+                        <li>  
                             <div class="like_amount">
-                                <p>Constacia 2</p>
-                                <span>Congreso 2</span>
-                            </div>
-                            
-                           
+                                <p>No tiene ninguna Constancia</p>
+                               
+                            </div>   
                         </li>
-                         <li>
-                            <div class="like_fb">
-                                <a class="youtube" href="#"><i class="fa fa-file-pdf-o"></i></a>
-                            </div>
-                            
-                            <div class="like_amount">
-                                <p>Constacia 3</p>
-                                <span>Congreso 3</span>
-                            </div>
-                            
-                            
-                        </li>
+                        {%endif%}
                          
-                        
                         
                     </ul>
                 </div>

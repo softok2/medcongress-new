@@ -1,0 +1,45 @@
+{% extends "MedCongressApp/base.html"%}
+{% load static %}
+{% block titulo %}
+Información
+{%endblock%}
+{% block contenido %}
+
+<div class="kode-event-time" >
+    <div class="kode-event-contact" style=" background:url({% static 'MedCongressApp/images/slide11.png'%}) no-repeat 50%  0;background-attachment: fixed; ">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="kf_heading_3" style="margin-top: 70px;">
+                        {%if aprobado%}
+                        <h2>Enhorabuena. Ha aprobado el cuestionario</h2>
+                        <span>Ya tiene la Constancia de haber participado en el Congreso: {{congreso.titulo}} </span>
+
+                      
+                        {%else%}
+                        <h2>lo sentimos. No ha aprobado el cuestionario</h2>
+                        <span>Deberá hacer de nuevo el cuestionario para tener una Constancia de haber participado en el Congreso: {{congreso.titulo}} </span>
+
+                      
+                       {%endif%}
+                    </div>
+                    {%if aprobado%}
+                   
+
+                    <a class="btn btn-primary" href="{% url 'Get_Constancia' path=congreso.path%}"> Ver Constancia</a>  <a class="btn btn-primary" type="button" href="{% url 'View_congreso' path=congreso.path%}"> Atrás</a>
+                    {%else%}
+                   
+                    <a class="btn btn-primary" type="link" href="{% url 'Cuestionario' path=congreso.path%}"> Llenar Cuestionario</a>  <a class="btn btn-primary" type="button" href="{% url 'View_congreso' path=congreso.path%}"> Atrás</a>
+                   {%endif%}
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock%}
+
+

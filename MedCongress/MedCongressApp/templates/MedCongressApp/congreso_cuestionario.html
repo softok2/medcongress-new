@@ -21,7 +21,7 @@ Cuestionario
         <table class="table table-responsive">
     {%for pregunta in preguntas%}
         <tr style="background-color: beige;"> 
-            <th style="width: 5%;"></th>
+            <th style="width: 5%;"> <input type="hidden" name="pregunta" value="{{pregunta.id}}"></th>
             <th>{{forloop.counter}}.- {{pregunta.pregunta}}</th>
       
         </tr>
@@ -36,8 +36,8 @@ Cuestionario
        
         {%endfor%}
     </table>
-    <button type="button" class="btn btn-lg btn-primary" >Atras </button>
-    <a class="btn btn-lg btn-primary" id="button"  role="button" >Enviar</a>
+    <a class="btn btn-primary" type="button" href="{% url 'View_congreso' path=congreso.path%}"> Atrás</a>
+    <a class="btn btn-primary" id="button"  role="button" >Enviar</a>
    
 </form></div>
 </div>
