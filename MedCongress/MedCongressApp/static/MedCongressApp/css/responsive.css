@@ -178,7 +178,7 @@
 	#kode-header{
 		text-align:center;
 		border:none;
-		background-color:rgba(0,0,0,0.5);
+		background-color:#fff;
 		padding:10px 0px;
 	}
 	.Kode-page-heading{
@@ -434,7 +434,7 @@
 
 	#kode-header{
 		position:relative;
-		background-color:#333;
+		background-color:#fff;
 	}
 	.kode-event-time{margin-top:0}
 	.kode-content{
