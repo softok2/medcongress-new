@@ -581,12 +581,14 @@ class ViewPonencia(TemplateView):
         ponencia=Ponencia.objects.filter(path=self.kwargs.get('path'),published=True).first() 
         if self.request.user.is_authenticated:
             context['is_pagado']=RelCongresoUser.objects.filter(congreso=ponencia.congreso,user=self.request.user.perfilusuario,is_pagado=True).exists()
+       
+       
+            if RelPonenciaVotacion.objects.filter(ponencia=ponencia,user=self.request.user).exists():
+                votacio=RelPonenciaVotacion.objects.filter(ponencia=ponencia,user=self.request.user).first()
+                context['is_evaluado']=votacio.votacion
         else:
             context['is_pagado']=False
         context['ponencia']=ponencia
-        if RelPonenciaVotacion.objects.filter(ponencia=ponencia,user=self.request.user).exists():
-            votacio=RelPonenciaVotacion.objects.filter(ponencia=ponencia,user=self.request.user).first()
-            context['is_evaluado']=votacio.votacion
         return context
 
 
