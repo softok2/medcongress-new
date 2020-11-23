@@ -222,7 +222,7 @@ line-height: 28px;
 						</li>
 						<li class="nav-item" data-toggle="modal" data-target=".pp">
 						  <a class="nav-link disabled" href="#">
-							<i class="fa colorazul fa-shopping-cart">
+							<i class="fa colorazul fa-cart-plus">
 							  <span class="badge badge-warning"  style="background-color: #00a4ef;">{%if  request.session.cart.1 %}{{ request.session.cart.1|length}}
 								{%else%} 0 {%endif%}</span>
 							</i>
@@ -258,7 +258,7 @@ line-height: 28px;
 						  </li>
 						  <li class="nav-item">
 							<a class="nav-link" href="{% url 'Registrarse' %}">
-							  <i class="fa fa-key"></i>
+							  <i class="fa colorazul fa-key"></i>
 								 Registrarse
 							</a>
 						  </li>
