@@ -5168,7 +5168,7 @@ ul.kode-tickets-title{
 	position:absolute;
 	left:80%;
 	top:2px;
-	border:solid 2px #fff;
+	border:solid 2px #333;
 	z-index:1000;
 	overflow:hidden;
 	height:40px;
@@ -5180,7 +5180,7 @@ ul.kode-tickets-title{
 	background-color: #333;
 }
 #mobile-header a{
-	color:#fff;
+	color:#333;
 	font-size:18px;
 	line-height:34px;
 	display:block;
