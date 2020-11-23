@@ -328,7 +328,8 @@ height:60px;
 background: #fff;
 width: 100%;
 z-index: 999;
-	
+-webkit-box-shadow: 0px 10px 13px -7px #000000, 1px 3px 15px 1px rgba(0,0,0,0); 
+	box-shadow: 0px 10px 13px -7px #000000, 1px 3px 15px 1px rgba(0,0,0,0);	
 }
 
 .colorazul{color:#00a4ef!important}
