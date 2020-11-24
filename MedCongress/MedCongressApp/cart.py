@@ -31,12 +31,12 @@ class Cart:
                         'id_cat_pago':relCongresoCategoriaPago.categoria.pk,
                         'nombre_cat_pago':relCongresoCategoriaPago.categoria.nombre,
                         'precio':relCongresoCategoriaPago.precio,
-                        'pagar':float(relCongresoCategoriaPago.precio)*float(cant),
+                        'pagar':round(float(relCongresoCategoriaPago.precio)*float(cant),2),
                         'moneda':relCongresoCategoriaPago.moneda,
                         'cantidad': cant
                     }
                 )
-                self.cart[0]['cant']=self.cart[0]['cant']+float(relCongresoCategoriaPago.precio)*float(cant)
+                self.cart[0]['cant']=round(self.cart[0]['cant']+float(relCongresoCategoriaPago.precio)*float(cant),2)
                 self.save()
                 return True
             else:
@@ -53,12 +53,12 @@ class Cart:
                         'id_cat_pago':relCongresoCategoriaPago.categoria.pk,
                         'nombre_cat_pago':relCongresoCategoriaPago.categoria.nombre,
                         'precio':relCongresoCategoriaPago.precio,
-                        'pagar':float(relCongresoCategoriaPago.precio)*float(cant),
+                        'pagar':round(float(relCongresoCategoriaPago.precio)*float(cant),2),
                         'moneda':relCongresoCategoriaPago.moneda,
                         'cantidad': cant
                     }
                 )  
-            self.cart[0]['cant']=self.cart[0]['cant']+float(relCongresoCategoriaPago.precio)*float(cant)
+            self.cart[0]['cant']=round(self.cart[0]['cant']+float(relCongresoCategoriaPago.precio)*float(cant),2)
             self.save()
             return True
 
@@ -83,12 +83,12 @@ class Cart:
                         'id_cat_pago':relTallerCategoriaPago.categoria.pk,
                         'nombre_cat_pago':relTallerCategoriaPago.categoria.nombre,
                         'precio':relTallerCategoriaPago.precio,
-                        'pagar':float(relTallerCategoriaPago.precio)*float(cant),
+                        'pagar':round(float(relTallerCategoriaPago.precio)*float(cant),2),
                         'moneda':relTallerCategoriaPago.moneda,
                         'cantidad': cant
                     }
                 )
-                self.cart[0]['cant']=self.cart[0]['cant']+float(relTallerCategoriaPago.precio)*float(cant)
+                self.cart[0]['cant']=round(self.cart[0]['cant']+float(relTallerCategoriaPago.precio)*float(cant),2)
                 self.save()
                 return True
             else:
@@ -105,12 +105,12 @@ class Cart:
                         'id_cat_pago':relTallerCategoriaPago.categoria.pk,
                         'nombre_cat_pago':relTallerCategoriaPago.categoria.nombre,
                         'precio':relTallerCategoriaPago.precio,
-                        'pagar':float(relTallerCategoriaPago.precio)*float(cant),
+                        'pagar':round(float(relTallerCategoriaPago.precio)*float(cant),2),
                         'moneda':relTallerCategoriaPago.moneda,
                         'cantidad': cant
                     }
                 )
-            self.cart[0]['cant']=self.cart[0]['cant']+float(relTallerCategoriaPago.precio)*float(cant)
+            self.cart[0]['cant']=round(self.cart[0]['cant']+float(relTallerCategoriaPago.precio)*float(cant),2)
             self.save()
             return True
 

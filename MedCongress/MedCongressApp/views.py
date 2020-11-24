@@ -44,7 +44,7 @@ from django.utils.html import strip_tags
 ID_KEY='m6ftsapwjvmo7j7y8mop'
 PUBLIC_KEY='pk_0d4449445a4948899811cea14a469793'
 PRIVATE_KEY='sk_34664e85b5504ca39cc19d8f9b8df8a2'
-URL_PDF='https://sandbox-dashboard.openpay.mx'
+URL_PDF='sandbox-api.openpay.mx'
 
 
 # ID_KEY='muq0plqu35rnjyo7sf2v'
@@ -78,7 +78,12 @@ class Home(TemplateView):
         return context
 
 class PagoExitoso(TemplateView):
-    template_name= 'MedCongressApp/pago_satifactorio.html' 
+    template_name= 'MedCongressApp/pago_satifactorio.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['uuid']=path=self.kwargs.get('uuid')
+        return context
+
 @method_decorator(login_required,name='dispatch')   
 class Perfil(TemplateView):
     template_name= 'MedCongressApp/perfil.html' 
@@ -394,11 +399,12 @@ class CongresoCardForm(TemplateView):
                 self.request.session["error_opempay"]= 'Error de Conección con Openpay'
                 return HttpResponseRedirect(reverse('Error_openpay'))
 
-            url='https://sandbox-api.openpay.mx/v1/%s/charges'%(ID_KEY)
+            url='https://%s/v1/%s/charges'%(URL_PDF,ID_KEY)
+            
             params= {
                     "source_id" : request.POST["token_id"],
                     "method" : "card",
-                    "amount" : 500,
+                    "amount" : self.request.session["cart"][0]['cant'],
                     "currency" : 'MXN',
                     "description" :  descripcion,
                     "device_session_id" : request.POST["deviceIdHiddenFieldName"],
@@ -408,91 +414,54 @@ class CongresoCardForm(TemplateView):
                             "email" : self.request.user.email
                     },
                     "use_3d_secure":True,
-                    "redirect_url":'https://medcongress.com.mx/transaccion_exitosa',
+                    "redirect_url":'http://localhost:8000/ver_transaccion',
+                    
                 }
 
                 
             headers={'Content-type': 'application/json'}
             response=requests.post(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(params),headers=headers)
             response_dic=response.json()
+            
             if response.status_code==200:
-                ##### EMAIL #####
-                subject = 'Comprobante de Pago de MedCongress'
-                html_message = render_to_string('MedCongressApp/recibo_pago.html', context={'car':self.request.session["cart"],'date':response_dic['operation_date'],'numero':response_dic['authorization'],'importe':response_dic['amount'],'card':response_dic['card']['card_number'],'orden_id':response_dic['order_id']})
-                plain_message = strip_tags('Aviso..... Usted se a comprado eventos en MedCongres')
-                from_email = ' Contacto MedCongress <contacto@medcongress.com.mx>'
-                to = self.request.user.email
-                mail.send_mail(subject, plain_message, from_email, [to],html_message=html_message)
-                ####END EMAIL ######
-                # url='https://sandbox-api.openpay.mx/v1/%s/invoices/v33'%(ID_KEY)
+                url='https://%s/v1/%s/invoices/v33'%(URL_PDF,ID_KEY)
+
+
+                concepto=[]
+                for  car in self.request.session["cart"][1]:
+                    concepto.append({
+                            "cantidad":car['cantidad'],
+                            "clave_unidad": "E54",
+                            "clave":"78111500",
+                            "identificador": "6K9MVV MEDCONGRESS",
+                            "unidad": car['tipo_evento'],
+                            "descripcion": 'Pago del %s %s . '%(car['tipo_evento'],car['nombre_congreso']),
+                            "valor_unitario":round(car['precio'],2),
+                            "importe": round(car['pagar'],2),
+                    })
+
                 params={
-                    "openpay_transaction_id":response_dic['order_id'],
-                    "subtotal": 2001.75,
+                    "openpay_transaction_id": response_dic['order_id'],
+                    "subtotal": round(self.request.session["cart"][0]['cant'],2),
                 
-                    "total": 2322.03,
+                    "total": round(self.request.session["cart"][0]['cant'],2),
                     "tipo_de_cambio": 1,
                     "forma_pago": "04",
                     "hide_total_items": True,
                     "hide_total_taxes": True,
                     
                     "moneda": "MXN",
-                    "conceptos": [
-                        {
-                            "clave": "78111500",
-                            "clave_unidad": "E54",
-                            "identificador": "6K9MVV CUAHUTEMOC BLANCO",
-                            "cantidad": 1,
-                            "unidad": "Viaje",
-                            "descripcion": "TRANSPORTACION AEREA DE QRO A MTY",
-                            "valor_unitario": 1744,
-                            "importe": 1744,
-                            "traslados": [
-                                {
-                                    "impuesto": "002",
-                                    "base": 1744,
-                                    "tipo_factor": "Tasa",
-                                    "tasa": 0.16,
-                                    "importe": 279.04
-                                }
-                            ]
-                        },
-                        {
-                            "clave": "78111500",
-                            "clave_unidad": "E54",
-                            "identificador": "6K9MVV CUAHUTEMOC BLANCO",
-                            "cantidad": 1,
-                            "unidad": "Viaje",
-                            "descripcion": "SEGURO DE CANCELACION",
-                            "valor_unitario": 257.75,
-                            "importe": 257.75,
-                            "traslados": [
-                                {
-                                    "impuesto": "002",
-                                    "base": 257.75,
-                                    "tipo_factor": "Tasa",
-                                    "tasa": 0.16,
-                                    "importe": 41.24
-                                }
-                            ]
-                        }
-                    ],
+                    "conceptos": concepto,
                     "lugar_expedicion": "76090",
-                    "observaciones": "Si desea obtener su factura por el servicio de Asistencia TAR, ingrese a la siguiente dirección:\nhttp://masistencia.emitecliente.mx/index.php/clientefacturacion/generarFactura\nSi lo desea puede ingresar a esta dirección desde nuestro portal.",
+                  
                     
-                    "impuestos_traslado": [
-                        {
-                            "impuesto": "002",
-                            "tasa": 0.16,
-                            "importe": 320.28,
-                            "tipo_factor": "Tasa"
-                        }
-                    ],
+                    "impuestos_traslado": [],
                     "impuestos_retencion": [],
                 
                     "receptor": {
-                        "nombre": "Alberto Montellano Sandoval",
+                        "nombre": self.request.user.first_name+' '+ self.request.user.last_name,
                         "rfc": "MOSA8311152G0",
-                        "email": "alberto.montellano@tcpip.tech",
+                        "email": self.request.user.email,
                         "uso_cfdi": "G03"
                     },
                     
@@ -500,25 +469,10 @@ class CongresoCardForm(TemplateView):
                     
                 }  
                 headers={'Content-type': 'application/json'}
-                response=requests.post(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(params),headers=headers)
-                return HttpResponseRedirect(reverse('Factura'))
-
-    
-                for cart in self.request.session["cart"][1]:
-                    if str(cart['tipo_evento']) == 'Congreso':
-                        congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
-                        categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                        pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],num_autorizacion_transaccion=response_dic['authorization'],num_tarjeta_tranzaccion=response_dic['card']['card_number'],is_pagado=True,cantidad=cart['cantidad'])
-                        pagar_congreso.save()
-                    if str(cart['tipo_evento']) == 'Taller':
-                        taller=Taller.objects.filter(id=cart['id_congreso']).first()
-                        categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                        pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dic['id'],num_autorizacion_transaccion=response_dic['authorization'],num_tarjeta_tranzaccion=response_dic['card']['card_number'],is_pagado=True,cantidad=cart['cantidad'])
-                        pagar_congreso.save()
-                car=Cart(self.request)
-                car.clear() 
-                return HttpResponseRedirect(reverse('transaccion_exitosa'))
-
+                response1=requests.post(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(params),headers=headers)
+                response_dic=response.json()
+                
+                return HttpResponseRedirect(response.json()['payment_method']['url']) 
             else:
                 self.request.session["error_opempay"]=response.json()['description']
                 return HttpResponseRedirect(reverse('Error_openpay'))
@@ -526,7 +480,7 @@ class CongresoCardForm(TemplateView):
         else:
             
             try:
-                url='https://sandbox-api.openpay.mx/v1/%s/charges'%(ID_KEY)
+                url='https://%s/v1/%s/charges'%(URL_PDF,ID_KEY)
                 params= {
                         
                         "method" : "store",
@@ -557,7 +511,7 @@ class CongresoCardForm(TemplateView):
                             pagar_congreso.save()
                     car=Cart(self.request)
                     car.clear() 
-                    return HttpResponseRedirect('%s/paynet-pdf/%s/%s'%(URL_PDF,ID_KEY,response_dic['payment_method']['reference']) )
+                    return HttpResponseRedirect('https://dashboard.openpay.mx/paynet-pdf/%s/%s'%(ID_KEY,response_dic['payment_method']['reference']) )
                 else:
                     self.request.session["error_opempay"]=response.json()['description']
                     return HttpResponseRedirect(reverse('Error_openpay'))
@@ -578,7 +532,6 @@ class CongresoCardForm(TemplateView):
                     self.request.session["error_opempay"]='Póngase en contacto con el Admin'
                
                 return HttpResponseRedirect(reverse('Error_openpay'))
-
 
 ##### Formulario para registrar usuario #####
 
@@ -912,101 +865,19 @@ class GetCuestionario(TemplateView):
                 constancia.save()
 
         return  HttpResponseRedirect(reverse('Resultado_Cuestionario',kwargs={'path': congreso.path}))
-        
 
-
-def GetFactura(request):
+# class GetFactura(TemplateView):
    
-    # url='https://sandbox-api.openpay.mx/v1/%s/invoices/v33'%(ID_KEY)
-    # params={
-    #     "openpay_transaction_id":'tr5h2zdvk1ju0jflmpwk',
-    #     "subtotal": 2001.75,
-       
-    #     "total": 2322.03,
-    #     "tipo_de_cambio": 1,
-    #     "forma_pago": "04",
-    #     "hide_total_items": True,
-    #     "hide_total_taxes": True,
-        
-    #     "moneda": "MXN",
-    #     "conceptos": [
-    #         {
-    #             "clave": "78111500",
-    #             "clave_unidad": "E54",
-    #             "identificador": "6K9MVV CUAHUTEMOC BLANCO",
-    #             "cantidad": 1,
-    #             "unidad": "Viaje",
-    #             "descripcion": "TRANSPORTACION AEREA DE QRO A MTY",
-    #             "valor_unitario": 1744,
-    #             "importe": 1744,
-    #             "traslados": [
-    #                 {
-    #                     "impuesto": "002",
-    #                     "base": 1744,
-    #                     "tipo_factor": "Tasa",
-    #                     "tasa": 0.16,
-    #                     "importe": 279.04
-    #                 }
-    #             ]
-    #         },
-    #         {
-    #             "clave": "78111500",
-    #             "clave_unidad": "E54",
-    #             "identificador": "6K9MVV CUAHUTEMOC BLANCO",
-    #             "cantidad": 1,
-    #             "unidad": "Viaje",
-    #             "descripcion": "SEGURO DE CANCELACION",
-    #             "valor_unitario": 257.75,
-    #             "importe": 257.75,
-    #             "traslados": [
-    #                 {
-    #                     "impuesto": "002",
-    #                     "base": 257.75,
-    #                     "tipo_factor": "Tasa",
-    #                     "tasa": 0.16,
-    #                     "importe": 41.24
-    #                 }
-    #             ]
-    #         }
-    #     ],
-    #     "lugar_expedicion": "76090",
-    #     "observaciones": "Si desea obtener su factura por el servicio de Asistencia TAR, ingrese a la siguiente dirección:\nhttp://masistencia.emitecliente.mx/index.php/clientefacturacion/generarFactura\nSi lo desea puede ingresar a esta dirección desde nuestro portal.",
-        
-    #     "impuestos_traslado": [
-    #         {
-    #             "impuesto": "002",
-    #             "tasa": 0.16,
-    #             "importe": 320.28,
-    #             "tipo_factor": "Tasa"
-    #         }
-    #     ],
-    #     "impuestos_retencion": [],
-       
-    #     "receptor": {
-    #         "nombre": "Alberto Montellano Sandoval",
-    #         "rfc": "MOSA8311152G0",
-    #         "email": "alberto.montellano@tcpip.tech",
-    #         "uso_cfdi": "G03"
-    #     },
-        
-    #     "metodo_pago": "PUE",
-        
-    # }  
-    # headers={'Content-type': 'application/json'}
-    # response=requests.post(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(params),headers=headers)
-    # response_dic=response.json()
+    # def get(self, request):
+        # para={
+        #     "getUrls":True
+        #     }
+        # url2='https://sandbox-api.openpay.mx/v1/%s/invoices/v33/%s/?getUrls=True'%(ID_KEY,response_dic[0]['uuid'])
 
-    # para={
-    # "getUrls":True
-    # }
-# D3342DF4-1E21-4BdB-AE53-EF317513E83A
-    url1='https://sandbox-api.openpay.mx/v1/%s/invoices/v33/?getUrls=True'%(ID_KEY)
-    
-    headers={'Content-type': 'application/json'}
-    response1=requests.get(url=url1,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
-    response_dic=response1.json()
-    return HttpResponse(response1)
-
+        # headers={'Content-type': 'application/json'}
+        # response2=requests.get(url=url2,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(para),headers=headers)
+        # response_d=response2.json()
+        # return HttpResponseRedirect( response_d['public_pdf_link'])
 
 class SetConstancia(TemplateView):
 
@@ -1110,3 +981,74 @@ class Resultado_Cuestionario(TemplateView):
         context['aprobado']=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario,is_constancia=True).exists()
 
         return context
+
+class VerTransaccion(TemplateView):
+    template_name= 'MedCongressApp/confic_email.html' 
+    def get(self, request, **kwargs):
+        
+        # #  url='https://sandbox-api.openpay.mx/v1/%s/charges'
+        url=' https://%s/v1/%s/charges/%s'%(URL_PDF,ID_KEY,self.request.GET['id'])
+    
+        headers={'Content-type': 'application/json'}
+        response=requests.get(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
+        
+        response_dict=response.json()
+        if response_dict['status'] =="completed":
+            user_perfil=PerfilUsuario.objects.filter(usuario=self.request.user.pk).first()
+            enviar=self.request.session["cart"]
+                ##### EMAIL #####
+            subject = 'Comprobante de Pago de MedCongress'
+            html_message = render_to_string('MedCongressApp/recibo_pago.html', context={'car':enviar,'date':response_dict['operation_date'],'numero':response_dict['authorization'],'importe':response_dict['amount'],'card':response_dict['card']['card_number'],'orden_id':response_dict['order_id']})
+            plain_message = strip_tags('Aviso..... Usted se a comprado eventos en MedCongres')
+            from_email = ' Contacto MedCongress <contacto@medcongress.com.mx>'
+            to = self.request.user.email
+            mail.send_mail(subject, plain_message, from_email, [to],html_message=html_message)
+            ####END EMAIL ######
+            ######### Facturacion #############
+            url1='https://sandbox-api.openpay.mx/v1/%s/invoices/v33/'%(ID_KEY)
+    
+            headers={'Content-type': 'application/json'}
+            response1=requests.get(url=url1,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
+            response_dic=response1.json()
+            para={
+            "getUrls":True
+            }
+            url2='https://sandbox-api.openpay.mx/v1/%s/invoices/v33/%s/?getUrls=True'%(ID_KEY,response_dic[0]['uuid'])
+
+            headers={'Content-type': 'application/json'}
+            response2=requests.get(url=url2,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(para),headers=headers)
+            response_d=response2.json()
+            return HttpResponseRedirect( response_d['public_pdf_link'])
+             ######### END Facturacion #############
+            for cart in self.request.session["cart"][1]:
+                if str(cart['tipo_evento']) == 'Congreso':
+                    congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
+                    categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
+                    pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=self.request.GET['id'],uuid_factura=response_dic[0]['uuid'])
+                    pagar_congreso.save()
+                if str(cart['tipo_evento']) == 'Taller':
+                    taller=Taller.objects.filter(id=cart['id_congreso']).first()
+                    categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
+                    pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dict['id'],uuid_factura=response_dic[0]['uuid'])
+                    pagar_congreso.save()
+            return HttpResponseRedirect(reverse('transaccion_exitosa',kwargs={'uuid': response_dic[0]['uuid']} ))
+        if response_dict['status'] =="failed": 
+            if response_dict['error_code'] == 3001:
+                self.request.session["error_opempay"]='La tarjeta fue rechazada.'
+            if response_dict['error_code'] == 3002:
+                self.request.session["error_opempay"]='La tarjeta ha expirado.'
+            if response_dict['error_code'] == 3003:
+                self.request.session["error_opempay"]='La tarjeta no tiene fondos suficientes.'
+            if response_dict['error_code'] == 3004:
+                self.request.session["error_opempay"]='La tarjeta ha sido identificada como una tarjeta robada.'
+            if response_dict['error_code'] == 3005:
+                self.request.session["error_opempay"]='La tarjeta ha sido rechazada por el sistema antifraudes.'  
+              
+            # self.request.session["error_opempay"]='Código de error %s  Transacción no exitosa.'%(response_dict['error_code'])  
+            return HttpResponseRedirect(reverse('Error_openpay'))
+
+        self.request.session["error_opempay"]='Transacción no Completada'  
+        return HttpResponseRedirect(reverse('Error_openpay'))
+
+       
+

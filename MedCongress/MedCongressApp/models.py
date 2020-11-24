@@ -259,6 +259,7 @@ class RelCongresoUser(models.Model):
     fecha_constancia=models.DateField(null=True)
     cuestionario=models.CharField(null=True,max_length=250)
     foto_constancia=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso/img_constancia',null=True)
+    uuid_factura=models.CharField(max_length=36,null=True)
 
     def __str__(self):
         return '%s->%s->%s'%(self.user.usuario.first_name, self.congreso.titulo, self.categoria_pago.nombre)
@@ -544,6 +545,7 @@ class RelTallerUser(models.Model):
     num_tarjeta_tranzaccion=models.CharField(max_length=16)
     created_at = models.DateTimeField(auto_now_add=True)
     cantidad=models.IntegerField(null=True)
+    uuid_factura=models.CharField(max_length=36,null=True)
 
 
     def __str__(self):

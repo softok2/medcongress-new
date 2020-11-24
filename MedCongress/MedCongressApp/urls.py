@@ -2,8 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from .views import (Home,CongresoListView,CongresoDetail,CongresoCardForm,PerfilUserCreate,
 ViewErrorOpenpay,PagarEfectivo,ViewError404,ViewPonencia,EspecialdiadesAutocomplete,
-AddCart,AddCartTaller,DeletedCart,ConfCart,AvisoPrivacidad,HabilitarUser,Perfil,PagoExitoso,Email,GetPerfil,
-GetFactura,GetCuestionario,SetConstancia,EvaluarPonencia,Resultado_Cuestionario,Get_Constancia)
+AddCart,AddCartTaller,DeletedCart,ConfCart,AvisoPrivacidad,HabilitarUser,Perfil,PagoExitoso,Email,GetPerfil,GetCuestionario,SetConstancia,EvaluarPonencia,Resultado_Cuestionario,Get_Constancia,VerTransaccion)
 
 urlpatterns = [
     
@@ -26,14 +25,15 @@ urlpatterns = [
     # path('confic_email',ConfigEmail.as_view() , name='confic_email'),
     path('habilitar_user/<str:token>',HabilitarUser.as_view() , name='habilitar_user'),
     path('perfil',Perfil.as_view() , name='perfil'),
-    path('transaccion_exitosa',PagoExitoso.as_view() , name='transaccion_exitosa'),
+    path('transaccion_exitosa/<str:uuid>',PagoExitoso.as_view() , name='transaccion_exitosa'),
     path('get_perfil', GetPerfil.as_view() , name='GetPerfil'),
-    path('get_factura', GetFactura , name='Factura'),
+    # path('get_factura', GetFactura.as_view , name='Factura'),
     path('cuestionario/congreso/<str:path>',GetCuestionario.as_view() , name='Cuestionario'),
     path('constancia/congreso/<str:path>',SetConstancia.as_view() , name='Constancia'),
     path('evaluar/ponencia',EvaluarPonencia.as_view() , name='EvaluarPonencia'),
     path('cuestionario/resultado/<str:path>',Resultado_Cuestionario.as_view() , name='Resultado_Cuestionario'),
     path('ver_constancia/congreso/<str:path>',Get_Constancia.as_view() , name='Get_Constancia'),
+    path('ver_transaccion',VerTransaccion.as_view() , name='ver_transaccion'),
     
     
     
