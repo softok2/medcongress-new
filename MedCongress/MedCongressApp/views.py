@@ -492,7 +492,7 @@ class CongresoCardForm(TemplateView):
                             "email" : self.request.user.email
                     },
                     "use_3d_secure":True,
-                    "redirect_url":'http://localhost:8000/ver_transaccion',
+                    "redirect_url":'https://medcongress.softok2.mx/ver_transaccion',
                     
                 }
 
