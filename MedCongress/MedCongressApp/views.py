@@ -81,8 +81,86 @@ class PagoExitoso(TemplateView):
     template_name= 'MedCongressApp/pago_satifactorio.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['uuid']=path=self.kwargs.get('uuid')
+        context['car']=self.request.session["cart"]
+        self.request.session["car1"]=self.request.session["cart"]
+        car=Cart(self.request)
+        car.clear() 
         return context
+
+    def post(self, request, **kwargs):
+        url='https://%s/v1/%s/invoices/v33'%(URL_PDF,ID_KEY)
+        chars = '0123456789'
+        secret_key = get_random_string(8, chars)
+        today = date.today()
+
+        invoice_id='%s-%s-%s_%s'%(today.year,today.month,today.day,secret_key)
+        concepto=[]
+        for  car in self.request.session["car1"][1]:
+            concepto.append({
+                    "cantidad":car['cantidad'],
+                    "clave_unidad": "E54",
+                    "clave":"78111500",
+                    "identificador": "6K9MVV MEDCONGRESS",
+                    "unidad": car['tipo_evento'],
+                    "descripcion": 'Pago del %s %s . '%(car['tipo_evento'],car['nombre_congreso']),
+                    "valor_unitario":round(car['precio'],2),
+                    "importe": round(car['pagar'],2),
+            })
+        
+        params={
+            # "openpay_transaction_id": self.request.GET['id'],
+            "subtotal": round(self.request.session["car1"][0]['cant'],2),
+        
+            "total": round(self.request.session["car1"][0]['cant'],2),
+            "tipo_de_cambio": 1,
+            "forma_pago": "04",
+            "hide_total_items": True,
+            "hide_total_taxes": True,
+            
+            "moneda": "MXN",
+            "conceptos": concepto,
+            "lugar_expedicion": "76090",
+        
+            
+            "impuestos_traslado": [],
+            "impuestos_retencion": [],
+        
+            "receptor": {
+                "nombre": self.request.user.first_name+' '+ self.request.user.last_name,
+                "rfc": self.request.POST["rfc"],
+                "email": self.request.user.email,
+                "uso_cfdi": "G03"
+            },
+            "invoice_id":invoice_id,
+            "metodo_pago": "PUE",
+            
+        }  
+        headers={'Content-type': 'application/json'}
+        response=requests.post(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(params),headers=headers)
+        response_dic=response.json()
+        # return HttpResponse(response)
+        if 'http_code' not in response_dic:
+            return HttpResponseRedirect(reverse('Factura',kwargs={'invoice': invoice_id}))
+        else:
+            self.request.session["error_facturacion"]= response_dic['description']
+            return HttpResponseRedirect(reverse('Error_facturacion'))
+        # 
+
+        # url1='https://sandbox-api.openpay.mx/v1/%s/invoices/v33/'%(ID_KEY)
+        # headers={'Content-type': 'application/json'}
+        # response2=requests.get(url=url1,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
+        # response_dic=response2.json()
+            
+        # para={
+        # "getUrls":True
+        # }
+        # url2='https://sandbox-api.openpay.mx/v1/%s/invoices/v33/%s/?getUrls=True'%(ID_KEY,response_dic[0]['uuid'])
+
+        # headers={'Content-type': 'application/json'}
+        # response2=requests.get(url=url2,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(para),headers=headers)
+        # response_d=response2.json()
+        # return HttpResponseRedirect( response_d['public_pdf_link'])
+
 
 @method_decorator(login_required,name='dispatch')   
 class Perfil(TemplateView):
@@ -132,7 +210,7 @@ class CongresoListView(ListView):
         id=[]
         for especialidad in especialidades:
             id.append(especialidad.pk)
-        print(id)
+        
         congreso=Congreso.objects.filter(especialidad__in=id,published=True)
         return self.render_to_response(self.get_context_data(object_list=congreso))
 
@@ -276,9 +354,9 @@ class CongresoDetail(TemplateView):
                 'id':ponente.id,
                 'id_user':ponente.user.pk,
                 'nombre': ponente.user.usuario.first_name,
-                'apellido': ponente.user.usuario.last_name ,# una relación a otro modelo
+                'apellido': ponente.user.usuario.last_name ,
                 'foto':ponente.user.foto,
-                'tipo':'Ponente',# la misma relación, otro campo
+                'tipo':'Ponente',
                 })
 
             prueba_taller=Taller.objects.filter(congreso=congreso.pk)
@@ -298,9 +376,9 @@ class CongresoDetail(TemplateView):
                     'id':ponente.id,
                     'id_user':ponente.user.pk,
                     'nombre': ponente.user.usuario.first_name,
-                    'apellido': ponente.user.usuario.last_name ,# una relación a otro modelo
+                    'apellido': ponente.user.usuario.last_name ,
                     'foto':ponente.user.foto,
-                    'tipo':'Ponente',# la misma relación, otro campo
+                    'tipo':'Ponente',
                     })
             
             bloques=Bloque.objects.filter(congreso=congreso.pk)
@@ -320,9 +398,9 @@ class CongresoDetail(TemplateView):
                     'id':moderador.id,
                     'id_user':moderador.user.pk,
                     'nombre': moderador.user.usuario.first_name,
-                    'apellido': moderador.user.usuario.last_name ,# una relación a otro modelo
+                    'apellido': moderador.user.usuario.last_name ,
                     'foto':moderador.user.foto,
-                    'tipo':'Moderador',# la misma relación, otro campo
+                    'tipo':'Moderador',
                     })
 
 
@@ -414,7 +492,7 @@ class CongresoCardForm(TemplateView):
                             "email" : self.request.user.email
                     },
                     "use_3d_secure":True,
-                    "redirect_url":'http://localhost:8000/ver_transaccion?factura=%s'%(),
+                    "redirect_url":'http://localhost:8000/ver_transaccion',
                     
                 }
 
@@ -424,7 +502,6 @@ class CongresoCardForm(TemplateView):
             response_dic=response.json()
             
             if response.status_code==200:
-                
                 return HttpResponseRedirect(response.json()['payment_method']['url']) 
             else:
                 self.request.session["error_opempay"]=response.json()['description']
@@ -552,6 +629,8 @@ class ViewError404(TemplateView):
 class ViewErrorOpenpay(TemplateView):
     template_name= 'MedCongressApp/Error_openpay.html' 
 ##### Error 404 #####
+class ViewErrorFact(TemplateView):
+    template_name= 'MedCongressApp/Error_Fact.html' 
 
 class ViewPonencia(TemplateView):
     template_name= 'MedCongressApp/view_ponencia.html' 
@@ -819,18 +898,43 @@ class GetCuestionario(TemplateView):
 
         return  HttpResponseRedirect(reverse('Resultado_Cuestionario',kwargs={'path': congreso.path}))
 
-# class GetFactura(TemplateView):
+class GetFactura(TemplateView):
    
-    # def get(self, request):
-        # para={
-        #     "getUrls":True
-        #     }
-        # url2='https://sandbox-api.openpay.mx/v1/%s/invoices/v33/%s/?getUrls=True'%(ID_KEY,response_dic[0]['uuid'])
+    def get(self, request,**kwargs):
 
-        # headers={'Content-type': 'application/json'}
-        # response2=requests.get(url=url2,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(para),headers=headers)
-        # response_d=response2.json()
-        # return HttpResponseRedirect( response_d['public_pdf_link'])
+        url1='https://sandbox-api.openpay.mx/v1/%s/invoices/v33/'%(ID_KEY)
+        headers={'Content-type': 'application/json'}
+        response=requests.get(url=url1,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
+        url1='https://sandbox-api.openpay.mx/v1/%s/invoices/v33/?id=%s'%(ID_KEY,self.kwargs.get('invoice'))
+        response_d=response.json()
+        if 'http_code' in response_d:
+            self.request.session["error_facturacion"]= response_d['description']
+            return HttpResponseRedirect(reverse('Error_facturacion'))
+        headers={'Content-type': 'application/json'}
+        response2=requests.get(url=url1,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
+        response_di=response2.json()
+        # return HttpResponse(response2)
+        if 'http_code' in response_di:
+            self.request.session["error_facturacion"]= response_di['description']
+            return HttpResponseRedirect(reverse('Error_facturacion'))
+        if response_di[0]['status']=='error':
+            self.request.session["error_facturacion"]= response_di[0]['message']
+            return HttpResponseRedirect(reverse('Error_facturacion'))
+        # return HttpResponse(response2)
+        para={
+            "getUrls":True
+            }
+        if 'uuid' not in response_di[0]:
+            return HttpResponseRedirect(reverse('Factura',kwargs={'invoice':self.kwargs.get('invoice') }))
+        url2='https://sandbox-dashboard.openpay.mx/v1/%s/invoices/v33/%s/?getUrls=True'%(ID_KEY,response_di[0]['uuid'])
+
+        headers={'Content-type': 'application/json'}
+        response3=requests.get(url=url2,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(para),headers=headers)
+        response_dic=response3.json()
+        if 'http_code' in response_dic:
+            self.request.session["error_facturacion"]= response_dic['description']
+            return HttpResponseRedirect(reverse('Error_facturacion'))
+        return HttpResponseRedirect( response_dic['public_pdf_link'])
 
 class SetConstancia(TemplateView):
 
@@ -957,82 +1061,19 @@ class VerTransaccion(TemplateView):
             to = self.request.user.email
             mail.send_mail(subject, plain_message, from_email, [to],html_message=html_message)
             ####END EMAIL ######
-            ######### Facturacion #############
-            if self.request.GET['factura']:
-                    url='https://%s/v1/%s/invoices/v33'%(URL_PDF,ID_KEY)
-
-
-                    concepto=[]
-                    for  car in self.request.session["cart"][1]:
-                        concepto.append({
-                                "cantidad":car['cantidad'],
-                                "clave_unidad": "E54",
-                                "clave":"78111500",
-                                "identificador": "6K9MVV MEDCONGRESS",
-                                "unidad": car['tipo_evento'],
-                                "descripcion": 'Pago del %s %s . '%(car['tipo_evento'],car['nombre_congreso']),
-                                "valor_unitario":round(car['precio'],2),
-                                "importe": round(car['pagar'],2),
-                        })
-                    
-                    params={
-                        "openpay_transaction_id": response_dic['order_id'],
-                        "subtotal": round(self.request.session["cart"][0]['cant'],2),
-                    
-                        "total": round(self.request.session["cart"][0]['cant'],2),
-                        "tipo_de_cambio": 1,
-                        "forma_pago": "04",
-                        "hide_total_items": True,
-                        "hide_total_taxes": True,
-                        
-                        "moneda": "MXN",
-                        "conceptos": concepto,
-                        "lugar_expedicion": "76090",
-                    
-                        
-                        "impuestos_traslado": [],
-                        "impuestos_retencion": [],
-                    
-                        "receptor": {
-                            "nombre": self.request.user.first_name+' '+ self.request.user.last_name,
-                            "rfc": request.POST["factura"],
-                            "email": self.request.user.email,
-                            "uso_cfdi": "G03"
-                        },
-                        
-                        "metodo_pago": "PUE",
-                        
-                    }  
-                    headers={'Content-type': 'application/json'}
-                    response1=requests.post(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(params),headers=headers)
-                    response_dic=response.json()
-                    url1='https://sandbox-api.openpay.mx/v1/%s/invoices/v33/'%(ID_KEY)
-    
-                    headers={'Content-type': 'application/json'}
-                    response1=requests.get(url=url1,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
-                    response_dic=response1.json()
-                    para={
-                    "getUrls":True
-                    }
-                    url2='https://sandbox-api.openpay.mx/v1/%s/invoices/v33/%s/?getUrls=True'%(ID_KEY,response_dic[0]['uuid'])
-
-                    headers={'Content-type': 'application/json'}
-                    response2=requests.get(url=url2,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(para),headers=headers)
-                    response_d=response2.json()
-                    HttpResponseRedirect( response_d['public_pdf_link'])
-             ######### END Facturacion #############
+            
             for cart in self.request.session["cart"][1]:
                 if str(cart['tipo_evento']) == 'Congreso':
                     congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
                     categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                    pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=self.request.GET['id'],uuid_factura=response_dic[0]['uuid'])
+                    pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=self.request.GET['id'])
                     pagar_congreso.save()
                 if str(cart['tipo_evento']) == 'Taller':
                     taller=Taller.objects.filter(id=cart['id_congreso']).first()
                     categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                    pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dict['id'],uuid_factura=response_dic[0]['uuid'])
+                    pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dict['id'])
                     pagar_congreso.save()
-            return HttpResponseRedirect(reverse('transaccion_exitosa',kwargs={'uuid': response_dic[0]['uuid']} ))
+            return HttpResponseRedirect(reverse('transaccion_exitosa' ))
         if response_dict['status'] =="failed": 
             if response_dict['error_code'] == 3001:
                 self.request.session["error_opempay"]='La tarjeta fue rechazada.'

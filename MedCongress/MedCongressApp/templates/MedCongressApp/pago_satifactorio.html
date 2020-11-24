@@ -7,6 +7,40 @@ Transaccion Exitosa
 <div class="sub-header">
     <!-- SUB HEADER -->
 </div>
+<div class="modal fade" id="my" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Entre su RFC</h4>
+            </div>
+            <form action="" method="POST">
+                {% csrf_token %}
+            <div class="modal-body">
+                
+                <div class=" ">
+                    <div id="factura" >
+                        <div class="form-group">
+                            <label>RFC</label>
+
+                            <input type="text" id="rfc" name="rfc">
+
+                        </div>
+
+                    </div>
+
+                </div>
+           
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-default" id="enviar" >Descargar Factura</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+            </div> </form>
+        </div>
+    </div>
+</div>
 <div class="content">
     <!--Kode-our-speaker-strip start-->
     <div class="Kode-page-heading">
@@ -42,13 +76,70 @@ Transaccion Exitosa
                         <h4>"Ahora puede acceder a sus eventos comprados."</h4> <br><h6> El comprobante de pago han sido enviados al correo electrónico de su cuenta, en caso de cualquier incidente contactar a <a
                             href="mailto:soporte@medcongress.com.mx">soporte@medcongress.com.mx </a>"</h6>
                         <p></p>
-                      
+                        <p></p>
+                        <h5 style="margin-top: px;"><b>Detalle de la Orden </b></h5>
+
+
+
+                        <table cellspacing="0" border="1" class="table table-responsive">
+                        
+                                <tr style="background-color:#d4d1d1;"> 
+                                    <th style="padding: 10px;" >#</th>
+                                    <th style="padding: 10px;">Evento</th>
+                                    <th >Nombre</th>
+                                    <th>Cat. de Pago</th>
+                                    <th>Precio</th>
+                                    <th >Cant.</th>
+                                    <th >A pagar</th>
+                                </tr>
+                        
+                            <tbody>
+                                
+                                {%for ca in car.1 %}
+                                <tr>
+                                    <th scope="row">{{forloop.counter}}</th>
+                                    <td style="padding: 10px;">{{ca.tipo_evento}}</td>
+                                    <td style="padding: 10px;">{{ca.nombre_congreso}}</td>
+                                    <td style="padding: 10px;">{{ca.nombre_cat_pago}}</td>
+                                    <td style="padding: 10px;">${{ca.precio}}</td>
+                                    <td style="padding: 10px;">{{ca.cantidad}}</td>
+                                    <td style="padding: 10px;">${{ca.pagar|floatformat:2}}</td>
+                                  
+                                </tr>
+                                {%endfor%}
+                                <tr style="background-color: slategray;">
+                                    <th scope="row" colspan="6">Total a pagar</th>
+                                    <td><b> ${{car.0.cant|floatformat:2}}</b></td>
+                                    
+                                        
+                                </tr>
+                             
+                                
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <a href="{%url 'Factura' %}" class="btn btn-primary"><i class="la la-donw"></i> Descargar Factura </a>
+                
+                <a  class="btn btn-primary" data-toggle="modal" data-target="#my">Obtener Factura </a>
             </div>
         </div>	
     </div>
 <!--KODE EVENT BLOG 2 START-->
 </div>
+{%endblock%}
+
+{%block script%}
+<script>
+ $(document).ready(function () {
+$('#enviar').on('click', function (event) {
+
+valor=$("#rfc").val()
+if (!valor.match(/[A-Z,Ñ,&]{3,4}[0-9]{2}[0-1][0-9][0-3][0-9][A-Z,0-9]?[A-Z,0-9]?[0-9,A-Z]?/))
+ {
+   alert("Esto no es un numero RFC");
+return false;
+}
+});
+});
+</script>
 {%endblock%}

@@ -166,28 +166,7 @@ Efectuar Pago
                                     </div>
 
                                 </div>
-                                <div class=" col-sm-6">
-                                    <div class="form-group">
-                                        <div class="">
-                                            <label> Desea Obtener una Factura? </label><input id="pol" name="factura" type="checkbox"
-                                                class="btn btn-primary" style="margin: 10px 10px;">
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class=" col-sm-6">
-                                    <div id="factura" style="display: none; margin-bottom: 20px;">
-                                        <div class="form-group">
-                                            <label>RFC</label>
-
-                                            <input type="text" id="rfc" name="rfc">
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
+                                
                             </div>
                             <div class="row">
                                 <div class=" col-sm-6" >
@@ -252,27 +231,7 @@ Efectuar Pago
     <script type="text/javascript">
         $(document).ready(function () {
 
-            $('#pol').change(function () {
-            if ($('#pol').prop('checked')) {
-                $("#factura").show();
-                $("#factura").attr('required', 'True')
-
-            }
-            else {
-                $("#factura").hide();
-                $("#factura").removeAttr('required')
-            }
-
-        });
-        $('#pol').ready(function () {
-            if ($('#pol').prop('checked')) {
-                $("#factura").show();
-            }
-            else {
-                $("#factura").hide();
-            }
-
-        });
+           
         
             $('#numero1').keyup(function () {
 
@@ -305,7 +264,9 @@ Efectuar Pago
             const csrftoken = getCookie('csrftoken');
             $('#pay-button').on('click', function (event) {
 
-
+              
+                  
+                    
                 event.preventDefault();
                 $("#pay-button").prop("disabled", true);
                 OpenPay.token.extractFormAndCreate('payment-form', sucess_callbak, error_callbak);

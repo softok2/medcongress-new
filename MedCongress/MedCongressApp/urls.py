@@ -2,7 +2,9 @@ from django.contrib import admin
 from django.urls import path
 from .views import (Home,CongresoListView,CongresoDetail,CongresoCardForm,PerfilUserCreate,
 ViewErrorOpenpay,PagarEfectivo,ViewError404,ViewPonencia,EspecialdiadesAutocomplete,
-AddCart,AddCartTaller,DeletedCart,ConfCart,AvisoPrivacidad,HabilitarUser,Perfil,PagoExitoso,Email,GetPerfil,GetCuestionario,SetConstancia,EvaluarPonencia,Resultado_Cuestionario,Get_Constancia,VerTransaccion)
+AddCart,AddCartTaller,DeletedCart,ConfCart,AvisoPrivacidad,HabilitarUser,Perfil,PagoExitoso,Email,GetPerfil,
+GetCuestionario,SetConstancia,EvaluarPonencia,Resultado_Cuestionario,Get_Constancia,VerTransaccion,GetFactura,
+ViewErrorFact)
 
 urlpatterns = [
     
@@ -14,7 +16,9 @@ urlpatterns = [
     path('view_ponencia/<str:path>', ViewPonencia.as_view(), name='View_ponencia'),
     path('error404', ViewError404.as_view(), name='Error404'),
     path('error_openpay', ViewErrorOpenpay.as_view(), name='Error_openpay'),
+    path('error_facturacion', ViewErrorFact.as_view(), name='Error_facturacion'),
     path('pagar_efectivo', PagarEfectivo.as_view(), name='Pagar_efectivo'),
+    
     path('especialidades_autocomp', EspecialdiadesAutocomplete , name='Especialidades_autocomp'),
     path('add_cart', AddCart.as_view() , name='Add_cart'),
     path('add_cart_taller', AddCartTaller.as_view() , name='Add_cart_taller'),
@@ -25,9 +29,9 @@ urlpatterns = [
     # path('confic_email',ConfigEmail.as_view() , name='confic_email'),
     path('habilitar_user/<str:token>',HabilitarUser.as_view() , name='habilitar_user'),
     path('perfil',Perfil.as_view() , name='perfil'),
-    path('transaccion_exitosa/<str:uuid>',PagoExitoso.as_view() , name='transaccion_exitosa'),
+    path('transaccion_exitosa',PagoExitoso.as_view() , name='transaccion_exitosa'),
     path('get_perfil', GetPerfil.as_view() , name='GetPerfil'),
-    # path('get_factura', GetFactura.as_view , name='Factura'),
+    path('get_factura/<str:invoice>', GetFactura.as_view() , name='Factura'),
     path('cuestionario/congreso/<str:path>',GetCuestionario.as_view() , name='Cuestionario'),
     path('constancia/congreso/<str:path>',SetConstancia.as_view() , name='Constancia'),
     path('evaluar/ponencia',EvaluarPonencia.as_view() , name='EvaluarPonencia'),
