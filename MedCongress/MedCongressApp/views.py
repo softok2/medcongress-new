@@ -414,7 +414,7 @@ class CongresoCardForm(TemplateView):
                             "email" : self.request.user.email
                     },
                     "use_3d_secure":True,
-                    "redirect_url":'http://localhost:8000/ver_transaccion',
+                    "redirect_url":'http://localhost:8000/ver_transaccion?factura=%s'%(),
                     
                 }
 
@@ -424,68 +424,7 @@ class CongresoCardForm(TemplateView):
             response_dic=response.json()
             
             if response.status_code==200:
-                if request.POST["factura"]:
-                    url='https://%s/v1/%s/invoices/v33'%(URL_PDF,ID_KEY)
-
-
-                    concepto=[]
-                    for  car in self.request.session["cart"][1]:
-                        concepto.append({
-                                "cantidad":car['cantidad'],
-                                "clave_unidad": "E54",
-                                "clave":"78111500",
-                                "identificador": "6K9MVV MEDCONGRESS",
-                                "unidad": car['tipo_evento'],
-                                "descripcion": 'Pago del %s %s . '%(car['tipo_evento'],car['nombre_congreso']),
-                                "valor_unitario":round(car['precio'],2),
-                                "importe": round(car['pagar'],2),
-                        })
-                    
-                    params={
-                        "openpay_transaction_id": response_dic['order_id'],
-                        "subtotal": round(self.request.session["cart"][0]['cant'],2),
-                    
-                        "total": round(self.request.session["cart"][0]['cant'],2),
-                        "tipo_de_cambio": 1,
-                        "forma_pago": "04",
-                        "hide_total_items": True,
-                        "hide_total_taxes": True,
-                        
-                        "moneda": "MXN",
-                        "conceptos": concepto,
-                        "lugar_expedicion": "76090",
-                    
-                        
-                        "impuestos_traslado": [],
-                        "impuestos_retencion": [],
-                    
-                        "receptor": {
-                            "nombre": self.request.user.first_name+' '+ self.request.user.last_name,
-                            "rfc": request.POST["factura"],
-                            "email": self.request.user.email,
-                            "uso_cfdi": "G03"
-                        },
-                        
-                        "metodo_pago": "PUE",
-                        
-                    }  
-                    headers={'Content-type': 'application/json'}
-                    response1=requests.post(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(params),headers=headers)
-                    response_dic=response.json()
-                    url1='https://sandbox-api.openpay.mx/v1/%s/invoices/v33/'%(ID_KEY)
-    
-                    headers={'Content-type': 'application/json'}
-                    response1=requests.get(url=url1,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
-                    response_dic=response1.json()
-                    para={
-                    "getUrls":True
-                    }
-                    url2='https://sandbox-api.openpay.mx/v1/%s/invoices/v33/%s/?getUrls=True'%(ID_KEY,response_dic[0]['uuid'])
-
-                    headers={'Content-type': 'application/json'}
-                    response2=requests.get(url=url2,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(para),headers=headers)
-                    response_d=response2.json()
-                    HttpResponseRedirect( response_d['public_pdf_link'])
+                
                 return HttpResponseRedirect(response.json()['payment_method']['url']) 
             else:
                 self.request.session["error_opempay"]=response.json()['description']
@@ -1019,20 +958,68 @@ class VerTransaccion(TemplateView):
             mail.send_mail(subject, plain_message, from_email, [to],html_message=html_message)
             ####END EMAIL ######
             ######### Facturacion #############
-            url1='https://sandbox-api.openpay.mx/v1/%s/invoices/v33/'%(ID_KEY)
-    
-            headers={'Content-type': 'application/json'}
-            response1=requests.get(url=url1,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
-            response_dic=response1.json()
-            para={
-            "getUrls":True
-            }
-            url2='https://sandbox-api.openpay.mx/v1/%s/invoices/v33/%s/?getUrls=True'%(ID_KEY,response_dic[0]['uuid'])
+            if self.request.GET['factura']:
+                    url='https://%s/v1/%s/invoices/v33'%(URL_PDF,ID_KEY)
 
-            headers={'Content-type': 'application/json'}
-            response2=requests.get(url=url2,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(para),headers=headers)
-            response_d=response2.json()
-            return HttpResponseRedirect( response_d['public_pdf_link'])
+
+                    concepto=[]
+                    for  car in self.request.session["cart"][1]:
+                        concepto.append({
+                                "cantidad":car['cantidad'],
+                                "clave_unidad": "E54",
+                                "clave":"78111500",
+                                "identificador": "6K9MVV MEDCONGRESS",
+                                "unidad": car['tipo_evento'],
+                                "descripcion": 'Pago del %s %s . '%(car['tipo_evento'],car['nombre_congreso']),
+                                "valor_unitario":round(car['precio'],2),
+                                "importe": round(car['pagar'],2),
+                        })
+                    
+                    params={
+                        "openpay_transaction_id": response_dic['order_id'],
+                        "subtotal": round(self.request.session["cart"][0]['cant'],2),
+                    
+                        "total": round(self.request.session["cart"][0]['cant'],2),
+                        "tipo_de_cambio": 1,
+                        "forma_pago": "04",
+                        "hide_total_items": True,
+                        "hide_total_taxes": True,
+                        
+                        "moneda": "MXN",
+                        "conceptos": concepto,
+                        "lugar_expedicion": "76090",
+                    
+                        
+                        "impuestos_traslado": [],
+                        "impuestos_retencion": [],
+                    
+                        "receptor": {
+                            "nombre": self.request.user.first_name+' '+ self.request.user.last_name,
+                            "rfc": request.POST["factura"],
+                            "email": self.request.user.email,
+                            "uso_cfdi": "G03"
+                        },
+                        
+                        "metodo_pago": "PUE",
+                        
+                    }  
+                    headers={'Content-type': 'application/json'}
+                    response1=requests.post(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(params),headers=headers)
+                    response_dic=response.json()
+                    url1='https://sandbox-api.openpay.mx/v1/%s/invoices/v33/'%(ID_KEY)
+    
+                    headers={'Content-type': 'application/json'}
+                    response1=requests.get(url=url1,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
+                    response_dic=response1.json()
+                    para={
+                    "getUrls":True
+                    }
+                    url2='https://sandbox-api.openpay.mx/v1/%s/invoices/v33/%s/?getUrls=True'%(ID_KEY,response_dic[0]['uuid'])
+
+                    headers={'Content-type': 'application/json'}
+                    response2=requests.get(url=url2,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(para),headers=headers)
+                    response_d=response2.json()
+                    HttpResponseRedirect( response_d['public_pdf_link'])
              ######### END Facturacion #############
             for cart in self.request.session["cart"][1]:
                 if str(cart['tipo_evento']) == 'Congreso':
