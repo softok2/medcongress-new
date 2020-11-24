@@ -398,7 +398,7 @@ class CongresoCardForm(TemplateView):
             params= {
                     "source_id" : request.POST["token_id"],
                     "method" : "card",
-                    "amount" : self.request.session["cart"][0]['cant'],
+                    "amount" : 500,
                     "currency" : 'MXN',
                     "description" :  descripcion,
                     "device_session_id" : request.POST["deviceIdHiddenFieldName"],
@@ -424,6 +424,86 @@ class CongresoCardForm(TemplateView):
                 to = self.request.user.email
                 mail.send_mail(subject, plain_message, from_email, [to],html_message=html_message)
                 ####END EMAIL ######
+                # url='https://sandbox-api.openpay.mx/v1/%s/invoices/v33'%(ID_KEY)
+                params={
+                    "openpay_transaction_id":response_dic['order_id'],
+                    "subtotal": 2001.75,
+                
+                    "total": 2322.03,
+                    "tipo_de_cambio": 1,
+                    "forma_pago": "04",
+                    "hide_total_items": True,
+                    "hide_total_taxes": True,
+                    
+                    "moneda": "MXN",
+                    "conceptos": [
+                        {
+                            "clave": "78111500",
+                            "clave_unidad": "E54",
+                            "identificador": "6K9MVV CUAHUTEMOC BLANCO",
+                            "cantidad": 1,
+                            "unidad": "Viaje",
+                            "descripcion": "TRANSPORTACION AEREA DE QRO A MTY",
+                            "valor_unitario": 1744,
+                            "importe": 1744,
+                            "traslados": [
+                                {
+                                    "impuesto": "002",
+                                    "base": 1744,
+                                    "tipo_factor": "Tasa",
+                                    "tasa": 0.16,
+                                    "importe": 279.04
+                                }
+                            ]
+                        },
+                        {
+                            "clave": "78111500",
+                            "clave_unidad": "E54",
+                            "identificador": "6K9MVV CUAHUTEMOC BLANCO",
+                            "cantidad": 1,
+                            "unidad": "Viaje",
+                            "descripcion": "SEGURO DE CANCELACION",
+                            "valor_unitario": 257.75,
+                            "importe": 257.75,
+                            "traslados": [
+                                {
+                                    "impuesto": "002",
+                                    "base": 257.75,
+                                    "tipo_factor": "Tasa",
+                                    "tasa": 0.16,
+                                    "importe": 41.24
+                                }
+                            ]
+                        }
+                    ],
+                    "lugar_expedicion": "76090",
+                    "observaciones": "Si desea obtener su factura por el servicio de Asistencia TAR, ingrese a la siguiente dirección:\nhttp://masistencia.emitecliente.mx/index.php/clientefacturacion/generarFactura\nSi lo desea puede ingresar a esta dirección desde nuestro portal.",
+                    
+                    "impuestos_traslado": [
+                        {
+                            "impuesto": "002",
+                            "tasa": 0.16,
+                            "importe": 320.28,
+                            "tipo_factor": "Tasa"
+                        }
+                    ],
+                    "impuestos_retencion": [],
+                
+                    "receptor": {
+                        "nombre": "Alberto Montellano Sandoval",
+                        "rfc": "MOSA8311152G0",
+                        "email": "alberto.montellano@tcpip.tech",
+                        "uso_cfdi": "G03"
+                    },
+                    
+                    "metodo_pago": "PUE",
+                    
+                }  
+                headers={'Content-type': 'application/json'}
+                response=requests.post(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(params),headers=headers)
+                return HttpResponseRedirect(reverse('Factura'))
+
+    
                 for cart in self.request.session["cart"][1]:
                     if str(cart['tipo_evento']) == 'Congreso':
                         congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
@@ -837,89 +917,94 @@ class GetCuestionario(TemplateView):
 
 def GetFactura(request):
    
-    url='https://sandbox-api.openpay.mx/v1/%s/invoices/v33'%(ID_KEY)
-    params={
-        "openpay_transaction_id":'tr5h2zdvk1ju0jflmpwk',
-        "subtotal": 2001.75,
+    # url='https://sandbox-api.openpay.mx/v1/%s/invoices/v33'%(ID_KEY)
+    # params={
+    #     "openpay_transaction_id":'tr5h2zdvk1ju0jflmpwk',
+    #     "subtotal": 2001.75,
        
-        "total": 2322.03,
-        "tipo_de_cambio": 1,
-        "forma_pago": "04",
-        "hide_total_items": True,
-        "hide_total_taxes": True,
+    #     "total": 2322.03,
+    #     "tipo_de_cambio": 1,
+    #     "forma_pago": "04",
+    #     "hide_total_items": True,
+    #     "hide_total_taxes": True,
         
-        "moneda": "MXN",
-        "conceptos": [
-            {
-                "clave": "78111500",
-                "clave_unidad": "E54",
-                "identificador": "6K9MVV CUAHUTEMOC BLANCO",
-                "cantidad": 1,
-                "unidad": "Viaje",
-                "descripcion": "TRANSPORTACION AEREA DE QRO A MTY",
-                "valor_unitario": 1744,
-                "importe": 1744,
-                "traslados": [
-                    {
-                        "impuesto": "002",
-                        "base": 1744,
-                        "tipo_factor": "Tasa",
-                        "tasa": 0.16,
-                        "importe": 279.04
-                    }
-                ]
-            },
-            {
-                "clave": "78111500",
-                "clave_unidad": "E54",
-                "identificador": "6K9MVV CUAHUTEMOC BLANCO",
-                "cantidad": 1,
-                "unidad": "Viaje",
-                "descripcion": "SEGURO DE CANCELACION",
-                "valor_unitario": 257.75,
-                "importe": 257.75,
-                "traslados": [
-                    {
-                        "impuesto": "002",
-                        "base": 257.75,
-                        "tipo_factor": "Tasa",
-                        "tasa": 0.16,
-                        "importe": 41.24
-                    }
-                ]
-            }
-        ],
-        "lugar_expedicion": "76090",
-        "observaciones": "Si desea obtener su factura por el servicio de Asistencia TAR, ingrese a la siguiente dirección:\nhttp://masistencia.emitecliente.mx/index.php/clientefacturacion/generarFactura\nSi lo desea puede ingresar a esta dirección desde nuestro portal.",
+    #     "moneda": "MXN",
+    #     "conceptos": [
+    #         {
+    #             "clave": "78111500",
+    #             "clave_unidad": "E54",
+    #             "identificador": "6K9MVV CUAHUTEMOC BLANCO",
+    #             "cantidad": 1,
+    #             "unidad": "Viaje",
+    #             "descripcion": "TRANSPORTACION AEREA DE QRO A MTY",
+    #             "valor_unitario": 1744,
+    #             "importe": 1744,
+    #             "traslados": [
+    #                 {
+    #                     "impuesto": "002",
+    #                     "base": 1744,
+    #                     "tipo_factor": "Tasa",
+    #                     "tasa": 0.16,
+    #                     "importe": 279.04
+    #                 }
+    #             ]
+    #         },
+    #         {
+    #             "clave": "78111500",
+    #             "clave_unidad": "E54",
+    #             "identificador": "6K9MVV CUAHUTEMOC BLANCO",
+    #             "cantidad": 1,
+    #             "unidad": "Viaje",
+    #             "descripcion": "SEGURO DE CANCELACION",
+    #             "valor_unitario": 257.75,
+    #             "importe": 257.75,
+    #             "traslados": [
+    #                 {
+    #                     "impuesto": "002",
+    #                     "base": 257.75,
+    #                     "tipo_factor": "Tasa",
+    #                     "tasa": 0.16,
+    #                     "importe": 41.24
+    #                 }
+    #             ]
+    #         }
+    #     ],
+    #     "lugar_expedicion": "76090",
+    #     "observaciones": "Si desea obtener su factura por el servicio de Asistencia TAR, ingrese a la siguiente dirección:\nhttp://masistencia.emitecliente.mx/index.php/clientefacturacion/generarFactura\nSi lo desea puede ingresar a esta dirección desde nuestro portal.",
         
-        "impuestos_traslado": [
-            {
-                "impuesto": "002",
-                "tasa": 0.16,
-                "importe": 320.28,
-                "tipo_factor": "Tasa"
-            }
-        ],
-        "impuestos_retencion": [],
+    #     "impuestos_traslado": [
+    #         {
+    #             "impuesto": "002",
+    #             "tasa": 0.16,
+    #             "importe": 320.28,
+    #             "tipo_factor": "Tasa"
+    #         }
+    #     ],
+    #     "impuestos_retencion": [],
        
-        "receptor": {
-            "nombre": "Alberto Montellano Sandoval",
-            "rfc": "MOSA8311152G0",
-            "email": "alberto.montellano@tcpip.tech",
-            "uso_cfdi": "G03"
-        },
-        "invoice_id":'12345',
-        "metodo_pago": "PUE",
+    #     "receptor": {
+    #         "nombre": "Alberto Montellano Sandoval",
+    #         "rfc": "MOSA8311152G0",
+    #         "email": "alberto.montellano@tcpip.tech",
+    #         "uso_cfdi": "G03"
+    #     },
         
-    }  
-    headers={'Content-type': 'application/json'}
-    response=requests.post(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(params),headers=headers)
-    response_dic=response.json()
+    #     "metodo_pago": "PUE",
+        
+    # }  
+    # headers={'Content-type': 'application/json'}
+    # response=requests.post(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(params),headers=headers)
+    # response_dic=response.json()
 
-    url1='https://sandbox-api.openpay.mx/v1/%s/invoices/v33/%s'%(ID_KEY,response_dic['request_id'])
-    print(url1)
+    # para={
+    # "getUrls":True
+    # }
+# D3342DF4-1E21-4BdB-AE53-EF317513E83A
+    url1='https://sandbox-api.openpay.mx/v1/%s/invoices/v33/?getUrls=True'%(ID_KEY)
+    
     headers={'Content-type': 'application/json'}
     response1=requests.get(url=url1,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
+    response_dic=response1.json()
     return HttpResponse(response1)
 
 
