@@ -890,12 +890,37 @@ class GetCuestionario(TemplateView):
         
         preguntas=self.request.POST[resp]
         if total/con*100>congreso.aprobado:
-
+            ##############
+            nombre='%s %s'%(self.request.user.first_name,self.request.user.last_name)
+            congreso_t= congreso.titulo
+            cont=len(nombre)
+            comienzo=630-(cont/2*18)
+            cont=len(congreso_t)
+            comienzo_t=640-(cont/2*10)
+            base=Image.open('MedCongressApp/static/%s'%(congreso.foto_constancia)).convert('RGBA')
+            text=Image.new('RGBA',base.size,(255,255,255,0))
+            nombre_font=ImageFont.truetype('bahnschrift.ttf',40)
+            congreso_font=ImageFont.truetype('calibri.ttf',25)
+            fecha_font=ImageFont.truetype('calibri.ttf',25)
+            # cong.set_variation_by_name('Italic')
+            d=ImageDraw.Draw(text)
+            d.text((comienzo,400),nombre,font=nombre_font,fill=(89, 85, 85))
+            d.text((430,470),'Ha concluido satisfactoriamente el Congreso',font=congreso_font,fill=(94,196,234,255))
+            d.text((comienzo_t,500),congreso_t,font=congreso_font,fill=(14,138,184,255))
+            today = date.today()
+            d.text((555,775),'%s/%s/%s'%(today.day,today.month,today.year),font=fecha_font,fill=(89, 85, 85))
+            out=Image.alpha_composite(base,text)
+            tit=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
+        
+            nombre_img='constancia_%s_%s'%(self.request.user.first_name,tit)  
+            out.save('MedCongressApp/static/congreso/img_constancia/%s.png'%(nombre_img))
+        ##########################
             constancias=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario)
             for constancia in constancias:
                 constancia.is_constancia=True
                 constancia.fecha_constancia=datetime.now()
                 constancia.cuestionario=(','.join(cuestionario))
+                constancia.foto_constancia='congreso/img_constancia/%s.png'%(nombre_img)
                 constancia.save()
 
         return  HttpResponseRedirect(reverse('Resultado_Cuestionario',kwargs={'path': congreso.path}))
@@ -945,7 +970,7 @@ class SetConstancia(TemplateView):
         
         context = super(SetConstancia, self).get_context_data(**kwargs)
         congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
-        constancias=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario,is_constancia=True)
+        constancias=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario)
         context['congreso']=congreso
         nombre='%s %s'%(self.request.user.first_name,self.request.user.last_name)
         congreso_t= congreso.titulo
@@ -967,12 +992,13 @@ class SetConstancia(TemplateView):
         out=Image.alpha_composite(base,text)
         tit=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
        
-        nombre_img='constancia_%s_%s'%(self.request.user.first_name,tit) 
+        nombre_img='constancia_%s_%s'%(self.request.user.first_name,tit)  
+        out.save('MedCongressApp/static/congreso/img_constancia/%s.png'%(nombre_img))
         for constancia in constancias:
             constancia.foto_constancia='congreso/img_constancia/%s.png'%(nombre_img)
             constancia.save()
 
-        out.save('MedCongressApp/static/congreso/img_constancia/%s.png'%(nombre_img))
+       
 
         return context
 
