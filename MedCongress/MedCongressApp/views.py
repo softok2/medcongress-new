@@ -285,6 +285,7 @@ class CongresoDetail(TemplateView):
                         'id':ponencia.id,
                         'path':ponencia.path,
                         'titulo': ponencia.titulo,
+                        'ver_ponencia':ponencia.is_info,
                         'fecha_inicio': ponencia.fecha_inicio ,# una relación a otro modelo
                         'detalle':ponencia.detalle ,
                         'ponentes':Ponente.objects.filter(ponencia_ponente__pk=ponencia.id).distinct() ,
@@ -315,6 +316,7 @@ class CongresoDetail(TemplateView):
                     result.append({
                     'id':ponencia.id,
                     'path':ponencia.path,
+                    'ver_ponencia':ponencia.is_info,
                     'titulo': ponencia.titulo,
                     'fecha_inicio': ponencia.fecha_inicio ,# una relación a otro modelo
                     'detalle':ponencia.detalle ,
@@ -1066,12 +1068,12 @@ class VerTransaccion(TemplateView):
                 if str(cart['tipo_evento']) == 'Congreso':
                     congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
                     categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                    pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=self.request.GET['id'])
+                    pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=self.request.GET['id'],is_pagado=True)
                     pagar_congreso.save()
                 if str(cart['tipo_evento']) == 'Taller':
                     taller=Taller.objects.filter(id=cart['id_congreso']).first()
                     categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                    pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dict['id'])
+                    pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dict['id'],is_pagado=True)
                     pagar_congreso.save()
             return HttpResponseRedirect(reverse('transaccion_exitosa' ))
         if response_dict['status'] =="failed": 

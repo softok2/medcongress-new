@@ -404,6 +404,7 @@ class Ponencia(models.Model):
     meta_keywords=models.TextField(max_length=250,null=True)
     meta_og_imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='metas',blank=True, null=True )
     meta_title=models.CharField(max_length=250,null=True)
+    is_info=models.BooleanField(null=True)
     
     class Meta:
         verbose_name='ponencia'

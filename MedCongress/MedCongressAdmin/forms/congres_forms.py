@@ -102,7 +102,7 @@ class PonenciaForm(forms.ModelForm):
     published=forms.BooleanField(label='Publicado',required=False)
     class Meta:
         model=Ponencia
-        fields=['titulo','duracion','detalle','fecha_inicio','imagen','published','cod_video','congreso','bloque']
+        fields=['titulo','duracion','detalle','fecha_inicio','imagen','published','cod_video','congreso','bloque','is_info']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
