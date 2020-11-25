@@ -14,7 +14,7 @@ Registrarse
 
 {%endblock%}
 {% block contenido %}
-<div class="kode-event-time" >
+<div class="kode-event-time">
 
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
@@ -43,12 +43,12 @@ Registrarse
                     <h4 class="modal-title" id="myModalLabel">Políticas de privacidad</h4>
                 </div>
                 <div class="modal-body">
-                  
-<div style="padding-left: 10px;">  {{aviso_privacidad.aviso_privacidad|safe}}</div>
-                        
-                        
-                        <!--KODE EVENT BLOG 2 START-->
-                     
+
+                    <div style="padding-left: 10px;"> {{aviso_privacidad.aviso_privacidad|safe}}</div>
+
+
+                    <!--KODE EVENT BLOG 2 START-->
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -57,9 +57,20 @@ Registrarse
             </div>
         </div>
     </div>
-    <div class="kode-event-contact" style=" background:url({% static 'MedCongressApp/images/slide11.png'%}) no-repeat 50%  0;background-attachment: fixed; ">
+    <div class="kode-event-contact"
+        style=" background:url({% static 'MedCongressApp/images/slide11.png'%}) no-repeat 50%  0;background-attachment: fixed; ">
         <div class="container">
 
+            {%if update%}
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="kf_heading_3" style="margin-top: 70px;">
+                        <h2>Actualizar Perfil en MedCongress</h2>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+            {%else%}
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="kf_heading_3" style="margin-top: 70px;">
@@ -68,10 +79,11 @@ Registrarse
                     </div>
                 </div>
             </div>
+            {%endif%}
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
-                    <form class="contactusform" action="" method="post">
+                    <form class="contactusform" action="" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="row">
                             <div class="col-sm-3 ">
@@ -117,6 +129,9 @@ Registrarse
 
                         </div>
                         <div class="row">
+                            {%if update%}
+                            <input type="hidden" value="True" name="update">
+                            {%else%}
                             <div class="col-sm-3 ">
                                 <div class="form-group">
                                     <label
@@ -139,7 +154,7 @@ Registrarse
 
                                 </div>
                             </div>
-
+                            {%endif%}
 
                             <div class="col-sm-3 ">
                                 <div class="form-group">
@@ -170,8 +185,7 @@ Registrarse
                                 <div class="form-group">
                                     <label
                                         for="{{form.categoria.nombre.id_for_label }}"><b>{{form.categoria.nombre.label }}</b>{% if form.categoria.nombre.errors %}
-                                        <span
-                                            style="font-size: 15px; color: red;">{{ form.categoria.nombre.errors }}
+                                        <span style="font-size: 15px; color: red;">{{ form.categoria.nombre.errors }}
                                         </span>{% endif %}</label>
                                     {{form.categoria.nombre}}
                                 </div>
@@ -263,9 +277,152 @@ Registrarse
 
 
                         </div>
+                        {%if update%}
+                        <div class="row">
+                            <div class="col-sm-8" >
+                                <div class="form-group">
+                                    <label
+                                        for="{{form.perfiluser.puesto.id_for_label }}"><b>Puesto Actual</b>{% if form.perfiluser.puesto.errors %}
+                                        <span
+                                            style="font-size: 15px; color: red;">{{ form.perfiluser.puesto.errors }}
+                                        </span>{% endif %}</label>
+
+                                    {{form.perfiluser.puesto }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12" >
+                                <div class="form-group">
+                                    <label
+                                        for="{{form.perfiluser.detalle.id_for_label }}"><b>Logros Académicos</b>{% if form.perfiluser.detalle.errors %}
+                                        <span
+                                            style="font-size: 15px; color: red;">{{ form.perfiluser.detalle.errors }}
+                                        </span>{% endif %}</label>
+
+                                    {{form.perfiluser.detalle }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12" >
+                                <div class="form-group">
+                                    <label
+                                        for="{{form.perfiluser.publicaciones.id_for_label }}"><b>Publicaciones</b>{% if form.perfiluser.publicaciones.errors %}
+                                        <span
+                                            style="font-size: 15px; color: red;">{{ form.perfiluser.publicaciones.errors }}
+                                        </span>{% endif %}</label>
+
+                                    {{form.perfiluser.publicaciones }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12" >
+                                <div class="form-group">
+                                    <label
+                                        for="{{form.perfiluser.datos_interes.id_for_label }}"><b>Otros Datos de Interes</b>{% if form.perfiluser.datos_interes.errors %}
+                                        <span
+                                            style="font-size: 15px; color: red;">{{ form.perfiluser.datos_interes.errors }}
+                                        </span>{% endif %}</label>
+
+                                    {{form.perfiluser.datos_interes }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3 ">
+                                <div class="form-group">
+                                    {%if imagen_seg_url%}	
+                                    <label ><b>Imagen Actual </b> </label>		
+                                    <figure class="col-lg-3 col-md-6 col-12" itemprop="associatedMedia" itemscope="" ></figure>
+                <a href="{{imagen_seg_url}}" itemprop="contentUrl" data-size="480x360">
+                    <img class="img-thumbnail img-fluid" src="{{imagen_seg_url}}" itemprop="thumbnail" alt="Image description">
+                </a> 
+                
+              </figure>
+
+                                    <label for=" " style="margin-top: 20px;"> <b>Insertar Nueva Imagen</b> </label>
+                                    {% if form.perfiluser.foto.errors %}
+                                        <span
+                                            style="font-size: 15px; color: red;">{{ form.perfiluser.foto.errors }}
+                                        </span>{% endif %}
+                                    <input type="file" name="perfiluser-foto" accept="image/*" class=" form-control " id="id_perfiluser-foto">
+                                    
+                                    {% else%}
+                                    <label
+                                        for="{{form.perfiluser.foto.id_for_label }}"><b>{{form.perfiluser.foto.label }}</b>{% if form.taller.congreso.errors %}
+                                        <span
+                                            style="font-size: 15px; color: red;">{{ form.perfiluser.foto.errors }}
+                                        </span>{% endif %} </label>
+
+                                        {{form.perfiluser.foto }}
+                                        {%endif%}
+                                </div>
+                            </div>
+                        </div>
+<div class="row">
+<h4 style="margin-left: 15px;"> <b>Redes Sociales </b> </h4>
+</div>
+                        <div class="row">
+                            
+                            <div class="col-sm-3 ">
+                                <div class="input-group form-group">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-primary" type="button" style="height: 41px;
+                                        width: 48px;"><i class="fa fa-linkedin" style="font-size: 23px;"></i></button>
+                                    </div>
+
+                                    {{form.perfiluser.linkedin }}
+                                </div>
+                            </div>
+                            <div class="col-sm-3 ">
+                                <div class="input-group form-group">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-danger" type="button" style="height: 41px;
+                                        width: 48px;"><i class="fa fa-youtube" style="font-size: 23px;"></i></button>
+                                    </div>
+
+                                    {{form.perfiluser.youtube }}
+                                </div>
+                            </div>
+                            <div class="col-sm-3 ">
+                                <div class="input-group form-group">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-primary" type="button" style="height: 41px;
+                                        width: 48px;"><i class="fa fa-facebook" style="font-size: 23px;"></i></button>
+                                    </div>
+
+                                    {{form.perfiluser.facebook }}
+                                </div>
+                            </div>
+                            <div class="col-sm-3 ">
+                                <div class="input-group form-group">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-info" type="button" style="height: 41px;
+                                        width: 48px;"><i class="fa fa-twitter" style="font-size: 34px;margin-top: -8px;margin-left: -8px;"></i></button>
+                                    </div>
+
+                                    {{form.perfiluser.twitter }}
+                                </div>
+                            </div>
+                        </div>
+
+                        {%endif%}
 
                         <div class="row">
+                            {%if update%}
+                            <div class="col-sm-offset-2 col-sm-5">
+                                <div class="">
+                                   
+                                        <button type="submit" class="btn btn-lg btn-primary" id="submit"
+                                            >Actualizar Perfil </button>
+                                    </label>
 
+                                </div>
+
+                            </div>
+                            {%else%}
                             <div class="col-sm-offset-2 col-sm-5">
                                 <div class="">
                                     <label>
@@ -281,8 +438,9 @@ Registrarse
                                 </div>
 
                             </div>
-
+                            {%endif%}
                         </div>
+
 
                 </div>
                 </form>
@@ -301,13 +459,15 @@ Registrarse
 
 <link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
 <script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/editors/ckeditor/ckeditor.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/editors/editor-ckeditor.js'%}"></script>
 <script src="{% static 'MedCongressApp/js/lugar.js'%}"></script>
 <script>
 
-    
+
 
     $(document).ready(function () {
-        FiltrarLugar('#id_ubicacion-direccion','#id_ubicacion-longitud','#id_ubicacion-latitud');
+        FiltrarLugar('#id_ubicacion-direccion', '#id_ubicacion-longitud', '#id_ubicacion-latitud');
         $('#id_ubicacion-direccion').keypress(function () {
             $('#id_ubicacion-latitud').val('');
             $('#id_ubicacion-longitud').val('');
@@ -321,7 +481,7 @@ Registrarse
 
             $("#esp_div").show();
             $("#cel_prof").show();
-           
+
             $("#id_perfiluser-especialidad").attr('required', 'True');
             $("#id_perfiluser-cel_profecional").attr('required', 'True');
 
@@ -389,7 +549,7 @@ Registrarse
 
         });
 
-        
+
         /*
          * Point location on google map
          */

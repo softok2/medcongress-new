@@ -4,7 +4,7 @@ from .views import (Home,CongresoListView,CongresoDetail,CongresoCardForm,Perfil
 ViewErrorOpenpay,PagarEfectivo,ViewError404,ViewPonencia,EspecialdiadesAutocomplete,
 AddCart,AddCartTaller,DeletedCart,ConfCart,AvisoPrivacidad,HabilitarUser,Perfil,PagoExitoso,Email,GetPerfil,
 GetCuestionario,SetConstancia,EvaluarPonencia,Resultado_Cuestionario,Get_Constancia,VerTransaccion,GetFactura,
-ViewErrorFact)
+ViewErrorFact,PerfilUpdateView)
 
 urlpatterns = [
     
@@ -18,7 +18,10 @@ urlpatterns = [
     path('error_openpay', ViewErrorOpenpay.as_view(), name='Error_openpay'),
     path('error_facturacion', ViewErrorFact.as_view(), name='Error_facturacion'),
     path('pagar_efectivo', PagarEfectivo.as_view(), name='Pagar_efectivo'),
+    path('editar_perfil/<int:pk>', PerfilUpdateView.as_view(), name='Edit_perfil'),
     
+
+
     path('especialidades_autocomp', EspecialdiadesAutocomplete , name='Especialidades_autocomp'),
     path('add_cart', AddCart.as_view() , name='Add_cart'),
     path('add_cart_taller', AddCartTaller.as_view() , name='Add_cart_taller'),

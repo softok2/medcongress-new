@@ -32,7 +32,7 @@ class UserForm(forms.ModelForm):
         self.fields['email'].widget.attrs.update({'class': 'form-control'})     
 
     def clean(self, *args, **kwargs):
-        cleaned_data = super(UserForm, self).clean(*args, **kwargs)
+        cleaned_data = super(UserForm, self).clean(*args, **kwargs)    
         password = cleaned_data.get('password', None)
         password1 = cleaned_data.get('password1', None)
         if password!=password1 :
@@ -40,10 +40,40 @@ class UserForm(forms.ModelForm):
         email = cleaned_data.get('email', None)
         username= cleaned_data.get('username',None)
         if User.objects.filter(email=email).exclude(username=username).count():
-            self.add_error('email', 'Ese Email ya existe! ')
+            self.add_error('email', 'Ese Email ya existe! ')                                                    
             
        
+class UserFormEdit(forms.ModelForm):
+    first_name=forms.CharField(
+               label = 'Nombre',
+               )
+    last_name=forms.CharField(
+                label = 'Apellidos',
+                )
+    username= forms.CharField(
+               label = 'Usuario',
+               )         
+    
+    class Meta:
+        model=User
+        fields=['username','first_name','last_name','email']
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['username'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['first_name'].widget.attrs.update({'class': 'form-control','placeholder':'Nombre'})   
+        self.fields['last_name'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['email'].widget.attrs.update({'class': 'form-control'})     
+
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(UserFormEdit, self).clean(*args, **kwargs)
+        email = cleaned_data.get('email', None)
+        username= cleaned_data.get('username',None)
+        if User.objects.filter(email=email).exclude(username=username).count():
+            self.add_error('email', 'Ese Email ya existe! ')                                                    
+            
+       
 class PerfilUserForm(forms.ModelForm):
     cel_profecional=forms.CharField(
                label = 'Cédula Profesional',
@@ -88,7 +118,7 @@ class Ubicacion(forms.ModelForm):
         cleaned_data = super(Ubicacion, self).clean(*args, **kwargs)
         longitud = cleaned_data.get('longitud', None)
         latitud = cleaned_data.get('latitud', None)
-        print(longitud)
+        
         if longitud is None :
             self.add_error('direccion', 'Debe seleccionar una dirección')
     
@@ -114,6 +144,14 @@ class Categoria(forms.ModelForm):
 class UserPerfilUser(MultiModelForm):
     form_classes = {
         'user': UserForm,
+        'perfiluser': PerfilUserForm,
+        'ubicacion':Ubicacion,
+        'categoria':Categoria
+    }
+
+class UserPerfilUserEditar(MultiModelForm):
+    form_classes = {
+        'user': UserFormEdit,
         'perfiluser': PerfilUserForm,
         'ubicacion':Ubicacion,
         'categoria':Categoria
