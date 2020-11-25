@@ -953,7 +953,7 @@ class SetConstancia(TemplateView):
         comienzo=630-(cont/2*18)
         cont=len(congreso_t)
         comienzo_t=640-(cont/2*10)
-        base=Image.open('MedCongressApp/static/congreso/img_constancia/cosntancia.jpeg').convert('RGBA')
+        base=Image.open('MedCongressApp/static/%s')%(congreso.foto_constancia).convert('RGBA')
         text=Image.new('RGBA',base.size,(255,255,255,0))
         nombre_font=ImageFont.truetype('bahnschrift.ttf',40)
         congreso_font=ImageFont.truetype('calibri.ttf',25)
