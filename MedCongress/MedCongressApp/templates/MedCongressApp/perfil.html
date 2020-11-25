@@ -61,7 +61,7 @@ Detalles del Perfil
                         </div>
 
                         <h4> {{request.user.first_name}} {{request.user.last_name}}</h4>
-                        <a href="{% url 'Edit_perfil' pk=request.user.pk %}" style=" float: left; padding: 10px;"><i class="fa fa-edit"></i> Editar</a> 
+                        <a href="{% url 'Edit_perfil' pk=request.user.perfilusuario.pk %}" style=" float: left; padding: 10px;"><i class="fa fa-edit"></i> Editar</a> 
                          <a href="" style=" float: left;padding: 10px;"> <i class="fa fa-edit"></i>Cambiar Password</a>
 
                         <table class="table table-bordered">
