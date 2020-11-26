@@ -900,7 +900,7 @@ class GetCuestionario(TemplateView):
             comienzo_t=640-(cont/2*10)
             base=Image.open('MedCongressApp/static/%s'%(congreso.foto_constancia)).convert('RGBA')
             text=Image.new('RGBA',base.size,(255,255,255,0))
-            nombre_font=ImageFont.load("/usr/share/fonts/truetype/freefont/FreeMono.ttf", 40, encoding="unic")
+            nombre_font=ImageFont.truetype("/usr/share/fonts/truetype/freefont/FreeMono.ttf", 40, encoding="unic")
             congreso_font=ImageFont.truetype("/usr/share/fonts/truetype/freefont/FreeMono.ttf", 25, encoding="unic")
             fecha_font=ImageFont.truetype("/usr/share/fonts/truetype/freefont/FreeMono.ttf", 25, encoding="unic")
             # cong.set_variation_by_name('Italic')
