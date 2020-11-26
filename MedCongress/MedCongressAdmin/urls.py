@@ -12,7 +12,7 @@ from .views.congress_views import (CongressListView,CongressCreateView,CongressU
                                    CongressTalleresListView,CongressPonenciasListView,CongressCategPagosListView,
                                    CongressImagenesListView,AddPonenciaCongreso,CongressCategPagosCreateView,
                                    CongressDeletedView,CongressBloquesListView,GetBloques,AsignarCongressListView,AsignarCongressAddViews,GetPagos,
-                                   AsignarCongressDeletedViews,CongressImagenCreateView)
+                                   AsignarCongressDeletedViews,CongressImagenCreateView,CongressImagenDeletView)
 from .views.imagen_views import (ImagenCreateView)
 from .views.ponencia_view import (PonenciaListView, PonenciaCreateView,PonenciaPonenteListView,
                                    PonencicaUpdateView,PonenciaPonenteCreateView,PonenciaDeletedView,
@@ -151,6 +151,7 @@ urlpatterns = [
      #Congreso-Imagenes
      path('imagenes/congreso/<str:path>', CongressImagenesListView.as_view(), name='Congres_imagenes'),
      path('imagen-congreso/adicinar/<int:pk>', CongressImagenCreateView.as_view(), name='imagen_congress_add'),
+     path('imagen-congreso/eliminar/<int:pk>', CongressImagenDeletView.as_view(), name='congress_imagen_delete'),
      
      
    

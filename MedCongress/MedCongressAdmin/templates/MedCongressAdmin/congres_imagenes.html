@@ -53,14 +53,21 @@
                     <div class="card-body card-dashboard">
                         <div class="card-body  my-gallery" itemscope=""  data-pswp-uid="1">
                             <div class="row">
+                                
                                 {% for imagen in imagenes%}
-                              <figure class="col-lg-3 col-md-6 col-12" itemprop="associatedMedia" itemscope="" >
+                                <div class="col-md-3">
+                              <figure class="" itemprop="associatedMedia" itemscope="" >
                                 <a href="{% static '/'%}{{imagen.imagen}}" itemprop="contentUrl" data-size="480x360">
                                     <img class="img-thumbnail img-fluid" src="{% static '/'%}{{imagen.imagen}}" itemprop="thumbnail" alt="Image description">
                                 </a> 
-                                <a href="">Eliminar</a>
+                                
                               </figure>
-                             
+                             <button id="del_{{ imagen.pk }}" class=" btn btn-danger"
+                                                        onclick="deleteItem('{{ imagen.pk }}')"
+                                                        title="Eliminar">
+                                                        <i class="la la-trash " ></i> Eliminar
+                             </button>
+                            </div>
                               {%endfor%}
                               
                             </div>
@@ -107,7 +114,9 @@
 
         dataTable = $('.zero-configuration').DataTable();
     });
+
     function deleteItem(pk) {
+        
         swal({
             title: "Estas seguro?",
             text: "No será capaz de recuperar este elemento!",
@@ -131,10 +140,11 @@
         })
             .then((isConfirm) => {
                 if (isConfirm) {
-                    url = "{% url 'MedCongressAdmin:country_delete' pk=0 %}";
+                    url = "{% url 'MedCongressAdmin:congress_imagen_delete' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                         dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
                         swal("Eliminado!", "Este elemento ha sido eliminado.", "success");
+                        location.reload()
                     });
                 } else {
                     swal("Cancelado", "No se eliminó este elemento.", "error");

@@ -299,4 +299,12 @@ class CongressImagenCreateView(validarUser,FormView):
         self.success_url =  reverse_lazy('MedCongressAdmin:Congres_imagenes',kwargs={'path': congreso.path} )
         return self.success_url
 
+class CongressImagenDeletView(validarUser,DeleteView):
+    model = ImagenCongreso
+    success_url = reverse_lazy('MedCongressAdmin:Congres_imagenes')
+
+    def get_success_url(self):
+        imagen=ImagenCongreso.objects.get(pk=self.kwargs.get('pk'))
+        self.success_url =  reverse_lazy('MedCongressAdmin:Congres_imagenes',kwargs={'path': imagen.congreso.path} )
+        return self.success_url
     
