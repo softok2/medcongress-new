@@ -1,44 +1,42 @@
 {% extends "MedCongressApp/base.html"%}
 {% load static %}
 {%block css%}
+<style>
+    .table td {
+        border-top: #979494 solid 1px !important;
+    }
+    .kf_aside_folwer {
+    border: 1px solid #979494;
+    margin-bottom: 40px;
+}
+.kf_heading_1{
+   
+    margin: 0px;
+}
+.kf_experience_my, .kf_who_am {
 
+    border-bottom: 1px solid #979494;
+   
+}
+
+</style>
 {%endblock%}
 {% block titulo %}
 Detalles del Perfil
 {%endblock%}
-{% block contenido %}
-<div class="sub-header">
-    <!-- SUB HEADER -->
-</div>
 
-<div class="Kode-page-heading">
-    <div class="container">
-        <!--ROW START-->
-        <div class="row">
-            <div class="col-md-6 col-sm-6">
-                <h2>Detalles del Perfil</h2>
-            </div>
-            <div class="col-md-6 col-sm-6">
-                <ul>
-                    <li>
-                        <a href="#"><i class="fa fa-home"></i>Home</a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-angle-right"></i>Detalles del Perfil</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!--ROW END-->
-    </div>
-</div>
+
+
+{% block contenido %}
+
 <!--Top Heading And Breadcrumb Wrap End-->
 
 
 <!--Our Speaker Wrap Start-->
-<div class="kf_content">
-    <div class="container">
-        <div class="row">
+<div class="kode-event-time">
+    <div class="kode-event-contact"
+        style=" background:url({% static 'MedCongressApp/images/slide11.png'%}) no-repeat 50%  0;background-attachment: fixed; ">
+        <div class="container">
 
             <div class="col-md-8">
                 <!--Who Am I Wrap Start-->
@@ -53,7 +51,7 @@ Detalles del Perfil
                         {%endif%}
 
                     </figure>
-                   
+
                     <div class="kf_who_am_des">
                         <div class="kf_heading_1">
                             <h5>Mi perfil <i class="fa fa-calendar"></i></h5>
@@ -61,37 +59,39 @@ Detalles del Perfil
                         </div>
 
                         <h4> {{request.user.first_name}} {{request.user.last_name}}</h4>
-                        <a href="{% url 'Edit_perfil' pk=request.user.perfilusuario.pk %}" style=" float: left; padding: 10px;"><i class="fa fa-edit"></i> Editar</a> 
-                         <a href="{% url 'Cambiar_Pass'  %}" style=" float: left;padding: 10px;"> <i class="fa fa-edit"></i>Cambiar Password</a>
+                        <a href="{% url 'Edit_perfil' pk=request.user.perfilusuario.pk %}"
+                            style=" float: left; padding: 10px;"><i class="fa fa-edit"></i> Editar</a>
+                        <a href="{% url 'Cambiar_Pass'  %}" style=" float: left;padding: 10px;"> <i
+                                class="fa fa-edit"></i>Cambiar Password</a>
 
-                        <table class="table table-bordered">
-                            <tr>
-                                <td align="center"> <b>Localidad</b> </td>
+                        <table class=" table" >
+                            <tr style="border-top: black solid 1px;">
+                                <td align="center" > <b>Localidad</b> </td>
                                 <td>{{request.user.perfilusuario.ubicacion}}</td>
 
                             </tr>
 
-                            <tr>
+                            <tr style="border-top: black solid 1px;">
                                 <td align="center"> <b>Email</b> </td>
                                 <td>{{request.user.email}}</td>
 
                             </tr>
-                            <tr>
+                            <tr style="border-top: black solid 1px;">
                                 <td align="center"> <b>Categoría</b> </td>
                                 <td>{{request.user.perfilusuario.categoria}}</td>
 
                             </tr>
                             {%if request.user.perfilusuario.especialidad%}
-                            <tr>
+                            <tr style="border-top: black solid 1px;">
                                 <td align="center"> <b>Especialidad</b> </td>
                                 <td>{{request.user.perfilusuario.especialidad}}</td>
 
                             </tr>
                             {%endif%}
                             {%if request.user.perfilusuario.cel_profecional%}
-                            <tr>
-                                <td align="center"> <b>Cédula Profecional</b> </td>
-                                <td>{{request.user.perfilusuario.cel_profecional}}</td>
+                            <tr >
+                                <td align="center" style="border-top: black solid 1px;"> <b>Cédula Profecional</b> </td>
+                                <td >{{request.user.perfilusuario.cel_profecional}}</td>
 
                             </tr>
                             {%endif%}
@@ -132,7 +132,7 @@ Detalles del Perfil
                         <div class="kf_experience">
 
                             <div class="kf_heading_1">
-                                <h5>Congresos Pagados</h5>
+                                <h5>Mis Congresos</h5>
 
                             </div>
 
@@ -167,7 +167,7 @@ Detalles del Perfil
                             </ul>
                         </div>
                     </div>
-                    
+
 
                 </div>
 
@@ -178,8 +178,8 @@ Detalles del Perfil
             <div class="col-md-4">
                 {% if constancias %}
                 <div class="kf_aside_folwer">
-                    <h6 style="text-align:center; padding:20px;border-bottom: 1px solid #e6e6e6;
-background-color: #e6e6e6;"> <b> MedCongress Constacias</b></h6>
+                    <h6 style="text-align:center; padding:20px;border-bottom: 1px solid #979494;
+background-color: #979494;"> <b> MedCongress Constacias</b></h6>
                     <ul>
 
 

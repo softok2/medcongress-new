@@ -1,0 +1,572 @@
+{% extends "MedCongressApp/base.html"%}
+{% load static %}
+{% block titulo %}
+Registrarse
+{%endblock%}
+
+{%block css%}
+<style>
+    #geomap {
+        width: 100%;
+        height: 400px;
+    }
+</style>
+
+{%endblock%}
+{% block contenido %}
+<div class="kode-event-time">
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Localidad</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="geomap"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="kode-event-contact"
+        style=" background:url({% static 'MedCongressApp/images/slide11.png'%}) no-repeat 50%  0;background-attachment: fixed; ">
+        <div class="container">
+
+
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="kf_heading_3" style="margin-top: 70px;">
+                        <h2>Actualizar Perfil en MedCongress</h2>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+           
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                    <form class="contactusform" action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="home">
+                                <div class="row">
+                                    <div class="col-sm-3 ">
+                                        <div class="form-group">
+                                            {%if imagen_seg_url%}
+                                            <label><b>Imagen Actual </b> </label>
+                                            <figure class="col-lg-3 col-md-6 col-12" itemprop="associatedMedia"
+                                                itemscope="">
+                                            </figure>
+                                            <a href="{{imagen_seg_url}}" itemprop="contentUrl" data-size="480x360">
+                                                <img class="img-thumbnail img-fluid" src="{{imagen_seg_url}}"
+                                                    itemprop="thumbnail" alt="Image description">
+                                            </a>
+
+                                            </figure>
+
+                                            <label for=" " style="margin-top: 20px;"> <b>Insertar Nueva Imagen</b>
+                                            </label>
+                                            {% if form.perfiluser.foto.errors %}
+                                            <span style="font-size: 15px; color: red;">{{ form.perfiluser.foto.errors }}
+                                            </span>{% endif %}
+                                            <input type="file" name="perfiluser-foto" accept="image/*"
+                                                class=" form-control " id="id_perfiluser-foto">
+
+                                            {% else%}
+                                            <label
+                                                for="{{form.perfiluser.foto.id_for_label }}"><b>{{form.perfiluser.foto.label }}</b>{% if form.taller.congreso.errors %}
+                                                <span
+                                                    style="font-size: 15px; color: red;">{{ form.perfiluser.foto.errors }}
+                                                </span>{% endif %} </label>
+
+                                            {{form.perfiluser.foto }}
+                                            {%endif%}
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-9 ">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label
+                                                        for="{{form.user.first_name.id_for_label }}"><b>{{form.user.first_name.label }}</b>{% if form.user.first_name.errors %}
+                                                        <span
+                                                            style="font-size: 15px; color: red;">{{ form.user.first_name.errors }}
+                                                        </span>{% endif %} </label>
+
+                                                    {{form.user.first_name }} {{form.user.first_name.help_text }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label
+                                                        for="{{form.user.last_name.id_for_label }}"><b>{{form.user.last_name.label }}</b>{% if form.user.last_name.errors %}
+                                                        <span
+                                                            style="font-size: 15px; color: red;">{{ form.user.last_name.errors }}
+                                                        </span>{% endif %} </label>
+
+                                                    {{form.user.last_name }}
+                                                </div>
+
+
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label
+                                                        for="{{form.user.email.id_for_label }}"><b>{{form.user.email.label }}</b>{% if form.user.email.errors %}
+                                                        <span
+                                                            style="font-size: 15px; color: red;">{{ form.user.email.errors }}
+                                                        </span>{% endif %} </label>
+
+                                                    {{form.user.email }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-3 ">
+                                                <div class="form-group">
+                                                    <label for="{{form.user.username.id_for_label }}"><b>{{form.user.username.label }}
+                                                        </b> {% if form.user.username.errors %} <span
+                                                            style="font-size: 15px; color: red;">{{ form.user.username.errors }}
+                                                        </span>{% endif %} </label>
+
+                                                    {{form.user.username }}
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-8 ">
+                                                <div class="form-group">
+                                                    <label
+                                                        for="{{form.ubicacion.direccion.id_for_label }}"><b>{{form.ubicacion.direccion.label }}</b>
+                                                        {% if form.ubicacion.direccion.errors %} <span
+                                                            style="font-size: 15px; color: red;">{{ form.ubicacion.direccion.errors }}
+                                                        </span>{% endif %} </label>
+
+                                                    {{form.ubicacion.direccion }}
+                                                </div>
+                                            </div>
+                                            <div class="col-ms-1">
+                                                <div class="form-group">
+
+                                                    <label class="mapa">Ver Mapa</label>
+                                                    <!-- <a onclick="VerMapa()" type="link"  style="display: block;">  <i class="" style="font-size: 43px;"></i> </a> -->
+                                                    <button type="button" class="btn btn-link" data-toggle="modal"
+                                                        data-target="#myModal" style="display: block;">
+                                                        <span><i class="glyphicon glyphicon-map-marker"
+                                                                style="font-size: 30px;display: block;"></i></span>
+
+                                                    </button>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="row">
+
+
+                                            <div class="col-sm-3 ">
+                                                <div class="form-group">
+                                                    <label
+                                                        for="{{form.perfiluser.genero.id_for_label }}"><b>{{form.perfiluser.genero.label }}</b>{% if form.perfiluser.genero.errors %}
+                                                        <span
+                                                            style="font-size: 15px; color: red;">{{ form.perfiluser.genero.errors }}
+                                                        </span>{% endif %}</label>
+                                                    {{form.perfiluser.genero }}
+                                                </div>
+                                            </div>
+                                            {%if update%}
+                                            {%else%}
+                                        </div>
+                                        <div class="row">
+                                            {%endif%}
+                                            <div class="col-sm-3 ">
+                                                <div class="form-group">
+                                                    <label
+                                                        for="{{form.perfiluser.categoria.id_for_label }}"><b>{{form.perfiluser.categoria.label }}</b>{% if form.perfiluser.categoria.errors %}
+                                                        <span
+                                                            style="font-size: 15px; color: red;">{{ form.perfiluser.categoria.errors }}
+                                                        </span>{% endif %}</label>
+
+                                                    {{form.perfiluser.categoria }}
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3 " id="new_cat">
+                                                <div class="form-group">
+                                                    <label
+                                                        for="{{form.categoria.nombre.id_for_label }}"><b>{{form.categoria.nombre.label }}</b>{% if form.categoria.nombre.errors %}
+                                                        <span
+                                                            style="font-size: 15px; color: red;">{{ form.categoria.nombre.errors }}
+                                                        </span>{% endif %}</label>
+                                                    {{form.categoria.nombre}}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-3 " id="esp_div">
+                                                <div class="form-group">
+                                                    <label
+                                                        for="{{form.perfiluser.especialidad.id_for_label }}"><b>{{form.perfiluser.especialidad.label }}</b>{% if form.perfiluser.especialidad.errors %}
+                                                        <span
+                                                            style="font-size: 15px; color: red;">{{ form.perfiluser.especialidad.errors }}
+                                                        </span>{% endif %}</label>
+                                                    {{form.perfiluser.especialidad }}
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3 " id="cel_prof">
+                                                <div class="form-group">
+                                                    <label
+                                                        for="{{form.perfiluser.cel_profecional.id_for_label }}"><b>{{form.perfiluser.cel_profecional.label }}</b>{% if form.perfiluser.cel_profecional.errors %}
+                                                        <span
+                                                            style="font-size: 15px; color: red;">{{ form.perfiluser.cel_profecional.errors }}
+                                                        </span>{% endif %}</label>
+
+                                                    {{form.perfiluser.cel_profecional }}
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-6 ">
+                                                <div class="form-group">
+                                                    {{form.perfiluser.is_ponente }}
+                                                    <label for="{{form.perfiluser.is_ponente.id_for_label }}"><b>{{form.perfiluser.is_ponente.label }}
+                                                    </label>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-3 ">
+                                                <div class="form-group" style="display: none;">
+                                                    <label
+                                                        for="{{form.ubicacion.longitud.id_for_label }}"><b>{{form.ubicacion.longitud.label }}</b>{% if form.ubicacion.longitud.errors %}
+                                                        <span
+                                                            style="font-size: 15px; color: red;">{{ form.ubicacion.longitud.errors }}
+                                                        </span>{% endif %}</label>
+
+                                                    {{form.ubicacion.longitud }}
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3 " style="display: none;">
+                                                <div class="form-group">
+                                                    <label
+                                                        for="{{form.ubicacion.latitud.id_for_label }}"><b>{{form.ubicacion.latitud.label }}</b>{% if form.ubicacion.latitud.errors %}
+                                                        <span
+                                                            style="font-size: 15px; color: red;">{{ form.ubicacion.latitud.errors }}
+                                                        </span>{% endif %} </label>
+
+                                                    {{form.ubicacion.latitud }}
+                                                </div>
+                                            </div>
+
+
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="profile" >
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <div class="form-group">
+                                            <label for="{{form.perfiluser.puesto.id_for_label }}"><b>Puesto
+                                                    Actual</b>{% if form.perfiluser.puesto.errors %}
+                                                <span
+                                                    style="font-size: 15px; color: red;">{{ form.perfiluser.puesto.errors }}
+                                                </span>{% endif %}</label>
+
+                                            {{form.perfiluser.puesto }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label for="{{form.perfiluser.detalle.id_for_label }}"><b>Logros
+                                                    Académicos</b>{% if form.perfiluser.detalle.errors %}
+                                                <span
+                                                    style="font-size: 15px; color: red;">{{ form.perfiluser.detalle.errors }}
+                                                </span>{% endif %}</label>
+
+                                            {{form.perfiluser.detalle }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label
+                                                for="{{form.perfiluser.publicaciones.id_for_label }}"><b>Publicaciones</b>{% if form.perfiluser.publicaciones.errors %}
+                                                <span
+                                                    style="font-size: 15px; color: red;">{{ form.perfiluser.publicaciones.errors }}
+                                                </span>{% endif %}</label>
+
+                                            {{form.perfiluser.publicaciones }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label for="{{form.perfiluser.datos_interes.id_for_label }}"><b>Otros Datos
+                                                    de
+                                                    Interes</b>{% if form.perfiluser.datos_interes.errors %}
+                                                <span
+                                                    style="font-size: 15px; color: red;">{{ form.perfiluser.datos_interes.errors }}
+                                                </span>{% endif %}</label>
+
+                                            {{form.perfiluser.datos_interes }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <h4 style="margin-left: 15px;"> <b>Redes Sociales </b> </h4>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-sm-3 ">
+                                        <div class="input-group form-group">
+                                            <div class="input-group-prepend">
+                                                <button class="btn btn-primary" type="button" style="height: 41px;
+                                        width: 48px;"><i class="fa fa-linkedin" style="font-size: 23px;"></i></button>
+                                            </div>
+
+                                            {{form.perfiluser.linkedin }}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3 ">
+                                        <div class="input-group form-group">
+                                            <div class="input-group-prepend">
+                                                <button class="btn btn-danger" type="button" style="height: 41px;
+                                        width: 48px;"><i class="fa fa-youtube" style="font-size: 23px;"></i></button>
+                                            </div>
+
+                                            {{form.perfiluser.youtube }}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3 ">
+                                        <div class="input-group form-group">
+                                            <div class="input-group-prepend">
+                                                <button class="btn btn-primary" type="button" style="height: 41px;
+                                        width: 48px;"><i class="fa fa-facebook" style="font-size: 23px;"></i></button>
+                                            </div>
+
+                                            {{form.perfiluser.facebook }}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3 ">
+                                        <div class="input-group form-group">
+                                            <div class="input-group-prepend">
+                                                <button class="btn btn-info" type="button" style="height: 41px;
+                                        width: 48px;"><i class="fa fa-twitter"
+                                                        style="font-size: 34px;margin-top: -8px;margin-left: -8px;"></i></button>
+                                            </div>
+
+                                            {{form.perfiluser.twitter }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-sm-offset-2 col-sm-5">
+                                <div class="">
+
+                                    <button type="submit" class="btn btn-lg btn-primary" id="submit">Actualizar
+                                        Perfil </button>
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+
+{% endblock%}
+
+{%block script%}
+
+<link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
+<script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/editors/ckeditor/ckeditor.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/editors/editor-ckeditor.js'%}"></script>
+<script src="{% static 'MedCongressApp/js/lugar.js'%}"></script>
+<script>
+
+$('#myTabs a').click(function (e) {
+    
+  e.preventDefault()
+  $(this).tab('show')
+})
+
+    $(document).ready(function () {
+       
+        
+        FiltrarLugar('#id_ubicacion-direccion', '#id_ubicacion-longitud', '#id_ubicacion-latitud');
+        $('#id_ubicacion-direccion').keypress(function () {
+            $('#id_ubicacion-latitud').val('');
+            $('#id_ubicacion-longitud').val('');
+
+        });
+
+        $("#esp_div").hide();
+        $("#cel_prof").hide();
+        $("#new_cat").hide();
+        if ($('#id_perfiluser-categoria option:selected').text() == 'Médico' || $('#id_perfiluser-categoria option:selected').text() == 'Residente') {
+
+            $("#esp_div").show();
+            $("#cel_prof").show();
+
+            $("#id_perfiluser-especialidad").attr('required', 'True');
+            $("#id_perfiluser-cel_profecional").attr('required', 'True');
+
+
+        }
+        else {
+            $("#esp_div").hide();
+            $("#cel_prof").hide();
+            $("#id_perfiluser-especialidad").val('');
+            $("#id_perfiluser-cel_profecional").val('');
+            $("#id_perfiluser-especialidad").removeAttr('required')
+            $("#id_perfiluser-cel_profecional").removeAttr('required')
+
+        }
+        if ($('#id_perfiluser-categoria option:selected').text() == 'Otra') {
+            $("#new_cat").show();
+            $("#id_categoria-nombre").attr('required', 'True');
+
+        }
+        else {
+            $("#new_cat").hide();
+            $("#id_categoria-nombre").val('')
+            $("#id_categoria-nombre").removeAttr('required');
+        }
+
+
+        $('#id_perfiluser-categoria').change(function () {
+
+            if ($('#id_perfiluser-categoria option:selected').text() == 'Médico' || $('#id_perfiluser-categoria option:selected').text() == 'Residente') {
+
+                $("#esp_div").show();
+                $("#cel_prof").show();
+                $("#id_perfiluser-especialidad").attr('required', 'True')
+                $("#id_perfiluser-cel_profecional").attr('required', 'True')
+            }
+            else {
+                $("#id_perfiluser-especialidad").val('');
+                $("#id_perfiluser-cel_profecional").val('');
+                $("#esp_div").hide();
+                $("#cel_prof").hide();
+                $("#id_perfiluser-especialidad").removeAttr('required')
+                $("#id_perfiluser-cel_profecional").removeAttr('required')
+
+            }
+            if ($('#id_perfiluser-categoria option:selected').text() == 'Otra') {
+                $("#new_cat").show();
+                $("#id_categoria-nombre").attr('required', 'True')
+
+            }
+            else {
+                $("#new_cat").hide();
+                $("#id_categoria-nombre").val('')
+                $("#id_categoria-nombre").removeAttr('required')
+            }
+
+        });
+
+        $('#pol').change(function () {
+            if ($('#pol').prop('checked')) {
+                $("#submit").removeAttr('disabled')
+            }
+            else {
+                $("#submit").attr('disabled', 'disabled')
+            }
+
+        });
+
+
+        /*
+         * Point location on google map
+         */
+        // $('#get_map').click(function (e) {
+
+        //     var address = $(PostCodeid).val();
+        //     geocoder.geocode({'address': address}, function (results, status) {
+        //         if (status == google.maps.GeocoderStatus.OK) {
+        //             map.setCenter(results[0].geometry.location);
+        //             marker.setPosition(results[0].geometry.location);
+        //             $('#id_ubicacion-direccion').val(results[0].formatted_address);
+        //             $('#id_ubicacion-latitud').val(marker.getPosition().lat());
+        //             $('#id_ubicacion-longitud').val(marker.getPosition().lng());
+        //         } else {
+        //             alert("Geocode was not successful for the following reason: " + status);
+        //         }
+        //     });
+        //     e.preventDefault();
+        // });
+
+        //Add listener to marker for reverse geocoding
+
+        //     google.maps.event.addListener( map, "click", function(ele) {
+        //     // codigo que crea el marcador
+        //     new google.maps.Marker({
+        //         map: map
+        //     })
+        // });
+
+
+        // google.maps.event.addListener(map, 'click', function (event) {
+
+        //     marker = new google.maps.Marker({
+        //     map: map,
+        //     draggable: true,
+        //     position: event.latLng
+        // });
+
+        //     geocoder.geocode({'latLng': marker.getPosition()}, function (results, status) {
+        //         if (status == google.maps.GeocoderStatus.OK) {
+        //             if (results[0]) {
+        //                 $('#id_ubicacion-direccion').val(results[0].formatted_address);
+        //                 $('#id_ubicacion-latitud').val(marker.getPosition().lat());
+        //                 $('#id_ubicacion-longitud').val(marker.getPosition().lng());
+        //             }
+        //         }
+        //     });
+        // });
+
+
+
+
+
+
+    });
+
+    function VerMapa() {
+
+        $('.geomap').slideToggle();
+        $('.mapa').slideToggle(1);
+    }
+
+</script>
+{%endblock%}

@@ -1179,7 +1179,7 @@ class VerTransaccion(TemplateView):
 class PerfilUpdateView(UpdateView):
     form_class = UsuarioForms
     success_url = reverse_lazy('perfil')
-    template_name='MedCongressApp/registrarse.html'
+    template_name='MedCongressApp/edit_perfil.html'
     
     
     def get_queryset(self, **kwargs):
