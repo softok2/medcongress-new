@@ -78,7 +78,7 @@ class UsuarioUpdateView(validarUser,UpdateView):
         return context
 
 class UsuarioDeletedView(validarUser,DeleteView):
-    model = PerfilUsuario
+    model = User
     success_url = reverse_lazy('MedCongressAdmin:usuarios_list')
 
 
