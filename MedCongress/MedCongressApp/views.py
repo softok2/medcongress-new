@@ -606,7 +606,7 @@ class PerfilUserCreate(CreateView):
         subject = 'Bienvenido a MedCongress'
         html_message = render_to_string('MedCongressApp/email.html', context={'token':secret_key})
         plain_message = strip_tags('Aviso..... Usted se a creado un usuario en MedCongress')
-        from_email = ' Contacto MedCongress <contacto@medcongress.com.mx>'
+        from_email = ''
         to = user.email
         mail.send_mail(subject, plain_message, from_email, [to],html_message=html_message)
 
