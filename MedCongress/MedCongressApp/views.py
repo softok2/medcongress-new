@@ -897,7 +897,7 @@ class GetCuestionario(TemplateView):
             cont=len(nombre)
             comienzo=630-(cont/2*18)
             cont=len(congreso_t)
-            comienzo_t=640-(cont/2*10)
+            comienzo_t=630-(cont/2*10)
             base=Image.open('MedCongressApp/static/%s'%(congreso.foto_constancia)).convert('RGBA')
             text=Image.new('RGBA',base.size,(255,255,255,0))
             nombre_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans-Oblique.ttf", 40)

@@ -60,6 +60,23 @@
     .shadow-none {
         box-shadow: none !important;
     }
+  
+	.simply-section {
+		color: #e5e5e7 !important;
+		background-color: #39393a60 !important;
+
+	}
+
+	.glyphicon {
+		color: yellow;
+		font-size: 40px;
+
+	}
+
+	.glyphicon-star-empty {
+		color: rgb(85, 84, 84);
+	}
+
 </style>
 {%endblock%}
 {% block contenido %}
@@ -1155,9 +1172,9 @@
         $.get(url, { 'pk': pk }, function (data) {
 
             if (data.foto)
-                $('#foto').html('<img class="img-responsive" src="{% static ' / '%}' + data.foto + '" alt=" foto ' + data.nombre + '" >');
+                $('#foto').html('<img class="img-responsive" src="{% static '/'%}'+data.foto+'" alt=" foto ' + data.nombre + '" >');
             else
-                $('#foto').html('<img class="img-responsive" src="{% static 'MedCongressApp / images / defaulthombre.png' %}" alt="{{request.user.username}}" >');
+                $('#foto').html('<img class="img-responsive" src="{% static 'MedCongressApp/images/defaulthombre.png' %}" alt="{{request.user.username}}" >');
             if (data.bandera)
                 $('#bandera').html('<img style="width: 100px; display:block;margin:auto;" class="img-responsive" src="{% static ' / '%}' + data.bandera + '" >');
 
