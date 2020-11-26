@@ -4,7 +4,7 @@ from .views import (Home,CongresoListView,CongresoDetail,CongresoCardForm,Perfil
 ViewErrorOpenpay,PagarEfectivo,ViewError404,ViewPonencia,EspecialdiadesAutocomplete,
 AddCart,AddCartTaller,DeletedCart,ConfCart,AvisoPrivacidad,HabilitarUser,Perfil,PagoExitoso,Email,GetPerfil,
 GetCuestionario,SetConstancia,EvaluarPonencia,Resultado_Cuestionario,Get_Constancia,VerTransaccion,GetFactura,
-ViewErrorFact,PerfilUpdateView)
+ViewErrorFact,PerfilUpdateView,CambiarPass)
 
 urlpatterns = [
     
@@ -41,6 +41,7 @@ urlpatterns = [
     path('cuestionario/resultado/<str:path>',Resultado_Cuestionario.as_view() , name='Resultado_Cuestionario'),
     path('ver_constancia/congreso/<str:path>',Get_Constancia.as_view() , name='Get_Constancia'),
     path('ver_transaccion',VerTransaccion.as_view() , name='ver_transaccion'),
+    path('cambiar_pass',CambiarPass.as_view() , name='Cambiar_Pass'),
     
     
     

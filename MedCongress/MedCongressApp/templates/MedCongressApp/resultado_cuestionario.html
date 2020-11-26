@@ -1,45 +1,95 @@
 {% extends "MedCongressApp/base.html"%}
 {% load static %}
 {% block titulo %}
-Información
+Cuestionario
 {%endblock%}
 {% block contenido %}
 
-<div class="kode-event-time" >
-    <div class="kode-event-contact" style=" background:url({% static 'MedCongressApp/images/slide11.png'%}) no-repeat 50%  0;background-attachment: fixed; ">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="kf_heading_3" style="margin-top: 70px;">
-                        {%if aprobado%}
-                        <h2>Enhorabuena. Ha aprobado el cuestionario</h2>
-                        <span>Ya tiene la Constancia de haber participado en el Congreso: {{congreso.titulo}} </span>
 
-                      
-                        {%else%}
-                        <h2>lo sentimos. No ha aprobado el cuestionario</h2>
-                        <span>Deberá hacer de nuevo el cuestionario para tener una Constancia de haber participado en el Congreso: {{congreso.titulo}} </span>
-
-                      
-                       {%endif%}
-                    </div>
-                    {%if aprobado%}
-                   
-
-                    <a class="btn btn-primary" href="{% url 'Get_Constancia' path=congreso.path%}"> Ver Constancia</a>  <a class="btn btn-primary" type="button" href="{% url 'View_congreso' path=congreso.path%}"> Atrás</a>
-                    {%else%}
-                   
-                    <a class="btn btn-primary" type="link" href="{% url 'Cuestionario' path=congreso.path%}"> Llenar Cuestionario</a>  <a class="btn btn-primary" type="button" href="{% url 'View_congreso' path=congreso.path%}"> Atrás</a>
-                   {%endif%}
-                </div>
-            </div>
-            
+<div class="kode-conference-schedule" id="programas">
+    <div class="container">
+        <div class="kf_heading_3">
+            <h2>Cuestionario</h2>
+            <span>Debe llenar este cuestionario para que se le otorgue la Constancia de haber participado en este Congreso</span>
         </div>
-    </div>
 
+        
+    </div>
+    <div class="container" >
+        <form  action="" method="POST" id="form" name="miform">
+            {% csrf_token %}
+        <table class="table table-responsive">
+    {%for pregunta in preguntas%}
+        <tr style="background-color: beige;"> 
+            <th style="width: 5%;"> <input type="hidden" name="pregunta" value="{{pregunta.id}}"></th>
+            <th>{{forloop.counter}}.- {{pregunta.pregunta}}</th>
+      
+        </tr>
+        {%for respuesta in pregunta.respuestas%}
+        <tr>
+            <td style="text-align: center;">{{respuesta.tipo|safe}}   </td> 
+            <td> {{respuesta.respuesta}}</td>
+      
+        </tr>
+        {%endfor%}
+
+       
+        {%endfor%}
+    </table>
+    <div class="row"><div class="col-md-3">
+        <b>Aceptó {{informacion}}</b> 
+        <table class="table">
+           
+            <tr><td align="center">{%if aprobado%} Abrobado{%else%} No Aprobado{%endif%}</td></tr>
+        </table>
+        
+   </div>
+   <div class="col-md-7">
+      <b> Leyenda</b> 
+        <table class="table">
+            <tr>
+                <td>
+                    <i style="color: green; font-size: 20px; margin-left: 21px;" class="fa fa-check-circle"></i>
+                </td>
+                <td>
+                   Respuesta Correcta
+                </td><td>
+                    <i style="color: red; font-size: 20px;" class="fa fa-times-circle"></i>
+                </td>
+                <td>
+                   Respuesta Incorrecta
+                </td>  <td>
+                    <i style="color: black; font-size: 20px;" class="fa fa-check">
+                </td>
+                <td>
+                   Su Elección
+                </td>
+            
+        </table>
+    </div>
+    </div>
+    <a class="btn btn-primary" type="button" href="{% url 'View_congreso' path=congreso.path%}"> Atrás</a>
+    {%if aprobado%}
+    <a class="btn btn-primary" id="button"  role="button"  href="{% url 'Get_Constancia' congreso.path %}">Ver Constancia</a>
+    {%else%}
+    <a class="btn btn-primary" id="button"  role="button"  href="{% url 'Cuestionario' congreso.path %}" >Hacer Cuestionario</a>
+    {%endif%}
+   
+</form></div>
 </div>
 
+{%endblock%}
 
-{% endblock%}
+{%block script%}
 
+<script>
+ $(document).ready(function () {
+     {%if aprobado%}
+swal("Aprobado", " Ya puede ver su Constancia. Acertó {{informacion}}", "info");
+{%else%}
+swal("No Aprobó", " Para obtener su Constancia debe realizar de nuevo el Cuestionario. Acertó {{informacion}}", "error");
+{%endif%}
+ });
 
+</script>
+{%endblock%}

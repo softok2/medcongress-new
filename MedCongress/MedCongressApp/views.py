@@ -24,7 +24,7 @@ from django.contrib.auth.views import PasswordResetView
 from random import sample
 from PIL import Image, ImageDraw, ImageFont
 
-from .forms import UserPerfilUser,UserPerfilUserEditar
+from .forms import UserPerfilUser,UserPerfilUserEditar,CambiarPassForm
 from MedCongressAdmin.forms.congres_forms import UsuarioForms
 from .models import (CategoriaPagoCongreso, Congreso, EspecialidadCongreso,
                      Ponencia, Ponente, RelCongresoCategoriaPago,
@@ -79,7 +79,7 @@ class Home(TemplateView):
         context['congresos']= Congreso.objects.filter(published=True).order_by('fecha_inicio')
         context['nuevo_congreso'] = Congreso.objects.filter(fecha_inicio__gt=datetime.now(),published=True).first()
         return context
-
+@method_decorator(login_required,name='dispatch')
 class PagoExitoso(TemplateView):
     template_name= 'MedCongressApp/pago_satifactorio.html'
     def get_context_data(self, **kwargs):
@@ -923,9 +923,13 @@ class GetCuestionario(TemplateView):
                 constancia.cuestionario=(','.join(cuestionario))
                 constancia.foto_constancia='congreso/img_constancia/%s.png'%(nombre_img)
                 constancia.save()
-
+        else:
+            constancias=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario)
+            for constancia in constancias:
+                constancia.cuestionario=(','.join(cuestionario))
+                constancia.save()
         return  HttpResponseRedirect(reverse('Resultado_Cuestionario',kwargs={'path': congreso.path}))
-
+@method_decorator(login_required,name='dispatch')
 class GetFactura(TemplateView):
    
     def get(self, request,**kwargs):
@@ -977,7 +981,7 @@ class GetFactura(TemplateView):
             self.request.session["error_facturacion"]= response_dic['description']
             return HttpResponseRedirect(reverse('Error_facturacion'))
         return HttpResponseRedirect( response_dic['public_pdf_link'])
-
+@method_decorator(login_required,name='dispatch')
 class SetConstancia(TemplateView):
 
     template_name= 'MedCongressApp/congreso_constancia.html' 
@@ -1025,7 +1029,7 @@ class SetConstancia(TemplateView):
         if  constancia is None :
             return   HttpResponseRedirect(reverse('Error404'))
         return self.render_to_response(self.get_context_data())
-
+@method_decorator(login_required,name='dispatch')
 class Get_Constancia(PdfMixin,TemplateView):
 
     template_name= 'MedCongressApp/congreso_constancia.html' 
@@ -1048,7 +1052,7 @@ class Get_Constancia(PdfMixin,TemplateView):
             return   HttpResponseRedirect(reverse('Error404'))
         return self.render_to_response(self.get_context_data())
 
-
+@method_decorator(login_required,name='dispatch')
 class EvaluarPonencia(TemplateView):
     template_name= 'MedCongressApp/pago_satifactorio.html'
 
@@ -1063,7 +1067,7 @@ class EvaluarPonencia(TemplateView):
             usuario_json={'succes':'True'}
             return JsonResponse(usuario_json, safe=False)
         return TemplateResponse(request, reverse('dashboard')) 
-
+@method_decorator(login_required,name='dispatch')
 class Resultado_Cuestionario(TemplateView):
     template_name='MedCongressApp/resultado_cuestionario.html'
 
@@ -1071,17 +1075,49 @@ class Resultado_Cuestionario(TemplateView):
         congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
         if congreso is None:
             return   HttpResponseRedirect(reverse('Error404'))
-       
+        constancia = RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario).first()
+        if constancia.cuestionario is None: 
+            return   HttpResponseRedirect(reverse('Error404'))
         return self.render_to_response(self.get_context_data())
 
     def get_context_data(self, **kwargs):
         context = super(Resultado_Cuestionario, self).get_context_data(**kwargs)
         congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
         context['congreso']=congreso
-        context['aprobado']=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario,is_constancia=True).exists()
-
+        constancia = RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario).first()
+        context['aprobado']=constancia.is_constancia
+        cuestionario=constancia.cuestionario
+        preguntas=cuestionario.split(',')
+        cuestionario_env=[]
+        cont=0
+        for pregunta in preguntas:
+            preg_resp=pregunta.split('-')
+            preg=CuestionarioPregunta.objects.get(pk=preg_resp[0])
+            respuesta_env=[]
+            respuestas=CuestionarioRespuestas.objects.filter(pregunta=preg)
+            for respuesta in respuestas:
+                if respuesta.id == int(preg_resp[1]):
+                    if respuesta.is_correcto:
+                        cont=cont+1
+                        respuesta_env.append({'respuesta':respuesta.respuesta,
+                                                'tipo':'<i style="color: black; font-size: 20px;" class="fa fa-check"></i><i style="color: green; font-size: 20px;" class="fa fa-check-circle"></i>'})
+                    else:
+                        respuesta_env.append({'respuesta':respuesta.respuesta,
+                                                'tipo':'<i style="color: black; font-size: 20px;" class="fa fa-check"><i style="color: red; font-size: 20px;" class="fa fa-times-circle"></i>'})
+                else:
+                    if respuesta.is_correcto:
+                        respuesta_env.append({'respuesta':respuesta.respuesta,
+                                                'tipo':'<i style="color: green; font-size: 20px; margin-left: 21px;" class="fa fa-check-circle"></i>'})
+                    else:
+                        respuesta_env.append({'respuesta':respuesta.respuesta,
+                                                'tipo':''})
+            cuestionario_env.append({'pregunta':preg.pregunta,
+                                      'respuestas':respuesta_env  })
+        porciento=cont/len(preguntas)*100
+        context['informacion']='%s de %s para  un %s'%(cont,len(preguntas),porciento)+'%'
+        context['preguntas']=cuestionario_env
         return context
-
+@method_decorator(login_required,name='dispatch')
 class VerTransaccion(TemplateView):
     template_name= 'MedCongressApp/confic_email.html' 
     def get(self, request, **kwargs):
@@ -1139,8 +1175,7 @@ class VerTransaccion(TemplateView):
 
         self.request.session["error_opempay"]='Transacción no Completada'  
         return HttpResponseRedirect(reverse('Error_openpay'))
-
-       
+@method_decorator(login_required,name='dispatch')       
 class PerfilUpdateView(UpdateView):
     form_class = UsuarioForms
     success_url = reverse_lazy('perfil')
@@ -1164,6 +1199,18 @@ class PerfilUpdateView(UpdateView):
         context['update']=True
         context['imagen_seg_url']='/static/%s'%(self.object.foto)
         return context
+@method_decorator(login_required,name='dispatch')
+class CambiarPass(FormView):
+    form_class = CambiarPassForm
+    success_url = reverse_lazy('perfil')
+    template_name='MedCongressApp/cambiar_pass.html'
 
+    def form_valid(self, form):
+        print()
+        usuario= User.objects.filter(username=self.request.user.username).first()
+        usuario.set_password(self.request.POST['password'])
+        usuario.save()
+
+        return HttpResponseRedirect(reverse('perfil'))
       
 

@@ -165,11 +165,12 @@ Registrarse
                                     {{form.perfiluser.genero }}
                                 </div>
                             </div>
-
-
+                            {%if update%}
+{%else%}
                         </div>
 
                         <div class="row">
+                            {%endif%}
                             <div class="col-sm-3 ">
                                 <div class="form-group">
                                     <label

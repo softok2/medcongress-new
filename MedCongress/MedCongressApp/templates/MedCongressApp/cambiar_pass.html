@@ -11,22 +11,20 @@ Formulario Cambiar Pass
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="kf_heading_3" style="margin-top: 70px;">
-                        {%if validlink%}
+                      
                         <h2>Entre y Confirme la Nueva Contraseña </h2>
                         <span></span>
-                        <form action="" method="POST" class="contactusform" >
+                        <form action="" method="POST"  class="contactusform" >
                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             {%csrf_token%}
-                            <span style="font-size: 15px; color: red;">{{form.new_password1.errors}}</span>
-                            <label for="id_new_password1">Nueva Contraseña</label>
-                            {{form.new_password1}}
-                            <span style="font-size: 15px; color: red;">{{form.new_password2.errors}}</span> 
-                            <label for="id_new_password2">Confirme la Nueva Contraseña</label>
-                            {{form.new_password2}}
+                            <span style="font-size: 15px; color: red;">{{form.password.errors}}</span>
+                            <label for="id_password">Nueva Contraseña</label>
+                            {{form.password}}
+                            <span style="font-size: 15px; color: red;">{{form.password1.errors}}</span> 
+                            <label for="id_password1">Confirme la Nueva Contraseña</label>
+                            {{form.password1}}
                           <input type="submit" value="Cambiar Contraseña">
-                        {%else%}
-                        <span style="font-size: 15px; color: red;">Enlase Invalido</span> 
-                        {%endif%}
+                     
                     </div>
                         </form>
                     </div>
