@@ -145,7 +145,7 @@ Detalles del Perfil
                                 {%for congreso in congresos%}
                                 <li>
                                     <div class="kf_experience_list">
-                                        <h6>{{congreso.congreso.titulo}}</h6>
+                                        <h6><a href=" {% url 'View_congreso' path=congreso.congreso.path%}">{{congreso.congreso.titulo}}</a></h6>
                                         <a href="#"><i class="fa fa-calendar"></i>
                                             {{congreso.congreso.fecha_inicio|date:"M"}}
                                             {{congreso.congreso.fecha_inicio|date:"d"}} /

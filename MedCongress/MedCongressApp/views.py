@@ -29,7 +29,8 @@ from MedCongressAdmin.forms.congres_forms import UsuarioForms
 from .models import (CategoriaPagoCongreso, Congreso, EspecialidadCongreso,
                      Ponencia, Ponente, RelCongresoCategoriaPago,
                      RelCongresoUser,RelPonenciaPonente,PerfilUsuario,ImagenCongreso,Taller,RelTalleresCategoriaPago,RelTallerUser,DatosIniciales,
-                     CategoriaUsuario,Bloque,Moderador,RelTallerPonente,Pais,CuestionarioPregunta,CuestionarioRespuestas,RelPonenciaVotacion)
+                     CategoriaUsuario,Bloque,Moderador,RelTallerPonente,Pais,CuestionarioPregunta,CuestionarioRespuestas,RelPonenciaVotacion,
+                     PreguntasFrecuentes)
 from .pager import Pager
 from .cart import Cart
 from django_xhtml2pdf.views import PdfMixin
@@ -47,7 +48,7 @@ ID_KEY='m6ftsapwjvmo7j7y8mop'
 PUBLIC_KEY='pk_0d4449445a4948899811cea14a469793'
 PRIVATE_KEY='sk_34664e85b5504ca39cc19d8f9b8df8a2'
 URL_API='sandbox-api.openpay.mx'
-URL_SITE='https://medcongress.softok2.mx'
+URL_SITE='http://localhost:8000'
 URL_PDF='sandbox-dashboard.openpay.mx'
 
 # ID_KEY='muq0plqu35rnjyo7sf2v'
@@ -96,7 +97,10 @@ class PagoExitoso(TemplateView):
 
         invoice_id='%s-%s-%s_%s'%(today.year,today.month,today.day,secret_key)
         concepto=[]
+        subtotal=0
         for  car in self.request.session["car1"][1]:
+            importe_sin_iva=round(car['pagar']/1.16,2)
+            subtotal=subtotal+importe_sin_iva
             concepto.append({
                     "cantidad":car['cantidad'],
                     "clave_unidad": "E48",
@@ -104,38 +108,55 @@ class PagoExitoso(TemplateView):
                     "identificador": "6K9MVV MEDCONGRESS",
                     "unidad": car['tipo_evento'],
                     "descripcion": 'Pago del %s %s . '%(car['tipo_evento'],car['nombre_congreso']),
-                    "valor_unitario":round(car['precio'],2),
-                    "importe": round(car['pagar'],2),
+                    "valor_unitario":round(car['precio']/1.16,2),
+                    "importe":importe_sin_iva,
+                    "traslados": [
+                    {
+                        "impuesto": "002",
+                        "base": importe_sin_iva,
+                        "tipo_factor": "Tasa",
+                        "tasa": 0.16,
+                        "importe": round(importe_sin_iva*0.16,2)
+                    }]
             })
-        
-        params={
-            # "openpay_transaction_id": self.request.GET['id'],
-            "subtotal": round(self.request.session["car1"][0]['cant'],2),
-        
-            "total": round(self.request.session["car1"][0]['cant'],2),
-            "tipo_de_cambio": 1,
-            "forma_pago": "04",
-            "hide_total_items": True,
-            "hide_total_taxes": True,
-            
-            "moneda": "MXN",
-            "conceptos": concepto,
-            "lugar_expedicion": "76090",
-        
-            
-            "impuestos_traslado": [],
-            "impuestos_retencion": [],
-        
-            "receptor": {
+
+           
+        pago_sin_iva= round(self.request.session["car1"][0]['cant']/1.16,2)
+        # return HttpResponse('Total: %s  0.16: %s 0.48: %s'%(round(self.request.session["car1"][0]['cant'],2),round(self.request.session["car1"][0]['cant']*0.16,2),round(self.request.session["car1"][0]['cant'],2)-round(self.request.session["car1"][0]['cant']*0.16,2)))
+        params=  {
+        "subtotal":subtotal,
+        "total_trasladados": round(subtotal*0.16,2),
+        "total": subtotal+round(subtotal*0.16,2),
+        "tipo_de_cambio": 1,
+        "forma_pago": "04",
+        "hide_total_items": True,
+        "hide_total_taxes": True,
+        "moneda": "MXN",
+        "conceptos": concepto,
+        "lugar_expedicion": "76090",
+        "observaciones": "Si desea obtener su factura por el servicio de Asistencia TAR, ingrese a la siguiente dirección:\nhttp://masistencia.emitecliente.mx/index.php/clientefacturacion/generarFactura\nSi lo desea puede ingresar a esta dirección desde nuestro portal.",
+        "serie": "TAR",
+        "impuestos_traslado": [
+            {
+                "impuesto": "002",
+                "tasa": 0.16,
+                "importe": round(pago_sin_iva*0.16,2),
+                "tipo_factor": "Tasa"
+            }
+        ],
+        "impuestos_retencion": [],
+        "folio": "024295",
+         "receptor": {
                 "nombre": self.request.user.first_name+' '+ self.request.user.last_name,
                 "rfc": self.request.POST["rfc"],
                 "email": self.request.user.email,
-                "uso_cfdi": "G03"
+                "uso_cfdi": self.request.POST["cfdi"],
+                "residencia_fiscal":self.request.POST["dir"]
             },
-            "invoice_id":invoice_id,
-            "metodo_pago": "PUE",
-            
-        }  
+        "invoice_id": invoice_id,
+        "metodo_pago": "PUE",
+        "tipo_comprobante": "I"
+    }
         headers={'Content-type': 'application/json'}
         response=requests.post(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(params),headers=headers)
         response_dic=response.json()
@@ -448,6 +469,8 @@ class CongresoDetail(TemplateView):
                 context['talleres']=ver
                 context['permiso'] = False  
             context['categorias_pago']=cat_pago
+
+            context['preg_frecuentes']=PreguntasFrecuentes.objects.filter(congreso=congreso,published=True)
         return context
 
 ##### Formulario Tarjeta Pagar Congreso #####

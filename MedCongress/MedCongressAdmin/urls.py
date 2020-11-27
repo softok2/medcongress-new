@@ -12,7 +12,7 @@ from .views.congress_views import (CongressListView,CongressCreateView,CongressU
                                    CongressTalleresListView,CongressPonenciasListView,CongressCategPagosListView,
                                    CongressImagenesListView,AddPonenciaCongreso,CongressCategPagosCreateView,
                                    CongressDeletedView,CongressBloquesListView,GetBloques,AsignarCongressListView,AsignarCongressAddViews,GetPagos,
-                                   AsignarCongressDeletedViews,CongressImagenCreateView,CongressCuestionarioListView)
+                                   AsignarCongressDeletedViews,CongressImagenCreateView,CongressCuestionarioListView,CongressPregFrecuenteListView)
 from .views.imagen_views import (ImagenCreateView)
 from .views.ponencia_view import (PonenciaListView, PonenciaCreateView,PonenciaPonenteListView,
                                    PonencicaUpdateView,PonenciaPonenteCreateView,PonenciaDeletedView,
@@ -28,6 +28,7 @@ from .views.otros_views import (OtrosListView,OtroUpdateView)
 from .views.cuestionario_views import (PreguntaCreateView,CustionarioUpdateView)
 from .views.moderador_view import ModeradoresListView,ModeradorCreateView,ModeradorDeletedView
 from .views.meta_views import MetaPagInicioView,MetaPagInicioUpdateView
+from .views.preg_frecuente_view import PregFrecuenteCreateView,PregFrecuenteUpdateView,PregFrecuenteDeletView
 from .views.dashboard import DashboardView
 from django.conf.urls import handler404
 
@@ -63,6 +64,9 @@ urlpatterns = [
      path('cuestionario/congreso/<str:path>', CongressCuestionarioListView.as_view(), name='Congres_cuestionario'),
      path('cuestionario_pregunta/congreso/add/<str:path>', PreguntaCreateView.as_view(), name='congreso_cuestionario_pregunta_add'),
 
+      # Congreso-PregFrecuentes
+     path('pregunta_frecuente/congreso/<str:path>', CongressPregFrecuenteListView.as_view(), name='Congres_freg_frecuente'),
+     path('pregunta_frecuente/congreso/add/<str:path>', PregFrecuenteCreateView.as_view(), name='congreso_preg_frecuente_add'),
 
      # Congreso-Talleres
      path('talleres/congreso/<str:path>', CongressTalleresListView.as_view(), name='Congres_talleres'),
@@ -166,6 +170,11 @@ urlpatterns = [
      #Metadatos
      path('meta_pagina_inicio', MetaPagInicioView.as_view(), name='meta_pag_inicio'),
      path('meta_pagina_inicio/editar/<int:pk>', MetaPagInicioUpdateView.as_view(), name='meta_pag_inicio_edit'),
+     
+     #Pregunta Frecuentes
+   
+     path('pregunat_frecuente/editar/<int:pk>', PregFrecuenteUpdateView.as_view(), name='preg_frecuente_edit'),
+     path('pregunat_frecuente/eliminar/<int:pk>', PregFrecuenteDeletView.as_view(), name='preg_frecuente_delete'),
      
    
      

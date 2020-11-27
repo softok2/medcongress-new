@@ -1,0 +1,197 @@
+{% extends 'MedCongressAdmin/base.html' %}
+{% block title %}Adicionar Preguntas Frecuente {% endblock %}
+{% load static %}
+{% block styles %}
+
+
+
+{% endblock %}
+{% block content %}
+<section class="multiple-input-with-labels" id="multiple-input-with-labels">
+
+
+
+
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-header">
+					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
+						Adicionar Preguntas Frecuente</h1>
+					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
+					<div class="heading-elements">
+						<ul class="list-inline mb-0">
+							<li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+							<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="card-content collapse show">
+					<div class="card-body">
+						<form id="congres-form" method="POST" action="" enctype="multipart/form-data">
+							{% csrf_token %}
+						
+							<div class="form-body">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="row">
+											<div class="col-sm-8 ">
+												<div class="form-group">
+													<label
+														for="{{form.pregunta.id_for_label }}"><b>{{form.pregunta.label }}</b>{% if form.pregunta.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.pregunta.errors }}
+														</span>{% endif %} </label>
+
+													{{form.pregunta }}
+												</div>
+											</div>
+
+											<div class="col-sm-3 " style="display: none;">
+												<div class="form-group">
+													<label
+														for="{{form.congreso.id_for_label }}"><b>{{form.congreso.label }}</b>{% if form.congreso %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.congreso.errors }}
+														</span>{% endif %} </label>
+
+													{{form.congreso}}
+												</div>
+											</div>
+											<div class="col-sm-2 ">
+												<div class="form-group">
+													<label
+														for="{{form.published.id_for_label }}"><b>{{form.published.label }}</b>{% if form.published %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.published.errors }}
+														</span>{% endif %} </label>
+														<select name=" published" id="id_published" class="form-control">
+														<option value="True" selected>Si</option>
+														<option value="False" >No</option>
+														
+													</select>
+													
+													
+												
+												</div>
+											</div>
+
+										</div>
+										<div class="row">
+											<div class="col-sm-12 ">
+												<div class="form-group">
+													<label
+														for="{{form.respuesta.id_for_label }}"><b>{{form.respuesta.label }}</b>{% if form.respuesta.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.respuesta.errors }}
+														</span>{% endif %} </label>
+
+													{{form.respuesta }}
+												</div>
+											</div>
+											</div>
+										
+										
+											
+										</div>
+
+									<div class="form-actions">
+										<div class="text-right">
+											<button id="atras" type="button" class="btn btn-danger ">Cancelar
+												<i class="ft-x position-right"></i>
+											</button>
+
+											<button id="save" type="submit" class="btn btn-primary">Guardar
+												<i class="ft-save position-right"></i>
+											</button>
+
+										</div>
+									</div>
+								</div>
+							</div>
+					</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/editors/ckeditor/ckeditor.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/editors/editor-ckeditor.js'%}"></script>
+<link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
+<script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
+
+
+
+
+<script type="text/javascript">
+	$('#atras').click(function () {
+		{%if congreso %}
+		location.href = "{% url 'MedCongressAdmin:Congres_cuestionario' congreso.path %}";
+		{%else%}
+		location.href = "{% url 'MedCongressAdmin:bloques_list' %}";
+		{% endif %}
+	});
+	{%if congreso %}
+	$("#id_congreso option[value='{{congreso.id}}']").attr("selected", true);
+	{% endif %}
+
+	$(document).ready(function () {
+		
+
+
+
+
+
+		var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+		$.ajaxSetup({
+			beforeSend: function (xhr, settings) {
+				xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			}
+		});
+
+
+	});
+	function AddRespuesta(){
+		jQuery('.respuestas').append(`<div class="row respuesta">
+											<div class="col-sm-8 ">
+												<div class="form-group">
+
+
+													<input type="text" name="respuesta" maxlength="250" class="form-control" required="">
+												</div>
+											</div>
+											<div class="col-sm-2 ">
+												<div class="form-group">
+
+
+													<select name="is_correcto" class="form-control" id="">
+														<option value="True">Verdadera</option>
+														<option value="False" selected>Falsa</option>
+													</select>
+												</div>
+											</div>
+											<div class="col-sm-2 ">
+												<div class="form-group">
+
+
+													<select name="published_resp" class="form-control" id="">
+														<option value="True">Si</option>
+														<option value="False" selected>No</option>
+													</select>
+												</div>
+											</div>
+										
+										</div>`);
+										$('#del').removeAttr('disabled');
+
+	}
+function DeletedRespuesta(){
+	$('.respuesta').last().remove();
+	if($('.respuesta').length==2)
+	$('#del').attr('disabled','disabled');
+}
+</script>
+{% endblock %}

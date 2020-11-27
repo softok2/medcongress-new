@@ -112,6 +112,7 @@ class PerfilUsuario(models.Model):
     meta_keywords=models.TextField(max_length=250,null=True)
     meta_og_imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='metas',blank=True, null=True )
     meta_title=models.CharField(max_length=250,null=True)
+    score=models.IntegerField(null=True)
     class Meta:
         verbose_name='Perfil usuario'
         verbose_name_plural='Perfil de usuarios'
@@ -216,6 +217,7 @@ class Congreso(models.Model):
     foto_constancia=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso/img_constancia',null=True)
     aprobado=models.IntegerField(null=True)
     cant_preguntas=models.IntegerField(null=True)
+    score=models.IntegerField(null=True)
     
 
 
@@ -631,4 +633,16 @@ class MetaPagListCongreso(models.Model):
 
     def __str__(self):
         return self.meta_title 
-   
+
+
+class PreguntasFrecuentes(models.Model):
+    pregunta=models.CharField(max_length=250)
+    respuesta=models.TextField()
+    congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
+    published=models.BooleanField(null=True)
+    class Meta:
+        verbose_name='Pregunta frecuente de un Congreso'
+        verbose_name_plural='Preguntas fercuentes de los Congresos'
+
+    def __str__(self):
+        return self.pregunta 

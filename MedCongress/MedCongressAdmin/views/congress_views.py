@@ -9,7 +9,7 @@ from django.views.generic import ListView,TemplateView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView,FormView
 from MedCongressApp.models import (Congreso,Taller,Ponencia,RelCongresoCategoriaPago,ImagenCongreso,Ubicacion
-                                    ,Bloque,RelCongresoUser,RelCongresoCategoriaPago,CuestionarioPregunta,CuestionarioRespuestas)
+                                    ,Bloque,RelCongresoUser,RelCongresoCategoriaPago,CuestionarioPregunta,CuestionarioRespuestas,PreguntasFrecuentes)
 from MedCongressAdmin.forms.congres_forms import CongresoForms,PonenciaForms,CongresoCategPagoForm,AsignarCongresoForms,ImagenCongForms
 
 class validarUser(UserPassesTestMixin):
@@ -335,5 +335,26 @@ class CongressImagenCreateView(validarUser,FormView):
         congreso=Congreso.objects.get(pk=self.kwargs.get('pk'))
         self.success_url =  reverse_lazy('MedCongressAdmin:Congres_imagenes',kwargs={'path': congreso.path} )
         return self.success_url
+
+
+########## Vista del Preguntas Frecuentes de un Congreso #############
+
+class CongressPregFrecuenteListView(validarUser,TemplateView):
+    template_name= 'MedCongressAdmin/preg_frecuentes.html' 
+    def get(self, request, **kwargs):
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        if congreso is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        return self.render_to_response(self.get_context_data()) 
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        preguntas_env=[]
+        preguntas=PreguntasFrecuentes.objects.filter(congreso=congreso)
+        context['preguntas']=preguntas
+        context['congreso']=congreso
+       
+        return context
 
     

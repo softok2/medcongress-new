@@ -6,7 +6,7 @@ from  MedCongressApp.models import (Congreso,Ubicacion,ImagenCongreso,TipoCongre
                                     CategoriaPagoCongreso,RelTalleresCategoriaPago,Genero,CategoriaUsuario,
                                     RelTallerPonente,Bloque,DatosIniciales,RelCongresoUser,RelTallerUser,
                                     Moderador,RelBloqueModerador,ImagenCongreso,CuestionarioPregunta,CuestionarioRespuestas,
-                                    MetaPagInicio,MetaPagListCongreso)
+                                    MetaPagInicio,MetaPagListCongreso,PreguntasFrecuentes)
                     
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
@@ -455,6 +455,7 @@ class PreguntaForm(forms.ModelForm):
     class Meta:
         model=CuestionarioPregunta
         fields=['congreso','pregunta','published']
+
 class RespuestasForm(forms.ModelForm):
     
     respuesta=forms.MultipleChoiceField(widget=forms.TextInput())
@@ -502,6 +503,27 @@ class MetaPagInicioForm(forms.ModelForm):
         self.fields['meta_og_imagen'].widget.attrs.update({'class': 'form-control '}) 
         self.fields['meta_title'].widget.attrs.update({'class': 'form-control'})   
           
+class PregFrecuenteForm(forms.ModelForm):
+    
+    class Meta:
+        model=PreguntasFrecuentes
+        fields=['pregunta','respuesta','congreso','published']
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+
+        self.fields['pregunta'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['respuesta'].widget.attrs.update({'class': 'form-control ckeditor'}) 
+        self.fields['congreso'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['published'].widget.attrs.update({'class': 'form-control'}) 
+
+    # def clean(self, *args, **kwargs):
+    #     cleaned_data = super(ImagenCongForms, self).clean(*args, **kwargs)
+    #     imagen = cleaned_data.get('imagen', None)
+    #     w, h = get_image_dimensions(imagen)
+    #     if w != 1920 or h != 1080:
+    #         self.add_error('imagen',"Esta imagen tiene %s X %s pixel. Debe ser de 1920 X 1080 pixel" %(w,h) )
 
 
 

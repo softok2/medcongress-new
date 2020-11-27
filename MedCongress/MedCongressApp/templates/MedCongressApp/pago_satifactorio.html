@@ -19,8 +19,8 @@ Transaccion Exitosa
                 {% csrf_token %}
             <div class="modal-body">
                 
-                <div class=" ">
-                    <div id="factura" >
+                <div class=" row ">
+                    <div id="factura" class="col-md-6" >
                         <div class="form-group">
                             <label>RFC</label>
 
@@ -29,6 +29,32 @@ Transaccion Exitosa
                         </div>
 
                     </div>
+                    <div id="" class="col-md-6" >
+                        <div class="form-group">
+                            <label>CFDI</label>
+<select name="cfdi" id="" class="form-control">
+
+    <option value="G03">G03 	Gastos en general.</option>
+    <option value="D10">D10 	Pagos por servicios educativos (colegiaturas).</option>
+</select>
+                            
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class=" row ">
+                    <div id="" class="col-md-12" >
+                        <div class="form-group">
+                            <label>Dirección a Facturar</label>
+
+                            <input type="text" id="" name="dir">
+
+                        </div>
+
+                    </div>
+                    
 
                 </div>
            
