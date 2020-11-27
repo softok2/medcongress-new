@@ -376,6 +376,17 @@
 													{{form.congreso.published }}
 												</div>
 											</div>
+											<div class="col-sm-3 ">
+												<div class="form-group">
+													<label
+														for="{{form.congreso.score.id_for_label }}"><b>{{form.congreso.score.label }}</b>{% if form.congreso.score.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.congreso.score.errors }}
+														</span>{% endif %} </label>
+
+													{{form.congreso.score }}
+												</div>
+											</div>
 										</div>
 
 										<div class="form-actions">

@@ -15,15 +15,16 @@ from betterforms.multiform import MultiModelForm
 class CongresForm(forms.ModelForm):
     imagen_seg=forms.ImageField(label='Buscar Imagen',required=False)
     is_openpay=forms.BooleanField(label='Pagar por OpenPay',required=False)
-    titulo=forms.CharField(label='Título',initial=True)
+    titulo=forms.CharField(label='Título')
     template=forms.CharField(label='Template del Congreso',required=False)
     published=forms.BooleanField(label='Publicado',required=False)
     sub_titulo=forms.CharField(label='Título segundario',required=False) 
     t_congreso=forms.ModelChoiceField(queryset=TipoCongreso.objects.all(),label='Tipo de Congreso')
     fecha_inicio=forms.DateTimeField(widget=forms.TextInput())
+    score=forms.IntegerField(label='Puntuación del Congreso')
     class Meta:
         model=Congreso
-        fields=['titulo','sub_titulo','imagen_seg','fecha_inicio','published','t_congreso','especialidad','is_openpay','template','foto_constancia','aprobado','cant_preguntas']
+        fields=['titulo','sub_titulo','imagen_seg','fecha_inicio','published','t_congreso','especialidad','is_openpay','template','foto_constancia','aprobado','cant_preguntas','score']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
@@ -40,7 +41,7 @@ class CongresForm(forms.ModelForm):
         self.fields['foto_constancia'].widget.attrs.update({'class': 'form-control',}) 
         self.fields['aprobado'].widget.attrs.update({'class': 'form-control',})  
         self.fields['cant_preguntas'].widget.attrs.update({'class': 'form-control',})                        
-
+        self.fields['score'].widget.attrs.update({'class': 'form-control',})   
     def clean(self, *args, **kwargs):
         cleaned_data = super(CongresForm, self).clean(*args, **kwargs)
         imagen = cleaned_data.get('imagen_seg', None)

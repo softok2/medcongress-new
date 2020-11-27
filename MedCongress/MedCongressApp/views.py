@@ -914,7 +914,17 @@ class GetCuestionario(TemplateView):
         
         preguntas=self.request.POST[resp]
         if total/con*100>congreso.aprobado:
-            ##############
+            usuario=PerfilUsuario.objects.filter(usuario=self.request.user).first()
+            score=0
+           
+            if congreso.score:
+                score=congreso.score
+            if usuario.score is None:
+                usuario.score=score
+            else:
+                usuario.score=usuario.score+score
+            usuario.save()
+            ############## hacer Constancia#############
             nombre='%s %s'%(self.request.user.first_name,self.request.user.last_name)
             congreso_t= congreso.titulo
             cont=len(nombre)
@@ -939,6 +949,7 @@ class GetCuestionario(TemplateView):
             nombre_img='constancia_%s_%s'%(self.request.user.first_name,tit)  
             out.save('MedCongressApp/static/congreso/img_constancia/%s.png'%(nombre_img))
         ##########################
+            
             constancias=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario)
             for constancia in constancias:
                 constancia.is_constancia=True
@@ -1019,7 +1030,7 @@ class SetConstancia(TemplateView):
         cont=len(nombre)
         comienzo=630-(cont/2*18)
         cont=len(congreso_t)
-        comienzo_t=640-(cont/2*10)
+        comienzo_t=630-(cont/2*10)
         base=Image.open('MedCongressApp/static/%s')%(congreso.foto_constancia).convert('RGBA')
         text=Image.new('RGBA',base.size,(255,255,255,0))
         nombre_font=ImageFont.truetype('calibri.ttf',40)
