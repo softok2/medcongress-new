@@ -293,8 +293,8 @@ Ver Ponencia
 		$('input.update').on('change', function () {
 
 swal({
-	title: "Le dará una Evaluación de " + $(this).val() + ' puntos a esta Ponencia',
-	text: "Si Acepta no podra dar otra puntuación",
+	title: "Atención",
+	text: "Le dará una Evaluación de " + $(this).val() + " puntos a esta Ponencia",
 	icon: "warning",
 	buttons: {
 		cancel: {
@@ -418,7 +418,7 @@ swal({
 		if (isConfirm) {
 			$('#sin_evaluar').show();
 			$('#evaluado').hide();
-		swal('Aviso','Pyede evaluar de nuevo esta Ponencia','success')
+		swal('Aviso',' Ya puede evaluar de nuevo esta Ponencia','success')
 		}
 		else {
 		location.reload()	
