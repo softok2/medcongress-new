@@ -4,7 +4,7 @@ from .views import (Home,CongresoListView,CongresoDetail,CongresoCardForm,Perfil
 ViewErrorOpenpay,PagarEfectivo,ViewError404,ViewPonencia,EspecialdiadesAutocomplete,
 AddCart,AddCartTaller,DeletedCart,ConfCart,AvisoPrivacidad,HabilitarUser,Perfil,PagoExitoso,Email,GetPerfil,
 GetCuestionario,SetConstancia,EvaluarPonencia,Resultado_Cuestionario,Get_Constancia,VerTransaccion,GetFactura,
-ViewErrorFact,PerfilUpdateView,CambiarPass)
+ViewErrorFact,PerfilUpdateView,CambiarPass,UpdateEvaluarPonencia)
 
 urlpatterns = [
     
@@ -38,6 +38,9 @@ urlpatterns = [
     path('cuestionario/congreso/<str:path>',GetCuestionario.as_view() , name='Cuestionario'),
     path('constancia/congreso/<str:path>',SetConstancia.as_view() , name='Constancia'),
     path('evaluar/ponencia',EvaluarPonencia.as_view() , name='EvaluarPonencia'),
+    path('reevaluar/ponencia',UpdateEvaluarPonencia.as_view() , name='UpdateEvaluarPonencia'),
+
+    
     path('cuestionario/resultado/<str:path>',Resultado_Cuestionario.as_view() , name='Resultado_Cuestionario'),
     path('ver_constancia/congreso/<str:path>',Get_Constancia.as_view() , name='Get_Constancia'),
     path('ver_transaccion',VerTransaccion.as_view() , name='ver_transaccion'),

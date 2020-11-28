@@ -29,70 +29,79 @@ Ver Ponencia
 {%if ponencia.cod_video and is_pagado%}
 <div class="container">
 	<div class="row" style="margin-top: 5%; margin-bottom: 50px;">
-		<div class="col-md-2"></div>
-		<div class="col-md-8">
-			<div class="col-md-8">
-				<div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/{{ponencia.cod_video}}" frameborder="0" allow="autoplay; fullscreen" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe></div>
-				
-			<div>
-				<h4 style="margin: 0 0 15px;
-		font-size: 14px;
-		line-height: 30px;
-		text-transform: uppercase;
-		font-family: 'Gotham-Bold';
-		color: #565657;">{{ponencia.titulo}}</h4>
-				{%for ponente in ponencia.ponente.all%}
-				<div class="kf_new_conf_orgnizr ">
-					<figure>
-						{% if ponente.user.foto%}
-						<img src="{% static '/'%}{{ponente.user.foto}}" alt="image de {{mod.user.usuario.username}}">
-						{%else%}
-						<img src="{% static 'MedCongressApp/images/defaulthombre.png' %}"
-							alt="image de {{mod.user.usuario.username}}">
-						{%endif%}
-					</figure>
-					<div class="kf_new_conf_orgnizr_name">
-						<span> Ponente</span>
-						<h6>{{ponente.user.usuario.first_name}}
-							{{ponente.user.usuario.last_name}}</h6>
-						<p>
-							{%if ponente.user.puesto %}
-							{{ponente.user.puesto}}
-							{%endif%}
-						</p>
-					</div>
-				</div>
-				<div class="kf_new_conf_orgnizr ">
 
-					<div class="">
-						{%if is_evaluado%}
-						<h6 style="margin: 0 0 15px;
+		<div class="col-md-12">
+
+			<div style='padding:56.25% 0 0 0;position:relative;margin:25px 0'><iframe
+					src='https://player.vimeo.com/video/{{ponencia.cod_video }}' allowfullscreen frameborder='0'
+					style='position:absolute;top:0;left:0;width:100%;height:100%;'></iframe></div>
+
+
+			<h4 style="margin: 0 0 15px;font-size: 14px;line-height: 30px;text-transform: uppercase;font-family: 'Gotham-Bold';color: #565657;">{{ponencia.titulo}}</h4>
+			{%for ponente in ponencia.ponente.all%}
+			<div class="kf_new_conf_orgnizr ">
+				<figure>
+					{% if ponente.user.foto%}
+					<img src="{% static '/'%}{{ponente.user.foto}}" alt="image de {{mod.user.usuario.username}}">
+					{%else%}
+					<img src="{% static 'MedCongressApp/images/defaulthombre.png' %}"
+						alt="image de {{mod.user.usuario.username}}">
+					{%endif%}
+				</figure>
+				<div class="kf_new_conf_orgnizr_name">
+					<span> Ponente</span>
+					<h6>{{ponente.user.usuario.first_name}}
+						{{ponente.user.usuario.last_name}}</h6>
+					<p>
+						{%if ponente.user.puesto %}
+						{{ponente.user.puesto}}
+						{%endif%}
+					</p>
+				</div>
+			</div>
+			
+
+
+
+			{%endfor%}
+			<div class="kf_new_conf_orgnizr ">
+
+				<div class="">
+					{%if is_evaluado%}
+					<div id="evaluado">
+					<h6 style="margin: 0 0 15px;
 				font-size: 14px;
 				line-height: 30px;
 				text-transform: uppercase;
 				font-family: 'Gotham-Bold';
 				color: #565657;">Su evaluación fue</h6>
 
-						<input type="hidden" class="rating" id="rating" data-readonly value="{{is_evaluado}}" />
-						{%else%}
-						<h6 style="margin: 0 0 15px;
+					<input type="hidden" class="rating" id="rating" data-readonly value="{{is_evaluado}}" /> <button id="update" class="btn btn-primary" onclick="Update()" title="Cambiar Votación"><i class="fa fa-refresh" ></i></button>
+				</div>
+				<div id='sin_evaluar' style="display: none;">
+					<h6 style="margin: 0 0 15px;
+					font-size: 14px;
+					line-height: 30px;
+					text-transform: uppercase;
+					font-family: 'Gotham-Bold';
+					color: #565657;">Vuelva a Evaluar esta Ponencia</h6>
+	
+						<input type="hidden" class="rating check rating-tooltip update" id="rating" /></div>
+					{%else%}
+					<h6 style="margin: 0 0 15px;
 				font-size: 14px;
 				line-height: 30px;
 				text-transform: uppercase;
 				font-family: 'Gotham-Bold';
 				color: #565657;">Evalue esta Ponencia</h6>
 
-						<input type="hidden" class="rating check rating-tooltip" id="rating" />
-						{%endif%}
-					</div>
+					<input type="hidden" class="rating check rating-tooltip nueva" id="rating" />
+					{%endif%}
 				</div>
-
-
-
-				{%endfor%}
 			</div>
 		</div>
 	</div>
+</div>
 </div>
 {%else%}
 <div style="background-color: rgb(99, 97, 97);">
@@ -231,13 +240,13 @@ Ver Ponencia
 		countUp: false
 	});
 	$(function () {
-		
-		$('input.check').on('change', function () {
+
+		$('input.nueva').on('change', function () {
 
 			swal({
 				title: "Le dará una Evaluación de " + $(this).val() + ' puntos a esta Ponencia',
 				text: "Si Acepta no podra dar otra puntuación",
-				icon: "success",
+				icon: "warning",
 				buttons: {
 					cancel: {
 						text: "No!",
@@ -269,7 +278,7 @@ Ver Ponencia
 								'ponencia': '{{ponencia.pk}}',// from form
 							},
 							success: function (data) {
-								alert(data.succes)
+								
 								location.reload();
 							}
 						});
@@ -281,17 +290,66 @@ Ver Ponencia
 				});
 
 		});
+		$('input.update').on('change', function () {
+
+swal({
+	title: "Le dará una Evaluación de " + $(this).val() + ' puntos a esta Ponencia',
+	text: "Si Acepta no podra dar otra puntuación",
+	icon: "warning",
+	buttons: {
+		cancel: {
+			text: "No!",
+			value: null,
+			visible: true,
+			className: "",
+			closeModal: false,
+		},
+		confirm: {
+			text: "Si",
+			value: true,
+			visible: true,
+			className: "",
+			closeModal: false
+		}
 
 
-{%if is_evaluado %}
+
+	}
+})
+	.then((isConfirm) => {
+		if (isConfirm) {
+			$.ajax({
+				type: "GET",
+				url: "{% url 'UpdateEvaluarPonencia'%}",
+				data: {
+					'puntuacion': $(this).val(), // from form
+					'usuario': '{{request.user.pk}}',// from form
+					'ponencia': '{{ponencia.pk}}',// from form
+				},
+				success: function (data) {
+					
+					location.reload();
+				}
+			});
+		}
+		else {
+			location.reload();
+		}
+
+	});
+
+});
+	 
+
+		{%if is_evaluado %}
 		$('.rating').each(function () {
 			$('<span class="label label-default"></span>')
-			
-			.text('{{is_evaluado}}' || ' ')
-			
-		
-			
-            .insertAfter(this);
+
+				.text('{{is_evaluado}}' || ' ')
+
+
+
+				.insertAfter(this);
 		});
 		{% endif %}
 		$('.rating-tooltip').rating({
@@ -329,6 +387,46 @@ Ver Ponencia
 		});
 
 	});
+
+	function Update() {
+
+swal({
+	title: "Cambiará su Evaluación",
+	text: "Desea dar otra puntuación",
+	icon: "warning",
+	buttons: {
+		cancel: {
+			text: "No!",
+			value: null,
+			visible: true,
+			className: "",
+			closeModal: false,
+		},
+		confirm: {
+			text: "Si",
+			value: true,
+			visible: true,
+			className: "",
+			closeModal: false
+		}
+
+
+
+	}
+})
+	.then((isConfirm) => {
+		if (isConfirm) {
+			$('#sin_evaluar').show();
+			$('#evaluado').hide();
+		swal('Aviso','Pyede evaluar de nuevo esta Ponencia','success')
+		}
+		else {
+		location.reload()	
+		}
+
+	});
+
+}
 
 </script>
 {%endblock%}

@@ -387,6 +387,17 @@
 													{{form.congreso.score }}
 												</div>
 											</div>
+											<div class="col-sm-3 ">
+												<div class="form-group">
+													<label
+														for="{{form.congreso.streaming.id_for_label }}"><b>{{form.congreso.streaming.label }}</b>{% if form.congreso.streaming.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.congreso.streaming.errors }}
+														</span>{% endif %} </label>
+
+													{{form.congreso.streaming }}
+												</div>
+											</div>
 										</div>
 
 										<div class="form-actions">

@@ -48,7 +48,7 @@ ID_KEY='m6ftsapwjvmo7j7y8mop'
 PUBLIC_KEY='pk_0d4449445a4948899811cea14a469793'
 PRIVATE_KEY='sk_34664e85b5504ca39cc19d8f9b8df8a2'
 URL_API='sandbox-api.openpay.mx'
-URL_SITE='https://medcongress.softok2.mx'
+URL_SITE='http://localhost:8000'
 URL_PDF='sandbox-dashboard.openpay.mx'
 
 # ID_KEY='muq0plqu35rnjyo7sf2v'
@@ -851,7 +851,6 @@ class GetPerfil(TemplateView):
                             'talleres':talleres_env}
             return JsonResponse(usuario_json, safe=False)
         return TemplateResponse(request, reverse('dashboard'))
-
 @method_decorator(login_required,name='dispatch')
 class GetCuestionario(TemplateView):
     template_name= 'MedCongressApp/congreso_cuestionario.html' 
@@ -997,12 +996,12 @@ class GetFactura(TemplateView):
                 if str(cart['tipo_evento']) == 'Congreso':
                     congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
                     categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                    pagar_congreso=RelCongresoUser.objects.create(user=self.request.user.perfilusuario,congreso=congreso,categoria_pago=categoria,uuid_factura=response_di[0]['uuid'])
+                    pagar_congreso=RelCongresoUser.objects.create(user=self.request.user.perfilusuario,congreso=congreso,categoria_pago=categoria,uuid_factura=self.kwargs.get('invoice'))
                     pagar_congreso.save()
                 if str(cart['tipo_evento']) == 'Taller':
                     taller=Taller.objects.filter(id=cart['id_congreso']).first()
                     categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                    pagar_congreso=RelTallerUser.objects.create(user=self.request.user.perfilusuario,taller=taller,categoria_pago=categoria,uuid_factura=response_di[0]['uuid'])
+                    pagar_congreso=RelTallerUser.objects.create(user=self.request.user.perfilusuario,taller=taller,categoria_pago=categoria,uuid_factura=self.kwargs.get('invoice'))
                     pagar_congreso.save()
 
         url2='https://%s/v1/%s/invoices/v33/%s/?getUrls=True'%(URL_API,ID_KEY,response_di[0]['uuid'])
@@ -1085,7 +1084,6 @@ class Get_Constancia(PdfMixin,TemplateView):
         if  constancia is None :
             return   HttpResponseRedirect(reverse('Error404'))
         return self.render_to_response(self.get_context_data())
-
 @method_decorator(login_required,name='dispatch')
 class EvaluarPonencia(TemplateView):
     template_name= 'MedCongressApp/pago_satifactorio.html'
@@ -1101,6 +1099,21 @@ class EvaluarPonencia(TemplateView):
             usuario_json={'succes':'True'}
             return JsonResponse(usuario_json, safe=False)
         return TemplateResponse(request, reverse('dashboard')) 
+@method_decorator(login_required,name='dispatch')
+class UpdateEvaluarPonencia(TemplateView):
+    template_name= 'MedCongressApp/pago_satifactorio.html'
+
+    def get(self, request):
+        if request.is_ajax:
+            puntuacion =request.GET.get("puntuacion")
+            usuario=request.GET.get("usuario")
+            ponencia_id=request.GET.get("ponencia")
+            ponencia=Ponencia.objects.get(pk=ponencia_id)
+            votacion=RelPonenciaVotacion.objects.filter(user=self.request.user,ponencia=ponencia).first()
+            votacion.votacion=puntuacion
+            votacion.save()
+            usuario_json={'succes':'True'}
+            return JsonResponse(usuario_json, safe=False)
 @method_decorator(login_required,name='dispatch')
 class Resultado_Cuestionario(TemplateView):
     template_name='MedCongressApp/resultado_cuestionario.html'

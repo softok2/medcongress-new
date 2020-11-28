@@ -146,11 +146,14 @@ Detalles del Perfil
                                 <li>
                                     <div class="kf_experience_list">
                                         <h6><a href=" {% url 'View_congreso' path=congreso.congreso.path%}">{{congreso.congreso.titulo}}</a></h6>
+                                        
                                         <a href="#"><i class="fa fa-calendar"></i>
                                             {{congreso.congreso.fecha_inicio|date:"M"}}
                                             {{congreso.congreso.fecha_inicio|date:"d"}} /
                                             {{congreso.congreso.fecha_inicio|date:"Y"}}</a>
                                         <p>{{congreso.congreso.sub_titulo}}</p>
+
+                                        <a style="margin-top: -10px;color: black;" href=""><i class='fa fa-eye'></i><b>Ver Factura</b> </a><br>
                                     </div>
                                 </li>
                                 {%endfor%}

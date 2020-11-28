@@ -218,6 +218,7 @@ class Congreso(models.Model):
     aprobado=models.IntegerField(null=True)
     cant_preguntas=models.IntegerField(null=True)
     score=models.IntegerField(null=True)
+    streaming=models.CharField(max_length=10,null=True)
     
 
 
