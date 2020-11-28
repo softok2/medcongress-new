@@ -35,7 +35,7 @@
 													<span style="font-size: 15px; color: red;">{{ form.user.errors }}
 													</span>{% endif %} </label>
 
-												{{form.user }}
+													<input type="text" class="form-control" id='id_user' name="user">
 											</div>
 										</div>
 										<div class="col-sm-2">
@@ -90,7 +90,15 @@
 </section>
 {% endblock %}
 {% block scripts %}
+<link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
+<script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
 <script type="text/javascript">
+$(function() {
+	  $("#id_user").autocomplete({
+		source: "{% url 'User_autocomp'%}",
+		minLength: 3,
+	  });
+	});
 	$(document).ready(function () {
 		var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
 		$.ajaxSetup({

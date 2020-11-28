@@ -698,6 +698,22 @@ def EspecialdiadesAutocomplete(request):
     mimetype = "application/json"
     return HttpResponse(data, mimetype)
 
+##### Autocompletar Especialidades #####
+
+def UserAutocomplete(request):
+    if request.is_ajax():
+        query = request.GET.get("term", "")
+        usuarios = User.objects.filter(email__icontains=query)
+        results = []
+        for usuario in usuarios:
+            place_json = usuario.email
+            results.append(place_json)
+        data = json.dumps(results)
+    mimetype = "application/json"
+    return HttpResponse(data, mimetype)
+
+
+
 ##### Pagar en efectivo #####
 @method_decorator(login_required,name='dispatch')
 class PagarEfectivo(TemplateView):

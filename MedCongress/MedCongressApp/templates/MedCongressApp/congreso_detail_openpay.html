@@ -229,9 +229,7 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 {%if pagado and  congreso.streaming%}
-                <div style='padding:56.25% 0 0 0;position:relative;margin:25px 0'><iframe
-                        src='{{congreso.streaming }}' allowfullscreen frameborder='0'
-                        style='position:absolute;top:0;left:0;width:100%;height:100%;'></iframe></div>
+                {{congreso.streaming|safe }}
                 {%endif%}
                 <div class="schedule-banner">
                     <img src="{% static '/'%}{{congreso.imagen_seg}}" alt="" />

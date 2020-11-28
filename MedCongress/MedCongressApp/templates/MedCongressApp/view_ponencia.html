@@ -31,10 +31,8 @@ Ver Ponencia
 	<div class="row" style="margin-top: 5%; margin-bottom: 50px;">
 
 		<div class="col-md-12">
-
-			<div style='padding:56.25% 0 0 0;position:relative;margin:25px 0'><iframe
-					src='{{ponencia.cod_video }}' allowfullscreen frameborder='0'
-					style='position:absolute;top:0;left:0;width:100%;height:100%;'></iframe></div>
+			{{ponencia.cod_video|safe }}
+			
 
 
 			<h4 style="margin: 0 0 15px;font-size: 14px;line-height: 30px;text-transform: uppercase;font-family: 'Gotham-Bold';color: #565657;">{{ponencia.titulo}}</h4>

@@ -4,7 +4,7 @@ from .views import (Home,CongresoListView,CongresoDetail,CongresoCardForm,Perfil
 ViewErrorOpenpay,PagarEfectivo,ViewError404,ViewPonencia,EspecialdiadesAutocomplete,
 AddCart,AddCartTaller,DeletedCart,ConfCart,AvisoPrivacidad,HabilitarUser,Perfil,PagoExitoso,Email,GetPerfil,
 GetCuestionario,SetConstancia,EvaluarPonencia,Resultado_Cuestionario,Get_Constancia,VerTransaccion,GetFactura,
-ViewErrorFact,PerfilUpdateView,CambiarPass,UpdateEvaluarPonencia)
+ViewErrorFact,PerfilUpdateView,CambiarPass,UpdateEvaluarPonencia,UserAutocomplete)
 
 urlpatterns = [
     
@@ -23,6 +23,7 @@ urlpatterns = [
 
 
     path('especialidades_autocomp', EspecialdiadesAutocomplete , name='Especialidades_autocomp'),
+    path('user_autocomp', UserAutocomplete , name='User_autocomp'),
     path('add_cart', AddCart.as_view() , name='Add_cart'),
     path('add_cart_taller', AddCartTaller.as_view() , name='Add_cart_taller'),
     path('deleted_cart',DeletedCart.as_view() , name='Deleted_cart'),
@@ -45,6 +46,7 @@ urlpatterns = [
     path('ver_constancia/congreso/<str:path>',Get_Constancia.as_view() , name='Get_Constancia'),
     path('ver_transaccion',VerTransaccion.as_view() , name='ver_transaccion'),
     path('cambiar_pass',CambiarPass.as_view() , name='Cambiar_Pass'),
+    
     
     
     
