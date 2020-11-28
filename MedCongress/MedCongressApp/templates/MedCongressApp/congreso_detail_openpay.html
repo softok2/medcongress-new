@@ -486,6 +486,50 @@
         {%endif%}
     </div>
 </div>
+<div class="kode-our-pricing" id="pagos">
+    <div class="container">
+        <div class="kf_heading_3">
+            <h2>Ponencias</h2>
+            <span></span>
+        </div>
+       
+<div class="row">
+    {%if ponencias_video %}
+    {% for ponencia in ponencias_video %}
+    {%if ponencia.cod_video%}
+    <div class="col-md-4">
+        <!--KODE_EVENT_BLOG2 START-->
+        <div class="kode-event-blog3">
+            <a href="{% url 'View_ponencia' ponencia.path %}" class="">
+            <figure >
+                <img src="{% static '/'%}{{ponencia.imagen}}" alt=""/>
+               
+               
+                <div class="kode-fig-capstion" >
+                    <a href="{% url 'View_ponencia' ponencia.path  %}">{{ponencia.titulo }}</a>
+                   {%if ponencia.detalle%} <p style="font-style: italic;"> {{ponencia.detalle|truncatewords:10 }}</p>{%endif%}
+                </div>
+               
+            </figure>
+        </a>
+            <div class="kode-thumb-caption">
+                <a href="{% url 'View_ponencia' ponencia.path %}"><h4>{{ponencia.titulo }}</h4></a>
+                <ul>
+                    <li><a href="#"><i class="fa fa-calendar"></i>{{ponencia.fecha_inicio|date:"M"}} {{ponencia.fecha_inicio|date:"d"}} / {{ponencia.fecha_inicio|date:"Y"}}</a></li>
+                   
+                </ul>
+                <span><a href="{% url 'View_ponencia' ponencia.path %}">Leer Más</a></span>
+            </div>
+       
+        </div>
+        <!--KODE_EVENT_BLOG2 START-->
+    </div>
+    {%endif%}
+    {% endfor %}
+    
+    {%endif%}
+</div>
+</div  
 <!-- Boletos-->
 <div class="kode-our-pricing" id="pagos">
     <div class="container">

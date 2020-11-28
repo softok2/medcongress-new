@@ -383,7 +383,8 @@ class CongresoDetail(TemplateView):
                 'foto':ponente.user.foto,
                 'tipo':'Ponente',
                 })
-
+            ponencias_video= Ponencia.objects.filter(congreso=congreso)
+            context['ponencias_video']=ponencias_video
             prueba_taller=Taller.objects.filter(congreso=congreso.pk)
             id_t=[]
             for pp in prueba_taller:
