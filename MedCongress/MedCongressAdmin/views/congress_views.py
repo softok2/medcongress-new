@@ -122,7 +122,7 @@ class CongressPonenciasListView(validarUser,TemplateView):
         context = super().get_context_data(**kwargs)
         congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
         context['congres']=congreso
-        context['ponencias']=Ponencia.objects.filter(congreso=congreso,published=True)
+        context['ponencias']=Ponencia.objects.filter(congreso=congreso)
         context['all_ponencias']=Ponencia.objects.filter(published=True).exclude(congreso=congreso)
         return context
 

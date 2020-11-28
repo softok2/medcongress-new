@@ -60,23 +60,22 @@
     .shadow-none {
         box-shadow: none !important;
     }
-  
-	.simply-section {
-		color: #e5e5e7 !important;
-		background-color: #39393a60 !important;
 
-	}
+    .simply-section {
+        color: #e5e5e7 !important;
+        background-color: #39393a60 !important;
 
-	.glyphicon {
-		color: yellow;
-		font-size: 40px;
+    }
 
-	}
+    .glyphicon {
+        color: yellow;
+        font-size: 40px;
 
-	.glyphicon-star-empty {
-		color: rgb(85, 84, 84);
-	}
+    }
 
+    .glyphicon-star-empty {
+        color: rgb(85, 84, 84);
+    }
 </style>
 {%endblock%}
 {% block contenido %}
@@ -355,7 +354,7 @@
                                                                 {{evento.titulo}}{%else%}
                                                                 {{evento.titulo}}<br>
                                                                 {%if evento.ver_ponencia %}
-                                                                 <span> <a
+                                                                <span> <a
                                                                         href="{% url 'View_ponencia' path=evento.path%}"><b
                                                                             style="font-style: italic;"><i
                                                                                 class="fa fa-eye"></i>Ver
@@ -472,7 +471,8 @@
         {%if pagado%}
         {%if constancia %}
         <div class="col-sm-6" style="margin: 0 100px;">
-            <a href="{% url 'Get_Constancia' congreso.path %}" style="font-size: 18px;"><i class="fa fa-download"></i> Ver
+            <a href="{% url 'Get_Constancia' congreso.path %}" style="font-size: 18px;"><i class="fa fa-download"></i>
+                Ver
                 Mi Constancia de este Congreso</a><br />
 
         </div>
@@ -492,45 +492,51 @@
             <h2>Ponencias</h2>
             <span></span>
         </div>
+
+
+        {%if ponencias_video %}
+        {% for ponencia in ponencias_video %}
        
-<div class="row">
-    {%if ponencias_video %}
-    {% for ponencia in ponencias_video %}
-    {%if ponencia.cod_video%}
-    <div class="col-md-4">
-        <!--KODE_EVENT_BLOG2 START-->
-        <div class="kode-event-blog3">
-            <a href="{% url 'View_ponencia' ponencia.path %}" class="">
-            <figure >
-                <img src="{% static '/'%}{{ponencia.imagen}}" alt=""/>
-               
-               
-                <div class="kode-fig-capstion" >
-                    <a href="{% url 'View_ponencia' ponencia.path  %}">{{ponencia.titulo }}</a>
-                   {%if ponencia.detalle%} <p style="font-style: italic;"> {{ponencia.detalle|truncatewords:10 }}</p>{%endif%}
+
+        {%if forloop.first%}
+        <div class="row">
+            {% endif %}
+            <div class="col-md-4">
+                <!--KODE_EVENT_BLOG2 START-->
+                <div class="kode-event-blog3">
+                    <a href="{% url 'View_ponencia' ponencia.path %}" class="">
+
+                    </a>
+                    <div class="kode-thumb-caption">
+                        <a href="{% url 'View_ponencia' ponencia.path %}">
+                            <h4>{{ponencia.titulo }}</h4>
+                        </a>
+                        <ul>
+                            <li><a href="#"><i class="fa fa-calendar"></i>{{ponencia.fecha_inicio|date:"M"}}
+                                    {{ponencia.fecha_inicio|date:"d"}} / {{ponencia.fecha_inicio|date:"Y"}}</a></li>
+
+                        </ul>
+                        <span><a href="{% url 'View_ponencia' ponencia.path %}">Leer Más</a></span>
+                    </div>
+
                 </div>
-               
-            </figure>
-        </a>
-            <div class="kode-thumb-caption">
-                <a href="{% url 'View_ponencia' ponencia.path %}"><h4>{{ponencia.titulo }}</h4></a>
-                <ul>
-                    <li><a href="#"><i class="fa fa-calendar"></i>{{ponencia.fecha_inicio|date:"M"}} {{ponencia.fecha_inicio|date:"d"}} / {{ponencia.fecha_inicio|date:"Y"}}</a></li>
-                   
-                </ul>
-                <span><a href="{% url 'View_ponencia' ponencia.path %}">Leer Más</a></span>
             </div>
-       
+            
+            <!--KODE_EVENT_BLOG2 START-->
+            {%if forloop.counter|divisibleby:3 %}
         </div>
-        <!--KODE_EVENT_BLOG2 START-->
-    </div>
-    {%endif%}
-    {% endfor %}
+        <div class='row'>
+            {%endif%}
+            {%if forloop.last%}
+        </div>
+        {% endif %}
     
+       
+    {% endfor %}
+
     {%endif%}
 </div>
-</div  
-<!-- Boletos-->
+</div> <!-- Boletos-->
 <div class="kode-our-pricing" id="pagos">
     <div class="container">
         <div class="kf_heading_3">
@@ -592,30 +598,30 @@
             <span> No tiene establecido los precios aún </span>
             {%endif%}
         </div>
-        
+
     </div>
 </div>
 <div class="kode-speaker-frame">
-	<div class="container">
-		<div class="kf_heading_1">
-			<h2>FAQs</h2>
-				
-		</div>
-		<div class="kf_faq_accordian">
+    <div class="container">
+        <div class="kf_heading_1">
+            <h2>FAQs</h2>
+
+        </div>
+        <div class="kf_faq_accordian">
             {%for preg_frecuente in preg_frecuentes%}
-			<div class="kf_accordian_hdg accordion" id="section3">
-				<h5>{{preg_frecuente.pregunta}}</h5>
-			</div>
-			<div class="kf_accordian_des">
-				<div class="kode-our-pricing">
-					<div class="row">
-					 {{preg_frecuente.respuesta|safe}}
-					</div>
-				</div>
+            <div class="kf_accordian_hdg accordion" id="section3">
+                <h5>{{preg_frecuente.pregunta}}</h5>
+            </div>
+            <div class="kf_accordian_des">
+                <div class="kode-our-pricing">
+                    <div class="row">
+                        {{preg_frecuente.respuesta|safe}}
+                    </div>
+                </div>
             </div>
             {%endfor%}
-		</div>
-	</div>
+        </div>
+    </div>
 </div>
 <!-- Talleres-->
 <div class="kode-speaker-frame">
@@ -1182,9 +1188,9 @@
         $.get(url, { 'pk': pk }, function (data) {
 
             if (data.foto)
-                $('#foto').html('<img class="img-responsive" src="{% static '/'%}'+data.foto+'" alt=" foto ' + data.nombre + '" >');
+                $('#foto').html('<img class="img-responsive" src="{% static ' / '%}' + data.foto + '" alt=" foto ' + data.nombre + '" >');
             else
-                $('#foto').html('<img class="img-responsive" src="{% static 'MedCongressApp/images/defaulthombre.png' %}" alt="{{request.user.username}}" >');
+                $('#foto').html('<img class="img-responsive" src="{% static 'MedCongressApp / images / defaulthombre.png' %}" alt="{{request.user.username}}" >');
             if (data.bandera)
                 $('#bandera').html('<img style="width: 100px; display:block;margin:auto;" class="img-responsive" src="{% static ' / '%}' + data.bandera + '" >');
 

@@ -43,7 +43,7 @@ class CongresForm(forms.ModelForm):
         self.fields['aprobado'].widget.attrs.update({'class': 'form-control',})  
         self.fields['cant_preguntas'].widget.attrs.update({'class': 'form-control',})                        
         self.fields['score'].widget.attrs.update({'class': 'form-control',})   
-        self.fields['streaming'].widget.attrs.update({'class': 'form-control',})   
+        self.fields['streaming'].widget.attrs.update({'class': 'form-control','rows':'3'})   
     def clean(self, *args, **kwargs):
         cleaned_data = super(CongresForm, self).clean(*args, **kwargs)
         imagen = cleaned_data.get('imagen_seg', None)
@@ -102,6 +102,7 @@ class PonenciaForm(forms.ModelForm):
     titulo=forms.CharField(label='Título')
     fecha_inicio=forms.DateTimeField()
     published=forms.BooleanField(label='Publicado',required=False)
+  
     class Meta:
         model=Ponencia
         fields=['titulo','duracion','detalle','fecha_inicio','imagen','published','cod_video','congreso','bloque','is_info']
@@ -115,7 +116,7 @@ class PonenciaForm(forms.ModelForm):
         self.fields['bloque'].widget.attrs.update({'class': 'form-control'})  
         self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control'})   
         self.fields['published'].widget.attrs.update({'class': 'form-control'})   
-        self.fields['cod_video'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['cod_video'].widget.attrs.update({'class': 'form-control','rows':'3'}) 
         self.fields['detalle'].widget.attrs.update({'class': 'form-control','rows':'3'})  
        
     
