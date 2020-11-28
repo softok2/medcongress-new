@@ -118,7 +118,7 @@ class PerfilUsuario(models.Model):
         verbose_name_plural='Perfil de usuarios'
 
     def __str__(self):
-        return self.usuario.first_name +' '+self.usuario.last_name
+        return self.usuario.email 
 
     def is_openpay(self):
         if self.id_openpay :
@@ -218,7 +218,7 @@ class Congreso(models.Model):
     aprobado=models.IntegerField(null=True)
     cant_preguntas=models.IntegerField(null=True)
     score=models.IntegerField(null=True)
-    streaming=models.CharField(max_length=10,null=True)
+    streaming=models.CharField(max_length=250,null=True)
     
 
 
@@ -384,7 +384,7 @@ class Ponencia(models.Model):
     titulo=models.CharField(max_length=250)
     duracion=models.CharField(max_length=250)
     detalle=models.TextField(null=True,blank=True)
-    cod_video=models.CharField(max_length=10,null=True)
+    cod_video=models.CharField(max_length=250,null=True)
     imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='ponencias',blank=True, null=True  )
     fecha_inicio=models.DateTimeField()
     path=models.CharField(max_length=250, help_text='campo para identificarlo por la URL')
