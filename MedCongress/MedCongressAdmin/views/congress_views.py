@@ -11,7 +11,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView,FormView
 from MedCongressApp.models import (Congreso,Taller,Ponencia,RelCongresoCategoriaPago,ImagenCongreso,Ubicacion
                                     ,Bloque,RelCongresoUser,RelCongresoCategoriaPago,CuestionarioPregunta,CuestionarioRespuestas,PreguntasFrecuentes,
-                                    CategoriaPagoCongreso,User,PerfilUsuario)
+                                    CategoriaPagoCongreso,User,PerfilUsuario,Ponente)
 from MedCongressAdmin.forms.congres_forms import CongresoForms,PonenciaForms,CongresoCategPagoForm,AsignarCongresoForms,ImagenCongForms
 
 class validarUser(UserPassesTestMixin):
@@ -409,3 +409,42 @@ class Ver_usuarios (validarUser,TemplateView):
 class Ver_Exel(TemplateView):
 
     template_name='MedCongressAdmin/ver_exel.html'
+
+class Exportar_usuarios(TemplateView):
+    template_name='MedCongressAdmin/view_exportar_usuario.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        usuarios=  PerfilUsuario.objects.all()
+        email=[]
+        nombre=[]
+        for usuario in usuarios:
+            if Ponente.objects.filter(user=usuario).exists():
+                email=email
+            else:
+                email.append(usuario.usuario.email)
+                nombre.append('%s %s'%(usuario.usuario.first_name,usuario.usuario.last_name))
+        data = {'Nombre y Apellidos':nombre,'Email': email}
+        df = pd.DataFrame(data, columns = ['Nombre y Apellidos','Email'])
+        df.to_excel('MedCongressApp/static/patrocinadores/user_registrados.xlsx', sheet_name='example')
+        return context
+
+class Usuarios_pagaron(TemplateView):
+    template_name='MedCongressAdmin/view_pagaron_usuario.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        usurios_pagaron= RelCongresoUser.objects.all().distinct('user')
+        email=[]
+        nombre=[]
+        for usuario in usurios_pagaron:
+                email.append(usuario.user.usuario.email)
+                nombre.append('%s %s'%(usuario.user.usuario.first_name,usuario.user.usuario.last_name))
+        data = {'Nombre y Apellidos':nombre,'Email': email}
+        df = pd.DataFrame(data, columns = ['Nombre y Apellidos','Email'])
+        df.to_excel('MedCongressApp/static/patrocinadores/user_pagaron.xlsx', sheet_name='example')
+        return context
+
+

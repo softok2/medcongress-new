@@ -1,0 +1,23 @@
+{% extends 'MedCongressAdmin/base.html' %}
+{% block title %}MedCongressAdmin | Buscar Usuarios{% endblock %}
+{% load static %}
+{% block styles %}
+{% endblock %}
+{% block content %}
+<section class="multiple-input-with-labels" id="multiple-input-with-labels">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+               
+                <div class="card-content collapse show">
+                    <div class="card-body">
+
+                        <a href="{% static 'patrocinadores/user_pagaron.xlsx'%}" style="font-size: 18px;"><i class="fa fa-download"></i> Descargar
+                            Exel con usuarios registrado</a><br />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

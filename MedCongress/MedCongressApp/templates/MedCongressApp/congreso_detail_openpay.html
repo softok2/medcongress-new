@@ -1188,9 +1188,9 @@
         $.get(url, { 'pk': pk }, function (data) {
 
             if (data.foto)
-                $('#foto').html('<img class="img-responsive" src="{% static ' / '%}' + data.foto + '" alt=" foto ' + data.nombre + '" >');
+                $('#foto').html('<img class="img-responsive" src="{% static '/'%}'+ data.foto +'" alt=" foto ' + data.nombre + '" >');
             else
-                $('#foto').html('<img class="img-responsive" src="{% static 'MedCongressApp / images / defaulthombre.png' %}" alt="{{request.user.username}}" >');
+                $('#foto').html('<img class="img-responsive" src="{% static 'MedCongressApp/images/defaulthombre.png' %}" alt="{{request.user.username}}" >');
             if (data.bandera)
                 $('#bandera').html('<img style="width: 100px; display:block;margin:auto;" class="img-responsive" src="{% static ' / '%}' + data.bandera + '" >');
 
