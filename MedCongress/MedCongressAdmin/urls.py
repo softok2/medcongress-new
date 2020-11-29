@@ -12,7 +12,8 @@ from .views.congress_views import (CongressListView,CongressCreateView,CongressU
                                    CongressTalleresListView,CongressPonenciasListView,CongressCategPagosListView,
                                    CongressImagenesListView,AddPonenciaCongreso,CongressCategPagosCreateView,
                                    CongressDeletedView,CongressBloquesListView,GetBloques,AsignarCongressListView,AsignarCongressAddViews,GetPagos,
-                                   AsignarCongressDeletedViews,CongressImagenCreateView,CongressCuestionarioListView,CongressPregFrecuenteListView)
+                                   AsignarCongressDeletedViews,CongressImagenCreateView,CongressCuestionarioListView,CongressPregFrecuenteListView,
+                                   Ver_usuarios,Ver_Exel)
 from .views.imagen_views import (ImagenCreateView)
 from .views.ponencia_view import (PonenciaListView, PonenciaCreateView,PonenciaPonenteListView,
                                    PonencicaUpdateView,PonenciaPonenteCreateView,PonenciaDeletedView,
@@ -176,6 +177,8 @@ urlpatterns = [
      path('pregunat_frecuente/editar/<int:pk>', PregFrecuenteUpdateView.as_view(), name='preg_frecuente_edit'),
      path('pregunat_frecuente/eliminar/<int:pk>', PregFrecuenteDeletView.as_view(), name='preg_frecuente_delete'),
      
-   
+     #Ver Usuarios
+     path('ver_usuarios', Ver_usuarios.as_view(), name='Ver_usuarios'),
+     path('descargar_exel', Ver_Exel.as_view(), name='Ver_exel'),
      
 ]

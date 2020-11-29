@@ -1,5 +1,6 @@
 import json
 from django import forms
+import pandas as pd
 from django.contrib import messages
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.urls import reverse_lazy,reverse
@@ -9,7 +10,8 @@ from django.views.generic import ListView,TemplateView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView,FormView
 from MedCongressApp.models import (Congreso,Taller,Ponencia,RelCongresoCategoriaPago,ImagenCongreso,Ubicacion
-                                    ,Bloque,RelCongresoUser,RelCongresoCategoriaPago,CuestionarioPregunta,CuestionarioRespuestas,PreguntasFrecuentes)
+                                    ,Bloque,RelCongresoUser,RelCongresoCategoriaPago,CuestionarioPregunta,CuestionarioRespuestas,PreguntasFrecuentes,
+                                    CategoriaPagoCongreso,User,PerfilUsuario)
 from MedCongressAdmin.forms.congres_forms import CongresoForms,PonenciaForms,CongresoCategPagoForm,AsignarCongresoForms,ImagenCongForms
 
 class validarUser(UserPassesTestMixin):
@@ -357,4 +359,53 @@ class CongressPregFrecuenteListView(validarUser,TemplateView):
        
         return context
 
+class Ver_usuarios (validarUser,TemplateView):
+
+    template_name='MedCongressAdmin/ver_usuarios.html'
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        congresos=Congreso.objects.all()
+        cat_pago=CategoriaPagoCongreso.objects.all()
+        context['congresos']=congresos
+        context['cat_pagos']=cat_pago
+       
+        return context
+
+    def post(self, request, **kwargs):
+
+        id_congreso=self.request.POST['congresos']
+        id_cat_pago=self.request.POST['cat_pago']
+        cat_pago= CategoriaPagoCongreso.objects.get(pk=id_cat_pago)
+        congreso= Congreso.objects.get(pk=id_congreso)
+        archivo_excel = pd.read_excel(self.request.FILES['exel'])
+        values = archivo_excel['Correo'].values
+        ###################
+        sin_pagar=[]
+        for value in values:
+            user=User.objects.filter(email=value).first()
+            if PerfilUsuario.objects.filter(usuario=user).exists():
+                if user :
+                    relacion=RelCongresoUser.objects.filter(congreso=congreso,user=user.perfilusuario).first()
+                    if relacion:
+                        relacion.is_pagado=True
+                        relacion.cantidad=1
+                        relacion.save()
+                    else:
+                        rel=RelCongresoUser(congreso=congreso,user=user.perfilusuario,is_pagado=True,cantidad=1,categoria_pago=cat_pago)
+                        rel.save()
+                else:
+                    sin_pagar.append(value)
+            else:
+                sin_pagar.append(value)
+        data = {'Usuarios que no se han Autentificado': sin_pagar}
+        df = pd.DataFrame(data, columns = ['Usuarios que no se han Autentificado'])
+        df.to_excel('MedCongressApp/static/patrocinadores/example.xlsx', sheet_name='example')
+       
+        ###################
+
+        return HttpResponseRedirect(reverse('MedCongressAdmin:Ver_exel' ))
+
+class Ver_Exel(TemplateView):
+
+    template_name='MedCongressAdmin/ver_exel.html'
