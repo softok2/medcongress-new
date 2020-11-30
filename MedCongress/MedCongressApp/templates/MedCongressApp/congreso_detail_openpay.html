@@ -496,7 +496,7 @@
 
         {%if ponencias_video %}
         {% for ponencia in ponencias_video %}
-       
+       {%if ponencia.cod_video%}
 
         {%if forloop.first%}
         <div class="row">
@@ -540,7 +540,7 @@
         </div>
         {% endif %}
     
-       
+        {% endif %}
     {% endfor %}
 
     {%endif%}
