@@ -228,7 +228,9 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <!-- <div style='padding:56.25% 0 0 0;position:relative;margin:25px 0'><iframe src='https://vimeo.com/showcase/6787538/embed' allowfullscreen frameborder='0' style='position:absolute;top:0;left:0;width:100%;height:100%;'></iframe></div> -->
-
+                {%if pagado and  congreso.streaming%}
+                {{congreso.streaming|safe }}
+                {%endif%}
                 <div class="schedule-banner">
                     <img src="{% static '/'%}{{congreso.imagen_seg}}" alt="" />
                     <div class="scheduletabs">
@@ -297,9 +299,12 @@
                                                                 {%endif%}
                                                             </figure>
                                                             <div class="kf_new_conf_orgnizr_name">
-                                                                <h6>{{mod.user.usuario.first_name}}{%if mod.user.usuario.first_name|length > 15 or mod.user.usuario.last_name|length > 15 %}
-                                                                        <br>{%endif%}
+                                                                <button type="button" class="btn btn-link"
+                                                                data-toggle="modal" data-target=".tt"
+                                                                onclick="VerPerfil('{{mod.user.pk}}')">
+                                                                <h6>{{mod.user.usuario.first_name}}{%if mod.user.usuario.first_name|length > 30 or mod.user.usuario.last_name|length > 30 %} <br>{%endif%}
                                                                     {{mod.user.usuario.last_name}}</h6>
+                                                            </button>
                                                                 <span> Moderador</span>
                                                                 <p>
                                                                     {%if mod.user.puesto %}
@@ -331,9 +336,12 @@
                                                                 {%endif%}
                                                             </figure>
                                                             <div class="kf_new_conf_orgnizr_name">
-                                                                <h6>{{ponente.user.usuario.first_name}}{%if ponente.user.usuario.first_name|length > 15 or ponente.user.usuario.last_name|length > 15 %}
-                                                                        <br>{%endif%}
+                                                                <button type="button" class="btn btn-link"
+                                                                data-toggle="modal" data-target=".tt"
+                                                                onclick="VerPerfil('{{ponente.user.pk}}')">
+                                                                <h6>{{ponente.user.usuario.first_name}}{%if ponente.user.usuario.first_name|length > 30 or ponente.user.usuario.last_name|length > 30 %} <br>{%endif%}
                                                                     {{ponente.user.usuario.last_name}}</h6>
+                                                            </button>
                                                                 <span> Ponente</span>
                                                                 <p>
                                                                     {%if ponente.user.puesto %}
@@ -405,9 +413,12 @@
                                                                 {%endif%}
                                                             </figure>
                                                             <div class="kf_new_conf_orgnizr_name">
-                                                                <h6>{{ponente.user.usuario.first_name}}{%if ponente.user.usuario.first_name|length > 15 or ponente.user.usuario.last_name|length > 15 %}
-                                                                        <br>{%endif%}
+                                                                <button type="button" class="btn btn-link"
+                                                                data-toggle="modal" data-target=".tt"
+                                                                onclick="VerPerfil('{{ponente.user.pk}}')">
+                                                                <h6>{{ponente.user.usuario.first_name}}{%if ponente.user.usuario.first_name|length > 30 or ponente.user.usuario.last_name|length > 30 %} <br>{%endif%}
                                                                     {{ponente.user.usuario.last_name}}</h6>
+                                                            </button>
                                                                 <span> Ponente</span>
                                                                 <p>
                                                                     {%if ponente.user.puesto %}
@@ -862,6 +873,18 @@
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                     <img class="img-responsive" src="{% static 'socios/18.jpg'%}" alt="">
                 </div>
+				<!-- kode-new speaker over state End -->
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                    <img class="img-responsive" src="{% static 'socios/19.jpg'%}" alt="">
+                </div>
+				<!-- kode-new speaker over state End -->
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                    <img class="img-responsive" src="{% static 'socios/20.jpg'%}" alt="">
+                </div>
+				<!-- kode-new speaker over state End -->
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                    <img class="img-responsive" src="{% static 'socios/21.jpg'%}" alt="">
+                </div>
             </div>
         </div>
     </div>
@@ -1155,9 +1178,9 @@
         $.get(url, { 'pk': pk }, function (data) {
 
             if (data.foto)
-                $('#foto').html('<img class="img-responsive" src="{% static ' / '%}' + data.foto + '" alt=" foto ' + data.nombre + '" >');
+                $('#foto').html('<img class="img-responsive" src="{% static '/'%}'+data.foto+'" alt=" foto ' + data.nombre + '" >');
             else
-                $('#foto').html('<img class="img-responsive" src="{% static 'MedCongressApp / images / defaulthombre.png' %}" alt="{{request.user.username}}" >');
+                $('#foto').html('<img class="img-responsive" src="{% static 'MedCongressApp/images/defaulthombre.png' %}" alt="{{request.user.username}}" >');
             if (data.bandera)
                 $('#bandera').html('<img style="width: 100px; display:block;margin:auto;" class="img-responsive" src="{% static ' / '%}' + data.bandera + '" >');
 
