@@ -302,7 +302,7 @@
                                                                 <button type="button" class="btn btn-link"
                                                                 data-toggle="modal" data-target=".tt"
                                                                 onclick="VerPerfil('{{mod.user.pk}}')">
-                                                                <h6>{{mod.user.usuario.first_name}}{%if mod.user.usuario.first_name|length > 30 or mod.user.usuario.last_name|length > 30 %} <br>{%endif%}
+                                                                <h6>{{mod.user.usuario.first_name}}{%if mod.user.usuario.first_name|length > 20 or mod.user.usuario.last_name|length > 20 %} <br>{%endif%}
                                                                     {{mod.user.usuario.last_name}}</h6>
                                                             </button>
                                                                 <span> Moderador</span>
@@ -339,7 +339,7 @@
                                                                 <button type="button" class="btn btn-link"
                                                                 data-toggle="modal" data-target=".tt"
                                                                 onclick="VerPerfil('{{ponente.user.pk}}')">
-                                                                <h6>{{ponente.user.usuario.first_name}}{%if ponente.user.usuario.first_name|length > 30 or ponente.user.usuario.last_name|length > 30 %} <br>{%endif%}
+                                                                <h6>{{ponente.user.usuario.first_name}}{%if ponente.user.usuario.first_name|length > 20 or ponente.user.usuario.last_name|length > 20 %} <br>{%endif%}
                                                                     {{ponente.user.usuario.last_name}}</h6>
                                                             </button>
                                                                 <span> Ponente</span>
@@ -416,7 +416,7 @@
                                                                 <button type="button" class="btn btn-link"
                                                                 data-toggle="modal" data-target=".tt"
                                                                 onclick="VerPerfil('{{ponente.user.pk}}')">
-                                                                <h6>{{ponente.user.usuario.first_name}}{%if ponente.user.usuario.first_name|length > 30 or ponente.user.usuario.last_name|length > 30 %} <br>{%endif%}
+                                                                <h6>{{ponente.user.usuario.first_name}}{%if ponente.user.usuario.first_name|length > 20 or ponente.user.usuario.last_name|length > 20 %} <br>{%endif%}
                                                                     {{ponente.user.usuario.last_name}}</h6>
                                                             </button>
                                                                 <span> Ponente</span>
