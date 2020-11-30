@@ -227,9 +227,8 @@
 
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                {%if pagado and  congreso.streaming%}
-                {{congreso.streaming|safe }}
-                {%endif%}
+                <!-- <div style='padding:56.25% 0 0 0;position:relative;margin:25px 0'><iframe src='https://vimeo.com/showcase/6787538/embed' allowfullscreen frameborder='0' style='position:absolute;top:0;left:0;width:100%;height:100%;'></iframe></div> -->
+
                 <div class="schedule-banner">
                     <img src="{% static '/'%}{{congreso.imagen_seg}}" alt="" />
                     <div class="scheduletabs">
@@ -280,7 +279,7 @@
                                                 <div class="kf_new_conf_open_wrap">
                                                     <div class="kf_new_conf_des">
                                                         {%if pon.detalle%}
-                                                        <p>{{pon.detalle|safe}}</p>
+                                                        <p>{{pon.detalle}}</p>
                                                         {%endif%}
                                                     </div>
                                                     <div class="row">
@@ -297,17 +296,14 @@
                                                                     alt="image de {{mod.user.usuario.username}}">
                                                                 {%endif%}
                                                             </figure>
-                                                            <div class="kf_new_conf_orgnizr_name col-sm-6">
-                                                                <button type="button" class="btn btn-link"
-                                                                    data-toggle="modal" data-target=".tt"
-                                                                    onclick="VerPerfil('{{mod.user.pk}}')">
-                                                                    <h6>{{mod.user.usuario.first_name}}{%if mod.user.usuario.first_name|length > 30 or mod.user.usuario.last_name|length > 30 %} <br>{%endif%}
-                                                                        {{mod.user.usuario.last_name}}</h6>
-                                                                </button>
+                                                            <div class="kf_new_conf_orgnizr_name">
+                                                                <h6>{{mod.user.usuario.first_name}}{%if mod.user.usuario.first_name|length > 15 or mod.user.usuario.last_name|length > 15 %}
+                                                                        <br>{%endif%}
+                                                                    {{mod.user.usuario.last_name}}</h6>
                                                                 <span> Moderador</span>
                                                                 <p>
-                                                                    {%if mod.user.puesto %}
-                                                                    {{mod.user.puesto}}
+                                                                    {%if mod.user.detalle %}
+                                                                    {{mod.user.detalle}}
                                                                     {%endif%}
                                                                 </p>
                                                             </div>
@@ -335,31 +331,21 @@
                                                                 {%endif%}
                                                             </figure>
                                                             <div class="kf_new_conf_orgnizr_name">
-                                                                <button type="button" class="btn btn-link"
-                                                                    data-toggle="modal" data-target=".tt"
-                                                                    onclick="VerPerfil('{{ponente.user.pk}}')">
-                                                                    <h6>{{ponente.user.usuario.first_name}}{%if ponente.user.usuario.first_name|length > 30 or ponente.user.usuario.last_name|length > 30 %} <br>{%endif%}
-                                                                        {{ponente.user.usuario.last_name}}</h6>
-                                                                </button>
+                                                                <h6>{{ponente.user.usuario.first_name}}{%if ponente.user.usuario.first_name|length > 15 or ponente.user.usuario.last_name|length > 15 %}
+                                                                        <br>{%endif%}
+                                                                    {{ponente.user.usuario.last_name}}</h6>
                                                                 <span> Ponente</span>
                                                                 <p>
-                                                                    {%if ponente.user.puesto %}
-                                                                    {{ponente.user.puesto}}
+                                                                    {%if ponente.user.detalle %}
+                                                                    {{ponente.user.detalle}}
                                                                     {%endif%}
                                                                 </p>
                                                             </div>
                                                             <h5
                                                                 style="color: #00a4ef;padding-bottom: 61px;font-size: 14px;">
-                                                                {%if evento.tipo == 'Taller'%}{{evento.tipo|upper}}
-                                                                {{evento.titulo}}{%else%}
-                                                                {{evento.titulo}}<br>
-                                                                {%if evento.ver_ponencia %}
-                                                                <span> <a
-                                                                        href="{% url 'View_ponencia' path=evento.path%}"><b
-                                                                            style="font-style: italic;"><i
-                                                                                class="fa fa-eye"></i>Ver
-                                                                            Ponencia</b></a>
-                                                                </span>{%endif%}{%endif%} </h5>
+                                                                {%if evento.tipo == 'Taller'%}{{evento.tipo|upper}}{%endif%}
+                                                                {{evento.titulo}} <span style="font-style: italic;">
+                                                                </span> </h5>
                                                         </div>
                                                         {%if pon.moderador|length|divisibleby:2%}
 
@@ -403,16 +389,6 @@
                                                     </div>
                                                     <div class="kf_new_conf_open_wrap">
                                                         <div class="kf_new_conf_des">
-                                                            {%if pon.tipo == 'Ponencia' and pon.ver_ponencia%}
-                                                            <h6><a href="{% url 'View_ponencia' path=pon.path%}"><b
-                                                                        style="font-style: italic;"><i
-                                                                            class="fa fa-eye"></i> Ver Ponencia</b> </a>
-                                                            </h6>
-                                                            {%endif%}
-                                                        </div>
-
-
-                                                        <div class="kf_new_conf_des">
                                                             {%if pon.detalle%}
                                                             <p>{{pon.detalle}}</p>
                                                             {%endif%}
@@ -429,20 +405,16 @@
                                                                 {%endif%}
                                                             </figure>
                                                             <div class="kf_new_conf_orgnizr_name">
-                                                                <button type="button" class="btn btn-link"
-                                                                    data-toggle="modal" data-target=".tt"
-                                                                    onclick="VerPerfil('{{ponente.user.pk}}')">
-                                                                    <h6>{{ponente.user.usuario.first_name}}{%if ponente.user.usuario.first_name|length > 30 or ponente.user.usuario.last_name|length > 30 %} <br>{%endif%}
-                                                                        {{ponente.user.usuario.last_name}}</h6>
-                                                                </button>
+                                                                <h6>{{ponente.user.usuario.first_name}}{%if ponente.user.usuario.first_name|length > 15 or ponente.user.usuario.last_name|length > 15 %}
+                                                                        <br>{%endif%}
+                                                                    {{ponente.user.usuario.last_name}}</h6>
                                                                 <span> Ponente</span>
                                                                 <p>
-                                                                    {%if ponente.user.puesto %}
-                                                                    {{ponente.user.puesto}}
+                                                                    {%if ponente.user.detalle %}
+                                                                    {{ponente.user.detalle}}
                                                                     {%endif%}
                                                                 </p>
                                                             </div>
-
                                                         </div>
                                                         {%endfor%}
                                                     </div>
@@ -468,22 +440,7 @@
             </div>
         </div>
         <!-- Kode-Conference Schedule End -->
-        {%if pagado%}
-        {%if constancia %}
-        <div class="col-sm-6" style="margin: 0 100px;">
-            <a href="{% url 'Get_Constancia' congreso.path %}" style="font-size: 18px;"><i class="fa fa-download"></i>
-                Ver
-                Mi Constancia de este Congreso</a><br />
 
-        </div>
-        {%else%}
-        <div class="col-sm-6" style="margin: 0 100px;">
-            <a href="{% url 'Cuestionario' congreso.path %}" style="font-size: 18px;"><i class="fa fa-download"></i>
-                Pedir Constancia</a><br />
-
-        </div>
-        {%endif%}
-        {%endif%}
     </div>
 </div>
 <div class="kode-our-pricing" id="pagos">
@@ -496,7 +453,7 @@
 
         {%if ponencias_video %}
         {% for ponencia in ponencias_video %}
-       {%if ponencia.cod_video%}
+        {%if ponencia.cod_video%}
 
         {%if forloop.first%}
         <div class="row">
@@ -505,15 +462,16 @@
                 <!--KODE_EVENT_BLOG2 START-->
                 <div class="kode-event-blog3">
                     <a href="{% url 'View_ponencia' ponencia.path %}" class="">
-                        <figure >
-                            <img src="{% static '/'%}{{ponencia.imagen}}" alt=""/>
-                           
-                           
-                            <div class="kode-fig-capstion" >
+                        <figure>
+                            <img src="{% static '/'%}{{ponencia.imagen}}" alt="" />
+
+
+                            <div class="kode-fig-capstion">
                                 <a href="{% url 'View_ponencia' ponencia.path  %}">{{ponencia.titulo }}</a>
-                               {%if ponencia.detalle%} <p style="font-style: italic;"> {{ponencia.detalle|truncatewords:10 }}</p>{%endif%}
+                                {%if ponencia.detalle%} <p style="font-style: italic;">
+                                    {{ponencia.detalle|truncatewords:10 }}</p>{%endif%}
                             </div>
-                           
+
                         </figure>
                     </a>
                     <div class="kode-thumb-caption">
@@ -530,7 +488,7 @@
 
                 </div>
             </div>
-            
+
             <!--KODE_EVENT_BLOG2 START-->
             {%if forloop.counter|divisibleby:3 %}
         </div>
@@ -539,12 +497,12 @@
             {%if forloop.last%}
         </div>
         {% endif %}
-    
-        {% endif %}
-    {% endfor %}
 
-    {%endif%}
-</div>
+        {% endif %}
+        {% endfor %}
+
+        {%endif%}
+    </div>
 </div> <!-- Boletos-->
 <div class="kode-our-pricing" id="pagos">
     <div class="container">
@@ -1197,9 +1155,9 @@
         $.get(url, { 'pk': pk }, function (data) {
 
             if (data.foto)
-                $('#foto').html('<img class="img-responsive" src="{% static '/'%}'+ data.foto +'" alt=" foto ' + data.nombre + '" >');
+                $('#foto').html('<img class="img-responsive" src="{% static ' / '%}' + data.foto + '" alt=" foto ' + data.nombre + '" >');
             else
-                $('#foto').html('<img class="img-responsive" src="{% static 'MedCongressApp/images/defaulthombre.png' %}" alt="{{request.user.username}}" >');
+                $('#foto').html('<img class="img-responsive" src="{% static 'MedCongressApp / images / defaulthombre.png' %}" alt="{{request.user.username}}" >');
             if (data.bandera)
                 $('#bandera').html('<img style="width: 100px; display:block;margin:auto;" class="img-responsive" src="{% static ' / '%}' + data.bandera + '" >');
 
