@@ -34,8 +34,8 @@
 													for="{{form.user.id_for_label }}"><b>{{form.user.label }}</b>{% if form.user.errors %}
 													<span style="font-size: 15px; color: red;">{{ form.user.errors }}
 													</span>{% endif %} </label>
-
-													<input type="text" class="form-control" id='id_user' name="user">
+													{{ form.user }}
+													
 											</div>
 										</div>
 										<div class="col-sm-2">
