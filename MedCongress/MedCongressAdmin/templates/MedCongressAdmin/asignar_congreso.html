@@ -60,7 +60,9 @@
                                         id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
                                         <thead>
                                             <th style="width:50%">Usuario</th>
+                                            <th>Email</th>
                                                 <th>Congreso</th>
+                                                
                                                 <th>Cant.</th>
                                                 <th>Categoría de Pago</th>
                                                 <th>Pagado</th>
@@ -70,7 +72,7 @@
                                             {% for congres in congress %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
                                                 <td class="sorting_1">{{ congres.user.usuario.first_name }} {{ congres.user.usuario.last_name}}</td>
-                                                
+                                                <td>{{ congres.user.usuario.email}}</td>
                                                 <td>{{ congres.congreso.titulo}}</td>
                                                 {%if congres.cantidad%}
                                                 <td>{{ congres.cantidad}}</td>
@@ -94,6 +96,7 @@
                                         </tbody>
                                         <tfoot>
                                             <th style="width:50%">Usuario</th>
+                                            <th>Email</th>
                                                 <th>Congreso</th>
                                                 <th>Cant.</th>
                                                 <th>Categoría de Pago</th>
