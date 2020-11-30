@@ -297,11 +297,11 @@
                                                                     alt="image de {{mod.user.usuario.username}}">
                                                                 {%endif%}
                                                             </figure>
-                                                            <div class="kf_new_conf_orgnizr_name">
+                                                            <div class="kf_new_conf_orgnizr_name col-sm-6">
                                                                 <button type="button" class="btn btn-link"
                                                                     data-toggle="modal" data-target=".tt"
                                                                     onclick="VerPerfil('{{mod.user.pk}}')">
-                                                                    <h6>{{mod.user.usuario.first_name}}
+                                                                    <h6>{{mod.user.usuario.first_name}}{%if mod.user.usuario.first_name|length > 30 or mod.user.usuario.last_name|length > 30 %} <br>{%endif%}
                                                                         {{mod.user.usuario.last_name}}</h6>
                                                                 </button>
                                                                 <span> Moderador</span>
@@ -338,7 +338,7 @@
                                                                 <button type="button" class="btn btn-link"
                                                                     data-toggle="modal" data-target=".tt"
                                                                     onclick="VerPerfil('{{ponente.user.pk}}')">
-                                                                    <h6>{{ponente.user.usuario.first_name}}
+                                                                    <h6>{{ponente.user.usuario.first_name}}{%if ponente.user.usuario.first_name|length > 30 or ponente.user.usuario.last_name|length > 30 %} <br>{%endif%}
                                                                         {{ponente.user.usuario.last_name}}</h6>
                                                                 </button>
                                                                 <span> Ponente</span>
@@ -432,7 +432,7 @@
                                                                 <button type="button" class="btn btn-link"
                                                                     data-toggle="modal" data-target=".tt"
                                                                     onclick="VerPerfil('{{ponente.user.pk}}')">
-                                                                    <h6>{{ponente.user.usuario.first_name}}
+                                                                    <h6>{{ponente.user.usuario.first_name}}{%if ponente.user.usuario.first_name|length > 30 or ponente.user.usuario.last_name|length > 30 %} <br>{%endif%}
                                                                         {{ponente.user.usuario.last_name}}</h6>
                                                                 </button>
                                                                 <span> Ponente</span>
@@ -505,7 +505,16 @@
                 <!--KODE_EVENT_BLOG2 START-->
                 <div class="kode-event-blog3">
                     <a href="{% url 'View_ponencia' ponencia.path %}" class="">
-
+                        <figure >
+                            <img src="{% static '/'%}{{ponencia.imagen}}" alt=""/>
+                           
+                           
+                            <div class="kode-fig-capstion" >
+                                <a href="{% url 'View_ponencia' ponencia.path  %}">{{ponencia.titulo }}</a>
+                               {%if ponencia.detalle%} <p style="font-style: italic;"> {{ponencia.detalle|truncatewords:10 }}</p>{%endif%}
+                            </div>
+                           
+                        </figure>
                     </a>
                     <div class="kode-thumb-caption">
                         <a href="{% url 'View_ponencia' ponencia.path %}">
