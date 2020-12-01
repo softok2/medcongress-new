@@ -349,11 +349,18 @@
                                                                     {%endif%}
                                                                 </p>
                                                             </div>
-                                                            <h5
+                                                             <h5
                                                                 style="color: #00a4ef;padding-bottom: 61px;font-size: 14px;">
-                                                                {%if evento.tipo == 'Taller'%}{{evento.tipo|upper}}{%endif%}
-                                                                {{evento.titulo}} <span style="font-style: italic;">
-                                                                </span> </h5>
+                                                                {%if evento.tipo == 'Taller'%}{{evento.tipo|upper}}
+                                                                {{evento.titulo}}{%else%}
+                                                                {{evento.titulo}}<br>
+                                                                {%if evento.ver_ponencia %}
+                                                                <span> <a
+                                                                        href="{% url 'View_ponencia' path=evento.path%}"><b
+                                                                            style="font-style: italic;"><i
+                                                                                class="fa fa-eye"></i>Ver
+                                                                            Ponencia</b></a>
+                                                                </span>{%endif%}{%endif%} </h5>
                                                         </div>
                                                         {%if pon.moderador|length|divisibleby:2%}
 
@@ -396,6 +403,14 @@
 
                                                     </div>
                                                     <div class="kf_new_conf_open_wrap">
+                                                        <div class="kf_new_conf_des">
+                                                            {%if pon.tipo == 'Ponencia' and pon.ver_ponencia%}
+                                                            <h6><a href="{% url 'View_ponencia' path=pon.path%}"><b
+                                                                        style="font-style: italic;"><i
+                                                                            class="fa fa-eye"></i> Ver Ponencia</b> </a>
+                                                            </h6>
+                                                            {%endif%}
+                                                        </div>
                                                         <div class="kf_new_conf_des">
                                                             {%if pon.detalle%}
                                                             <p>{{pon.detalle}}</p>
@@ -515,7 +530,7 @@
 
         {%endif%}
     </div>
-</div> Boletos 
+</div>
 <div class="kode-our-pricing" id="pagos">
     <div class="container">
         <div class="kf_heading_3">

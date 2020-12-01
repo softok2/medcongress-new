@@ -308,7 +308,7 @@ class CongresoDetail(TemplateView):
                         'id':ponencia.id,
                         'path':ponencia.path,
                         'titulo': ponencia.titulo,
-                        'ver_ponencia':ponencia.is_info,
+                        'ver_ponencia':ponencia.cod_video,
                         'fecha_inicio': ponencia.fecha_inicio ,# una relación a otro modelo
                         'detalle':ponencia.detalle ,
                         'ponentes':Ponente.objects.filter(ponencia_ponente__pk=ponencia.id).distinct() ,
@@ -339,7 +339,7 @@ class CongresoDetail(TemplateView):
                     result.append({
                     'id':ponencia.id,
                     'path':ponencia.path,
-                    'ver_ponencia':ponencia.is_info,
+                    'ver_ponencia':ponencia.cod_video,
                     'titulo': ponencia.titulo,
                     'fecha_inicio': ponencia.fecha_inicio ,# una relación a otro modelo
                     'detalle':ponencia.detalle ,
@@ -1275,7 +1275,7 @@ class CambiarPass(FormView):
         usuario= User.objects.filter(username=self.request.user.username).first()
         usuario.set_password(self.request.POST['password'])
         usuario.save()
-
+        
         return HttpResponseRedirect(reverse('perfil'))
       
 
