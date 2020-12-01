@@ -507,7 +507,9 @@
                         <ul>
                             <li><a href="#"><i class="fa fa-calendar"></i>{{ponencia.fecha_inicio|date:"M"}}
                                     {{ponencia.fecha_inicio|date:"d"}} / {{ponencia.fecha_inicio|date:"Y"}}</a></li>
-                                    <li><a href="#"><i class="fa fa-user"></i> <b>Ponente:</b> <span style="font-style: italic;">{{ponencia.ponente.all.0.user.usuario.first_name}} {{ponencia.ponente.all.0.user.usuario.last_name}}</span> 
+                                    <li><a href="#"><i class="fa fa-user"></i> <b>Ponente:</b> <button style="margin-top: -2px;" type="button" class="btn btn-link"
+                                        data-toggle="modal" data-target=".tt"
+                                        onclick="VerPerfil('{{ponencia.ponente.all.0.user.pk}}')"> <span style="font-style: italic;">{{ponencia.ponente.all.0.user.usuario.first_name}} {{ponencia.ponente.all.0.user.usuario.last_name}}</span> </button>
                                         </a></li>
                         </ul>
                         <span><a href="{% url 'View_ponencia' ponencia.path %}">Leer Más</a></span>
