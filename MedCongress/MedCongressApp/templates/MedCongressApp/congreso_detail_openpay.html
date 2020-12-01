@@ -484,7 +484,7 @@
         {%if forloop.first%}
         <div class="row">
             {% endif %}
-            <div class="col-md-4">
+            <div class="col-md-4 {{forloop.counter}}" >
                  <!-- KODE_EVENT_BLOG2 START-->
                <div class="kode-event-blog3">
                     <a href="{% url 'View_ponencia' ponencia.path %}" class="">
@@ -515,7 +515,7 @@
 
                 </div>
             </div> 
-
+            
             <!--KODE_EVENT_BLOG2 START-->
              {%if forloop.counter|divisibleby:3 %}
         </div>
