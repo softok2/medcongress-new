@@ -1,6 +1,6 @@
 import json
 from django import forms
-import pandas as pd
+# import pandas as pd
 from django.contrib import messages
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.urls import reverse_lazy,reverse
@@ -313,6 +313,13 @@ class AsignarCongressAddViews(validarUser,FormView):
     def form_valid(self, form):
         congress=form.save(commit=True)
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        ctx = super(AsignarCongressAddViews, self).get_context_data(**kwargs)
+        if self.kwargs.get('pk'):
+            usuario=PerfilUsuario.objects.get(pk=self.kwargs.get('pk'))
+            ctx['usuario'] = usuario
+        return ctx    
 
 class AsignarCongressDeletedViews(validarUser,DeleteView):
     model = RelCongresoUser
