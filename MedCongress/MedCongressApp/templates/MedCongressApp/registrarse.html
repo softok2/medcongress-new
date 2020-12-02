@@ -61,16 +61,7 @@ Registrarse
         style=" background:url({% static 'MedCongressApp/images/slide11.png'%}) no-repeat 50%  0;background-attachment: fixed; ">
         <div class="container">
 
-            {%if update%}
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="kf_heading_3" style="margin-top: 70px;">
-                        <h2>Actualizar Perfil en MedCongress</h2>
-                        <span></span>
-                    </div>
-                </div>
-            </div>
-            {%else%}
+            
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="kf_heading_3" style="margin-top: 70px;">
@@ -79,7 +70,7 @@ Registrarse
                     </div>
                 </div>
             </div>
-            {%endif%}
+            
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
@@ -88,35 +79,29 @@ Registrarse
                         <div class="row">
                             <div class="col-sm-3 ">
                                 <div class="form-group">
-                                    <label
-                                        for="{{form.user.first_name.id_for_label }}"><b>{{form.user.first_name.label }}</b>{% if form.user.first_name.errors %}
-                                        <span style="font-size: 15px; color: red;">{{ form.user.first_name.errors }}
+                                    <label for="{{form.user.first_name.id_for_label }}"><b>{{form.user.first_name.label }}
+                                        </b> {% if form.user.first_name.errors %} <span
+                                            style="font-size: 15px; color: red;">{{ form.user.first_name.errors }}
                                         </span>{% endif %} </label>
 
-                                    {{form.user.first_name }} {{form.user.first_name.help_text }}
+                                    {{form.user.first_name }}
                                 </div>
                             </div>
                             <div class="col-sm-3 ">
                                 <div class="form-group">
-                                    <label
-                                        for="{{form.user.last_name.id_for_label }}"><b>{{form.user.last_name.label }}</b>{% if form.user.last_name.errors %}
-                                        <span style="font-size: 15px; color: red;">{{ form.user.last_name.errors }}
+                                    <label for="{{form.user.last_name.id_for_label }}"><b>{{form.user.last_name.label }}
+                                        </b> {% if form.user.last_name.errors %} <span
+                                            style="font-size: 15px; color: red;">{{ form.user.last_name.errors }}
                                         </span>{% endif %} </label>
 
                                     {{form.user.last_name }}
                                 </div>
                             </div>
-                            <div class="col-sm-3 ">
-                                <div class="form-group">
-                                    <label for="{{form.user.username.id_for_label }}"><b>{{form.user.username.label }}
-                                        </b> {% if form.user.username.errors %} <span
-                                            style="font-size: 15px; color: red;">{{ form.user.username.errors }}
-                                        </span>{% endif %} </label>
-
-                                    {{form.user.username }}
-                                </div>
+                            
+                         
                             </div>
-                            <div class="col-sm-3 ">
+                            <div class="row">
+                            <div class="col-sm-6 ">
                                 <div class="form-group">
                                     <label
                                         for="{{form.user.email.id_for_label }}"><b>{{form.user.email.label }}</b>{% if form.user.email.errors %}
@@ -129,10 +114,8 @@ Registrarse
 
                         </div>
                         <div class="row">
-                            {%if update%}
-                            <input type="hidden" value="True" name="update">
-                            {%else%}
-                            <div class="col-sm-3 ">
+                          
+                            <div class="col-sm-6 ">
                                 <div class="form-group">
                                     <label
                                         for="{{form.user.password.id_for_label }}"><b>{{form.user.password.label }}</b>{% if form.user.password.errors %}
@@ -142,7 +125,9 @@ Registrarse
                                     {{form.user.password }}
                                 </div>
                             </div>
-                            <div class="col-sm-3 ">
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label
                                         for="{{form.user.password1.id_for_label }}"><b>{{form.user.password1.label }}</b>
@@ -154,9 +139,9 @@ Registrarse
 
                                 </div>
                             </div>
-                            {%endif%}
+                        </div>
 
-                            <div class="col-sm-3 ">
+                            <!-- <div class="col-sm-3 ">
                                 <div class="form-group">
                                     <label
                                         for="{{form.perfiluser.genero.id_for_label }}"><b>{{form.perfiluser.genero.label }}</b>{% if form.perfiluser.genero.errors %}
@@ -167,7 +152,7 @@ Registrarse
                             </div>
                             {%if update%}
 {%else%}
-                        </div>
+                        </div>-->
 
                         <div class="row">
                             {%endif%}
@@ -215,7 +200,7 @@ Registrarse
                             </div>
 
                         </div>
-                        <div class="row">
+                      <!--- <div class="row">
                             <div class="col-sm-5 ">
                                 <div class="form-group">
                                     <label
@@ -232,7 +217,7 @@ Registrarse
 
                                     <label class="mapa">Ver Mapa</label>
                                     <!-- <a onclick="VerMapa()" type="link"  style="display: block;">  <i class="" style="font-size: 43px;"></i> </a> -->
-                                    <button type="button" class="btn btn-link" data-toggle="modal"
+                                    <!-- <button type="button" class="btn btn-link" data-toggle="modal"
                                         data-target="#myModal" style="display: block;">
                                         <span><i class="glyphicon glyphicon-map-marker"
                                                 style="font-size: 30px;display: block;"></i></span>
@@ -423,7 +408,7 @@ Registrarse
                                 </div>
 
                             </div>
-                            {%else%}
+                            {%else%}  -->
                             <div class="col-sm-offset-2 col-sm-5">
                                 <div class="">
                                     <label>

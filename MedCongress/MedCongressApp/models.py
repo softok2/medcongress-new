@@ -3,6 +3,7 @@ from django.core.files.storage import FileSystemStorage
 from django.core.validators import RegexValidator
 from django.db import models
 
+
 # Create your models here.
 
 ##### Tabla Categoria del usuario  ###
@@ -90,10 +91,10 @@ class PerfilUsuario(models.Model):
     activation_key = models.CharField(max_length=60,blank=True, null=True)
     key_expires = models.DateTimeField(blank=True, null=True)
     usuario=models.OneToOneField(User, on_delete=models.CASCADE)
-    categoria=models.ForeignKey(CategoriaUsuario,on_delete=models.DO_NOTHING)
+    categoria=models.ForeignKey(CategoriaUsuario,on_delete=models.DO_NOTHING,null=True)
     especialidad=models.ForeignKey(Especialidades,on_delete=models.DO_NOTHING,null=True,blank=True)
     ubicacion=models.ForeignKey(Ubicacion,on_delete=models.DO_NOTHING,null=True)
-    genero=models.ForeignKey(Genero,on_delete=models.DO_NOTHING)
+    genero=models.ForeignKey(Genero,on_delete=models.DO_NOTHING,null=True)
     datos_interes=models.TextField(null=True)
     linkedin=models.CharField(max_length=50,null=True)
     facebook=models.CharField(max_length=50,null=True)
@@ -113,6 +114,8 @@ class PerfilUsuario(models.Model):
     meta_og_imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='metas',blank=True, null=True )
     meta_title=models.CharField(max_length=250,null=True)
     score=models.IntegerField(null=True)
+    fecha_nacimiento=models.DateField(null=True)
+    num_telefono=models.CharField(max_length=20,null=True)
     class Meta:
         verbose_name='Perfil usuario'
         verbose_name_plural='Perfil de usuarios'

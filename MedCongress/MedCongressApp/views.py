@@ -30,7 +30,7 @@ from .models import (CategoriaPagoCongreso, Congreso, EspecialidadCongreso,
                      Ponencia, Ponente, RelCongresoCategoriaPago,
                      RelCongresoUser,RelPonenciaPonente,PerfilUsuario,ImagenCongreso,Taller,RelTalleresCategoriaPago,RelTallerUser,DatosIniciales,
                      CategoriaUsuario,Bloque,Moderador,RelTallerPonente,Pais,CuestionarioPregunta,CuestionarioRespuestas,RelPonenciaVotacion,
-                     PreguntasFrecuentes)
+                     PreguntasFrecuentes,Ubicacion)
 from .pager import Pager
 from .cart import Cart
 from django_xhtml2pdf.views import PdfMixin
@@ -183,7 +183,6 @@ class PagoExitoso(TemplateView):
         # response2=requests.get(url=url2,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(para),headers=headers)
         # response_d=response2.json()
         # return HttpResponseRedirect( response_d['public_pdf_link'])
-
 
 @method_decorator(login_required,name='dispatch')   
 class Perfil(TemplateView):
@@ -593,7 +592,7 @@ class CongresoCardForm(TemplateView):
 
 ##### Formulario para registrar usuario #####
 
-class PerfilUserCreate(CreateView):
+class PerfilUserCreate(FormView):
     model=User
     form_class= UserPerfilUser
     template_name='MedCongressApp/registrarse.html'
@@ -610,35 +609,33 @@ class PerfilUserCreate(CreateView):
         # email.send()
         
 
-        us=User.objects.create_user(user.username,user.email,user.password)
-        ubicacion= form['ubicacion'].save(commit=True)
-        perfiluser = form['perfiluser'].save(commit=False)
-        categoria = form['categoria'].save(commit=False)
-        if categoria.nombre !='':
-            categoria.published=False
-            categoria.save()
-            perfiluser.categoria=categoria
-        us.first_name=user.first_name
-        us.last_name=user.last_name
-        us.is_active = False
-        group= Group.objects.get(name='Cliente')
-        us.groups.add(group)
-        us.save()
         chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
         secret_key = get_random_string(60, chars)
-        perfiluser.activation_key=secret_key
-
         subject = 'Bienvenido a MedCongress'
         html_message = render_to_string('MedCongressApp/email.html', context={'token':secret_key})
         plain_message = strip_tags('Aviso..... Usted se a creado un usuario en MedCongress')
         from_email = ''
         to = user.email
         mail.send_mail(subject, plain_message, from_email, [to],html_message=html_message)
+        us=User.objects.create_user(user.email,user.email,user.password) 
+        us.is_active = False 
+        group= Group.objects.get(name='Cliente')
+        us.groups.add(group)
+        us.save()
+        perfil = form['perfiluser'].save(commit=False) 
+        categoria = form['categoria'].save(commit=False)
+        if categoria.nombre !='':
+            categoria.published=False
+            categoria.save()
+            perfil.categoria=categoria
+        perfil.activation_key=secret_key
+        perfil.usuario = us
+        path=us.username.replace(".","").replace("@","-")
+        perfil.path=path
+        perfil.save()
+        
 
-        perfiluser.usuario = us
-        perfiluser.ubicacion=ubicacion
-        perfiluser.path=us.username
-        perfiluser.save()
+        
         # datas={}
         # datas['activation_key']=secret_key
         # datas['email']=user.email
@@ -646,8 +643,9 @@ class PerfilUserCreate(CreateView):
         # datas['email_path']="/ActivationEmail.txt"
         # datas['email_subject']="Activation de votre compte yourdomain"
         # #form.sendEmail(datas)
+        
+        return HttpResponseRedirect(reverse('Registro_exitoso'))
        
-        return HttpResponseRedirect(reverse('Home'))
 
 ##### Error 404 #####
 
@@ -656,6 +654,10 @@ class ViewError404(TemplateView):
 
 class ViewErrorOpenpay(TemplateView):
     template_name= 'MedCongressApp/Error_openpay.html' 
+class ViewErrorRegistrar(TemplateView):
+    template_name= 'MedCongressApp/Error_registrar.html' 
+
+    
 ##### Error 404 #####
 class ViewErrorFact(TemplateView):
     template_name= 'MedCongressApp/Error_Fact.html' 
@@ -1240,29 +1242,61 @@ class VerTransaccion(TemplateView):
 
         self.request.session["error_opempay"]='Transacción no Completada'  
         return HttpResponseRedirect(reverse('Error_openpay'))
-@method_decorator(login_required,name='dispatch')       
-class PerfilUpdateView(UpdateView):
+@method_decorator(login_required,name='dispatch') 
+
+class PerfilUpdateView(FormView):
     form_class = UsuarioForms
     success_url = reverse_lazy('perfil')
     template_name='MedCongressApp/edit_perfil.html'
-    
-    
-    def get_queryset(self, **kwargs):
-        return PerfilUsuario.objects.filter(pk=self.kwargs.get('pk'))
+
     
     def get_form_kwargs(self):
         kwargs = super(PerfilUpdateView, self).get_form_kwargs()
+        user= PerfilUsuario.objects.filter(pk=self.kwargs.get('pk')).first()
         kwargs.update(instance={
-            'perfiluser': self.object,
-            'user': self.object.usuario,
-            'ubicacion': self.object.ubicacion,
+            'perfiluser': user,
+            'user': user.usuario,
+            'ubicacion': user.ubicacion,
         })
         return kwargs
+
+
+    def form_valid(self, form):
+
+        user = form['user'].save(commit=False)
+        perfiluser = form['perfiluser'].save(commit=False)
+        print( form['ubicacion'].instance.latitud)
+        ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
+        
+        us=User.objects.get(email=form['user'].instance.email)
+        perfil_edit =PerfilUsuario.objects.filter(usuario=us).first()
+        
+        if ubic.exists():
+            perfiluser.ubicacion=ubic.first()
+        else:
+            new_ubicacion=Ubicacion(direccion=form['ubicacion'].instance.direccion,longitud= form['ubicacion'].instance.longitud,latitud =form['ubicacion'].instance.latitud)
+            new_ubicacion.save()
+            perfiluser.ubicacion=new_ubicacion
+
+        perfil_edit=form['perfiluser']
+        us.first_name=user.first_name
+        us.last_name=user.last_name
+        us.is_active = True
+        us.save()
+        
+        perfil_edit.save()
+       
+        return super(PerfilUpdateView, self).form_valid(form)
+
 
     def get_context_data(self, **kwargs):
         context=super().get_context_data(**kwargs)
         context['update']=True
-        context['imagen_seg_url']='/static/%s'%(self.object.foto)
+        perfil_edit =PerfilUsuario.objects.get(pk=self.kwargs.get('pk'))
+        if perfil_edit.foto:
+            context['imagen_seg_url']='/static/%s'%(perfil_edit.foto)
+        else:
+            context['imagen_seg_url']=False
         return context
 @method_decorator(login_required,name='dispatch')
 class CambiarPass(FormView):
@@ -1271,7 +1305,7 @@ class CambiarPass(FormView):
     template_name='MedCongressApp/cambiar_pass.html'
 
     def form_valid(self, form):
-        print()
+       
         usuario= User.objects.filter(username=self.request.user.username).first()
         usuario.set_password(self.request.POST['password'])
         usuario.save()
@@ -1279,3 +1313,5 @@ class CambiarPass(FormView):
         return HttpResponseRedirect(reverse('perfil'))
       
 
+class RegistroExitoso(TemplateView):
+    template_name='MedCongressApp/registro_exitoso.html' 

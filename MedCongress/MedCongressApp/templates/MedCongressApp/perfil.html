@@ -65,22 +65,41 @@ Detalles del Perfil
                                 class="fa fa-edit"></i>Cambiar Password</a>
 
                         <table class=" table" >
+                            
+                            {%if request.user.perfilusuario.ubicacion%}
                             <tr style="border-top: black solid 1px;">
                                 <td align="center" > <b>Localidad</b> </td>
                                 <td>{{request.user.perfilusuario.ubicacion}}</td>
 
                             </tr>
-
+                            {%endif%}
                             <tr style="border-top: black solid 1px;">
                                 <td align="center"> <b>Email</b> </td>
                                 <td>{{request.user.email}}</td>
 
                             </tr>
+                           
+                            {%if request.user.perfilusuario.num_telefono%}
+                            <tr >
+                                <td align="center" style="border-top: black solid 1px;"> <b>Puntos en MedCongress</b> </td>
+                                <td >{{request.user.perfilusuario.num_telefono}}</td>
+
+                            </tr>
+                            {%endif%}
+                            {%if request.user.perfilusuario.fecha_nacimiento%}
+                            <tr >
+                                <td align="center" style="border-top: black solid 1px;"> <b>Puntos en MedCongress</b> </td>
+                                <td >{{request.user.perfilusuario.fecha_nacimiento}}</td>
+
+                            </tr>
+                            {%endif%}
+                            {%if request.user.perfilusuario.categoria%}
                             <tr style="border-top: black solid 1px;">
                                 <td align="center"> <b>Categoría</b> </td>
                                 <td>{{request.user.perfilusuario.categoria}}</td>
 
                             </tr>
+                            {%endif%}
                             {%if request.user.perfilusuario.especialidad%}
                             <tr style="border-top: black solid 1px;">
                                 <td align="center"> <b>Especialidad</b> </td>
@@ -95,11 +114,14 @@ Detalles del Perfil
 
                             </tr>
                             {%endif%}
+                            {%if request.user.perfilusuario.score%}
                             <tr >
                                 <td align="center" style="border-top: black solid 1px;"> <b>Puntos en MedCongress</b> </td>
                                 <td >{{request.user.perfilusuario.score}}</td>
 
                             </tr>
+                            {%endif%}
+                           
                         </table>
 
                     </div>

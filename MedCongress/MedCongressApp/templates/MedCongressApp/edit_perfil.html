@@ -48,7 +48,7 @@ Registrarse
                     </div>
                 </div>
             </div>
-           
+
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
@@ -59,17 +59,29 @@ Registrarse
                                 <div class="row">
                                     <div class="col-sm-3 ">
                                         <div class="form-group">
-                                            {%if imagen_seg_url%}
+
                                             <label><b>Imagen Actual </b> </label>
                                             <figure class="col-lg-3 col-md-6 col-12" itemprop="associatedMedia"
-                                                itemscope="">
-                                            </figure>
+                                                itemscope=""> </figure>
+                                            {%if imagen_seg_url%}
+
+
+
                                             <a href="{{imagen_seg_url}}" itemprop="contentUrl" data-size="480x360">
                                                 <img class="img-thumbnail img-fluid" src="{{imagen_seg_url}}"
                                                     itemprop="thumbnail" alt="Image description">
                                             </a>
 
-                                            </figure>
+
+                                            {% else%}
+                                            <a href="{% static 'MedCongressApp/images/defaulthombre.png' %}"
+                                                itemprop="contentUrl" data-size="480x360">
+                                                <img class="img-thumbnail img-fluid"
+                                                    src="{% static 'MedCongressApp/images/defaulthombre.png' %}"
+                                                    itemprop="thumbnail" alt="Image description">
+                                            </a>
+
+                                            {%endif%}
 
                                             <label for=" " style="margin-top: 20px;"> <b>Insertar Nueva Imagen</b>
                                             </label>
@@ -79,15 +91,9 @@ Registrarse
                                             <input type="file" name="perfiluser-foto" accept="image/*"
                                                 class=" form-control " id="id_perfiluser-foto">
 
-                                            {% else%}
-                                            <label
-                                                for="{{form.perfiluser.foto.id_for_label }}"><b>{{form.perfiluser.foto.label }}</b>{% if form.taller.congreso.errors %}
-                                                <span
-                                                    style="font-size: 15px; color: red;">{{ form.perfiluser.foto.errors }}
-                                                </span>{% endif %} </label>
 
-                                            {{form.perfiluser.foto }}
-                                            {%endif%}
+
+
                                         </div>
                                     </div>
 
@@ -168,6 +174,30 @@ Registrarse
                                             </div>
                                         </div>
                                         <div class="row">
+                                            <div class="col-sm-3 ">
+                                                <div class="form-group">
+                                                    <label
+                                                        for="{{form.perfiluser.num_telefono.id_for_label }}"><b>{{form.perfiluser.num_telefono.label }}</b>{% if form.perfiluser.num_telefono.errors %}
+                                                        <span
+                                                            style="font-size: 15px; color: red;">{{ form.perfiluser.num_telefono.errors }}
+                                                        </span>{% endif %}</label>
+
+                                                    {{form.perfiluser.num_telefono }}
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3 ">
+                                                <div class="form-group">
+                                                    <label
+                                                        for="{{form.perfiluser.fecha_nacimiento.id_for_label }}"><b>{{form.perfiluser.fecha_nacimiento.label }}</b>{% if form.perfiluser.cel_profecional.errors %}
+                                                        <span
+                                                            style="font-size: 15px; color: red;">{{ form.perfiluser.fecha_nacimiento.errors }}
+                                                        </span>{% endif %}</label>
+
+                                                        <input type="date" name="perfiluser-fecha_nacimiento" class="form-control" id="id_perfiluser-fecha_nacimiento">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
 
 
                                             <div class="col-sm-3 ">
@@ -230,6 +260,7 @@ Registrarse
                                             </div>
 
                                         </div>
+                                        
                                         <div class="row">
                                             <div class="col-sm-6 ">
                                                 <div class="form-group">
@@ -266,12 +297,13 @@ Registrarse
 
 
                                         </div>
+                                        
                                     </div>
 
 
                                 </div>
                             </div>
-                            <div role="tabpanel" class="tab-pane" id="profile" >
+                            <div role="tabpanel" class="tab-pane" id="profile">
                                 <div class="row">
                                     <div class="col-sm-8">
                                         <div class="form-group">
@@ -414,15 +446,15 @@ Registrarse
 <script src="{% static 'MedCongressApp/js/lugar.js'%}"></script>
 <script>
 
-$('#myTabs a').click(function (e) {
-    
-  e.preventDefault()
-  $(this).tab('show')
-})
+    $('#myTabs a').click(function (e) {
+
+        e.preventDefault()
+        $(this).tab('show')
+    })
 
     $(document).ready(function () {
-       
-        
+
+
         FiltrarLugar('#id_ubicacion-direccion', '#id_ubicacion-longitud', '#id_ubicacion-latitud');
         $('#id_ubicacion-direccion').keypress(function () {
             $('#id_ubicacion-latitud').val('');

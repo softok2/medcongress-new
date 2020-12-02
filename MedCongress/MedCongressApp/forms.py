@@ -11,19 +11,17 @@ class UserForm(forms.ModelForm):
     last_name=forms.CharField(
                 label = 'Apellidos',
                 )
-    username= forms.CharField(
-               label = 'Usuario',
-               )         
+    
     password = forms.CharField(widget=forms.PasswordInput,label='Contraseña')
     password1 = forms.CharField(widget=forms.PasswordInput,label='Rectifique contraseña')
     class Meta:
         model=User
-        fields=['username','password','password1','first_name','last_name','email']
+        fields=['password','password1','first_name','last_name','email']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['username'].widget.attrs.update({'class': 'form-control'}) 
+       
         self.fields['password'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['password1'].widget.attrs.update({'class': 'form-control'}) 
           
@@ -84,20 +82,20 @@ class PerfilUserForm(forms.ModelForm):
                 required=False
                
                )
-    genero=forms.ModelChoiceField(queryset=Genero.objects.all(), label='Género')
+
     categoria=forms.ModelChoiceField(queryset=CategoriaUsuario.objects.filter(published=True),label='Categoría')
    
     class Meta:
         model=PerfilUsuario
-        fields=['cel_profecional','categoria','genero','especialidad','is_ponente']
+        fields=['cel_profecional','categoria','especialidad','fecha_nacimiento','num_telefono']
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
          
         self.fields['cel_profecional'].widget.attrs.update({'class': 'form-control'})   
         self.fields['categoria'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['genero'].widget.attrs.update({'class': 'form-control'}) 
-       
+        self.fields['fecha_nacimiento'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['num_telefono'].widget.attrs.update({'class': 'form-control'})
        
         
 class Ubicacion(forms.ModelForm):
@@ -145,7 +143,6 @@ class UserPerfilUser(MultiModelForm):
     form_classes = {
         'user': UserForm,
         'perfiluser': PerfilUserForm,
-        'ubicacion':Ubicacion,
         'categoria':Categoria
     }
 

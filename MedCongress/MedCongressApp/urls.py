@@ -4,7 +4,7 @@ from .views import (Home,CongresoListView,CongresoDetail,CongresoCardForm,Perfil
 ViewErrorOpenpay,PagarEfectivo,ViewError404,ViewPonencia,EspecialdiadesAutocomplete,
 AddCart,AddCartTaller,DeletedCart,ConfCart,AvisoPrivacidad,HabilitarUser,Perfil,PagoExitoso,Email,GetPerfil,
 GetCuestionario,SetConstancia,EvaluarPonencia,Resultado_Cuestionario,Get_Constancia,VerTransaccion,GetFactura,
-ViewErrorFact,PerfilUpdateView,CambiarPass,UpdateEvaluarPonencia,UserAutocomplete)
+ViewErrorFact,PerfilUpdateView,CambiarPass,UpdateEvaluarPonencia,UserAutocomplete,ViewErrorRegistrar,RegistroExitoso)
 
 urlpatterns = [
     
@@ -16,7 +16,7 @@ urlpatterns = [
     path('view_ponencia/<str:path>', ViewPonencia.as_view(), name='View_ponencia'),
     path('error404', ViewError404.as_view(), name='Error404'),
     path('error_openpay', ViewErrorOpenpay.as_view(), name='Error_openpay'),
-    #path('error_registrar', ViewErrorRegistrar.as_view(), name='ErrorRegistrar'),
+    path('error_registrar', ViewErrorRegistrar.as_view(), name='ErrorRegistrar'),
     
     
     path('error_facturacion', ViewErrorFact.as_view(), name='Error_facturacion'),
@@ -49,7 +49,7 @@ urlpatterns = [
     path('ver_constancia/congreso/<str:path>',Get_Constancia.as_view() , name='Get_Constancia'),
     path('ver_transaccion',VerTransaccion.as_view() , name='ver_transaccion'),
     path('cambiar_pass',CambiarPass.as_view() , name='Cambiar_Pass'),
-    #path('registro_existoso',RegistroExitoso.as_view() , name='Registro_exitoso'),
+    path('registro_existoso',RegistroExitoso.as_view() , name='Registro_exitoso'),
     
     
     
