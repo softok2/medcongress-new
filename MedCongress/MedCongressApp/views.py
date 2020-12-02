@@ -45,8 +45,8 @@ from django.utils.html import strip_tags
 
 
 ID_KEY='mrkdgemoa3sig3imqehg'
-PUBLIC_KEY='sk_77e831c6a9db4dae8eb25a5ed9c1bbdf'
-PRIVATE_KEY='pk_644303cc7033454298d199d1464b740f'
+PRIVATE_KEY='sk_77e831c6a9db4dae8eb25a5ed9c1bbdf'
+PUBLIC_KEY='pk_644303cc7033454298d199d1464b740f'
 URL_API='api.openpay.mx'
 URL_SITE='https://medcongress.com.mx'
 # URL_SITE='http://localhost:8000'
