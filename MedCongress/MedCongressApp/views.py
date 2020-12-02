@@ -618,6 +618,8 @@ class PerfilUserCreate(FormView):
         to = user.email
         mail.send_mail(subject, plain_message, from_email, [to],html_message=html_message)
         us=User.objects.create_user(user.email,user.email,user.password) 
+        us.first_name=user.first_name
+        us.last_name=user.last_name
         us.is_active = False 
         group= Group.objects.get(name='Cliente')
         us.groups.add(group)
