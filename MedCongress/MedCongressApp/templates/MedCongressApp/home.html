@@ -19,7 +19,9 @@ Inicio
 						<input type="text" name="especialidad" id="especialidad"  placeholder="Buscar especialidad">
 						<input type="submit"  name="submit">
 					</form>
+
 					
+									
 					{%if nuevo_congreso%}
 					<h2>Siguiente evento:</h2>
 					<div id="countdown" class="simply-countdown"></div>
@@ -47,7 +49,7 @@ Inicio
 									<p class="seconds_ref">segundos</p>
 								</li>
 							</ul>
-							<h4>No hay eventos próximos por el momento</h4>
+							<a href="{%url 'View_congreso' path='1-simposio-en-ciencias-de-la-salud-AMCIC'%}" class="button" style="margin-top: 30px;">Ver Congreso Actual</a>
 									{% endif%}
 				</div>
 			</div>
