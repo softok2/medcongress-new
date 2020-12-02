@@ -22,7 +22,7 @@ from .views.taller_view import (TalleresListView,TallerCreateView,TallerCategPag
                                    TallerUpdateView,TallerPonenteListView,TallerPonenteCreateView,TallerDeletedView,AsignarTalleresListView,
                                    AsignarTallerAddViews,GetPagosT,AsignarTallerDeletedViews,TallerPonenteDeletedView,TallerBloqueDeleted)
 from .views.ponente_view import (PonentesListView,PonentesCreateView,PonenteDeletedView)
-from .views.user_views import (UsuariosListView,UsuarioCreateView,UsuarioUpdateView,UsuarioDeletedView)
+from .views.user_views import (UsuariosListView,UsuarioCreateView,UsuarioUpdateView,UsuarioDeletedView,UsuarioAsigCongresoView)
 from .views.bloque_views import (BloquesListView,BloqueCreateView,BloqueDeletedView,BloquePonenciasListView,BloqueTalleresListView,
                                    BloqueUpdateView,BloqueModeradoresListView,page_not_found,BloqueModeradoresCreateView,BloqueModeradoresDeletedView)
 from .views.otros_views import (OtrosListView,OtroUpdateView)
@@ -99,7 +99,7 @@ urlpatterns = [
      path('usuario/adicionar', UsuarioCreateView.as_view(), name='usuario_add'),
      path('usuario/editar/<int:pk>', UsuarioUpdateView.as_view(), name='usuario_edit'),
      path('usuario/eliminar/<int:pk>', UsuarioDeletedView.as_view(), name='user_delete'),
-     
+     path('usuario/asig_congreso/<int:pk>', AsignarCongressAddViews.as_view(), name='asig_congreso'),
 
      # Ponentes
      path('ponentes', PonentesListView.as_view(), name='Ponentes_list'),
@@ -181,7 +181,7 @@ urlpatterns = [
      path('ver_usuarios', Ver_usuarios.as_view(), name='Ver_usuarios'),
      path('descargar_exel', Ver_Exel.as_view(), name='Ver_exel'),
      path('exp_usuario', Exportar_usuarios.as_view(), name='Exportar_usuarios'),
-     path('usurios_pagaron', Usuarios_pagaron.as_view(), name='Usuarios_pagaron'),
+     path('usuarios_pagaron', Usuarios_pagaron.as_view(), name='Usuarios_pagaron'),
      
      
 ]
