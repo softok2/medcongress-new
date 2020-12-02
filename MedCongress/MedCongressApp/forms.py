@@ -77,25 +77,21 @@ class PerfilUserForm(forms.ModelForm):
                label = 'Cédula Profesional',
                 required=False
                )
-    is_ponente=forms.BooleanField(
-                label = 'Desearía ser ponente en un evento   ',
-                required=False
-               
-               )
+   
 
     categoria=forms.ModelChoiceField(queryset=CategoriaUsuario.objects.filter(published=True),label='Categoría')
    
     class Meta:
         model=PerfilUsuario
-        fields=['cel_profecional','categoria','especialidad','fecha_nacimiento','num_telefono']
+        fields=['cel_profecional','categoria','especialidad']
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
          
         self.fields['cel_profecional'].widget.attrs.update({'class': 'form-control'})   
         self.fields['categoria'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['fecha_nacimiento'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['num_telefono'].widget.attrs.update({'class': 'form-control'})
+        self.fields['especialidad'].widget.attrs.update({'class': 'form-control'}) 
+        
        
         
 class Ubicacion(forms.ModelForm):
