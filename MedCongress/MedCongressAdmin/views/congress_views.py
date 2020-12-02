@@ -1,6 +1,6 @@
 import json
 from django import forms
-# import pandas as pd
+import pandas as pd
 from django.contrib import messages
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.urls import reverse_lazy,reverse
