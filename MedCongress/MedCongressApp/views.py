@@ -1270,7 +1270,8 @@ class PerfilUpdateView(FormView):
         print( form['ubicacion'].instance.latitud)
         ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
         
-        us=User.objects.get(email=form['user'].instance.email)
+        us=User.objects.get(username=form['user'].instance.username)
+
         perfil_edit =PerfilUsuario.objects.filter(usuario=us).first()
         
         if ubic.exists():
@@ -1281,8 +1282,10 @@ class PerfilUpdateView(FormView):
             perfiluser.ubicacion=new_ubicacion
 
         perfil_edit=form['perfiluser']
+       
         us.first_name=user.first_name
         us.last_name=user.last_name
+        us.email=user.email
         us.is_active = True
         us.save()
         
