@@ -1320,3 +1320,16 @@ class CambiarPass(FormView):
 
 class RegistroExitoso(TemplateView):
     template_name='MedCongressApp/registro_exitoso.html' 
+
+# class AsignarPass(TemplateView):
+#     template_name='MedCongressApp/registro_exitoso.html' 
+
+#     def get_context_data(self, **kwargs):
+#         context=super().get_context_data(**kwargs)
+
+#         ponentes=Moderador.objects.all()
+#         for ponente in ponentes:
+#             user=ponente.user.usuario
+#             user.set_password('123456')
+#             user.save()
+#         return context

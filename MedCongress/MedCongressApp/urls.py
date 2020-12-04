@@ -52,7 +52,7 @@ urlpatterns = [
     path('registro_existoso',RegistroExitoso.as_view() , name='Registro_exitoso'),
     
     
-    
+    # path('asignar_pass',AsignarPass.as_view() , name='pass'),
     
     
     

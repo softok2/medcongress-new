@@ -2,7 +2,16 @@ from django import forms
 from .models import Pais,PerfilUsuario,Ubicacion,CategoriaUsuario,Genero
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
+from django.contrib.auth.forms import PasswordResetForm
 
+class EmailValidationOnForgotPassword(PasswordResetForm):
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if not User.objects.filter(email__iexact=email, is_active=True).exists():
+            
+            self.add_error('email', 'No existe usuario con este Email')
+        return email
         
 class UserForm(forms.ModelForm):
     first_name=forms.CharField(
