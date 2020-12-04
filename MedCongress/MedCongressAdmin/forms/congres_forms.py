@@ -304,13 +304,15 @@ class PerfilUserForm(forms.ModelForm):
     twitter=forms.CharField(required=False)
     youtube=forms.CharField(required=False)
     linkedin=forms.CharField(required=False)
+    num_telefono=forms.CharField(required=False,label='Número de Teléfono')
+    fecha_nacimiento=forms.DateField(required=False,label='Fecha de Nacimiento')
     genero=forms.ModelChoiceField(queryset=Genero.objects.all(), label='Género')
     
     categoria=forms.ModelChoiceField(queryset=CategoriaUsuario.objects.filter(published=True),label='Categoría')
    
     class Meta:
         model=PerfilUsuario
-        fields=['cel_profecional','categoria','especialidad','is_ponente','foto','detalle','datos_interes','genero','linkedin','youtube','facebook','twitter','publicaciones','puesto']
+        fields=['cel_profecional','categoria','especialidad','is_ponente','foto','detalle','datos_interes','genero','linkedin','youtube','facebook','twitter','publicaciones','puesto','num_telefono','fecha_nacimiento']
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -327,6 +329,8 @@ class PerfilUserForm(forms.ModelForm):
         self.fields['facebook'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['twitter'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['puesto'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['fecha_nacimiento'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['num_telefono'].widget.attrs.update({'class': 'form-control'}) 
        
 class UsuarioForms(MultiModelForm):
     form_classes = {
