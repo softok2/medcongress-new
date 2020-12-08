@@ -383,8 +383,14 @@ class CongresoDetail(TemplateView):
                 'foto':ponente.user.foto,
                 'tipo':'Ponente',
                 })
-            ponencias_video= Ponencia.objects.filter(congreso=congreso.pk,published=True).exclude(cod_video='')
-            context['ponencias_video']=ponencias_video
+            ponencias_video_env=[]
+
+            fechas_ponencias_video=Ponencia.objects.filter(congreso=congreso.pk,published=True).exclude(cod_video='').distinct('fecha_inicio__date').values('fecha_inicio__date')
+            for fecha in fechas_ponencias_video:
+                ponencias_video= Ponencia.objects.filter(congreso=congreso.pk,published=True,fecha_inicio__date=fecha['fecha_inicio__date']).exclude(cod_video='')
+                ponencias_video_env.append({'fecha':fecha['fecha_inicio__date'],
+                                            'ponencias':ponencias_video})
+            context['ponencias_video']=ponencias_video_env
             prueba_taller=Taller.objects.filter(congreso=congreso.pk)
             id_t=[]
             for pp in prueba_taller:
@@ -473,6 +479,7 @@ class CongresoDetail(TemplateView):
             context['categorias_pago']=cat_pago
 
             context['preg_frecuentes']=PreguntasFrecuentes.objects.filter(congreso=congreso,published=True)
+
         return context
 
 ##### Formulario Tarjeta Pagar Congreso #####
@@ -724,7 +731,7 @@ def PonenteAutocomplete(request):
     if request.is_ajax():
         query = request.GET.get("term", "")
         usuarios=User.objects.filter(email__icontains=query)
-        print(usuarios)
+ 
         results = []
         for usuario in usuarios:
             if Ponente.objects.filter(user=PerfilUsuario.objects.filter(usuario=usuario).first()).exists():
@@ -733,6 +740,24 @@ def PonenteAutocomplete(request):
         data = json.dumps(results)
     mimetype = "application/json"
     return HttpResponse(data, mimetype)
+
+##### Autocompletar ponentes #####
+
+def ModeradorAutocomplete(request):
+    if request.is_ajax():
+        query = request.GET.get("term", "")
+        usuarios=User.objects.filter(email__icontains=query)
+ 
+        results = []
+        for usuario in usuarios:
+            if Moderador.objects.filter(user=PerfilUsuario.objects.filter(usuario=usuario).first()).exists():
+                place_json = usuario.email
+                results.append(place_json)
+        data = json.dumps(results)
+    mimetype = "application/json"
+    return HttpResponse(data, mimetype)
+
+
 
 ##### Pagar en efectivo #####
 @method_decorator(login_required,name='dispatch')
@@ -1122,7 +1147,7 @@ class Get_Constancia(PdfMixin,TemplateView):
         context = super(Get_Constancia, self).get_context_data(**kwargs)
         congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
         constancia=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario,is_constancia=True).first()
-        print(constancia)
+        
         context['congreso']=congreso
         context['constancia']=constancia
         return context
@@ -1301,7 +1326,7 @@ class PerfilUpdateView(FormView):
 
         user = form['user'].save(commit=False)
         perfiluser = form['perfiluser'].save(commit=False)
-        print( form['ubicacion'].instance.latitud)
+        
         ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
         
         us=User.objects.get(username=form['user'].instance.username)

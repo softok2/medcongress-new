@@ -447,7 +447,7 @@ class AsignarTallerForms(forms.ModelForm):
         self.fields['is_pagado'].widget.attrs.update({'class': 'form-control'})   
           
 class ModeradorBloqueForm(forms.ModelForm):
-    moderador=forms.ModelChoiceField(queryset=Moderador.objects.all(),label='Moderador')
+    moderador=forms.ModelChoiceField(queryset=Moderador.objects.all(),label='Moderador',required=False)
   
     class Meta:
         model=RelBloqueModerador
@@ -460,6 +460,16 @@ class ModeradorBloqueForm(forms.ModelForm):
         self.fields['moderador'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['bloque'].widget.attrs.update({'class': 'form-control','style':'display:none'}) 
 
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(ModeradorBloqueForm, self).clean(*args, **kwargs)
+        moderador = cleaned_data.get('moderador', None)
+        bloque = cleaned_data.get('bloque', None)
+       
+        if not moderador:
+            self.add_error('moderador', 'No existe ese Moderador')
+
+        if RelBloqueModerador.objects.filter(bloque=bloque,moderador=moderador).exists():
+            self.add_error('moderador', 'Este Bloque ya tiene un moderador con ese Email')
 class ImagenCongForms(forms.ModelForm):
     imagen=forms.ImageField(label='Buscar Imagen')
     class Meta:

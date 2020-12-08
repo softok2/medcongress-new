@@ -300,11 +300,12 @@
                                                             </figure>
                                                             <div class="kf_new_conf_orgnizr_name">
                                                                 <button type="button" class="btn btn-link"
-                                                                data-toggle="modal" data-target=".tt"
-                                                                onclick="VerPerfil('{{mod.user.pk}}')">
-                                                                <h6>{{mod.user.usuario.first_name}}{%if mod.user.usuario.first_name|length > 20 or mod.user.usuario.last_name|length > 20 %} <br>{%endif%}
-                                                                    {{mod.user.usuario.last_name}}</h6>
-                                                            </button>
+                                                                    data-toggle="modal" data-target=".tt"
+                                                                    onclick="VerPerfil('{{mod.user.pk}}')">
+                                                                    <h6>{{mod.user.usuario.first_name}}{%if mod.user.usuario.first_name|length > 20 or mod.user.usuario.last_name|length > 20 %}
+                                                                        <br>{%endif%}
+                                                                        {{mod.user.usuario.last_name}}</h6>
+                                                                </button>
                                                                 <span> Moderador</span>
                                                                 <p>
                                                                     {%if mod.user.puesto %}
@@ -337,11 +338,12 @@
                                                             </figure>
                                                             <div class="kf_new_conf_orgnizr_name">
                                                                 <button type="button" class="btn btn-link"
-                                                                data-toggle="modal" data-target=".tt"
-                                                                onclick="VerPerfil('{{ponente.user.pk}}')">
-                                                                <h6>{{ponente.user.usuario.first_name}}{%if ponente.user.usuario.first_name|length > 20 or ponente.user.usuario.last_name|length > 20 %} <br>{%endif%}
-                                                                    {{ponente.user.usuario.last_name}}</h6>
-                                                            </button>
+                                                                    data-toggle="modal" data-target=".tt"
+                                                                    onclick="VerPerfil('{{ponente.user.pk}}')">
+                                                                    <h6>{{ponente.user.usuario.first_name}}{%if ponente.user.usuario.first_name|length > 20 or ponente.user.usuario.last_name|length > 20 %}
+                                                                        <br>{%endif%}
+                                                                        {{ponente.user.usuario.last_name}}</h6>
+                                                                </button>
                                                                 <span> Ponente</span>
                                                                 <p>
                                                                     {%if ponente.user.puesto %}
@@ -349,7 +351,7 @@
                                                                     {%endif%}
                                                                 </p>
                                                             </div>
-                                                             <h5
+                                                            <h5
                                                                 style="color: #00a4ef;padding-bottom: 61px;font-size: 14px;">
                                                                 {%if evento.tipo == 'Taller'%}{{evento.tipo|upper}}
                                                                 {{evento.titulo}}{%else%}
@@ -429,11 +431,12 @@
                                                             </figure>
                                                             <div class="kf_new_conf_orgnizr_name">
                                                                 <button type="button" class="btn btn-link"
-                                                                data-toggle="modal" data-target=".tt"
-                                                                onclick="VerPerfil('{{ponente.user.pk}}')">
-                                                                <h6>{{ponente.user.usuario.first_name}}{%if ponente.user.usuario.first_name|length > 20 or ponente.user.usuario.last_name|length > 20 %} <br>{%endif%}
-                                                                    {{ponente.user.usuario.last_name}}</h6>
-                                                            </button>
+                                                                    data-toggle="modal" data-target=".tt"
+                                                                    onclick="VerPerfil('{{ponente.user.pk}}')">
+                                                                    <h6>{{ponente.user.usuario.first_name}}{%if ponente.user.usuario.first_name|length > 20 or ponente.user.usuario.last_name|length > 20 %}
+                                                                        <br>{%endif%}
+                                                                        {{ponente.user.usuario.last_name}}</h6>
+                                                                </button>
                                                                 <span> Ponente</span>
                                                                 <p>
                                                                     {%if ponente.user.puesto %}
@@ -469,7 +472,11 @@
 
     </div>
 </div>
-<div class="kode-our-pricing" id="pagos">
+
+<!-- /////////////////////////////////////////////-->
+{% if ponencias_video%}
+
+<div class="kode-speaker-frame">
     <div class="container">
         <div class="kf_heading_3">
             <h2>Ponencias</h2>
@@ -477,62 +484,92 @@
         </div>
 
 
-        {%if ponencias_video %}
-        {% for ponencia in ponencias_video %}
-        {%if ponencia.cod_video%}
-
-        {%if forloop.first%}
-        <div class="row">
-            {% endif %}
-            <div class="col-md-4 {{forloop.counter}}" >
-                 <!-- KODE_EVENT_BLOG2 START-->
-               <div class="kode-event-blog3">
-                    <a href="{% url 'View_ponencia' ponencia.path %}" class="">
-                        <figure>
-                            <img src="{% static '/'%}{{ponencia.imagen}}" alt="" />
 
 
-                            <div class="kode-fig-capstion">
-                                <a href="{% url 'View_ponencia' ponencia.path  %}">{{ponencia.titulo }}</a>
-                                {%if ponencia.detalle%} <p style="font-style: italic;">
-                                    {{ponencia.detalle|truncatewords:10 }}</p>{%endif%}
+        {% for ponencia_v in ponencias_video %}
+        <div class="kf_faq_accordian">
+            <div class="kf_accordian_hdg accordion" id="section3">
+                <h5>{{ponencia_v.fecha}}</h5>
+            </div>
+
+            <div class="kf_accordian_des">
+                <div class="kode-our-pricing">
+                   
+
+                        {% for ponencia in ponencia_v.ponencias %}
+                        {%if ponencia.cod_video%}
+                        {%if forloop.first%}
+                        <div class="row">
+                            {% endif %}
+                            <div class="col-md-4 {{forloop.counter}}">
+                                <!-- KODE_EVENT_BLOG2 START-->
+                                <div class="kode-event-blog3">
+                                    <a href="{% url 'View_ponencia' ponencia.path %}" class="">
+                                        <figure>
+                                            <img src="{% static '/'%}{{ponencia.imagen}}" alt="" />
+
+
+                                            <div class="kode-fig-capstion">
+                                                <a
+                                                    href="{% url 'View_ponencia' ponencia.path  %}">{{ponencia.titulo }}</a>
+                                                {%if ponencia.detalle%} <p style="font-style: italic;">
+                                                    {{ponencia.detalle|truncatewords:10 }}</p>{%endif%}
+                                            </div>
+
+                                        </figure>
+                                    </a>
+                                    <div class="kode-thumb-caption">
+                                        <a href="{% url 'View_ponencia' ponencia.path %}">
+                                            <h4>{{ponencia.titulo }}</h4>
+                                        </a>
+                                        <ul>
+                                            <li><a href="#"><i
+                                                        class="fa fa-calendar"></i>{{ponencia.fecha_inicio|date:"M"}}
+                                                    {{ponencia.fecha_inicio|date:"d"}} /
+                                                    {{ponencia.fecha_inicio|date:"Y"}}</a></li>
+                                            <li><a href="#"><i class="fa fa-user"></i> <b>Ponente:</b> <button
+                                                        style="margin-top: -2px;" type="button" class="btn btn-link"
+                                                        data-toggle="modal" data-target=".tt"
+                                                        onclick="VerPerfil('{{ponencia.ponente.all.0.user.pk}}')"> <span
+                                                            style="font-style: italic;">{{ponencia.ponente.all.0.user.usuario.first_name}}
+                                                            {{ponencia.ponente.all.0.user.usuario.last_name}}</span>
+                                                    </button>
+                                                </a></li>
+                                        </ul>
+                                        <span><a href="{% url 'View_ponencia' ponencia.path %}">Leer Más</a></span>
+                                    </div>
+
+                                </div>
                             </div>
 
-                        </figure>
-                    </a>
-                    <div class="kode-thumb-caption">
-                        <a href="{% url 'View_ponencia' ponencia.path %}">
-                            <h4>{{ponencia.titulo }}</h4>
-                        </a>
-                        <ul>
-                            <li><a href="#"><i class="fa fa-calendar"></i>{{ponencia.fecha_inicio|date:"M"}}
-                                    {{ponencia.fecha_inicio|date:"d"}} / {{ponencia.fecha_inicio|date:"Y"}}</a></li>
-                                    <li><a href="#"><i class="fa fa-user"></i> <b>Ponente:</b> <button style="margin-top: -2px;" type="button" class="btn btn-link"
-                                        data-toggle="modal" data-target=".tt"
-                                        onclick="VerPerfil('{{ponencia.ponente.all.0.user.pk}}')"> <span style="font-style: italic;">{{ponencia.ponente.all.0.user.usuario.first_name}} {{ponencia.ponente.all.0.user.usuario.last_name}}</span> </button>
-                                        </a></li>
-                        </ul>
-                        <span><a href="{% url 'View_ponencia' ponencia.path %}">Leer Más</a></span>
+                            <!--KODE_EVENT_BLOG2 START-->
+                            {%if forloop.counter|divisibleby:3 %}
+                        </div>
+                        <div class='row'>
+                            {%endif%}
+                            {%if forloop.last%}
+                        </div>
+                        {% endif %}
+
+                        {% endif %}
+                        {% endfor %}
+
+
                     </div>
-
-                </div>
-            </div> 
-            
-            <!--KODE_EVENT_BLOG2 START-->
-             {%if forloop.counter|divisibleby:3 %}
+               
+            </div>
         </div>
-        <div class='row'>
-            {%endif%}
-            {%if forloop.last%}
-        </div>
-        {% endif %}
+        {%endfor%}
 
-        {% endif %}
-        {% endfor %}
 
-        {%endif%}
+
+
+
     </div>
 </div>
+
+{%endif%}
+<!--//////////////////////////////////////////////////////////-->
 <div class="kode-our-pricing" id="pagos">
     <div class="container">
         <div class="kf_heading_3">
@@ -891,15 +928,15 @@
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                     <img class="img-responsive" src="{% static 'socios/18.jpg'%}" alt="">
                 </div>
-				<!-- kode-new speaker over state End -->
+                <!-- kode-new speaker over state End -->
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                     <img class="img-responsive" src="{% static 'socios/19.jpg'%}" alt="">
                 </div>
-				<!-- kode-new speaker over state End -->
+                <!-- kode-new speaker over state End -->
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                     <img class="img-responsive" src="{% static 'socios/20.jpg'%}" alt="">
                 </div>
-				<!-- kode-new speaker over state End -->
+                <!-- kode-new speaker over state End -->
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                     <img class="img-responsive" src="{% static 'socios/21.jpg'%}" alt="">
                 </div>
@@ -1196,7 +1233,7 @@
         $.get(url, { 'pk': pk }, function (data) {
 
             if (data.foto)
-                $('#foto').html('<img class="img-responsive" src="{% static '/'%}'+data.foto+'" alt=" foto ' + data.nombre + '" >');
+                $('#foto').html('<img class="img-responsive" src="{% static '/'%}'+ data.foto +'" alt=" foto ' + data.nombre + '" >');
             else
                 $('#foto').html('<img class="img-responsive" src="{% static 'MedCongressApp/images/defaulthombre.png' %}" alt="{{request.user.username}}" >');
             if (data.bandera)

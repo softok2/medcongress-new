@@ -2,7 +2,7 @@ from django import forms
 from .models import Pais,PerfilUsuario,Ubicacion,CategoriaUsuario,Genero
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
-from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.forms import PasswordResetForm,SetPasswordForm
 
 class EmailValidationOnForgotPassword(PasswordResetForm):
 
@@ -12,6 +12,16 @@ class EmailValidationOnForgotPassword(PasswordResetForm):
             
             self.add_error('email', 'No existe usuario con este Email')
         return email
+
+class PasswordChangeOnForgotPassword(SetPasswordForm):
+
+   def clean_new_password2(self):
+        password1 = self.cleaned_data.get('new_password1')
+        password2 = self.cleaned_data.get('new_password2')
+        if password1 and password2:
+            if password1 != password2:
+                self.add_error('new_password2', 'No coinciden las contraseñas. Intente de Nuevo')
+        return password2
         
 class UserForm(forms.ModelForm):
     first_name=forms.CharField(

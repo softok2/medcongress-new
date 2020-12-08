@@ -36,13 +36,7 @@
 													</span>{% endif %} </label>
 													<input type="text" name="my_user" class="form-control" required="" id="id_my_user">
 													<div style="display: none;">
-														<select name="moderador" class="form-control" required="" id="id_moderador">
-														
-													  
-														{%for moderador in moderadores%}
-														<option value="{{moderador.id}}" selected="">{{moderador.user.usuario.first_name}} {{moderador.user.usuario.last_name}}</option>
-														{%endfor%}
-													  	</select>
+														{{form.moderador}}
 													</div>
 													
 											</div>
@@ -77,9 +71,20 @@
 </section>
 {% endblock %}
 {% block scripts %}
+<link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
+<script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
 <script type="text/javascript">
 	$(document).ready(function () {
 		$("#id_bloque option[value='{{bloq.id}}']").attr("selected",true);
+		$("#id_my_user").autocomplete({
+		source: "{% url 'Moderador_autocomp'%}",
+		minLength: 3,
+	  });
+$('#id_my_user').change(function(){
+	email=$('#id_my_user').val()
+$("#id_moderador option:contains('"+email+"')").attr("selected",true);
+
+});
 		
 	});
 </script>
