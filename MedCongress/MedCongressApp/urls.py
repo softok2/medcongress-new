@@ -4,7 +4,8 @@ from .views import (Home,CongresoListView,CongresoDetail,CongresoCardForm,Perfil
 ViewErrorOpenpay,PagarEfectivo,ViewError404,ViewPonencia,EspecialdiadesAutocomplete,
 AddCart,AddCartTaller,DeletedCart,ConfCart,AvisoPrivacidad,HabilitarUser,Perfil,PagoExitoso,Email,GetPerfil,
 GetCuestionario,SetConstancia,EvaluarPonencia,Resultado_Cuestionario,Get_Constancia,VerTransaccion,GetFactura,
-ViewErrorFact,PerfilUpdateView,CambiarPass,UpdateEvaluarPonencia,UserAutocomplete,ViewErrorRegistrar,RegistroExitoso)
+ViewErrorFact,PerfilUpdateView,CambiarPass,UpdateEvaluarPonencia,UserAutocomplete,ViewErrorRegistrar,RegistroExitoso,
+PonenteAutocomplete)
 
 urlpatterns = [
     
@@ -27,6 +28,8 @@ urlpatterns = [
 
     path('especialidades_autocomp', EspecialdiadesAutocomplete , name='Especialidades_autocomp'),
     path('user_autocomp', UserAutocomplete , name='User_autocomp'),
+    path('ponente_autocomp', PonenteAutocomplete , name='Ponente_autocomp'),
+    
     path('add_cart', AddCart.as_view() , name='Add_cart'),
     path('add_cart_taller', AddCartTaller.as_view() , name='Add_cart_taller'),
     path('deleted_cart',DeletedCart.as_view() , name='Deleted_cart'),

@@ -329,7 +329,7 @@ class Ponente(models.Model):
         verbose_name_plural='ponentes'
 
     def __str__(self):
-        return self.user.usuario.first_name +' '+self.user.usuario.last_name
+        return self.user.usuario.email
 
 ##### Tabla  moderador  #####
 
@@ -341,7 +341,7 @@ class Moderador(models.Model):
         verbose_name_plural='moderadores'
 
     def __str__(self):
-        return self.user.usuario.first_name +' '+self.user.usuario.last_name
+        return self.user.usuario.email 
 
 #### Tabla Bloque #######
 

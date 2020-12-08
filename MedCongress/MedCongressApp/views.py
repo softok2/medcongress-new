@@ -19,6 +19,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import (CreateView, DetailView, FormView, ListView,
                                   TemplateView, View)
 from requests.auth import HTTPBasicAuth
+from django.db.models import Sum
 from django.views.generic.edit import UpdateView
 from django.contrib.auth.views import PasswordResetView
 from random import sample
@@ -717,7 +718,21 @@ def UserAutocomplete(request):
     mimetype = "application/json"
     return HttpResponse(data, mimetype)
 
+##### Autocompletar ponentes #####
 
+def PonenteAutocomplete(request):
+    if request.is_ajax():
+        query = request.GET.get("term", "")
+        usuarios=User.objects.filter(email__icontains=query)
+        print(usuarios)
+        results = []
+        for usuario in usuarios:
+            if Ponente.objects.filter(user=PerfilUsuario.objects.filter(usuario=usuario).first()).exists():
+                place_json = usuario.email
+                results.append(place_json)
+        data = json.dumps(results)
+    mimetype = "application/json"
+    return HttpResponse(data, mimetype)
 
 ##### Pagar en efectivo #####
 @method_decorator(login_required,name='dispatch')
@@ -854,6 +869,19 @@ class GetPerfil(TemplateView):
             if Pais.objects.filter(denominacion=(usuario.ubicacion.direccion.split(',')[-1]).strip()).exists():
                 pais=Pais.objects.filter(denominacion=(usuario.ubicacion.direccion.split(',')[-1]).strip()).first()
                 bandera=str(pais.banderas)
+
+            ponente=Ponente.objects.filter(user=usuario).first()
+            ponencias=RelPonenciaPonente.objects.filter(ponente=ponente)
+            votacion=int(0)
+            cont=0
+            for ponencia in ponencias:
+                if  RelPonenciaVotacion.objects.filter(ponencia=ponencia.ponencia).exists():
+                    vot= RelPonenciaVotacion.objects.filter(ponencia=ponencia.ponencia).aggregate(Sum('votacion')) 
+                    c= RelPonenciaVotacion.objects.filter(ponencia=ponencia.ponencia).count()
+                    cont=c+cont
+                    votacion=vot['votacion__sum']+votacion 
+
+
             usuario_json={'nombre_completo':usuario.usuario.first_name+' '+usuario.usuario.last_name,
                             'nombre':usuario.usuario.first_name,
                             'email':usuario.usuario.email,
@@ -870,7 +898,8 @@ class GetPerfil(TemplateView):
                             'facebook':usuario.facebook,
                             'puesto':puesto_env,
                             'ponencias':ponencias_env,
-                            'talleres':talleres_env}
+                            'talleres':talleres_env,
+                            'votacion':round(votacion/cont,0)}
             return JsonResponse(usuario_json, safe=False)
         return TemplateResponse(request, reverse('dashboard'))
 @method_decorator(login_required,name='dispatch')
@@ -1116,9 +1145,14 @@ class EvaluarPonencia(TemplateView):
             usuario=request.GET.get("usuario")
             ponencia_id=request.GET.get("ponencia")
             ponencia=Ponencia.objects.get(pk=ponencia_id)
-            votacion=RelPonenciaVotacion(user=self.request.user,ponencia=ponencia,votacion=puntuacion)
-            votacion.save()
-            usuario_json={'succes':'True'}
+            if not RelPonenciaVotacion.objects.filter(user=self.request.user,ponencia=ponencia).exists():
+                votacion=RelPonenciaVotacion(user=self.request.user,ponencia=ponencia,votacion=puntuacion)
+                votacion.save()
+            else:
+                votacion=RelPonenciaVotacion.objects.filter(user=self.request.user,ponencia=ponencia).first()
+                votacion.votacion=puntuacion
+                votacion.save()  
+            usuario_json={'succes':'True','valor':puntuacion}
             return JsonResponse(usuario_json, safe=False)
         return TemplateResponse(request, reverse('dashboard')) 
 @method_decorator(login_required,name='dispatch')
@@ -1134,7 +1168,7 @@ class UpdateEvaluarPonencia(TemplateView):
             votacion=RelPonenciaVotacion.objects.filter(user=self.request.user,ponencia=ponencia).first()
             votacion.votacion=puntuacion
             votacion.save()
-            usuario_json={'succes':'True'}
+            usuario_json={'succes':'True','valor':puntuacion}
             return JsonResponse(usuario_json, safe=False)
 @method_decorator(login_required,name='dispatch')
 class Resultado_Cuestionario(TemplateView):

@@ -38,7 +38,7 @@ handler404= page_not_found
 app_name = 'MedCongressAdmin'
 
 urlpatterns = [
-     path('', DashboardView.as_view(), name='dashboard'),
+     path('', UsuariosListView.as_view(), name='dashboard'),
      path('pais', CountryListView.as_view(), name='country_list'),
      path('pais/adicionar', CountryCreateView.as_view(), name='country_add'),
      path('pais/adicionar/<str:param>', CountryCreateView.as_view(), name='country_add_plus'),

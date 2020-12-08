@@ -35,19 +35,18 @@
 													for="{{form.ponente.id_for_label }}"><b>{{form.ponente.label }}</b>{% if form.ponente.errors %}
 													<span style="font-size: 15px; color: red;">{{ form.ponente.errors }}
 													</span>{% endif %} </label>
+												<div style="display: none;">
+													{{form.ponente}}
+												</div>
 
-													<select name="ponente" class="form-control" required="" id="id_ponente">
-														<option value="" selected="">---------</option>
-													  {%for ponente in ponentes%}
-														<option value="{{ponente.id}}">{{ponente.user.usuario.first_name}} {{ponente.user.usuario.last_name}}</option>
-													  {%endfor%}
-													  </select>
+												<input type="text" name="my_ponente" class="form-control" required=""
+													id="id_my_ponente">
 											</div>
-											<div class="col-sm-6 " >
+											<div class="col-sm-6 ">
 												<div class="form-group">
-													
+
 													{{form.ponencia }}
-													<!-- <input type="text" id="id_ponencia" name="id_ponencia" value="{{pon.id}}"> -->
+
 												</div>
 											</div>
 										</div>
@@ -56,11 +55,11 @@
 										</fieldset>
 										<div class="form-actions">
 											<div class="text-right">
-												
+
 												<button id="save" type="submit" class="btn btn-primary">Guardar
 													<i class="ft-save position-right"></i>
 												</button>
-											
+
 											</div>
 										</div>
 									</div>
@@ -74,10 +73,20 @@
 </section>
 {% endblock %}
 {% block scripts %}
+<link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
+<script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
 <script type="text/javascript">
 	$(document).ready(function () {
-		$("#id_ponencia option[value='{{pon.id}}']").attr("selected",true);
-		
+		$("#id_ponencia option[value='{{pon.id}}']").attr("selected", true);
+		$("#id_my_ponente").autocomplete({
+			source: "{% url 'Ponente_autocomp'%}",
+			minLength: 3,
+		});
+		$('#id_my_ponente').change(function () {
+			email = $('#id_my_ponente').val()
+			$("#id_ponente option:contains('" + email + "')").attr("selected", true);
+
+		});
 	});
 </script>
 {% endblock %}
