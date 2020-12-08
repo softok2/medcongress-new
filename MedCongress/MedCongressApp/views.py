@@ -905,8 +905,9 @@ class GetPerfil(TemplateView):
                     c= RelPonenciaVotacion.objects.filter(ponencia=ponencia.ponencia).count()
                     cont=c+cont
                     votacion=vot['votacion__sum']+votacion 
-
-
+            votacion_env=0
+            if cont!=0:
+                votacion_env=round(votacion/cont,0)
             usuario_json={'nombre_completo':usuario.usuario.first_name+' '+usuario.usuario.last_name,
                             'nombre':usuario.usuario.first_name,
                             'email':usuario.usuario.email,
@@ -924,7 +925,7 @@ class GetPerfil(TemplateView):
                             'puesto':puesto_env,
                             'ponencias':ponencias_env,
                             'talleres':talleres_env,
-                            'votacion':round(votacion/cont,0)}
+                            'votacion':votacion_env}
             return JsonResponse(usuario_json, safe=False)
         return TemplateResponse(request, reverse('dashboard'))
 @method_decorator(login_required,name='dispatch')
