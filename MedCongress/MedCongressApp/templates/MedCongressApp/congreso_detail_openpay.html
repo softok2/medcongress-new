@@ -110,8 +110,13 @@
                                                                 <div style="text-align: center;">
                                                                     <p class="text-muted font-size-sm" id="bandera"></p>
                                                                 </div>
-                                                                <input type="hidden" id="rating" class="rating"
-                                                                    data-readonly value="3" />
+                                                                <div id="div_rating">
+                                                                    <input type="hidden" id="rating" class="rating" data-readonly value="3" />
+                                                                </div>
+                                                                <div id="not_rating">
+                                                                   No Evaluado
+                                                                </div>
+                                                                
                                                             </div>
                                                         </div>
                                                     </div>
@@ -980,7 +985,7 @@
 
 {%endblock%}
 {% block script%}
-<script src="{% static 'MedCongressApp/js/bootstrap-rating.js' %}"></script>
+
 <script type="text/javascript">
     jQuery(document).ready(function ($) {
         $(".back").click(function (event) {
@@ -1228,6 +1233,7 @@
                 });
         }
     }
+
     function VerPerfil(pk) {
         url = "{% url 'GetPerfil'%}";
         $.get(url, { 'pk': pk }, function (data) {
@@ -1297,7 +1303,19 @@
             $('#talleres').html(talleres)
             $('#puesto').html(data.puesto)
             $('#nombre_completo').html(data.nombre_completo)
+            if(data.votacion==0){
+              $('#not_rating').show()
+            $('#div_rating').hide()  
+            }
+            else{
+              $('#not_rating').hide()
+            $('#div_rating').show() 
             $('#rating').rating('rate', data.votacion);
+            }
+            
+            // else
+            // $('#div_rating').html('<input type="hidden" id="rating" class="rating" data-readonly value="'+ data.votacion+'" /> ')
+            // $('#rating').rating('rate', data.votacion);
             //                     $('#rating2').rating({
             //   filled: 'glyphicon glyphicon-heart-empty',
             //   filledSelected: 'glyphicon glyphicon-heart',
@@ -1307,7 +1325,7 @@
 
         });
     }
-
+    
 </script>
-
+<script src="{% static 'MedCongressApp/js/bootstrap-rating.js' %}"></script>
 {%endblock%}
