@@ -33,6 +33,7 @@ class ReporteRelCongresoUserExcel(TemplateView):
        
 		#En la celda B1 ponemos el texto 'REPORTE DE PERSONAS'
         ws['B1'] = 'Usuarios que han comprado Congresos'
+        ws['B1'].font = Font(size=12,bold=True)
         ws['B1'].alignment = Alignment(mergeCell='center',horizontal='center') 
         
 		#Juntamos las celdas desde la B1 hasta la E1, formando una sola celda
@@ -357,6 +358,7 @@ class AsignarCongressAddViews(validarUser,FormView):
 
     def form_valid(self, form):
         congress=form.save(commit=True)
+        
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):

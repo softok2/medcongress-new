@@ -418,9 +418,10 @@ class AsignarCongresoForms(forms.ModelForm):
     user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Email del Usuario')
     categoria_pago=forms.ModelChoiceField(queryset=CategoriaPagoCongreso.objects.all(),label='Categoría de Pago')
     is_pagado=forms.BooleanField(label='Pagó el Congreso')
+    cantidad=forms.IntegerField(label='Cantidad',initial=1)
     class Meta:
         model=RelCongresoUser
-        fields=['user','congreso','categoria_pago','is_pagado']
+        fields=['user','congreso','categoria_pago','is_pagado','cantidad']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
@@ -429,6 +430,7 @@ class AsignarCongresoForms(forms.ModelForm):
         self.fields['congreso'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['categoria_pago'].widget.attrs.update({'class': 'form-control','rows':'3'})   
         self.fields['is_pagado'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['cantidad'].widget.attrs.update({'class': 'form-control'})  
          
 class AsignarTallerForms(forms.ModelForm):
     user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Usuario')

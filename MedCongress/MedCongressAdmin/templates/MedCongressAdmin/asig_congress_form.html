@@ -29,7 +29,7 @@
 									<div class="col-md-12">
 										<div class="row">
 											
-										<div class="col-sm-4 " {%if usuario%}
+										<div class="col-sm-3" {%if usuario%}
 											
 										style="display: none;"  {%endif%}>
 										
@@ -47,7 +47,7 @@
 											</div>
 										</div>
 									
-										<div class="col-sm-4">
+										<div class="col-sm-3">
 											<div class="form-group">
 												<label
 													for="{{form.congreso.id_for_label }}"><b>{{form.congreso.label }}</b>{% if form.congreso.errors %}
@@ -76,6 +76,16 @@
 													</span>{% endif %} </label>
 											
 												{{form.is_pagado }}
+											</div>
+										</div>
+										<div class="col-sm-1 ">
+											<div class="form-group">
+												<label
+													for="{{form.cantidad.id_for_label }}"><b>{{form.cantidad.label }}</b>{% if form.cantidad.errors %}
+													<span style="font-size: 15px; color: red;">{{ form.cantidad.errors }}
+													</span>{% endif %} </label>
+											
+												{{form.cantidad }}
 											</div>
 										</div>
 									</div>
