@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.urls import reverse_lazy,reverse
 from django.utils.crypto import get_random_string
+from django.db.models import Sum
 from django.http import HttpResponse, HttpResponseRedirect,JsonResponse
 from django.views.generic import ListView,TemplateView
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -13,7 +14,51 @@ from MedCongressApp.models import (Congreso,Taller,Ponencia,RelCongresoCategoria
                                     ,Bloque,RelCongresoUser,RelCongresoCategoriaPago,CuestionarioPregunta,CuestionarioRespuestas,PreguntasFrecuentes,
                                     CategoriaPagoCongreso,User,PerfilUsuario,Ponente)
 from MedCongressAdmin.forms.congres_forms import CongresoForms,PonenciaForms,CongresoCategPagoForm,AsignarCongresoForms,ImagenCongForms
+from openpyxl import Workbook
+from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection, Font
 
+#Nuestra clase hereda de la vista genérica TemplateView
+class ReporteRelCongresoUserExcel(TemplateView):
+    
+    #Usamos el método get para generar el archivo excel 
+    def get(self, request, *args, **kwargs):
+        #Obtenemos todas las personas de nuestra base de datos
+        query= RelCongresoUser.objects.values('user__usuario__first_name','user__usuario__email','congreso__titulo','categoria_pago__nombre').annotate(Sum('cantidad'))
+        
+        print(query)
+		#Creamos el libro de trabajo
+        wb = Workbook()
+		#Definimos como nuestra hoja de trabajo, la hoja activa, por defecto la primera del libro
+        ws = wb.active
+       
+		#En la celda B1 ponemos el texto 'REPORTE DE PERSONAS'
+        ws['B1'] = 'Usuarios que han comprado Congresos'
+        ws['B1'].alignment = Alignment(mergeCell='center',horizontal='center') 
+        
+		#Juntamos las celdas desde la B1 hasta la E1, formando una sola celda
+        ws.merge_cells('B1:E1')
+		#Creamos los encabezados desde la celda B3 hasta la E3
+        ws['A3'] = 'No.'
+        ws['B3'] = 'Nombre'
+        ws['C3'] = 'Email'
+        ws['D3'] = 'Congreso'
+        ws['E3'] = 'Categoria de Pago'
+        ws['F3'] = 'Cantidad'        
+        cont=4
+        #Recorremos el conjunto de personas y vamos escribiendo cada uno de los datos en las celdas
+        for quer in query:
+            ws.cell(row=cont,column=1).value = cont-3
+            ws.cell(row=cont,column=2).value = quer['user__usuario__first_name']
+            ws.cell(row=cont,column=3).value = quer['user__usuario__email']
+            ws.cell(row=cont,column=4).value = quer['congreso__titulo']
+            ws.cell(row=cont,column=5).value = quer['categoria_pago__nombre']
+            ws.cell(row=cont,column=6).value = quer['cantidad__sum']
+            cont = cont + 1
+		
+        response = HttpResponse(content_type="application/ms-excel") 
+        response["Content-Disposition"] = "attachment; filename=RelCongresoUser.xlsx"
+        wb.save(response)
+        return response
 class validarUser(UserPassesTestMixin):
     permission_denied_message = 'No tiene permiso para acceder a la administracion'
     login_url='/admin/login/'
@@ -319,6 +364,8 @@ class AsignarCongressAddViews(validarUser,FormView):
         if self.kwargs.get('pk'):
             usuario=PerfilUsuario.objects.get(pk=self.kwargs.get('pk'))
             ctx['usuario'] = usuario
+
+       
         return ctx    
 
 class AsignarCongressDeletedViews(validarUser,DeleteView):

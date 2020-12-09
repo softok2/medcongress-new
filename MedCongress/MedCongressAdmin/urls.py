@@ -13,7 +13,7 @@ from .views.congress_views import (CongressListView,CongressCreateView,CongressU
                                    CongressImagenesListView,AddPonenciaCongreso,CongressCategPagosCreateView,
                                    CongressDeletedView,CongressBloquesListView,GetBloques,AsignarCongressListView,AsignarCongressAddViews,GetPagos,
                                    AsignarCongressDeletedViews,CongressImagenCreateView,CongressCuestionarioListView,CongressPregFrecuenteListView,
-                                   Ver_usuarios,Ver_Exel,Exportar_usuarios,Usuarios_pagaron)
+                                   Ver_usuarios,Ver_Exel,Exportar_usuarios,Usuarios_pagaron,ReporteRelCongresoUserExcel)
 from .views.imagen_views import (ImagenCreateView)
 from .views.ponencia_view import (PonenciaListView, PonenciaCreateView,PonenciaPonenteListView,
                                    PonencicaUpdateView,PonenciaPonenteCreateView,PonenciaDeletedView,
@@ -182,6 +182,10 @@ urlpatterns = [
      path('descargar_exel', Ver_Exel.as_view(), name='Ver_exel'),
      path('exp_usuario', Exportar_usuarios.as_view(), name='Exportar_usuarios'),
      path('usuarios_pagaron', Usuarios_pagaron.as_view(), name='Usuarios_pagaron'),
+     
+
+     #Reportes
+     path('reporte_congreso_user', ReporteRelCongresoUserExcel.as_view(), name='Rep_RelCongresoUser'),
      
      
 ]
