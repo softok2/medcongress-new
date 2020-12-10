@@ -757,6 +757,21 @@ def ModeradorAutocomplete(request):
     mimetype = "application/json"
     return HttpResponse(data, mimetype)
 
+##### Autocompletar congresos #####
+
+def CongresoAutocomplete(request):
+    if request.is_ajax():
+        query = request.GET.get("term", "")
+        congresos=Congreso.objects.filter(titulo__icontains=query)
+        print(congresos)
+        results = []
+        for congreso in congresos:
+            place_json = congreso.titulo
+            results.append(place_json)
+        data = json.dumps(results)
+    mimetype = "application/json"
+    return HttpResponse(data, mimetype)
+
 
 
 ##### Pagar en efectivo #####

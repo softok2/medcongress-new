@@ -5,7 +5,7 @@ ViewErrorOpenpay,PagarEfectivo,ViewError404,ViewPonencia,EspecialdiadesAutocompl
 AddCart,AddCartTaller,DeletedCart,ConfCart,AvisoPrivacidad,HabilitarUser,Perfil,PagoExitoso,Email,GetPerfil,
 GetCuestionario,SetConstancia,EvaluarPonencia,Resultado_Cuestionario,Get_Constancia,VerTransaccion,GetFactura,
 ViewErrorFact,PerfilUpdateView,CambiarPass,UpdateEvaluarPonencia,UserAutocomplete,ViewErrorRegistrar,RegistroExitoso,
-PonenteAutocomplete,ModeradorAutocomplete)
+PonenteAutocomplete,ModeradorAutocomplete,CongresoAutocomplete)
 
 urlpatterns = [
     
@@ -30,7 +30,7 @@ urlpatterns = [
     path('user_autocomp', UserAutocomplete , name='User_autocomp'),
     path('ponente_autocomp', PonenteAutocomplete , name='Ponente_autocomp'),
     path('moderador_autocomp', ModeradorAutocomplete , name='Moderador_autocomp'),
-
+    path('congreso_autocomp', CongresoAutocomplete , name='Congreso_autocomp'),
 
 
     path('add_cart', AddCart.as_view() , name='Add_cart'),

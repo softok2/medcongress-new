@@ -13,7 +13,7 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView,FormVie
 from MedCongressApp.models import (Congreso,Taller,Ponencia,RelCongresoCategoriaPago,ImagenCongreso,Ubicacion
                                     ,Bloque,RelCongresoUser,RelCongresoCategoriaPago,CuestionarioPregunta,CuestionarioRespuestas,PreguntasFrecuentes,
                                     CategoriaPagoCongreso,User,PerfilUsuario,Ponente)
-from MedCongressAdmin.forms.congres_forms import CongresoForms,PonenciaForms,CongresoCategPagoForm,AsignarCongresoForms,ImagenCongForms
+from MedCongressAdmin.forms.congres_forms import CongresoForms,PonenciaForms,CongresoCategPagoForm,AsignarCongresoForms,ImagenCongForms,ExportarExelForm
 from openpyxl import Workbook
 from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection, Font
 
@@ -21,11 +21,11 @@ from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection, Fo
 class ReporteRelCongresoUserExcel(TemplateView):
     
     #Usamos el método get para generar el archivo excel 
-    def get(self, request, *args, **kwargs):
+    def post(self, request):
         #Obtenemos todas las personas de nuestra base de datos
-        query= RelCongresoUser.objects.values('user__usuario__first_name','user__usuario__email','congreso__titulo','categoria_pago__nombre').annotate(Sum('cantidad'))
-        
-        print(query)
+        congreso=self.request.POST['congreso']
+        query= RelCongresoUser.objects.filter(congreso=congreso).values('user__usuario__first_name','user__usuario__last_name','user__usuario__email','congreso__titulo','categoria_pago__nombre').annotate(Sum('cantidad'))
+
 		#Creamos el libro de trabajo
         wb = Workbook()
 		#Definimos como nuestra hoja de trabajo, la hoja activa, por defecto la primera del libro
@@ -49,7 +49,7 @@ class ReporteRelCongresoUserExcel(TemplateView):
         #Recorremos el conjunto de personas y vamos escribiendo cada uno de los datos en las celdas
         for quer in query:
             ws.cell(row=cont,column=1).value = cont-3
-            ws.cell(row=cont,column=2).value = quer['user__usuario__first_name']
+            ws.cell(row=cont,column=2).value = '%s %s'%(quer['user__usuario__first_name'],quer['user__usuario__last_name'])
             ws.cell(row=cont,column=3).value = quer['user__usuario__email']
             ws.cell(row=cont,column=4).value = quer['congreso__titulo']
             ws.cell(row=cont,column=5).value = quer['categoria_pago__nombre']
@@ -345,11 +345,54 @@ def GetPagos(request):
     mimetype = "application/json"
     return HttpResponse(data, mimetype)   
 
-class AsignarCongressListView(validarUser,ListView):
+class AsignarCongressListView(validarUser,ListView,FormView):
     model = RelCongresoUser
     context_object_name = 'congress'
     template_name = 'MedCongressAdmin/asignar_congreso.html'
+    form_class=ExportarExelForm
+    
+    def form_valid(self, form):
+        return super().form_valid(form)
+    # def post(self, form):
 
+    #     id_congreso=self.request.POST['congreso']
+    #     query= RelCongresoUser.objects.filter(congreso=id_congreso).values('user__usuario__first_name','user__usuario__last_name','user__usuario__email','congreso__titulo','categoria_pago__nombre').annotate(Sum('cantidad'))
+        
+    #     print(query)
+	# 	#Creamos el libro de trabajo
+    #     wb = Workbook()
+	# 	#Definimos como nuestra hoja de trabajo, la hoja activa, por defecto la primera del libro
+    #     ws = wb.active
+       
+	# 	#En la celda B1 ponemos el texto 'REPORTE DE PERSONAS'
+    #     ws['B1'] = 'Usuarios que han comprado Congresos'
+    #     ws['B1'].font = Font(size=12,bold=True)
+    #     ws['B1'].alignment = Alignment(mergeCell='center',horizontal='center') 
+        
+	# 	#Juntamos las celdas desde la B1 hasta la E1, formando una sola celda
+    #     ws.merge_cells('B1:E1')
+	# 	#Creamos los encabezados desde la celda B3 hasta la E3
+    #     ws['A3'] = 'No.'
+    #     ws['B3'] = 'Nombre'
+    #     ws['C3'] = 'Email'
+    #     ws['D3'] = 'Congreso'
+    #     ws['E3'] = 'Categoria de Pago'
+    #     ws['F3'] = 'Cantidad'        
+    #     cont=4
+    #     #Recorremos el conjunto de personas y vamos escribiendo cada uno de los datos en las celdas
+    #     for quer in query:
+    #         ws.cell(row=cont,column=1).value = cont-3
+    #         ws.cell(row=cont,column=2).value ='%s %s'%(quer['user__usuario__first_name'],quer['user__usuario__last_name']) 
+    #         ws.cell(row=cont,column=3).value = quer['user__usuario__email']
+    #         ws.cell(row=cont,column=4).value = quer['congreso__titulo']
+    #         ws.cell(row=cont,column=5).value = quer['categoria_pago__nombre']
+    #         ws.cell(row=cont,column=6).value = quer['cantidad__sum']
+    #         cont = cont + 1
+		
+    #     response = HttpResponse(content_type="application/ms-excel") 
+    #     response["Content-Disposition"] = "attachment; filename=RelCongresoUser.xlsx"
+    #     wb.save(response)
+    #     return response
 
 class AsignarCongressAddViews(validarUser,FormView):
     form_class = AsignarCongresoForms

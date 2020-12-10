@@ -578,4 +578,23 @@ class PregFrecuenteForm(forms.ModelForm):
     #         self.add_error('imagen',"Esta imagen tiene %s X %s pixel. Debe ser de 1920 X 1080 pixel" %(w,h) )
 
 
+class ExportarExelForm(forms.ModelForm):
+    
+    congreso=forms.ModelChoiceField(queryset=Congreso.objects.all(),label='Filtrar Congreso',required=False)
+
+    class Meta:
+        model=RelCongresoUser
+        fields=['congreso']
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+
+        self.fields['congreso'].widget.attrs.update({'class': 'form-control'}) 
+       
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(ExportarExelForm, self).clean(*args, **kwargs)
+        congreso = cleaned_data.get('congreso', None)
+      
+        if not congreso:
+            print(congreso)
+            self.add_error('congreso','Entre un congreso ')
 
