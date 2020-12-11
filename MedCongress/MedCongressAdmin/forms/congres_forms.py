@@ -47,10 +47,11 @@ class CongresForm(forms.ModelForm):
     def clean(self, *args, **kwargs):
         cleaned_data = super(CongresForm, self).clean(*args, **kwargs)
         imagen = cleaned_data.get('imagen_seg', None)
-        w, h = get_image_dimensions(imagen)
-        if w != 1140 or h != 240:
-            self.add_error('imagen_seg',"Esta imagen tiene %s X %s pixel. Debe ser de 1140 X 240 pixel" %(w,h) )
-   
+        if imagen:
+            w, h = get_image_dimensions(imagen)
+            if w != 1140 or h != 240:
+                self.add_error('imagen_seg',"Esta imagen tiene %s X %s pixel. Debe ser de 1140 X 240 pixel" %(w,h) )
+    
 
     # def clean(self, *args, **kwargs):
     #     cleaned_data = super(UserForm, self).clean(*args, **kwargs)
@@ -443,9 +444,10 @@ class ImagenCongForms(forms.ModelForm):
     def clean(self, *args, **kwargs):
         cleaned_data = super(ImagenCongForms, self).clean(*args, **kwargs)
         imagen = cleaned_data.get('imagen', None)
-        w, h = get_image_dimensions(imagen)
-        if w != 1920 or h != 1080:
-            self.add_error('imagen',"Esta imagen tiene %s X %s pixel. Debe ser de 1920 X 1080 pixel" %(w,h) )
+        if imagen:
+            w, h = get_image_dimensions(imagen)
+            if w != 1920 or h != 1080:
+                self.add_error('imagen',"Esta imagen tiene %s X %s pixel. Debe ser de 1920 X 1080 pixel" %(w,h) )
 
 class PreguntaForm(forms.ModelForm):
     congreso=forms.ModelChoiceField(queryset=Congreso.objects.filter(published=True),label='Congreso')
