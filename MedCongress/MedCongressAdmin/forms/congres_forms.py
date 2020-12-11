@@ -98,7 +98,7 @@ class CongresoForms(MultiModelForm):
     }
 
 class PonenciaForm(forms.ModelForm):
-    imagen=forms.ImageField(label='Buscar Imagen',required=False)
+    imagen=forms.ImageField(label='Buscar Imagen',required=True)
     titulo=forms.CharField(label='Título')
     fecha_inicio=forms.DateTimeField()
     published=forms.BooleanField(label='Publicado',required=False)
@@ -129,7 +129,9 @@ class PonenciaForm(forms.ModelForm):
         if w != 1920 or h != 1080:
             self.add_error('imagen',"Esta imagen tiene %s X %s pixel. Debe ser de 1920 X 1080 pixel" %(w,h) )
    
-
+        if not imagen:
+            self.add_error('imagen',"Debe entrar una imagen"  )
+   
         if bloq and fecha_inicio.date() != bloq.fecha_inicio.date():
             self.add_error('fecha_inicio', 'La fecha de inicio no coincide  con las del bloque que pertenece %s '%(bloq.fecha_inicio.date()))
     
