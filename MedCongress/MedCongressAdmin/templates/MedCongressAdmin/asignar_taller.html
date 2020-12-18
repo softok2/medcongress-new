@@ -60,6 +60,7 @@
                                         id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
                                         <thead>
                                             <th style="width:50%">Usuario</th>
+                                            <th>Email</th>
                                                 <th>Taller</th>
                                                 <th>Cant.</th>
                                                 <th>Categoría de Pago</th>
@@ -70,7 +71,7 @@
                                             {% for taller in talleres %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
                                                 <td class="sorting_1">{{ taller.user.usuario.first_name }} {{ taller.user.usuario.last_name}}</td>
-                                                
+                                                <td>{{ taller.user.usuario.email }}</td>
                                                 <td>{{ taller.taller.titulo}}</td>
                                                 {%if taller.cantidad%}
                                                 <td>{{ taller.cantidad}}</td>
@@ -82,7 +83,7 @@
                                                   <td>  <a id="del_{{ taller.pk }}"
                                                         href="javascript:deleteItem('{{ taller.pk }}')"
                                                         title="Eliminar">
-                                                        <i class="la la-trash "></i>
+                                                        <i class="icon icon-eliminar "></i>
                                                     </a>
 
                                                    
@@ -94,6 +95,7 @@
                                         </tbody>
                                         <tfoot>
                                             <th style="width:50%">Usuario</th>
+                                            <th>Emails</th>
                                                 <th>Taller</th>
                                                 <th>Cant.</th>
                                                 <th>Categoría de Pago</th>

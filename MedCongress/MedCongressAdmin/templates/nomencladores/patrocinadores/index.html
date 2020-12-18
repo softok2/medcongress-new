@@ -78,17 +78,17 @@
                                                       <a id="del_{{ patrocinador.pk }}"
                                                         href="javascript:deleteItemCongreso('{{ patrocinador.pk }}')"
                                                         title="Eliminar de este Evento">
-                                                        <i class="la la-trash "></i>
+                                                        <i class="icon icon-eliminar_vinculo"></i>
                                                     </a>
                                                       {%else%}
                                                      
                                                     <a href="{% url 'MedCongressAdmin:patrocinador_edit' pk=patrocinador.pk %}"
-                                                    title="Editar"><i class="la la-pencil-square"></i></a>
+                                                    title="Editar"><i class="icon icon-editar"></i></a>
                                                     
                                                     <a id="del_{{ patrocinador.pk }}"
                                                         href="javascript:deleteItem('{{ patrocinador.pk }}')"
                                                         title="Eliminar">
-                                                        <i class="la la-trash "></i>
+                                                        <i class="icon icon-eliminar "></i>
                                                     </a>
  {%endif%}
                                                    
@@ -194,7 +194,7 @@
     function deleteItemCongreso(pk) {
         swal({
             title: "Estas seguro?",
-            text: "Eliminará este Patrocinador de este evento!",
+            text: "Eliminará la relación del Patrocinador con este Congreso !",
             icon: "warning",
             buttons: {
                 cancel: {
@@ -205,7 +205,7 @@
                     closeModal: false,
                 },
                 confirm: {
-                    text: "Sí, eliminarlo!",
+                    text: "Sí, eliminarla!",
                     value: true,
                     visible: true,
                     className: "",
@@ -220,14 +220,14 @@
                         if (data.success){
                           dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
 
-                        swal("Eliminado!", "Este elemento ha sido eliminado de este Evento.", "success");  
+                        swal("Eliminado!", "Esta Relación ha sido Eliminada .", "success");  
                         }
                         else{
                             swal("Este Elemento no se puede eliminar!", "Este Patrocinador no está asociado a este  Evento.", "error"); 
                         }
                     });
                 } else {
-                    swal("Cancelado", "No se eliminó este elemento.", "error");
+                    swal("Cancelado", "No se eliminó este relación.", "error");
                 }
             });
     }

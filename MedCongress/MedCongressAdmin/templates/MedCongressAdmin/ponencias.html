@@ -62,8 +62,8 @@
                                                 <th style="width:50%">Nombre</th>
                                                 <th>Congreso</th>
                                                 <th>Ponentes</th>
-                                                <th>Lugar</th>
-                                                <th>Fecha</th>
+                                                <!-- <th>Lugar</th>
+                                                <th>Fecha</th> -->
                                                 <th>Public.</th>
                                                 <th style="width:5%">Operaciones</th>
                                             </tr>
@@ -78,19 +78,19 @@
                                                     <a id="del_{{ congres.pk }}"
                                                     href="{%url 'MedCongressAdmin:Ponencia_ponentes' ponencia.path%}"
                                                         title="Ponentes">
-                                                        <i class="la la-user-secret " style= "color: blue;" ></i>
+                                                        <i class="icon icon-ponente " style= "color: blue;" ></i>
                                                     </a></td>
-                                                <td>{{ ponencia.lugar }}</td>
-                                                <td>{{ ponencia.fecha_inicio }}</td>
+                                                <!-- <td>{{ ponencia.lugar }}</td>
+                                                <td>{{ ponencia.fecha_inicio }}</td> -->
                                                 <td>{%if ponencia.published%}Si{%else%}No{%endif%}</td>
 
                                                 <td style="text-align: center;">
                                                     <a href="{% url 'MedCongressAdmin:ponencia_edit' pk=ponencia.pk %}"
-                                                        title="Editar"><i class="la la-pencil-square"></i></a>
+                                                        title="Editar"><i class="icon icon-editar"></i></a>
                                                     <a id="del_{{ ponencia.pk }}"
                                                         href="javascript:deleteItem('{{ ponencia.pk }}')"
                                                         title="Eliminar">
-                                                        <i class="la la-trash text-danger" ></i>
+                                                        <i class="icon icon-eliminar" ></i>
                                                     </a>
                                                 </td>
                                             </tr>
@@ -101,8 +101,8 @@
                                                 <th style="width:50%">Nombre</th>
                                                 <th>Congreso</th>
                                                 <th>Ponentes</th>
-                                                <th>Lugar</th>
-                                                <th>Fecha</th>
+                                                <!-- <th>Lugar</th>
+                                                <th>Fecha</th> -->
                                                 <th>Public.</th>
                                                 <th style="width:5%">Operaciones</th>
                                             </tr>

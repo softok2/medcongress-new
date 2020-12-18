@@ -69,11 +69,11 @@
                                                 <td class="sorting_1">{{ country.denominacion }}</td>
                                                 <td style="text-align: center;">
                                                     <a href="{% url 'MedCongressAdmin:country_edit' pk=country.pk %}"
-                                                        title="Editar"><i class="la la-pencil-square"></i></a>
+                                                        title="Editar"><i class="icon icon-editar"></i></a>
                                                     <a id="del_{{ country.pk }}"
                                                         href="javascript:deleteItem('{{ country.pk }}')"
                                                         title="Eliminar">
-                                                        <i class="la la-trash text-danger"></i>
+                                                        <i class="icon icon-eliminar"></i>
                                                     </a>
                                                 </td>
                                             </tr>
