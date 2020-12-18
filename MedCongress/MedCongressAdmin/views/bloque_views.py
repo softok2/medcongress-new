@@ -140,7 +140,7 @@ class BloqueModeradoresListView(TemplateView):
         context['moderadores']=RelBloqueModerador.objects.filter(bloque=bloque)
         return context   
 
-class  BloqueModeradoresCreateView(validarUser,CreateView):
+class  BloqueModeradoresCreateView(validarUser,FormView):
     
     form_class = ModeradorBloqueForm
     # success_url = reverse_lazy('MedCongressAdmin:ponencias_list')
@@ -164,7 +164,11 @@ class  BloqueModeradoresCreateView(validarUser,CreateView):
         ctx['moderadores']=Moderador.objects.exclude(id__in=id)
         ctx['bloq'] = bloq
         return ctx
-
+    def get(self, request, **kwargs):
+        bloque=Bloque.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        if bloque is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        return self.render_to_response(self.get_context_data()) 
 class BloqueModeradoresDeletedView(validarUser,DeleteView):
     model = RelBloqueModerador
     success_url = reverse_lazy('MedCongressAdmin:Moderadores_list')

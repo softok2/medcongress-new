@@ -6,18 +6,20 @@ from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.urls import reverse_lazy,reverse
 from django.utils.crypto import get_random_string
 from django.db.models import Sum
+from django.shortcuts import render
+from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect,JsonResponse
 from django.views.generic import ListView,TemplateView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView,FormView
 from MedCongressApp.models import (Congreso,Taller,Ponencia,RelCongresoCategoriaPago,ImagenCongreso,Ubicacion
                                     ,Bloque,RelCongresoUser,RelCongresoCategoriaPago,CuestionarioPregunta,CuestionarioRespuestas,PreguntasFrecuentes,
-                                    CategoriaPagoCongreso,User,PerfilUsuario,Ponente)
-from MedCongressAdmin.forms.congres_forms import CongresoForms,PonenciaForms,CongresoCategPagoForm,AsignarCongresoForms,ImagenCongForms,ExportarExelForm
+                                    CategoriaPagoCongreso,User,PerfilUsuario,Ponente,RelCongresoAval,AvalCongreso,SocioCongreso,RelCongresoSocio)
+from MedCongressAdmin.forms.congres_forms import CongresoForms,PonenciaForms,CongresoCategPagoForm,AsignarCongresoForms,ImagenCongForms,ExportarExelForm,CongresoPatrocinadorForm,CongresoSocioForm
 from openpyxl import Workbook
 from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection, Font
 
-#Nuestra clase hereda de la vista genérica TemplateView
+
 class ReporteRelCongresoUserExcel(TemplateView):
     
     #Usamos el método get para generar el archivo excel 
@@ -70,7 +72,6 @@ class validarUser(UserPassesTestMixin):
         else:
             return False
     
-
 class CongressListView(validarUser,ListView):
     model = Congreso
     context_object_name = 'congress'
@@ -82,25 +83,23 @@ class CongressCreateView(validarUser,FormView):
     template_name = 'MedCongressAdmin/congres_form.html'
 
     def form_valid(self, form):
-    
-       
-        congress=form['congreso'].save(commit=False)
-       
-        ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
-
-        if ubic.exists():
-            congress.lugar=ubic.first()
-        else:
-            ubicacion=form['ubicacion'].save(commit=True)
-            congress.lugar=ubicacion
-               
-        path=congress.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
-        chars = '0123456789'
-        secret_key = get_random_string(5, chars)
-        congress.path=path+secret_key  
-        congress.save()
-        return super().form_valid(form)
-    
+        try:
+            congress=form['congreso'].save(commit=False)
+            ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
+            if ubic.exists():
+                congress.lugar=ubic.first()
+            else:
+                ubicacion=form['ubicacion'].save(commit=True)
+                congress.lugar=ubicacion    
+            path=congress.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
+            chars = '0123456789'
+            secret_key = get_random_string(5, chars)
+            congress.path=path+secret_key  
+            congress.save()
+            return super().form_valid(form)
+        except Exception as e:
+            messages.warning(self.request, e)
+            return super().form_invalid(form)
 
 class CongressUpdateView(validarUser,UpdateView):
     form_class = CongresoForms
@@ -121,6 +120,8 @@ class CongressUpdateView(validarUser,UpdateView):
     def get_context_data(self, **kwargs):
         context=super().get_context_data(**kwargs)
         context['imagen_seg_url']='/static/%s'%(self.object.imagen_seg)
+        if self.object.meta_og_imagen:
+            context['imagen_meta']='/static/%s'%(self.object.meta_og_imagen)
         context['foto_constancia']='/static/%s'%(self.object.foto_constancia)
         return context
 
@@ -141,24 +142,23 @@ class CongressUpdateView(validarUser,UpdateView):
 class CongressTalleresListView(validarUser,TemplateView):
     template_name= 'MedCongressAdmin/congres_talleres.html' 
     
-
     def get(self, request, **kwargs):
-        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
         if congreso is None:
             return   HttpResponseRedirect(reverse('Error404'))
         return self.render_to_response(self.get_context_data())    
     def get_context_data(self, **kwargs):
         context = super(CongressTalleresListView, self).get_context_data(**kwargs)
-        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
         context['congres']=congreso
-        context['talleres']=Taller.objects.filter(congreso=congreso,published=True)
+        context['talleres']=Taller.objects.filter(congreso=congreso)
         return context
 
 
 ########## Vista de las Ponencias de un Congreso #############
 
 class CongressPonenciasListView(validarUser,TemplateView):
-    template_name= 'MedCongressAdmin/congres_ponencias.html' 
+    template_name= 'MedCongressAdmin/ponencias.html' 
     form_class = PonenciaForms
     def get(self, request, **kwargs):
         congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
@@ -248,7 +248,6 @@ class AddPonenciaCongreso(TemplateView):
     def get(self, request):
         
         if request.is_ajax:
-            
             id_ponencia =request.GET.get("id_ponencia")
             congreso_path =request.GET.get("congreso")
             
@@ -312,15 +311,15 @@ class CongressBloquesListView(validarUser,TemplateView):
     template_name= 'MedCongressAdmin/congres_bloques.html'  
 
     def get(self, request, **kwargs):
-        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
         if congreso is None:
             return   HttpResponseRedirect(reverse('Error404'))
         return self.render_to_response(self.get_context_data())    
     def get_context_data(self, **kwargs):
         context = super(CongressBloquesListView, self).get_context_data(**kwargs)
-        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
         context['congres']=congreso
-        context['bloques']=Bloque.objects.filter(congreso=congreso,published=True)
+        context['bloques']=Bloque.objects.filter(congreso=congreso)
         return context
 
 def GetBloques(request):
@@ -437,7 +436,11 @@ class CongressImagenCreateView(validarUser,FormView):
         self.success_url =  reverse_lazy('MedCongressAdmin:Congres_imagenes',kwargs={'path': congreso.path} )
         return self.success_url
 
+class CongressImagenDeletedView(validarUser,DeleteView):
+    model = ImagenCongreso
+    success_url = reverse_lazy('MedCongressAdmin:cat_usuarios_list')
 
+    
 ########## Vista del Preguntas Frecuentes de un Congreso #############
 
 class CongressPregFrecuenteListView(validarUser,TemplateView):
@@ -546,4 +549,176 @@ class Usuarios_pagaron(TemplateView):
         df.to_excel('MedCongressApp/static/patrocinadores/user_pagaron.xlsx', sheet_name='example')
         return context
 
+########## Vista de las Patrocinadores de un Congreso #############
 
+class CongressPatrocinadorListView(TemplateView):
+    template_name= 'nomencladores/patrocinadores/index.html' 
+    
+
+    def get(self, request, **kwargs):
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        if congreso is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        return self.render_to_response(self.get_context_data())    
+    def get_context_data(self, **kwargs):
+        context = super(CongressPatrocinadorListView, self).get_context_data(**kwargs)
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        context['congreso']=congreso
+        rel_patroc_usuarios=RelCongresoAval.objects.filter(congreso=congreso)
+        patrocinadores_env=[]
+        for relacion in rel_patroc_usuarios:
+            patrocinadores_env.append(relacion.aval)
+        context['patrocinadores']=patrocinadores_env
+        return context    
+
+# class CongressPatrocinadorCreateView(validarUser,FormView):
+#     form_class = ImagenCongForms
+#     success_url = reverse_lazy('MedCongressAdmin:Congres_patrocinador')
+#     template_name = 'MedCongressAdmin/imagen_congress_form.html'
+
+#     def form_valid(self, form):
+#         imagen=form.save(commit=True)
+
+#         return super().form_valid(form)
+
+#     def get_context_data(self, **kwargs):
+#         ctx = super(CongressImagenCreateView, self).get_context_data(**kwargs)
+#         cong=Congreso.objects.filter(pk=self.kwargs.get('pk'),published=True).first()
+#         ctx['cong'] = cong
+#         return ctx
+#     def get_success_url(self):
+#         congreso=Congreso.objects.get(pk=self.kwargs.get('pk'))
+#         self.success_url =  reverse_lazy('MedCongressAdmin:Congres_imagenes',kwargs={'path': congreso.path} )
+#         return self.success_url
+
+# class PatrocinadorSeleccionarView(validarUser,TemplateView):
+#     template_name='MedCongressAdmin/congress_patrocinador_form.html'
+#     form_class=CongresoPatrocinadorForm
+    
+#     def get_context_data(self, **kwargs):
+#         ctx = super().get_context_data(**kwargs)
+#         cong=Congreso.objects.filter(pk=self.kwargs.get('pk'),published=True).first()
+#         ctx['cong'] = cong
+#         return ctx
+
+#     def get(self, request, **kwargs):
+#         congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+#         if congreso is None:
+#             return   HttpResponseRedirect(reverse('Error404'))
+#         return self.render_to_response(self.get_context_data())   
+   
+class  PatrocinadorSeleccionarView(validarUser,FormView):
+    
+    model=RelCongresoAval
+    form_class = CongresoPatrocinadorForm
+    # success_url = reverse_lazy('MedCongressAdmin:ponencias_list')
+    template_name='MedCongressAdmin/congress_patrocinador_form.html'
+   
+    def get(self, request, **kwargs):
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        if congreso is None:
+            return   HttpResponseRedirect(reverse('Error404'))    
+        return self.render_to_response(self.get_context_data()) 
+    def get_success_url(self):
+           self.success_url =  reverse_lazy('MedCongressAdmin:Congres_patrocinadores',kwargs={'path': self.kwargs.get('path')} )
+           return self.success_url
+
+    def get_context_data(self, **kwargs):
+        context = super(PatrocinadorSeleccionarView, self).get_context_data(**kwargs)
+        
+        pon=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+       
+        context['congreso'] = pon
+        return context
+    def form_valid(self, form):
+    
+       
+        relacion_aval=form.save(commit=True)
+       
+        return super().form_valid(form)
+
+
+
+
+def PatrocinadorSeleccionarDeleted( request):
+        
+    if request.is_ajax():
+        id_aval =request.GET.get("pk")
+        patrocinador=AvalCongreso.objects.get(pk=id_aval)
+        id_congreso=request.GET.get("pk_congreso")
+        congreso=Congreso.objects.get(pk=id_congreso)
+        relacion= RelCongresoAval.objects.filter(congreso=congreso,aval=patrocinador)
+       
+        if relacion.exists():
+            relacion.first().delete()
+            return JsonResponse({'success':True}, safe=False)
+    return JsonResponse({'success':False}, safe=False)
+
+def SocioSeleccionarDeleted( request):
+        
+    if request.is_ajax():
+        id_socio =request.GET.get("pk")
+        socio=SocioCongreso.objects.get(pk=id_socio)
+        id_congreso=request.GET.get("pk_congreso")
+        congreso=Congreso.objects.get(pk=id_congreso)
+        relacion= RelCongresoSocio.objects.filter(congreso=congreso,socio=socio)
+        if relacion.exists():
+            relacion.first().delete()
+            return JsonResponse({'success':True}, safe=False)
+    return JsonResponse({'success':False}, safe=False)
+
+class  SocioSeleccionarView(validarUser,FormView):
+    
+    model=RelCongresoSocio
+    form_class = CongresoSocioForm
+    # success_url = reverse_lazy('MedCongressAdmin:ponencias_list')
+    template_name='MedCongressAdmin/congress_socio_form.html'
+   
+    def get(self, request, **kwargs):
+
+        
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        if congreso is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+             
+        return self.render_to_response(self.get_context_data()) 
+    def get_success_url(self):
+           self.success_url =  reverse_lazy('MedCongressAdmin:Congres_socios',kwargs={'path': self.kwargs.get('path')} )
+           return self.success_url
+
+    def get_context_data(self, **kwargs):
+        context = super(SocioSeleccionarView, self).get_context_data(**kwargs)
+        
+        pon=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+       
+        context['congreso'] = pon
+        return context
+    def form_valid(self, form):
+    
+       
+        relacion_aval=form.save(commit=True)
+       
+        return super().form_valid(form)
+
+
+########## Vista de las Patrocinadores de un Congreso #############
+
+class CongressSocioListView(TemplateView):
+    template_name= 'nomencladores/socios/index.html' 
+    
+
+    def get(self, request, **kwargs):
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        if congreso is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        return self.render_to_response(self.get_context_data())    
+    def get_context_data(self, **kwargs):
+        context = super(CongressSocioListView, self).get_context_data(**kwargs)
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        context['congreso']=congreso
+        rel_patroc_usuarios=RelCongresoSocio.objects.filter(congreso=congreso)
+        patrocinadores_env=[]
+        for relacion in rel_patroc_usuarios:
+            patrocinadores_env.append(relacion.socio)
+        context['socios']=patrocinadores_env
+        return context 

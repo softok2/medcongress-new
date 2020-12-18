@@ -147,8 +147,14 @@
                 if (isConfirm) {
                     url = "{% url 'MedCongressAdmin:moderador_delete' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
-                        dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
-                        swal("Eliminado!", "Este elemento ha sido eliminado.", "success");
+                        if (data.success){
+                          dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
+
+                        swal("Eliminado!", "Este elemento ha sido eliminado.", "success");  
+                        }
+                        else{
+                            swal("Este Moderador no se puede eliminar!", "Está Asociado a un Bloque.", "error"); 
+                        }
                     });
                 } else {
                     swal("Cancelado", "No se eliminó este elemento.", "error");

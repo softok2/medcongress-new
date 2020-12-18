@@ -24,7 +24,43 @@
 {% block titulo %}
 Detalles del Perfil
 {%endblock%}
+{% block metadatos%}
+{% if request.user.perfilusuario.meta_title%}
+<meta property="title" content="{{request.user.perfilusuario.meta_title}}">
+{%endif%}
+{% if request.user.perfilusuario.meta_description %}
+<meta name="description" content="{{request.user.perfilusuario.meta_description}}">
+{%endif%}
+{% if request.user.perfilusuario.meta_og_description %}
+<meta property="og:description" content="{{request.user.perfilusuario.meta_og_description}}">
+{%endif%}
+{% if request.user.perfilusuario.meta_og_type %}
+<meta property="og:type" content="{{request.user.perfilusuario.meta_og_type}}">
+{%endif%}
+{% if request.user.perfilusuario.meta_og_title %}
+<meta property="og:title" content="{{request.user.perfilusuario.meta_og_title}}">
+{%endif%}
+{% if request.user.perfilusuario.meta_og_url %}
+<meta property="og:url" content="{{request.user.perfilusuario.meta_og_url}}">
+{%endif%}
+{% if request.user.perfilusuario.meta_og_imagen %}
+<meta property="og:image" content="{% static '/'%}{{request.user.perfilusuario.meta_og_imagen}}">
+{%endif%}
+{% if request.user.perfilusuario.meta_twitter_card %}
+<meta name="twitter:card" content="{{request.user.perfilusuario.meta_twitter_card}}" />
+{%endif%}
+{% if request.user.perfilusuario.meta_twitter_site %}
+<meta name="twitter:site" content="{{request.user.perfilusuario.meta_twitter_site}}" />
+{%endif%}
+{% if request.user.perfilusuario.meta_twitter_creator %}
+<meta name="twitter:creator" content="{{request.user.perfilusuario.meta_twitter_creator}}" />
+{%endif%}
+{% if request.user.perfilusuario.meta_keywords %}
+<meta name="keywords"
+	content="{{request.user.perfilusuario.meta_keywords}}" />
+{%endif%}
 
+{%endblock%}
 
 
 {% block contenido %}

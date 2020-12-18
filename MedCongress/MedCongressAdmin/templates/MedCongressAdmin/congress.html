@@ -54,6 +54,7 @@
                         <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4">
                             <div class="row">
                                 <div class="col-sm-12">
+                                   
                                     <table class="table table-striped table-bordered zero-configuration dataTable"
                                         style="margin-top: 5px!important; margin-bottom: 15px!important;"
                                         id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
@@ -61,8 +62,8 @@
                                             <tr role="row" style="font-size: 13px;">
                                                 <th style="width:50%">Nombre</th>
                                                
-                                                <th>T. de Congreso</th>
-                                                <th>Especialidad</th>
+                                                <!-- <th>T. de Congreso</th>
+                                                <th>Especialidad</th> -->
                                                 <th>Public.</th>
                                                 <th style="width:12%">Programa</th>
                                                 <th>Otros &nbsp;&nbsp;  </th>
@@ -72,54 +73,65 @@
                                         <tbody>
                                             {% for congres in congress %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
-                                                <td class="sorting_1">{{ congres.titulo }}</td>
+                                                <td class="sorting_1" style="vertical-align: middle;">{{ congres.titulo }}</td>
                                                 
-                                                <td>{{ congres.t_congreso.nombre }}</td>
-                                                <td>{{ congres.especialidad.nombre }}</td>
-                                                <td>{%if congres.published%}Si{%else%}No{%endif%}</td>
-                                                <td> 
+                                                <!-- <td>{{ congres.t_congreso.nombre }}</td>
+                                                <td>{{ congres.especialidad.nombre }}</td> -->
+                                                <td style="vertical-align: middle;">{%if congres.published%}Si{%else%}No{%endif%}</td>
+                                                <td style="vertical-align: middle;"> 
                                                     <a id=""
                                                     href="{%url 'MedCongressAdmin:Congres_bloques' congres.path%}"
-                                                    title="Bloques ">
-                                                    <i class="ft ft-package" style="color:brown;font-size: 18px;"> </i>
-                                                </a> <a id=""
+                                                    title="Bloques " style="margin-left: 5px;">
+                                                    <i class="icon-block " style=" padding:15px ;"> </i>
+                                                </a>
+                                                <a id=""
                                                     href="{%url 'MedCongressAdmin:Congres_ponencias' congres.path%}"
                                                     title="Ponencias " style="margin-left: 5px;">
-                                                    <i class="la la-graduation-cap " style="color:yellowgreen;font-size: 26px;"> </i>
+                                                    <i class="icon-ponencia " style=" padding:15px"> </i>
                                                 </a>
                                                 <a id=""
                                                      href="{%url 'MedCongressAdmin:Congres_talleres' congres.path %}"
                                                     title="Talleres " style="margin-left: 5px;">
-                                                    <i class="la la-hdd-o " style="color:rgb(40, 4, 124);font-size: 22px;"> </i>
+                                                    <i class="icon-taller " style=" padding:15px"> </i>
                                                 </a>
                                                 <a id=""
                                                 href="{%url 'MedCongressAdmin:Congres_cuestionario' congres.path %}"
                                                title="Cuestionario " style="margin-left: 5px;">
-                                               <i class="la la-clipboard " style="color:rgb(40, 4, 124);font-size: 22px;"> </i>
+                                               <i class="icon-cuestionario " style=" padding:15px"> </i>
                                            </a>
                                             </td>
-                                                <td><a id=""
+                                                <td style="vertical-align: middle;"><a id=""
                                                     href="{%url 'MedCongressAdmin:Congres_imagenes' congres.path%}"
-                                                        title="Imagenes">
-                                                        <i class="la la-image "></i>
+                                                        title="Imagenes" style="margin-left: 5px;">
+                                                        <i class="icon-imagen " style=" padding:15px"> </i>
                                                     </a> 
                                                     <a id=""
                                                     href="{%url 'MedCongressAdmin:Congres_freg_frecuente' congres.path%}"
-                                                        title="Preguntas Frecuentes">
-                                                        <i class="la la-question "></i>
+                                                        title="Preguntas Frecuentes" style="margin-left: 5px;">
+                                                        <i class="icon-preguntas" style=" padding:15px"> </i>
                                                     </a> 
                                                     <a id=""
                                                     href="{%url 'MedCongressAdmin:Congres_pagos' congres.path%}"
-                                                        title="Categorias de pago" >
-                                                        <i class="la la-dollar "></i>
-                                                    </a></td>
-                                                <td style="text-align: center;">
+                                                        title="Categorias de pago" style="margin-left: 5px;">
+                                                        <i class="icon-pago" style=" padding:15px"> </i>
+                                                    </a> <a id=""
+                                                    href="{%url 'MedCongressAdmin:Congres_patrocinadores' congres.path%}"
+                                                        title="Patrocinadores" style="margin-left: 5px;">
+                                                        <i class="icon-patrocinador" style=" padding:15px"> </i>
+                                                    </a>
+                                                    <a id=""
+                                                    href="{%url 'MedCongressAdmin:Congres_socios' congres.path%}"
+                                                        title="Socios" style="margin-left: 5px;">
+                                                        <i class="icon-socio" style=" padding:15px"> </i>
+                                                    </a> </td>
+                                                   
+                                                <td style="vertical-align: middle;">
                                                     <a href="{% url 'MedCongressAdmin:congres_edit' pk=congres.pk %}"
-                                                        title="Editar"><i class="la la-pencil-square"></i></a>
+                                                        title="Editar" style="margin-left: 5px;"><i class="icon-editar" style="padding: 15px;"></i></a>
                                                     <a id="del_{{ congres.pk }}"
                                                         href="javascript:deleteItem('{{ congres.pk }}')"
-                                                        title="Eliminar">
-                                                        <i class="la la-trash text-danger"></i>
+                                                        title="Eliminar" style="margin-left: 5px;">
+                                                        <i class="icon-eliminar" style="padding: 15px;"></i>
                                                     </a>
                                                     
                                                     
@@ -135,8 +147,8 @@
                                             <tr style="font-size: 13px;">
                                                 <th>Nombre</th>
                                                 
-                                                <th>T. de Congreso</th>
-                                                <th>Especialidad</th>
+                                                <!-- <th>T. de Congreso</th>
+                                                <th>Especialidad</th> -->
                                                 <th>Public.</th>
                                                 <th>Programa</th>
                                                  <th>Otros</th>

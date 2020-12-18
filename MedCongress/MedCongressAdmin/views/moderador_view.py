@@ -1,12 +1,12 @@
 from django import forms
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
-from django.http import HttpResponseBadRequest, HttpResponseRedirect
+from django.http import HttpResponseBadRequest, HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import ListView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from MedCongressApp.models import Moderador,PerfilUsuario
+from MedCongressApp.models import Moderador,PerfilUsuario, RelBloqueModerador
 from MedCongressAdmin.forms.congres_forms import ModeradorForm
 
 class validarUser(UserPassesTestMixin):
@@ -50,4 +50,12 @@ class ModeradorDeletedView(validarUser,DeleteView):
     model = Moderador
     success_url = reverse_lazy('MedCongressAdmin:Moderadores_list')
 
+    def delete(self,request, *args, **kwargs):
+           
+            moderador=Moderador.objects.get(pk=self.kwargs.get('pk'))
+            if RelBloqueModerador.objects.filter(moderador=moderador).exists():
+                return JsonResponse({'success':False}, safe=False)
+            else:
+                moderador.delete()
+                return JsonResponse({'success':True}, safe=False)
 

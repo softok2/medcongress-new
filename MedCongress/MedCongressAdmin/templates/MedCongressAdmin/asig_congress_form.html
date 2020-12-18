@@ -38,9 +38,9 @@
 													for="{{form.user.id_for_label }}"><b>{{form.user.label }}</b>{% if form.user.errors %}
 													<span style="font-size: 15px; color: red;">{{ form.user.errors }}
 													</span>{% endif %} </label>
-													{%if usuario%} {%else%}
+													
 													<input type="text" name="my_user" class="form-control" required="" id="id_my_user">
-													{%endif%}
+													
 													<div style="display: none;">
 													{{ form.user }}
 													</div>
@@ -123,7 +123,8 @@ $(function() {
 $('#id_my_user').change(function(){
 	email=$('#id_my_user').val()
 $("#id_user option:contains('"+email+"')").attr("selected",true);
-
+if ($("#id_user option:selected").text()!= email) 
+            $("#id_user").val('')
 });
 
 		{%if usuario %}

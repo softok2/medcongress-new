@@ -1,0 +1,219 @@
+{% extends 'MedCongressAdmin/base.html' %}
+{% block title %}Metas Página Listar Congreso{% endblock %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" type="text/css"
+    href="{% static 'MedCongressAdmin/app-assets/vendors/css/tables/datatable/datatables.min.css' %}">
+<style type="text/css">
+    .custom-select-sm {
+        font-size: 110%;
+    }
+
+    .page-link {
+        padding: 10px 15px;
+    }
+
+    #DataTables_Table_0_length>label {
+        margin-top: 1.2rem;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<section id="configuration">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-10">
+                            <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Editar
+                                Meta Datos de la Página Listar Congreso/h1>
+
+                        </div>
+                        <div class="col-2">
+                            <div style="margin-right: 45%; margin-top: 1.5rem;">
+
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-content collapse show">
+                    <div class="card-body card-dashboard">
+                        <form id="congres-form" method="POST" action="" enctype="multipart/form-data">
+                            {% csrf_token %}
+                        <div class="row">
+                            <div class="col-sm-4">
+								<h3 style="margin-bottom: 30px;"><b>Metas Principales </b> </h3>
+								<div class="form-group">
+                               <label for=""> <b>Título</b></label>
+                                {% if form.meta_title.errors %}<span
+                                    style="font-size: 15px; color: red;">{{ form.meta_title.errors }}
+                                </span>{% endif %} </label>
+
+								{{form.meta_title}}
+							</div>
+							<div class="form-group">
+								<label for=""> <b>Descripción</b></label>
+                                
+                                {% if form.meta_description.errors %}<span
+                                    style="font-size: 15px; color: red;">{{ form.meta_description.errors }}
+                                </span>{% endif %} </label>
+
+								{{form.meta_description}}
+							</div>
+							<div class="form-group">
+								<label for=""> <b>Palabras Claves</b><span   id="toggle-method" data-toggle="tooltip" data-placement="top" data-original-title="Palabras separadas por coma(,)" >
+									<i class="ft ft-info"></i>
+							   </span></label>
+                               
+                                {% if form.meta_keywords.errors %}<span 
+                                    style="font-size: 15px; color: red;">{{ form.meta_keywords.errors }}
+                                </span>{% endif %} </label>
+
+								{{form.meta_keywords}}
+								</div>
+                            </div>
+                            <div class="col-sm-4">
+                                <h3 style="margin-bottom: 30px;"><b>Metas para FaceBook </b> </h3>
+								<div class="form-group">
+									<label for=""> <b>Título</b></label>
+                                {% if form.meta_og_title.errors %}<span
+                                    style="font-size: 15px; color: red;">{{ form.meta_og_title.errors }}
+                                </span>{% endif %} </label>
+
+								{{form.meta_og_title}}
+								</div>
+                                <div class="form-group">
+									<label for=""> <b>Descripción</b></label>
+                                {% if form.meta_og_description.errors %}<span
+                                    style="font-size: 15px; color: red;">{{ form.meta_og_description.errors }}
+                                </span>{% endif %} </label>
+
+								{{form.meta_og_description}}
+								</div>
+                                <div class="form-group">
+									<label for=""> <b>Tipo</b></label>
+                                {% if form.meta_og_type.errors %}<span
+                                    style="font-size: 15px; color: red;">{{ form.meta_og_type.errors }}
+                                </span>{% endif %} </label>
+
+								{{form.meta_og_type}}
+								</div>
+                                <div class="form-group">
+									<label for=""> <b>URL</b></label>
+                                {% if form.meta_og_url.errors %}<span
+                                    style="font-size: 15px; color: red;">{{ form.meta_og_url.errors }}
+                                </span>{% endif %} </label>
+
+								{{form.meta_og_url}}
+								</div>
+								<div class="form-group">
+									<label for=""> <b>Imagen</b></label>
+								
+								{%if imagen%}
+								<img src="{% static '/'%}{{imagen}}" class="img-responsive" style="width: 126px; padding: 20px;" alt="">
+								<input type="file" name="meta_og_imagen" accept="image/*" class="form-control " id="id_meta_og_imagen">
+								{%else%}
+                                {% if form.meta_og_imagen.errors %}<span
+                                    style="font-size: 15px; color: red;">{{ form.meta_og_imagen.errors }}
+                                </span>{% endif %} </label>
+
+                                {{form.meta_og_imagen}}
+								{%endif%}
+								</div>
+                            </div>
+                            <div class="col-sm-4">
+                                <h3 style="margin-bottom: 30px;"> <b> Metas para Redes Sociales</b> </h3>
+
+                                <div class="form-group">
+									<label for=""> <b>Card</b></label>
+                                {% if form.meta_twitter_card.errors %}<span
+                                    style="font-size: 15px; color: red;">{{ form.meta_twitter_card.errors }}
+                                </span>{% endif %} </label>
+
+								{{form.meta_twitter_card}}
+								</div>
+
+                                <div class="form-group">
+								<label for=""> <b>Site</b></label>
+                                {% if form.meta_twitter_site.errors %}<span
+                                    style="font-size: 15px; color: red;">{{ form.meta_twitter_site.errors }}
+                                </span>{% endif %} </label>
+
+								{{form.meta_twitter_site}}
+								</div>
+                                <div class="form-group">
+									<label for=""> <b>Creador</b></label>
+
+                                {% if form.meta_twitter_creator.errors %}<span
+                                    style="font-size: 15px; color: red;">{{ form.meta_twitter_creator.errors }}
+                                </span>{% endif %} </label>
+								{{form.meta_twitter_creator}}
+								</div>
+
+
+
+
+                            </div>
+
+                        </div>
+                        <div class="form-actions">
+                            <div class="text-right">
+                                <button id="atras" type="button" class="btn btn-danger ">Cancelar
+                                    <i class="ft-x position-right"></i>
+                                </button>
+
+                                <button id="save" type="submit" class="btn btn-primary">Guardar
+                                    <i class="ft-save position-right"></i>
+                                </button>
+
+                            </div>
+                        </div>
+
+
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="swal-overlay" tabindex="-1">
+    <form id="swall-modal-form" method="POST" style="display: none;">
+        {% csrf_token %}
+    </form>
+
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/extensions/sweetalert.min.js' %}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/tables/datatable/datatables.min.js' %}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/tooltip/tooltip.js'%}"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        });
+
+        // $('#add-btn').click(function () {
+        //     location.href = "";
+        // });
+
+        dataTable = $('.zero-configuration').DataTable();
+    });
+
+</script>
+{% endblock %}

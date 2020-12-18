@@ -1,7 +1,44 @@
 {% extends "MedCongressApp/base.html"%}
 {% load static %}
 {% block titulo %}
-Ver Ponencia
+{{ponencia.titulo}}
+{%endblock%}
+{% block metadatos%}
+{% if ponencia.meta_title%}
+<meta property="title" content="{{ponencia.meta_title}}">
+{%endif%}
+{% if ponencia.meta_description %}
+<meta name="description" content="{{ponencia.meta_description}}">
+{%endif%}
+{% if ponencia.meta_og_description %}
+<meta property="og:description" content="{{ponencia.meta_og_description}}">
+{%endif%}
+{% if ponencia.meta_og_type %}
+<meta property="og:type" content="{{ponencia.meta_og_type}}">
+{%endif%}
+{% if ponencia.meta_og_title %}
+<meta property="og:title" content="{{ponencia.meta_og_title}}">
+{%endif%}
+{% if ponencia.meta_og_url %}
+<meta property="og:url" content="{{ponencia.meta_og_url}}">
+{%endif%}
+{% if ponencia.meta_og_imagen %}
+<meta property="og:image" content="{% static '/'%}{{ponencia.meta_og_imagen}}">
+{%endif%}
+{% if ponencia.meta_twitter_card %}
+<meta name="twitter:card" content="{{ponencia.meta_twitter_card}}" />
+{%endif%}
+{% if ponencia.meta_twitter_site %}
+<meta name="twitter:site" content="{{ponencia.meta_twitter_site}}" />
+{%endif%}
+{% if ponencia.meta_twitter_creator %}
+<meta name="twitter:creator" content="{{ponencia.meta_twitter_creator}}" />
+{%endif%}
+{% if ponencia.meta_keywords %}
+<meta name="keywords"
+	content="{{ponencia.meta_keywords}}" />
+{%endif%}
+
 {%endblock%}
 {%block css%}
 
@@ -178,6 +215,7 @@ Ver Ponencia
 				Debe pagar el Congreso para poder acceder a esta Ponencia
 				{%endif%}</h4>
 		</div>
+		{% if ponencia.iniciada%}
 		<div class="col-md-6"></div>
 		<div class=" col-md-6" style="margin-top: -50px;">
 
@@ -208,6 +246,7 @@ Ver Ponencia
 
 
 		</div>
+		{%endif%}
 	</div>
 </div>
 </div>
@@ -263,7 +302,7 @@ Ver Ponencia
 
 			swal({
 				title: "Le dará una Evaluación de " + $(this).val() + ' puntos a esta Ponencia',
-				text: "Si Acepta no podra dar otra puntuación",
+				text: "",
 				icon: "warning",
 				buttons: {
 					cancel: {

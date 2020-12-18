@@ -6,7 +6,7 @@ from  MedCongressApp.models import (Congreso,Ubicacion,ImagenCongreso,TipoCongre
                                     CategoriaPagoCongreso,RelTalleresCategoriaPago,Genero,CategoriaUsuario,
                                     RelTallerPonente,Bloque,DatosIniciales,RelCongresoUser,RelTallerUser,
                                     Moderador,RelBloqueModerador,ImagenCongreso,CuestionarioPregunta,CuestionarioRespuestas,
-                                    MetaPagInicio,MetaPagListCongreso,PreguntasFrecuentes)
+                                    MetaPagInicio,MetaPagListCongreso,PreguntasFrecuentes,RelCongresoAval, AvalCongreso,RelCongresoSocio,SocioCongreso)
                     
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
@@ -25,7 +25,8 @@ class CongresForm(forms.ModelForm):
    
     class Meta:
         model=Congreso
-        fields=['titulo','sub_titulo','imagen_seg','fecha_inicio','published','t_congreso','especialidad','is_openpay','template','foto_constancia','aprobado','cant_preguntas','score','streaming']
+        fields=['titulo','sub_titulo','imagen_seg','fecha_inicio','published','t_congreso','especialidad','is_openpay','template','foto_constancia','aprobado','cant_preguntas','score','streaming','meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
+        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
@@ -43,15 +44,27 @@ class CongresForm(forms.ModelForm):
         self.fields['aprobado'].widget.attrs.update({'class': 'form-control',})  
         self.fields['cant_preguntas'].widget.attrs.update({'class': 'form-control',})                        
         self.fields['score'].widget.attrs.update({'class': 'form-control',})   
-        self.fields['streaming'].widget.attrs.update({'class': 'form-control','rows':'3'})   
+        self.fields['streaming'].widget.attrs.update({'class': 'form-control','rows':'3'}) 
+        self.fields['meta_og_title'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['meta_description'].widget.attrs.update({'class': 'form-control','rows':'3'}) 
+        self.fields['meta_og_description'].widget.attrs.update({'class': 'form-control','rows':'3'})   
+        self.fields['meta_og_type'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['meta_og_url'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['meta_twitter_card'].widget.attrs.update({'class': 'form-control'})  
+        self.fields['meta_twitter_site'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['meta_twitter_creator'].widget.attrs.update({'class': 'form-control '})  
+        self.fields['meta_keywords'].widget.attrs.update({'class': 'form-control','rows':'3'})   
+        self.fields['meta_og_imagen'].widget.attrs.update({'class': 'form-control '}) 
+        self.fields['meta_title'].widget.attrs.update({'class': 'form-control'})    
     def clean(self, *args, **kwargs):
         cleaned_data = super(CongresForm, self).clean(*args, **kwargs)
         imagen = cleaned_data.get('imagen_seg', None)
-        w, h = get_image_dimensions(imagen)
-        if w != 1140 or h != 240:
-            self.add_error('imagen_seg',"Esta imagen tiene %s X %s pixel. Debe ser de 1140 X 240 pixel" %(w,h) )
+        if imagen:
+            w, h = get_image_dimensions(imagen)
+            if w != 1140 or h != 240:
+                self.add_error('imagen_seg',"Esta imagen tiene %s X %s pixel. Debe ser de 1140 X 240 pixel" %(w,h) )
    
-
+    
     # def clean(self, *args, **kwargs):
     #     cleaned_data = super(UserForm, self).clean(*args, **kwargs)
     #     password = cleaned_data.get('password', None)
@@ -105,7 +118,9 @@ class PonenciaForm(forms.ModelForm):
   
     class Meta:
         model=Ponencia
-        fields=['titulo','duracion','detalle','fecha_inicio','imagen','published','cod_video','congreso','bloque','is_info']
+        fields=['titulo','duracion','detalle','fecha_inicio','imagen','published','cod_video','congreso','bloque','is_info',
+        'meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
+        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
@@ -118,16 +133,27 @@ class PonenciaForm(forms.ModelForm):
         self.fields['published'].widget.attrs.update({'class': 'form-control'})   
         self.fields['cod_video'].widget.attrs.update({'class': 'form-control','rows':'3'}) 
         self.fields['detalle'].widget.attrs.update({'class': 'form-control','rows':'3'})  
-       
+        self.fields['meta_og_title'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['meta_description'].widget.attrs.update({'class': 'form-control','rows':'3'}) 
+        self.fields['meta_og_description'].widget.attrs.update({'class': 'form-control','rows':'3'})   
+        self.fields['meta_og_type'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['meta_og_url'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['meta_twitter_card'].widget.attrs.update({'class': 'form-control'})  
+        self.fields['meta_twitter_site'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['meta_twitter_creator'].widget.attrs.update({'class': 'form-control '})  
+        self.fields['meta_keywords'].widget.attrs.update({'class': 'form-control','rows':'3'})   
+        self.fields['meta_og_imagen'].widget.attrs.update({'class': 'form-control '}) 
+        self.fields['meta_title'].widget.attrs.update({'class': 'form-control'})   
     
     def clean(self, *args, **kwargs):
         cleaned_data = super(PonenciaForm, self).clean(*args, **kwargs)
         fecha_inicio = cleaned_data.get('fecha_inicio', None)
         bloq = cleaned_data.get('bloque', None)
         imagen = cleaned_data.get('imagen', None)
-        w, h = get_image_dimensions(imagen)
-        if w != 1920 or h != 1080:
-            self.add_error('imagen',"Esta imagen tiene %s X %s pixel. Debe ser de 1920 X 1080 pixel" %(w,h) )
+        if imagen:
+            w, h = get_image_dimensions(imagen)
+            if w != 1920 or h != 1080:
+                self.add_error('imagen',"Esta imagen tiene %s X %s pixel. Debe ser de 1920 X 1080 pixel" %(w,h) )
    
 
         if bloq and fecha_inicio.date() != bloq.fecha_inicio.date():
@@ -140,7 +166,9 @@ class TallerForm(forms.ModelForm):
     published=forms.BooleanField(label='Publicado',required=False)
     class Meta:
         model=Taller
-        fields=['titulo','duracion','fecha_inicio','imagen','published','congreso','detalle','bloque']
+        fields=['titulo','duracion','fecha_inicio','imagen','published','congreso','detalle','bloque',
+        'meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
+        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','cod_video']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
@@ -152,13 +180,30 @@ class TallerForm(forms.ModelForm):
         self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control'})   
         self.fields['published'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['detalle'].widget.attrs.update({'class': 'form-control','rows':'3'}) 
+        self.fields['meta_og_title'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['meta_description'].widget.attrs.update({'class': 'form-control','rows':'3'}) 
+        self.fields['meta_og_description'].widget.attrs.update({'class': 'form-control','rows':'3'})   
+        self.fields['meta_og_type'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['meta_og_url'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['meta_twitter_card'].widget.attrs.update({'class': 'form-control'})  
+        self.fields['meta_twitter_site'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['meta_twitter_creator'].widget.attrs.update({'class': 'form-control '})  
+        self.fields['meta_keywords'].widget.attrs.update({'class': 'form-control','rows':'3'})   
+        self.fields['meta_og_imagen'].widget.attrs.update({'class': 'form-control '}) 
+        self.fields['meta_title'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['cod_video'].widget.attrs.update({'class': 'form-control','rows':'3'}) 
 
     def clean(self, *args, **kwargs):
         cleaned_data = super(TallerForm, self).clean(*args, **kwargs)
         fecha_inicio = cleaned_data.get('fecha_inicio', None)
         bloq = cleaned_data.get('bloque', None)
         # bloque=Bloque.objects.get(pk=int(bloq))
-
+        imagen = cleaned_data.get('imagen', None)
+        if imagen:
+            w, h = get_image_dimensions(imagen)
+            if w != 1920 or h != 1080:
+                self.add_error('imagen',"Esta imagen tiene %s X %s pixel. Debe ser de 1920 X 1080 pixel" %(w,h) )
+   
         if bloq and fecha_inicio.date() != bloq.fecha_inicio.date():
             self.add_error('fecha_inicio', 'La fecha de inicio no coincide  con las del bloque que pertenece %s '%(bloq.fecha_inicio.date()))
 
@@ -211,7 +256,7 @@ class ModeradorForm(forms.ModelForm):
         if not user:
             self.add_error('user', 'No existe ese User')
 class PonentePonenciaForm(forms.ModelForm):
-    ponente=forms.ModelChoiceField(queryset=Ponente.objects.all(),label='Entre Email del Ponentes',required=False)
+    ponente=forms.ModelChoiceField(queryset=Ponente.objects.all(),label='Entre Email del Ponente',required=False)
   
     class Meta:
         model=RelPonenciaPonente
@@ -345,7 +390,9 @@ class PerfilUserForm(forms.ModelForm):
    
     class Meta:
         model=PerfilUsuario
-        fields=['cel_profecional','categoria','especialidad','is_ponente','foto','detalle','datos_interes','genero','linkedin','youtube','facebook','twitter','publicaciones','puesto','num_telefono','fecha_nacimiento']
+        fields=['cel_profecional','categoria','especialidad','is_ponente','foto','detalle','datos_interes','genero','linkedin','youtube','facebook','twitter','publicaciones','puesto','num_telefono','fecha_nacimiento',
+        'meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
+        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title']
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -363,7 +410,18 @@ class PerfilUserForm(forms.ModelForm):
         self.fields['twitter'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['puesto'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['fecha_nacimiento'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['num_telefono'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['num_telefono'].widget.attrs.update({'class': 'form-control'}),
+        self.fields['meta_og_title'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['meta_description'].widget.attrs.update({'class': 'form-control','rows':'3'}) 
+        self.fields['meta_og_description'].widget.attrs.update({'class': 'form-control','rows':'3'})   
+        self.fields['meta_og_type'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['meta_og_url'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['meta_twitter_card'].widget.attrs.update({'class': 'form-control'})  
+        self.fields['meta_twitter_site'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['meta_twitter_creator'].widget.attrs.update({'class': 'form-control '})  
+        self.fields['meta_keywords'].widget.attrs.update({'class': 'form-control','rows':'3'})   
+        self.fields['meta_og_imagen'].widget.attrs.update({'class': 'form-control '}) 
+        self.fields['meta_title'].widget.attrs.update({'class': 'form-control'})  
        
 class UsuarioForms(MultiModelForm):
     form_classes = {
@@ -533,8 +591,6 @@ class CuestionarioForms(MultiModelForm):
 
 class MetaPagInicioForm(forms.ModelForm):
 
-    
-
     class Meta:
         model=MetaPagInicio
         fields=['meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
@@ -542,6 +598,7 @@ class MetaPagInicioForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
+        
 
         self.fields['meta_og_title'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['meta_description'].widget.attrs.update({'class': 'form-control','rows':'3'}) 
@@ -554,7 +611,30 @@ class MetaPagInicioForm(forms.ModelForm):
         self.fields['meta_keywords'].widget.attrs.update({'class': 'form-control','rows':'3'})   
         self.fields['meta_og_imagen'].widget.attrs.update({'class': 'form-control '}) 
         self.fields['meta_title'].widget.attrs.update({'class': 'form-control'})   
-          
+
+class MetaPagListarForm(forms.ModelForm):
+
+    class Meta:
+        model=MetaPagListCongreso
+        fields=['meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
+        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+        
+
+        self.fields['meta_og_title'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['meta_description'].widget.attrs.update({'class': 'form-control','rows':'3'}) 
+        self.fields['meta_og_description'].widget.attrs.update({'class': 'form-control','rows':'3'})   
+        self.fields['meta_og_type'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['meta_og_url'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['meta_twitter_card'].widget.attrs.update({'class': 'form-control'})  
+        self.fields['meta_twitter_site'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['meta_twitter_creator'].widget.attrs.update({'class': 'form-control '})  
+        self.fields['meta_keywords'].widget.attrs.update({'class': 'form-control','rows':'3'})   
+        self.fields['meta_og_imagen'].widget.attrs.update({'class': 'form-control '}) 
+        self.fields['meta_title'].widget.attrs.update({'class': 'form-control'})   
+            
 class PregFrecuenteForm(forms.ModelForm):
     
     class Meta:
@@ -598,3 +678,53 @@ class ExportarExelForm(forms.ModelForm):
             print(congreso)
             self.add_error('congreso','Entre un congreso ')
 
+class CongresoPatrocinadorForm(forms.ModelForm):
+    
+    aval=forms.ModelChoiceField(queryset=AvalCongreso.objects.all(),required=False)
+    class Meta:
+        model=RelCongresoAval
+        fields=['congreso','aval']
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+
+        self.fields['congreso'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['aval'].widget.attrs.update({'class': 'form-control'}) 
+      
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(CongresoPatrocinadorForm, self).clean(*args, **kwargs)
+        aval = cleaned_data.get('aval', None)
+        congreso = cleaned_data.get('congreso', None)
+       
+        if not aval:
+            self.add_error('aval', 'No existe Patrocinador con ese Nombre')
+
+        if RelCongresoAval.objects.filter(congreso=congreso,aval=aval).exists():
+            self.add_error('aval', 'Este Patrocinador ya esta asociado a este congreso')
+
+
+class CongresoSocioForm(forms.ModelForm):
+    
+    socio=forms.ModelChoiceField(queryset=SocioCongreso.objects.all(),required=False)
+    class Meta:
+        model=RelCongresoSocio
+        fields=['congreso','socio']
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+
+        self.fields['congreso'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['socio'].widget.attrs.update({'class': 'form-control'}) 
+      
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(CongresoSocioForm, self).clean(*args, **kwargs)
+        socio = cleaned_data.get('socio', None)
+        congreso = cleaned_data.get('congreso', None)
+       
+        if not socio:
+            self.add_error('socio', 'No existe Socio con ese Nombre')
+
+        if RelCongresoSocio.objects.filter(congreso=congreso,socio=socio).exists():
+            self.add_error('socio', 'Este Socio ya esta asociado a este congreso')

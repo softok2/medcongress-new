@@ -325,6 +325,229 @@
 </select>
 												</div>
 											</div>
+											<!-- META DATOS -->
+										<div class="modal fade bs-example-modal-lg" id="meta" tabindex="-1"
+										role="dialog" aria-labelledby="myModalLabel">
+										<div class="modal-dialog  modal-lg" role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+
+													<h4 class="modal-title" id="myModalLabel">Meta datos de esta
+														Ponencia</h4>
+													<button type="button" class="close" data-dismiss="modal"
+														aria-label="Close"><span
+															aria-hidden="true">&times;</span></button>
+												</div>
+												<div class="modal-body">
+													<section id="configuration">
+														<div class="row">
+															<div class="col-12">
+																<div class="card">
+
+
+																	<div class="card-content collapse show">
+																		<div class="card-body card-dashboard">
+
+																			<div class="row">
+																				<div class="col-sm-4">
+																					<h5
+																						style="margin-bottom: 10px;">
+																						<b>Metas Principales </b>
+																					</h5>
+																					<div class="form-group">
+																						<label for="">
+																							<b>Título</b></label>
+
+
+																						{{form.ponencia.meta_title}}
+																					</div>
+																					<div class="form-group">
+																						<label for="">
+																							<b>Descripción</b></label>
+
+																					
+
+																						{{form.ponencia.meta_description}}
+																					</div>
+																					<div class="form-group">
+																						<label for=""> <b>Palabras
+																								Claves</b><span
+																								id="toggle-method"
+																								data-toggle="tooltip"
+																								data-placement="top"
+																								data-original-title="Palabras separadas por coma(,)">
+																								<i
+																									class="ft ft-info"></i>
+																							</span></label>
+
+																						
+
+																						{{form.ponencia.meta_keywords}}
+																					</div>
+																				</div>
+																				<div class="col-sm-4">
+																					<h5
+																						style="margin-bottom: 10px;">
+																						<b>Metas para FaceBook </b>
+																					</h5>
+																					<div class="form-group">
+																						<label for="">
+																							<b>Título</b></label>
+																						
+
+																						{{form.ponencia.meta_og_title}}
+																					</div>
+																					<div class="form-group">
+																						<label for="">
+																							<b>Descripción</b></label>
+																					
+																						{{form.ponencia.meta_og_description}}
+																					</div>
+																					<div class="form-group">
+																						<label for="">
+																							<b>Tipo</b></label>
+																					
+																						{{form.ponencia.meta_og_type}}
+																					</div>
+																					<div class="form-group">
+																						<label for="">
+																							<b>URL</b></label>
+
+
+																						{{form.ponencia.meta_og_url}}
+																					</div>
+																					<div class="form-group">
+																						<label for="">
+																							<b>Imagen</b></label>
+
+																						{%if imagen_meta%}
+																						<img src="{{imagen_meta}}"
+																							class="img-responsive"
+																							style="width: 126px; padding: 20px;"
+																							alt=""><br>
+																							<input type="checkbox" name="ponencia-meta_og_imagen-clear" id="ponencia-meta_og_imagen-clear_id"> Eliminar
+																						<input type="file"
+																							name="meta_og_imagen"
+																							accept="image/*"
+																							class="form-control "
+																							id="id_ponencia-meta_og_imagen">
+																						{%else%}
+																						{{form.ponencia.meta_og_imagen}}
+																						{%endif%}
+																					</div>
+																				</div>
+																				<div class="col-sm-4">
+																					<h5
+																						style="margin-bottom: 10px;">
+																						<b> Metas para Redes
+																							Sociales</b>
+																					</h5>
+
+																					<div class="form-group">
+																						<label for="">
+																							<b>Card</b></label>
+
+
+																						{{form.ponencia.meta_twitter_card}}
+																					</div>
+
+																					<div class="form-group">
+																						<label for="">
+																							<b>Site</b></label>
+
+
+																						{{form.ponencia.meta_twitter_site}}
+																					</div>
+																					<div class="form-group">
+																						<label for="">
+																							<b>Creador</b></label>
+
+																						{{form.ponencia.meta_twitter_creator}}
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+
+																	</div>
+																</div>
+															</div>
+														</div>
+													</section>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-default"
+														data-dismiss="modal">Aplicar</button>
+
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<!-- END META DATOS -->
+											<div class="col-md-1"></div>
+											<div class="col-md-5">
+												{% if form.ponencia.meta_description.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.ponencia.meta_description.errors }}
+													</span>
+													{% endif %} 
+												{% if form.ponencia.meta_og_title.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.ponencia.meta_og_title.errors }}
+													</span>
+													{% endif %} 
+												{% if form.ponencia.meta_og_type.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.ponencia.meta_og_type.errors }}
+													</span>
+													{% endif %}
+												{% if form.ponencia.meta_og_url.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.ponencia.meta_og_url.errors }}
+												</span>
+												{% endif %}
+												{% if form.ponencia.meta_title.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{form.ponencia.meta_title.errors }}
+												</span>
+												{% endif %}
+												{% if form.ponencia.meta_keywords.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.ponencia.meta_keywords.errors }}
+													</span>
+													{% endif %} 
+												{% if form.ponencia.meta_twitter_card.errors%}
+												<span style="font-size: 15px; color: red;">
+													{{form.ponencia.meta_twitter_card.errors}}
+												</span>
+												{% endif %}
+												{% if form.ponencia.meta_og_imagen.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.ponencia.meta_og_imagen.errors}}
+												</span>
+												{% endif %}
+												{% if form.ponencia.meta_twitter_creator.errors%}
+												<span style="font-size: 15px; color: red;">
+													{{form.ponencia.meta_twitter_creator.errors}}
+												</span>
+												{% endif %}
+												{% if form.ponencia.meta_twitter_site.errors%}
+												<span style="font-size: 15px; color: red;">
+													{{form.ponencia.meta_twitter_site.errors}}
+												</span>
+												{% endif %}
+												{% if form.ponencia.meta_og_description.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.ponencia.meta_og_description.errors }}
+													</span>
+													{% endif %} 
+
+												<button type="button" class="btn btn-link" data-toggle="modal"
+													data-target="#meta">
+													<h6 > Gestionar los Metadatos de esta Ponencia </h6>
+
+												</button>
+											</div>
 										</div>
 
 

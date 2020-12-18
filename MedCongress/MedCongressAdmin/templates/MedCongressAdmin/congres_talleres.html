@@ -61,9 +61,9 @@
                                             <tr role="row" style="font-size: 13px;">
                                                 <th style="width:50%">Nombre</th>
                                                
-                                                <th>Lugar</th>
+                                                <!-- <th>Lugar</th> -->
                                                 <th>Ponentes</th>
-                                                <th>Fecha</th>
+                                                <!-- <th>Fecha</th> -->
                                                 <th>Public.</th>
                                                 
                                                 <th style="width:5%">Operaciones</th>
@@ -74,23 +74,23 @@
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
                                                 <td class="sorting_1">{{ taller.titulo }}</td>
                                                 
-                                                <td>{{ taller.lugar }}</td>
+                                                <!-- <td>{{ taller.lugar }}</td> -->
                                                 <td style="text-align: center;">
                                                     
                                                     <a id=""
                                                     href="{%url 'MedCongressAdmin:Taller_ponentes' taller.path%}"
                                                         title="Ponentes">
-                                                        <i class="la la-user-secret " style= "color: blue;" ></i>
+                                                        <i class="icon icon-ponente " ></i>
                                                     </a></td>
-                                                <td>{{ taller.fecha_inicio }}</td>
+                                                <!-- <td>{{ taller.fecha_inicio }}</td> -->
                                                 <td>{%if taller.published%}Si{%else%}No{%endif%}</td>
                                                 
                                                 <td style="text-align: center;">
                                                     
                                                     <a id="del_{{ congres.pk }}"
-                                                        href="javascript:deleteItem('{{ country.pk }}')"
-                                                        title="Eliminar">
-                                                        <i class="la la-trash text-danger"></i>
+                                                        href="javascript:deleteItem('{{ congres.pk }}')"
+                                                        title="Eliminar Taller">
+                                                        <i class="icon icon-eliminar"></i>
                                                     </a>
                                                    
 
@@ -105,9 +105,9 @@
                                             <tr style="font-size: 13px;">
                                                 <th style="width:50%">Nombre</th>
                                                
-                                                <th>Lugar</th>
+                                                <!-- <th>Lugar</th> -->
                                                 <th>Ponentes</th>
-                                                <th>Fecha</th>
+                                                <!-- <th>Fecha</th> -->
                                                 <th>Public.</th>
                                                 <th style="width:5%">Operaciones</th>
                                             </tr>
@@ -179,7 +179,7 @@
         })
             .then((isConfirm) => {
                 if (isConfirm) {
-                    url = "{% url 'MedCongressAdmin:country_delete' pk=0 %}";
+                    url = "{% url 'MedCongressAdmin:taller_delete' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                         dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
                         swal("Eliminado!", "Este elemento ha sido eliminado.", "success");

@@ -1,11 +1,11 @@
 from django import forms
 from django.contrib import messages
-from django.http import HttpResponseBadRequest, HttpResponseRedirect
+from django.http import HttpResponseBadRequest, HttpResponseRedirect,JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import ListView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from MedCongressApp.models import Ponente,PerfilUsuario
+from MedCongressApp.models import Ponente,PerfilUsuario,RelPonenciaPonente
 from MedCongressAdmin.forms.congres_forms import PonenteForm
 
 class validarUser(UserPassesTestMixin):
@@ -49,5 +49,12 @@ class  PonentesCreateView(validarUser,CreateView):
 class PonenteDeletedView(validarUser,DeleteView):
     model = Ponente
     success_url = reverse_lazy('MedCongressAdmin:talleres_list')
-
+    def delete(self,request, *args, **kwargs):
+           
+            ponente=Ponente.objects.get(pk=self.kwargs.get('pk'))
+            if RelPonenciaPonente.objects.filter(ponente=ponente).exists():
+                return JsonResponse({'success':False}, safe=False)
+            else:
+                ponente.delete()
+                return JsonResponse({'success':True}, safe=False)
 

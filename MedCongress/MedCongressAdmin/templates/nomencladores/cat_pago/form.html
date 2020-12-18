@@ -1,0 +1,93 @@
+{% extends 'MedCongressAdmin/base.html' %}
+{% block title %}{% if update %}Editar Categoria de Pago {%else%} Adicionar Categoria de Pago{%endif%}{% endblock %}
+{% load static %}
+{% block styles %}
+{% endblock %}
+{% block content %}
+<section class="multiple-input-with-labels" id="multiple-input-with-labels">
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-header">
+					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
+						{% if update %}Editar Categoria de Pago {%else%} Adicionar Categoria de Pago{%endif%}</h1>
+
+					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
+					<div class="heading-elements">
+						<ul class="list-inline mb-0">
+							<li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+							<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="card-content collapse show">
+					<div class="card-body">
+						<form id="country-form" method="POST">
+							{% csrf_token %}
+							<div class="form-body">
+								<div class="row">
+									<div class="col-md-8">
+										<div class="form-group">
+											<label
+												for="{{form.nombre.id_for_label }}"><b>{{form.nombre.label }}</b>{% if form.nombre.errors %}
+												<span
+													style="font-size: 15px; color: red;">{{ form.nombre.errors }}
+												</span>{% endif %} </label>
+
+											{{form.nombre }}
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<div class="form-group">
+											<label
+												for="{{form.detalle.id_for_label }}"><b>{{form.detalle.label }}</b>{% if form.detalle.errors %}
+												<span
+													style="font-size: 15px; color: red;">{{ form.detalle.errors }}
+												</span>{% endif %} </label>
+
+											{{form.detalle }}
+										</div>
+									</div>
+								</div>
+
+									<div class="form-actions">
+										<div class="text-right">
+											<a id="atras" type="button" class="btn btn-danger " href="{%url 'MedCongressAdmin:cat_pagos_list'%}">Cancelar
+												<i class="ft-x position-right"></i>
+											</a>
+											<button id="save" type="submit" class="btn btn-primary">Guardar
+												<i class="ft-save position-right"></i>
+											</button>
+
+										</div>
+									</div>
+								</div>
+							</div>
+					</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/editors/ckeditor/ckeditor.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/editors/editor-ckeditor.js'%}"></script>
+<script type="text/javascript">
+	
+	
+	$(document).ready(function () {
+
+		var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+		$.ajaxSetup({
+			beforeSend: function (xhr, settings) {
+				xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			}
+		});
+	
+	});
+</script>
+{% endblock %}

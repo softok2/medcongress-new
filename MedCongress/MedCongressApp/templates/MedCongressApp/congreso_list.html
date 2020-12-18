@@ -4,6 +4,43 @@
 {% block titulo %}
 Congresos
 {%endblock%}
+{% block metadatos%}
+{% if metadatos.meta_title%}
+<meta property="title" content="{{metadatos.meta_title}}">
+{%endif%}
+{% if metadatos.meta_description %}
+<meta name="description" content="{{metadatos.meta_description}}">
+{%endif%}
+{% if metadatos.meta_og_description %}
+<meta property="og:description" content="{{metadatos.meta_og_description}}">
+{%endif%}
+{% if metadatos.meta_og_type %}
+<meta property="og:type" content="{{metadatos.meta_og_type}}">
+{%endif%}
+{% if metadatos.meta_og_title %}
+<meta property="og:title" content="{{metadatos.meta_og_title}}">
+{%endif%}
+{% if metadatos.meta_og_url %}
+<meta property="og:url" content="{{metadatos.meta_og_url}}">
+{%endif%}
+{% if metadatos.meta_og_imagen %}
+<meta property="og:image" content="{% static '/'%}{{metadatos.meta_og_imagen}}">
+{%endif%}
+{% if metadatos.meta_twitter_card %}
+<meta name="twitter:card" content="{{metadatos.meta_twitter_card}}" />
+{%endif%}
+{% if metadatos.meta_twitter_site %}
+<meta name="twitter:site" content="{{metadatos.meta_twitter_site}}" />
+{%endif%}
+{% if metadatos.meta_twitter_creator %}
+<meta name="twitter:creator" content="{{metadatos.meta_twitter_creator}}" />
+{%endif%}
+{% if metadatos.meta_keywords %}
+<meta name="keywords"
+	content="{{metadatos.meta_keywords}}" />
+{%endif%}
+
+{%endblock%}
 {% block contenido %}
 
 <div class="sub-header">

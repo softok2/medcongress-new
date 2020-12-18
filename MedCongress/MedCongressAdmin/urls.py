@@ -13,7 +13,8 @@ from .views.congress_views import (CongressListView,CongressCreateView,CongressU
                                    CongressImagenesListView,AddPonenciaCongreso,CongressCategPagosCreateView,
                                    CongressDeletedView,CongressBloquesListView,GetBloques,AsignarCongressListView,AsignarCongressAddViews,GetPagos,
                                    AsignarCongressDeletedViews,CongressImagenCreateView,CongressCuestionarioListView,CongressPregFrecuenteListView,
-                                   Ver_usuarios,Ver_Exel,Exportar_usuarios,Usuarios_pagaron,ReporteRelCongresoUserExcel)
+                                   Ver_usuarios,Ver_Exel,Exportar_usuarios,Usuarios_pagaron,ReporteRelCongresoUserExcel,CongressPatrocinadorListView,
+                                   PatrocinadorSeleccionarView,PatrocinadorSeleccionarDeleted, SocioSeleccionarView,SocioSeleccionarDeleted,CongressSocioListView,CongressImagenDeletedView)
 from .views.imagen_views import (ImagenCreateView)
 from .views.ponencia_view import (PonenciaListView, PonenciaCreateView,PonenciaPonenteListView,
                                    PonencicaUpdateView,PonenciaPonenteCreateView,PonenciaDeletedView,
@@ -25,6 +26,19 @@ from .views.ponente_view import (PonentesListView,PonentesCreateView,PonenteDele
 from .views.user_views import (UsuariosListView,UsuarioCreateView,UsuarioUpdateView,UsuarioDeletedView,UsuarioAsigCongresoView)
 from .views.bloque_views import (BloquesListView,BloqueCreateView,BloqueDeletedView,BloquePonenciasListView,BloqueTalleresListView,
                                    BloqueUpdateView,BloqueModeradoresListView,page_not_found,BloqueModeradoresCreateView,BloqueModeradoresDeletedView)
+from .views_nomencladores.genero_views import (GeneroListView,GeneroCreateView,GeneroDeletedView,GeneroUpdateView)
+from .views_nomencladores.cat_pago_views import (CatPagoListView,CatPagoCreateView,CatPagoDeletedView,CatPagoUpdateView)
+from .views_nomencladores.patrocinador_views import (PatrocinadorListView,PatrocinadorCreateView,PatrocinadorDeletedView,PatrocinadorUpdateView)
+from .views_nomencladores.socio_views import (SocioListView,SocioCreateView,SocioDeletedView,SocioUpdateView)
+from .views_nomencladores.cat_usuario_views import (CatUsuarioListView,CatUsuarioCreateView,CatUsuarioDeletedView,CatUsuarioUpdateView)
+from .views_nomencladores.esp_evento_views import (EspEventoListView,EspEventoCreateView,EspEventoDeletedView,EspEventoUpdateView)
+from .views_nomencladores.tipo_evento_views import (TipoEventoListView,TipoEventoCreateView,TipoEventoDeletedView,TipoEventoUpdateView)
+from .views_nomencladores.esp_usuario_views import (EspUsuarioListView,EspUsuarioCreateView,EspUsuarioDeletedView,EspUsuarioUpdateView)
+from .views_inicio.quienes_somos_views import (QuienesSomosListView,QuienesSomosUpdateView,QuienesSomosCreateView,QuienesSomosImagenCreateView,QuienesSomosImagenDeletedView)
+from .views_inicio.footer_views import (FooterListView,FooterUpdateView,FooterCreateView)
+from .views_inicio.meta_datos_views import (MetaInicioListView,MetaInicioUpdateView,MetaInicioCreateView,MetaListarListView,MetaListarUpdateView,MetaListarCreateView)
+
+from .views_inicio.ofrecemos_views import (OfrecemosListView,OfrecemosCreateView,OfrecemosDeletedView,OfrecemosUpdateView)
 from .views.otros_views import (OtrosListView,OtroUpdateView)
 from .views.cuestionario_views import (PreguntaCreateView,CustionarioUpdateView)
 from .views.moderador_view import ModeradoresListView,ModeradorCreateView,ModeradorDeletedView
@@ -139,7 +153,7 @@ urlpatterns = [
      # Bloque-Ponencias
      path('ponencias/bloque/<str:path>', BloquePonenciasListView.as_view(), name='Bloque_ponencias'),
      path('ponencia/bloque/add/<int:pk_block>', PonenciaCreateView.as_view(), name='ponencia_bloque_add'),
-
+    
      # Bloque-talleres
      path('talleres/bloque/<str:path>', BloqueTalleresListView.as_view(), name='Bloque_talleres'),
      path('taller/bloque/add/<int:pk_block>', TallerCreateView.as_view(), name='taller_bloque_add'),
@@ -163,6 +177,21 @@ urlpatterns = [
      #Congreso-Imagenes
      path('imagenes/congreso/<str:path>', CongressImagenesListView.as_view(), name='Congres_imagenes'),
      path('imagen-congreso/adicinar/<int:pk>', CongressImagenCreateView.as_view(), name='imagen_congress_add'),
+      path('imagen-congreso/eliminar/<int:pk>', CongressImagenDeletedView.as_view(), name='imagen_congress_deleted'),
+     
+
+     #Congreso-Patrocinadores
+     path('patrocinadores/congreso/<str:path>', CongressPatrocinadorListView.as_view(), name='Congres_patrocinadores'),
+     path('patrocinador-congreso/adicinar/<int:pk>', PatrocinadorCreateView.as_view(), name='patrocinadores_congress_add'),
+     path('patrocinador-congreso/seleccionar/<str:path>', PatrocinadorSeleccionarView.as_view(), name='patrocinadores_congress_select'),
+     path('patrocinador-congreso/deleted', PatrocinadorSeleccionarDeleted, name='congreso_patrocinador_delete'),
+
+    #Congreso-Socios
+      path('socios/congreso/<str:path>', CongressSocioListView.as_view(), name='Congres_socios'),
+     path('socio-congreso/adicinar/<int:pk>', SocioCreateView.as_view(), name='socios_congress_add'),
+     path('socio-congreso/seleccionar/<str:path>',SocioSeleccionarView.as_view(), name='socios_congress_select'),
+     path('socio-congreso/deleted', SocioSeleccionarDeleted, name='congreso_socio_delete'),
+
      
      #Cuestionarios
      path('cuestionario_pregunta/congreso/add/', PreguntaCreateView.as_view(), name='cuestionario_pregunta_add'),
@@ -187,5 +216,83 @@ urlpatterns = [
      #Reportes
      path('reporte_congreso_user', ReporteRelCongresoUserExcel.as_view(), name='Rep_RelCongresoUser'),
      
+      # Genero
+     path('generos', GeneroListView.as_view(), name='generos_list'),
+     path('genero/adicionar',GeneroCreateView.as_view(), name='genero_add'), 
+     path('genero/editar/<int:pk>', GeneroUpdateView.as_view(), name='genero_edit'),
+     path('genero/eliminar/<int:pk>', GeneroDeletedView.as_view(), name='genero_delete'),
+
+      # Cat de Pago
+     path('cat_pago', CatPagoListView.as_view(), name='cat_pagos_list'),
+     path('cat_pago/adicionar',CatPagoCreateView.as_view(), name='cat_pago_add'), 
+     path('cat_pago/editar/<int:pk>', CatPagoUpdateView.as_view(), name='cat_pago_edit'),
+     path('cat_pago/eliminar/<int:pk>', CatPagoDeletedView.as_view(), name='cat_pago_delete'),
+
+       # Patrocinadores
+     path('patrocinador', PatrocinadorListView.as_view(), name='patrocinadores_list'),
+     path('patrocinador/adicionar',PatrocinadorCreateView.as_view(), name='patrocinador_add'), 
+     path('patrocinador/editar/<int:pk>', PatrocinadorUpdateView.as_view(), name='patrocinador_edit'),
+     path('patrocinador/eliminar/<int:pk>', PatrocinadorDeletedView.as_view(), name='patrocinador_delete'),
+
+      # Socios
+     path('socio', SocioListView.as_view(), name='socios_list'),
+     path('socio/adicionar',SocioCreateView.as_view(), name='socio_add'), 
+     path('socio/editar/<int:pk>', SocioUpdateView.as_view(), name='socio_edit'),
+     path('socio/eliminar/<int:pk>', SocioDeletedView.as_view(), name='socio_delete'),
+
+      # Categoria de Usuarios
+     path('cat_usuario', CatUsuarioListView.as_view(), name='cat_usuarios_list'),
+     path('cat_usuario/adicionar',CatUsuarioCreateView.as_view(), name='cat_usuario_add'), 
+     path('cat_usuario/editar/<int:pk>', CatUsuarioUpdateView.as_view(), name='cat_usuario_edit'),
+     path('cat_usuario/eliminar/<int:pk>', CatUsuarioDeletedView.as_view(), name='cat_usuario_delete'),
+
+      # Especialidades de Eventos
+     path('esp_evento', EspEventoListView.as_view(), name='esp_eventos_list'),
+     path('esp_evento/adicionar',EspEventoCreateView.as_view(), name='esp_evento_add'), 
+     path('esp_evento/editar/<int:pk>', EspEventoUpdateView.as_view(), name='esp_evento_edit'),
+     path('esp_evento/eliminar/<int:pk>', EspEventoDeletedView.as_view(), name='esp_evento_delete'),
+
+       # Especialidades de usuarios
+     path('esp_usuario', EspUsuarioListView.as_view(), name='esp_usuarios_list'),
+     path('esp_usuario/adicionar',EspUsuarioCreateView.as_view(), name='esp_usuario_add'), 
+     path('esp_usuario/editar/<int:pk>', EspUsuarioUpdateView.as_view(), name='esp_usuario_edit'),
+     path('esp_usuario/eliminar/<int:pk>', EspUsuarioDeletedView.as_view(), name='esp_usuario_delete'),
+
+     # Tipos de Eventos
+     path('tipo_evento', TipoEventoListView.as_view(), name='tipo_eventos_list'),
+     path('tipo_evento/adicionar',TipoEventoCreateView.as_view(), name='tipo_evento_add'), 
+     path('tipo_evento/editar/<int:pk>', TipoEventoUpdateView.as_view(), name='tipo_evento_edit'),
+     path('tipo_evento/eliminar/<int:pk>', TipoEventoDeletedView.as_view(), name='tipo_evento_delete'),
+
+      #Quienes Somos
+     path('quienes_somos', QuienesSomosListView.as_view(), name='quienes_somos_list'),
+     path('quienes_somos/editar/<int:pk>', QuienesSomosUpdateView.as_view(), name='quienes_somos_edit'),
+    path('quienes_somos/adicionar',QuienesSomosCreateView.as_view(), name='quienes_somos_add'), 
+
+
+      #Footer
+     path('footer', FooterListView.as_view(), name='footer_list'),
+     path('footer/editar/<int:pk>', FooterUpdateView.as_view(), name='footer_edit'),
+    path('footer/adicionar',FooterCreateView.as_view(), name='footer_add'), 
+
+    #Meta Pag Inicio
+     path('meta_pag_inicio', MetaInicioListView.as_view(), name='meta_pag_inicio_list'),
+     path('meta_pag_inicio/editar/<int:pk>', MetaInicioUpdateView.as_view(), name='meta_pag_inicio_edit'),
+    path('meta_pag_inicio/adicionar',MetaInicioCreateView.as_view(), name='meta_pag_inicio_add'), 
+
+    #Meta Pag Listar Congresos
+     path('meta_pag_listar_congreso', MetaListarListView.as_view(), name='meta_pag_listar_list'),
+     path('meta_pag_listar_congreso/editar/<int:pk>', MetaListarUpdateView.as_view(), name='meta_pag_listar_edit'),
+    path('meta_pag_listar_congreso/adicionar',MetaListarCreateView.as_view(), name='meta_pag_listar_add'), 
+
+      #Ofrecemos
+     path('ofrecemos', OfrecemosListView.as_view(), name='ofrecemos_list'),
+     path('ofrecemos/adicionar',OfrecemosCreateView.as_view(), name='ofrecemos_add'), 
+     path('ofrecemos/editar/<int:pk>', OfrecemosUpdateView.as_view(), name='ofrecemos_edit'),
+     path('ofrecemos/eliminar/<int:pk>', OfrecemosDeletedView.as_view(), name='ofrecemos_deleted'),
+
+     #Congreso-Quienes Somos
      
+     path('imagen-quienes_somos/adicinar', QuienesSomosImagenCreateView.as_view(), name='imagen-quienes_somos_add'),
+    path('imagen-quienes_somos/eliminar/<int:pk>', QuienesSomosImagenDeletedView.as_view(), name='imagen_quienes_somos_deleted'),
 ]

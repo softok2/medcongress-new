@@ -1,0 +1,184 @@
+{% extends 'MedCongressAdmin/base.html' %}
+{% block title %}Quienes Somos | Página de Inicio{% endblock %}
+{% load static %}
+{% block styles %}
+
+
+{% endblock %}
+{% block content %}
+<section id="configuration">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-10">
+                            <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Quienes Somos | Página de Inicio</h1>
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="card-content collapse show">
+                    <div class="card-body card-dashboard">
+                        <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    {%if quienes_somoss%}
+                                    {%for quienes_somos in quienes_somoss%}
+                                    <h4> <b>Título</b>  <small>{{quienes_somos.titulo}}</small></h4>
+                                    <h4> <b>Sub Título</b>  <small>{{quienes_somos.sub_titulo}}</small></h4>
+                                  
+                                    <h4> <b>Texto</b>  <label >{{quienes_somos.texto|safe}}</label></h4>
+                                    
+                                    <a id="edit-btn" type="button" class="btn btn-success" title="Editar Valores" href=" {% url 'MedCongressAdmin:quienes_somos_edit' pk=quienes_somos.pk %}"
+                                    style="float: left; padding:7px;font-size: 20px; margin-top: 30px;">
+                                    <i class="ft ft-edit"></i> Editar  </a>
+                                    
+                                   
+                                    {%endfor%}
+                                   
+                              
+                                {%else%}
+                                <a id="edit-btn" type="button" class="btn btn-success" title="Editar Valores" href=" {% url 'MedCongressAdmin:quienes_somos_add' %}"
+                                    style="float: left; padding:7px;font-size: 20px; margin-top: 30px;">
+                                    <i class="ft ft-plus"></i>Adicionar
+                                </a>
+                                {%endif%}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-10">
+                            <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Imágenes</h1>
+                      
+                        </div>
+                         <div class="col-2">
+                            <div style="margin-right: 45%; margin-top: 1.5rem;">
+                                <button id="add_img-btn" type="button" class="btn btn-success" title="Adicionar Imagen a este Congreso" 
+                                    style="float:right; padding: 3px;">
+                                    <i class="la la-plus"></i>
+                                </button>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+                <div class="card-content collapse show">
+                    <div class="card-body card-dashboard">
+                        <div class="card-body  my-gallery" itemscope=""  data-pswp-uid="1">
+                            <div class="row">
+                                {% for imagen in imagenes%}
+                              <figure class="col-lg-3 col-md-6 col-12" itemprop="associatedMedia" itemscope="" >
+                                <a href="{% static '/'%}{{imagen.imagen}}" itemprop="contentUrl" data-size="480x360">
+                                    <img class="img-thumbnail img-fluid" src="{% static '/'%}{{imagen.imagen}}" itemprop="thumbnail" alt="Image description">
+                                </a> 
+                                <button class="btn " onclick="deleteItem('{{imagen.pk}}')" title="Eliminar Imagen"> <i class="icon icon-eliminar"></i></button>
+                              </figure>
+                             
+                              {%endfor%}
+                              
+                            </div>
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="swal-overlay" tabindex="-1">
+    <form id="swall-modal-form" method="POST" style="display: none;">
+        {% csrf_token %}
+    </form>
+
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/extensions/sweetalert.min.js' %}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/tables/datatable/datatables.min.js' %}"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        
+        var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        });
+
+        $('#add-btn').click(function () {
+            location.href = "{% url 'MedCongressAdmin:cat_pago_add'   %}";
+        });
+        $('#add_img-btn').click(function () {
+            location.href = "{% url 'MedCongressAdmin:imagen-quienes_somos_add'   %}";
+        });
+        
+        dataTable = $('.zero-configuration').DataTable();
+    });
+    function deleteItem(pk) {
+        swal({
+            title: "Estas seguro?",
+            text: "No será capaz de recuperar este elemento!",
+            icon: "warning",
+            buttons: {
+                cancel: {
+                    text: "No, cancelar!",
+                    value: null,
+                    visible: true,
+                    className: "",
+                    closeModal: false,
+                },
+                confirm: {
+                    text: "Sí, eliminarlo!",
+                    value: true,
+                    visible: true,
+                    className: "",
+                    closeModal: false
+                }
+            }
+        })
+            .then((isConfirm) => {
+                if (isConfirm) {
+                    url = "{% url 'MedCongressAdmin:imagen_quienes_somos_deleted' pk=0 %}";
+                    $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
+                       
+                       swal("Eliminado!", "Este elemento ha sido eliminado.", "success");
+                       location.reload()
+               
+                        
+                    });
+                } else {
+                    swal("Cancelado", "No se eliminó este elemento.", "error");
+                }
+            });
+    }
+</script>
+{% endblock %}

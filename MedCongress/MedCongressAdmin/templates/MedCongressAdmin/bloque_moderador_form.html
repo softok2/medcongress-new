@@ -1,5 +1,5 @@
 {% extends 'MedCongressAdmin/base.html' %}
-{% block title %}Adicionar Moderadores{% endblock %}
+{% block title %}Adicionar Moderador{% endblock %}
 {% load static %}
 {% block styles %}
 {% endblock %}
@@ -10,7 +10,7 @@
 			<div class="card">
 				<div class="card-header">
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
-						Adicionar Moderadores</h1>
+						Adicionar Moderador</h1>
 					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
 					<div class="heading-elements">
 						<ul class="list-inline mb-0">
@@ -31,7 +31,7 @@
 										<div class="col-sm-6 ">
 											<div class="form-group">
 												<label
-													for="{{form.moderador.id_for_label }}"><b>{{form.moderador.label }}</b>{% if form.moderador.errors %}
+													for="{{form.moderador.id_for_label }}"><b>Entre Email del Moderador</b>{% if form.moderador.errors %}
 													<span style="font-size: 15px; color: red;">{{ form.moderador.errors }}
 													</span>{% endif %} </label>
 													<input type="text" name="my_user" class="form-control" required="" id="id_my_user">
@@ -83,7 +83,8 @@
 $('#id_my_user').change(function(){
 	email=$('#id_my_user').val()
 $("#id_moderador option:contains('"+email+"')").attr("selected",true);
-
+if ($("#id_moderador option:selected").text()!= email) 
+            $("#id_moderador").val('')
 });
 		
 	});

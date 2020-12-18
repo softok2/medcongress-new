@@ -31,7 +31,8 @@ from .models import (CategoriaPagoCongreso, Congreso, EspecialidadCongreso,
                      Ponencia, Ponente, RelCongresoCategoriaPago,
                      RelCongresoUser,RelPonenciaPonente,PerfilUsuario,ImagenCongreso,Taller,RelTalleresCategoriaPago,RelTallerUser,DatosIniciales,
                      CategoriaUsuario,Bloque,Moderador,RelTallerPonente,Pais,CuestionarioPregunta,CuestionarioRespuestas,RelPonenciaVotacion,
-                     PreguntasFrecuentes,Ubicacion)
+                     PreguntasFrecuentes,Ubicacion,AvalCongreso,SocioCongreso,QuienesSomos,Ofrecemos,ImagenQuienesSomos,RelTallerVotacion,MetaPagInicio,MetaPagListCongreso,
+                     RelCongresoAval,RelCongresoSocio)
 from .pager import Pager
 from .cart import Cart
 from django_xhtml2pdf.views import PdfMixin
@@ -81,6 +82,11 @@ class Home(TemplateView):
         context['afiliados'] = len(User.objects.all())+datos_in.afiliados
         context['congresos']= Congreso.objects.filter(published=True).order_by('fecha_inicio')
         context['nuevo_congreso'] = Congreso.objects.filter(fecha_inicio__gt=datetime.now(),published=True).first()
+        quienes_somos=QuienesSomos.objects.filter().first()
+        context['quienes_somos'] = quienes_somos
+        context['quienes_somos_imagenes']=ImagenQuienesSomos.objects.filter(q_somos=quienes_somos)
+        context['ofrecemos'] = Ofrecemos.objects.all()
+        context['metadatos']= MetaPagInicio.objects.all().first()
         return context
 @method_decorator(login_required,name='dispatch')
 class PagoExitoso(TemplateView):
@@ -237,10 +243,10 @@ class CongresoListView(ListView):
         congreso=Congreso.objects.filter(especialidad__in=id,published=True)
         return self.render_to_response(self.get_context_data(object_list=congreso))
 
-    # def get_context_data(self, **kwargs):
-    #     context = super(CongresoListView, self).get_context_data(**kwargs)
-    #     context['pager_url'] = '%sall' % self.request.path
-    #     return Pager.get_paginated_context(context)
+    def get_context_data(self, **kwargs):
+        context = super(CongresoListView, self).get_context_data(**kwargs)
+        context['metadatos']= MetaPagListCongreso.objects.all().first()
+        return Pager.get_paginated_context(context)
 
 
 ##### Visualizar Congreso #####
@@ -266,6 +272,8 @@ class CongresoDetail(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(CongresoDetail, self).get_context_data(**kwargs)
         congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        context['patrocinadores']=RelCongresoAval.objects.filter(congreso=congreso)
+        context['socios']=RelCongresoSocio.objects.filter(congreso=congreso)
         if self.request.user.is_authenticated:
             pagado=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario,is_pagado=True)
             if pagado :
@@ -301,6 +309,7 @@ class CongresoDetail(TemplateView):
                 result=[]
                 for bloque in bloques: 
                     bloque_ponencias=Ponencia.objects.filter(bloque=bloque,published=True).order_by('fecha_inicio')
+                   
                     bloque_talleres=Taller.objects.filter(bloque=bloque,published=True).order_by('fecha_inicio')
                     eventos=[]
                     for ponencia in bloque_ponencias: 
@@ -335,6 +344,7 @@ class CongresoDetail(TemplateView):
                     'eventos':eventos,
                     'tipo':'Bloque',# la misma relación, otro campo
                     })
+                   
                 for ponencia in ponencias: 
                     result.append({
                     'id':ponencia.id,
@@ -367,7 +377,7 @@ class CongresoDetail(TemplateView):
             
             context['ponencias']=ponencias_env
 
-            prueba_ponecia=Ponencia.objects.filter(congreso=congreso.pk)
+            prueba_ponecia=Ponencia.objects.filter(congreso=congreso.pk,published=True)
             id_p=[]
             for pp in prueba_ponecia:
                 id_p.append(pp.pk)
@@ -386,12 +396,25 @@ class CongresoDetail(TemplateView):
             ponencias_video_env=[]
 
             fechas_ponencias_video=Ponencia.objects.filter(congreso=congreso.pk,published=True).exclude(cod_video='').distinct('fecha_inicio__date').values('fecha_inicio__date')
-            for fecha in fechas_ponencias_video:
-                ponencias_video= Ponencia.objects.filter(congreso=congreso.pk,published=True,fecha_inicio__date=fecha['fecha_inicio__date']).exclude(cod_video='')
-                ponencias_video_env.append({'fecha':fecha['fecha_inicio__date'],
-                                            'ponencias':ponencias_video})
+            fechas_talleres_video=Taller.objects.filter(congreso=congreso.pk,published=True).exclude(cod_video='').distinct('fecha_inicio__date').values('fecha_inicio__date')
+            
+            fechas=[]
+            for fecha_ponencia in fechas_ponencias_video:
+                fechas.append(fecha_ponencia['fecha_inicio__date'])
+            for fechas_tallere in fechas_talleres_video:
+                fechas.append(fechas_tallere['fecha_inicio__date'])
+            
+            fechas=set(fechas)
+            fechas_final=sorted(fechas)
+            
+            for j in range(0, len(fechas_final)):
+                ponencias_video= Ponencia.objects.filter(congreso=congreso.pk,published=True,fecha_inicio__date=fechas_final[j]).exclude(cod_video='')
+                talleres_video= Taller.objects.filter(congreso=congreso.pk,published=True,fecha_inicio__date=fechas_final[j]).exclude(cod_video='')
+                ponencias_video_env.append({'fecha':fechas_final[j],
+                                            'ponencias':ponencias_video,
+                                            'talleres':talleres_video})
             context['ponencias_video']=ponencias_video_env
-            prueba_taller=Taller.objects.filter(congreso=congreso.pk)
+            prueba_taller=Taller.objects.filter(congreso=congreso.pk,published=True)
             id_t=[]
             for pp in prueba_taller:
                 id_t.append(pp.pk)
@@ -413,7 +436,7 @@ class CongresoDetail(TemplateView):
                     'tipo':'Ponente',
                     })
             
-            bloques=Bloque.objects.filter(congreso=congreso.pk)
+            bloques=Bloque.objects.filter(congreso=congreso.pk,published=True)
             id_b=[]
             for pp in bloques:
               
@@ -442,7 +465,7 @@ class CongresoDetail(TemplateView):
 
             if self.request.user.is_authenticated :
                 user_perfil=PerfilUsuario.objects.filter(usuario=self.request.user.pk).first()
-                talleres=Taller.objects.filter(congreso=congreso.pk).order_by('fecha_inicio')
+                talleres=Taller.objects.filter(congreso=congreso.pk,published=True).order_by('fecha_inicio')
                 ver=[]
                 for taller in talleres:
                     if RelTalleresCategoriaPago.objects.filter(taller=taller).exists():
@@ -466,7 +489,7 @@ class CongresoDetail(TemplateView):
                 else: 
                     context['permiso'] = False                                                                  
             else:
-                talleres=Taller.objects.filter(congreso=congreso.pk).order_by('fecha_inicio')
+                talleres=Taller.objects.filter(congreso=congreso.pk,published=True).order_by('fecha_inicio')
                 ver=[]
                 for taller in talleres:
                     if RelTalleresCategoriaPago.objects.filter(taller=taller).exists():
@@ -673,7 +696,7 @@ class ViewErrorFact(TemplateView):
     template_name= 'MedCongressApp/Error_Fact.html' 
 
 class ViewPonencia(TemplateView):
-    template_name= 'MedCongressApp/view_ponencia.html' 
+    template_name= 'MedCongressApp/ponencia_details.html' 
 
     def get(self, request, **kwargs):
         ponencia=Ponencia.objects.filter(path=self.kwargs.get('path'),published=True).first()
@@ -696,6 +719,28 @@ class ViewPonencia(TemplateView):
         context['ponencia']=ponencia
         return context
 
+class ViewTaller(TemplateView):
+    template_name= 'MedCongressApp/taller_details.html' 
+
+    def get(self, request, **kwargs):
+        taller=Taller.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        if taller is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        return self.render_to_response(self.get_context_data())    
+
+    def get_context_data(self, **kwargs):
+        context = super(ViewTaller, self).get_context_data(**kwargs)
+        taller=Taller.objects.filter(path=self.kwargs.get('path'),published=True).first() 
+        if self.request.user.is_authenticated:
+            context['is_pagado']=RelTallerUser.objects.filter(taller=taller,user=self.request.user.perfilusuario,is_pagado=True).exists()
+
+            if RelTallerVotacion.objects.filter(taller=taller,user=self.request.user).exists():
+                votacio=RelTallerVotacion.objects.filter(taller=taller,user=self.request.user).first()
+                context['is_evaluado']=votacio.votacion
+        else:
+            context['is_pagado']=False
+        context['ponencia']=taller
+        return context
 
 ##### Autocompletar Especialidades #####
 
@@ -763,10 +808,40 @@ def CongresoAutocomplete(request):
     if request.is_ajax():
         query = request.GET.get("term", "")
         congresos=Congreso.objects.filter(titulo__icontains=query)
-        print(congresos)
+        
         results = []
         for congreso in congresos:
             place_json = congreso.titulo
+            results.append(place_json)
+        data = json.dumps(results)
+    mimetype = "application/json"
+    return HttpResponse(data, mimetype)
+
+##### Autocompletar patrocinador #####
+
+def PatrocinadorAutocomplete(request):
+    if request.is_ajax():
+        query = request.GET.get("term", "")
+        congresos=AvalCongreso.objects.filter(nombre__icontains=query)
+       
+        results = []
+        for congreso in congresos:
+            place_json = congreso.nombre
+            results.append(place_json)
+        data = json.dumps(results)
+    mimetype = "application/json"
+    return HttpResponse(data, mimetype)
+
+##### Autocompletar socio #####
+
+def SocioAutocomplete(request):
+    if request.is_ajax():
+        query = request.GET.get("term", "")
+        congresos=SocioCongreso.objects.filter(nombre__icontains=query)
+       
+        results = []
+        for congreso in congresos:
+            place_json = congreso.nombre
             results.append(place_json)
         data = json.dumps(results)
     mimetype = "application/json"
@@ -1207,6 +1282,41 @@ class UpdateEvaluarPonencia(TemplateView):
             ponencia_id=request.GET.get("ponencia")
             ponencia=Ponencia.objects.get(pk=ponencia_id)
             votacion=RelPonenciaVotacion.objects.filter(user=self.request.user,ponencia=ponencia).first()
+            votacion.votacion=puntuacion
+            votacion.save()
+            usuario_json={'succes':'True','valor':puntuacion}
+            return JsonResponse(usuario_json, safe=False)
+
+class EvaluarTaller(TemplateView):
+    template_name= 'MedCongressApp/pago_satifactorio.html'
+
+    def get(self, request):
+        if request.is_ajax:
+            puntuacion =request.GET.get("puntuacion")
+            usuario=request.GET.get("usuario")
+            taller_id=request.GET.get("taller")
+            taller=Taller.objects.get(pk=taller_id)
+            if not RelTallerVotacion.objects.filter(user=self.request.user,taller=taller).exists():
+                votacion=RelTallerVotacion(user=self.request.user,taller=taller,votacion=puntuacion)
+                votacion.save()
+            else:
+                votacion=RelTallerVotacion.objects.filter(user=self.request.user,taller=taller).first()
+                votacion.votacion=puntuacion
+                votacion.save()  
+            usuario_json={'succes':'True','valor':puntuacion}
+            return JsonResponse(usuario_json, safe=False)
+        return TemplateResponse(request, reverse('dashboard')) 
+@method_decorator(login_required,name='dispatch')
+class UpdateEvaluarTaller(TemplateView):
+    template_name= 'MedCongressApp/pago_satifactorio.html'
+
+    def get(self, request):
+        if request.is_ajax:
+            puntuacion =request.GET.get("puntuacion")
+            usuario=request.GET.get("usuario")
+            taller_id=request.GET.get("taller")
+            taller=Taller.objects.get(pk=ponencia_id)
+            votacion=RelTallerVotacion.objects.filter(user=self.request.user,taller=taller).first()
             votacion.votacion=puntuacion
             votacion.save()
             usuario_json={'succes':'True','valor':puntuacion}

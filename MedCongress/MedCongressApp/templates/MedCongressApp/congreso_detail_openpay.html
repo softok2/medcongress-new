@@ -4,6 +4,43 @@
 {% block titulo %}
 {{congreso.titulo}}
 {%endblock%}
+{% block metadatos%}
+{% if congreso.meta_title%}
+<meta property="title" content="{{congreso.meta_title}}">
+{%endif%}
+{% if congreso.meta_description %}
+<meta name="description" content="{{congreso.meta_description}}">
+{%endif%}
+{% if congreso.meta_og_description %}
+<meta property="og:description" content="{{congreso.meta_og_description}}">
+{%endif%}
+{% if congreso.meta_og_type %}
+<meta property="og:type" content="{{congreso.meta_og_type}}">
+{%endif%}
+{% if congreso.meta_og_title %}
+<meta property="og:title" content="{{congreso.meta_og_title}}">
+{%endif%}
+{% if congreso.meta_og_url %}
+<meta property="og:url" content="{{congreso.meta_og_url}}">
+{%endif%}
+{% if congreso.meta_og_imagen %}
+<meta property="og:image" content="{% static '/'%}{{congreso.meta_og_imagen}}">
+{%endif%}
+{% if congreso.meta_twitter_card %}
+<meta name="twitter:card" content="{{congreso.meta_twitter_card}}" />
+{%endif%}
+{% if congreso.meta_twitter_site %}
+<meta name="twitter:site" content="{{congreso.meta_twitter_site}}" />
+{%endif%}
+{% if congreso.meta_twitter_creator %}
+<meta name="twitter:creator" content="{{congreso.meta_twitter_creator}}" />
+{%endif%}
+{% if congreso.meta_keywords %}
+<meta name="keywords"
+	content="{{congreso.meta_keywords}}" />
+{%endif%}
+
+{%endblock%}
 {%block css%}
 <link rel="stylesheet" href="{% static 'MedCongressApp/css/bootstrap-rating.css'%}" type="text/css" media="all">
 <style type="text/css">
@@ -216,6 +253,7 @@
 
 </div>
 <!-- Programa -->
+{% if fecha_ponencias %}
 <div class="kode-conference-schedule" id="programas">
     <div class="container">
         <div class="kf_heading_3">
@@ -477,7 +515,7 @@
 
     </div>
 </div>
-
+{%endif%}
 <!-- /////////////////////////////////////////////-->
 {% if ponencias_video%}
 
@@ -500,7 +538,11 @@
             <div class="kf_accordian_des">
                 <div class="kode-our-pricing">
                    
-
+                    {%if ponencia_v.ponencias%}
+<div class="kf_heading_3">
+    <h5> <b>Ponencias</b> </h5>
+    <span></span>
+</div>
                         {% for ponencia in ponencia_v.ponencias %}
                         {%if ponencia.cod_video%}
                         {%if forloop.first%}
@@ -558,8 +600,71 @@
 
                         {% endif %}
                         {% endfor %}
+                        {% endif %}
+                        
+{%if ponencia_v.talleres%}
+<div class="kf_heading_3">
+    <h5> <b>Talleres</b> </h5>
+    <span></span>
+</div>
+                        {% for ponencia in ponencia_v.talleres %}
+                        {%if ponencia.cod_video%}
+                        {%if forloop.first%}
+                        <div class="row">
+                            {% endif %}
+                            <div class="col-md-4 {{forloop.counter}}">
+                                <!-- KODE_EVENT_BLOG2 START-->
+                                <div class="kode-event-blog3">
+                                    <a href="{% url 'View_taller' ponencia.path %}" class="">
+                                        <figure>
+                                            <img src="{% static '/'%}{{ponencia.imagen}}" alt="" />
 
 
+                                            <div class="kode-fig-capstion">
+                                                <a
+                                                    href="{% url 'View_taller' ponencia.path  %}">{{ponencia.titulo }}</a>
+                                                {%if ponencia.detalle%} <p style="font-style: italic;">
+                                                    {{ponencia.detalle|truncatewords:10 }}</p>{%endif%}
+                                            </div>
+
+                                        </figure>
+                                    </a>
+                                    <div class="kode-thumb-caption">
+                                        <a href="{% url 'View_taller' ponencia.path %}">
+                                            <h4>{{ponencia.titulo }}</h4>
+                                        </a>
+                                        <ul>
+                                            <li><a href="#"><i
+                                                        class="fa fa-calendar"></i>{{ponencia.fecha_inicio|date:"M"}}
+                                                    {{ponencia.fecha_inicio|date:"d"}} /
+                                                    {{ponencia.fecha_inicio|date:"Y"}}</a></li>
+                                            <li><a href="#"><i class="fa fa-user"></i> <b>Ponente:</b> <button
+                                                        style="margin-top: -2px;" type="button" class="btn btn-link"
+                                                        data-toggle="modal" data-target=".tt"
+                                                        onclick="VerPerfil('{{ponencia.ponente.all.0.user.pk}}')"> <span
+                                                            style="font-style: italic;">{{ponencia.ponente.all.0.user.usuario.first_name}}
+                                                            {{ponencia.ponente.all.0.user.usuario.last_name}}</span>
+                                                    </button>
+                                                </a></li>
+                                        </ul>
+                                        <span><a href="{% url 'View_taller' ponencia.path %}">Leer Más</a></span>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!--KODE_EVENT_BLOG2 START-->
+                            {%if forloop.counter|divisibleby:3 %}
+                        </div>
+                        <div class='row'>
+                            {%endif%}
+                            {%if forloop.last%}
+                        </div>
+                        {% endif %}
+
+                        {% endif %}
+                        {% endfor %}
+                        {% endif %}
                     </div>
                
             </div>
@@ -575,6 +680,7 @@
 
 {%endif%}
 <!--//////////////////////////////////////////////////////////-->
+{%if categorias_pago %}
 <div class="kode-our-pricing" id="pagos">
     <div class="container">
         <div class="kf_heading_3">
@@ -593,7 +699,7 @@
         </div>
         <div class="row">
             <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
-            {%if categorias_pago %}
+           
             {%for categoria_pago in categorias_pago %}
 
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
@@ -632,36 +738,13 @@
                 <!-- kode-price-box End -->
             </div>
             {%endfor%}
-            {%else%}
-            <span> No tiene establecido los precios aún </span>
-            {%endif%}
+            
         </div>
 
     </div>
 </div>
-<!-- <div class="kode-speaker-frame">
-    <div class="container">
-        <div class="kf_heading_1">
-            <h2>FAQs</h2>
-
-        </div>
-        <div class="kf_faq_accordian">
-            {%for preg_frecuente in preg_frecuentes%}
-            <div class="kf_accordian_hdg accordion" id="section3">
-                <h5>{{preg_frecuente.pregunta}}</h5>
-            </div>
-            <div class="kf_accordian_des">
-                <div class="kode-our-pricing">
-                    <div class="row">
-                        {{preg_frecuente.respuesta|safe}}
-                    </div>
-                </div>
-            </div>
-            {%endfor%}
-        </div>
-    </div>
-</div> -->
-<!-- Talleres-->
+{%endif%}
+{% if talleres %}
 <div class="kode-speaker-frame">
     <div class="container">
         <div class="kf_heading_3">
@@ -744,7 +827,9 @@
 
     </div>
 </div>
+{%endif%}
 <!-- Ponentes-->
+{% if ponentes_congreso %}
 <div class="kode-speaker-frame">
     <div class="container">
         <div class="kf_heading_3">
@@ -821,7 +906,9 @@
 
     </div>
 </div>
+{%endif%}
 <!-- Patrocinadores-->
+{% if patrocinadores %}
 <div class="kode-speaker-frame">
     <div class="container">
         <div class="kf_heading_3">
@@ -829,31 +916,31 @@
             <span>Patrocinadores de este congreso</span>
         </div>
         <div class="row">
+            
             <div id="kode-speaker-causel" class="owl-carousel">
-
+{%for patrocindador in patrocinadores%}
 
                 <div class="kode-newspeaker">
                     <div class="speaker-photo">
-                        <img src="{% static 'patrocinadores/indice.png'%}" alt="">
-                    </div>
+                        <a href="{{patrocindador.aval.url}}" target="_blank">
+                        <img hre src="{% static '/'%}{{patrocindador.aval.logo}}" alt="{{patrocindador.aval.nombre}}">
+                   </a> 
+                </div>
 
 
                     <!-- kode-new speaker over state End -->
 
                 </div>
-                <div class="kode-newspeaker">
-                    <div class="speaker-photo">
-                        <img src="{% static 'patrocinadores/faicic.png'%}" alt="">
-                    </div>
-
-
-                    <!-- kode-new speaker over state End -->
-                </div>
+                {% endfor%}
+                
+            
             </div>
         </div>
     </div>
 </div>
+{%endif%}
 <!-- Socios-->
+{% if socios %}
 <div class="kode-speaker-frame">
     <div class="container">
         <div class="kf_heading_3">
@@ -861,94 +948,21 @@
             <span></span>
         </div>
         <div class="row">
-            <div id="kode-speaker-causel2">
+           
+            <div id="kode-speaker-causel2"> 
+                {%for socio in socios%}
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/1.png'%}" alt="">
+                    <a href="{{socio.socio.url}}" target="_blank">
+                    <img class="img-responsive" src="{% static '/'%}{{socio.socio.logo}}" alt="{{socio.socio.nombre}}">
+                </a>
                 </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/2.png'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/3.png'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/4.png'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/5.png'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/6.png'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/7.png'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/8.png'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/9.png'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/10.jpg'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/11.jpg'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/12.jpg'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/13.jpg'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/14.jpg'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/15.jpg'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/16.jpg'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/17.jpg'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/18.jpg'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/19.jpg'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/20.jpg'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/21.jpg'%}" alt="">
-                </div>
+                {%endfor%}
+                
             </div>
         </div>
     </div>
 </div>
+{%endif%}
 <!-- Contactos-->
 <div class="kode-event-contact">
     <div class="container">

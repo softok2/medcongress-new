@@ -72,8 +72,8 @@
                                                 <td>{{ ponente.ponente.user.usuario.email}}</td>
                                                   <td>  <a id="del_{{ ponente.pk }}"
                                                         href="javascript:deleteItem('{{ ponente.pk }}')"
-                                                        title="Eliminar">
-                                                        <i class="la la-trash "></i>
+                                                        title="Eliminar Vínculo entre Ponente y esta Ponencia">
+                                                        <i class="icon icon-eliminar_vinculo"></i>
                                                     </a>
 
                                                    
@@ -129,7 +129,7 @@
     function deleteItem(pk) {
         swal({
             title: "Estas seguro?",
-            text: "No será capaz de recuperar este elemento!",
+            text: "Eliminará la relación del Ponente con esta Ponencia !!",
             icon: "warning",
             buttons: {
                 cancel: {
@@ -140,7 +140,7 @@
                     closeModal: false,
                 },
                 confirm: {
-                    text: "Sí, eliminarlo!",
+                    text: "Sí, eliminarla!",
                     value: true,
                     visible: true,
                     className: "",
@@ -153,10 +153,10 @@
                     url = "{% url 'MedCongressAdmin:ponecia_ponente_delete' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                         dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
-                        swal("Eliminado!", "Este elemento ha sido eliminado.", "success");
+                        swal("Eliminado!", "Esta relación ha sido eliminada.", "success");
                     });
                 } else {
-                    swal("Cancelado", "No se eliminó este elemento.", "error");
+                    swal("Cancelado", "No se eliminó esta relación.", "error");
                 }
             });
     }

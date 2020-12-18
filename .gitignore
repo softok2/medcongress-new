@@ -8,3 +8,5 @@
 /MedCongress/MedCongressAdmin/migrations/__pycache__
 /MedCongress/MedCongressAdmin/views/__pycache__
 /MedCongress/MedCongressApp/templatetags/__pycache__
+/MedCongress/MedCongressApp/static/metas
+/MedCongress/MedCongressApp/static/congreso

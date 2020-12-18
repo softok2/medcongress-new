@@ -55,9 +55,38 @@
 							{% csrf_token %}
 							<div class="form-body">
 								<div class="row">
-									<div class="col-md-12">
+									<div class="col-md-4">
+										<div class="form-group">
+											{%if imagen_seg_url%}	
+											<label ><b>Imagen Actual </b> </label>		
+											<figure class="col-lg-3 col-md-6 col-12" itemprop="associatedMedia" itemscope="" ></figure>
+												<a href="{{imagen_seg_url}}" itemprop="contentUrl" data-size="480x360">
+													<img class="img-thumbnail img-fluid" src="{{imagen_seg_url}}" itemprop="thumbnail" alt="Image description" >
+														</a> 
+						
+													  </figure>
+
+											<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva Imagen</b> </label>
+											{% if form.perfiluser.foto.errors %}
+												<span
+													style="font-size: 15px; color: red;">{{ form.perfiluser.foto.errors }}
+												</span>{% endif %}
+											<input type="file" name="perfiluser-foto" accept="image/*" class=" form-control " id="id_perfiluser-foto">
+											
+											{% else%}
+											<label
+												for="{{form.perfiluser.foto.id_for_label }}"><b>{{form.perfiluser.foto.label }}</b>{% if form.taller.congreso.errors %}
+												<span
+													style="font-size: 15px; color: red;">{{ form.perfiluser.foto.errors }}
+												</span>{% endif %} </label>
+
+												{{form.perfiluser.foto }}
+												{%endif%}
+										</div>
+									</div>
+									<div class="col-md-8">
 										<div class="row">
-											<div class="col-sm-3 ">
+											<div class="col-sm-6 ">
 												<div class="form-group">
 													<label
 														for="{{form.user.first_name.id_for_label }}"><b>{{form.user.first_name.label }}</b>{% if form.user.first_name.errors %}
@@ -68,7 +97,7 @@
 													{{form.user.first_name }}
 												</div>
 											</div>
-											<div class="col-sm-3 ">
+											<div class="col-sm-6 ">
 												<div class="form-group">
 													<label
 														for="{{form.user.last_name.id_for_label }}"><b>{{form.user.last_name.label }}</b>{% if form.user.last_name.errors %}
@@ -79,7 +108,9 @@
 													{{form.user.last_name }}
 												</div>
 											</div>
-											<div class="col-sm-3 ">
+										</div>
+										<div class="row">
+											<div class="col-sm-3 " style="display: none;">
 												<div class="form-group">
 													<label
 														for="{{form.user.username.id_for_label }}"><b>{{form.user.username.label }}</b>{% if form.user.username.errors %}
@@ -90,7 +121,7 @@
 													{{form.user.username }}
 												</div>
 											</div>
-											<div class="col-sm-3 ">
+											<div class="col-sm-6 ">
 												<div class="form-group">
 													<label
 														for="{form.user.email.id_for_label }}"><b>{{form.user.email.label }}</b>{% if form.user.email.errors %}
@@ -101,11 +132,20 @@
 													{{form.user.email}}
 												</div>
 											</div>
+											<div class="col-sm-4 ">
+												<div class="form-group">
+													<label
+														for="{{form.perfiluser.genero.id_for_label }}"><b>{{form.perfiluser.genero.label }}</b>{% if form.perfiluser.genero.errors %}
+														<span style="font-size: 15px; color: red;">{{ form.perfiluser.genero.errors }}
+														</span>{% endif %}</label>
+													{{form.perfiluser.genero }}
+												</div>
+											</div>
 										</div>
 										
 										
 										<div class="row">
-											<div class="col-sm-3 ">
+											<div class="col-sm-4 ">
 												<div class="form-group">
 													<label
 														for="{{form.perfiluser.categoria.id_for_label }}"><b>{{form.perfiluser.categoria.label }}</b>{% if form.perfiluser.categoria.errors %}
@@ -116,21 +156,8 @@
 													{{form.perfiluser.categoria }}
 												</div>
 											</div>
-											<div class="col-sm-3 ">
-												<div class="form-group">
-													<label
-														for="{{form.perfiluser.genero.id_for_label }}"><b>{{form.perfiluser.genero.label }}</b>{% if form.perfiluser.genero.errors %}
-														<span style="font-size: 15px; color: red;">{{ form.perfiluser.genero.errors }}
-														</span>{% endif %}</label>
-													{{form.perfiluser.genero }}
-												</div>
-											</div>
-				
 											
-				
-										</div>
-										<div class="row">
-											<div class="col-sm-3 " id="esp_div">
+											<div class="col-sm-4 " id="esp_div">
 												<div class="form-group">
 													<label
 														for="{{form.perfiluser.especialidad.id_for_label }}"><b>{{form.perfiluser.especialidad.label }}</b>{% if form.perfiluser.especialidad.errors %}
@@ -140,7 +167,7 @@
 													{{form.perfiluser.especialidad }}
 												</div>
 											</div>
-											<div class="col-sm-3 " id="cel_prof">
+											<div class="col-sm-4 " id="cel_prof">
 												<div class="form-group">
 													<label
 														for="{{form.perfiluser.cel_profecional.id_for_label }}"><b>{{form.perfiluser.cel_profecional.label }}</b>{% if form.perfiluser.cel_profecional.errors %}
@@ -153,6 +180,8 @@
 											</div>
 										
 										</div>
+									</div>
+								</div>
 										<div class="row">
 											<div class="col-sm-8" >
 												<div class="form-group">
@@ -232,7 +261,225 @@
 												</div>
 	
 											</div>
-											
+											<!-- META DATOS -->
+										<div class="modal fade bs-example-modal-lg" id="meta" tabindex="-1"
+										role="dialog" aria-labelledby="myModalLabel">
+										<div class="modal-dialog  modal-lg" role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+
+													<h4 class="modal-title" id="myModalLabel">Meta datos de este
+														Usuario</h4>
+													<button type="button" class="close" data-dismiss="modal"
+														aria-label="Close"><span
+															aria-hidden="true">&times;</span></button>
+												</div>
+												<div class="modal-body">
+													<section id="configuration">
+														<div class="row">
+															<div class="col-12">
+																<div class="card">
+
+
+																	<div class="card-content collapse show">
+																		<div class="card-body card-dashboard">
+
+																			<div class="row">
+																				<div class="col-sm-4">
+																					<h5
+																						style="margin-bottom: 10px;">
+																						<b>Metas Principales </b>
+																					</h5>
+																					<div class="form-group">
+																						<label for="">
+																							<b>Título</b></label>
+
+
+																						{{form.perfiluser.meta_title}}
+																					</div>
+																					<div class="form-group">
+																						<label for="">
+																							<b>Descripción</b></label>
+
+																					
+
+																						{{form.perfiluser.meta_description}}
+																					</div>
+																					<div class="form-group">
+																						<label for=""> <b>Palabras
+																								Claves</b><span
+																								id="toggle-method"
+																								data-toggle="tooltip"
+																								data-placement="top"
+																								data-original-title="Palabras separadas por coma(,)">
+																								<i
+																									class="ft ft-info"></i>
+																							</span></label>
+
+																						
+
+																						{{form.perfiluser.meta_keywords}}
+																					</div>
+																				</div>
+																				<div class="col-sm-4">
+																					<h5
+																						style="margin-bottom: 10px;">
+																						<b>Metas para FaceBook </b>
+																					</h5>
+																					<div class="form-group">
+																						<label for="">
+																							<b>Título</b></label>
+																						
+
+																						{{form.perfiluser.meta_og_title}}
+																					</div>
+																					<div class="form-group">
+																						<label for="">
+																							<b>Descripción</b></label>
+																					
+																						{{form.perfiluser.meta_og_description}}
+																					</div>
+																					<div class="form-group">
+																						<label for="">
+																							<b>Tipo</b></label>
+																					
+																						{{form.perfiluser.meta_og_type}}
+																					</div>
+																					<div class="form-group">
+																						<label for="">
+																							<b>URL</b></label>
+
+
+																						{{form.perfiluser.meta_og_url}}
+																					</div>
+																					<div class="form-group">
+																						<label for="">
+																							<b>Imagen</b></label>
+
+																						{%if imagen_meta%}
+																						<img src="{{imagen_meta}}"
+																							class="img-responsive"
+																							style="width: 126px; padding: 20px;"
+																							alt=""><br>
+																							<input type="checkbox" name="perfiluser-meta_og_imagen-clear" id="perfiluser-meta_og_imagen-clear_id"> Eliminar
+																							<input type="file" name="perfiluser-meta_og_imagen" accept="image/*" class="form-control " id="id_perfiluser-meta_og_imagen">
+																						{%else%}
+																						{{form.perfiluser.meta_og_imagen}}
+																						{%endif%}
+																					</div>
+																				</div>
+																				<div class="col-sm-4">
+																					<h5
+																						style="margin-bottom: 10px;">
+																						<b> Metas para Redes
+																							Sociales</b>
+																					</h5>
+
+																					<div class="form-group">
+																						<label for="">
+																							<b>Card</b></label>
+
+
+																						{{form.perfiluser.meta_twitter_card}}
+																					</div>
+
+																					<div class="form-group">
+																						<label for="">
+																							<b>Site</b></label>
+
+
+																						{{form.perfiluser.meta_twitter_site}}
+																					</div>
+																					<div class="form-group">
+																						<label for="">
+																							<b>Creador</b></label>
+
+																						{{form.perfiluser.meta_twitter_creator}}
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+
+																	</div>
+																</div>
+															</div>
+														</div>
+													</section>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-default"
+														data-dismiss="modal">Aplicar</button>
+
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<!-- END META DATOS -->
+									<div class="col-md-1"></div>
+											<div class="col-md-3">
+												{% if form.congreso.meta_description.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.congreso.meta_description.errors }}
+													</span>
+													{% endif %} 
+												{% if form.congreso.meta_og_title.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.congreso.meta_og_title.errors }}
+													</span>
+													{% endif %} 
+												{% if form.congreso.meta_og_type.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.congreso.meta_og_type.errors }}
+													</span>
+													{% endif %}
+												{% if form.congreso.meta_og_url.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.congreso.meta_og_url.errors }}
+												</span>
+												{% endif %}
+												{% if form.congreso.meta_title.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{form.congreso.meta_title.errors }}
+												</span>
+												{% endif %}
+												{% if form.congreso.meta_keywords.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.congreso.meta_keywords.errors }}
+													</span>
+													{% endif %} 
+												{% if form.congreso.meta_twitter_card.errors%}
+												<span style="font-size: 15px; color: red;">
+													{{form.congreso.meta_twitter_card.errors}}
+												</span>
+												{% endif %}
+												{% if form.congreso.meta_og_imagen.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.congreso.meta_og_imagen.errors}}
+												</span>
+												{% endif %}
+												{% if form.congreso.meta_twitter_creator.errors%}
+												<span style="font-size: 15px; color: red;">
+													{{form.congreso.meta_twitter_creator.errors}}
+												</span>
+												{% endif %}
+												{% if form.congreso.meta_twitter_site.errors%}
+												<span style="font-size: 15px; color: red;">
+													{{form.congreso.meta_twitter_site.errors}}
+												</span>
+												{% endif %}
+												{% if form.congreso.meta_og_description.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.congreso.meta_og_description.errors }}
+													</span>
+													{% endif %} 
+
+												<button type="button" class="btn btn-link" data-toggle="modal"
+													data-target="#meta">
+													<h6 > Gestionar los Metadatos de este Usuario </h6>
+
+												</button>
+											</div>
 											<div class="col-sm-3 " style="display: none;">
 												<div class="form-group">
 													<label
@@ -259,33 +506,7 @@
 										</div>
 										<div class="row">
 											<div class="col-sm-3 ">
-												<div class="form-group">
-													{%if imagen_seg_url%}	
-													<label ><b>Imagen Actual </b> </label>		
-													<figure class="col-lg-3 col-md-6 col-12" itemprop="associatedMedia" itemscope="" ></figure>
-                                <a href="{{imagen_seg_url}}" itemprop="contentUrl" data-size="480x360">
-                                    <img class="img-thumbnail img-fluid" src="{{imagen_seg_url}}" itemprop="thumbnail" alt="Image description">
-                                </a> 
-                                
-                              </figure>
-	
-													<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva Imagen</b> </label>
-													{% if form.perfiluser.foto.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.perfiluser.foto.errors }}
-														</span>{% endif %}
-													<input type="file" name="perfiluser-foto" accept="image/*" class=" form-control " id="id_perfiluser-foto">
-													
-													{% else%}
-													<label
-														for="{{form.perfiluser.foto.id_for_label }}"><b>{{form.perfiluser.foto.label }}</b>{% if form.taller.congreso.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.perfiluser.foto.errors }}
-														</span>{% endif %} </label>
-	
-														{{form.perfiluser.foto }}
-														{%endif%}
-												</div>
+												
 											</div>
 										</div>
 <div class="row">
@@ -342,8 +563,8 @@
 												</button>
 												
 											</div>
-										</div>
-									</div>
+										
+									
 								</div>
 							</div>
 						</form>

@@ -79,7 +79,8 @@ $(function() {
 $('#id_my_user').change(function(){
 	email=$('#id_my_user').val()
 $("#id_user option:contains('"+email+"')").attr("selected",true);
-
+if ($("#id_user option:selected").text()!= email) 
+            $("#id_user").val('')
 });
 
 	});
