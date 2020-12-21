@@ -6,7 +6,7 @@ AddCart,AddCartTaller,DeletedCart,ConfCart,AvisoPrivacidad,HabilitarUser,Perfil,
 GetCuestionario,SetConstancia,EvaluarPonencia,Resultado_Cuestionario,Get_Constancia,VerTransaccion,GetFactura,
 ViewErrorFact,PerfilUpdateView,CambiarPass,UpdateEvaluarPonencia,UserAutocomplete,ViewErrorRegistrar,RegistroExitoso,
 PonenteAutocomplete,ModeradorAutocomplete,CongresoAutocomplete,PatrocinadorAutocomplete,SocioAutocomplete,ViewTaller,
-EvaluarTaller,UpdateEvaluarTaller)
+EvaluarTaller,UpdateEvaluarTaller,TallerAutocomplete)
 
 urlpatterns = [
     
@@ -33,6 +33,8 @@ urlpatterns = [
     path('ponente_autocomp', PonenteAutocomplete , name='Ponente_autocomp'),
     path('moderador_autocomp', ModeradorAutocomplete , name='Moderador_autocomp'),
     path('congreso_autocomp', CongresoAutocomplete , name='Congreso_autocomp'),
+    path('taller_autocomp', TallerAutocomplete , name='Taller_autocomp'),
+    
     path('patrocinador_autocomp', PatrocinadorAutocomplete , name='Patrocinador_autocomp'),
     path('socio_autocomp', SocioAutocomplete , name='Socio_autocomp'),
     path('add_cart', AddCart.as_view() , name='Add_cart'),

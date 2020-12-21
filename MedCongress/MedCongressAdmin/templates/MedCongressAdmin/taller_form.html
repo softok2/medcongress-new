@@ -196,8 +196,8 @@
 													{{form.ubicacion.latitud }}
 												</div>
 											</div>
-											<div class="col-sm-3 ">
-												<div class="form-group" {%if con %} style="display: none;" {%endif%}>
+											<div class="col-sm-3 "{%if con %} style="display: none;" {%endif%}>
+												<div class="form-group" >
 													<label
 														for="{{form.taller.congreso.id_for_label }}"><b>{{form.taller.congreso.label }}</b>{% if form.taller.congreso.errors %}
 														<span
@@ -207,8 +207,8 @@
 													{{form.taller.congreso }}
 												</div>
 											</div>
-											<div class="col-sm-3 ">
-												<div class="form-group" {%if bloque %} style="display: none;" {%endif%}>
+											<div class="col-sm-3 " {%if bloque %} style="display: none;" {%endif%}>
+												<div class="form-group">
 
 
 													<label

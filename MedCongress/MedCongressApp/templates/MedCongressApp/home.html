@@ -189,12 +189,7 @@ Inicio
 									<h2>{{congreso.titulo}}</h2>{%if congreso.sub_titulo %}<h2 class="mi_h2">
 										{{congreso.sub_titulo }}</h2> {%endif%}
 
-									<div class="button-holder" style="padding-top: 30px;">
-										<a href="{% url 'View_congreso' congreso.path %}#programas"
-											class="button">Programa</a>
-										<a href="{% url 'View_congreso' congreso.path %}#pagos"
-											class="button">Inscripción</a>
-									</div>
+									
 								</div>
 							</div>
 						</div>
@@ -398,16 +393,16 @@ Inicio
 		</div>
 		<div class="row">
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-				<form class="contactusform" action="#">
-
+				<form class="contactusform" action="" method="POST" id="form">
+					{% csrf_token %}
 					<div class="row">
 						<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-							<input type="text" placeholder="Nombre">
-							<input type="email" placeholder="Email">
-							<input type="text" placeholder="Asunto">
+							<input type="text" required placeholder="Nombre" id="nombre" name="nombre">
+							<input type="email" required placeholder="Email" id="email" name="email">
+							<input type="text" required placeholder="Asunto" id="asunto" name="asunto">
 						</div>
 						<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-							<textarea name="Message" cols="30" rows="10" placeholder="Mensaje"></textarea>
+							<textarea name="Message" required cols="30" rows="10" placeholder="Mensaje"></textarea>
 							<input type="submit" value="Enviar" name="submit">
 						</div>
 					</div>
@@ -460,6 +455,13 @@ Inicio
 <script>
 
 	$(function () {
+
+		$('form').submit(function(event) { // o el id de tu formulario
+        if($('#id_congreso').val() == '') {
+            swal("Cancelado", "No existe ese congreso.", "error");
+            return false;
+        }
+    })
 		$("#especialidad").autocomplete({
 			source: "{% url 'Especialidades_autocomp'%}",
 			minLength: 3,

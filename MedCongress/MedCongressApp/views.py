@@ -3,6 +3,7 @@ import os
 from collections import namedtuple
 from datetime import date,datetime
 import openpay
+from django.core.mail import send_mail
 import requests
 from django.template import RequestContext
 from django.contrib import auth
@@ -88,6 +89,21 @@ class Home(TemplateView):
         context['ofrecemos'] = Ofrecemos.objects.all()
         context['metadatos']= MetaPagInicio.objects.all().first()
         return context
+    def post(self, request, **kwargs):
+        # subject = self.request.POST['asunto']
+        # html_message = ''
+        # plain_message = self.request.POST['Message']
+        # from_email = self.request.POST['email']
+        # to = 'dennis.molinetg@gmail.com'
+        # mail.send_mail(subject, plain_message, from_email, [to],html_message=html_message)
+        send_mail(
+                "<html><body>Dennis</body></html>", # El usuario escribe el mensaje.
+                'asunto',
+                'dennis.molinetg@gmail.com', # El destino.
+                ['mislenis.morenop@gmail.com'],
+                fail_silently=False,
+                )
+        return HttpResponse('csddfbdgnfg')
 @method_decorator(login_required,name='dispatch')
 class PagoExitoso(TemplateView):
     template_name= 'MedCongressApp/pago_satifactorio.html'
@@ -504,6 +520,7 @@ class CongresoDetail(TemplateView):
             context['preg_frecuentes']=PreguntasFrecuentes.objects.filter(congreso=congreso,published=True)
 
         return context
+    
 
 ##### Formulario Tarjeta Pagar Congreso #####
 
@@ -816,6 +833,23 @@ def CongresoAutocomplete(request):
         data = json.dumps(results)
     mimetype = "application/json"
     return HttpResponse(data, mimetype)
+
+##### Autocompletar Talleres #####
+
+def TallerAutocomplete(request):
+    if request.is_ajax():
+        query = request.GET.get("term", "")
+        talleres=Taller.objects.filter(titulo__icontains=query)
+        
+        results = []
+        for taller in talleres:
+            place_json = taller.titulo
+            results.append(place_json)
+        data = json.dumps(results)
+    mimetype = "application/json"
+    return HttpResponse(data, mimetype)
+
+
 
 ##### Autocompletar patrocinador #####
 

@@ -7,7 +7,7 @@ Especialidades, TipoCongreso,SocioCongreso)
 
 class GeneroForm(forms.ModelForm):
    
-    
+    denominacion= forms.CharField(label='Denominación')
     class Meta:
         model=Genero
         fields=['denominacion',]
@@ -16,6 +16,10 @@ class GeneroForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields['denominacion'].widget.attrs.update({'class': 'form-control'})  
+
+    
+      
+       
 
 class CatPagoForm(forms.ModelForm):
    

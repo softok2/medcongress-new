@@ -41,12 +41,62 @@
                         </div>
                         <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
+                                <button class="btn btn-info" title="Descargar Exel" onclick="Mostrar()" style="float:right; padding: 3px;margin-left: 10px;">
+                                    <i class="la la-file-excel-o"></i>
+                                </button>
                                 <button id="add-btn" type="button" class="btn btn-success" title="Asignar pago de un Taller a un Usuario" 
                                     style="float:right; padding: 3px;">
                                     <i class="la la-plus"></i>
                                 </button>
                                 <div class="clearfix"></div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="row card-content collapse show" style="display: none;" id='mostrar'>
+                         
+                                
+                           
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6" style="float: right;">
+                            
+                            <form id="form" method="POST" action="{%url 'MedCongressAdmin:Rep_RelTallerUser'%}">
+                                {% csrf_token %}
+                                <div class="form-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+
+                                            <div class="col-sm-12 ">
+                                                <div class="form-group">
+                                                    <label for="{{form.taller.id_for_label }}"><b>Filtre
+                                                            Taller</b>{% if form.taller.errors %}
+                                                        <span
+                                                            style="font-size: 15px; color: red;">{{ form.taller.errors }}
+                                                        </span>{% endif %} </label>
+                                                    <div style="display: none;">
+                                                        {{form.taller}}
+                                                    </div>
+                                                    <input type="text" name="my_user" class="form-control" required=""
+                                                        id="id_my_user">
+
+                                                </div>
+                                            </div>
+
+
+
+                                            </fieldset>
+                                            <div class="form-actions">
+                                                <div class="text-right">
+
+                                                    <button id="save" type="submit" class="btn btn-primary">Exportar
+                                                        <i class="la la-file-excel-o position-right"></i>
+                                                    </button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -120,12 +170,30 @@
 </div>
 {% endblock %}
 {% block scripts %}
+<link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
+<script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/extensions/sweetalert.min.js' %}"></script>
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/tables/datatable/datatables.min.js' %}"></script>
 
 <script type="text/javascript">
     $(document).ready(function () {
-        
+        $('form').submit(function(event) { // o el id de tu formulario
+        if($('#id_taller').val() == '') {
+            swal("Cancelado", "No existe ese taller.", "error");
+            return false;
+        }
+    })
+        $("#id_my_user").autocomplete({
+            source: "{% url 'Taller_autocomp'%}",
+            minLength: 3,
+        });
+        $('#id_my_user').change(function () {
+            email = $('#id_my_user').val()
+            $("#id_taller option:contains('" + email + "')").attr("selected", true);
+            if ($("#id_taller option:selected").text()!= email) 
+            $("#id_taller").val('')
+
+        });
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({
             beforeSend: function (xhr, settings) {
@@ -174,5 +242,29 @@
                 }
             });
     }
+    function Mostrar(){
+$('#mostrar').toggle();
+
+ }
+ function DescragarExel() {
+
+
+$.ajax({
+    type: "GET",
+    url: "{% url 'MedCongressAdmin:Rep_RelTallerUser'%}",
+    data: {
+        'taller': $('#id_taller').val()// from form
+    },
+    success: function (data) {
+        if (data['succes']) {
+            swal("Cancelado", "No existe ese taller.", "error");
+        }
+       
+           
+    }
+});
+
+
+}
 </script>
 {% endblock %}

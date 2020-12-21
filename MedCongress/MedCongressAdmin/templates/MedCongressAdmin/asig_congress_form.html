@@ -49,12 +49,17 @@
 									
 										<div class="col-sm-3">
 											<div class="form-group">
-												<label
-													for="{{form.congreso.id_for_label }}"><b>{{form.congreso.label }}</b>{% if form.congreso.errors %}
-													<span style="font-size: 15px; color: red;">{{ form.congreso.errors }}
+												<label for="{{form.congreso.id_for_label }}"><b>Filtre
+														Congreso</b>{% if form.congreso.errors %}
+													<span
+														style="font-size: 15px; color: red;">{{ form.congreso.errors }}
 													</span>{% endif %} </label>
+												<div style="display: none;">
+													{{form.congreso}}
+												</div>
+												<input type="text" name="my_congress" class="form-control" required=""
+													id="id_my_congress">
 
-												{{form.congreso }}
 											</div>
 										</div>
 										
@@ -117,6 +122,23 @@ $(function() {
 		source: "{% url 'User_autocomp'%}",
 		minLength: 3,
 	  });
+	  $('#id_my_user').change(function () {
+			email = $('#id_my_user').val()
+			$("#id_user option:contains('" + email + "')").attr("selected", true);
+			if ($("#id_user option:selected").text() != email)
+				$("#id_user").val('')
+		});
+	  $("#id_my_congress").autocomplete({
+            source: "{% url 'Congreso_autocomp'%}",
+            minLength: 3,
+        });
+        $('#id_my_congress').change(function () {
+            email = $('#id_my_congress').val()
+            $("#id_congreso option:contains('" + email + "')").attr("selected", true);
+            if ($("#id_congreso option:selected").text()!= email) 
+            $("#id_congreso").val('')
+
+        });
 	});
 	$(document).ready(function () {
 

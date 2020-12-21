@@ -21,7 +21,8 @@ from .views.ponencia_view import (PonenciaListView, PonenciaCreateView,PonenciaP
                                    PonenciaPonenteDeletedView,PonenciaBloqueDeleted)
 from .views.taller_view import (TalleresListView,TallerCreateView,TallerCategPagosListView,TallerCategPagosCreateView,
                                    TallerUpdateView,TallerPonenteListView,TallerPonenteCreateView,TallerDeletedView,AsignarTalleresListView,
-                                   AsignarTallerAddViews,GetPagosT,AsignarTallerDeletedViews,TallerPonenteDeletedView,TallerBloqueDeleted)
+                                   AsignarTallerAddViews,GetPagosT,AsignarTallerDeletedViews,TallerPonenteDeletedView,TallerBloqueDeleted,
+                                   ReporteRelTallerUserExcel)
 from .views.ponente_view import (PonentesListView,PonentesCreateView,PonenteDeletedView)
 from .views.user_views import (UsuariosListView,UsuarioCreateView,UsuarioUpdateView,UsuarioDeletedView,UsuarioAsigCongresoView)
 from .views.bloque_views import (BloquesListView,BloqueCreateView,BloqueDeletedView,BloquePonenciasListView,BloqueTalleresListView,
@@ -215,6 +216,7 @@ urlpatterns = [
 
      #Reportes
      path('reporte_congreso_user', ReporteRelCongresoUserExcel.as_view(), name='Rep_RelCongresoUser'),
+      path('reporte_taller_user', ReporteRelTallerUserExcel.as_view(), name='Rep_RelTallerUser'),
      
       # Genero
      path('generos', GeneroListView.as_view(), name='generos_list'),

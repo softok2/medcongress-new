@@ -1,23 +1,37 @@
 import json
-from django import forms
+
 import pandas as pd
+from django import forms
 from django.contrib import messages
-from django.http import HttpResponseBadRequest, HttpResponseRedirect
-from django.urls import reverse_lazy,reverse
-from django.utils.crypto import get_random_string
-from django.db.models import Sum
-from django.shortcuts import render
-from django.contrib import messages
-from django.http import HttpResponse, HttpResponseRedirect,JsonResponse
-from django.views.generic import ListView,TemplateView
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.views.generic.edit import CreateView, DeleteView, UpdateView,FormView
-from MedCongressApp.models import (Congreso,Taller,Ponencia,RelCongresoCategoriaPago,ImagenCongreso,Ubicacion
-                                    ,Bloque,RelCongresoUser,RelCongresoCategoriaPago,CuestionarioPregunta,CuestionarioRespuestas,PreguntasFrecuentes,
-                                    CategoriaPagoCongreso,User,PerfilUsuario,Ponente,RelCongresoAval,AvalCongreso,SocioCongreso,RelCongresoSocio)
-from MedCongressAdmin.forms.congres_forms import CongresoForms,PonenciaForms,CongresoCategPagoForm,AsignarCongresoForms,ImagenCongForms,ExportarExelForm,CongresoPatrocinadorForm,CongresoSocioForm
+from django.db.models import Sum
+from django.http import (HttpResponse, HttpResponseBadRequest,
+                         HttpResponseRedirect, JsonResponse)
+from django.shortcuts import render
+from django.urls import reverse, reverse_lazy
+from django.utils.crypto import get_random_string
+from django.views.generic import ListView, TemplateView
+from django.views.generic.edit import (CreateView, DeleteView, FormView,
+                                       UpdateView)
+from MedCongressAdmin.forms.congres_forms import (AsignarCongresoForms,
+                                                  CongresoCategPagoForm,
+                                                  CongresoForms,
+                                                  CongresoPatrocinadorForm,
+                                                  CongresoSocioForm,
+                                                  ExportarExelForm,
+                                                  ImagenCongForms,
+                                                  PonenciaForms)
+from MedCongressApp.models import (AvalCongreso, Bloque, CategoriaPagoCongreso,
+                                   Congreso, CuestionarioPregunta,
+                                   CuestionarioRespuestas, ImagenCongreso,
+                                   PerfilUsuario, Ponencia, Ponente,
+                                   PreguntasFrecuentes, RelCongresoAval,
+                                   RelCongresoCategoriaPago, RelCongresoSocio,
+                                   RelCongresoUser, SocioCongreso, Taller,
+                                   Ubicacion, User)
 from openpyxl import Workbook
-from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection, Font
+from openpyxl.styles import (Alignment, Border, Font, PatternFill, Protection,
+                             Side)
 
 
 class ReporteRelCongresoUserExcel(TemplateView):
@@ -34,7 +48,7 @@ class ReporteRelCongresoUserExcel(TemplateView):
         ws = wb.active
        
 		#En la celda B1 ponemos el texto 'REPORTE DE PERSONAS'
-        ws['B1'] = 'Usuarios que han comprado Congresos'
+        ws['B1'] = 'Usuarios que han comprado el Congresos %s'%(query[0]['congreso__titulo'])
         ws['B1'].font = Font(size=12,bold=True)
         ws['B1'].alignment = Alignment(mergeCell='center',horizontal='center') 
         

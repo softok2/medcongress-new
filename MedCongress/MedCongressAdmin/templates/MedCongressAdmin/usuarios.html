@@ -81,13 +81,13 @@
                                                 
                                                 <td style="text-align: center;">
                                                     <a href="{% url 'MedCongressAdmin:usuario_edit' pk=user.pk %}"
-                                                    title="Editar"><i class="la la-pencil-square"></i></a>
+                                                    title="Editar"><i class="icon icon-editar"></i></a>
                                                     <a href="{% url 'MedCongressAdmin:asig_congreso' pk=user.pk %}"
-                                                    title="Asignar Congreso"><i class="la la-cart-plus"></i></a>
+                                                    title="Asignar Congreso"><i class="icon-asignar_congreso"></i></a>
                                                     <a id="del_{{ user.usuario.pk  }}"
                                                         href="javascript:deleteItem('{{ user.usuario.pk }}')"
                                                         title="Eliminar">
-                                                        <i class="la la-trash text-danger"></i>
+                                                        <i class="icon icon-eliminar"></i>
                                                     </a>
                                                     
                                                     

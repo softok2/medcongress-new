@@ -496,7 +496,7 @@ class AsignarTallerForms(forms.ModelForm):
     is_pagado=forms.BooleanField(label='Pagó el Taller')
     class Meta:
         model=RelTallerUser
-        fields=['user','taller','categoria_pago','is_pagado']
+        fields=['user','taller','categoria_pago','is_pagado','cantidad']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
@@ -504,7 +504,8 @@ class AsignarTallerForms(forms.ModelForm):
         self.fields['user'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['taller'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['categoria_pago'].widget.attrs.update({'class': 'form-control','rows':'3'})   
-        self.fields['is_pagado'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['is_pagado'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['cantidad'].widget.attrs.update({'class': 'form-control'})    
           
 class ModeradorBloqueForm(forms.ModelForm):
     moderador=forms.ModelChoiceField(queryset=Moderador.objects.all(),label='Moderador',required=False)
@@ -675,8 +676,26 @@ class ExportarExelForm(forms.ModelForm):
         congreso = cleaned_data.get('congreso', None)
       
         if not congreso:
-            print(congreso)
             self.add_error('congreso','Entre un congreso ')
+
+class ExportarTallerExelForm(forms.ModelForm):
+    
+    taller=forms.ModelChoiceField(queryset=Taller.objects.all(),label='Filtrar Congreso',required=False)
+
+    class Meta:
+        model=RelTallerUser
+        fields=['taller']
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+
+        self.fields['taller'].widget.attrs.update({'class': 'form-control'}) 
+       
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(ExportarTallerExelForm, self).clean(*args, **kwargs)
+        taller = cleaned_data.get('taller', None)
+        if not taller:
+        
+            self.add_error('taller','Entre un taller ')
 
 class CongresoPatrocinadorForm(forms.ModelForm):
     

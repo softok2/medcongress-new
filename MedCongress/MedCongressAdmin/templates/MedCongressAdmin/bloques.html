@@ -80,7 +80,7 @@
                                                     <a id=""
                                                     href="{%url 'MedCongressAdmin:Moderadores_bloque' bloque.path%}"
                                                         title="Ponentes">
-                                                        <i class="la la-user-secret " style= "color: blue;" ></i>
+                                                        <i class="icon icon-moderador" style= "color: blue;" ></i>
                                                     </a></td>
                                                 <td>{{ bloque.fecha_inicio }}</td>
                                                 
@@ -89,21 +89,21 @@
                                                     href="{%url 'MedCongressAdmin:Bloque_ponencias' bloque.path%}"
                                                     
                                                     title="Ponencias ">
-                                                    <i class="la la-graduation-cap " style="color:yellowgreen;"> </i>
+                                                    <i class="icon icon-ponencia " > </i>
                                                 </a>
                                                 <a id=""
                                                      href="{%url 'MedCongressAdmin:Bloque_talleres' bloque.path%}"
                                                     title="Talleres " style="margin-left: 10px;">
-                                                    <i class="la la-hdd-o " style="color:rgb(40, 4, 124);"> </i>
+                                                    <i class="icon icon-taller " > </i>
                                                 </a></td>
                                                 
                                                 <td style="text-align: center;">
                                                     <a href="{% url 'MedCongressAdmin:bloque_edit' pk=bloque.pk %}"
-                                                        title="Editar"><i class="la la-pencil-square"></i></a>
+                                                        title="Editar"><i class="icon icon-editar"></i></a>
                                                     <a id="del_{{ congres.pk }}"
                                                         href="javascript:deleteItem('{{ bloque.pk }}')"
                                                         title="Eliminar">
-                                                        <i class="la la-trash text-danger"></i>
+                                                        <i class="icon icon-eliminar"></i>
                                                     </a>
                                                        
                                                 </td>
