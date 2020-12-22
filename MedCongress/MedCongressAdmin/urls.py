@@ -14,7 +14,8 @@ from .views.congress_views import (CongressListView,CongressCreateView,CongressU
                                    CongressDeletedView,CongressBloquesListView,GetBloques,AsignarCongressListView,AsignarCongressAddViews,GetPagos,
                                    AsignarCongressDeletedViews,CongressImagenCreateView,CongressCuestionarioListView,CongressPregFrecuenteListView,
                                    Ver_usuarios,Ver_Exel,Exportar_usuarios,Usuarios_pagaron,ReporteRelCongresoUserExcel,CongressPatrocinadorListView,
-                                   PatrocinadorSeleccionarView,PatrocinadorSeleccionarDeleted, SocioSeleccionarView,SocioSeleccionarDeleted,CongressSocioListView,CongressImagenDeletedView)
+                                   PatrocinadorSeleccionarView,PatrocinadorSeleccionarDeleted, SocioSeleccionarView,SocioSeleccionarDeleted,CongressSocioListView,
+                                   CongresoDetail,CongressImagenDeletedView)
 from .views.imagen_views import (ImagenCreateView)
 from .views.ponencia_view import (PonenciaListView, PonenciaCreateView,PonenciaPonenteListView,
                                    PonencicaUpdateView,PonenciaPonenteCreateView,PonenciaDeletedView,
@@ -66,6 +67,7 @@ urlpatterns = [
      path('congreso/adicionar', CongressCreateView.as_view(), name='congres_add'),
      path('congreso/editar/<int:pk>', CongressUpdateView.as_view(), name='congres_edit'),
      path('congreso/eliminar/<int:pk>', CongressDeletedView.as_view(), name='congress_delete'),
+      path('congreso/previsualizar/<str:path>', CongresoDetail.as_view(), name='congress_previsualizar'),
 
      # Pagar Congresos
      path('asignar/congreso', AsignarCongressListView.as_view(), name='asig_congress_list'),

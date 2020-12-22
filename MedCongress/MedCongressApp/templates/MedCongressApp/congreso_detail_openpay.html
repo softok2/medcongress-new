@@ -551,20 +551,12 @@
                             <div class="col-md-4 {{forloop.counter}}">
                                 <!-- KODE_EVENT_BLOG2 START-->
                                 <div class="kode-event-blog3">
-                                    <a href="{% url 'View_ponencia' ponencia.path %}" class="">
+                                   
                                         <figure>
-                                            <img src="{% static '/'%}{{ponencia.imagen}}" alt="" />
-
-
-                                            <div class="kode-fig-capstion">
-                                                <a
-                                                    href="{% url 'View_ponencia' ponencia.path  %}">{{ponencia.titulo }}</a>
-                                                {%if ponencia.detalle%} <p style="font-style: italic;">
-                                                    {{ponencia.detalle|truncatewords:10 }}</p>{%endif%}
-                                            </div>
+                                            {{ponencia.cod_video|safe }}
 
                                         </figure>
-                                    </a>
+                                  
                                     <div class="kode-thumb-caption">
                                         <a href="{% url 'View_ponencia' ponencia.path %}">
                                             <h4>{{ponencia.titulo }}</h4>
@@ -615,20 +607,11 @@
                             <div class="col-md-4 {{forloop.counter}}">
                                 <!-- KODE_EVENT_BLOG2 START-->
                                 <div class="kode-event-blog3">
-                                    <a href="{% url 'View_taller' ponencia.path %}" class="">
+                                   
                                         <figure>
-                                            <img src="{% static '/'%}{{ponencia.imagen}}" alt="" />
-
-
-                                            <div class="kode-fig-capstion">
-                                                <a
-                                                    href="{% url 'View_taller' ponencia.path  %}">{{ponencia.titulo }}</a>
-                                                {%if ponencia.detalle%} <p style="font-style: italic;">
-                                                    {{ponencia.detalle|truncatewords:10 }}</p>{%endif%}
-                                            </div>
-
+                                            {{ponencia.cod_video|safe }}
                                         </figure>
-                                    </a>
+                                   
                                     <div class="kode-thumb-caption">
                                         <a href="{% url 'View_taller' ponencia.path %}">
                                             <h4>{{ponencia.titulo }}</h4>

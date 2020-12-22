@@ -40,10 +40,12 @@
                         </div>
                         <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
+                               
                                 <button id="add-btn" type="button" class="btn btn-success" title="Nuevo" onclick="add()"
                                     style="float:right; padding: 3px;">
                                     <i class="la la-plus"></i>
                                 </button>
+                               
                                 <div class="clearfix"></div>
                             </div>
                         </div>
@@ -138,7 +140,15 @@
         });
 
         $('#add-btn').click(function () {
+            {%if congres%}
+            location.href = "{% url 'MedCongressAdmin:ponente_ponencia_add' pk=congres.pk %}";
+            
+            {%elif bloc%}
+            location.href = "{% url 'MedCongressAdmin:ponencia_bloque_add' pk_block=bloc.pk %}";
+           {%else%}
+
             location.href = "{% url 'MedCongressAdmin:ponencia_add' %}";
+            {%endif%}
         });
 
         dataTable = $('.zero-configuration').DataTable();
