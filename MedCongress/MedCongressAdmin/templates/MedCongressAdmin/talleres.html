@@ -145,7 +145,15 @@
         });
 
         $('#add-btn').click(function () {
-            location.href = "{% url 'MedCongressAdmin:taller_add' %}";
+            {%if congres%}
+            location.href = "{% url 'MedCongressAdmin:ponente_ponencia_add' pk=congres.pk %}";
+            
+            {%elif bloc%}
+            location.href = "{% url 'MedCongressAdmin:ponencia_bloque_add' pk_block=bloc.pk %}";
+           {%else%}
+
+            location.href = "{% url 'MedCongressAdmin:ponencia_add' %}";
+            {%endif%}
         });
 
         dataTable = $('.zero-configuration').DataTable();

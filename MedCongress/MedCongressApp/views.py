@@ -849,8 +849,6 @@ def TallerAutocomplete(request):
     mimetype = "application/json"
     return HttpResponse(data, mimetype)
 
-
-
 ##### Autocompletar patrocinador #####
 
 def PatrocinadorAutocomplete(request):

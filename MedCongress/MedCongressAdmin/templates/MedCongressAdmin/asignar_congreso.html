@@ -126,18 +126,18 @@
                                         <tbody>
                                             {% for congres in congress %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
-                                                <td class="sorting_1">{{ congres.user.usuario.first_name }}
+                                                <td class="sorting_1" style="vertical-align: middle;">{{ congres.user.usuario.first_name }}
                                                     {{ congres.user.usuario.last_name}}</td>
-                                                <td>{{ congres.user.usuario.email}}</td>
-                                                <td>{{ congres.congreso.titulo}}</td>
+                                                <td style="vertical-align: middle;">{{ congres.user.usuario.email}}</td>
+                                                <td style="vertical-align: middle;">{{ congres.congreso.titulo}}</td>
                                                 {%if congres.cantidad%}
-                                                <td>{{ congres.cantidad}}</td>
+                                                <td style="vertical-align: middle;">{{ congres.cantidad}}</td>
                                                 {%else%}
-                                                <td>1</td>
+                                                <td style="vertical-align: middle;">1</td>
                                                 {%endif%}
-                                                <td>{{ congres.categoria_pago.nombre}}</td>
-                                                <td>{%if congres.is_pagado%}Si{%else%}No{%endif%}</td>
-                                                <td> <a id="del_{{ congres.pk }}"
+                                                <td style="vertical-align: middle;">{{ congres.categoria_pago.nombre}}</td>
+                                                <td style="vertical-align: middle;">{%if congres.is_pagado%}Si{%else%}No{%endif%}</td>
+                                                <td style="vertical-align: middle;"> <a id="del_{{ congres.pk }}"
                                                         href="javascript:deleteItem('{{ congres.pk }}')"
                                                         title="Eliminar">
                                                         <i class="icon icon-eliminar"></i>

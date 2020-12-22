@@ -152,7 +152,8 @@
 			{%else%}
 			location.href = "{% url 'MedCongressAdmin:bloques_list' %}";
 			{%endif%}
-        });
+		});
+		
 		{%if con %}
 		$("#id_congreso option[value='{{con.id}}']").attr("selected",true);
 		{%endif%}

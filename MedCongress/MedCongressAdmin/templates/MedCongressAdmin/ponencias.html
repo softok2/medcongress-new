@@ -40,7 +40,14 @@
                         </div>
                         <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
-                               
+                                {%if congres%} <button id="select-for_congreso_btn" type="button" class="btn btn-warning" title="Seleccionar Ponencia Existente" 
+                                style="float:right;padding: 5px;margin-left: 10px;">
+                                <i class="ft  ft-server"></i>
+                            </button> {%endif%}
+                            {%if bloc%} <button id="select-for_block_btn" type="button" class="btn btn-warning" title="Seleccionar Ponencia Existente" 
+                                style="float:right;padding: 5px;margin-left: 10px;">
+                                <i class="ft  ft-server"></i>
+                            </button> {%endif%}
                                 <button id="add-btn" type="button" class="btn btn-success" title="Nuevo" onclick="add()"
                                     style="float:right; padding: 3px;">
                                     <i class="la la-plus"></i>

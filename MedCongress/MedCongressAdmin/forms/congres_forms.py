@@ -386,7 +386,7 @@ class PerfilUserForm(forms.ModelForm):
     fecha_nacimiento=forms.DateField(required=False,label='Fecha de Nacimiento')
     genero=forms.ModelChoiceField(queryset=Genero.objects.all(), label='Género')
     
-    categoria=forms.ModelChoiceField(queryset=CategoriaUsuario.objects.filter(published=True),label='Categoría')
+    categoria=forms.ModelChoiceField(queryset=CategoriaUsuario.objects.all(),label='Categoría')
    
     class Meta:
         model=PerfilUsuario
@@ -435,7 +435,7 @@ class BloqueForms(forms.ModelForm):
     titulo=forms.CharField(label='Título')
     duracion=forms.CharField(label='Duración')
     published=forms.BooleanField(label='Publicado')
-    congreso=forms.ModelChoiceField(queryset=Congreso.objects.filter(published=True),label='Congreso')
+    congreso=forms.ModelChoiceField(queryset=Congreso.objects.all(),label='Congreso')
    
     
     class Meta:
@@ -552,7 +552,7 @@ class ImagenCongForms(forms.ModelForm):
             self.add_error('imagen',"Esta imagen tiene %s X %s pixel. Debe ser de 1920 X 1080 pixel" %(w,h) )
 
 class PreguntaForm(forms.ModelForm):
-    congreso=forms.ModelChoiceField(queryset=Congreso.objects.filter(published=True),label='Congreso')
+    congreso=forms.ModelChoiceField(queryset=Congreso.objects.all(),label='Congreso')
     published=forms.BooleanField(label='Publicada',required=False)
 
 
