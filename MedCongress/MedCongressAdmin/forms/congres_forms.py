@@ -747,3 +747,14 @@ class CongresoSocioForm(forms.ModelForm):
 
         if RelCongresoSocio.objects.filter(congreso=congreso,socio=socio).exists():
             self.add_error('socio', 'Este Socio ya esta asociado a este congreso')
+
+
+class SelectPonencia(forms.Form):
+    ponencia=forms.ModelChoiceField(queryset=Ponencia.objects.all(),required=False)
+    def __init__(self, *args, **kwargs):
+        self.path = kwargs.pop('path', None)
+        super().__init__(*args, **kwargs) 
+        bloque=Bloque.objects.filter(path=self.path).first()
+        ponencia=forms.ModelChoiceField(queryset=Ponencia.objects.filter(congreso=bloque.congreso),required=False)
+        self.fields['ponencia'].widget.attrs.update({'class': 'form-control'}) 
+        

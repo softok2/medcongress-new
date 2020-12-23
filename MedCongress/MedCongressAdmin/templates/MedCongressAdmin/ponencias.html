@@ -40,11 +40,8 @@
                         </div>
                         <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
-                                {%if congres%} <button id="select-for_congreso_btn" type="button" class="btn btn-warning" title="Seleccionar Ponencia Existente" 
-                                style="float:right;padding: 5px;margin-left: 10px;">
-                                <i class="ft  ft-server"></i>
-                            </button> {%endif%}
-                            {%if bloc%} <button id="select-for_block_btn" type="button" class="btn btn-warning" title="Seleccionar Ponencia Existente" 
+                               
+                            {%if bloque%} <button id="select-btn" type="button" class="btn btn-warning" title="Seleccionar Ponencia Existente" 
                                 style="float:right;padding: 5px;margin-left: 10px;">
                                 <i class="ft  ft-server"></i>
                             </button> {%endif%}
@@ -150,14 +147,19 @@
             {%if congres%}
             location.href = "{% url 'MedCongressAdmin:ponente_ponencia_add' pk=congres.pk %}";
             
-            {%elif bloc%}
-            location.href = "{% url 'MedCongressAdmin:ponencia_bloque_add' pk_block=bloc.pk %}";
+            {%elif bloque%}
+            location.href = "{% url 'MedCongressAdmin:ponencia_bloque_add' pk_block=bloque.pk %}";
            {%else%}
 
             location.href = "{% url 'MedCongressAdmin:ponencia_add' %}";
             {%endif%}
         });
-
+        {%if bloque%}
+        $('#select-btn').click(function () {
+          
+            location.href = "{% url 'MedCongressAdmin:bloque_ponencia_select' path=bloque.path  %}";
+        });
+        {%endif%}
         dataTable = $('.zero-configuration').DataTable();
     });
     function deleteItem(pk) {

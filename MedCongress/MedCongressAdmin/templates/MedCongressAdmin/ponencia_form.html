@@ -118,6 +118,9 @@
 					<div class="card-body">
 						<form id="congres-form" method="POST" action="" enctype="multipart/form-data">
 							{% csrf_token %}
+							{%if ponencia %}
+							<input type="hidden" name="id" value="{{ponencia.id}}">
+							{%endif%}
 							<div class="form-body">
 								<div class="row">
 									<div class="col-md-12">
@@ -619,9 +622,6 @@
 						for (var i = 0; i < data.length; i++) {
 
 							$('#id_ponencia-bloque').append($("<option></option").attr('value', data[i].id).text(data[i].titulo))
-							{%if update%}
-							$("#id_ponencia-bloque option[value='{{update.id}}']").attr("selected", true);
-							{%endif%}
 							{%if bloque %}
 							$("#id_ponencia-bloque option[value='{{bloque.id}}']").attr("selected", true);
 							{% endif %}
@@ -636,7 +636,7 @@
 
 	
 		});
-		//alert('{{update.id}}');
+		
 	
 	
 		$('#id_ponencia-congreso').change(function () {
@@ -688,6 +688,9 @@
 		
 		{% endif %}
 		{%if bloque %}
+		$("#id_ponencia-bloque option[value='{{bloque.id}}']").attr("selected", true);
+		{% endif %}
+		{%if bloque_update %}
 		$("#id_ponencia-bloque option[value='{{bloque.id}}']").attr("selected", true);
 		{% endif %}
 

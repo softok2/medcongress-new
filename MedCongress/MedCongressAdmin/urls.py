@@ -27,7 +27,8 @@ from .views.taller_view import (TalleresListView,TallerCreateView,TallerCategPag
 from .views.ponente_view import (PonentesListView,PonentesCreateView,PonenteDeletedView)
 from .views.user_views import (UsuariosListView,UsuarioCreateView,UsuarioUpdateView,UsuarioDeletedView,UsuarioAsigCongresoView)
 from .views.bloque_views import (BloquesListView,BloqueCreateView,BloqueDeletedView,BloquePonenciasListView,BloqueTalleresListView,
-                                   BloqueUpdateView,BloqueModeradoresListView,page_not_found,BloqueModeradoresCreateView,BloqueModeradoresDeletedView)
+                                   BloqueUpdateView,BloqueModeradoresListView,page_not_found,BloqueModeradoresCreateView,BloqueModeradoresDeletedView,
+                                   PonenciaSeleccionarView)
 from .views_nomencladores.genero_views import (GeneroListView,GeneroCreateView,GeneroDeletedView,GeneroUpdateView)
 from .views_nomencladores.cat_pago_views import (CatPagoListView,CatPagoCreateView,CatPagoDeletedView,CatPagoUpdateView)
 from .views_nomencladores.patrocinador_views import (PatrocinadorListView,PatrocinadorCreateView,PatrocinadorDeletedView,PatrocinadorUpdateView)
@@ -156,6 +157,7 @@ urlpatterns = [
      # Bloque-Ponencias
      path('ponencias/bloque/<str:path>', BloquePonenciasListView.as_view(), name='Bloque_ponencias'),
      path('ponencia/bloque/add/<int:pk_block>', PonenciaCreateView.as_view(), name='ponencia_bloque_add'),
+    path('bloque_ponencia/seleccionar/<str:path>', PonenciaSeleccionarView.as_view(), name='bloque_ponencia_select'),
     
      # Bloque-talleres
      path('talleres/bloque/<str:path>', BloqueTalleresListView.as_view(), name='Bloque_talleres'),

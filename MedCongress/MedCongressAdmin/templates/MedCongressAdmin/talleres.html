@@ -146,13 +146,13 @@
 
         $('#add-btn').click(function () {
             {%if congres%}
-            location.href = "{% url 'MedCongressAdmin:ponente_ponencia_add' pk=congres.pk %}";
+            location.href = "{% url 'MedCongressAdmin:congreso_taller_add' pk=congres.pk %}";
             
             {%elif bloc%}
-            location.href = "{% url 'MedCongressAdmin:ponencia_bloque_add' pk_block=bloc.pk %}";
+            location.href = "{% url 'MedCongressAdmin:taller_bloque_add' pk_block=bloc.pk %}";
            {%else%}
 
-            location.href = "{% url 'MedCongressAdmin:ponencia_add' %}";
+            location.href = "{% url 'MedCongressAdmin:taller_add' %}";
             {%endif%}
         });
 

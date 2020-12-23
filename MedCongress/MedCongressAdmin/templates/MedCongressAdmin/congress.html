@@ -77,8 +77,8 @@
                                                 
                                                 <!-- <td>{{ congres.t_congreso.nombre }}</td>
                                                 <td>{{ congres.especialidad.nombre }}</td> -->
-                                                <td >{%if congres.published%}Si{%else%}No{%endif%}</td>
-                                                <td > 
+                                                <td style="vertical-align: middle;">{%if congres.published%}Si{%else%}No{%endif%}</td>
+                                                <td style="vertical-align: middle;"> 
                                                     <a id=""
                                                     href="{%url 'MedCongressAdmin:Congres_bloques' congres.path%}"
                                                     title="Bloques " style="margin-left: 5px;">

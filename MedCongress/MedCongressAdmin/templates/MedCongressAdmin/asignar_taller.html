@@ -120,8 +120,8 @@
                                         <tbody>
                                             {% for taller in talleres %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
-                                                <td class="sorting_1">{{ taller.user.usuario.first_name }} {{ taller.user.usuario.last_name}}</td>
-                                                <td>{{ taller.user.usuario.email }}</td>
+                                                <td class="sorting_1" style="vertical-align: middle;">{{ taller.user.usuario.first_name }} {{ taller.user.usuario.last_name}}</td>
+                                                <td style="vertical-align: middle;">{{ taller.user.usuario.email }}</td>
                                                 <td>{{ taller.taller.titulo}}</td>
                                                 {%if taller.cantidad%}
                                                 <td>{{ taller.cantidad}}</td>

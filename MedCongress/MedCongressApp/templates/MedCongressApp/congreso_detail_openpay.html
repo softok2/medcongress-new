@@ -553,8 +553,9 @@
                                 <div class="kode-event-blog3">
                                    
                                         <figure>
-                                            {{ponencia.cod_video|safe }}
-
+                                            <!-- {{ponencia.cod_video|safe }} -->
+                                            <img id="vimeo-{{ponencia.id_video}}" src="" alt="{{ponencia.id_video}}" />
+                                           
                                         </figure>
                                   
                                     <div class="kode-thumb-caption">
@@ -609,7 +610,7 @@
                                 <div class="kode-event-blog3">
                                    
                                         <figure>
-                                            {{ponencia.cod_video|safe }}
+                                            <img id="vimeo-{{ponencia.id_video}}" src="" alt="{{ponencia.id_video}}" />
                                         </figure>
                                    
                                     <div class="kode-thumb-caption">
@@ -985,6 +986,35 @@
 
 <script type="text/javascript">
     jQuery(document).ready(function ($) {
+        
+      {%if ponencias_video%}
+        {% for ponencia_v in ponencias_video %}
+        {% for ponencia in ponencia_v.ponencias %}
+       
+       var url = "http://vimeo.com/api/v2/video/{{ponencia.id_video}}.json?callback=showThumb";
+
+       var id_img = "#vimeo-{{ponencia.id_video}}";
+
+       var script = document.createElement( 'script' );
+       script.src = url;
+
+       $(id_img).before(script);
+       {%endfor%}
+       {% for ponencia in ponencia_v.talleres %}
+       
+       var url = "http://vimeo.com/api/v2/video/{{ponencia.id_video}}.json?callback=showThumb";
+
+       var id_img = "#vimeo-{{ponencia.id_video}}";
+
+       var script = document.createElement( 'script' );
+       script.src = url;
+
+       $(id_img).before(script);
+       {%endfor%}
+    {%endfor%}
+    {%endif%}
+
+    
         $(".back").click(function (event) {
             event.preventDefault();
             $('html,body').animate({ scrollTop: $(this.hash).offset().top }, 500);
@@ -1323,6 +1353,12 @@
 
         });
     }
+    
+function showThumb(data){
+       var id_img = "#vimeo-" + data[0].id;
+       $(id_img).attr('src',data[0].thumbnail_large);
+}
+
     
 </script>
 <script src="{% static 'MedCongressApp/js/bootstrap-rating.js' %}"></script>

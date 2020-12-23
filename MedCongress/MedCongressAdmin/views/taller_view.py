@@ -58,6 +58,11 @@ class  TallerCreateView(validarUser,FormView):
         chars = '0123456789'
         secret_key = get_random_string(5, chars)
         taller.path=path+secret_key
+        id_video=['']
+        if taller.cod_video:
+            id_video=taller.cod_video.split(sep='https://player.vimeo.com/video/')
+            id_video=id_video[-1].split(sep='"')
+        taller.id_video=id_video[0]
         taller.save()
         return super(TallerCreateView, self).form_valid(form)
 
@@ -120,7 +125,7 @@ class  TallerCategPagosCreateView(validarUser,CreateView):
         ctx['cong'] = pon
         return ctx
 
-class TallerUpdateView(validarUser,UpdateView):
+class TallerUpdateView(validarUser,FormView):
     form_class = TallerForms
     success_url = reverse_lazy('MedCongressAdmin:talleres_list')
     template_name = 'MedCongressAdmin/taller_form.html'
@@ -129,6 +134,8 @@ class TallerUpdateView(validarUser,UpdateView):
         return Taller.objects.filter(pk=self.kwargs.get('pk'))
     
     def get_form_kwargs(self):
+        taller=Taller.objects.get(pk=self.kwargs.get('pk'))
+        self.object=taller
         kwargs = super(TallerUpdateView, self).get_form_kwargs()
         kwargs.update(instance={
             'taller': self.object,
@@ -137,6 +144,8 @@ class TallerUpdateView(validarUser,UpdateView):
         return kwargs
 
     def get_context_data(self, **kwargs):
+        taller=Taller.objects.get(pk=self.kwargs.get('pk'))
+        self.object=taller
         context=super().get_context_data(**kwargs)
         if self.object.meta_og_imagen:
             context['imagen_meta']='/static/%s'%(self.object.meta_og_imagen)
@@ -144,6 +153,25 @@ class TallerUpdateView(validarUser,UpdateView):
         context['update']=self.object.bloque
         return context
 
+    def form_valid(self, form):
+        taller_update=Taller.objects.get(pk=self.kwargs.get('pk'))
+        self.object=taller_update
+        taller=form['taller'].save(commit=False)
+        ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
+
+        if ubic.exists():
+            taller.lugar=ubic.first()
+        else:
+            ubicacion=form['ubicacion'].save(commit=True)
+            taller.lugar=ubicacion
+        id_video=['']
+        if taller.cod_video:
+            id_video=taller.cod_video.split(sep='https://player.vimeo.com/video/')
+            id_video=id_video[-1].split(sep='"')
+        taller.id_video=id_video[0]
+        taller_update=taller
+        taller_update.save()
+        return super(TallerUpdateView, self).form_valid(form)
 class TallerPonenteListView(TemplateView):
     template_name= 'MedCongressAdmin/taller_ponentes.html' 
     def get(self, request, **kwargs):
