@@ -681,12 +681,14 @@
             <p style="margin-top:20px">Información de registro o dudas al <b>WhatsApp</b> <a target="_blank"
                     href=" https://wa.me/525537345007">5537345007</a></p>
         </div>
-        <div class="row">
-            <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
-           
             {%for categoria_pago in categorias_pago %}
-
-            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            {%if forloop.first or forloop.counter|divisibleby:3%}
+            <div class="row">
+            
+           
+            <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
+            {%endif%}
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="margin-bottom: 20px;">
                 <div class="price-box-frame first-box">
                     <div class="kode-price-box">
                         <div class="kode-price-header">
@@ -719,11 +721,14 @@
                         </div>
                     </div>
                 </div>
-                <!-- kode-price-box End -->
             </div>
+                <!-- kode-price-box End -->
+                {%if forloop.counter|divisibleby:2%}
+               </div>
+                {%endif%}
             {%endfor%}
             
-        </div>
+       
 
     </div>
 </div>

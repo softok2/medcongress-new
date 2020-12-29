@@ -184,7 +184,17 @@ class PonenciaPonenteForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
         self.fields['ponente'].widget.attrs.update({'class': 'form-control'})   
-        
+    def clean(self, *args, **kwargs):
+        try:
+            cleaned_data = super(PonenciaPonenteForm, self).clean(*args, **kwargs)
+            ponente = cleaned_data.get('ponente', None)
+           
+            if not ponente:
+                self.add_error('ponente', 'Este ponente no existe')
+                return
+
+        except Exception as e:
+            self.add_error('error', e)    
 
 class TallerForm(forms.ModelForm):
     imagen=forms.ImageField(label='Buscar Imagen',required=False)
@@ -347,6 +357,14 @@ class CongresoCategPagoForm(forms.ModelForm):
         self.fields['congreso'].widget.attrs.update({'class': 'form-control','style':'display:none'}) 
         self.fields['precio'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['moneda'].widget.attrs.update({'class': 'form-control'}) 
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(CongresoCategPagoForm, self).clean(*args, **kwargs)
+        categoria = cleaned_data.get('categoria', None)
+        congreso = cleaned_data.get('congreso', None)
+        moneda = cleaned_data.get('moneda', None)
+       
+        if RelCongresoCategoriaPago.objects.filter(congreso=congreso,categoria=categoria,moneda=moneda).exists():
+            self.add_error('categoria', 'Ya existe esta categoria de pago en este Congreso con esta moneda')
 
 class TallerCategPagoForm(forms.ModelForm):
     categoria=forms.ModelChoiceField(queryset=CategoriaPagoCongreso.objects.all(),label='Categoría de Pago')
