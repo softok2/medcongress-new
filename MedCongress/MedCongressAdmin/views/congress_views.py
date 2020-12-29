@@ -101,6 +101,7 @@ class CongressCreateView(validarUser,FormView):
     def form_valid(self, form):
         try:
             congress=form['congreso'].save(commit=False)
+            imagen=form['imagen_congreso'].save(commit=False)
             ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
             if ubic.exists():
                 congress.lugar=ubic.first()
@@ -112,6 +113,8 @@ class CongressCreateView(validarUser,FormView):
             secret_key = get_random_string(5, chars)
             congress.path=path+secret_key  
             congress.save()
+            imagen.congreso=congress
+            imagen.save()
             return super().form_valid(form)
         except Exception as e:
             messages.warning(self.request, e)

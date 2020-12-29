@@ -23,7 +23,7 @@ class CongresForm(forms.ModelForm):
     t_congreso=forms.ModelChoiceField(queryset=TipoCongreso.objects.all(),label='Tipo de Congreso')
     fecha_inicio=forms.DateTimeField(widget=forms.TextInput())
     score=forms.IntegerField(label='Puntuación del Congreso')
-   
+    imagen_seg=forms.ImageField(label='Buscar Imagen',required=True,)
     class Meta:
         model=Congreso
         fields=['titulo','sub_titulo','imagen_seg','fecha_inicio','published','t_congreso','especialidad','is_openpay','template','foto_constancia','aprobado','cant_preguntas','score','streaming','meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
@@ -34,7 +34,7 @@ class CongresForm(forms.ModelForm):
 
         self.fields['titulo'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['sub_titulo'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['imagen_seg'].widget.attrs.update({'class': ' form-control '}) 
+        # self.fields['imagen_seg'].widget.attrs.update({'class': ' form-control '}) 
         self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control'})   
         self.fields['published'].widget.attrs.update({'class': 'form-control'})   
         self.fields['t_congreso'].widget.attrs.update({'class': 'form-control'})  
