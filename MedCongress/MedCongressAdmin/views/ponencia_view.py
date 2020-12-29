@@ -6,7 +6,7 @@ from django.urls import reverse_lazy,reverse
 from django.views.generic import ListView,TemplateView,FormView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from MedCongressApp.models import Ponencia,RelPonenciaPonente,Ubicacion,Congreso,Bloque,Ponente
+from MedCongressApp.models import Ponencia,RelPonenciaPonente,Ubicacion,Congreso,Bloque,Ponente,RelPonenciaPonente
 from MedCongressAdmin.forms.congres_forms import PonenciaForms,PonentePonenciaForm
 from django.utils.crypto import get_random_string
 class validarUser(UserPassesTestMixin):
@@ -33,7 +33,7 @@ class  PonenciaCreateView(validarUser,FormView):
         try: 
             ponencia=form['ponencia'].save(commit=False)
             ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
-
+            relacion=form['ponencia_ponente'].save(commit=False)
             if ubic.exists():
                 ponencia.lugar=ubic.first()
             else:
@@ -50,6 +50,9 @@ class  PonenciaCreateView(validarUser,FormView):
             ponencia.id_video=id_video[0]
             
             ponencia.save()
+            relacion.ponencia=ponencia
+            relacion.save()
+
             return super(PonenciaCreateView, self).form_valid(form)
         except Exception as e:
             messages.warning(self.request, e)

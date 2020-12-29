@@ -97,3 +97,7 @@ class CustionarioUpdateView(validarUser,FormView):
             
             self.success_url =  reverse_lazy('MedCongressAdmin:Congres_cuestionario',kwargs={'path': pregunta.congreso.path} )
         return self.success_url 
+
+class CustionarioDeletedView(validarUser,DeleteView):
+    model = CuestionarioPregunta
+    success_url = reverse_lazy('MedCongressAdmin:asig_congress_list')

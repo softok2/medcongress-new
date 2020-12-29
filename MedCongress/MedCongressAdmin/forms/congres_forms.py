@@ -116,12 +116,13 @@ class PonenciaForm(forms.ModelForm):
     titulo=forms.CharField(label='Título')
     fecha_inicio=forms.DateTimeField()
     published=forms.BooleanField(label='Publicado',required=False)
+    # ponente=forms.ModelChoiceField(queryset=Ponente.objects.all(),label='Ponente',required=False)
     error=forms.CharField(required=False)
     class Meta:
         model=Ponencia
         fields=['titulo','duracion','detalle','fecha_inicio','imagen','published','cod_video','congreso','bloque','is_info',
         'meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
-        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','error']
+        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','error',]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
@@ -132,7 +133,8 @@ class PonenciaForm(forms.ModelForm):
         self.fields['congreso'].widget.attrs.update({'class': 'form-control'})
         self.fields['bloque'].widget.attrs.update({'class': 'form-control'})  
         self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control'})   
-        self.fields['published'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['published'].widget.attrs.update({'class': 'form-control'})  
+        # self.fields['ponente'].widget.attrs.update({'class': 'form-control'})   
         self.fields['cod_video'].widget.attrs.update({'class': 'form-control','rows':'3'}) 
         self.fields['detalle'].widget.attrs.update({'class': 'form-control','rows':'3'})  
         self.fields['meta_og_title'].widget.attrs.update({'class': 'form-control'}) 
@@ -152,17 +154,38 @@ class PonenciaForm(forms.ModelForm):
             cleaned_data = super(PonenciaForm, self).clean(*args, **kwargs)
             fecha_inicio = cleaned_data.get('fecha_inicio', None)
             bloq = cleaned_data.get('bloque', None)
+            congreso=cleaned_data.get('congreso', None)
             imagen = cleaned_data.get('imagen', None)
             if imagen:
                 w, h = get_image_dimensions(imagen)
                 if w != 1920 or h != 1080:
                     self.add_error('imagen',"Esta imagen tiene %s X %s pixel. Debe ser de 1920 X 1080 pixel" %(w,h) )
-    
+
 
             if bloq and fecha_inicio.date() != bloq.fecha_inicio.date():
                 self.add_error('fecha_inicio', 'La fecha de inicio no coincide  con las del bloque que pertenece %s '%(bloq.fecha_inicio.date()))
+                return
+            if fecha_inicio < congreso.fecha_inicio:
+                self.add_error('fecha_inicio', 'Esta Fecha no puede ser menor  que la Fecha de inicio del Congreso %s'%(congreso.fecha_inicio))
+                return
+
         except Exception as e:
             self.add_error('error', e)
+
+
+class PonenciaPonenteForm(forms.ModelForm):
+   
+    ponente=forms.ModelChoiceField(queryset=Ponente.objects.all(),label='Ponente',required=False)
+  
+    class Meta:
+        model=RelPonenciaPonente
+        fields=['ponente',]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+        self.fields['ponente'].widget.attrs.update({'class': 'form-control'})   
+        
+
 class TallerForm(forms.ModelForm):
     imagen=forms.ImageField(label='Buscar Imagen',required=False)
     titulo=forms.CharField(label='Título')
@@ -215,6 +238,7 @@ class PonenciaForms(MultiModelForm):
     form_classes = {
         'ponencia': PonenciaForm,
         'ubicacion':UbicacionForm,
+        'ponencia_ponente':PonenciaPonenteForm,
         
     }
 
@@ -460,12 +484,13 @@ class BloqueForms(forms.ModelForm):
         cleaned_data = super(BloqueForms, self).clean(*args, **kwargs)
         congreso = cleaned_data.get('congreso', None)
         titulo = cleaned_data.get('titulo', None)
+        fecha = cleaned_data.get('fecha_inicio', None)
        
         if not congreso:
             self.add_error('congreso', 'No existe ese Congreso')
 
-        if Bloque.objects.filter(titulo=titulo,congreso=congreso).exists():
-            self.add_error('titulo', 'Ya existe un Bloque con este Título en ese Congreso')
+        if fecha < congreso.fecha_inicio:
+            self.add_error('fecha_inicio', 'Esta Fecha no puede ser menor  que la Fecha de inicio del Congreso %s'%(congreso.fecha_inicio))
 
 class OtrosForm(forms.ModelForm):
 

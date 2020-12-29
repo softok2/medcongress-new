@@ -87,8 +87,8 @@
                                                 <td>{%if pregunta.publicada%}Si{%else%}No{%endif%}</td>
                                                   <td>  <a href="{% url 'MedCongressAdmin:cuestionario_edit' pk=pregunta.id %}"
                                                     title="Editar"><i class="icon icon-editar"></i></a> 
-                                                    <a id="del_{{ cuestionario.pk }}"
-                                                        href="javascript:deleteItem('{{ cuestionario.pk }}')"
+                                                    <a id="del_{{ pregunta.id }}"
+                                                        href="javascript:deleteItem('{{ pregunta.id }}')"
                                                         title="Eliminar">
                                                         <i class="icon icon-eliminar "></i>
                                                     </a>
@@ -171,7 +171,7 @@
         })
             .then((isConfirm) => {
                 if (isConfirm) {
-                    url = "{% url 'MedCongressAdmin:ponente_delete' pk=0 %}";
+                    url = "{% url 'MedCongressAdmin:cuestionario_delete' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                         dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
                         swal("Eliminado!", "Este elemento ha sido eliminado.", "success");

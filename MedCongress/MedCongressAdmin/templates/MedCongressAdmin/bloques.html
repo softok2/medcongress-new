@@ -154,7 +154,11 @@
         });
 
         $('#add-btn').click(function () {
+            {%if congres%}
+            location.href = "{% url 'MedCongressAdmin:congres_bloque_add' pk=congres.pk %}"; 
+            {%else%}
             location.href = "{% url 'MedCongressAdmin:bloque_add' %}";
+            {%endif%}
         });
 
         dataTable = $('.zero-configuration').DataTable();

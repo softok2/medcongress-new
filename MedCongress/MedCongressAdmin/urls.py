@@ -43,7 +43,7 @@ from .views_inicio.meta_datos_views import (MetaInicioListView,MetaInicioUpdateV
 
 from .views_inicio.ofrecemos_views import (OfrecemosListView,OfrecemosCreateView,OfrecemosDeletedView,OfrecemosUpdateView)
 from .views.otros_views import (OtrosListView,OtroUpdateView)
-from .views.cuestionario_views import (PreguntaCreateView,CustionarioUpdateView)
+from .views.cuestionario_views import (PreguntaCreateView,CustionarioUpdateView,CustionarioDeletedView)
 from .views.moderador_view import ModeradoresListView,ModeradorCreateView,ModeradorDeletedView
 from .views.meta_views import MetaPagInicioView,MetaPagInicioUpdateView
 from .views.preg_frecuente_view import PregFrecuenteCreateView,PregFrecuenteUpdateView,PregFrecuenteDeletView
@@ -201,6 +201,7 @@ urlpatterns = [
      #Cuestionarios
      path('cuestionario_pregunta/congreso/add/', PreguntaCreateView.as_view(), name='cuestionario_pregunta_add'),
      path('cuestionario/editar/<int:pk>', CustionarioUpdateView.as_view(), name='cuestionario_edit'),
+     path('cuestionario/eliminar/<int:pk>', CustionarioDeletedView.as_view(), name='cuestionario_delete'),
   
      #Metadatos
      path('meta_pagina_inicio', MetaPagInicioView.as_view(), name='meta_pag_inicio'),

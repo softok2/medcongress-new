@@ -52,7 +52,7 @@ class BloqueCreateView(validarUser,FormView):
             self.success_url =  reverse_lazy('MedCongressAdmin:Congres_bloques',kwargs={'path': congreso.path} )
         return self.success_url 
     def form_valid(self, form):
-
+        
         bloque = form.save(commit=False)
         path=bloque.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
         chars = '0123456789'

@@ -65,7 +65,7 @@
 											<div class="col-sm-4 ">
 												<div class="form-group">
 													<label
-														for="{{form.fecha_inicio.id_for_label }}"><b>{{form.fecha_inicio.label }}</b>{% if form.fecha_final %}
+														for="{{form.fecha_inicio.id_for_label }}"><b>{{form.fecha_inicio.label }}</b>{% if form.fecha_inicio.errors %}
 														<span
 															style="font-size: 15px; color: red;">{{ form.fecha_inicio.errors }}
 														</span>{% endif %} </label>
@@ -112,14 +112,16 @@
 														<div style="display: none;">
 															{{form.congreso}}
 														</div>
+														{%if not con %}
 														<input type="text" name="my_user" class="form-control" required=""
 															id="id_my_user">
+															{%endif%}
 												</div>
 
 
 											</div>
 
-</div>
+												</div>
 											<div class="form-actions">
 												<div class="text-right">
 													<button id="atras" type="button" class="btn btn-danger ">Cancelar

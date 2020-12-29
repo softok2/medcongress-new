@@ -105,6 +105,13 @@
 				<div class="card-header">
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
 						Adicionar Ponencia</h1>
+						{% if messages %}
+						<ul class="messages">
+							{% for message in messages %}
+							<li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+								{% endfor %}
+						</ul>
+						{% endif %}
 						{% if form.ponencia.error.errors %}
 					<ul class="messages">
 						
@@ -230,8 +237,23 @@
 													{%endif%}
 												</div>
 											</div>
-
-
+											{% if not bloque_update%}
+											<div class="col-sm-6 ">
+												<div class="form-group">
+													<label
+														for="{{form.ponencia_ponente.ponente.id_for_label }}"><b>{{form.ponencia_ponente.ponente.label }}</b>
+														{% if form.ponencia_ponente.ponente.errors %} <span
+															style="font-size: 15px; color: red;">{{ form.ponencia_ponente.ponente.errors }}
+														</span>{% endif %} </label>
+														<div style="display: none;">
+															{{form.ponencia_ponente.ponente}}
+														</div>
+		
+														<input type="text" name="my_ponente" class="form-control" required=""
+															id="id_my_ponente">
+												</div>
+											</div>
+											{%endif%}
 
 										</div>
 										<div class="row">
@@ -611,8 +633,20 @@
 
 
 <script type="text/javascript">
+
 	$(document).ready(function () {
-	
+
+		$("#id_ponencia_ponente-ponente option[value='{{pon.id}}']").attr("selected", true);
+		$("#id_my_ponente").autocomplete({
+			source: "{% url 'Ponente_autocomp'%}",
+			minLength: 3,
+		});
+		$('#id_my_ponente').change(function () {
+			email = $('#id_my_ponente').val()
+			$("#id_ponencia_ponente-ponente option:contains('" + email + "')").attr("selected", true);
+			if ($("#id_ponencia_ponente-ponente option:selected").text()!= email) 
+            $("#id_ponencia_ponente-ponente").val('')
+		});
 		$('#id_ponencia-congreso').ready(function () {
 				$('#id_ponencia-bloque').empty();
 				$('#id_ponencia-bloque').append($("<option></option").attr('value', '').text('----------'));
