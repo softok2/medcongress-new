@@ -594,7 +594,7 @@
                         {% endif %}
                         {% endfor %}
                         {% endif %}
-                        
+              
 {%if ponencia_v.talleres%}
 <div class="kf_heading_3">
     <h5> <b>Talleres</b> </h5>
@@ -947,7 +947,7 @@
     </div>
 </div>
 {%endif%}
-<!-- Contactos-->
+<!-- Contactos
 <div class="kode-event-contact">
     <div class="container">
         <div class="row">
@@ -977,7 +977,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->
 <!--kode-event-contact-->
 
 
@@ -991,7 +991,7 @@
         {% for ponencia_v in ponencias_video %}
         {% for ponencia in ponencia_v.ponencias %}
        
-       var url = "http://vimeo.com/api/v2/video/{{ponencia.id_video}}.json?callback=showThumb";
+       var url = "https://vimeo.com/api/v2/video/{{ponencia.id_video}}.json?callback=showThumb";
 
        var id_img = "#vimeo-{{ponencia.id_video}}";
 
@@ -1002,7 +1002,7 @@
        {%endfor%}
        {% for ponencia in ponencia_v.talleres %}
        
-       var url = "http://vimeo.com/api/v2/video/{{ponencia.id_video}}.json?callback=showThumb";
+       var url = "https://vimeo.com/api/v2/video/{{ponencia.id_video}}.json?callback=showThumb";
 
        var id_img = "#vimeo-{{ponencia.id_video}}";
 

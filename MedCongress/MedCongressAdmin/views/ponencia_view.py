@@ -30,27 +30,30 @@ class  PonenciaCreateView(validarUser,FormView):
     success_url = reverse_lazy('MedCongressAdmin:ponencias_list')
     template_name = 'MedCongressAdmin/ponencia_form.html'
     def form_valid(self, form):
-        
-        ponencia=form['ponencia'].save(commit=False)
-        ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
+        try: 
+            ponencia=form['ponencia'].save(commit=False)
+            ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
 
-        if ubic.exists():
-            ponencia.lugar=ubic.first()
-        else:
-            ubicacion=form['ubicacion'].save(commit=True)
-            ponencia.lugar=ubicacion
-        path=ponencia.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
-        chars = '0123456789'
-        secret_key = get_random_string(5, chars)
-        ponencia.path=path+secret_key
-        id_video=['']
-        if ponencia.cod_video:
-            id_video=ponencia.cod_video.split(sep='https://player.vimeo.com/video/')
-            id_video=id_video[-1].split(sep='"')
-        ponencia.id_video=id_video[0]
-        
-        ponencia.save()
-        return super(PonenciaCreateView, self).form_valid(form)
+            if ubic.exists():
+                ponencia.lugar=ubic.first()
+            else:
+                ubicacion=form['ubicacion'].save(commit=True)
+                ponencia.lugar=ubicacion
+            path=ponencia.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
+            chars = '0123456789'
+            secret_key = get_random_string(5, chars)
+            ponencia.path=path+secret_key
+            id_video=['']
+            if ponencia.cod_video:
+                id_video=ponencia.cod_video.split(sep='https://player.vimeo.com/video/')
+                id_video=id_video[-1].split(sep='"')
+            ponencia.id_video=id_video[0]
+            
+            ponencia.save()
+            return super(PonenciaCreateView, self).form_valid(form)
+        except Exception as e:
+            messages.warning(self.request, e)
+            return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
         
@@ -158,25 +161,29 @@ class PonencicaUpdateView(validarUser,FormView):
         return context
 
     def form_valid(self, form):
-        ponencia=Ponencia.objects.get(pk=self.kwargs.get('pk'))
-        self.object=ponencia
-        pon=form['ponencia'].save(commit=False)
-        print(pon)
-        ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
+        try:
+            ponencia=Ponencia.objects.get(pk=self.kwargs.get('pk'))
+            self.object=ponencia
+            pon=form['ponencia'].save(commit=False)
+            print(pon)
+            ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
 
-        if ubic.exists():
-            pon.lugar=ubic.first()
-        else:
-            ubicacion=form['ubicacion'].save(commit=True)
-            pon.lugar=ubicacion
-        id_video=['']
-        if pon.cod_video:
-            id_video=pon.cod_video.split(sep='https://player.vimeo.com/video/')
-            id_video=id_video[-1].split(sep='"')
-        pon.id_video=id_video[0]
-        ponencia=pon
-        ponencia.save()
-        return super(PonencicaUpdateView, self).form_valid(form)
+            if ubic.exists():
+                pon.lugar=ubic.first()
+            else:
+                ubicacion=form['ubicacion'].save(commit=True)
+                pon.lugar=ubicacion
+            id_video=['']
+            if pon.cod_video:
+                id_video=pon.cod_video.split(sep='https://player.vimeo.com/video/')
+                id_video=id_video[-1].split(sep='"')
+            pon.id_video=id_video[0]
+            ponencia=pon
+            ponencia.save()
+            return super(PonencicaUpdateView, self).form_valid(form)
+        except Exception as e:
+            messages.warning(self.request, e)
+            return super().form_invalid(form)
 class PonenciaDeletedView(validarUser,DeleteView):
     model = Ponencia
     success_url = reverse_lazy('MedCongressAdmin:ponencias_list')

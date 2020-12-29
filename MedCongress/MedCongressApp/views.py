@@ -879,6 +879,22 @@ def SocioAutocomplete(request):
     mimetype = "application/json"
     return HttpResponse(data, mimetype)
 
+##### Autocompletar socio #####
+
+def PonenciaAutocomplete(request):
+    if request.is_ajax():
+        query = request.GET.get("term", "")
+        id_congreso = request.GET.get("id_congreso", "")
+        ponencias=Ponencia.objects.filter(titulo__icontains=query,congreso__pk=id_congreso)
+       
+        results = []
+        for ponencia in ponencias:
+            place_json = ponencia.titulo
+            results.append(place_json)
+        data = json.dumps(results)
+    mimetype = "application/json"
+    return HttpResponse(data, mimetype)
+
 
 
 ##### Pagar en efectivo #####

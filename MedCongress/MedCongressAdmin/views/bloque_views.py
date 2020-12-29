@@ -104,6 +104,11 @@ class BloqueUpdateView(validarUser,UpdateView):
     def get_queryset(self, **kwargs):
         return Bloque.objects.filter(pk=self.kwargs.get('pk'))
 
+    def get_context_data(self, **kwargs):
+        self.objects=Bloque.objects.get(pk=self.kwargs.get('pk'))
+        context = super(BloqueUpdateView, self).get_context_data(**kwargs)
+        context['update']=self.objects.congreso.titulo
+        return context
 class BloqueModeradoresListView(validarUser,TemplateView):
     template_name= 'MedCongressAdmin/bloque_moderadores.html' 
     def get(self, request, **kwargs):
@@ -174,17 +179,17 @@ class  PonenciaSeleccionarView(validarUser,FormView):
            return self.success_url
 
     def get_context_data(self, **kwargs):
-        context = super(PonenciaSeleccionarView, self).get_context_data(**kwargs)
-        
-        bloque=Bloque.objects.filter(path=self.kwargs.get('path')).first()
        
-        context['bloque'] = bloque
+        context = super(PonenciaSeleccionarView, self).get_context_data(**kwargs)
+        bloque=Bloque.objects.filter(path=self.kwargs.get('path')).first()
+        context['congreso'] = bloque.congreso
         return context
     def form_valid(self, form):
-    
-       
-        relacion_aval=form.save(commit=True)
-       
+        ponencia_pk=self.request.POST['ponencia']
+        
+        bloque=Bloque.objects.filter(path=self.kwargs.get('path')).first()
+        print(bloque)
+        ponencia=Ponencia.objects.filter(pk=ponencia_pk).update(bloque=bloque)
         return super().form_valid(form)
 
 

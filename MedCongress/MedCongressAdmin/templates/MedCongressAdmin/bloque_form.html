@@ -109,7 +109,11 @@
 															style="font-size: 15px; color: red;">{{ form.congreso.errors }}
 														</span>{% endif %} </label>
 
-													{{form.congreso }}
+														<div style="display: none;">
+															{{form.congreso}}
+														</div>
+														<input type="text" name="my_user" class="form-control" required=""
+															id="id_my_user">
 												</div>
 
 
@@ -146,6 +150,21 @@
 
 
 <script type="text/javascript">
+$("#id_my_user").autocomplete({
+            source: "{% url 'Congreso_autocomp'%}",
+            minLength: 3,
+        });
+        $('#id_my_user').change(function () {
+            email = $('#id_my_user').val()
+            $("#id_congreso option:contains('" + email + "')").attr("selected", true);
+            if ($("#id_congreso option:selected").text()!= email) 
+            $("#id_congreso").val('')
+
+		});
+		{%if update%}
+		$("#id_my_user").val('{{update}}');
+		{%endif%}
+
 	$('#atras').click(function () {
 			{%if con %}
 			location.href = "{% url 'MedCongressAdmin:Congres_bloques' con.path %}";

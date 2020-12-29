@@ -105,6 +105,13 @@
 				<div class="card-header">
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
 						Adicionar Ponencia</h1>
+						{% if form.ponencia.error.errors %}
+					<ul class="messages">
+						
+						<li  class="" >{{form.ponencia.error.errors }} </li>
+							
+					</ul>
+					{% endif %}
 					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
 					<div class="heading-elements">
 						<ul class="list-inline mb-0">
