@@ -125,6 +125,7 @@ class Cart:
                 self.cart[0]['cant']=float(self.cart[0]['cant'])+float(self.cart[1][cont]['pagar'])
             cont=cont+1
         self.save()
+        print(self.cart)
         return True
 
 

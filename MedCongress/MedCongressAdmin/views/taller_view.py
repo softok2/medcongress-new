@@ -172,6 +172,14 @@ class TallerUpdateView(validarUser,FormView):
         taller_update=taller
         taller_update.save()
         return super(TallerUpdateView, self).form_valid(form)
+    def get_success_url(self):
+        if self.kwargs.get('pk'):
+            congreso=Congreso.objects.get(pk=self.kwargs.get('pk'))
+            self.success_url =  reverse_lazy('MedCongressAdmin:Congres_talleres',kwargs={'path': congreso.path} )
+        if self.kwargs.get('pk_block'):
+            block=Bloque.objects.get(pk=self.kwargs.get('pk_block'))
+            self.success_url =  reverse_lazy('MedCongressAdmin:Bloque_talleres',kwargs={'path': block.path} )
+        return self.success_url  
 class TallerPonenteListView(TemplateView):
     template_name= 'MedCongressAdmin/taller_ponentes.html' 
     def get(self, request, **kwargs):

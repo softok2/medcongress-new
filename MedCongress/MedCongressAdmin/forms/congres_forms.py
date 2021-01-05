@@ -390,22 +390,23 @@ class UserForm(forms.ModelForm):
                 label = 'Apellidos',
                 )
     username= forms.CharField(
-               label = 'Usuario',
+               label = 'Usuario'
                )         
     
     class Meta:
         model=User
-        fields=['username','first_name','last_name','email']
+        fields=['first_name','last_name','email','username']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['username'].widget.attrs.update({'class': 'form-control'}) 
+ 
       
           
         self.fields['first_name'].widget.attrs.update({'class': 'form-control','placeholder':'Nombre'})   
         self.fields['last_name'].widget.attrs.update({'class': 'form-control'})   
-        self.fields['email'].widget.attrs.update({'class': 'form-control'})     
+        self.fields['email'].widget.attrs.update({'class': 'form-control'})  
+        self.fields['username'].widget.attrs.update({'type': 'hidden'})    
 
     def clean(self, *args, **kwargs):
         cleaned_data = super(UserForm, self).clean(*args, **kwargs)
@@ -694,7 +695,7 @@ class MetaPagListarForm(forms.ModelForm):
         self.fields['meta_title'].widget.attrs.update({'class': 'form-control'})   
             
 class PregFrecuenteForm(forms.ModelForm):
-    
+    published=forms.BooleanField(label='Publicado')
     class Meta:
         model=PreguntasFrecuentes
         fields=['pregunta','respuesta','congreso','published']

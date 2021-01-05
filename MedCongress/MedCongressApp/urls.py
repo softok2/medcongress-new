@@ -6,7 +6,7 @@ AddCart,AddCartTaller,DeletedCart,ConfCart,AvisoPrivacidad,HabilitarUser,Perfil,
 GetCuestionario,SetConstancia,EvaluarPonencia,Resultado_Cuestionario,Get_Constancia,VerTransaccion,GetFactura,
 ViewErrorFact,PerfilUpdateView,CambiarPass,UpdateEvaluarPonencia,UserAutocomplete,ViewErrorRegistrar,RegistroExitoso,
 PonenteAutocomplete,ModeradorAutocomplete,CongresoAutocomplete,PatrocinadorAutocomplete,SocioAutocomplete,ViewTaller,
-EvaluarTaller,UpdateEvaluarTaller,TallerAutocomplete,PonenciaAutocomplete)
+EvaluarTaller,UpdateEvaluarTaller,TallerAutocomplete,PonenciaAutocomplete,ViewCart)
 
 urlpatterns = [
     
@@ -42,6 +42,7 @@ urlpatterns = [
     path('add_cart_taller', AddCartTaller.as_view() , name='Add_cart_taller'),
     path('deleted_cart',DeletedCart.as_view() , name='Deleted_cart'),
     path('conf_cart',ConfCart.as_view() , name='Conf_cart'),
+     path('view_cart',ViewCart.as_view() , name='View_cart'),
     path('aviso_privacidad',AvisoPrivacidad.as_view() , name='aviso_privacidad'),
     path('email',Email.as_view() , name='email'),
     # path('confic_email',ConfigEmail.as_view() , name='confic_email'),

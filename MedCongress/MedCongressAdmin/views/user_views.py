@@ -45,7 +45,7 @@ class UsuarioCreateView(validarUser,FormView):
             ubicacion=form['ubicacion'].save(commit=True)
             perfiluser.ubicacion=ubicacion
        
-        us=User.objects.create_user(user.username,user.email,user.password)  
+        us=User.objects.create_user(user.email,user.email,user.password)  
         us.first_name=user.first_name
         us.last_name=user.last_name
         us.is_active = True

@@ -19,6 +19,19 @@
 </style>
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+		  
+		  <li class="breadcrumb-item active"> Usuario
+		</li>
+	
+		</ol>
+	  </div>
+	</div>
+  </div>
 <section id="configuration">
     <div class="row">
         <div class="col-12">
@@ -34,6 +47,10 @@
                 <div class="col-12">
                     <div class="row">
                         <div class="col-10">
+                            <div class="content-header-left col-md-6 col-12 ">
+						
+                               
+                              </div>
                             <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Listado
                                 de Usuarios</h1>
                             <p class="card-text">Mostrando todos los usuarios almacenados.</p>
@@ -62,7 +79,7 @@
                                                 <th style="width:50%">Nombre</th>
                                                
                                                 <th>Email</th>
-                                                <th>username</th>
+                                               
                                                 <th>Categoria</th>
                                                 <th>Especialidad </th>
                                                 <th style="width:5%">Operaciones</th>
@@ -74,7 +91,7 @@
                                                 <td class="sorting_1">{{ user.usuario.first_name }} {{ user.usuario.last_name }}</td>
                                                 
                                                 <td>{{ user.usuario.email}}</td>
-                                                <td>{{ user.usuario.username}}</td>
+                                                
                                                 <td>{{ user.categoria.nombre}}</td>
                                                 <td>{{user.especialidad.nombre}}</td>
                                                 
@@ -89,12 +106,7 @@
                                                         title="Eliminar">
                                                         <i class="icon icon-eliminar"></i>
                                                     </a>
-                                                    
-                                                    
 
-                                                   
-
-                                                    
                                                 </td>
                                             </tr>
                                             {% endfor %}
@@ -104,7 +116,7 @@
                                                 <th style="width:50%">Nombre</th>
                                                
                                                 <th>Email</th>
-                                                <th>username</th>
+                                               
                                                 <th>Categoria</th>
                                                 <th>Especialidad </th>
                                                 <th style="width:5%">Operaciones</th>

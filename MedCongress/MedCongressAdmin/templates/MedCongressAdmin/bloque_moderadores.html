@@ -125,19 +125,19 @@
     });
     function deleteItem(pk) {
         swal({
-            title: "Estas seguro?",
-            text: "Eliminará la relación del Moderador con este Bloque !",
+            title: "¿Estás seguro?",
+            text: "¡Eliminará la relación del Moderador con este Bloque !",
             icon: "warning",
             buttons: {
                 cancel: {
-                    text: "No, cancelar!",
+                    text: "¡No, cancelar!",
                     value: null,
                     visible: true,
                     className: "",
                     closeModal: false,
                 },
                 confirm: {
-                    text: "Sí, eliminarla!",
+                    text: "¡Sí, eliminarla!",
                     value: true,
                     visible: true,
                     className: "",
@@ -150,10 +150,10 @@
                     url = "{% url 'MedCongressAdmin:moderador_block_delete' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                         dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
-                        swal("Eliminada!", "Esta relación ha sido eliminada.", "success");
+                        swal("¡Eliminada!", "Esta relación ha sido eliminada.", "success");
                     });
                 } else {
-                    swal("Cancelado", "No se eliminó esta relación.", "error");
+                    swal("¡Cancelado!", "No se eliminó esta relación.", "error");
                 }
             });
     }

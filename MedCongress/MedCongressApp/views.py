@@ -352,7 +352,7 @@ class CongresoDetail(TemplateView):
                     eventos = sorted(eventos, key=lambda k: k['fecha_inicio'])
                     result.append({
                     'id':bloque.id,
-                    'path':ponencia.path,
+                    'path':bloque.path,
                     'moderador':Moderador.objects.filter(bloque_moderador__pk=bloque.id).distinct() ,
                     'titulo': bloque.titulo,
                     'fecha_inicio': bloque.fecha_inicio ,# una relación a otro modelo
@@ -1554,15 +1554,9 @@ class CambiarPass(FormView):
 class RegistroExitoso(TemplateView):
     template_name='MedCongressApp/registro_exitoso.html' 
 
-# class AsignarPass(TemplateView):
-#     template_name='MedCongressApp/registro_exitoso.html' 
+    
+@method_decorator(login_required,name='dispatch')
+class ViewCart(TemplateView):
+    template_name='MedCongressApp/ver_carrito.html' 
 
-#     def get_context_data(self, **kwargs):
-#         context=super().get_context_data(**kwargs)
-
-#         ponentes=Moderador.objects.all()
-#         for ponente in ponentes:
-#             user=ponente.user.usuario
-#             user.set_password('123456')
-#             user.save()
-#         return context
+    
