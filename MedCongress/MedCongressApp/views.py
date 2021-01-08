@@ -5,6 +5,7 @@ from datetime import date,datetime
 import openpay
 from django.core.mail import send_mail
 import requests
+import urllib3
 from django.template import RequestContext
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
@@ -89,21 +90,21 @@ class Home(TemplateView):
         context['ofrecemos'] = Ofrecemos.objects.all()
         context['metadatos']= MetaPagInicio.objects.all().first()
         return context
-    def post(self, request, **kwargs):
-        # subject = self.request.POST['asunto']
-        # html_message = ''
-        # plain_message = self.request.POST['Message']
-        # from_email = self.request.POST['email']
-        # to = 'dennis.molinetg@gmail.com'
-        # mail.send_mail(subject, plain_message, from_email, [to],html_message=html_message)
-        send_mail(
-                "<html><body>Dennis</body></html>", # El usuario escribe el mensaje.
-                'asunto',
-                'dennis.molinetg@gmail.com', # El destino.
-                ['mislenis.morenop@gmail.com'],
-                fail_silently=False,
-                )
-        return HttpResponse('csddfbdgnfg')
+    # def post(self, request, **kwargs):
+    #     # subject = self.request.POST['asunto']
+    #     # html_message = ''
+    #     # plain_message = self.request.POST['Message']
+    #     # from_email = self.request.POST['email']
+    #     # to = 'dennis.molinetg@gmail.com'
+    #     # mail.send_mail(subject, plain_message, from_email, [to],html_message=html_message)
+    #     send_mail(
+    #             "<html><body>Dennis</body></html>", # El usuario escribe el mensaje.
+    #             'asunto',
+    #             'dennis.molinetg@gmail.com', # El destino.
+    #             ['mislenis.morenop@gmail.com'],
+    #             fail_silently=False,
+    #             )
+    #     return HttpResponse('csddfbdgnfg')
 @method_decorator(login_required,name='dispatch')
 class PagoExitoso(TemplateView):
     template_name= 'MedCongressApp/pago_satifactorio.html'
@@ -286,6 +287,19 @@ class CongresoDetail(TemplateView):
         return template_name
 
     def get_context_data(self, **kwargs):
+
+        # # /////////////////
+        # url = "http://vimeo.com/api/v2/video/459579093.xml"
+        
+        # response=requests.get('http://vimeo.com/api/v2/video/459579093.xml')
+        # req = urllib3.request('http://vimeo.com/api/v2/video/459579093.xml')
+        # print(req)
+        # # response_dic=response.json()
+        
+        # if response.status_code==200:
+        #     return HttpResponseRedirect(response.json()['payment_method']['url']) 
+        # # /////////////////////
+
         context = super(CongresoDetail, self).get_context_data(**kwargs)
         congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
         context['patrocinadores']=RelCongresoAval.objects.filter(congreso=congreso)
