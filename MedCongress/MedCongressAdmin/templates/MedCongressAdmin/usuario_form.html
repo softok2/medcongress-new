@@ -417,7 +417,7 @@
 							
 																								<div class="form-group">
 																									<label for="">
-																										<b>Site</b></label>
+																										<b>Sitio</b></label>
 							
 							
 																									{{form.perfiluser.meta_twitter_site}}
@@ -516,7 +516,7 @@
 																<div class="col-sm-12" >
 																	<div class="form-group">
 																		<label
-																			for="{{form.perfiluser.datos_interes.id_for_label }}"><b>Otros Datos de Interes</b>{% if form.perfiluser.datos_interes.errors %}
+																			for="{{form.perfiluser.datos_interes.id_for_label }}"><b>Otros Datos de Interés</b>{% if form.perfiluser.datos_interes.errors %}
 																			<span
 																				style="font-size: 15px; color: red;">{{ form.perfiluser.datos_interes.errors }}
 																			</span>{% endif %}</label>
@@ -573,6 +573,9 @@
 
 
 <script type="text/javascript">
+	$('#atras').click(function () {
+		location.href = "{% url 'MedCongressAdmin:usuarios_list' %}";
+	});
 	$(document).ready(function () {
 		{%if con %}
 		$("#id_taller-congreso option[value='{{con.id}}']").attr("selected",true);
