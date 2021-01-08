@@ -5,6 +5,7 @@ from django.views.defaults import page_not_found
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
+from django.http import JsonResponse
 from django.utils.crypto import get_random_string
 from django.views.generic import CreateView, ListView, TemplateView
 from django.views.generic.edit import DeleteView, FormView, UpdateView
@@ -19,7 +20,7 @@ def page_not_found(request,exception):
         )
 class validarUser(UserPassesTestMixin):
     permission_denied_message = 'No tiene permiso para acceder a la administracion'
-    login_url='/admin/login/'
+    login_url='accounts/login/'
     def test_func(self):
        
         if self.request.user.is_staff :
@@ -65,6 +66,20 @@ class BloqueCreateView(validarUser,FormView):
 class BloqueDeletedView(validarUser,DeleteView):
     model = Bloque
     success_url = reverse_lazy('MedCongressAdmin:bloques_list')
+
+    def delete(self,request, *args, **kwargs):
+            
+        bloque=Bloque.objects.get(pk=self.kwargs.get('pk'))
+       
+        if bloque.congreso:
+            return JsonResponse({'success':False,'evento': 'Congreso'}, safe=False)
+        if Ponencia.objects.filter(bloque=bloque).exists():
+            return JsonResponse({'success':False,'evento': 'Ponencia'}, safe=False) 
+        if Taller.objects.filter(bloque=bloque).exists():
+            return JsonResponse({'success':False,'evento': 'Taller'}, safe=False) 
+        else:
+            bloque.delete()
+            return JsonResponse({'success':True}, safe=False)
 
 class BloquePonenciasListView(validarUser,TemplateView):
     template_name= 'MedCongressAdmin/ponencias.html'  

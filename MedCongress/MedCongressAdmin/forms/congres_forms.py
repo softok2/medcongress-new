@@ -399,7 +399,7 @@ class UserForm(forms.ModelForm):
                 label = 'Apellidos',
                 )
     username= forms.CharField(
-               label = 'Usuario'
+               label = 'Usuario',required=False
                )
     email= forms.CharField(
                label = 'Correo'

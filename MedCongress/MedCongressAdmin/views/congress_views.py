@@ -36,7 +36,18 @@ from openpyxl.styles import (Alignment, Border, Font, PatternFill, Protection,
                              Side)
 
 
-class ReporteRelCongresoUserExcel(TemplateView):
+
+class validarUser(UserPassesTestMixin):
+    permission_denied_message = 'No tiene permiso para acceder a la administracion'
+    login_url='accounts/login/'
+    def test_func(self):
+       
+        if self.request.user.is_staff :
+            return True
+        else:
+            return False
+
+class ReporteRelCongresoUserExcel(validarUser,TemplateView):
     
     #Usamos el método get para generar el archivo excel 
     def post(self, request):
@@ -78,16 +89,7 @@ class ReporteRelCongresoUserExcel(TemplateView):
         response["Content-Disposition"] = "attachment; filename=RelCongresoUser.xlsx"
         wb.save(response)
         return response
-class validarUser(UserPassesTestMixin):
-    permission_denied_message = 'No tiene permiso para acceder a la administracion'
-    login_url='/admin/login/'
-    def test_func(self):
-       
-        if self.request.user.is_staff :
-            return True
-        else:
-            return False
-    
+
 class CongressListView(validarUser,ListView):
     model = Congreso
     context_object_name = 'congress'
@@ -228,7 +230,7 @@ class CongressCuestionarioListView(validarUser,TemplateView):
     
 ########## Vista de las Categorias de Pago de un Congreso #############
 
-class CongressCategPagosListView(TemplateView):
+class CongressCategPagosListView(validarUser,TemplateView):
     template_name= 'MedCongressAdmin/congres_cat_pagos.html' 
     
 
@@ -246,7 +248,7 @@ class CongressCategPagosListView(TemplateView):
         
 ########## Vista de las Imagenes de un Congreso #############
 
-class CongressImagenesListView(TemplateView):
+class CongressImagenesListView(validarUser,TemplateView):
     template_name= 'MedCongressAdmin/congres_imagenes.html' 
     
 
@@ -264,7 +266,7 @@ class CongressImagenesListView(TemplateView):
 
 ##### Adicionar ponencia al congreso a Carrito de Compra #####
 
-class AddPonenciaCongreso(TemplateView):
+class AddPonenciaCongreso(validarUser,TemplateView):
     def get(self, request):
         
         if request.is_ajax:
@@ -525,7 +527,7 @@ class Ver_usuarios (validarUser,TemplateView):
 
         return HttpResponseRedirect(reverse('MedCongressAdmin:Ver_exel' ))
 
-class Ver_Exel(TemplateView):
+class Ver_Exel(validarUser,TemplateView):
 
     template_name='MedCongressAdmin/ver_exel.html'
 

@@ -11,7 +11,7 @@ from MedCongressAdmin.forms.congres_forms import PonenciaForms,PonentePonenciaFo
 from django.utils.crypto import get_random_string
 class validarUser(UserPassesTestMixin):
     permission_denied_message = 'No tiene permiso para acceder a la administracion'
-    login_url='/admin/login/'
+    login_url='accounts/login/'
     def test_func(self):
        
         if self.request.user.is_staff :
@@ -81,7 +81,7 @@ class  PonenciaCreateView(validarUser,FormView):
  
 ########## Vista de las Categorias de Pago de un Congreso #############
 
-class PonenciaPonenteListView(TemplateView):
+class PonenciaPonenteListView(validarUser,TemplateView):
     template_name= 'MedCongressAdmin/ponencia_ponentes.html' 
     def get(self, request, **kwargs):
         ponencia=Ponencia.objects.filter(path=self.kwargs.get('path'),published=True).first()
@@ -130,7 +130,6 @@ class  PonenciaPonenteCreateView(validarUser,CreateView):
             id.append(ponente.ponente.pk)
         ctx['ponentes']=Ponente.objects.exclude(id__in=id)
         return ctx
-
 
 class PonencicaUpdateView(validarUser,FormView):
     form_class = PonenciaForms
@@ -188,6 +187,7 @@ class PonencicaUpdateView(validarUser,FormView):
         except Exception as e:
             messages.warning(self.request, e)
             return super().form_invalid(form)
+            
 class PonenciaDeletedView(validarUser,DeleteView):
     model = Ponencia
     success_url = reverse_lazy('MedCongressAdmin:ponencias_list')

@@ -19,7 +19,7 @@ def page_not_found(request,exception):
         )
 class validarUser(UserPassesTestMixin):
     permission_denied_message = 'No tiene permiso para acceder a la administracion'
-    login_url='/admin/login/'
+    login_url='accounts/login/'
     def test_func(self):
        
         if self.request.user.is_staff :
