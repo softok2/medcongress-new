@@ -13,7 +13,7 @@ class EmailAuthBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
         try:
             captcha_token=request.POST.get("g-recaptcha-response")
-            cap_url="http://www.google.com/recaptcha/api/siteverify"
+            cap_url="https://www.google.com/recaptcha/api/siteverify"
             cap_secret="6Ld6FyEaAAAAAGggch470Ybh9GHS1Mu3dhz9IT3P"
             cap_data={"secret":cap_secret,"response":captcha_token}
             cap_server_response=requests.post(url=cap_url,data=cap_data)
