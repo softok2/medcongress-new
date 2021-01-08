@@ -76,7 +76,8 @@ class UsuarioUpdateView(validarUser,UpdateView):
         context=super().get_context_data(**kwargs)
         if self.object.meta_og_imagen:
             context['imagen_meta']='/static/%s'%(self.object.meta_og_imagen)
-        context['imagen_seg_url']='/static/%s'%(self.object.foto)
+        if self.object.foto:    
+            context['imagen_seg_url']='/static/%s'%(self.object.foto)
         return context
 
 class UsuarioDeletedView(validarUser,DeleteView):

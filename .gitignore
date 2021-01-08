@@ -14,3 +14,5 @@
 /MedCongress/MedCongressAdmin/views_nomencladores/__pycache__
 /MedCongress/MedCongressApp/static/ponencias
 /MedCongress/MedCongressApp/static/talleres
+/MedCongress/MedCongressApp/backends.py
+MedCongress/MedCongressApp/backends.py

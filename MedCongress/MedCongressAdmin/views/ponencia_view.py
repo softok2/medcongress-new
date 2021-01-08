@@ -156,7 +156,8 @@ class PonencicaUpdateView(validarUser,FormView):
         ponencia=Ponencia.objects.get(pk=self.kwargs.get('pk'))
         self.object=ponencia
         context=super().get_context_data(**kwargs)
-        context['imagen_seg_url']='/static/%s'%(self.object.imagen)
+        if self.object.meta_og_imagen:
+            context['imagen_seg_url']='/static/%s'%(self.object.imagen)
         if self.object.meta_og_imagen:
             context['imagen_meta']='/static/%s'%(self.object.meta_og_imagen)
         context['bloque_update']=self.object.bloque

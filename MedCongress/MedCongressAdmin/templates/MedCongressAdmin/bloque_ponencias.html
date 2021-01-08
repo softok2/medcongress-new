@@ -158,6 +158,29 @@
 <script src="{% static 'MedCongressApp/js/lugar.js'%}"></script>
 <script type="text/javascript">
     $(document).ready(function () {
+        $('.table').DataTable({
+    language: {
+        "decimal": "",
+        "emptyTable": "No hay información",
+        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+        "infoPostFix": "",
+        "thousands": ",",
+        "lengthMenu": "Mostrar _MENU_ Entradas",
+        "loadingRecords": "Cargando...",
+        "processing": "Procesando...",
+        "search": "Buscar:",
+        "zeroRecords": "Sin resultados encontrados",
+        "paginate": {
+            "first": "Primero",
+            "last": "Ultimo",
+            "next": "Siguiente",
+            "previous": "Anterior"
+        }
+    },
+ 
+});
         $('#atras').click(function () {
             location.href = "{%url 'MedCongressAdmin:Congres_bloques' bloque.congreso.path%}";
         });

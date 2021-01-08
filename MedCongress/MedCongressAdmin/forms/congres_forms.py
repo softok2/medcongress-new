@@ -75,13 +75,22 @@ class CongresForm(forms.ModelForm):
 
  
 class ImagenCongresoForms(forms.ModelForm):
-    imagen=forms.ImageField(required=False)
+    imagen=forms.ImageField()
     class Meta:
         model=ImagenCongreso
         fields=['imagen']       
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # self.fields['imagen'].widget.attrs.update({'class': 'form-control'}) 
+
+    def clean(self, *args, **kwargs):
+        
+        cleaned_data = super(ImagenCongresoForms, self).clean(*args, **kwargs)
+        imagen = cleaned_data.get('imagen', None)
+        if imagen:
+            w, h = get_image_dimensions(imagen)
+            if w != 1920 or h != 1080:
+                self.add_error('imagen',"Esta imagen tiene %s X %s pixel. Debe ser de 1920 X 1080 pixel" %(w,h) )
 
 class UbicacionForm(forms.ModelForm):
     direccion=forms.CharField(
@@ -260,7 +269,7 @@ class TallerForms(MultiModelForm):
     }
 
 class PonenteForm(forms.ModelForm):
-    user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Entre Email del Usuario',required=False)
+    user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Entre Correo del Usuario',required=False)
     class Meta:
         model=Ponente
         fields=['user']
@@ -277,7 +286,7 @@ class PonenteForm(forms.ModelForm):
             self.add_error('user', 'No existe ese User')
 
 class ModeradorForm(forms.ModelForm):
-    user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Entre Email del Usuario', required=False)
+    user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Entre Correo del Usuario', required=False)
     class Meta:
         model=Moderador
         fields=['user']
@@ -294,7 +303,7 @@ class ModeradorForm(forms.ModelForm):
         if not user:
             self.add_error('user', 'No existe ese User')
 class PonentePonenciaForm(forms.ModelForm):
-    ponente=forms.ModelChoiceField(queryset=Ponente.objects.all(),label='Entre Email del Ponente',required=False)
+    ponente=forms.ModelChoiceField(queryset=Ponente.objects.all(),label='Entre Correo del Ponente',required=False)
   
     class Meta:
         model=RelPonenciaPonente
@@ -316,10 +325,10 @@ class PonentePonenciaForm(forms.ModelForm):
             self.add_error('ponente', 'No existe ese Ponente')
 
         if RelPonenciaPonente.objects.filter(ponencia=ponencia,ponente=user).exists():
-            self.add_error('ponente', 'Esta Ponencia ya tiene un ponente con ese Email')
+            self.add_error('ponente', 'Esta Ponencia ya tiene un ponente con ese Correo')
 
 class PonenteTallerForm(forms.ModelForm):
-    ponente=forms.ModelChoiceField(queryset=Ponente.objects.all(),label='Entre Email del Ponentes',required=False)
+    ponente=forms.ModelChoiceField(queryset=Ponente.objects.all(),label='Entre Correo del Ponentes',required=False)
   
     class Meta:
         model=RelTallerPonente
@@ -341,7 +350,7 @@ class PonenteTallerForm(forms.ModelForm):
             self.add_error('ponente', 'No existe ese Ponente')
 
         if RelTallerPonente.objects.filter(taller=taller,ponente=user).exists():
-            self.add_error('ponente', 'Este taller ya tiene un ponente con ese Email')
+            self.add_error('ponente', 'Este taller ya tiene un ponente con ese Correo')
 class CongresoCategPagoForm(forms.ModelForm):
     categoria=forms.ModelChoiceField(queryset=CategoriaPagoCongreso.objects.all(),label='Categoría de Pago')
     
@@ -391,7 +400,10 @@ class UserForm(forms.ModelForm):
                 )
     username= forms.CharField(
                label = 'Usuario'
-               )         
+               )
+    email= forms.CharField(
+               label = 'Correo'
+               )          
     
     class Meta:
         model=User
@@ -413,7 +425,7 @@ class UserForm(forms.ModelForm):
         email = cleaned_data.get('email', None)
         username= cleaned_data.get('username',None)
         if User.objects.filter(email=email).exclude(username=username).count():
-            self.add_error('email', 'Ese Email ya existe! ')
+            self.add_error('email', 'Ese Correo ya existe! ')
 
 class PerfilUserForm(forms.ModelForm):
     cel_profecional=forms.CharField(
@@ -531,7 +543,7 @@ class OtrosForm(forms.ModelForm):
 
 
 class AsignarCongresoForms(forms.ModelForm):
-    user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Email del Usuario')
+    user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Correo del Usuario')
     categoria_pago=forms.ModelChoiceField(queryset=CategoriaPagoCongreso.objects.all(),label='Categoría de Pago')
     is_pagado=forms.BooleanField(label='Pagó el Congreso')
     cantidad=forms.IntegerField(label='Cantidad',initial=1)
@@ -588,7 +600,7 @@ class ModeradorBloqueForm(forms.ModelForm):
             self.add_error('moderador', 'No existe ese Moderador')
 
         if RelBloqueModerador.objects.filter(bloque=bloque,moderador=moderador).exists():
-            self.add_error('moderador', 'Este Bloque ya tiene un moderador con ese Email')
+            self.add_error('moderador', 'Este Bloque ya tiene un moderador con ese Correo')
 class ImagenCongForms(forms.ModelForm):
     imagen=forms.ImageField(label='Buscar Imagen')
     class Meta:
