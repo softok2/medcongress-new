@@ -9,16 +9,7 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from MedCongressApp.models import Ponencia,RelPonenciaPonente,Ubicacion,Congreso,Bloque,Ponente,RelPonenciaPonente
 from MedCongressAdmin.forms.congres_forms import PonenciaForms,PonentePonenciaForm
 from django.utils.crypto import get_random_string
-class validarUser(UserPassesTestMixin):
-    permission_denied_message = 'No tiene permiso para acceder a la administracion'
-    login_url='accounts/login/'
-    def test_func(self):
-       
-        if self.request.user.is_staff :
-            return True
-        else:
-            return False
-    
+from MedCongressAdmin.apps import validarUser
 
 class PonenciaListView(validarUser,ListView):
     model = Ponencia
@@ -66,7 +57,7 @@ class  PonenciaCreateView(validarUser,FormView):
             context['blo']=Bloque.objects.filter(congreso=context['con'])
         if self.kwargs.get('pk_block'):
             context['bloque']=Bloque.objects.get(pk=self.kwargs.get('pk_block'))
-            context['con']=context['bloque'].congreso
+            context['congreso']=context['bloque'].congreso
             context['blo']= None
         return context 
     
@@ -160,6 +151,7 @@ class PonencicaUpdateView(validarUser,FormView):
         if self.object.meta_og_imagen:
             context['imagen_meta']='/static/%s'%(self.object.meta_og_imagen)
         context['bloque_update']=self.object.bloque
+        context['update']='update'
         context['ponencia']=self.object
         return context
 

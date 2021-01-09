@@ -12,17 +12,56 @@
 
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+			{%if update%}
+{%if con%}
+<li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+</li>
+<li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:Congres_bloques' path=con.path %}">Bloques</a>
+</li>
+
+<li class="breadcrumb-item active">Actualizar Bloque
+</li>
+
+{%else%}
+<li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:bloques_list' %}">Bloques</a>
+</li>
+<li class="breadcrumb-item active"> Actualizar Bloque
+</li>
+{%endif%}
+{%else%}
+{%if con%}
+<li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+</li>
+<li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:Congres_bloques' path=con.path %}">Bloques</a>
+</li>
+
+<li class="breadcrumb-item active">Adicionar Bloque
+</li>
+
+{%else%}
+<li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:bloques_list' %}">Bloques</a>
+</li>
+<li class="breadcrumb-item active"> Adicionar Bloque
+</li>
+{%endif%}
+{%endif%}
+</ol>
+</div>
+</div>
+</div>
 <section class="multiple-input-with-labels" id="multiple-input-with-labels">
-
-
-
 
 	<div class="row">
 		<div class="col-12">
 			<div class="card">
 				<div class="card-header">
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
-						Adicionar Bloque</h1>
+						{% if update%}Actualizar Bloque {%else%}Adicionar Bloque {%endif%}</h1>
 					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
 					<div class="heading-elements">
 						<ul class="list-inline mb-0">
@@ -124,10 +163,6 @@
 												</div>
 											<div class="form-actions">
 												<div class="text-right">
-													<button id="atras" type="button" class="btn btn-danger ">Cancelar
-														<i class="ft-x position-right"></i>
-													</button>
-
 													<button id="save" type="submit" class="btn btn-primary">Guardar
 														<i class="ft-save position-right"></i>
 													</button>

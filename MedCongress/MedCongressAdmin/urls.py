@@ -15,7 +15,7 @@ from .views.congress_views import (CongressListView,CongressCreateView,CongressU
                                    AsignarCongressDeletedViews,CongressImagenCreateView,CongressCuestionarioListView,CongressPregFrecuenteListView,
                                    Ver_usuarios,Ver_Exel,Exportar_usuarios,Usuarios_pagaron,ReporteRelCongresoUserExcel,CongressPatrocinadorListView,
                                    PatrocinadorSeleccionarView,PatrocinadorSeleccionarDeleted, SocioSeleccionarView,SocioSeleccionarDeleted,CongressSocioListView,
-                                   CongresoDetail,CongressImagenDeletedView)
+                                   CongresoDetail,CongressImagenDeletedView,CongressCategPagosUpdateView,CongressCategPagosDeletedView)
 from .views.imagen_views import (ImagenCreateView)
 from .views.ponencia_view import (PonenciaListView, PonenciaCreateView,PonenciaPonenteListView,
                                    PonencicaUpdateView,PonenciaPonenteCreateView,PonenciaDeletedView,
@@ -145,7 +145,7 @@ urlpatterns = [
      # bloques
      path('bloques', BloquesListView.as_view(), name='bloques_list'),
      path('bloque/adicionar', BloqueCreateView.as_view(), name='bloque_add'), 
-     path('bloque/editar/<int:pk>', BloqueUpdateView.as_view(), name='bloque_edit'),
+     path('bloque/editar/<int:pk>/<str:tipo>/', BloqueUpdateView.as_view(), name='bloque_edit'),
      path('bloque/eliminar/<int:pk>', BloqueDeletedView.as_view(), name='bloque_delete'),
      
      # otros
@@ -155,7 +155,7 @@ urlpatterns = [
     
 
      # Bloque-Ponencias
-     path('ponencias/bloque/<str:path>', BloquePonenciasListView.as_view(), name='Bloque_ponencias'),
+     path('ponencias/bloque/<str:path>/<str:tipo>', BloquePonenciasListView.as_view(), name='Bloque_ponencias'),
      path('ponencia/bloque/add/<int:pk_block>', PonenciaCreateView.as_view(), name='ponencia_bloque_add'),
     path('bloque_ponencia/seleccionar/<str:path>', PonenciaSeleccionarView.as_view(), name='bloque_ponencia_select'),
     
@@ -173,9 +173,13 @@ urlpatterns = [
      path('ponencia/bloque/eliminar', PonenciaBloqueDeleted, name='ponencia_block_delete'),
      
      
-    #Categorias de Pagos
+    #Categorias de Pagos-Congreso
      path('categorias_pago/congreso/<str:path>', CongressCategPagosListView.as_view(), name='Congres_pagos'),
      path('categorias_pago-congres/adicinar/<str:path>', CongressCategPagosCreateView.as_view(), name='congres_cat_pago_add'),
+     path('categorias_pago-congres/editar/<int:pk>', CongressCategPagosUpdateView.as_view(), name='congres_cat_pago_editar'),
+     path('categorias_pago-congres/eliminar/<int:pk>', CongressCategPagosDeletedView.as_view(), name='congres_cat_pago_eliminar'),
+
+    #Categorias de Pagos-Taller
      path('categorias_pago/taller/<str:path>', TallerCategPagosListView.as_view(), name='Taller_pagos'),
      path('categoria_pago-taller/adicionar/<str:path>', TallerCategPagosCreateView.as_view(), name='taller_cat_pago_add'),
 

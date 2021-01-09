@@ -2,30 +2,23 @@ from django import forms
 from django.contrib import messages
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.urls import reverse_lazy,reverse
+from django.shortcuts import redirect
+
 from django.views.generic import ListView,CreateView,TemplateView
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.mixins import UserPassesTestMixin,AccessMixin
 from django.views.generic.edit import  DeleteView, UpdateView,FormView
 from MedCongressApp.models import User,PerfilUsuario,Ubicacion
 from MedCongressAdmin.forms.congres_forms import UsuarioForms
+from MedCongressAdmin.apps import validarUser
+  
 
-class validarUser(UserPassesTestMixin):
-    permission_denied_message = 'No tiene permiso para acceder a la administracion'
-    login_url='accounts/login/'
-    def test_func(self):
-       
-        if self.request.user.is_staff :
-            return True
-        else:
-            return False
-    
 
 class UsuariosListView(validarUser,ListView):
     model = PerfilUsuario
     context_object_name = 'users'
     template_name = 'MedCongressAdmin/usuarios.html'
 
-
-
+   
 
 
 class UsuarioCreateView(validarUser,FormView):

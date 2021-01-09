@@ -10,17 +10,7 @@ from django.views.generic import CreateView, ListView, TemplateView
 from django.views.generic.edit import DeleteView, FormView, UpdateView
 from MedCongressAdmin.forms.congres_forms import CuestionarioForms,PreguntaForm
 from MedCongressApp.models import CuestionarioPregunta,CuestionarioRespuestas,Congreso
-
-
-class validarUser(UserPassesTestMixin):
-    permission_denied_message = 'No tiene permiso para acceder a la administracion'
-    login_url='accounts/login/'
-    def test_func(self):
-       
-        if self.request.user.is_staff :
-            return True
-        else:
-            return False
+from MedCongressAdmin.apps import validarUser
     
 
 class CuestionarioListView(validarUser,ListView):

@@ -366,6 +366,7 @@ class CongresoCategPagoForm(forms.ModelForm):
         self.fields['congreso'].widget.attrs.update({'class': 'form-control','style':'display:none'}) 
         self.fields['precio'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['moneda'].widget.attrs.update({'class': 'form-control'}) 
+        
     def clean(self, *args, **kwargs):
         cleaned_data = super(CongresoCategPagoForm, self).clean(*args, **kwargs)
         categoria = cleaned_data.get('categoria', None)
@@ -493,7 +494,7 @@ class BloqueForms(forms.ModelForm):
     
     titulo=forms.CharField(label='Título')
     duracion=forms.CharField(label='Duración')
-    published=forms.BooleanField(label='Publicado')
+    published=forms.BooleanField(label='Publicado',required=False)
     congreso=forms.ModelChoiceField(queryset=Congreso.objects.all(),label='Congreso',required=False)
    
     

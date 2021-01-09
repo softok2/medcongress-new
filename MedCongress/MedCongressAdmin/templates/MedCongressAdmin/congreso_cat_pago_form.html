@@ -4,6 +4,21 @@
 {% block styles %}
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+		  </li>
+		 
+		  <li class="breadcrumb-item active"><a href="{% url 'MedCongressAdmin:congress_list' %}">Categorias de Pago</a>
+		</li>
+		
+		</ol>
+	  </div>
+	</div>
+  </div>
 <section class="multiple-input-with-labels" id="multiple-input-with-labels">
 	<div class="row">
 		<div class="col-12">
@@ -15,9 +30,9 @@
 					<div class="heading-elements">
 						<ul class="list-inline mb-0">
 							<li><a data-action="collapse"><i class="ft-minus"></i></a></li>
-							<li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+						
 							<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
-							<li><a data-action="close"><i class="ft-x"></i></a></li>
+						
 						</ul>
 					</div>
 				</div>

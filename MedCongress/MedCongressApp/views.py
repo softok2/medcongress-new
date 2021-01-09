@@ -289,15 +289,16 @@ class CongresoDetail(TemplateView):
     def get_context_data(self, **kwargs):
 
         # # /////////////////
-        # url = "http://vimeo.com/api/v2/video/459579093.xml"
+        url = "http://vimeo.com/api/v2/video/459579093.json"
+       
+           
+                
+        headers={'Content-type': 'application/json'}
+        response=requests.post(url=url,headers=headers)
+        response_dic=response.json()
         
-        # response=requests.get('http://vimeo.com/api/v2/video/459579093.xml')
-        # req = urllib3.request('http://vimeo.com/api/v2/video/459579093.xml')
-        # print(req)
-        # # response_dic=response.json()
-        
-        # if response.status_code==200:
-        #     return HttpResponseRedirect(response.json()['payment_method']['url']) 
+        if response.status_code==200:
+            return HttpResponseRedirect(response.json()) 
         # # /////////////////////
 
         context = super(CongresoDetail, self).get_context_data(**kwargs)

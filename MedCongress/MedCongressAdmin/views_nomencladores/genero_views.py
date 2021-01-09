@@ -10,22 +10,7 @@ from django.views.generic import CreateView, ListView, TemplateView
 from django.views.generic.edit import DeleteView, FormView, UpdateView
 from MedCongressAdmin.forms.nomencladores_forms import GeneroForm
 from MedCongressApp.models import Genero,PerfilUsuario
-
-
-def page_not_found(request,exception):
-    response = render_to_response(
-        'MedCongressAdmin/404.html',
-        context_instance=RequestContext(request)
-        )
-class validarUser(UserPassesTestMixin):
-    permission_denied_message = 'No tiene permiso para acceder a la administracion'
-    login_url='/admin/login/'
-    def test_func(self):
-       
-        if self.request.user.is_staff :
-            return True
-        else:
-            return False
+from MedCongressAdmin.apps import validarUser
     
 
 class GeneroListView(validarUser,ListView):

@@ -7,17 +7,8 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from MedCongressApp.models import Ponente,PerfilUsuario,RelPonenciaPonente
 from MedCongressAdmin.forms.congres_forms import PonenteForm
+from MedCongressAdmin.apps import validarUser
 
-class validarUser(UserPassesTestMixin):
-    permission_denied_message = 'No tiene permiso para acceder a la administracion'
-    login_url='accounts/login/'
-    def test_func(self):
-       
-        if self.request.user.is_staff :
-            return True
-        else:
-            return False
-    
 
 class PonentesListView(validarUser,ListView):
     model = Ponente

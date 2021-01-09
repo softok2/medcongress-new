@@ -21,18 +21,8 @@ from MedCongressApp.models import (Bloque, Congreso, Ponente,
 from openpyxl import Workbook
 from openpyxl.styles import (Alignment, Border, Font, PatternFill, Protection,
                              Side)
+from MedCongressAdmin.apps import validarUser
 
-
-class validarUser(UserPassesTestMixin):
-    permission_denied_message = 'No tiene permiso para acceder a la administracion'
-    login_url='accounts/login/'
-    def test_func(self):
-       
-        if self.request.user.is_staff :
-            return True
-        else:
-            return False
-    
 
 class TalleresListView(validarUser,ListView):
     model = Taller

@@ -19,6 +19,35 @@
 </style>
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+{%if congres%}
+<li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+</li>
+
+<li class="breadcrumb-item active">Ponencia
+</li>
+
+{%else%}
+{%if bloc%}
+<li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+</li>
+<li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:Congres_bloques' path=bloc.congreso.path %}">Bloques</a>
+</li>
+<li class="breadcrumb-item active">Ponencia
+</li>
+{%else%}
+<li class="breadcrumb-item active">Ponencia
+</li>
+{%endif%}
+{%endif%}
+</ol>
+</div>
+</div>
+</div>
 <section id="configuration">
     <div class="row">
         <div class="col-12">

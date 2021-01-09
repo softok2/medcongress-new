@@ -34,18 +34,7 @@ from MedCongressApp.models import (AvalCongreso, Bloque, CategoriaPagoCongreso,
 from openpyxl import Workbook
 from openpyxl.styles import (Alignment, Border, Font, PatternFill, Protection,
                              Side)
-
-
-
-class validarUser(UserPassesTestMixin):
-    permission_denied_message = 'No tiene permiso para acceder a la administracion'
-    login_url='accounts/login/'
-    def test_func(self):
-       
-        if self.request.user.is_staff :
-            return True
-        else:
-            return False
+from MedCongressAdmin.apps import validarUser
 
 class ReporteRelCongresoUserExcel(validarUser,TemplateView):
     
@@ -590,41 +579,7 @@ class CongressPatrocinadorListView(validarUser,TemplateView):
         context['patrocinadores']=patrocinadores_env
         return context    
 
-# class CongressPatrocinadorCreateView(validarUser,FormView):
-#     form_class = ImagenCongForms
-#     success_url = reverse_lazy('MedCongressAdmin:Congres_patrocinador')
-#     template_name = 'MedCongressAdmin/imagen_congress_form.html'
 
-#     def form_valid(self, form):
-#         imagen=form.save(commit=True)
-
-#         return super().form_valid(form)
-
-#     def get_context_data(self, **kwargs):
-#         ctx = super(CongressImagenCreateView, self).get_context_data(**kwargs)
-#         cong=Congreso.objects.filter(pk=self.kwargs.get('pk'),published=True).first()
-#         ctx['cong'] = cong
-#         return ctx
-#     def get_success_url(self):
-#         congreso=Congreso.objects.get(pk=self.kwargs.get('pk'))
-#         self.success_url =  reverse_lazy('MedCongressAdmin:Congres_imagenes',kwargs={'path': congreso.path} )
-#         return self.success_url
-
-# class PatrocinadorSeleccionarView(validarUser,TemplateView):
-#     template_name='MedCongressAdmin/congress_patrocinador_form.html'
-#     form_class=CongresoPatrocinadorForm
-    
-#     def get_context_data(self, **kwargs):
-#         ctx = super().get_context_data(**kwargs)
-#         cong=Congreso.objects.filter(pk=self.kwargs.get('pk'),published=True).first()
-#         ctx['cong'] = cong
-#         return ctx
-
-#     def get(self, request, **kwargs):
-#         congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
-#         if congreso is None:
-#             return   HttpResponseRedirect(reverse('Error404'))
-#         return self.render_to_response(self.get_context_data())   
    
 class  PatrocinadorSeleccionarView(validarUser,FormView):
     
@@ -682,6 +637,7 @@ def SocioSeleccionarDeleted( request):
             relacion.first().delete()
             return JsonResponse({'success':True}, safe=False)
     return JsonResponse({'success':False}, safe=False)
+
 
 class  SocioSeleccionarView(validarUser,FormView):
     
@@ -992,3 +948,52 @@ class CongresoDetail(validarUser,TemplateView):
             context['preg_frecuentes']=PreguntasFrecuentes.objects.filter(congreso=congreso,published=True)
 
         return context
+
+class CongressCategPagosUpdateView(validarUser,FormView):
+
+    form_class = RelCongresoCategoriaPago
+    success_url = reverse_lazy('MedCongressAdmin:ponencias_list')
+    template_name = 'MedCongressAdmin/congreso_cat_pago_form.html'
+
+    def get_queryset(self, **kwargs):
+        return RelCongresoCategoriaPago.objects.get(pk=self.kwargs.get('pk'))
+
+
+    # def get_context_data(self, **kwargs):
+    #     context=super().get_context_data(**kwargs)
+    #     pregunta=CuestionarioPregunta.objects.get(pk=self.kwargs.get('pk'))
+    #     context['respuestas']=CuestionarioRespuestas.objects.filter(pregunta=pregunta)
+    #     context['congreso']=pregunta.congreso
+    #     context['pregunta']=pregunta
+    #     return context
+    # def form_valid(self, form):
+        
+    #     pregunta =CuestionarioPregunta.objects.get(pk=self.request.POST['update'])   
+    #     pregunta.pregunta=self.request.POST['pregunta']
+    #     pregunta.published=self.request.POST['published']
+    #     pregunta.save()
+    #     CuestionarioRespuestas.objects.filter(pregunta=pregunta).delete()
+    #     cant=0
+    #     for respuesta in self.request.POST.getlist('respuesta'):
+    #         resp=CuestionarioRespuestas(pregunta=pregunta,respuesta=respuesta,published=self.request.POST.getlist('published_resp')[cant],is_correcto=self.request.POST.getlist('is_correcto')[cant])
+    #         resp.save() 
+    #         cant=cant+1  
+    #     return super(CustionarioUpdateView, self).form_valid(form)
+    # def get_initial(self):
+    #     initial=super().get_initial()
+    #     pregunta=CuestionarioPregunta.objects.get(pk=self.kwargs.get('pk'))
+    #     initial['pregunta']=pregunta.pregunta
+    #     initial['published']=pregunta.published
+    #     return initial
+
+    # def get_success_url(self):
+    #     if self.kwargs.get('pk'):
+    #         pregunta=CuestionarioPregunta.objects.get(pk=self.kwargs.get('pk'))
+            
+    #         self.success_url =  reverse_lazy('MedCongressAdmin:Congres_cuestionario',kwargs={'path': pregunta.congreso.path} )
+    #     return self.success_url 
+
+
+class CongressCategPagosDeletedView(validarUser,DeleteView):
+    model = RelCongresoCategoriaPago
+    success_url = reverse_lazy('MedCongressAdmin:cat_usuarios_list')

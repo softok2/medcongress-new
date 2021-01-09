@@ -11,22 +11,7 @@ from django.views.generic import CreateView, ListView, TemplateView
 from django.views.generic.edit import DeleteView, FormView, UpdateView
 from MedCongressAdmin.forms.congres_forms import BloqueForms,ModeradorBloqueForm,SelectPonencia
 from MedCongressApp.models import Bloque, Congreso, Ponencia, Taller, RelBloqueModerador,Moderador
-
-
-def page_not_found(request,exception):
-    response = render_to_response(
-        'MedCongressAdmin/404.html',
-        context_instance=RequestContext(request)
-        )
-class validarUser(UserPassesTestMixin):
-    permission_denied_message = 'No tiene permiso para acceder a la administracion'
-    login_url='accounts/login/'
-    def test_func(self):
-       
-        if self.request.user.is_staff :
-            return True
-        else:
-            return False
+from MedCongressAdmin.apps import validarUser
     
 
 class BloquesListView(validarUser,ListView):
@@ -93,6 +78,8 @@ class BloquePonenciasListView(validarUser,TemplateView):
         context = super(BloquePonenciasListView, self).get_context_data(**kwargs)
         bloque=Bloque.objects.filter(path=self.kwargs.get('path')).first()
         context['bloque']=bloque
+        if self.kwargs.get('tipo')=='congreso':
+            context['congres']=bloque.congreso
         context['ponencias']=Ponencia.objects.filter(bloque=bloque)
         return context
 
@@ -122,8 +109,18 @@ class BloqueUpdateView(validarUser,UpdateView):
     def get_context_data(self, **kwargs):
         self.objects=Bloque.objects.get(pk=self.kwargs.get('pk'))
         context = super(BloqueUpdateView, self).get_context_data(**kwargs)
+        if self.kwargs.get('tipo') and self.kwargs.get('tipo')=='congreso':
+            context['con']=self.objects.congreso
         context['update']=self.objects.congreso.titulo
         return context
+
+    def get_success_url(self):
+        self.objects=Bloque.objects.get(pk=self.kwargs.get('pk'))
+        if self.kwargs.get('tipo') and self.kwargs.get('tipo')=='congreso':
+            congreso=self.objects.congreso
+            print(self.kwargs.get('tipo'))
+            self.success_url =  reverse_lazy('MedCongressAdmin:Congres_bloques',kwargs={'path': congreso.path} )
+        return self.success_url
 class BloqueModeradoresListView(validarUser,TemplateView):
     template_name= 'MedCongressAdmin/bloque_moderadores.html' 
     def get(self, request, **kwargs):

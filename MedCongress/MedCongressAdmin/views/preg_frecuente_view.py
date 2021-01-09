@@ -10,23 +10,7 @@ from django.views.generic import CreateView, ListView, TemplateView, UpdateView
 from django.views.generic.edit import DeleteView, FormView
 from MedCongressAdmin.forms.congres_forms import PregFrecuenteForm
 from MedCongressApp.models import PreguntasFrecuentes,Congreso
-
-
-class validarUser(UserPassesTestMixin):
-    permission_denied_message = 'No tiene permiso para acceder a la administracion'
-    login_url='accounts/login/'
-    def test_func(self):
-       
-        if self.request.user.is_staff :
-            return True
-        else:
-            return False
-    
-
-# class CuestionarioListView(validarUser,ListView):
-#     model = CuestionarioPregunta
-#     context_object_name = 'cuestionarios'
-#     template_name = 'MedCongressAdmin/cuestionarios.html'
+from MedCongressAdmin.apps import validarUser
 
 
 class  PregFrecuenteCreateView(validarUser,CreateView):

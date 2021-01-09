@@ -19,6 +19,27 @@
 </style>
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+{%if congres%}
+<li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+</li>
+
+<li class="breadcrumb-item active">Bloques
+</li>
+
+{%else%}
+<li class="breadcrumb-item active"> Bloques
+</li>
+
+{%endif%}
+</ol>
+</div>
+</div>
+</div>
 <section id="configuration">
     <div class="row">
         <div class="col-12">
@@ -36,7 +57,11 @@
                         <div class="col-10">
                             <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Listado
                                 de bloques  <i class="icon-block" style="padding: 15px;"></i></h1>
+                                {%if congres%}
+                                <p class="card-text">Mostrando bloques del Congreso {{congres.titulo}}.</p>
+                                {%else%}
                             <p class="card-text">Mostrando todos los bloques almacenados.</p>
+                            {%endif%}
                         </div>
                         <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
@@ -85,9 +110,11 @@
                                                 <td>{{ bloque.fecha_inicio }}</td>
                                                 
                                                 <td>  <a id=""
-                                                   
-                                                    href="{%url 'MedCongressAdmin:Bloque_ponencias' bloque.path%}"
-                                                    
+                                                   {% if congres%}
+                                                    href="{%url 'MedCongressAdmin:Bloque_ponencias' path=bloque.path tipo='congreso'%}"
+                                                    {%else%}
+                                                    href="{%url 'MedCongressAdmin:Bloque_ponencias' path=bloque.path tipo='false'%}"
+                                                    {%endif%}
                                                     title="Ponencias ">
                                                     <i class="icon icon-ponencia " > </i>
                                                 </a>
@@ -98,8 +125,13 @@
                                                 </a></td>
                                                 
                                                 <td style="text-align: center;">
-                                                    <a href="{% url 'MedCongressAdmin:bloque_edit' pk=bloque.pk %}"
+                                                    {%if congres%}
+                                                    <a href="{% url 'MedCongressAdmin:bloque_edit' pk=bloque.pk tipo='congreso' %}"
                                                         title="Editar"><i class="icon icon-editar"></i></a>
+                                                    {%else%}
+                                                    <a href="{% url 'MedCongressAdmin:bloque_edit' pk=bloque.pk tipo='falso' %}"
+                                                        title="Editar"><i class="icon icon-editar"></i></a>
+                                                        {%endif%}
                                                     <a id="del_{{ bloque.pk }}"
                                                         href="javascript:deleteItem('{{ bloque.pk }}')"
                                                         title="Eliminar">

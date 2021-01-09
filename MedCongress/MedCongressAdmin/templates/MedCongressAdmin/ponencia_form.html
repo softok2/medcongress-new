@@ -13,98 +13,54 @@
 
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+{%if con%}
+    <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+    </li>
+        {%if bloque%}
+            <li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:Congres_bloques' path=bloque.congreso.path %}">Bloques</a>
+			</li>
+			<li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:Bloque_ponencias' path=bloque.path tipo='congreso' %}">Ponencias</a>
+			</li>
+			{%else%}	
+			<li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:Congres_ponencias' path=con.path %}">Ponencias</a>
+			</li>
+	{%endif%}
+	
+    <li class="breadcrumb-item active">{%if ponencia%} Actualizar Ponencia {%else%} Adicionar Ponencia {%endif%}
+    </li>
+{%else%}
+
+
+{%if bloque%}
+
+<li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:bloques_list' %}">Bloques</a>
+</li>
+<li class="breadcrumb-item active">Ponencia
+</li>
+{%else%}
+<li class="breadcrumb-item active">Ponencia
+</li>
+{%endif%}
+{%endif%}
+</ol>
+</div>
+</div>
+</div>
 <section class="multiple-input-with-labels" id="multiple-input-with-labels">
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title" id="myModalLabel">Insertar Foto</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-							aria-hidden="true">&times;</span></button>
+	
 
-				</div>
-				<div class="modal-body">
-					<div class="col-sm-12">
-						<div class="form-group">
-							<label
-								for="{{form.imagen_congreso.imagen.id_for_label }}"><b>{{form.imagen_congreso.imagen.label }}</b>{% if form.imagen_congreso.imagen.errors %}
-								<span style="font-size: 15px; color: red;">{{ form.imagen_congreso.imagen.errors }}
-								</span>{% endif %} </label>
 
-							{{form.imagen_congreso.imagen }}
-						</div>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<a onclick="InsertImagen()" type="button" class="btn btn-primary" data-dismiss="modal">Insertar</a>
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="modal fade" id="my" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title" id="myModalLabel">Lugar</h4> <button type="button" class="close"
-						data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-
-				</div>
-				<div class="modal-body">
-					<div id="geomap"></div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="modal fade" id="add_tipo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title" id="myModalLabel">Insertar Nuevo Tipo de Congreso</h4> <button type="button"
-						class="close" data-dismiss="modal" aria-label="Close"><span
-							aria-hidden="true">&times;</span></button>
-
-				</div>
-				<div class="modal-body">
-					<div id="geomap"></div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="modal fade" id="add_esp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title" id="myModalLabel">Insertar Nueva Especialidad</h4> <button type="button"
-						class="close" data-dismiss="modal" aria-label="Close"><span
-							aria-hidden="true">&times;</span></button>
-
-				</div>
-				<div class="modal-body">
-					<div id="geomap"></div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-
-				</div>
-			</div>
-		</div>
-	</div>
 	<div class="row">
 		<div class="col-12">
 			<div class="card">
 				<div class="card-header">
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
-						Adicionar Ponencia</h1>
+						{%if ponencia%} Actualizar Ponencia {%else%} Adicionar Ponencia {%endif%}</h1>
 						{% if messages %}
 						<ul class="messages">
 							{% for message in messages %}
@@ -306,7 +262,7 @@
 												</div>
 											</div>
 											<div class="col-sm-3 ">
-												<div class="form-group" {%if con %} style="display: none;" {%endif%}>
+												<div class="form-group" {%if con or congreso %} style="display: none;" {%endif%}>
 
 
 													<label
@@ -602,9 +558,7 @@
 
 										<div class="form-actions">
 											<div class="text-right">
-												<button id="atras" type="button" class="btn btn-danger ">Cancelar
-													<i class="ft-x position-right"></i>
-												</button>
+											
 												<button id="save" type="submit" class="btn btn-primary">Guardar
 													<i class="ft-save position-right"></i>
 												</button>
@@ -712,7 +666,7 @@
 		$('#atras').click(function () {
 			{%if con %} {
 				{%if bloque %}
-				location.href = "{% url 'MedCongressAdmin:Bloque_ponencias' bloque.path %}";
+				location.href = "{% url 'MedCongressAdmin:Bloque_ponencias' path=bloque.path tipo='congreso'%}";
 				{%else%}
 				location.href = "{% url 'MedCongressAdmin:Congres_ponencias' con.path %}";
 				{% endif %}
@@ -726,6 +680,9 @@
 		
 		{%if con %}
 		$("#id_ponencia-congreso option[value='{{con.id}}']").attr("selected", true);
+		{% endif %}
+		{%if congreso %}
+		$("#id_ponencia-congreso option[value='{{congreso.id}}']").attr("selected", true);
 		
 		{% endif %}
 		{%if bloque %}
