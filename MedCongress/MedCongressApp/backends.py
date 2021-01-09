@@ -12,14 +12,14 @@ class EmailAuthBackend(ModelBackend):
     """
     def authenticate(self, request, username=None, password=None, **kwargs):
         try:
-            # captcha_token=request.POST.get("g-recaptcha-response")
-            # cap_url="https://www.google.com/recaptcha/api/siteverify"
-            # cap_secret="6Ld6FyEaAAAAAGggch470Ybh9GHS1Mu3dhz9IT3P"
-            # cap_data={"secret":cap_secret,"response":captcha_token}
-            # cap_server_response=requests.post(url=cap_url,data=cap_data)
-            # cap_json=json.loads(cap_server_response.text)
-            # if cap_json['success']==False:
-            #     return None
+            captcha_token=request.POST.get("g-recaptcha-response")
+            cap_url="https://www.google.com/recaptcha/api/siteverify"
+            cap_secret="6Ld6FyEaAAAAAGggch470Ybh9GHS1Mu3dhz9IT3P"
+            cap_data={"secret":cap_secret,"response":captcha_token}
+            cap_server_response=requests.post(url=cap_url,data=cap_data)
+            cap_json=json.loads(cap_server_response.text)
+            if cap_json['success']==False:
+                return None
                
             user = User.objects.get(email=username)
             if user.check_password(password):
