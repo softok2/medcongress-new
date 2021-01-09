@@ -289,7 +289,7 @@ class CongresoDetail(TemplateView):
     def get_context_data(self, **kwargs):
 
         # # /////////////////
-        url = "http://vimeo.com/api/v2/video/459579093.json"
+        url = "https://vimeo.com/api/v2/video/459579093.json"
        
            
                 
