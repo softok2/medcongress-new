@@ -129,7 +129,7 @@ class PerfilUsuario(models.Model):
             return True
         else:
             return False
-
+    
 
 #### Tabla Tipo de Congresos que hay ######
 

@@ -11,7 +11,7 @@ from django.views.generic.edit import  DeleteView, UpdateView,FormView
 from MedCongressApp.models import User,PerfilUsuario,Ubicacion
 from MedCongressAdmin.forms.congres_forms import UsuarioForms
 from MedCongressAdmin.apps import validarUser
-from MedCongressAdmin.pager import Pager
+
 
 # from django.views import generic
   
