@@ -99,7 +99,7 @@
                                             <tr role="row">
                                                 <th style="width:50%">Nombre</th>
                                                 <th>Congreso</th>
-                                                <th>Ponentes</th>
+                                                
                                                 <!-- <th>Lugar</th>
                                                 <th>Fecha</th> -->
                                                 <th>Public.</th>
@@ -107,7 +107,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for ponencia in ponencias %}
+                                            <!-- {% for ponencia in ponencias %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
                                                 <td class="sorting_1">{{ ponencia.titulo }}</td>
                                                 <td class="sorting_1">{{ ponencia.congreso.titulo }}</td>
@@ -118,9 +118,9 @@
                                                         title="Ponentes">
                                                         <i class="icon icon-ponente " style= "color: blue;" ></i>
                                                     </a></td>
-                                                <!-- <td>{{ ponencia.lugar }}</td>
+                                                <td>{{ ponencia.lugar }}</td>
                                                 <td>{{ ponencia.fecha_inicio }}</td> -->
-                                                <td>{%if ponencia.published%}Si{%else%}No{%endif%}</td>
+                                                <!-- <td>{%if ponencia.published%}Si{%else%}No{%endif%}</td>
 
                                                 <td style="text-align: center;">
                                                     <a href="{% url 'MedCongressAdmin:ponencia_edit' pk=ponencia.pk %}"
@@ -132,13 +132,13 @@
                                                     </a>
                                                 </td>
                                             </tr>
-                                            {% endfor %}
+                                            {% endfor %} -->
                                         </tbody>
                                         <tfoot>
                                             <tr>
                                                 <th style="width:50%">Nombre</th>
                                                 <th>Congreso</th>
-                                                <th>Ponentes</th>
+                                               
                                                 <!-- <th>Lugar</th>
                                                 <th>Fecha</th> -->
                                                 <th>Public.</th>
@@ -189,7 +189,30 @@
             "previous": "Anterior"
         }
     },
- 
+    "columns": [
+       
+        {'data':'nombre','orderable': true},
+        {'data':'congreso','orderable': true}, 
+        {'data':'public','orderable': true },
+        {'data':'operaciones','orderable': true }
+       
+    ],
+    "bServerSide": true,
+    "sAjaxSource": "{% url 'MedCongressAdmin:table_json_ponencia' %}",
+    "fnServerParams": function (aoData) {
+        {%if congres%}
+            aoData.push( { "name": "tipo", "value": "congreso" } );
+            aoData.push( { "name": "id", "value": {{congres.pk}} } );
+            {%elif bloque%}
+            aoData.push( { "name": "tipo", "value": "bloque" } );
+            aoData.push( { "name": "id", "value": {{bloque.pk}} } );
+           {%else%}
+
+            aoData.push( { "name": "tipo", "value": "nada" } );
+            
+            {%endif%}
+        
+       }
 });
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({
@@ -215,7 +238,6 @@
             location.href = "{% url 'MedCongressAdmin:bloque_ponencia_select' path=bloque.path  %}";
         });
         {%endif%}
-        dataTable = $('.zero-configuration').DataTable();
     });
     function deleteItem(pk) {
         swal({

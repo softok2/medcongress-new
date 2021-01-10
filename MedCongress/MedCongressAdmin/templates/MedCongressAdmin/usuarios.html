@@ -86,7 +86,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for user in users %}
+                                            <!-- {% for user in users %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
                                                 <td class="sorting_1">{{ user.usuario.first_name }} {{ user.usuario.last_name }}</td>
                                                 
@@ -109,7 +109,7 @@
 
                                                 </td>
                                             </tr>
-                                            {% endfor %}
+                                            {% endfor %} -->
                                         </tbody>
                                         <tfoot>
                                             <tr style="font-size: 13px;">
@@ -131,6 +131,8 @@
             </div>
         </div>
     </div>
+   
+</div>
 </section>
 <div class="swal-overlay" tabindex="-1">
     <form id="swall-modal-form" method="POST" style="display: none;">
@@ -166,7 +168,18 @@
             "previous": "Anterior"
         }
     },
- 
+    
+    "columns": [
+       
+        {'data':'nombre','orderable': true},
+        {'data':'email','orderable': true},
+        {'data':'categoria','orderable': true },
+        {'data':'especialidad','orderable': true },
+        {'data':'operaciones','orderable': true }
+       
+    ],
+    "bServerSide": true,
+    "sAjaxSource":"{% url 'MedCongressAdmin:table_json' %}"
 });
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({

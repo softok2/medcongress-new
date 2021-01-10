@@ -10,6 +10,7 @@ from MedCongressApp.models import Ponencia,RelPonenciaPonente,Ubicacion,Congreso
 from MedCongressAdmin.forms.congres_forms import PonenciaForms,PonentePonenciaForm
 from django.utils.crypto import get_random_string
 from MedCongressAdmin.apps import validarUser
+from django.db.models import Q
 
 class PonenciaListView(validarUser,ListView):
     model = Ponencia
@@ -146,7 +147,7 @@ class PonencicaUpdateView(validarUser,FormView):
         ponencia=Ponencia.objects.get(pk=self.kwargs.get('pk'))
         self.object=ponencia
         context=super().get_context_data(**kwargs)
-        if self.object.meta_og_imagen:
+        if self.object.imagen:
             context['imagen_seg_url']='/static/%s'%(self.object.imagen)
         if self.object.meta_og_imagen:
             context['imagen_meta']='/static/%s'%(self.object.meta_og_imagen)
@@ -201,5 +202,67 @@ def PonenciaBloqueDeleted(request):
 
 
 
+class vTableAsJSONPonencia(TemplateView):
+    template_name = 'MedCongressAdmin/asig_congress_form.html'
+    def get(self, request, *args, **kwargs):
+        col_name_map = {
+            '0': 'titulo',
+            '1': 'congreso__titulo',
+            
+        }
 
+        if request.GET.get('tipo')=='nada':
+            object_list = Ponencia.objects.all()
+        if request.GET.get('tipo')=='congreso':
+            object_list = Ponencia.objects.filter(congreso__pk=int(request.GET.get('id')))
+        if request.GET.get('tipo')=='bloque':
+            object_list = Ponencia.objects.filter(bloque__pk=int(request.GET.get('id')))
+        
+       
+        search_text = request.GET.get('sSearch', '').lower()
+        start = int(request.GET.get('iDisplayStart', 0))
+        delta = int(request.GET.get('iDisplayLength', 50))
+        sort_dir = request.GET.get('sSortDir_0', 'asc')
+        sort_col = int(request.GET.get('iSortCol_0', 0))
+        sort_col_name = request.GET.get('mDataProp_%s' % sort_col, '1')
+        sort_dir_prefix = (sort_dir == 'desc' and '-' or '')
 
+        if sort_col_name in col_name_map:
+            sort_col = col_name_map[sort_col_name]
+            object_list = object_list.order_by('%s%s' % (sort_dir_prefix, sort_col))
+
+        filtered_object_list = object_list
+        if len(search_text) > 0:
+            filtered_object_list = object_list.filter(Q(titulo__icontains=search_text) | Q(congreso__titulo__icontains=search_text))
+
+        enviar =[]
+        for objet in filtered_object_list[start:(start+delta)]:
+            public='No'
+            if objet.published:
+                public='Si'
+            user=''
+            # if objet.ponente:
+            #     user= '%s %s'%(objet.ponente.first().user.usuario.first_name,objet.ponente.first().user.usuario.last_name)
+            enviar.append({ 'nombre':objet.titulo,
+                            'congreso': objet.congreso.titulo,
+                            'public' : public,
+                            'operaciones' : ''' <a href="'''+ reverse('MedCongressAdmin:ponencia_edit',kwargs={'pk':objet.pk})+'''"
+                                                    title="Editar"><i class="icon icon-editar"></i></a>
+                                                    <a id="del_'''+ str(objet.pk) +'''"
+                                                        href="javascript:deleteItem('''+ str(objet.pk) +''')"
+                                                        title="Eliminar">
+                                                        <i class="icon icon-eliminar"></i>
+                                                    </a>''',
+                            
+            })
+        jsoner = {
+            
+            "iTotalRecords": filtered_object_list.count(),
+            "iTotalDisplayRecords": filtered_object_list.count(),
+            "sEcho": request.GET.get('sEcho', 1),
+            "data": enviar
+        }
+        data = json.dumps(jsoner)
+        mimetype = "application/json"
+
+        return HttpResponse(data, mimetype)

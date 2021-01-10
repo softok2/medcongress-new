@@ -19,13 +19,13 @@ from .views.congress_views import (CongressListView,CongressCreateView,CongressU
 from .views.imagen_views import (ImagenCreateView)
 from .views.ponencia_view import (PonenciaListView, PonenciaCreateView,PonenciaPonenteListView,
                                    PonencicaUpdateView,PonenciaPonenteCreateView,PonenciaDeletedView,
-                                   PonenciaPonenteDeletedView,PonenciaBloqueDeleted)
+                                   PonenciaPonenteDeletedView,PonenciaBloqueDeleted,vTableAsJSONPonencia)
 from .views.taller_view import (TalleresListView,TallerCreateView,TallerCategPagosListView,TallerCategPagosCreateView,
                                    TallerUpdateView,TallerPonenteListView,TallerPonenteCreateView,TallerDeletedView,AsignarTalleresListView,
                                    AsignarTallerAddViews,GetPagosT,AsignarTallerDeletedViews,TallerPonenteDeletedView,TallerBloqueDeleted,
                                    ReporteRelTallerUserExcel)
 from .views.ponente_view import (PonentesListView,PonentesCreateView,PonenteDeletedView)
-from .views.user_views import (UsuariosListView,UsuarioCreateView,UsuarioUpdateView,UsuarioDeletedView,UsuarioAsigCongresoView)
+from .views.user_views import (UsuariosListView,UsuarioCreateView,UsuarioUpdateView,UsuarioDeletedView,UsuarioAsigCongresoView,vTableAsJSON)
 from .views.bloque_views import (BloquesListView,BloqueCreateView,BloqueDeletedView,BloquePonenciasListView,BloqueTalleresListView,
                                    BloqueUpdateView,BloqueModeradoresListView,page_not_found,BloqueModeradoresCreateView,BloqueModeradoresDeletedView,
                                    PonenciaSeleccionarView)
@@ -306,4 +306,8 @@ urlpatterns = [
      
      path('imagen-quienes_somos/adicinar', QuienesSomosImagenCreateView.as_view(), name='imagen-quienes_somos_add'),
     path('imagen-quienes_somos/eliminar/<int:pk>', QuienesSomosImagenDeletedView.as_view(), name='imagen_quienes_somos_deleted'),
+    path('pruebaTablaJson', vTableAsJSON.as_view(), name='table_json'),
+    path('pruebaTablaJsonPonencia', vTableAsJSONPonencia.as_view(), name='table_json_ponencia'),
+    
+
 ]

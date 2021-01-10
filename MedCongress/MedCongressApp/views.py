@@ -273,12 +273,14 @@ class CongresoDetail(TemplateView):
     
 
     def get(self, request, **kwargs):
-          # # /////////////////
-        url = "https://vimeo.com/api/v2/video/492853093.json"        
-        headers={'Content-type': 'application/json'}
-        response=requests.get(url=url,headers=headers)
+        #   # # /////////////////
+        url = "https://vimeo.com/api/v2/video/463582604.json"        
+        
+
+        
+        response=requests.get(url=url,headers={ 'Authorization': 'Bearer ef977a79f8ddf1902334a4a3a9c64215','Accept': 'application/vnd.vimeo.*+json;version=3.4' })
         return HttpResponse(response.json() )  
-        # # /////////////////////
+        # # # /////////////////////
         congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
         if congreso is None:
             return   HttpResponseRedirect(reverse('Error404'))
@@ -295,10 +297,10 @@ class CongresoDetail(TemplateView):
     def get_context_data(self, **kwargs):
 
         # # /////////////////
-        url = "https://vimeo.com/api/v2/video/494532060.json"        
-        headers={'Content-type': 'application/json'}
-        response=requests.post(url=url,headers=headers)
-        return response.json() 
+        # url = "https://vimeo.com/api/v2/video/494532060.json"        
+        # headers={'Content-type': 'application/json'}
+        # response=requests.post(url=url,headers=headers)
+        # return response.json() 
         # # /////////////////////
 
         context = super(CongresoDetail, self).get_context_data(**kwargs)
