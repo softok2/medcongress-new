@@ -102,7 +102,7 @@ class vTableAsJSON(TemplateView):
         object_list = PerfilUsuario.objects.all()
         search_text = request.GET.get('sSearch', '').lower()
         start = int(request.GET.get('iDisplayStart', 0))
-        delta = int(request.GET.get('iDisplayLength', 50))
+        delta = int(request.GET.get('iDisplayLength', 10))
         sort_dir = request.GET.get('sSortDir_0', 'asc')
         sort_col = int(request.GET.get('iSortCol_0', 0))
         sort_col_name = request.GET.get('mDataProp_%s' % sort_col, '1')
