@@ -205,12 +205,10 @@ def PonenciaBloqueDeleted(request):
 class vTableAsJSONPonencia(TemplateView):
     template_name = 'MedCongressAdmin/asig_congress_form.html'
     def get(self, request, *args, **kwargs):
-        col_name_map = {
-            '0': 'titulo',
-            '1': 'congreso__titulo',
-            
-        }
-
+        #arreglo con las columnas de la BD a filtrar
+        col_name_map = ['titulo','congreso__titulo','published']
+           
+        #listado que muestra en dependencia de donde estes parado
         if request.GET.get('tipo')=='nada':
             object_list = Ponencia.objects.all()
         if request.GET.get('tipo')=='congreso':
@@ -218,23 +216,26 @@ class vTableAsJSONPonencia(TemplateView):
         if request.GET.get('tipo')=='bloque':
             object_list = Ponencia.objects.filter(bloque__pk=int(request.GET.get('id')))
         
-       
-        search_text = request.GET.get('sSearch', '').lower()
-        start = int(request.GET.get('iDisplayStart', 0))
-        delta = int(request.GET.get('iDisplayLength', 50))
-        sort_dir = request.GET.get('sSortDir_0', 'asc')
-        sort_col = int(request.GET.get('iSortCol_0', 0))
+        #parametros 
+        search_text = request.GET.get('sSearch', '').lower()# texto a buscar
+        start = int(request.GET.get('iDisplayStart', 0))#por donde empezar a mostrar
+        delta = int(request.GET.get('iDisplayLength', 10))#cantidad a mostrar
+        sort_dir = request.GET.get('sSortDir_0', 'asc')# direccion a ordenar
+        sort_col = int(request.GET.get('iSortCol_0', 0)) # numero de la columna a ordenar
         sort_col_name = request.GET.get('mDataProp_%s' % sort_col, '1')
-        sort_dir_prefix = (sort_dir == 'desc' and '-' or '')
+        sort_dir_prefix = (sort_dir == 'desc' and '-' or '') #sufijo para poner en la consulta para ordenar
 
-        if sort_col_name in col_name_map:
-            sort_col = col_name_map[sort_col_name]
-            object_list = object_list.order_by('%s%s' % (sort_dir_prefix, sort_col))
+        #para ordenar el listado
+        if sort_col!=3:# columna en la tabla para las operaciones
+            sort_colr = col_name_map[sort_col]
+            object_list = object_list.order_by('%s%s' % (sort_dir_prefix,sort_colr))
 
+        #para filtrar el listado
         filtered_object_list = object_list
         if len(search_text) > 0:
             filtered_object_list = object_list.filter(Q(titulo__icontains=search_text) | Q(congreso__titulo__icontains=search_text))
 
+        #Guardar datos en un 
         enviar =[]
         for objet in filtered_object_list[start:(start+delta)]:
             public='No'
@@ -243,6 +244,8 @@ class vTableAsJSONPonencia(TemplateView):
             user=''
             # if objet.ponente:
             #     user= '%s %s'%(objet.ponente.first().user.usuario.first_name,objet.ponente.first().user.usuario.last_name)
+           
+           #Guardar datos en un dic 
             enviar.append({ 'nombre':objet.titulo,
                             'congreso': objet.congreso.titulo,
                             'public' : public,
@@ -255,6 +258,7 @@ class vTableAsJSONPonencia(TemplateView):
                                                     </a>''',
                             
             })
+        #parametros para la respuesta
         jsoner = {
             
             "iTotalRecords": filtered_object_list.count(),
@@ -264,5 +268,5 @@ class vTableAsJSONPonencia(TemplateView):
         }
         data = json.dumps(jsoner)
         mimetype = "application/json"
-
+        #Enviar
         return HttpResponse(data, mimetype)
