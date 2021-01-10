@@ -117,7 +117,7 @@ class vTableAsJSON(TemplateView):
             filtered_object_list = object_list.filter_on_search(search_text)
 
         enviar =[]
-        for objet in object_list:
+        for objet in filtered_object_list[start:(start+delta)]:
             enviar.append({ 'nombre':'%s %s'%(objet.usuario.first_name,objet.usuario.last_name),
                             'email': objet.usuario.email,
                             'categoria' : objet.categoria.nombre,
