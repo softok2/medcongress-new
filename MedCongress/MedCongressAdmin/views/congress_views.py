@@ -959,13 +959,11 @@ class CongressCategPagosUpdateView(validarUser,FormView):
         return RelCongresoCategoriaPago.objects.get(pk=self.kwargs.get('pk'))
 
 
-    # def get_context_data(self, **kwargs):
-    #     context=super().get_context_data(**kwargs)
-    #     pregunta=CuestionarioPregunta.objects.get(pk=self.kwargs.get('pk'))
-    #     context['respuestas']=CuestionarioRespuestas.objects.filter(pregunta=pregunta)
-    #     context['congreso']=pregunta.congreso
-    #     context['pregunta']=pregunta
-    #     return context
+    def get_context_data(self, **kwargs):
+        context=super().get_context_data(**kwargs)
+        
+        context['update']=True
+        return context
     # def form_valid(self, form):
         
     #     pregunta =CuestionarioPregunta.objects.get(pk=self.request.POST['update'])   

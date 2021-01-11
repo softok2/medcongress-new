@@ -19,6 +19,17 @@
 </style>
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">	
+		  <li class="breadcrumb-item">Especialidades de los Usuarios
+		  </li>		
+		</ol>
+	  </div>
+	</div>
+  </div>
 <section id="configuration">
     <div class="row">
         <div class="col-12">
@@ -61,6 +72,7 @@
                                             <th style="width:50%">Nombre</th>
                                             
                                                 <th style="width:5%">Operaciones</th>
+                                               
                                         </thead>
                                         <tbody>
                                             {% for esp_usuario in esp_usuarios %}
@@ -85,7 +97,7 @@
                                         <tfoot>
                                             
                                                 <th>Nombre</th>
-                                                
+                                               
                                                 <th style="width:5%">Operaciones</th>
                                         </tfoot>
                                     </table>

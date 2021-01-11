@@ -226,7 +226,7 @@ class vTableAsJSONPonencia(TemplateView):
         sort_dir_prefix = (sort_dir == 'desc' and '-' or '') #sufijo para poner en la consulta para ordenar
 
         #para ordenar el listado
-        if sort_col!=3:# columna en la tabla para las operaciones
+        if sort_col!=4 or sort_col!=2:# columna en la tabla para las operaciones
             sort_colr = col_name_map[sort_col]
             object_list = object_list.order_by('%s%s' % (sort_dir_prefix,sort_colr))
 
@@ -248,6 +248,10 @@ class vTableAsJSONPonencia(TemplateView):
            #Guardar datos en un dic 
             enviar.append({ 'nombre':objet.titulo,
                             'congreso': objet.congreso.titulo,
+                            'ponentes':''' <a  href="'''+ reverse('MedCongressAdmin:Ponencia_ponentes',kwargs={'path':objet.path})+'''"
+                                                        title="Ponentes">
+                                                        <i class="icon icon-ponente " style= "color: blue;" ></i>
+                                                    </a>''',
                             'public' : public,
                             'operaciones' : ''' <a href="'''+ reverse('MedCongressAdmin:ponencia_edit',kwargs={'pk':objet.pk})+'''"
                                                     title="Editar"><i class="icon icon-editar"></i></a>

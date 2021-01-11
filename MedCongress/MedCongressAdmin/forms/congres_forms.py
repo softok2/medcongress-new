@@ -708,7 +708,7 @@ class MetaPagListarForm(forms.ModelForm):
         self.fields['meta_title'].widget.attrs.update({'class': 'form-control'})   
             
 class PregFrecuenteForm(forms.ModelForm):
-    published=forms.BooleanField(label='Publicado')
+    published=forms.BooleanField(label='Publicado',required=False)
     class Meta:
         model=PreguntasFrecuentes
         fields=['pregunta','respuesta','congreso','published']

@@ -160,7 +160,7 @@ urlpatterns = [
     path('bloque_ponencia/seleccionar/<str:path>', PonenciaSeleccionarView.as_view(), name='bloque_ponencia_select'),
     
      # Bloque-talleres
-     path('talleres/bloque/<str:path>', BloqueTalleresListView.as_view(), name='Bloque_talleres'),
+     path('talleres/bloque/<str:path>/<str:tipo>', BloqueTalleresListView.as_view(), name='Bloque_talleres'),
      path('taller/bloque/add/<int:pk_block>', TallerCreateView.as_view(), name='taller_bloque_add'),
  
      

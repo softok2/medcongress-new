@@ -75,6 +75,7 @@ class UsuarioUpdateView(validarUser,UpdateView):
             context['imagen_meta']='/static/%s'%(self.object.meta_og_imagen)
         if self.object.foto:    
             context['imagen_seg_url']='/static/%s'%(self.object.foto)
+        context['update']=True
         return context
 
 class UsuarioDeletedView(validarUser,DeleteView):

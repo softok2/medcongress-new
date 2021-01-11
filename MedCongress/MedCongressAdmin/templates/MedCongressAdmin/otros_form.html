@@ -4,6 +4,24 @@
 {% block styles %}
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+			
+		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:otros_list' %}">Otros Datos</a>
+		  </li>
+		  
+		
+	
+		<li class="breadcrumb-item active"> Actualizar Otros Datos</a>
+		</li>
+		
+		</ol>
+	  </div>
+	</div>
+  </div>
 <section class="multiple-input-with-labels" id="multiple-input-with-labels">
 	<div class="row">
 		<div class="col-12">
@@ -15,9 +33,9 @@
 					<div class="heading-elements">
 						<ul class="list-inline mb-0">
 							<li><a data-action="collapse"><i class="ft-minus"></i></a></li>
-							<li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+							
 							<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
-							<li><a data-action="close"><i class="ft-x"></i></a></li>
+							
 						</ul>
 					</div>
 				</div>
@@ -29,7 +47,7 @@
 								<div class="row">
 									
 										
-										<div class="col-sm-1 ">
+										<div class="col-sm-2 ">
 											<div class="form-group">
 												<label
 													for="{{form.ponentes.id_for_label }}"><b>{{form.ponentes.label }}</b>{% if form.ponentes.errors %}
@@ -40,7 +58,7 @@
 												{{form.ponentes }}
 											</div>
 										</div>
-										<div class="col-sm-1 ">
+										<div class="col-sm-2 ">
 											<div class="form-group">
 												<label
 													for="{{form.ponencias.id_for_label }}"><b>{{form.ponencias.label }}</b>{% if form.ponencias.errors %}
@@ -51,7 +69,7 @@
 												{{form.ponencias }}
 											</div>
 										</div>	
-										<div class="col-sm-1 ">
+										<div class="col-sm-2 ">
 											<div class="form-group">
 												<label
 													for="{{form.paises.id_for_label }}"><b>{{form.paises.label }}</b>{% if form.paises.errors %}
@@ -62,7 +80,7 @@
 												{{form.paises }}
 											</div>
 										</div>
-										<div class="col-sm-1 ">
+										<div class="col-sm-2">
 											<div class="form-group">
 												<label
 													for="{{form.eventos.id_for_label }}"><b>{{form.eventos.label }}</b>{% if form.eventos.errors %}
@@ -73,7 +91,9 @@
 												{{form.eventos }}
 											</div>
 										</div>	
-										<div class="col-sm-1 ">
+								</div>
+								<div class="row">
+										<div class="col-sm-2 ">
 											<div class="form-group">
 												<label
 													for="{{form.especialidades.id_for_label }}"><b>{{form.especialidades.label }}</b>{% if form.especialidades.errors %}
@@ -84,7 +104,7 @@
 												{{form.especialidades }}
 											</div>
 										</div>
-										<div class="col-sm-1 ">
+										<div class="col-sm-2 ">
 											<div class="form-group">
 												<label
 													for="{{form.talleres.id_for_label }}"><b>{{form.talleres.label }}</b>{% if form.talleres.errors %}
@@ -95,7 +115,7 @@
 												{{form.talleres }}
 											</div>
 										</div>	
-										<div class="col-sm-1 ">
+										<div class="col-sm-2 ">
 											<div class="form-group">
 												<label
 													for="{{form.afiliados.id_for_label }}"><b>{{form.afiliados.label }}</b>{% if form.afiliados.errors %}

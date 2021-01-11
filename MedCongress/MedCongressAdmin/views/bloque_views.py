@@ -84,7 +84,7 @@ class BloquePonenciasListView(validarUser,TemplateView):
         return context
 
 class BloqueTalleresListView(validarUser,TemplateView):
-    template_name= 'MedCongressAdmin/bloque_talleres.html'  
+    template_name= 'MedCongressAdmin/talleres.html'  
 
     def get(self, request, **kwargs):
         bloque=Bloque.objects.filter(path=self.kwargs.get('path')).first()
@@ -94,7 +94,9 @@ class BloqueTalleresListView(validarUser,TemplateView):
     def get_context_data(self, **kwargs):
         context = super(BloqueTalleresListView, self).get_context_data(**kwargs)
         bloque=Bloque.objects.filter(path=self.kwargs.get('path')).first()
-        context['bloque']=bloque
+        context['bloc']=bloque
+        if self.kwargs.get('tipo')=='congreso':
+            context['congres']=bloque.congreso
         context['talleres']=Taller.objects.filter(bloque=bloque)
         return context
 

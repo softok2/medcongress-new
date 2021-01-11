@@ -119,7 +119,11 @@
                                                     <i class="icon icon-ponencia " > </i>
                                                 </a>
                                                 <a id=""
-                                                     href="{%url 'MedCongressAdmin:Bloque_talleres' bloque.path%}"
+                                                {% if congres%}
+                                                href="{%url 'MedCongressAdmin:Bloque_talleres' path=bloque.path tipo='congreso'%}"
+                                                {%else%}
+                                                href="{%url 'MedCongressAdmin:Bloque_talleres' path=bloque.path tipo='false'%}"
+                                                {%endif%}
                                                     title="Talleres " style="margin-left: 10px;">
                                                     <i class="icon icon-taller " > </i>
                                                 </a></td>

@@ -4,20 +4,38 @@
 {% block styles %}
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+			
+		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:country_list' %}">Paises</a>
+		  </li>
+		  
+		
+	
+		<li class="breadcrumb-item active"> {% if update %}Actualizar País {%else%} Adicionar País{%endif%}</a>
+		</li>
+		
+		</ol>
+	  </div>
+	</div>
+  </div>
 <section class="multiple-input-with-labels" id="multiple-input-with-labels">
 	<div class="row">
 		<div class="col-12">
 			<div class="card">
 				<div class="card-header">
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
-						{{ form_title }} Pa&iacute;s</h1>
+						{% if update %}Actualizar País {%else%} Adicionar País{%endif%}</h1>
 					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
 					<div class="heading-elements">
 						<ul class="list-inline mb-0">
 							<li><a data-action="collapse"><i class="ft-minus"></i></a></li>
-							<li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+							
 							<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
-							<li><a data-action="close"><i class="ft-x"></i></a></li>
+							
 						</ul>
 					</div>
 				</div>

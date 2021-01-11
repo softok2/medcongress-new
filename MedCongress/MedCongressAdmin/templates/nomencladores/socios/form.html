@@ -4,6 +4,29 @@
 {% block styles %}
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+			{%if congreso%}
+		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+		  </li>
+		  
+		  <li class="breadcrumb-item active"><a href="{%url 'MedCongressAdmin:Congres_socios' path=congreso.path%}">Socios</a>
+		</li>
+		
+		{%else%}
+		<li class="breadcrumb-item active"><a href="{%url 'MedCongressAdmin:socios_list'%}">Socios</a>
+		</li>
+		{%endif%}
+		<li class="breadcrumb-item active">{% if update %}Editar Socios {%else%} Adicionar Socios{%endif%}</a>
+		</li>
+		
+		</ol>
+	  </div>
+	</div>
+  </div>
 <section class="multiple-input-with-labels" id="multiple-input-with-labels">
 	<div class="row">
 		<div class="col-12">
@@ -100,7 +123,11 @@
 								<div class="form-actions">
 									<div class="text-right">
 										<a id="atras" type="button" class="btn btn-danger "
+										{%if congreso%}
+										href="{%url 'MedCongressAdmin:Congres_socios' path=congreso.path%}">Cancelar
+										{%else%}
 											href="{%url 'MedCongressAdmin:socios_list'%}">Cancelar
+											{%endif%}
 											<i class="ft-x position-right"></i>
 										</a>
 										<button id="save" type="submit" class="btn btn-primary">Guardar

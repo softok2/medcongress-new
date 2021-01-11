@@ -31,7 +31,7 @@
             <li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:Congres_bloques' path=bloque.congreso.path %}">Bloques</a>
             </li>
     {%endif%}
-    <li class="breadcrumb-item active">Ponencia
+    <li class="breadcrumb-item active">Ponencias
     </li>
 {%else%}
 
@@ -40,10 +40,10 @@
 
 <li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:bloques_list' %}">Bloques</a>
 </li>
-<li class="breadcrumb-item active">Ponencia
+<li class="breadcrumb-item active">Ponencias
 </li>
 {%else%}
-<li class="breadcrumb-item active">Ponencia
+<li class="breadcrumb-item active">Ponencias
 </li>
 {%endif%}
 {%endif%}
@@ -102,6 +102,7 @@
                                                 
                                                 <!-- <th>Lugar</th>
                                                 <th>Fecha</th> -->
+                                                <th>Ponentes</th>
                                                 <th>Public.</th>
                                                 <th style="width:5%">Operaciones</th>
                                             </tr>
@@ -141,6 +142,7 @@
                                                
                                                 <!-- <th>Lugar</th>
                                                 <th>Fecha</th> -->
+                                                <th>Ponentes</th>
                                                 <th>Public.</th>
                                                 <th style="width:5%">Operaciones</th>
                                             </tr>
@@ -192,9 +194,10 @@
     "columns": [
        
         {'data':'nombre','orderable': true},
-        {'data':'congreso','orderable': true}, 
+        {'data':'congreso','orderable': true},
+        {'data':'ponentes','orderable':false},
         {'data':'public','orderable': true },
-        {'data':'operaciones','orderable': true }
+        {'data':'operaciones','orderable': false }
        
     ],
     "ordering": true,

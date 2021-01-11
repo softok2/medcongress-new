@@ -41,6 +41,7 @@ class PregFrecuenteUpdateView(validarUser,UpdateView):
         context=super().get_context_data(**kwargs)
         pregunta=PreguntasFrecuentes.objects.get(pk=self.kwargs.get('pk'))
         context['congreso']=pregunta.congreso
+        context['update']=True
         
         return context
     # def form_valid(self, form):

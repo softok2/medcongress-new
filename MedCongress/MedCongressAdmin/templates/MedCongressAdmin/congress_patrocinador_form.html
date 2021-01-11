@@ -1,5 +1,5 @@
 {% extends 'MedCongressAdmin/base.html' %}
-{% block title %}MedCongressAdmin | Add Moderador{% endblock %}
+{% block title %}MedCongressAdmin | Seleccionar Patrocinador{% endblock %}
 {% load static %}
 {% block styles %}
 {% endblock %}
@@ -9,13 +9,18 @@
 	<div class="row breadcrumbs-top">
 	  <div class="breadcrumb-wrapper col-12">
 		<ol class="breadcrumb">
-			
-		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:Moderadores_list' %}">Moderadores</a>
+			{%if congreso%}
+		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
 		  </li>
 		  
+		  <li class="breadcrumb-item active"><a href="{%url 'MedCongressAdmin:Congres_patrocinadores' path=congreso.path%}">Patrocinadores</a>
+		</li>
 		
-	
-		<li class="breadcrumb-item active"> Adicionar Moderador</a>
+		{%else%}
+		<li class="breadcrumb-item active"><a href="{%url 'MedCongressAdmin:patrocinadores_list'%}">Patrocinadores</a>
+		</li>
+		{%endif%}
+		<li class="breadcrumb-item active">Seleccionar Patrocinador</a>
 		</li>
 		
 		</ol>
@@ -28,7 +33,7 @@
 			<div class="card">
 				<div class="card-header">
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
-						Adicionar Moderador</h1>
+						Seleccionar Patrocinador</h1>
 					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
 					<div class="heading-elements">
 						<ul class="list-inline mb-0">
@@ -42,25 +47,32 @@
 					<div class="card-body">
 						<form id="country-form" method="POST">
 							{% csrf_token %}
+							
 							<div class="form-body">
 								<div class="row">
-									<div class="col-md-12">
+									
 										
-										<div class="col-sm-8 ">
+								
+										
+										
+										<div class="col-sm-6 ">
 											<div class="form-group">
 												<label
-													for="{{form.user.id_for_label }}"><b>{{form.user.label }}</b>{% if form.user.errors %}
+													for="{{form.aval.id_for_label }}"><b>Nombre del Patrocinador</b>{% if form.aval.errors %}
 													<span
-														style="font-size: 15px; color: red;">{{ form.user.errors }}
+														style="font-size: 15px; color: red;">{{ form.aval.errors }}
 													</span>{% endif %} </label>
-													<input type="text" name="my_user" class="form-control" required="" id="id_my_user">
-													<div  style="display: none;"> 
-														{{form.user}}
+													<div style="display: none;">
+														{{form.aval}}
 													</div>
+													<div style="display: none;">
+														{{form.congreso}}
+													</div>
+													<input type="text" name="my_patrocinador" class="form-control" required="" id="id_my_patrocinador">
 													
 											</div>
 										</div>
-											
+								</div>
 											
 											
 										</fieldset>
@@ -88,17 +100,21 @@
 <script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
 <script type="text/javascript">
 $(function() {
-
+	{% if congreso %}
 	
-	  $("#id_my_user").autocomplete({
-		source: "{% url 'User_autocomp'%}",
+		$("#id_congreso option[value='{{congreso.pk}}']").attr("selected", true);
+		
+		{% endif %}
+	
+	  $("#id_my_patrocinador").autocomplete({
+		source: "{% url 'Patrocinador_autocomp'%}",
 		minLength: 3,
 	  });
-$('#id_my_user').change(function(){
-	email=$('#id_my_user').val()
-$("#id_user option:contains('"+email+"')").attr("selected",true);
-if ($("#id_user option:selected").text()!= email) 
-            $("#id_user").val('')
+$('#id_my_patrocinador').change(function(){
+	email=$('#id_my_patrocinador').val()
+$("#id_aval option:contains('"+email+"')").attr("selected",true);
+if ($("#id_aval option:selected").text()!= email) 
+            $("#id_aval").val('')
 });
 
 	});

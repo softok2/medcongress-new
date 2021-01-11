@@ -20,13 +20,10 @@
 		<ol class="breadcrumb">
 		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:usuarios_list' %}">Usuarios</a>
 		  </li>
-		  {%if imagen_seg_url%}
-		  <li class="breadcrumb-item active">Editar Usuario
-		  </li>
-		  {%else%}
-		  <li class="breadcrumb-item active">Insertar Usuario
+		 
+		  <li class="breadcrumb-item active">{%if update%} Actualizar Usuario{%else%}Adicionar Usuario{%endif%}
 		</li>
-		{%endif%}
+		
 		</ol>
 	  </div>
 	</div>
@@ -58,7 +55,7 @@
 				<div class="card-header">
 					
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
-						Adicionar Usuario</h1>
+						{%if update%} Actualizar Usuario{%else%}Adicionar Usuario{%endif%}</h1>
 						
 					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
 					
