@@ -544,8 +544,9 @@ class OtrosForm(forms.ModelForm):
 
 
 class AsignarCongresoForms(forms.ModelForm):
-    user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Correo del Usuario')
+    user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Correo del Usuario',required=False)
     categoria_pago=forms.ModelChoiceField(queryset=CategoriaPagoCongreso.objects.all(),label='Categoría de Pago')
+    congreso=forms.ModelChoiceField(queryset=Congreso.objects.all(),label='Congreso',required=False)
     is_pagado=forms.BooleanField(label='Pagó el Congreso')
     cantidad=forms.IntegerField(label='Cantidad',initial=1)
     class Meta:
@@ -560,11 +561,23 @@ class AsignarCongresoForms(forms.ModelForm):
         self.fields['categoria_pago'].widget.attrs.update({'class': 'form-control','rows':'3'})   
         self.fields['is_pagado'].widget.attrs.update({'class': 'form-control'})   
         self.fields['cantidad'].widget.attrs.update({'class': 'form-control'})  
-         
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(AsignarCongresoForms, self).clean(*args, **kwargs)
+        congreso = cleaned_data.get('congreso', None)
+        user = cleaned_data.get('user', None)
+       
+       
+        if not congreso:
+            self.add_error('congreso', 'No existe ese Congreso')
+
+        if not user:
+            self.add_error('user', 'No existe ese Usuario')
+   
 class AsignarTallerForms(forms.ModelForm):
-    user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Usuario')
+    user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Email del Usuario',required=False)
     categoria_pago=forms.ModelChoiceField(queryset=CategoriaPagoCongreso.objects.all(),label='Categoría de Pago')
     is_pagado=forms.BooleanField(label='Pagó el Taller')
+    taller=forms.ModelChoiceField(queryset=Taller.objects.all(),label='Taller',required=False)
     class Meta:
         model=RelTallerUser
         fields=['user','taller','categoria_pago','is_pagado','cantidad']
@@ -576,7 +589,18 @@ class AsignarTallerForms(forms.ModelForm):
         self.fields['taller'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['categoria_pago'].widget.attrs.update({'class': 'form-control','rows':'3'})   
         self.fields['is_pagado'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['cantidad'].widget.attrs.update({'class': 'form-control'})    
+        self.fields['cantidad'].widget.attrs.update({'class': 'form-control'})  
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(AsignarTallerForms, self).clean(*args, **kwargs)
+        taller = cleaned_data.get('taller', None)
+        user = cleaned_data.get('user', None)
+       
+       
+        if not taller:
+            self.add_error('taller', 'No existe ese Taller')
+
+        if not user:
+            self.add_error('user', 'No existe ese Usuario')  
           
 class ModeradorBloqueForm(forms.ModelForm):
     moderador=forms.ModelChoiceField(queryset=Moderador.objects.all(),label='Moderador',required=False)
