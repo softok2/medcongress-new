@@ -12,17 +12,56 @@
 
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+			{%if update%}
+{%if con%}
+<li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+</li>
+<li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:Congres_bloques' path=con.path %}">Bloques</a>
+</li>
+
+<li class="breadcrumb-item active">Actualizar Bloque
+</li>
+
+{%else%}
+<li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:bloques_list' %}">Bloques</a>
+</li>
+<li class="breadcrumb-item active"> Actualizar Bloque
+</li>
+{%endif%}
+{%else%}
+{%if con%}
+<li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+</li>
+<li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:Congres_bloques' path=con.path %}">Bloques</a>
+</li>
+
+<li class="breadcrumb-item active">Adicionar Bloque
+</li>
+
+{%else%}
+<li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:bloques_list' %}">Bloques</a>
+</li>
+<li class="breadcrumb-item active"> Adicionar Bloque
+</li>
+{%endif%}
+{%endif%}
+</ol>
+</div>
+</div>
+</div>
 <section class="multiple-input-with-labels" id="multiple-input-with-labels">
-
-
-
 
 	<div class="row">
 		<div class="col-12">
 			<div class="card">
 				<div class="card-header">
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
-						Adicionar Bloque</h1>
+						{% if update%}Actualizar Bloque {%else%}Adicionar Bloque {%endif%}</h1>
 					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
 					<div class="heading-elements">
 						<ul class="list-inline mb-0">
@@ -65,7 +104,7 @@
 											<div class="col-sm-4 ">
 												<div class="form-group">
 													<label
-														for="{{form.fecha_inicio.id_for_label }}"><b>{{form.fecha_inicio.label }}</b>{% if form.fecha_final %}
+														for="{{form.fecha_inicio.id_for_label }}"><b>{{form.fecha_inicio.label }}</b>{% if form.fecha_inicio.errors %}
 														<span
 															style="font-size: 15px; color: red;">{{ form.fecha_inicio.errors }}
 														</span>{% endif %} </label>
@@ -109,19 +148,21 @@
 															style="font-size: 15px; color: red;">{{ form.congreso.errors }}
 														</span>{% endif %} </label>
 
-													{{form.congreso }}
+														<div style="display: none;">
+															{{form.congreso}}
+														</div>
+														{%if not con %}
+														<input type="text" name="my_user" class="form-control" required=""
+															id="id_my_user">
+															{%endif%}
 												</div>
 
 
 											</div>
 
-</div>
+												</div>
 											<div class="form-actions">
 												<div class="text-right">
-													<button id="atras" type="button" class="btn btn-danger ">Cancelar
-														<i class="ft-x position-right"></i>
-													</button>
-
 													<button id="save" type="submit" class="btn btn-primary">Guardar
 														<i class="ft-save position-right"></i>
 													</button>
@@ -146,13 +187,29 @@
 
 
 <script type="text/javascript">
+$("#id_my_user").autocomplete({
+            source: "{% url 'Congreso_autocomp'%}",
+            minLength: 3,
+        });
+        $('#id_my_user').change(function () {
+            email = $('#id_my_user').val()
+            $("#id_congreso option:contains('" + email + "')").attr("selected", true);
+            if ($("#id_congreso option:selected").text()!= email) 
+            $("#id_congreso").val('')
+
+		});
+		{%if update%}
+		$("#id_my_user").val('{{update}}');
+		{%endif%}
+
 	$('#atras').click(function () {
 			{%if con %}
 			location.href = "{% url 'MedCongressAdmin:Congres_bloques' con.path %}";
 			{%else%}
 			location.href = "{% url 'MedCongressAdmin:bloques_list' %}";
 			{%endif%}
-        });
+		});
+		
 		{%if con %}
 		$("#id_congreso option[value='{{con.id}}']").attr("selected",true);
 		{%endif%}

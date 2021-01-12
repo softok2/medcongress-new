@@ -4,7 +4,9 @@ from .views import (Home,CongresoListView,CongresoDetail,CongresoCardForm,Perfil
 ViewErrorOpenpay,PagarEfectivo,ViewError404,ViewPonencia,EspecialdiadesAutocomplete,
 AddCart,AddCartTaller,DeletedCart,ConfCart,AvisoPrivacidad,HabilitarUser,Perfil,PagoExitoso,Email,GetPerfil,
 GetCuestionario,SetConstancia,EvaluarPonencia,Resultado_Cuestionario,Get_Constancia,VerTransaccion,GetFactura,
-ViewErrorFact,PerfilUpdateView,CambiarPass,UpdateEvaluarPonencia,UserAutocomplete,ViewErrorRegistrar,RegistroExitoso)
+ViewErrorFact,PerfilUpdateView,CambiarPass,UpdateEvaluarPonencia,UserAutocomplete,ViewErrorRegistrar,RegistroExitoso,
+PonenteAutocomplete,ModeradorAutocomplete,CongresoAutocomplete,PatrocinadorAutocomplete,SocioAutocomplete,ViewTaller,
+EvaluarTaller,UpdateEvaluarTaller,TallerAutocomplete,PonenciaAutocomplete,ViewCart)
 
 urlpatterns = [
     
@@ -13,7 +15,8 @@ urlpatterns = [
     path('congreso/<str:path>', CongresoDetail.as_view(), name='View_congreso'),
     path('pagar', CongresoCardForm.as_view(), name='Pagar'),
     path('registrarse', PerfilUserCreate.as_view(), name='Registrarse'),
-    path('view_ponencia/<str:path>', ViewPonencia.as_view(), name='View_ponencia'),
+    path('ponencia/<str:path>', ViewPonencia.as_view(), name='View_ponencia'),
+    path('taller/<str:path>', ViewTaller.as_view(), name='View_taller'),
     path('error404', ViewError404.as_view(), name='Error404'),
     path('error_openpay', ViewErrorOpenpay.as_view(), name='Error_openpay'),
     path('error_registrar', ViewErrorRegistrar.as_view(), name='ErrorRegistrar'),
@@ -27,10 +30,19 @@ urlpatterns = [
 
     path('especialidades_autocomp', EspecialdiadesAutocomplete , name='Especialidades_autocomp'),
     path('user_autocomp', UserAutocomplete , name='User_autocomp'),
+    path('ponente_autocomp', PonenteAutocomplete , name='Ponente_autocomp'),
+    path('moderador_autocomp', ModeradorAutocomplete , name='Moderador_autocomp'),
+    path('congreso_autocomp', CongresoAutocomplete , name='Congreso_autocomp'),
+    path('taller_autocomp', TallerAutocomplete , name='Taller_autocomp'),
+    path('ponencia_autocomp', PonenciaAutocomplete , name='Ponencia_autocomp'),
+    
+    path('patrocinador_autocomp', PatrocinadorAutocomplete , name='Patrocinador_autocomp'),
+    path('socio_autocomp', SocioAutocomplete , name='Socio_autocomp'),
     path('add_cart', AddCart.as_view() , name='Add_cart'),
     path('add_cart_taller', AddCartTaller.as_view() , name='Add_cart_taller'),
     path('deleted_cart',DeletedCart.as_view() , name='Deleted_cart'),
     path('conf_cart',ConfCart.as_view() , name='Conf_cart'),
+     path('view_cart',ViewCart.as_view() , name='View_cart'),
     path('aviso_privacidad',AvisoPrivacidad.as_view() , name='aviso_privacidad'),
     path('email',Email.as_view() , name='email'),
     # path('confic_email',ConfigEmail.as_view() , name='confic_email'),
@@ -41,7 +53,10 @@ urlpatterns = [
     path('get_factura/<str:invoice>', GetFactura.as_view() , name='Factura'),
     path('cuestionario/congreso/<str:path>',GetCuestionario.as_view() , name='Cuestionario'),
     path('constancia/congreso/<str:path>',SetConstancia.as_view() , name='Constancia'),
-    path('evaluar/ponencia',EvaluarPonencia.as_view() , name='EvaluarPonencia'),
+    path('evaluar/taller',EvaluarTaller.as_view() , name='EvaluarTaller'),
+    path('reevaluar/taller',UpdateEvaluarTaller.as_view() , name='UpdateEvaluarTaller'),
+
+      path('evaluar/ponencia',EvaluarPonencia.as_view() , name='EvaluarPonencia'),
     path('reevaluar/ponencia',UpdateEvaluarPonencia.as_view() , name='UpdateEvaluarPonencia'),
 
     

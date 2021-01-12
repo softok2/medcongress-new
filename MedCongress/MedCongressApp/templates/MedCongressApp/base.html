@@ -9,7 +9,9 @@
 	<meta property="business:contact_data:postal_code" content="64860">
 	<meta property="business:contact_data:country_name" content="México">
 	<meta name="author" content="SOFTok2" />
+	<meta name="lang" content="es-ES" />
 	{% block metadatos %}
+
 		{%endblock%}
 	{% load filtros %}
 	{% load static %}
@@ -220,8 +222,8 @@ line-height: 28px;
 							   Congresos
 						  </a>
 						</li>
-						<li class="nav-item" data-toggle="modal" data-target=".pp">
-						  <a class="nav-link disabled" href="#">
+						<li class="nav-item" data-toggle="modal" data-target="">
+						  <a class="nav-link disabled" href="{%url 'View_cart'%}">
 							<i class="fa colorazul fa-cart-plus">
 							  <span class="badge badge-warning"  style="background-color: #00a4ef;">{%if  request.session.cart.1 %}{{ request.session.cart.1|length}}
 								{%else%} 0 {%endif%}</span>
@@ -279,7 +281,7 @@ line-height: 28px;
 			<i class="fa fa-shopping-cart" style="font-size: 30px;"></i>
 
 		</button> -->
-		<div class="modal fade bs-example-modal-lg pp" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="margin-top: 72px;">
+		<!-- <div class="modal fade bs-example-modal-lg pp" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="margin-top: 72px;">
 			<div class="modal-dialog modal-lg">
 			  <div class="modal-content">
 					<div class="modal-header">
@@ -355,7 +357,7 @@ line-height: 28px;
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 		<!-- Kode-Header End -->
 
 		{% block contenido%}
@@ -450,7 +452,7 @@ line-height: 28px;
 	{% block script%}
 
 	{%endblock%}
-	<script>
+	<!-- <script>
 		
 
 		function EliminarCart(id){
@@ -526,33 +528,9 @@ $('#btn_edit_'+id).show();
             },
             success: function (data) {
                 if (data['succes']){
+					location.reload();
 				
-					swal({
-            title: "Actualizado",
-            text: "Ha actualizado la cantidad de eventos en el carrito",
-            icon: "success",
-            buttons: {
-                cancel: {
-                    text: "ok!",
-                    value: null,
-                    visible: true,
-                    className: "",
-                    closeModal: false,
-                },
-               
-                
-                
-            }
-        })
-        .then((isConfirm) => {
-            if (isConfirm) {
-                
-            }
-            else{
-                location.reload();
-            }
-
-        });
+					
             }
                 else
                 swal("No se pudo actualizar", "Póngase en contacto con el administrador.", "error"); 
@@ -562,7 +540,7 @@ $('#btn_edit_'+id).show();
 
 	});
 	}
-	</script>
+	</script> -->
 </body>
 
 </html>

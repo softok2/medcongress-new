@@ -1,0 +1,186 @@
+{% extends 'MedCongressAdmin/base.html' %}
+{% block title %}Meta Datos Página de Inicio{% endblock %}
+{% load static %}
+{% block styles %}
+
+
+{% endblock %}
+{% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+			
+		  <li class="breadcrumb-item"> Meta Datos|Pag. List Congreso
+		  </li>
+
+		</ol>
+	  </div>
+	</div>
+  </div>
+<section id="configuration">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-10">
+                            <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Meta Datos Página Listar Congreso</h1>
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="card-content collapse show">
+                    <div class="card-body card-dashboard">
+                        <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                            <div class="row">
+                               
+                                    {%if met_listar%} 
+                                   
+                                    {%for meta_pag_inicio in met_listar %} 
+                                    <div class="col-sm-4">
+                                        <h3  style="margin-bottom: 30px;"><b>Metas Principales </b> </h3>
+                                        {%if meta_pag_inicio.meta_title%}
+                                        <h6 style="padding:10px"> <b>Título</b> <br> <small>{{meta_pag_inicio.meta_title}}</small></h6>
+                                        {%endif%}
+                                        {%if meta_pag_inicio.meta_description%}
+                                        <h6 style="padding:10px"> <b>Descripción</b>  <br><small>{{meta_pag_inicio.meta_description}}</small></h6>
+                                        {%endif%}
+                                        {%if meta_pag_inicio.meta_keywords%}
+                                        <h6 style="padding:10px"> <b>Palabras Claves</b> <br> <small>{{meta_pag_inicio.meta_keywords}}</small></h6>  
+                                   {%endif%} 
+                                </div>
+                                    <div class="col-sm-4"> 
+                                        <h3  style="margin-bottom: 30px;"><b>Metas para FaceBook </b> </h3>
+                                        
+                                        {%if meta_pag_inicio.meta_og_title%}
+                                        <h6 style="padding:10px" style="padding:10px"> <b>Título</b> <br> <small>{{meta_pag_inicio.meta_og_title}}</small></h6>
+                                        {%endif%}
+                                        {%if meta_pag_inicio.meta_og_description%}
+                                        <h6 style="padding:10px"> <b>Descripción</b> <br> <small>{{meta_pag_inicio.meta_og_description}}</small></h6>
+                                        {%endif%}
+                                        {%if meta_pag_inicio.meta_og_type%}
+                                        <h6 style="padding:10px"> <b>Tipo</b><br>  <small>{{meta_pag_inicio.meta_og_type}}</small></h6>
+                                        {%endif%}
+                                        {%if meta_pag_inicio.meta_og_url%}
+                                        <h6 style="padding:10px"> <b>URL</b>  <br><small>{{meta_pag_inicio.meta_og_url}}</small></h6>
+                                        {%endif%}
+                                        {% if meta_pag_inicio.meta_og_imagen%}
+                                        <h6 style="padding:10px"> <b>Imagen</b> <br> <small><img src="{% static '/'%}{{meta_pag_inicio.meta_og_imagen}}" class="img-responsive" style="width: 126px;" alt=""></small></h6>
+                                        {%endif%}
+                                            <a id="edit-btn" type="button" class="btn btn-success" title="Editar Valores" href=" {% url 'MedCongressAdmin:meta_pag_listar_edit' pk=meta_pag_inicio.pk %}"
+                                            style="float: left; padding:7px;font-size: 20px; margin-top: 30px;">
+                                            <i class="ft ft-edit"></i> Editar  </a>
+                                    </div>
+                                        <div class="col-sm-4">
+                                        <h3 style="margin-bottom: 30px;"> <b> Metas para Redes Sociales</b> </h3>
+                                        {%if meta_pag_inicio.meta_twitter_card%}
+                                        <h6 style="padding:10px"> <b>Card</b>  <br><small>{{meta_pag_inicio.meta_twitter_card}}</small></h6>
+                                        {%endif%}
+                                        {%if meta_pag_inicio.meta_twitter_site%}
+                                        <h6 style="padding:10px"> <b>Site</b>  <br><small>{{meta_pag_inicio.meta_twitter_site}}</small></h6>
+                                        {%endif%}
+                                        {%if meta_pag_inicio.meta_twitter_creator%}
+                                        <h6 style="padding:10px"> <b>Creador</b>  <br><small>{{meta_pag_inicio.meta_twitter_creator}}</small></h6>
+                                        {%endif%}
+                                    
+                                    {%endfor%}
+                                   
+                              
+                                {%else%}
+                                <a id="edit-btn" type="button" class="btn btn-success" title="Editar Valores" href=" {% url 'MedCongressAdmin:meta_pag_listar_add' %}"
+                                    style="float: left; padding:7px;font-size: 20px; margin-top: 30px;">
+                                    <i class="ft ft-plus"></i>Adicionar
+                                </a>
+                                {%endif%}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  
+</section>
+<div class="swal-overlay" tabindex="-1">
+    <form id="swall-modal-form" method="POST" style="display: none;">
+        {% csrf_token %}
+    </form>
+
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/extensions/sweetalert.min.js' %}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/tables/datatable/datatables.min.js' %}"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        
+        var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        });
+
+        $('#add-btn').click(function () {
+            location.href = "{% url 'MedCongressAdmin:cat_pago_add'   %}";
+        });
+        $('#add_img-btn').click(function () {
+            location.href = "{% url 'MedCongressAdmin:imagen-quienes_somos_add'   %}";
+        });
+        
+        dataTable = $('.zero-configuration').DataTable();
+    });
+    function deleteItem(pk) {
+        swal({
+            title: "Estas seguro?",
+            text: "No será capaz de recuperar este elemento!",
+            icon: "warning",
+            buttons: {
+                cancel: {
+                    text: "No, cancelar!",
+                    value: null,
+                    visible: true,
+                    className: "",
+                    closeModal: false,
+                },
+                confirm: {
+                    text: "Sí, eliminarlo!",
+                    value: true,
+                    visible: true,
+                    className: "",
+                    closeModal: false
+                }
+            }
+        })
+            .then((isConfirm) => {
+                if (isConfirm) {
+                    url = "{% url 'MedCongressAdmin:imagen_quienes_somos_deleted' pk=0 %}";
+                    $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
+                       
+                       swal("Eliminado!", "Este elemento ha sido eliminado.", "success");
+                       location.reload()
+               
+                        
+                    });
+                } else {
+                    swal("Cancelado", "No se eliminó este elemento.", "error");
+                }
+            });
+    }
+</script>
+{% endblock %}

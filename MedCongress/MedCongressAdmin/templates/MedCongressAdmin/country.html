@@ -19,6 +19,19 @@
 </style>
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+			
+		  <li class="breadcrumb-item">Paises
+		  </li>
+
+		</ol>
+	  </div>
+	</div>
+  </div>
 <section id="configuration">
     <div class="row">
         <div class="col-12">
@@ -69,11 +82,11 @@
                                                 <td class="sorting_1">{{ country.denominacion }}</td>
                                                 <td style="text-align: center;">
                                                     <a href="{% url 'MedCongressAdmin:country_edit' pk=country.pk %}"
-                                                        title="Editar"><i class="la la-pencil-square"></i></a>
+                                                        title="Editar"><i class="icon icon-editar"></i></a>
                                                     <a id="del_{{ country.pk }}"
                                                         href="javascript:deleteItem('{{ country.pk }}')"
                                                         title="Eliminar">
-                                                        <i class="la la-trash text-danger"></i>
+                                                        <i class="icon icon-eliminar"></i>
                                                     </a>
                                                 </td>
                                             </tr>
@@ -108,6 +121,29 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $('.table').DataTable({
+    language: {
+        "decimal": "",
+        "emptyTable": "No hay información",
+        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+        "infoPostFix": "",
+        "thousands": ",",
+        "lengthMenu": "Mostrar _MENU_ Entradas",
+        "loadingRecords": "Cargando...",
+        "processing": "Procesando...",
+        "search": "Buscar:",
+        "zeroRecords": "Sin resultados encontrados",
+        "paginate": {
+            "first": "Primero",
+            "last": "Ultimo",
+            "next": "Siguiente",
+            "previous": "Anterior"
+        }
+    },
+ 
+});
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({
             beforeSend: function (xhr, settings) {

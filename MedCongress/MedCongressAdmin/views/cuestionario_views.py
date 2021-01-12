@@ -10,17 +10,7 @@ from django.views.generic import CreateView, ListView, TemplateView
 from django.views.generic.edit import DeleteView, FormView, UpdateView
 from MedCongressAdmin.forms.congres_forms import CuestionarioForms,PreguntaForm
 from MedCongressApp.models import CuestionarioPregunta,CuestionarioRespuestas,Congreso
-
-
-class validarUser(UserPassesTestMixin):
-    permission_denied_message = 'No tiene permiso para acceder a la administracion'
-    login_url='/admin/login/'
-    def test_func(self):
-       
-        if self.request.user.is_staff :
-            return True
-        else:
-            return False
+from MedCongressAdmin.apps import validarUser
     
 
 class CuestionarioListView(validarUser,ListView):
@@ -52,7 +42,7 @@ class PreguntaCreateView(validarUser,FormView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
         context['congreso']=congreso
        
         return context
@@ -97,3 +87,7 @@ class CustionarioUpdateView(validarUser,FormView):
             
             self.success_url =  reverse_lazy('MedCongressAdmin:Congres_cuestionario',kwargs={'path': pregunta.congreso.path} )
         return self.success_url 
+
+class CustionarioDeletedView(validarUser,DeleteView):
+    model = CuestionarioPregunta
+    success_url = reverse_lazy('MedCongressAdmin:asig_congress_list')

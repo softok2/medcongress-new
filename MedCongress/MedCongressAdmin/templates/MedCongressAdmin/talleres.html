@@ -19,6 +19,38 @@
 </style>
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+{%if congres%}
+    <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+    </li>
+        {%if bloc%}
+            <li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:Congres_bloques' path=bloc.congreso.path %}">Bloques</a>
+            </li>
+    {%endif%}
+    <li class="breadcrumb-item active">Talleres
+    </li>
+{%else%}
+
+
+{%if bloc%}
+
+<li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:bloques_list' %}">Bloques</a>
+</li>
+<li class="breadcrumb-item active">Talleres
+</li>
+{%else%}
+<li class="breadcrumb-item active">Talleres
+</li>
+{%endif%}
+{%endif%}
+</ol>
+</div>
+</div>
+</div>
 <section id="configuration">
     <div class="row">
         <div class="col-12">
@@ -62,8 +94,8 @@
                                                 <th style="width:50%">Nombre</th>
                                                 <th>Congreso</th>
                                                 <th>Ponentes</th>
-                                                <th>Lugar</th>
-                                                <th>Fecha</th>
+                                                <!-- <th>Lugar</th>
+                                                <th>Fecha</th> -->
                                                 <th>Public.</th>
                                                 <th>Otros</th>
                                                 <th style="width:5%">Operaciones</th>
@@ -79,24 +111,24 @@
                                                     <a id=""
                                                     href="{%url 'MedCongressAdmin:Taller_ponentes' taller.path%}"
                                                         title="Ponentes">
-                                                        <i class="la la-user-secret " style= "color: blue;" ></i>
+                                                        <i class="icon icon-ponente " ></i>
                                                     </a></td>
-                                                <td>{{ taller.lugar }}</td>
-                                                <td>{{ taller.fecha_inicio }}</td>
+                                                <!-- <td>{{ taller.lugar }}</td>
+                                                <td>{{ taller.fecha_inicio }}</td> -->
                                                 <td>{%if taller.published%}Si{%else%}No{%endif%}</td>
                                                 <td><a id=""
                                                         href="{%url 'MedCongressAdmin:Taller_pagos' taller.path %}"
                                                         title="Categorias de pago">
-                                                        <i class="la la-dollar "></i>
+                                                        <i class="icon icon-pago "></i>
                                                     </a></td>
                                                 <td style="text-align: center;">
                                                     <a href="{% url 'MedCongressAdmin:taller_edit' pk=taller.pk %}"
-                                                    title="Editar"><i class="la la-pencil-square"></i></a>
+                                                    title="Editar"><i class="icon icon-editar"></i></a>
                                                
                                                     <a id="del_{{ congres.pk }}"
                                                         href="javascript:deleteItem('{{ taller.pk }}')"
                                                         title="Eliminar">
-                                                        <i class="la la-trash text-danger"></i>
+                                                        <i class="icon icon-eliminar"></i>
                                                     </a>
                                                 </td>
                                             </tr>
@@ -107,8 +139,8 @@
                                                 <th style="width:50%">Nombre</th>
                                                 <th>Congreso</th>
                                                 <th>Ponentes</th>
-                                                <th>Lugar</th>
-                                                <th>Fecha</th>
+                                                <!-- <th>Lugar</th>
+                                                <th>Fecha</th> -->
                                                 <th>Public.</th>
                                                 <th>Otros</th>
                                                 <th style="width:5%">Operaciones</th>
@@ -137,6 +169,29 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $('.table').DataTable({
+    language: {
+        "decimal": "",
+        "emptyTable": "No hay información",
+        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+        "infoPostFix": "",
+        "thousands": ",",
+        "lengthMenu": "Mostrar _MENU_ Entradas",
+        "loadingRecords": "Cargando...",
+        "processing": "Procesando...",
+        "search": "Buscar:",
+        "zeroRecords": "Sin resultados encontrados",
+        "paginate": {
+            "first": "Primero",
+            "last": "Ultimo",
+            "next": "Siguiente",
+            "previous": "Anterior"
+        }
+    },
+ 
+});
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({
             beforeSend: function (xhr, settings) {
@@ -145,7 +200,15 @@
         });
 
         $('#add-btn').click(function () {
+            {%if congres%}
+            location.href = "{% url 'MedCongressAdmin:congreso_taller_add' pk=congres.pk %}";
+            
+            {%elif bloc%}
+            location.href = "{% url 'MedCongressAdmin:taller_bloque_add' pk_block=bloc.pk %}";
+           {%else%}
+
             location.href = "{% url 'MedCongressAdmin:taller_add' %}";
+            {%endif%}
         });
 
         dataTable = $('.zero-configuration').DataTable();

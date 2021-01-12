@@ -19,6 +19,38 @@
 </style>
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+{%if congres%}
+    <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+    </li>
+        {%if bloque%}
+            <li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:Congres_bloques' path=bloque.congreso.path %}">Bloques</a>
+            </li>
+    {%endif%}
+    <li class="breadcrumb-item active">Ponencias
+    </li>
+{%else%}
+
+
+{%if bloque%}
+
+<li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:bloques_list' %}">Bloques</a>
+</li>
+<li class="breadcrumb-item active">Ponencias
+</li>
+{%else%}
+<li class="breadcrumb-item active">Ponencias
+</li>
+{%endif%}
+{%endif%}
+</ol>
+</div>
+</div>
+</div>
 <section id="configuration">
     <div class="row">
         <div class="col-12">
@@ -35,15 +67,21 @@
                     <div class="row">
                         <div class="col-10">
                             <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Listado
-                                de Ponencias</h1>
-                            <p class="card-text">Mostrando todas las Ponencias almacenados.</p>
+                                de Ponencias  <i class="icon-ponencia" style="padding: 15px;"></i></h1>
+                           
                         </div>
                         <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
+                               
+                            {%if bloque%} <button id="select-btn" type="button" class="btn btn-warning" title="Seleccionar Ponencia Existente" 
+                                style="float:right;padding: 5px;margin-left: 10px;">
+                                <i class="ft  ft-server"></i>
+                            </button> {%endif%}
                                 <button id="add-btn" type="button" class="btn btn-success" title="Nuevo" onclick="add()"
                                     style="float:right; padding: 3px;">
                                     <i class="la la-plus"></i>
                                 </button>
+                               
                                 <div class="clearfix"></div>
                             </div>
                         </div>
@@ -61,15 +99,16 @@
                                             <tr role="row">
                                                 <th style="width:50%">Nombre</th>
                                                 <th>Congreso</th>
+                                                
+                                                <!-- <th>Lugar</th>
+                                                <th>Fecha</th> -->
                                                 <th>Ponentes</th>
-                                                <th>Lugar</th>
-                                                <th>Fecha</th>
                                                 <th>Public.</th>
                                                 <th style="width:5%">Operaciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for ponencia in ponencias %}
+                                            <!-- {% for ponencia in ponencias %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
                                                 <td class="sorting_1">{{ ponencia.titulo }}</td>
                                                 <td class="sorting_1">{{ ponencia.congreso.titulo }}</td>
@@ -78,31 +117,32 @@
                                                     <a id="del_{{ congres.pk }}"
                                                     href="{%url 'MedCongressAdmin:Ponencia_ponentes' ponencia.path%}"
                                                         title="Ponentes">
-                                                        <i class="la la-user-secret " style= "color: blue;" ></i>
+                                                        <i class="icon icon-ponente " style= "color: blue;" ></i>
                                                     </a></td>
                                                 <td>{{ ponencia.lugar }}</td>
-                                                <td>{{ ponencia.fecha_inicio }}</td>
-                                                <td>{%if ponencia.published%}Si{%else%}No{%endif%}</td>
+                                                <td>{{ ponencia.fecha_inicio }}</td> -->
+                                                <!-- <td>{%if ponencia.published%}Si{%else%}No{%endif%}</td>
 
                                                 <td style="text-align: center;">
                                                     <a href="{% url 'MedCongressAdmin:ponencia_edit' pk=ponencia.pk %}"
-                                                        title="Editar"><i class="la la-pencil-square"></i></a>
+                                                        title="Editar"><i class="icon icon-editar"></i></a>
                                                     <a id="del_{{ ponencia.pk }}"
                                                         href="javascript:deleteItem('{{ ponencia.pk }}')"
                                                         title="Eliminar">
-                                                        <i class="la la-trash text-danger" ></i>
+                                                        <i class="icon icon-eliminar" ></i>
                                                     </a>
                                                 </td>
                                             </tr>
-                                            {% endfor %}
+                                            {% endfor %} -->
                                         </tbody>
                                         <tfoot>
                                             <tr>
                                                 <th style="width:50%">Nombre</th>
                                                 <th>Congreso</th>
+                                               
+                                                <!-- <th>Lugar</th>
+                                                <th>Fecha</th> -->
                                                 <th>Ponentes</th>
-                                                <th>Lugar</th>
-                                                <th>Fecha</th>
                                                 <th>Public.</th>
                                                 <th style="width:5%">Operaciones</th>
                                             </tr>
@@ -130,6 +170,54 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $('.table').DataTable({
+    language: {
+        "decimal": "",
+        "emptyTable": "No hay información",
+        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+        "infoPostFix": "",
+        "thousands": ",",
+        "lengthMenu": "Mostrar _MENU_ Entradas",
+        "loadingRecords": "Cargando...",
+        "processing": "Procesando...",
+        "search": "Buscar:",
+        "zeroRecords": "Sin resultados encontrados",
+        "paginate": {
+            "first": "Primero",
+            "last": "Ultimo",
+            "next": "Siguiente",
+            "previous": "Anterior"
+        }
+    },
+    "columns": [
+       
+        {'data':'nombre','orderable': true},
+        {'data':'congreso','orderable': true},
+        {'data':'ponentes','orderable':false},
+        {'data':'public','orderable': true },
+        {'data':'operaciones','orderable': false }
+       
+    ],
+    "ordering": true,
+    "bServerSide": true,
+    "sAjaxSource": "{% url 'MedCongressAdmin:table_json_ponencia' %}",
+    "fnServerParams": function (aoData) {
+        {%if congres%}
+            aoData.push( { "name": "tipo", "value": "congreso" } );
+            aoData.push( { "name": "id", "value": {{congres.pk}} } );
+            {%elif bloque%}
+            aoData.push( { "name": "tipo", "value": "bloque" } );
+            aoData.push( { "name": "id", "value": {{bloque.pk}} } );
+           {%else%}
+
+            aoData.push( { "name": "tipo", "value": "nada" } );
+            
+            {%endif%}
+        
+       }
+});
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({
             beforeSend: function (xhr, settings) {
@@ -138,10 +226,22 @@
         });
 
         $('#add-btn').click(function () {
-            location.href = "{% url 'MedCongressAdmin:ponencia_add' %}";
-        });
+            {%if congres%}
+            location.href = "{% url 'MedCongressAdmin:ponente_ponencia_add' pk=congres.pk %}";
+            
+            {%elif bloque%}
+            location.href = "{% url 'MedCongressAdmin:ponencia_bloque_add' pk_block=bloque.pk %}";
+           {%else%}
 
-        dataTable = $('.zero-configuration').DataTable();
+            location.href = "{% url 'MedCongressAdmin:ponencia_add' %}";
+            {%endif%}
+        });
+        {%if bloque%}
+        $('#select-btn').click(function () {
+          
+            location.href = "{% url 'MedCongressAdmin:bloque_ponencia_select' path=bloque.path  %}";
+        });
+        {%endif%}
     });
     function deleteItem(pk) {
         swal({

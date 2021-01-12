@@ -125,8 +125,12 @@
 
 													<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva
 															Imagen</b> </label>
-													<input type="file" name="ponencia-imagen" accept="image/*"
-														class=" form-control " id="id_ponencia-imagen">
+															{% if form.taller.imagen.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.taller.imagen.errors }}
+														</span>{% endif %}
+													<input type="file" name="taller-imagen" accept="image/*"
+														class=" form-control " id="id_taller-imagen">
 													{% else%}
 
 													<label
@@ -192,8 +196,8 @@
 													{{form.ubicacion.latitud }}
 												</div>
 											</div>
-											<div class="col-sm-3 ">
-												<div class="form-group" {%if con %} style="display: none;" {%endif%}>
+											<div class="col-sm-3 "{%if con %} style="display: none;" {%endif%}>
+												<div class="form-group" >
 													<label
 														for="{{form.taller.congreso.id_for_label }}"><b>{{form.taller.congreso.label }}</b>{% if form.taller.congreso.errors %}
 														<span
@@ -203,8 +207,8 @@
 													{{form.taller.congreso }}
 												</div>
 											</div>
-											<div class="col-sm-3 ">
-												<div class="form-group" {%if bloque %} style="display: none;" {%endif%}>
+											<div class="col-sm-3 " {%if bloque %} style="display: none;" {%endif%}>
+												<div class="form-group">
 
 
 													<label
@@ -228,6 +232,17 @@
 
 												</div>
 											</div>
+											<div class="col-sm-6 ">
+												<div class="form-group">
+													<label
+														for="{{form.taller.cod_video.id_for_label }}"><b>Código de inserción del video en Vimeo</b>{% if form.ponencia.cod_video.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.taller.cod_video.errors }}
+														</span>{% endif %} </label>
+
+													{{form.taller.cod_video }}
+												</div>
+											</div>
 										</div>
 
 
@@ -245,11 +260,234 @@
 													{{form.taller.published }}
 												</div>
 											</div>
+											<!-- META DATOS -->
+										<div class="modal fade bs-example-modal-lg" id="meta" tabindex="-1"
+										role="dialog" aria-labelledby="myModalLabel">
+										<div class="modal-dialog  modal-lg" role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+
+													<h4 class="modal-title" id="myModalLabel">Meta datos de este Taller</h4>
+													<button type="button" class="close" data-dismiss="modal"
+														aria-label="Close"><span
+															aria-hidden="true">&times;</span></button>
+												</div>
+												<div class="modal-body">
+													<section id="configuration">
+														<div class="row">
+															<div class="col-12">
+																<div class="card">
+
+
+																	<div class="card-content collapse show">
+																		<div class="card-body card-dashboard">
+
+																			<div class="row">
+																				<div class="col-sm-4">
+																					<h5
+																						style="margin-bottom: 10px;">
+																						<b>Metas Principales </b>
+																					</h5>
+																					<div class="form-group">
+																						<label for="">
+																							<b>Título</b></label>
+
+
+																						{{form.taller.meta_title}}
+																					</div>
+																					<div class="form-group">
+																						<label for="">
+																							<b>Descripción</b></label>
+
+																					
+
+																						{{form.taller.meta_description}}
+																					</div>
+																					<div class="form-group">
+																						<label for=""> <b>Palabras
+																								Claves</b><span
+																								id="toggle-method"
+																								data-toggle="tooltip"
+																								data-placement="top"
+																								data-original-title="Palabras separadas por coma(,)">
+																								<i
+																									class="ft ft-info"></i>
+																							</span></label>
+
+																						
+
+																						{{form.taller.meta_keywords}}
+																					</div>
+																				</div>
+																				<div class="col-sm-4">
+																					<h5
+																						style="margin-bottom: 10px;">
+																						<b>Metas para FaceBook </b>
+																					</h5>
+																					<div class="form-group">
+																						<label for="">
+																							<b>Título</b></label>
+																						
+
+																						{{form.taller.meta_og_title}}
+																					</div>
+																					<div class="form-group">
+																						<label for="">
+																							<b>Descripción</b></label>
+																					
+																						{{form.taller.meta_og_description}}
+																					</div>
+																					<div class="form-group">
+																						<label for="">
+																							<b>Tipo</b></label>
+																					
+																						{{form.taller.meta_og_type}}
+																					</div>
+																					<div class="form-group">
+																						<label for="">
+																							<b>URL</b></label>
+
+
+																						{{form.taller.meta_og_url}}
+																					</div>
+																					<div class="form-group">
+																						<label for="">
+																							<b>Imagen</b></label>
+
+																						{%if imagen_meta%}
+																						<img src="{{imagen_meta}}"
+																							class="img-responsive"
+																							style="width: 126px; padding: 20px;"
+																							alt=""><br>
+																							<input type="checkbox" name="taller-meta_og_imagen-clear" id="taller-meta_og_imagen-clear_id"> Eliminar
+																						<input type="file"
+																							name="taller-meta_og_imagen"
+																							accept="image/*"
+																							class="form-control "
+																							id="id_taller-meta_og_imagen">
+																						{%else%}
+																						{{form.taller.meta_og_imagen}}
+																						{%endif%}
+																					</div>
+																				</div>
+																				<div class="col-sm-4">
+																					<h5
+																						style="margin-bottom: 10px;">
+																						<b> Metas para Redes
+																							Sociales</b>
+																					</h5>
+
+																					<div class="form-group">
+																						<label for="">
+																							<b>Card</b></label>
+
+
+																						{{form.taller.meta_twitter_card}}
+																					</div>
+
+																					<div class="form-group">
+																						<label for="">
+																							<b>Sitio</b></label>
+
+
+																						{{form.taller.meta_twitter_site}}
+																					</div>
+																					<div class="form-group">
+																						<label for="">
+																							<b>Creador</b></label>
+
+																						{{form.taller.meta_twitter_creator}}
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+
+																	</div>
+																</div>
+															</div>
+														</div>
+													</section>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-default"
+														data-dismiss="modal">Aplicar</button>
+
+												</div>
+											</div>
 										</div>
+									</div>
+
+									 <!-- END META DATOS -->
+											<div class="col-md-1"></div>
+											<div class="col-md-5">
+												{% if form.taller.meta_description.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.taller.meta_description.errors }}
+													</span>
+													{% endif %} 
+												{% if form.taller.meta_og_title.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.taller.meta_og_title.errors }}
+													</span>
+													{% endif %} 
+												{% if form.taller.meta_og_type.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.taller.meta_og_type.errors }}
+													</span>
+													{% endif %}
+												{% if form.taller.meta_og_url.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.taller.meta_og_url.errors }}
+												</span>
+												{% endif %}
+												{% if form.taller.meta_title.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{form.taller.meta_title.errors }}
+												</span>
+												{% endif %}
+												{% if form.taller.meta_keywords.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.taller.meta_keywords.errors }}
+													</span>
+													{% endif %} 
+												{% if form.taller.meta_twitter_card.errors%}
+												<span style="font-size: 15px; color: red;">
+													{{form.taller.meta_twitter_card.errors}}
+												</span>
+												{% endif %}
+												{% if form.taller.meta_og_imagen.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.taller.meta_og_imagen.errors}}
+												</span>
+												{% endif %}
+												{% if form.taller.meta_twitter_creator.errors%}
+												<span style="font-size: 15px; color: red;">
+													{{form.taller.meta_twitter_creator.errors}}
+												</span>
+												{% endif %}
+												{% if form.taller.meta_twitter_site.errors%}
+												<span style="font-size: 15px; color: red;">
+													{{form.taller.meta_twitter_site.errors}}
+												</span>
+												{% endif %}
+												{% if form.taller.meta_og_description.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.taller.meta_og_description.errors }}
+													</span>
+													{% endif %} 
+
+												<button type="button" class="btn btn-link" data-toggle="modal"
+													data-target="#meta">
+													<h6 > Gestionar los Metadatos de este Taller </h6>
+
+												</button>
+											</div>
+										</div>
+										
 
 										<div class="form-actions">
 
-											<button id="save" type="submit" class="btn btn-primary">Guardar
+											<button id="save" type="submit" class="btn btn-primary" style="float: right;">Guardar
 												<i class="ft-save position-right"></i>
 											</button>
 

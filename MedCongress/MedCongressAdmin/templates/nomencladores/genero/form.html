@@ -1,0 +1,96 @@
+{% extends 'MedCongressAdmin/base.html' %}
+{% block title %} {% if update %}Editar Genero {%else%} Adicionar Genero{%endif%}{% endblock %}
+{% load static %}
+{% block styles %}
+{% endblock %}
+{% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+			
+		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:generos_list' %}">Generos</a>
+		  </li>
+		  
+		
+	
+		<li class="breadcrumb-item active"> {% if update %}Actualizar Genero {%else%} Adicionar Genero{%endif%}</a>
+		</li>
+		
+		</ol>
+	  </div>
+	</div>
+  </div>
+<section class="multiple-input-with-labels" id="multiple-input-with-labels">
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-header">
+					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
+						{% if update %}Actualizar Genero {%else%} Adicionar Genero{%endif%} </h1>
+
+					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
+					<div class="heading-elements">
+						<ul class="list-inline mb-0">
+							<li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+							<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="card-content collapse show">
+					<div class="card-body">
+						<form id="country-form" method="POST">
+							{% csrf_token %}
+							<div class="form-body">
+								<div class="row">
+									<div class="col-md-8">
+										<div class="form-group">
+											<label
+												for="{{form.denominacion.id_for_label }}"><b>{{form.denominacion.label }}</b>{% if form.denominacion.errors %}
+												<span
+													style="font-size: 15px; color: red;">{{ form.denominacion.errors }}
+												</span>{% endif %} </label>
+
+											{{form.denominacion }}
+										</div>
+									</div>
+								</div>
+
+									<div class="form-actions">
+										<div class="text-right">
+											<a id="atras" type="button" class="btn btn-danger " href="{%url 'MedCongressAdmin:generos_list'%}">Cancelar
+												<i class="ft-x position-right"></i>
+											</a>
+											<button id="save" type="submit" class="btn btn-primary">Guardar
+												<i class="ft-save position-right"></i>
+											</button>
+
+										</div>
+									</div>
+								</div>
+							</div>
+					</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+	
+	
+	$(document).ready(function () {
+
+		var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+		$.ajaxSetup({
+			beforeSend: function (xhr, settings) {
+				xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			}
+		});
+	
+	});
+</script>
+{% endblock %}

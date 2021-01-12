@@ -1,0 +1,432 @@
+{% extends "MedCongressApp/base.html"%}
+{% load static %}
+{% block titulo %}
+{{ponencia.titulo}}
+{%endblock%}
+{% block metadatos%}
+{% if ponencia.meta_title%}
+<meta property="title" content="{{ponencia.meta_title}}">
+{%endif%}
+{% if ponencia.meta_description %}
+<meta name="description" content="{{ponencia.meta_description}}">
+{%endif%}
+{% if ponencia.meta_og_description %}
+<meta property="og:description" content="{{ponencia.meta_og_description}}">
+{%endif%}
+{% if ponencia.meta_og_type %}
+<meta property="og:type" content="{{ponencia.meta_og_type}}">
+{%endif%}
+{% if ponencia.meta_og_title %}
+<meta property="og:title" content="{{ponencia.meta_og_title}}">
+{%endif%}
+{% if ponencia.meta_og_url %}
+<meta property="og:url" content="{{ponencia.meta_og_url}}">
+{%endif%}
+{% if ponencia.meta_og_imagen %}
+<meta property="og:image" content="{% static '/'%}{{ponencia.meta_og_imagen}}">
+{%endif%}
+{% if ponencia.meta_twitter_card %}
+<meta name="twitter:card" content="{{ponencia.meta_twitter_card}}" />
+{%endif%}
+{% if ponencia.meta_twitter_site %}
+<meta name="twitter:site" content="{{ponencia.meta_twitter_site}}" />
+{%endif%}
+{% if ponencia.meta_twitter_creator %}
+<meta name="twitter:creator" content="{{ponencia.meta_twitter_creator}}" />
+{%endif%}
+{% if ponencia.meta_keywords %}
+<meta name="keywords"
+	content="{{ponencia.meta_keywords}}" />
+{%endif%}
+
+{%endblock%}
+{%block css%}
+
+<link rel="stylesheet" href="{% static 'MedCongressApp/css/bootstrap-rating.css'%}" type="text/css" media="all">
+
+<style>
+	.simply-section {
+		color: #e5e5e7 !important;
+		background-color: #39393a60 !important;
+
+	}
+
+	.glyphicon {
+		color: yellow;
+		font-size: 40px;
+
+	}
+
+	.glyphicon-star-empty {
+		color: rgb(85, 84, 84);
+	}
+</style>
+{%endblock%}
+{% block contenido %}
+{%if ponencia.cod_video and is_pagado%}
+<div class="container">
+	<div class="row" style="margin-top: 5%; margin-bottom: 50px;">
+
+		<div class="col-md-12">
+			{{ponencia.cod_video|safe }}
+
+
+
+			<h4
+				style="margin: 0 0 15px;font-size: 14px;line-height: 30px;text-transform: uppercase;font-family: 'Gotham-Bold';color: #565657;">
+				{{ponencia.titulo}}</h4>
+			{%for ponente in ponencia.ponente.all%}
+			<div class="kf_new_conf_orgnizr ">
+				<figure>
+					{% if ponente.user.foto%}
+					<img src="{% static '/'%}{{ponente.user.foto}}" alt="image de {{mod.user.usuario.username}}">
+					{%else%}
+					<img src="{% static 'MedCongressApp/images/defaulthombre.png' %}"
+						alt="image de {{mod.user.usuario.username}}">
+					{%endif%}
+				</figure>
+				<div class="kf_new_conf_orgnizr_name">
+					<span> Ponente</span>
+					<h6>{{ponente.user.usuario.first_name}}
+						{{ponente.user.usuario.last_name}}</h6>
+					<p>
+						{%if ponente.user.puesto %}
+						{{ponente.user.puesto}}
+						{%endif%}
+					</p>
+				</div>
+			</div>
+
+
+
+
+			{%endfor%}
+			<div class="kf_new_conf_orgnizr ">
+
+				<div class="">
+					{%if is_evaluado%}
+					<div id="evaluado">
+						<h6 style="margin: 0 0 15px;
+				font-size: 14px;
+				line-height: 30px;
+				text-transform: uppercase;
+				font-family: 'Gotham-Bold';
+				color: #565657;">Su evaluación fue</h6>
+
+						<input type="hidden" class="rating" id="rating_evaluado" data-readonly
+							value="{{is_evaluado}}" /> <button class="btn btn-primary" onclick="Update()"
+							title="Cambiar Votación"><i class="fa fa-refresh"></i></button>
+					</div>
+					<div id='sin_evaluar' style="display: none;">
+						<h6 style="margin: 0 0 15px;
+					font-size: 14px;
+					line-height: 30px;
+					text-transform: uppercase;
+					font-family: 'Gotham-Bold';
+					color: #565657;">Vuelva a Evaluar este Taller</h6>
+
+						<input type="hidden" class="rating check rating-tooltip nueva" id="rating" />
+					</div>
+					{%else%}
+					<div id='sin_evaluar'>
+						<h6 style="margin: 0 0 15px;
+				font-size: 14px;
+				line-height: 30px;
+				text-transform: uppercase;
+				font-family: 'Gotham-Bold';
+				color: #565657;">Evalue este Taller</h6>
+
+						<input type="hidden" class="rating check rating-tooltip nueva" id="rating" />
+					</div>
+
+					<div id="evaluado" style="display: none;">
+						<h6 style="margin: 0 0 15px;
+				font-size: 14px;
+				line-height: 30px;
+				text-transform: uppercase;
+				font-family: 'Gotham-Bold';
+				color: #565657;">Su evaluación fue</h6>
+
+						<input type="hidden" class="rating" id="rating_evaluado" data-readonly
+							value="{{is_evaluado}}" /> <button class="btn btn-primary" onclick="Update()"
+							title="Cambiar Votación"><i class="fa fa-refresh"></i></button>
+					</div>
+					{%endif%}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+{%else%}
+<div style="background-color: rgb(99, 97, 97);">
+	<div class="kode-event-time" id="div"
+		style=" background:url({% static '/'%}{{ponencia.imagen}})  no-repeat 100% 0; opacity: 0.5;  height: 100%; ">
+		<div class="container">
+
+		</div>
+	</div>
+	<div class="ponencia " style="margin-top:10%;" id="">
+
+		<!-- Event Counter -->
+		<div class="col-md-12">
+
+			<h4 style="margin: 0 0 15px;
+			font-size: 28px;
+			line-height: 30px;
+			text-transform: uppercase;
+			font-family: 'Gotham-Bold';
+			color: #565657;">{{ponencia.titulo}}</h4>
+			{%for ponente in ponencia.ponente.all%}
+			<div class="kf_new_conf_orgnizr ">
+				<figure>
+					{% if ponente.user.foto%}
+					<img src="{% static '/'%}{{ponente.user.foto}}" alt="image de {{mod.user.usuario.username}}">
+					{%else%}
+					<img src="{% static 'MedCongressApp/images/defaulthombre.png' %}"
+						alt="image de {{mod.user.usuario.username}}">
+					{%endif%}
+				</figure>
+				<div class="kf_new_conf_orgnizr_name">
+					<span> Ponente</span>
+					<h6>{{ponente.user.usuario.first_name}}
+						{{ponente.user.usuario.last_name}}</h6>
+					<p>
+						{%if ponente.user.puesto %}
+						{{ponente.user.puesto}}
+						{%endif%}
+					</p>
+				</div>
+			</div>
+			{%endfor%}
+
+		</div>
+
+		<div class="col-md-12" style="margin-top: 40px;">
+			<h4 style="margin: 0 0 15px;
+			font-size: 14px;
+			line-height: 30px;
+			font-style: italic;
+			font-family: 'Gotham-Bold';
+			color: #565657;">
+				{%if is_pagado%}
+				Por favor esté pendiente al inicio de este Taller
+				{%else%}
+				Debe pagar este Taller para poder visualizarlo.
+				{%endif%}</h4>
+		</div>
+		{% if ponencia.iniciada%}
+		<div class="col-md-6"></div>
+		<div class=" col-md-6" style="margin-top: -50px;">
+
+			<h2 style="color: #565657;
+							font-size: 30px;
+							margin: 50px 0 30px;
+							text-transform: uppercase;
+							font-family: 'Gotham-Bold';">Comienza en:</h2>
+			<div id="countdown" class="simply-countdown"></div>
+			
+
+		</div>
+		{%endif%}
+	</div>
+</div>
+</div>
+{%endif%}
+{%endblock%}
+
+{% block script%}
+<script src="{% static 'MedCongressApp/js/bootstrap-rating.js' %}"></script>
+
+<script src="{% static 'MedCongressApp/js/plugins/simplyCountdown/simplyCountdown.min.js'%}"></script>
+<script>
+	$(document).ready(function () {
+		$('#rating').rating({
+			filled: 'glyphicon glyphicon-heart',
+			empty: 'glyphicon glyphicon-heart-empty'
+		});
+		$('#rating').rating('rate', '{{is_evaluado}}');
+		var height = $(window).height();
+		$('#div').height(height);
+	});
+
+
+	simplyCountdown('#countdown', {
+		year: '{{ponencia.fecha_inicio|date:"Y"}}', // required
+		month: '{{ponencia.fecha_inicio|date:"m"}}', // required
+		day: '{{ponencia.fecha_inicio|date:"d"}}', // required
+		hours: '{{ponencia.fecha_inicio|date:"h"}}', // Default is 0 [0-23] integer
+		minutes: '{{ponencia.fecha_inicio|date:"i"}}', // Default is 0 [0-59] integer
+		seconds: '{{fecha|date:"s"}}', // Default is 0 [0-59] integer
+		words: { //words displayed into the countdown
+			days: 'dia',
+			hours: 'hora',
+			minutes: 'minuto',
+			seconds: 'segundo',
+			pluralLetter: 's'
+		},
+		plural: true, //use plurals
+		inline: false, //set to true to get an inline basic countdown like : 24 days, 4 hours, 2 minutes, 5 seconds
+		inlineClass: 'simply-countdown-inline', //inline css span class in case of inline = true
+		// in case of inline set to false
+		enableUtc: true, //Use UTC as default
+		onEnd: function () { return; }, //Callback on countdown end, put your own function here
+		refresh: 1000, // default refresh every 1s
+		sectionClass: 'simply-section', //section css class
+		amountClass: 'simply-amount', // amount css class
+		wordClass: 'simply-word', // word css class
+		zeroPad: false,
+		countUp: false
+	});
+	$(function () {
+
+		$('input.nueva').on('change', function () {
+
+			swal({
+				title: "Le dará una Evaluación de " + $(this).val() + ' puntos a este Taller',
+				text: "",
+				icon: "warning",
+				buttons: {
+					cancel: {
+						text: "No!",
+						value: null,
+						visible: true,
+						className: "",
+						closeModal: false,
+					},
+					confirm: {
+						text: "Si",
+						value: true,
+						visible: true,
+						className: "",
+						closeModal: false
+					}
+
+
+
+				}
+			})
+				.then((isConfirm) => {
+					if (isConfirm) {
+						$('.label-default').empty();
+						$.ajax({
+							type: "GET",
+							url: "{% url 'EvaluarTaller'%}",
+							data: {
+								'puntuacion': $(this).val(), // from form
+								'usuario': '{{request.user.pk}}',// from form
+								'taller': '{{ponencia.pk}}',// from form
+							},
+							success: function (data) {
+								$('#sin_evaluar').hide();
+								$('#evaluado').show();
+								
+								$('#rating_evaluado').rating('rate', data.valor);
+								$('.rating').each(function () {
+									$('<span class="label label-default"></span>')
+
+										.text(data.valor || ' ')
+										.insertAfter(this);
+								});
+								swal('Correcto', ' Le ha dado una evaluación de: ' + data.valor + ' puntos', 'success')
+
+								swal('Correcto', ' Ya se envio su votación', 'success')
+							}
+						});
+					}
+					else {
+						swal('Cancelar', ' No se envio su votación', 'alert')
+					}
+
+				});
+
+		});
+
+
+		{%if is_evaluado %}
+		$('.rating').each(function () {
+			$('<span class="label label-default"></span>')
+
+				.text('{{is_evaluado}}' || ' ')
+
+
+
+				.insertAfter(this);
+		});
+		{% endif %}
+		// $('.rating-tooltip').rating({
+		// 	extendSymbol: function (rate) {
+		// 		$(this).tooltip({
+		// 			container: 'body',
+		// 			placement: 'bottom',
+		// 			title: 'Rate ' + rate
+		// 		});
+		// 	}
+		// });
+		// 	$('.rating-tooltip').rating({
+		// 		extendSymbol: function () {
+		// 			var title;
+		// 			$(this).tooltip({
+		// 				container: 'body',
+		// 				placement: 'bottom',
+		// 				trigger: 'manual',
+		// 				title: function () {
+		// 					return title;
+		// 				}
+		// 			});
+		// 			$(this).on('mouseenter', function (e, rate) {
+		// 				title = rate;
+		// 				$(this).tooltip('show');
+		// 			})
+		// 			$(this).on('mouseleave', function () {
+		// 				$(this).tooltip('hide');
+		// 			});
+		// 		}
+		// 	});
+
+
+
+	});
+
+	function Update() {
+
+		swal({
+			title: "Cambiará su Evaluación",
+			text: "Desea dar otra puntuación",
+			icon: "warning",
+			buttons: {
+				cancel: {
+					text: "No!",
+					value: null,
+					visible: true,
+					className: "",
+					closeModal: false,
+				},
+				confirm: {
+					text: "Si",
+					value: true,
+					visible: true,
+					className: "",
+					closeModal: false
+				}
+
+
+
+			}
+		})
+			.then((isConfirm) => {
+				if (isConfirm) {
+					$('#sin_evaluar').show();
+					$('#evaluado').hide();
+					swal('Aviso', ' Ya puede evaluar de nuevo este taller', 'success')
+				}
+				else {
+					swal('Cancelar', ' Se mantiene su evaluación', 'alert')
+				}
+
+			});
+
+	}
+
+</script>
+{%endblock%}

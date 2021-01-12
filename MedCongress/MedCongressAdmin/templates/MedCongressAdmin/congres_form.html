@@ -12,6 +12,24 @@
 
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+		  </li>
+		  {%if imagen_seg_url%}
+		  <li class="breadcrumb-item active">Editar Congresos
+		  </li>
+		  {%else%}
+		  <li class="breadcrumb-item active">Insertar Congresos
+		</li>
+		{%endif%}
+		</ol>
+	  </div>
+	</div>
+  </div>
 <section class="multiple-input-with-labels" id="multiple-input-with-labels">
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 		<div class="modal-dialog" role="document">
@@ -25,8 +43,8 @@
 				<div class="modal-body">
 					<div class="col-sm-12">
 						<div class="form-group">
-							<label
-								for="{{form.imagen_congreso.imagen.id_for_label }}"><b>{{form.imagen_congreso.imagen.label }}</b>{% if form.imagen_congreso.imagen.errors %}
+							<label for="{{form.imagen_congreso.imagen.id_for_label }}"><b>{{form.imagen_congreso.imagen.label
+									}}</b>{% if form.imagen_congreso.imagen.errors %}
 								<span style="font-size: 15px; color: red;">{{ form.imagen_congreso.imagen.errors }}
 								</span>{% endif %} </label>
 
@@ -104,6 +122,13 @@
 				<div class="card-header">
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
 						Adicionar Congreso</h1>
+					{% if messages %}
+					<ul class="messages">
+						{% for message in messages %}
+						<li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+							{% endfor %}
+					</ul>
+					{% endif %}
 					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
 					<div class="heading-elements">
 						<ul class="list-inline mb-0">
@@ -123,10 +148,8 @@
 										<div class="row">
 											<div class="col-sm-8 ">
 												<div class="form-group">
-													<label
-														for="{{form.congreso.titulo.id_for_label }}"><b>{{form.congreso.titulo.label }}</b>{% if form.congreso.titulo.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.congreso.titulo.errors }}
+													<label for="{{form.congreso.titulo.id_for_label }}"><b>{{form.congreso.titulo.label}}</b>{% if form.congreso.titulo.errors %}
+														<span style="font-size: 15px; color: red;">{{form.congreso.titulo.errors }}
 														</span>{% endif %} </label>
 
 													{{form.congreso.titulo }}
@@ -134,10 +157,8 @@
 											</div>
 											<div class="col-sm-4 ">
 												<div class="form-group">
-													<label
-														for="{{form.congreso.fecha_inicio.id_for_label }}"><b>{{form.congreso.fecha_inicio.label }}</b>{% if form.congreso.fecha_inicio.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.congreso.fecha_inicio.errors }}
+													<label for="{{form.congreso.fecha_inicio.id_for_label }}"><b>{{form.congreso.fecha_inicio.label}}</b>{% if form.congreso.fecha_inicio.errors %}
+														<span style="font-size: 15px; color: red;">{{form.congreso.fecha_inicio.errors }}
 														</span>{% endif %} </label>
 
 													{{form.congreso.fecha_inicio}}
@@ -147,18 +168,27 @@
 										<div class="row">
 											<div class="col-sm-8 ">
 												<div class="form-group">
-													<label
-														for="{{form.congreso.sub_titulo.id_for_label }}"><b>{{form.congreso.sub_titulo.label }}</b>{% if form.congreso.sub_titulo.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.congreso.sub_titulo.errors }}
+													<label for="{{form.congreso.sub_titulo.id_for_label }}"><b>{{form.congreso.sub_titulo.label}}</b>{% if form.congreso.sub_titulo.errors %}
+														<span style="font-size: 15px; color: red;">{{form.congreso.sub_titulo.errors }}
 														</span>{% endif %} </label>
 
 													{{form.congreso.sub_titulo }}
 												</div>
 											</div>
 										</div>
-										<div class="row">
+										
+										<div class="row">{%if not imagen_seg_url%}
+											<div class="col-sm-6 ">
+												<div class="form-group">
+													<label for="{{form.imagen_congreso.imagen.id_for_label }}"><b>Imagen Principal</b>
+														{% if form.imagen_congreso.imagen.errors %} <span
+															style="font-size: 15px; color: red;">{{form.imagen_congreso.imagen.errors }}
+														</span>{% endif %} </label><br>
 
+													{{form.imagen_congreso.imagen }}
+												</div>
+											</div>
+											{%endif%}
 											<div class="col-sm-6 ">
 												<div class="form-group">
 													{%if imagen_seg_url%}
@@ -176,27 +206,30 @@
 													<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva
 															Imagen</b> </label>
 													{% if form.congreso.imagen_seg.errors %}<span
-														style="font-size: 15px; color: red;">{{ form.congreso.imagen_seg.errors }}
+														style="font-size: 15px; color: red;">{{form.congreso.imagen_seg.errors }}
 													</span>{% endif %}
 													<input type="file" name="congreso-imagen_seg" accept="image/*"
 														class=" form-control " id="id_congreso-imagen_seg">
 													{% else%}
-													<label
-														for="{{form.congreso.imagen_seg.id_for_label }}"><b>{{form.congreso.imagen_seg.label }}</b>{% if form.congreso.imagen_seg.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.congreso.imagen_seg.errors }}
-														</span>{% endif %} </label>
+													<label for="{{form.congreso.imagen_seg.id_for_label }}"><b>Imagen Segundaria</b>{% if form.congreso.imagen_seg.errors %}
+														<span style="font-size: 15px; color: red;">{{form.congreso.imagen_seg.errors }}
+														</span>{% endif %} </label><br>
 
 													{{form.congreso.imagen_seg }}
 													{%endif%}
 												</div>
 											</div>
+										</div>
+										
+										<div class="row">
+
+											
+											
 											<div class="col-sm-3 ">
 												<div class="form-group">
-													<label
-														for="{{form.congreso.is_openpay.id_for_label }}"><b>{{form.congreso.is_openpay.label }}</b>
+													<label for="{{form.congreso.is_openpay.id_for_label }}"><b>{{form.congreso.is_openpay.label}}</b>
 														{% if form.congreso.is_openpay.errors %} <span
-															style="font-size: 15px; color: red;">{{ form.congreso.is_openpay.errors }}
+															style="font-size: 15px; color: red;">{{form.congreso.is_openpay.errors }}
 														</span>{% endif %} </label>
 
 													{{form.congreso.is_openpay }}
@@ -204,10 +237,9 @@
 											</div>
 											<div class="col-sm-3 ">
 												<div id="temp" class="form-group">
-													<label
-														for="{{form.congreso.template.id_for_label }}"><b>{{form.congreso.template.label }}</b>
+													<label for="{{form.congreso.template.id_for_label }}"><b>{{form.congreso.template.label}}</b>
 														{% if form.congreso.template.errors %} <span
-															style="font-size: 15px; color: red;">{{ form.congreso.template.errors }}
+															style="font-size: 15px; color: red;">{{form.congreso.template.errors }}
 														</span>{% endif %} </label>
 
 													{{form.congreso.template }}
@@ -218,10 +250,9 @@
 										<div class="row">
 											<div class="col-sm-5 ">
 												<div class="form-group">
-													<label
-														for="{{form.ubicacion.direccion.id_for_label }}"><b>{{form.ubicacion.direccion.label }}</b>
+													<label for="{{form.ubicacion.direccion.id_for_label }}"><b>{{form.ubicacion.direccion.label}}</b>
 														{% if form.ubicacion.direccion.errors %} <span
-															style="font-size: 15px; color: red;">{{ form.ubicacion.direccion.errors }}
+															style="font-size: 15px; color: red;">{{form.ubicacion.direccion.errors }}
 														</span>{% endif %} </label>
 
 													{{form.ubicacion.direccion }}
@@ -245,10 +276,8 @@
 											<div class="col-sm-1"></div>
 											<div class="col-sm-3">
 												<div class="form-group">
-													<label
-														for="{{form.congreso.t_congreso.id_for_label }}"><b>{{form.congreso.t_congreso.label }}</b>{% if form.congreso.t_congreso.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.congreso.t_congreso.errors }}
+													<label for="{{form.congreso.t_congreso.id_for_label }}"><b>{{form.congreso.t_congreso.label}}</b>{% if form.congreso.t_congreso.errors %}
+														<span style="font-size: 15px; color: red;">{{form.congreso.t_congreso.errors }}
 														</span>{% endif %} </label>
 
 													{{form.congreso.t_congreso }}
@@ -271,10 +300,8 @@
 											</div> -->
 											<div class="col-sm-3 " style="display: none;">
 												<div class="form-group">
-													<label
-														for="{{form.ubicacion.longitud.id_for_label }}"><b>{{form.ubicacion.longitud.label }}</b>{% if form.ubicacion.longitud.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.ubicacion.longitud.errors }}
+													<label for="{{form.ubicacion.longitud.id_for_label }}"><b>{{form.ubicacion.longitud.label}}</b>{% if form.ubicacion.longitud.errors %}
+														<span style="font-size: 15px; color: red;">{{form.ubicacion.longitud.errors }}
 														</span>{% endif %}</label>
 
 													{{form.ubicacion.longitud }}
@@ -282,10 +309,8 @@
 											</div>
 											<div class="col-sm-3 " style="display: none;">
 												<div class="form-group">
-													<label
-														for="{{form.ubicacion.latitud.id_for_label }}"><b>{{form.ubicacion.latitud.label }}</b>{% if form.ubicacion.latitud.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.ubicacion.latitud.errors }}
+													<label for="{{form.ubicacion.latitud.id_for_label }}"><b>{{form.ubicacion.latitud.label}}</b>{% if form.ubicacion.latitud.errors %}
+														<span style="font-size: 15px; color: red;">{{	form.ubicacion.latitud.errors }}
 														</span>{% endif %} </label>
 
 													{{form.ubicacion.latitud }}
@@ -295,10 +320,8 @@
 										<div class="row">
 											<div class="col-sm-3">
 												<div class="form-group">
-													<label
-														for="{{form.congreso.especialidad.id_for_label }}"><b>{{form.congreso.especialidad.label }}</b>{% if form.congreso.especialidad.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.congreso.especialidad.errors }}
+													<label for="{{form.congreso.especialidad.id_for_label }}"><b>{{form.congreso.especialidad.label}}</b>{% if form.congreso.especialidad.errors %}
+														<span style="font-size: 15px; color: red;">{{	form.congreso.especialidad.errors }}
 														</span>{% endif %} </label>
 
 													{{form.congreso.especialidad }}
@@ -308,23 +331,46 @@
 												<div class="form-group">
 													<label for="{{form.congreso.especialidad.id_for_label }}"><b>% Para
 															Obtener Constancia</b>{% if form.congreso.aprobado.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.congreso.aprobado.errors }}
+														<span style="font-size: 15px; color: red;">{{form.congreso.aprobado.errors }}
 														</span>{% endif %} </label>
 
 													{{form.congreso.aprobado }}
 												</div>
 											</div>
-											<div class="col-sm-3">
+											<div class="col-sm-4">
 												<div class="form-group">
 													<label for="{{form.congreso.cant_preguntas.id_for_label }}"><b>Cant.
 															Preguntas del
 															Cuestionario</b>{% if form.congreso.cant_preguntas.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.congreso.cant_preguntas.errors }}
+														<span style="font-size: 15px; color: red;">{{form.congreso.cant_preguntas.errors }}
 														</span>{% endif %} </label>
 
 													{{form.congreso.cant_preguntas }}
+												</div>
+											</div>
+											
+
+										</div>
+
+
+
+										<div class="row">
+											<div class="col-sm-3 ">
+												<div class="form-group">
+													<label for="{{form.congreso.published.id_for_label }}"><b>{{form.congreso.published.label}}</b>{% if form.congreso.published.errors %}
+														<span style="font-size: 15px; color: red;">{{form.congreso.published.errors }}
+														</span>{% endif %} </label>
+
+													{{form.congreso.published }}
+												</div>
+											</div>
+											<div class="col-sm-3 ">
+												<div class="form-group">
+													<label for="{{form.congreso.score.id_for_label }}"><b>{{form.congreso.score.label}}</b>{% if form.congreso.score.errors %}
+														<span style="font-size: 15px; color: red;">{{form.congreso.score.errors }}
+														</span>{% endif %} </label>
+
+													{{form.congreso.score }}
 												</div>
 											</div>
 											<div class="col-sm-3 ">
@@ -344,64 +390,257 @@
 													<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva
 															Imagen</b> </label>
 													{% if form.congreso.foto_constancia.errors %}<span
-														style="font-size: 15px; color: red;">{{ form.congreso.foto_constancia.errors }}
+														style="font-size: 15px; color: red;">{{form.congreso.foto_constancia.errors }}
 													</span>{% endif %}
 													<input type="file" name="congreso-foto_constancia" accept="image/*"
 														class=" form-control " id="id_congreso-foto_constancia">
 													{% else%}
-													<label
-														for="{{form.congreso.foto_constancia.id_for_label }}"><b>Imagen de la Constancia</b>{% if form.congreso.foto_constancia.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.congreso.foto_constancia.errors }}
+													<label for="{{form.congreso.foto_constancia.id_for_label }}"><b>Imagen
+															de la Constancia</b>
+															{% if form.congreso.foto_constancia.errors %}
+														<span style="font-size: 15px; color: red;">{{ form.congreso.foto_constancia.errors }}
 														</span>{% endif %} </label>
 
 													{{form.congreso.foto_constancia }}
 													{%endif%}
 												</div>
 											</div>
+										</div>
+										<!-- META DATOS -->
+										<div class="modal fade bs-example-modal-lg" id="meta" tabindex="-1"
+											role="dialog" aria-labelledby="myModalLabel">
+											<div class="modal-dialog  modal-lg" role="document">
+												<div class="modal-content">
+													<div class="modal-header">
 
+														<h4 class="modal-title" id="myModalLabel">Meta datos de este
+															Congreso</h4>
+														<button type="button" class="close" data-dismiss="modal"
+															aria-label="Close"><span
+																aria-hidden="true">&times;</span></button>
+													</div>
+													<div class="modal-body">
+														<section id="configuration">
+															<div class="row">
+																<div class="col-12">
+																	<div class="card">
+
+
+																		<div class="card-content collapse show">
+																			<div class="card-body card-dashboard">
+
+																				<div class="row">
+																					<div class="col-sm-4">
+																						<h5
+																							style="margin-bottom: 10px;">
+																							<b>Metas Principales </b>
+																						</h5>
+																						<div class="form-group">
+																							<label for="">
+																								<b>Título</b></label>
+
+
+																							{{form.congreso.meta_title}}
+																						</div>
+																						<div class="form-group">
+																							<label for="">
+																								<b>Descripción</b></label>
+
+																						
+
+																							{{form.congreso.meta_description}}
+																						</div>
+																						<div class="form-group">
+																							<label for=""> <b>Palabras
+																									Claves</b><span
+																									id="toggle-method"
+																									data-toggle="tooltip"
+																									data-placement="top"
+																									data-original-title="Palabras separadas por coma(,)">
+																									<i
+																										class="ft ft-info"></i>
+																								</span></label>
+
+																							
+
+																							{{form.congreso.meta_keywords}}
+																						</div>
+																					</div>
+																					<div class="col-sm-4">
+																						<h5
+																							style="margin-bottom: 10px;">
+																							<b>Metas para FaceBook </b>
+																						</h5>
+																						<div class="form-group">
+																							<label for="">
+																								<b>Título</b></label>
+																							
+
+																							{{form.congreso.meta_og_title}}
+																						</div>
+																						<div class="form-group">
+																							<label for="">
+																								<b>Descripción</b></label>
+																						
+																							{{form.congreso.meta_og_description}}
+																						</div>
+																						<div class="form-group">
+																							<label for="">
+																								<b>Tipo</b></label>
+																						
+																							{{form.congreso.meta_og_type}}
+																						</div>
+																						<div class="form-group">
+																							<label for="">
+																								<b>URL</b></label>
+
+
+																							{{form.congreso.meta_og_url}}
+																						</div>
+																						<div class="form-group">
+																							<label for="">
+																								<b>Imagen</b></label>
+
+																							{%if imagen_meta%}
+																							<img src="{{imagen_meta}}"
+																								class="img-responsive"
+																								style="width: 126px; padding: 20px;"
+																								alt=""><br>
+																								<input type="checkbox" name="congreso-meta_og_imagen-clear" id="congreso-meta_og_imagen-clear_id"> Eliminar
+																							<input type="file"
+																								name="meta_og_imagen"
+																								accept="image/*"
+																								class="form-control "
+																								id="id_congreso-meta_og_imagen">
+																							{%else%}
+																							{{form.congreso.meta_og_imagen}}
+																							{%endif%}
+																						</div>
+																					</div>
+																					<div class="col-sm-4">
+																						<h5
+																							style="margin-bottom: 10px;">
+																							<b> Metas para Redes
+																								Sociales</b>
+																						</h5>
+
+																						<div class="form-group">
+																							<label for="">
+																								<b>Card</b></label>
+
+
+																							{{form.congreso.meta_twitter_card}}
+																						</div>
+
+																						<div class="form-group">
+																							<label for="">
+																								<b>Sitio</b></label>
+
+
+																							{{form.congreso.meta_twitter_site}}
+																						</div>
+																						<div class="form-group">
+																							<label for="">
+																								<b>Creador</b></label>
+
+																							{{form.congreso.meta_twitter_creator}}
+																						</div>
+																					</div>
+																				</div>
+																			</div>
+
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</section>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-default"
+															data-dismiss="modal">Aplicar</button>
+
+													</div>
+												</div>
+											</div>
 										</div>
 
-
-
+										<!-- END META DATOS -->
 										<div class="row">
-											<div class="col-sm-3 ">
+											<div class="col-sm-6 ">
 												<div class="form-group">
-													<label
-														for="{{form.congreso.published.id_for_label }}"><b>{{form.congreso.published.label }}</b>{% if form.congreso.published.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.congreso.published.errors }}
+													<label for="{{form.congreso.streaming.id_for_label }}"><b>Código de
+															inserción del streaming en Vimeo</b>{% if form.congreso.streaming.errors %}
+														<span style="font-size: 15px; color: red;">{{ form.congreso.streaming.errors }}
 														</span>{% endif %} </label>
 
-													{{form.congreso.published }}
+													{{form.congreso.streaming }}
 												</div>
 											</div>
-											<div class="col-sm-3 ">
-												<div class="form-group">
-													<label
-														for="{{form.congreso.score.id_for_label }}"><b>{{form.congreso.score.label }}</b>{% if form.congreso.score.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.congreso.score.errors }}
-														</span>{% endif %} </label>
+											<div class="col-md-1"></div>
+											<div class="col-md-5">
+												{% if form.congreso.meta_description.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.congreso.meta_description.errors }}
+													</span>
+													{% endif %} 
+												{% if form.congreso.meta_og_title.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.congreso.meta_og_title.errors }}
+													</span>
+													{% endif %} 
+												{% if form.congreso.meta_og_type.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.congreso.meta_og_type.errors }}
+													</span>
+													{% endif %}
+												{% if form.congreso.meta_og_url.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.congreso.meta_og_url.errors }}
+												</span>
+												{% endif %}
+												{% if form.congreso.meta_title.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{form.congreso.meta_title.errors }}
+												</span>
+												{% endif %}
+												{% if form.congreso.meta_keywords.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.congreso.meta_keywords.errors }}
+													</span>
+													{% endif %} 
+												{% if form.congreso.meta_twitter_card.errors%}
+												<span style="font-size: 15px; color: red;">
+													{{form.congreso.meta_twitter_card.errors}}
+												</span>
+												{% endif %}
+												{% if form.congreso.meta_og_imagen.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.congreso.meta_og_imagen.errors}}
+												</span>
+												{% endif %}
+												{% if form.congreso.meta_twitter_creator.errors%}
+												<span style="font-size: 15px; color: red;">
+													{{form.congreso.meta_twitter_creator.errors}}
+												</span>
+												{% endif %}
+												{% if form.congreso.meta_twitter_site.errors%}
+												<span style="font-size: 15px; color: red;">
+													{{form.congreso.meta_twitter_site.errors}}
+												</span>
+												{% endif %}
+												{% if form.congreso.meta_og_description.errors %}
+												<span style="font-size: 15px; color: red;">
+													{{ form.congreso.meta_og_description.errors }}
+													</span>
+													{% endif %} 
 
-													{{form.congreso.score }}
-												</div>
+												<button type="button" class="btn btn-link" data-toggle="modal"
+													data-target="#meta">
+													<h6 > Gestionar los Metadatos de este Evento </h6>
+
+												</button>
 											</div>
-											
 										</div>
-										<div class="row"></div>
-										<div class="col-sm-6 ">
-											<div class="form-group">
-												<label
-													for="{{form.congreso.streaming.id_for_label }}"><b>Código de inserción del streaming en Vimeo</b>{% if form.congreso.streaming.errors %}
-													<span
-														style="font-size: 15px; color: red;">{{ form.congreso.streaming.errors }}
-													</span>{% endif %} </label>
-
-												{{form.congreso.streaming }}
-											</div>
-										</div>
-
 										<div class="form-actions">
 											<div class="text-right">
 												<button id="atras" type="button" class="btn btn-danger ">Cancelar

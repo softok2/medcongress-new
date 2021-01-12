@@ -19,6 +19,19 @@
 </style>
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+		  
+		  <li class="breadcrumb-item active"> Usuario
+		</li>
+	
+		</ol>
+	  </div>
+	</div>
+  </div>
 <section id="configuration">
     <div class="row">
         <div class="col-12">
@@ -34,6 +47,10 @@
                 <div class="col-12">
                     <div class="row">
                         <div class="col-10">
+                            <div class="content-header-left col-md-6 col-12 ">
+						
+                               
+                              </div>
                             <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Listado
                                 de Usuarios</h1>
                             <p class="card-text">Mostrando todos los usuarios almacenados.</p>
@@ -61,50 +78,45 @@
                                             <tr role="row" style="font-size: 13px;">
                                                 <th style="width:50%">Nombre</th>
                                                
-                                                <th>Email</th>
-                                                <th>username</th>
+                                                <th>Correo</th>
+                                               
                                                 <th>Categoria</th>
                                                 <th>Especialidad </th>
                                                 <th style="width:5%">Operaciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for user in users %}
+                                            <!-- {% for user in users %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
                                                 <td class="sorting_1">{{ user.usuario.first_name }} {{ user.usuario.last_name }}</td>
                                                 
                                                 <td>{{ user.usuario.email}}</td>
-                                                <td>{{ user.usuario.username}}</td>
+                                                
                                                 <td>{{ user.categoria.nombre}}</td>
                                                 <td>{{user.especialidad.nombre}}</td>
                                                 
                                                 
                                                 <td style="text-align: center;">
                                                     <a href="{% url 'MedCongressAdmin:usuario_edit' pk=user.pk %}"
-                                                    title="Editar"><i class="la la-pencil-square"></i></a>
+                                                    title="Editar"><i class="icon icon-editar"></i></a>
                                                     <a href="{% url 'MedCongressAdmin:asig_congreso' pk=user.pk %}"
-                                                    title="Asignar Congreso"><i class="la la-cart-plus"></i></a>
+                                                    title="Asignar Congreso"><i class="icon-asignar_congreso"></i></a>
                                                     <a id="del_{{ user.usuario.pk  }}"
                                                         href="javascript:deleteItem('{{ user.usuario.pk }}')"
                                                         title="Eliminar">
-                                                        <i class="la la-trash text-danger"></i>
+                                                        <i class="icon icon-eliminar"></i>
                                                     </a>
-                                                    
-                                                    
 
-                                                   
-
-                                                    
                                                 </td>
                                             </tr>
-                                            {% endfor %}
+                                            {% endfor %} -->
                                         </tbody>
                                         <tfoot>
                                             <tr style="font-size: 13px;">
                                                 <th style="width:50%">Nombre</th>
                                                
-                                                <th>Email</th>
-                                                <th>username</th>
+                                                <th>Correo</th>
+                                               
                                                 <th>Categoria</th>
                                                 <th>Especialidad </th>
                                                 <th style="width:5%">Operaciones</th>
@@ -119,6 +131,8 @@
             </div>
         </div>
     </div>
+   
+</div>
 </section>
 <div class="swal-overlay" tabindex="-1">
     <form id="swall-modal-form" method="POST" style="display: none;">
@@ -133,6 +147,40 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $('.table').DataTable({
+    language: {
+        "decimal": "",
+        "emptyTable": "No hay información",
+        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+        "infoPostFix": "",
+        "thousands": ",",
+        "lengthMenu": "Mostrar _MENU_ Entradas",
+        "loadingRecords": "Cargando...",
+        "processing": "Procesando...",
+        "search": "Buscar:",
+        "zeroRecords": "Sin resultados encontrados",
+        "paginate": {
+            "first": "Primero",
+            "last": "Ultimo",
+            "next": "Siguiente",
+            "previous": "Anterior"
+        }
+    },
+    
+    "columns": [
+       
+        {'data':'nombre','orderable': true},
+        {'data':'email','orderable': true},
+        {'data':'categoria','orderable': true },
+        {'data':'especialidad','orderable': true },
+        {'data':'operaciones','orderable': true }
+       
+    ],
+    "bServerSide": true,
+    "sAjaxSource":"{% url 'MedCongressAdmin:table_json' %}"
+});
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({
             beforeSend: function (xhr, settings) {

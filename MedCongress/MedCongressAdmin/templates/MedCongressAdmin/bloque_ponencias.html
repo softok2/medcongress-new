@@ -50,10 +50,15 @@
                         </div>
                         <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
+                                <!-- <button id="select-btn" type="button" class="btn btn-warning" title="Seleccionar Ponencia Existente" 
+                                style="float:right;padding: 5px;margin-left: 10px;">
+                                <i class="ft  ft-server"></i>
+                            </button>  -->
                                 <button id="add-btn" type="button" class="btn btn-success" title="Adicionar Ponencia a este Bloque" 
                                     style="float:right; padding: 3px;">
                                     <i class="la la-plus"></i>
                                 </button>
+                                
                                 <div class="clearfix"></div>
                             </div>
                         </div>
@@ -70,9 +75,9 @@
                                         <thead>
                                             <tr role="row" style="font-size: 13px;">
                                                 <th style="width:50%">Nombre</th>
-                                                <th>Lugar</th>
+                                                <!-- <th>Lugar</th> -->
                                                 <th>Ponentes</th>
-                                                <th>Fecha</th>
+                                                <!-- <th>Fecha</th> -->
                                                 <th>Public.</th>
                                                 <th style="width:5%">Operaciones</th>
                                             </tr>
@@ -82,27 +87,29 @@
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
                                                 <td class="sorting_1">{{ ponencia.titulo }}</td>
 
-                                                <td>{{ ponencia.lugar }}</td>
+                                                <!-- <td>{{ ponencia.lugar }}</td> -->
                                                 <td style="text-align: center;">
                                                     
                                                     <a id=""
                                                     href="{%url 'MedCongressAdmin:Ponencia_ponentes' ponencia.path%}"
                                                         title="Ponentes">
-                                                        <i class="la la-user-secret " style= "color: blue;" ></i>
+                                                        <i class="icon icon-ponente " style= "color: blue;" ></i>
                                                     </a></td>
-                                                <td>{{ ponencia.fecha_inicio }}</td>
+                                                <!-- <td>{{ ponencia.fecha_inicio }}</td> -->
                                                 <td>{%if ponencia.published%}Si{%else%}No{%endif%}</td>
 
                                                 <td style="text-align: center;">
-                                                    <a id="del_block{{ taller.pk }}"
+                                                    <a href="{% url 'MedCongressAdmin:ponencia_edit' pk=ponencia.pk %}"
+                                                    title="Editar"><i class="icon icon-editar"></i></a>
+                                                    <a id="del_block{{ ponencia.pk }}"
                                                     href="javascript:deleteItemBlock('{{ ponencia.pk }}')"
-                                                    title="Sacar Taller del Bloque">
-                                                    <i class="la la-close "></i>
+                                                    title="Eliminar Vínculo entre Ponencia y este Bloque ">
+                                                    <i class="icon icon-eliminar_vinculo "></i>
                                                 </a>
                                                     <a id="del_{{ ponencia.pk }}"
                                                         href="javascript:deleteItem('{{ ponencia.pk }}')"
                                                         title="Eliminar">
-                                                        <i class="la la-trash text-danger"></i>
+                                                        <i class="icon icon-eliminar"></i>
                                                     </a>
                                                 </td>
                                             </tr>
@@ -112,9 +119,9 @@
                                             <tr style="font-size: 13px;">
                                                 <th style="width:50%">Nombre</th>
 
-                                                <th>Lugar</th>
+                                                <!-- <th>Lugar</th> -->
                                                 <th>Ponentes</th>
-                                                <th>Fecha</th>
+                                                <!-- <th>Fecha</th> -->
                                                 <th>Public.</th>
                                                 <th style="width:5%">Operaciones</th>
                                             </tr>
@@ -151,6 +158,29 @@
 <script src="{% static 'MedCongressApp/js/lugar.js'%}"></script>
 <script type="text/javascript">
     $(document).ready(function () {
+        $('.table').DataTable({
+    language: {
+        "decimal": "",
+        "emptyTable": "No hay información",
+        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+        "infoPostFix": "",
+        "thousands": ",",
+        "lengthMenu": "Mostrar _MENU_ Entradas",
+        "loadingRecords": "Cargando...",
+        "processing": "Procesando...",
+        "search": "Buscar:",
+        "zeroRecords": "Sin resultados encontrados",
+        "paginate": {
+            "first": "Primero",
+            "last": "Ultimo",
+            "next": "Siguiente",
+            "previous": "Anterior"
+        }
+    },
+ 
+});
         $('#atras').click(function () {
             location.href = "{%url 'MedCongressAdmin:Congres_bloques' bloque.congreso.path%}";
         });
@@ -166,21 +196,22 @@
     $('#add-btn').click(function () {
             location.href = "{% url 'MedCongressAdmin:ponencia_bloque_add' bloque.pk  %}";
         });
+      
         function deleteItem(pk) {
         swal({
-            title: "Estas seguro?",
-            text: "No será capaz de recuperar este elemento!",
+            title: "¿Estás seguro?",
+            text: "¡No será capaz de recuperar este elemento!",
             icon: "warning",
             buttons: {
                 cancel: {
-                    text: "No, cancelar!",
+                    text: "¡No, cancelar!",
                     value: null,
                     visible: true,
                     className: "",
                     closeModal: false,
                 },
                 confirm: {
-                    text: "Sí, eliminarlo!",
+                    text: "¡Sí, eliminarlo!",
                     value: true,
                     visible: true,
                     className: "",
@@ -193,28 +224,28 @@
                     url = "{% url 'MedCongressAdmin:ponencia_delete' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                         dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
-                        swal("Eliminado!", "Este elemento ha sido eliminado.", "success");
+                        swal("¡Eliminado!", "Este elemento ha sido eliminado.", "success");
                     });
                 } else {
-                    swal("Cancelado", "No se eliminó este elemento.", "error");
+                    swal("¡Cancelado!", "No se eliminó este elemento.", "error");
                 }
             });
     }
     function deleteItemBlock(pk) {
         swal({
-            title: "Estas seguro?",
-            text: "Eliminará esta Ponencia del Bloque!",
+            title: "¿Estás seguro?",
+            text: "¡Eliminará esta Ponencia del Bloque!",
             icon: "warning",
             buttons: {
                 cancel: {
-                    text: "No, cancelar!",
+                    text: "¡No, cancelar!",
                     value: null,
                     visible: true,
                     className: "",
                     closeModal: false,
                 },
                 confirm: {
-                    text: "Sí, eliminarla!",
+                    text: "¡Sí, eliminarla!",
                     value: true,
                     visible: true,
                     className: "",
@@ -231,7 +262,7 @@
                        
                     });
                 } else {
-                    swal("Cancelado", "No se eliminó este elemento.", "error");
+                    swal("¡Cancelado!", "No se eliminó este elemento.", "error");
                 }
             });
                    

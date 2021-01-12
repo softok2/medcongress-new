@@ -1,5 +1,5 @@
 {% extends 'MedCongressAdmin/base.html' %}
-{% block title %}Adicionar Moderadores{% endblock %}
+{% block title %}Adicionar Moderador{% endblock %}
 {% load static %}
 {% block styles %}
 {% endblock %}
@@ -10,7 +10,7 @@
 			<div class="card">
 				<div class="card-header">
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
-						Adicionar Moderadores</h1>
+						Adicionar Moderador</h1>
 					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
 					<div class="heading-elements">
 						<ul class="list-inline mb-0">
@@ -31,17 +31,14 @@
 										<div class="col-sm-6 ">
 											<div class="form-group">
 												<label
-													for="{{form.moderador.id_for_label }}"><b>{{form.moderador.label }}</b>{% if form.moderador.errors %}
+													for="{{form.moderador.id_for_label }}"><b>Entre Correo del Moderador</b>{% if form.moderador.errors %}
 													<span style="font-size: 15px; color: red;">{{ form.moderador.errors }}
 													</span>{% endif %} </label>
-
-													<select name="moderador" class="form-control" required="" id="id_moderador">
-														<option value="" selected="">---------</option>
-													  
-														{%for moderador in moderadores%}
-														<option value="{{moderador.id}}" selected="">{{moderador.user.usuario.first_name}} {{moderador.user.usuario.last_name}}</option>
-														{%endfor%}
-													  </select>
+													<input type="text" name="my_user" class="form-control" required="" id="id_my_user">
+													<div style="display: none;">
+														{{form.moderador}}
+													</div>
+													
 											</div>
 											<div class="col-sm-6 " >
 												<div class="form-group">
@@ -74,9 +71,21 @@
 </section>
 {% endblock %}
 {% block scripts %}
+<link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
+<script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
 <script type="text/javascript">
 	$(document).ready(function () {
 		$("#id_bloque option[value='{{bloq.id}}']").attr("selected",true);
+		$("#id_my_user").autocomplete({
+		source: "{% url 'Moderador_autocomp'%}",
+		minLength: 3,
+	  });
+$('#id_my_user').change(function(){
+	email=$('#id_my_user').val()
+$("#id_moderador option:contains('"+email+"')").attr("selected",true);
+if ($("#id_moderador option:selected").text()!= email) 
+            $("#id_moderador").val('')
+});
 		
 	});
 </script>

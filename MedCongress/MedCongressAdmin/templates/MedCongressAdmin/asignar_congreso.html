@@ -19,6 +19,20 @@
 </style>
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+
+<li class="breadcrumb-item active">Usuarios que han pagado Congreso
+</li>
+
+
+</ol>
+</div>
+</div>
+</div>
 <section id="configuration">
     <div class="row">
         <div class="col-12">
@@ -37,20 +51,74 @@
                         <div class="col-10">
                             <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Listado
                                 del los Usuarios que han pagado Congresos </h1>
-                            
+
                         </div>
+
                         <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
-                                <button id="add-btn" type="button" class="btn btn-success" title="Asignar pago de un Congreso a un Usuario" 
-                                    style="float:right; padding: 3px;">
+                                <button class="btn btn-info" title="Descargar Exel" onclick="Mostrar()" style="float:right; padding: 3px;margin-left: 10px;">
+                                    <i class="la la-file-excel-o"></i>
+                                </button>
+
+                                <button id="add-btn" type="button" class="btn btn-success"
+                                    title="Asignar pago de un Congreso a un Usuario" style="float:right; padding: 3px;">
                                     <i class="la la-plus"></i>
                                 </button>
+
                                 <div class="clearfix"></div>
                             </div>
                         </div>
+
+                    </div>
+                    <div class="row card-content collapse show" style="display: none;" id='mostrar'>
+                         
+                                
+                           
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6" style="float: right;">
+                            
+                            <form id="form" method="POST" action="{%url 'MedCongressAdmin:Rep_RelCongresoUser'%}">
+                                {% csrf_token %}
+                                <div class="form-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+
+                                            <div class="col-sm-12 ">
+                                                <div class="form-group">
+                                                    <label for="{{form.congreso.id_for_label }}"><b>Filtre
+                                                            Congreso</b>{% if form.congreso.errors %}
+                                                        <span
+                                                            style="font-size: 15px; color: red;">{{ form.congreso.errors }}
+                                                        </span>{% endif %} </label>
+                                                    <div style="display: none;">
+                                                        {{form.congreso}}
+                                                    </div>
+                                                    <input type="text" name="my_user" class="form-control" required=""
+                                                        id="id_my_user">
+
+                                                </div>
+                                            </div>
+
+
+
+                                            </fieldset>
+                                            <div class="form-actions">
+                                                <div class="text-right">
+
+                                                    <button id="save" type="submit" class="btn btn-primary">Exportar
+                                                        <i class="la la-file-excel-o position-right"></i>
+                                                    </button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-                <div class="card-content collapse show">
+                <div class="">
                     <div class="card-body card-dashboard">
                         <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4">
                             <div class="row">
@@ -60,48 +128,49 @@
                                         id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
                                         <thead>
                                             <th style="width:50%">Usuario</th>
-                                            <th>Email</th>
-                                                <th>Congreso</th>
-                                                
-                                                <th>Cant.</th>
-                                                <th>Categoría de Pago</th>
-                                                <th>Pagado</th>
-                                                <th style="width:5%">Operaciones</th>
+                                            <th>Correo</th>
+                                            <th>Congreso</th>
+
+                                            <th>Cant.</th>
+                                            <th>Categoría de Pago</th>
+                                            <th>Pagado</th>
+                                            <th style="width:5%">Operaciones</th>
                                         </thead>
                                         <tbody>
                                             {% for congres in congress %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
-                                                <td class="sorting_1">{{ congres.user.usuario.first_name }} {{ congres.user.usuario.last_name}}</td>
-                                                <td>{{ congres.user.usuario.email}}</td>
-                                                <td>{{ congres.congreso.titulo}}</td>
+                                                <td class="sorting_1" style="vertical-align: middle;">{{ congres.user.usuario.first_name }}
+                                                    {{ congres.user.usuario.last_name}}</td>
+                                                <td style="vertical-align: middle;">{{ congres.user.usuario.email}}</td>
+                                                <td style="vertical-align: middle;">{{ congres.congreso.titulo}}</td>
                                                 {%if congres.cantidad%}
-                                                <td>{{ congres.cantidad}}</td>
+                                                <td style="vertical-align: middle;">{{ congres.cantidad}}</td>
                                                 {%else%}
-                                                <td>1</td>
+                                                <td style="vertical-align: middle;">1</td>
                                                 {%endif%}
-                                                <td>{{ congres.categoria_pago.nombre}}</td>
-                                                <td>{%if congres.is_pagado%}Si{%else%}No{%endif%}</td>
-                                                  <td>  <a id="del_{{ congres.pk }}"
+                                                <td style="vertical-align: middle;">{{ congres.categoria_pago.nombre}}</td>
+                                                <td style="vertical-align: middle;">{%if congres.is_pagado%}Si{%else%}No{%endif%}</td>
+                                                <td style="vertical-align: middle;"> <a id="del_{{ congres.pk }}"
                                                         href="javascript:deleteItem('{{ congres.pk }}')"
                                                         title="Eliminar">
-                                                        <i class="la la-trash "></i>
+                                                        <i class="icon icon-eliminar"></i>
                                                     </a>
 
-                                                   
 
-                                                    
+
+
                                                 </td>
                                             </tr>
                                             {% endfor %}
                                         </tbody>
                                         <tfoot>
                                             <th style="width:50%">Usuario</th>
-                                            <th>Email</th>
-                                                <th>Congreso</th>
-                                                <th>Cant.</th>
-                                                <th>Categoría de Pago</th>
-                                                <th>Pagado</th>
-                                                <th style="width:5%">Operaciones</th>
+                                            <th>Correo</th>
+                                            <th>Congreso</th>
+                                            <th>Cant.</th>
+                                            <th>Categoría de Pago</th>
+                                            <th>Pagado</th>
+                                            <th style="width:5%">Operaciones</th>
                                         </tfoot>
                                     </table>
                                 </div>
@@ -123,11 +192,51 @@
 {% block scripts %}
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/extensions/sweetalert.min.js' %}"></script>
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/tables/datatable/datatables.min.js' %}"></script>
-
+<link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
+<script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
 <script type="text/javascript">
-	
+
     $(document).ready(function () {
-        
+        $('.table').DataTable({
+    language: {
+        "decimal": "",
+        "emptyTable": "No hay información",
+        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+        "infoPostFix": "",
+        "thousands": ",",
+        "lengthMenu": "Mostrar _MENU_ Entradas",
+        "loadingRecords": "Cargando...",
+        "processing": "Procesando...",
+        "search": "Buscar:",
+        "zeroRecords": "Sin resultados encontrados",
+        "paginate": {
+            "first": "Primero",
+            "last": "Ultimo",
+            "next": "Siguiente",
+            "previous": "Anterior"
+        }
+    },
+ 
+});
+        $('form').submit(function(event) { // o el id de tu formulario
+        if($('#id_congreso').val() == '') {
+            swal("¡Cancelado!", "No existe ese congreso.", "error");
+            return false;
+        }
+    })
+        $("#id_my_user").autocomplete({
+            source: "{% url 'Congreso_autocomp'%}",
+            minLength: 3,
+        });
+        $('#id_my_user').change(function () {
+            email = $('#id_my_user').val()
+            $("#id_congreso option:contains('" + email + "')").attr("selected", true);
+            if ($("#id_congreso option:selected").text()!= email) 
+            $("#id_congreso").val('')
+
+        });
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({
             beforeSend: function (xhr, settings) {
@@ -143,19 +252,19 @@
     });
     function deleteItem(pk) {
         swal({
-            title: "Estas seguro?",
-            text: "No será capaz de recuperar este elemento!",
+            title: "¿Estás seguro?",
+            text: "¡No será capaz de recuperar este elemento!",
             icon: "warning",
             buttons: {
                 cancel: {
-                    text: "No, cancelar!",
+                    text: "¡No, cancelar!",
                     value: null,
                     visible: true,
                     className: "",
                     closeModal: false,
                 },
                 confirm: {
-                    text: "Sí, eliminarlo!",
+                    text: "¡Sí, eliminarlo!",
                     value: true,
                     visible: true,
                     className: "",
@@ -169,13 +278,37 @@
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                         dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
 
-                        swal("Eliminado!", "Este elemento ha sido eliminado.", "success");
+                        swal("¡Eliminado!", "Este elemento ha sido eliminado.", "success");
                     });
                 } else {
-                    swal("Cancelado", "No se eliminó este elemento.", "error");
+                    swal("¡Cancelado!", "No se eliminó este elemento.", "error");
                 }
             });
     }
-    
+ function Mostrar(){
+$('#mostrar').toggle();
+
+ }
+ function DescragarExel() {
+
+
+    $.ajax({
+        type: "GET",
+        url: "{% url 'MedCongressAdmin:Rep_RelCongresoUser'%}",
+        data: {
+            'congreso': $('#id_congreso').val()// from form
+        },
+        success: function (data) {
+            if (data['succes']) {
+                swal("Cancelado", "No existe ese congreso.", "error");
+            }
+           
+               
+        }
+    });
+
+
+}
+
 </script>
 {% endblock %}

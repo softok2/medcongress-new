@@ -19,6 +19,22 @@
 </style>
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+			
+		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:meta_pag_listar_list'%}"> Meta Datos|Pag. List Congreso</a>
+		  </li>
+		  
+		<li class="breadcrumb-item active"> Actualizar  Meta Datos|Pag. List Congreso</a>
+		</li>
+		
+		</ol>
+	  </div>
+	</div>
+  </div>
 <section id="configuration">
     <div class="row">
         <div class="col-12">
@@ -35,7 +51,7 @@
                     <div class="row">
                         <div class="col-10">
                             <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Editar
-                                Meta Datos de la Página de Inicio</h1>
+                                Meta Datos de la Página Listar Congreso</h1>
 
                         </div>
                         <div class="col-2">
@@ -52,83 +68,113 @@
                             {% csrf_token %}
                         <div class="row">
                             <div class="col-sm-4">
-                                <h3 style="margin-bottom: 30px;"><b>Metas Principales </b> </h3>
-                                <h4> <b>Título</b></h4>
+								<h3 style="margin-bottom: 30px;"><b>Metas Principales </b> </h3>
+								<div class="form-group">
+                               <label for=""> <b>Título</b></label>
                                 {% if form.meta_title.errors %}<span
                                     style="font-size: 15px; color: red;">{{ form.meta_title.errors }}
                                 </span>{% endif %} </label>
 
-                                {{form.meta_title}}
-                                <h4> <b>Descripción</b> </h4>
+								{{form.meta_title}}
+							</div>
+							<div class="form-group">
+								<label for=""> <b>Descripción</b></label>
+                                
                                 {% if form.meta_description.errors %}<span
                                     style="font-size: 15px; color: red;">{{ form.meta_description.errors }}
                                 </span>{% endif %} </label>
 
-                                {{form.meta_description}}
-                                <h4> <b>Palabras Claves</b><span   id="toggle-method" data-toggle="tooltip" data-placement="top" data-original-title="Palabras separadas por coma(,)" >
-                                     <i class="ft ft-info"></i>
-                                </span>  </h4>
+								{{form.meta_description}}
+							</div>
+							<div class="form-group">
+								<label for=""> <b>Palabras Claves</b><span   id="toggle-method" data-toggle="tooltip" data-placement="top" data-original-title="Palabras separadas por coma(,)" >
+									<i class="ft ft-info"></i>
+							   </span></label>
+                               
                                 {% if form.meta_keywords.errors %}<span 
                                     style="font-size: 15px; color: red;">{{ form.meta_keywords.errors }}
                                 </span>{% endif %} </label>
 
-                                {{form.meta_keywords}}
+								{{form.meta_keywords}}
+								</div>
                             </div>
                             <div class="col-sm-4">
                                 <h3 style="margin-bottom: 30px;"><b>Metas para FaceBook </b> </h3>
-                                <h4> <b>Título</b> </h4>
+								<div class="form-group">
+									<label for=""> <b>Título</b></label>
                                 {% if form.meta_og_title.errors %}<span
                                     style="font-size: 15px; color: red;">{{ form.meta_og_title.errors }}
                                 </span>{% endif %} </label>
 
-                                {{form.meta_og_title}}
-                                <h4> <b>Descripción</b> </h4>
+								{{form.meta_og_title}}
+								</div>
+                                <div class="form-group">
+									<label for=""> <b>Descripción</b></label>
                                 {% if form.meta_og_description.errors %}<span
                                     style="font-size: 15px; color: red;">{{ form.meta_og_description.errors }}
                                 </span>{% endif %} </label>
 
-                                {{form.meta_og_description}}
-                                <h4> <b>Tipo</b> </h4>
+								{{form.meta_og_description}}
+								</div>
+                                <div class="form-group">
+									<label for=""> <b>Tipo</b></label>
                                 {% if form.meta_og_type.errors %}<span
                                     style="font-size: 15px; color: red;">{{ form.meta_og_type.errors }}
                                 </span>{% endif %} </label>
 
-                                {{form.meta_og_type}}
-                                <h4> <b>URL</b> </h4>
+								{{form.meta_og_type}}
+								</div>
+                                <div class="form-group">
+									<label for=""> <b>URL</b></label>
                                 {% if form.meta_og_url.errors %}<span
                                     style="font-size: 15px; color: red;">{{ form.meta_og_url.errors }}
                                 </span>{% endif %} </label>
 
-                                {{form.meta_og_url}}
-                                <h4> <b>Imagen</b> </h4>
+								{{form.meta_og_url}}
+								</div>
+								<div class="form-group">
+									<label for=""> <b>Imagen</b></label>
+								
+								{%if imagen%}
+								<img src="{% static '/'%}{{imagen}}" class="img-responsive" style="width: 126px; padding: 20px;" alt="">
+								<input type="file" name="meta_og_imagen" accept="image/*" class="form-control " id="id_meta_og_imagen">
+								{%else%}
                                 {% if form.meta_og_imagen.errors %}<span
                                     style="font-size: 15px; color: red;">{{ form.meta_og_imagen.errors }}
                                 </span>{% endif %} </label>
 
                                 {{form.meta_og_imagen}}
-
+								{%endif%}
+								</div>
                             </div>
                             <div class="col-sm-4">
                                 <h3 style="margin-bottom: 30px;"> <b> Metas para Redes Sociales</b> </h3>
 
-                                <h4> <b>Card</b> </h4>
+                                <div class="form-group">
+									<label for=""> <b>Card</b></label>
                                 {% if form.meta_twitter_card.errors %}<span
                                     style="font-size: 15px; color: red;">{{ form.meta_twitter_card.errors }}
                                 </span>{% endif %} </label>
 
-                                {{form.meta_twitter_card}}
-                                <h4> <b>Site</b> </h4>
+								{{form.meta_twitter_card}}
+								</div>
+
+                                <div class="form-group">
+								<label for=""> <b>Sitio</b></label>
                                 {% if form.meta_twitter_site.errors %}<span
                                     style="font-size: 15px; color: red;">{{ form.meta_twitter_site.errors }}
                                 </span>{% endif %} </label>
 
-                                {{form.meta_twitter_site}}
-                                <h4> <b>Creador</b> </h4>
+								{{form.meta_twitter_site}}
+								</div>
+                                <div class="form-group">
+									<label for=""> <b>Creador</b></label>
 
                                 {% if form.meta_twitter_creator.errors %}<span
                                     style="font-size: 15px; color: red;">{{ form.meta_twitter_creator.errors }}
                                 </span>{% endif %} </label>
-                                {{form.meta_twitter_creator}}
+								{{form.meta_twitter_creator}}
+								</div>
 
 
 

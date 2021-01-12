@@ -19,6 +19,21 @@
 </style>
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+		  </li>
+		  
+		  <li class="breadcrumb-item active">Imagenes
+		</li>
+		
+		</ol>
+	  </div>
+	</div>
+  </div>
 <section id="configuration">
     <div class="row">
         <div class="col-12">
@@ -58,7 +73,7 @@
                                 <a href="{% static '/'%}{{imagen.imagen}}" itemprop="contentUrl" data-size="480x360">
                                     <img class="img-thumbnail img-fluid" src="{% static '/'%}{{imagen.imagen}}" itemprop="thumbnail" alt="Image description">
                                 </a> 
-                                <a href="">Eliminar</a>
+                                 <button class="btn " onclick="deleteItem('{{imagen.pk}}')"> <i class="icon icon-eliminar"></i></button>
                               </figure>
                              
                               {%endfor%}
@@ -131,10 +146,11 @@
         })
             .then((isConfirm) => {
                 if (isConfirm) {
-                    url = "{% url 'MedCongressAdmin:country_delete' pk=0 %}";
+                    url = "{% url 'MedCongressAdmin:imagen_congress_deleted' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
-                        dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
+                       
                         swal("Eliminado!", "Este elemento ha sido eliminado.", "success");
+                        location.reload()
                     });
                 } else {
                     swal("Cancelado", "No se eliminó este elemento.", "error");

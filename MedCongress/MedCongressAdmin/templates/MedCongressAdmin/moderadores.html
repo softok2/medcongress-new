@@ -19,6 +19,19 @@
 </style>
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+
+		<li class="breadcrumb-item active"> Moderadores</a>
+		</li>
+		
+		</ol>
+	  </div>
+	</div>
+  </div>
 <section id="configuration">
     <div class="row">
         <div class="col-12">
@@ -59,7 +72,7 @@
                                         <thead>
                                             <tr role="row" style="font-size: 13px;">
                                                 <th style="width:50%">Nombre</th>
-                                                <th>Email</th>
+                                                <th>Correo</th>
                                                 <th style="width:5%">Operaciones</th>
                                             </tr>
                                         </thead>
@@ -72,7 +85,7 @@
                                                   <td>  <a id="del_{{ moderador.pk }}"
                                                         href="javascript:deleteItem('{{ moderador.pk }}')"
                                                         title="Eliminar">
-                                                        <i class="la la-trash "></i>
+                                                        <i class="icon icon-eliminar "></i>
                                                     </a>
 
                                                    
@@ -85,7 +98,7 @@
                                         <tfoot>
                                             <tr style="font-size: 13px;">
                                                 <th style="width:50%">Nombre</th>
-                                                <th>Email</th>
+                                                <th>Correo</th>
                                                 <th style="width:5%">Operaciones</th>
                                             </tr>
                                         </tfoot>
@@ -112,6 +125,29 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $('.table').DataTable({
+    language: {
+        "decimal": "",
+        "emptyTable": "No hay información",
+        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+        "infoPostFix": "",
+        "thousands": ",",
+        "lengthMenu": "Mostrar _MENU_ Entradas",
+        "loadingRecords": "Cargando...",
+        "processing": "Procesando...",
+        "search": "Buscar:",
+        "zeroRecords": "Sin resultados encontrados",
+        "paginate": {
+            "first": "Primero",
+            "last": "Ultimo",
+            "next": "Siguiente",
+            "previous": "Anterior"
+        }
+    },
+ 
+});
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({
             beforeSend: function (xhr, settings) {
@@ -147,8 +183,14 @@
                 if (isConfirm) {
                     url = "{% url 'MedCongressAdmin:moderador_delete' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
-                        dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
-                        swal("Eliminado!", "Este elemento ha sido eliminado.", "success");
+                        if (data.success){
+                          dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
+
+                        swal("Eliminado!", "Este elemento ha sido eliminado.", "success");  
+                        }
+                        else{
+                            swal("Este Moderador no se puede eliminar!", "Está Asociado a un Bloque.", "error"); 
+                        }
                     });
                 } else {
                     swal("Cancelado", "No se eliminó este elemento.", "error");

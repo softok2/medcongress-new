@@ -1,0 +1,129 @@
+.icon{
+    padding: 15px;
+}
+
+.icon-disenio {
+    background: url('../images/icons/disenio.ico') no-repeat center center;
+  
+}
+.icon-evento {
+    background: url('../images/icons/evento.ico') no-repeat center center;
+   
+}
+.icon-gest_usuario {
+    background: url('../images/icons/gest_usuario.ico') no-repeat center center;
+    
+}
+.icon-nomencladores {
+    background: url('../images/icons/nomencladores.ico') no-repeat center center;
+    
+}
+
+.icon-metadate {
+    background: url('../images/icons/metadate.ico') no-repeat center center;
+   
+}
+
+.icon-home {
+    background: url('../images/icons/home.ico') no-repeat center center;
+   
+}
+.icon-ponencia {
+    background: url('../images/icons/ponencia.ico') no-repeat center center;
+    
+}
+.icon-block {
+    background: url('../images/icons/block.ico') no-repeat center center;
+   
+}
+.icon-taller {
+    background: url('../images/icons/taller.ico') no-repeat center center;
+    
+}
+.icon-cuestionario {
+    background: url('../images/icons/cuestionario.ico') no-repeat center center;
+  
+}
+.icon-imagen {
+    background: url('../images/icons/imagen.ico') no-repeat center center;
+   
+}
+
+.icon-preguntas {
+    background: url('../images/icons/preguntas.ico') no-repeat center center;
+   
+}
+.icon-pago {
+    background: url('../images/icons/pago.ico') no-repeat center center;
+   
+}
+.icon-patrocinador {
+    background: url('../images/icons/patrocinador.ico') no-repeat center center;
+    
+}
+.icon-socio {
+    background: url('../images/icons/socio.ico') no-repeat center center;
+    
+}
+.icon-editar {
+    background: url('../images/icons/editar.ico') no-repeat center center;
+    
+}
+.icon-eliminar {
+    background: url('../images/icons/eliminar.ico') no-repeat center center;
+   
+}
+.icon-ponente {
+    background: url('../images/icons/ponente.ico') no-repeat center center;
+   
+}
+.icon-usuario {
+    background: url('../images/icons/usuario.ico') no-repeat center center;
+   
+}
+.icon-moderador {
+    background: url('../images/icons/moderador.ico') no-repeat center center;
+   
+}
+.icon-pagina_inicio {
+    background: url('../images/icons/pagina_inicio.ico') no-repeat center center;
+   
+}
+.icon-pagina_listar_congreso {
+    background: url('../images/icons/pagina_listar_congreso.ico') no-repeat center center;
+   
+}
+
+.icon-congreso {
+    background: url('../images/icons/congreso.ico') no-repeat center center;
+   
+}
+
+.icon-asignar_congreso {
+    background: url('../images/icons/asignar.ico') no-repeat center center;
+   
+}
+.icon-asignar_taller {
+    background: url('../images/icons/asignar_taller.ico') no-repeat center center;
+   
+}
+.icon-footer {
+    background: url('../images/icons/footer.ico') no-repeat center center;
+   
+}
+.icon-eliminar_vinculo
+{
+    background: url('../images/icons/eliminar_vinculo.ico') no-repeat center center;
+   
+}
+.icon-asignar_congreso
+{
+    background: url('../images/icons/asignar_congreso.ico') no-repeat center center;
+   
+}
+
+.icon-visualizar
+{
+    background: url('../images/icons/visualizar.ico') no-repeat center center;
+   
+}

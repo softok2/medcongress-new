@@ -1,0 +1,136 @@
+{% extends 'MedCongressAdmin/base.html' %}
+{% block title %}Footer{% endblock %}
+{% load static %}
+{% block styles %}
+
+
+{% endblock %}
+{% block content %}
+<section id="configuration">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-10">
+                            <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Footer</h1>
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="card-content collapse show">
+                    <div class="card-body card-dashboard">
+                        <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    {%if footer%}
+                                    {%for foot in footer%}
+                                    <h4> <b>Dirección</b>  <small>{{foot.direccion}}</small></h4>
+                                    <h4> <b>Email</b>  <small>{{foot.email}}</small></h4>
+                                  
+                                    <h4> <b>Teléfono</b>  <label >{{foot.telefono}}</label></h4>
+                                    <h4> <b>Whatsapp</b>  <label >{{foot.whatsapp}}</label></h4>
+                                    <a id="edit-btn" type="button" class="btn btn-success" title="Editar Valores" href=" {% url 'MedCongressAdmin:footer_edit' pk=foot.pk %}"
+                                    style="float: left; padding:7px;font-size: 20px; margin-top: 30px;">
+                                    <i class="ft ft-edit"></i> Editar  </a>
+                                    
+                                   
+                                    {%endfor%}
+                                   
+                              
+                                {%else%}
+                                <a id="edit-btn" type="button" class="btn btn-success" title="Editar Valores" href=" {% url 'MedCongressAdmin:footer_add' %}"
+                                    style="float: left; padding:7px;font-size: 20px; margin-top: 30px;">
+                                    <i class="ft ft-plus"></i>Adicionar
+                                </a>
+                                {%endif%}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  
+</section>
+<div class="swal-overlay" tabindex="-1">
+    <form id="swall-modal-form" method="POST" style="display: none;">
+        {% csrf_token %}
+    </form>
+
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/extensions/sweetalert.min.js' %}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/tables/datatable/datatables.min.js' %}"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        
+        var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        });
+
+        $('#add-btn').click(function () {
+            location.href = "{% url 'MedCongressAdmin:cat_pago_add'   %}";
+        });
+        $('#add_img-btn').click(function () {
+            location.href = "{% url 'MedCongressAdmin:imagen-quienes_somos_add'   %}";
+        });
+        
+        dataTable = $('.zero-configuration').DataTable();
+    });
+    function deleteItem(pk) {
+        swal({
+            title: "Estas seguro?",
+            text: "No será capaz de recuperar este elemento!",
+            icon: "warning",
+            buttons: {
+                cancel: {
+                    text: "No, cancelar!",
+                    value: null,
+                    visible: true,
+                    className: "",
+                    closeModal: false,
+                },
+                confirm: {
+                    text: "Sí, eliminarlo!",
+                    value: true,
+                    visible: true,
+                    className: "",
+                    closeModal: false
+                }
+            }
+        })
+            .then((isConfirm) => {
+                if (isConfirm) {
+                    url = "{% url 'MedCongressAdmin:imagen_quienes_somos_deleted' pk=0 %}";
+                    $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
+                       
+                       swal("Eliminado!", "Este elemento ha sido eliminado.", "success");
+                       location.reload()
+               
+                        
+                    });
+                } else {
+                    swal("Cancelado", "No se eliminó este elemento.", "error");
+                }
+            });
+    }
+</script>
+{% endblock %}

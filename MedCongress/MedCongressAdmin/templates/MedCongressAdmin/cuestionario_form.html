@@ -12,6 +12,24 @@
 
 {% endblock %}
 {% block content %}
+
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+		  </li>
+		  
+		  <li class="breadcrumb-item active"><a href="{% url 'MedCongressAdmin:Congres_cuestionario' congreso.path %}">Cuestionario</a>
+		</li>
+		<li class="breadcrumb-item active">{%if pregunta%} Actualizar Pregunta del Cuestionario{%else%}Adicionar Pregunta del Cuestionario{%endif%}</a>
+		</li>
+		
+		</ol>
+	  </div>
+	</div>
+  </div>
 <section class="multiple-input-with-labels" id="multiple-input-with-labels">
 
 
@@ -22,7 +40,7 @@
 			<div class="card">
 				<div class="card-header">
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
-						Adicionar Preguntas al Cuestionario</h1>
+						{%if pregunta%} Actualizar Pregunta del Cuestionario{%else%}Adicionar Pregunta del Cuestionario{%endif%}</h1>
 					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
 					<div class="heading-elements">
 						<ul class="list-inline mb-0">
@@ -212,10 +230,7 @@
 											<div class="text-right">
 										<button type="button" class="btn btn-sm " title="Agregar Respuesta" onclick="AddRespuesta();">+</button>
 										<button type="button" class="btn btn-sm"  id="del" title="Eliminar Respuesta" onclick="DeletedRespuesta();" disabled>-</button>
-								
-									</div>
-
-									<div class="form-actions">
+								<div class="form-actions">
 										<div class="text-right">
 											<button id="atras" type="button" class="btn btn-danger ">Cancelar
 												<i class="ft-x position-right"></i>
@@ -227,6 +242,9 @@
 
 										</div>
 									</div>
+									</div>
+
+									
 								</div>
 							</div>
 					</div>
@@ -246,15 +264,13 @@
 
 <script type="text/javascript">
 	$('#atras').click(function () {
-		{%if congreso %}
+	
 		location.href = "{% url 'MedCongressAdmin:Congres_cuestionario' congreso.path %}";
-		{%else%}
-		location.href = "{% url 'MedCongressAdmin:bloques_list' %}";
-		{% endif %}
+		
 	});
-	{%if congreso %}
+	
 	$("#id_congreso option[value='{{congreso.id}}']").attr("selected", true);
-	{% endif %}
+	
 
 	$(document).ready(function () {
 		

@@ -19,6 +19,20 @@
 </style>
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+
+<li class="breadcrumb-item active"> Usuarios que han pagado Taller
+</li>
+
+
+</ol>
+</div>
+</div>
+</div>
 <section id="configuration">
     <div class="row">
         <div class="col-12">
@@ -41,12 +55,62 @@
                         </div>
                         <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
+                                <button class="btn btn-info" title="Descargar Exel" onclick="Mostrar()" style="float:right; padding: 3px;margin-left: 10px;">
+                                    <i class="la la-file-excel-o"></i>
+                                </button>
                                 <button id="add-btn" type="button" class="btn btn-success" title="Asignar pago de un Taller a un Usuario" 
                                     style="float:right; padding: 3px;">
                                     <i class="la la-plus"></i>
                                 </button>
                                 <div class="clearfix"></div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="row card-content collapse show" style="display: none;" id='mostrar'>
+                         
+                                
+                           
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6" style="float: right;">
+                            
+                            <form id="form" method="POST" action="{%url 'MedCongressAdmin:Rep_RelTallerUser'%}">
+                                {% csrf_token %}
+                                <div class="form-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+
+                                            <div class="col-sm-12 ">
+                                                <div class="form-group">
+                                                    <label for="{{form.taller.id_for_label }}"><b>Filtre
+                                                            Taller</b>{% if form.taller.errors %}
+                                                        <span
+                                                            style="font-size: 15px; color: red;">{{ form.taller.errors }}
+                                                        </span>{% endif %} </label>
+                                                    <div style="display: none;">
+                                                        {{form.taller}}
+                                                    </div>
+                                                    <input type="text" name="my_user" class="form-control" required=""
+                                                        id="id_my_user">
+
+                                                </div>
+                                            </div>
+
+
+
+                                            </fieldset>
+                                            <div class="form-actions">
+                                                <div class="text-right">
+
+                                                    <button id="save" type="submit" class="btn btn-primary">Exportar
+                                                        <i class="la la-file-excel-o position-right"></i>
+                                                    </button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -60,6 +124,7 @@
                                         id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
                                         <thead>
                                             <th style="width:50%">Usuario</th>
+                                            <th>Correo</th>
                                                 <th>Taller</th>
                                                 <th>Cant.</th>
                                                 <th>Categoría de Pago</th>
@@ -69,8 +134,8 @@
                                         <tbody>
                                             {% for taller in talleres %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
-                                                <td class="sorting_1">{{ taller.user.usuario.first_name }} {{ taller.user.usuario.last_name}}</td>
-                                                
+                                                <td class="sorting_1" style="vertical-align: middle;">{{ taller.user.usuario.first_name }} {{ taller.user.usuario.last_name}}</td>
+                                                <td style="vertical-align: middle;">{{ taller.user.usuario.email }}</td>
                                                 <td>{{ taller.taller.titulo}}</td>
                                                 {%if taller.cantidad%}
                                                 <td>{{ taller.cantidad}}</td>
@@ -82,7 +147,7 @@
                                                   <td>  <a id="del_{{ taller.pk }}"
                                                         href="javascript:deleteItem('{{ taller.pk }}')"
                                                         title="Eliminar">
-                                                        <i class="la la-trash "></i>
+                                                        <i class="icon icon-eliminar "></i>
                                                     </a>
 
                                                    
@@ -94,6 +159,7 @@
                                         </tbody>
                                         <tfoot>
                                             <th style="width:50%">Usuario</th>
+                                            <th>Correo</th>
                                                 <th>Taller</th>
                                                 <th>Cant.</th>
                                                 <th>Categoría de Pago</th>
@@ -118,12 +184,53 @@
 </div>
 {% endblock %}
 {% block scripts %}
+<link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
+<script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/extensions/sweetalert.min.js' %}"></script>
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/tables/datatable/datatables.min.js' %}"></script>
 
 <script type="text/javascript">
     $(document).ready(function () {
-        
+        $('.table').DataTable({
+    language: {
+        "decimal": "",
+        "emptyTable": "No hay información",
+        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+        "infoPostFix": "",
+        "thousands": ",",
+        "lengthMenu": "Mostrar _MENU_ Entradas",
+        "loadingRecords": "Cargando...",
+        "processing": "Procesando...",
+        "search": "Buscar:",
+        "zeroRecords": "Sin resultados encontrados",
+        "paginate": {
+            "first": "Primero",
+            "last": "Ultimo",
+            "next": "Siguiente",
+            "previous": "Anterior"
+        }
+    },
+ 
+});
+        $('form').submit(function(event) { // o el id de tu formulario
+        if($('#id_taller').val() == '') {
+            swal("Cancelado", "No existe ese taller.", "error");
+            return false;
+        }
+    })
+        $("#id_my_user").autocomplete({
+            source: "{% url 'Taller_autocomp'%}",
+            minLength: 3,
+        });
+        $('#id_my_user').change(function () {
+            email = $('#id_my_user').val()
+            $("#id_taller option:contains('" + email + "')").attr("selected", true);
+            if ($("#id_taller option:selected").text()!= email) 
+            $("#id_taller").val('')
+
+        });
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({
             beforeSend: function (xhr, settings) {
@@ -139,19 +246,19 @@
     });
     function deleteItem(pk) {
         swal({
-            title: "Estas seguro?",
-            text: "No será capaz de recuperar este elemento!",
+            title: "¿Estás seguro?",
+            text: "¡No será capaz de recuperar este elemento!",
             icon: "warning",
             buttons: {
                 cancel: {
-                    text: "No, cancelar!",
+                    text: "¡No, cancelar!",
                     value: null,
                     visible: true,
                     className: "",
                     closeModal: false,
                 },
                 confirm: {
-                    text: "Sí, eliminarlo!",
+                    text: "¡Sí, eliminarlo!",
                     value: true,
                     visible: true,
                     className: "",
@@ -165,12 +272,36 @@
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                         dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
 
-                        swal("Eliminado!", "Este elemento ha sido eliminado.", "success");
+                        swal("¡Eliminado!", "Este elemento ha sido eliminado.", "success");
                     });
                 } else {
-                    swal("Cancelado", "No se eliminó este elemento.", "error");
+                    swal("¡Cancelado!", "No se eliminó este elemento.", "error");
                 }
             });
     }
+    function Mostrar(){
+$('#mostrar').toggle();
+
+ }
+ function DescragarExel() {
+
+
+$.ajax({
+    type: "GET",
+    url: "{% url 'MedCongressAdmin:Rep_RelTallerUser'%}",
+    data: {
+        'taller': $('#id_taller').val()// from form
+    },
+    success: function (data) {
+        if (data['succes']) {
+            swal("¡Cancelado!", "No existe ese taller.", "error");
+        }
+       
+           
+    }
+});
+
+
+}
 </script>
 {% endblock %}

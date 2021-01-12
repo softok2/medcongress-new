@@ -19,6 +19,21 @@
 </style>
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+		  </li>
+		 
+		  <li class="breadcrumb-item active">Cuestionario
+		</li>
+		
+		</ol>
+	  </div>
+	</div>
+  </div>
 <section id="configuration">
     <div class="row">
         <div class="col-12">
@@ -86,11 +101,11 @@
                                                 </td>
                                                 <td>{%if pregunta.publicada%}Si{%else%}No{%endif%}</td>
                                                   <td>  <a href="{% url 'MedCongressAdmin:cuestionario_edit' pk=pregunta.id %}"
-                                                    title="Editar"><i class="la la-pencil-square"></i></a> 
-                                                    <a id="del_{{ cuestionario.pk }}"
-                                                        href="javascript:deleteItem('{{ cuestionario.pk }}')"
+                                                    title="Editar"><i class="icon icon-editar"></i></a> 
+                                                    <a id="del_{{ pregunta.id }}"
+                                                        href="javascript:deleteItem('{{ pregunta.id }}')"
                                                         title="Eliminar">
-                                                        <i class="la la-trash "></i>
+                                                        <i class="icon icon-eliminar "></i>
                                                     </a>
 
                                                    
@@ -131,6 +146,29 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $('.table').DataTable({
+    language: {
+        "decimal": "",
+        "emptyTable": "No hay información",
+        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+        "infoPostFix": "",
+        "thousands": ",",
+        "lengthMenu": "Mostrar _MENU_ Entradas",
+        "loadingRecords": "Cargando...",
+        "processing": "Procesando...",
+        "search": "Buscar:",
+        "zeroRecords": "Sin resultados encontrados",
+        "paginate": {
+            "first": "Primero",
+            "last": "Ultimo",
+            "next": "Siguiente",
+            "previous": "Anterior"
+        }
+    },
+ 
+});
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({
             beforeSend: function (xhr, settings) {
@@ -171,7 +209,7 @@
         })
             .then((isConfirm) => {
                 if (isConfirm) {
-                    url = "{% url 'MedCongressAdmin:ponente_delete' pk=0 %}";
+                    url = "{% url 'MedCongressAdmin:cuestionario_delete' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                         dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
                         swal("Eliminado!", "Este elemento ha sido eliminado.", "success");

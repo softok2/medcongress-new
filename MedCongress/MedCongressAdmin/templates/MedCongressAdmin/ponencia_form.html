@@ -13,36 +13,46 @@
 
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+{%if con%}
+    <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+    </li>
+        {%if bloque%}
+            <li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:Congres_bloques' path=bloque.congreso.path %}">Bloques</a>
+			</li>
+			<li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:Bloque_ponencias' path=bloque.path tipo='congreso' %}">Ponencias</a>
+			</li>
+			{%else%}	
+			<li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:Congres_ponencias' path=con.path %}">Ponencias</a>
+			</li>
+	{%endif%}
+	
+    <li class="breadcrumb-item active">{%if ponencia%} Actualizar Ponencia {%else%} Adicionar Ponencia {%endif%}
+    </li>
+{%else%}
+
+
+{%if bloque%}
+
+<li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:bloques_list' %}">Bloques</a>
+</li>
+<li class="breadcrumb-item active">Ponencia
+</li>
+{%else%}
+<li class="breadcrumb-item active">Ponencia
+</li>
+{%endif%}
+{%endif%}
+</ol>
+</div>
+</div>
+</div>
 <section class="multiple-input-with-labels" id="multiple-input-with-labels">
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title" id="myModalLabel">Insertar Foto</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-							aria-hidden="true">&times;</span></button>
-
-				</div>
-				<div class="modal-body">
-					<div class="col-sm-12">
-						<div class="form-group">
-							<label
-								for="{{form.imagen_congreso.imagen.id_for_label }}"><b>{{form.imagen_congreso.imagen.label }}</b>{% if form.imagen_congreso.imagen.errors %}
-								<span style="font-size: 15px; color: red;">{{ form.imagen_congreso.imagen.errors }}
-								</span>{% endif %} </label>
-
-							{{form.imagen_congreso.imagen }}
-						</div>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<a onclick="InsertImagen()" type="button" class="btn btn-primary" data-dismiss="modal">Insertar</a>
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-
-				</div>
-			</div>
-		</div>
-	</div>
+	
 	<div class="modal fade" id="my" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
@@ -61,50 +71,27 @@
 			</div>
 		</div>
 	</div>
-	<div class="modal fade" id="add_tipo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title" id="myModalLabel">Insertar Nuevo Tipo de Congreso</h4> <button type="button"
-						class="close" data-dismiss="modal" aria-label="Close"><span
-							aria-hidden="true">&times;</span></button>
 
-				</div>
-				<div class="modal-body">
-					<div id="geomap"></div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="modal fade" id="add_esp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title" id="myModalLabel">Insertar Nueva Especialidad</h4> <button type="button"
-						class="close" data-dismiss="modal" aria-label="Close"><span
-							aria-hidden="true">&times;</span></button>
-
-				</div>
-				<div class="modal-body">
-					<div id="geomap"></div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-
-				</div>
-			</div>
-		</div>
-	</div>
 	<div class="row">
 		<div class="col-12">
 			<div class="card">
 				<div class="card-header">
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
-						Adicionar Ponencia</h1>
+						{%if ponencia%} Actualizar Ponencia {%else%} Adicionar Ponencia {%endif%}</h1>
+						{% if messages %}
+						<ul class="messages">
+							{% for message in messages %}
+							<li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+								{% endfor %}
+						</ul>
+						{% endif %}
+						{% if form.ponencia.error.errors %}
+					<ul class="messages">
+						
+						<li  class="" >{{form.ponencia.error.errors }} </li>
+							
+					</ul>
+					{% endif %}
 					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
 					<div class="heading-elements">
 						<ul class="list-inline mb-0">
@@ -118,247 +105,490 @@
 					<div class="card-body">
 						<form id="congres-form" method="POST" action="" enctype="multipart/form-data">
 							{% csrf_token %}
-							<div class="form-body">
-								<div class="row">
-									<div class="col-md-12">
-										<div class="row">
-											<div class="col-sm-8 ">
-												<div class="form-group">
-													<label
-														for="{{form.ponencia.titulo.id_for_label }}"><b>{{form.ponencia.titulo.label }}</b>{% if form.ponencia.titulo.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.ponencia.titulo.errors }}
-														</span>{% endif %} </label>
-
-													{{form.ponencia.titulo }}
-												</div>
-											</div>
-											<div class="col-sm-4 ">
-												<div class="form-group">
-													<label
-														for="{{form.ponencia.fecha_inicio.id_for_label }}"><b>{{form.ponencia.fecha_inicio.label }}</b>{% if form.ponencia.fecha_inicio.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.ponencia.fecha_inicio.errors }}
-														</span>{% endif %} </label>
-
-													{{form.ponencia.fecha_inicio}}
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-sm-12 ">
-												<div class="form-group">
-													<label
-														for="{{form.ponencia.detalle.id_for_label }}"><b>{{form.ponencia.detalle.label }}</b>{% if form.ponencia.detalle.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.ponencia.detalle.errors }}
-														</span>{% endif %} </label>
-
-													{{form.ponencia.detalle }}
-												</div>
-											</div>
-										</div>
-										<div class="row">
-
-											<div class="col-sm-6 ">
-												<div class="form-group">
-													<label
-														for="{{form.ponencia.duracion.id_for_label }}"><b>{{form.ponencia.duracion.label }}</b>{% if form.ponencia.duracion.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.ponencia.duracion.errors }}
-														</span>{% endif %} </label>
-
-													{{form.ponencia.duracion }}
-												</div>
-											</div>
-											<div class="col-sm-6 ">
-												<div class="form-group">
-													<label
-														for="{{form.ponencia.cod_video.id_for_label }}"><b>Código de inserción del video en Vimeo</b>{% if form.ponencia.cod_video.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.ponencia.cod_video.errors }}
-														</span>{% endif %} </label>
-
-													{{form.ponencia.cod_video }}
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-sm-6 ">
-												<div class="form-group">
-
-													{%if imagen_seg_url%}
-													<label><b>Imagen Actual </b> </label>
-													<figure class="col-lg-3 col-md-6 col-12" itemprop="associatedMedia"
-														itemscope=""></figure>
-													<a href="{{imagen_seg_url}}" itemprop="contentUrl"
-														data-size="480x360">
-														<img class="img-thumbnail img-fluid" src="{{imagen_seg_url}}"
-															itemprop="thumbnail" alt="Image description">
-													</a>
-
-													</figure>
-
-													<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva
-															Imagen</b> </label>
-															{% if form.ponencia.imagen.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.ponencia.imagen.errors }}
-														</span>{% endif %}
-													<input type="file" name="ponencia-imagen" accept="image/*"
-														class=" form-control " id="id_ponencia-imagen">
-													{% else%}
-
-
-													<label
-														for="{{form.ponencia.imagen.id_for_label }}"><b>{{form.ponencia.imagen.label }}</b>{% if form.ponencia.imagen.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.ponencia.imagen.errors }}
-														</span>{% endif %} </label>
-
-													{{form.ponencia.imagen }}
-													{%endif%}
-												</div>
-											</div>
-
-
-
-										</div>
-										<div class="row">
-											<div class="col-sm-6 ">
-												<div class="form-group">
-													<label
-														for="{{form.ubicacion.direccion.id_for_label }}"><b>{{form.ubicacion.direccion.label }}</b>
-														{% if form.ubicacion.direccion.errors %} <span
-															style="font-size: 15px; color: red;">{{ form.ubicacion.direccion.errors }}
-														</span>{% endif %} </label>
-													{{form.ubicacion.direccion }}
-												</div>
-											</div>
-											<div class="col-ms-1">
-												<div class="form-group">
-
-													<label class="mapa">Ver Mapa</label>
-													<!-- <a onclick="VerMapa()" type="link"  style="display: block;">  <i class="" style="font-size: 43px;"></i> </a> -->
-													<button type="button" class="btn btn-link" data-toggle="modal"
-														data-target="#my" style="display: block;">
-														<span><i class="ft ft-map-pin"
-																style="font-size: 30px;display: block;margin-top: -13px;"></i></span>
-
-													</button>
-
-												</div>
-
-											</div>
-
-											<div class="col-sm-3 " style="display: none;">
-												<div class="form-group">
-													<label
-														for="{{form.ubicacion.longitud.id_for_label }}"><b>{{form.ubicacion.longitud.label }}</b>{% if form.ubicacion.longitud.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.ubicacion.longitud.errors }}
-														</span>{% endif %}</label>
-
-													{{form.ubicacion.longitud }}
-												</div>
-											</div>
-											<div class="col-sm-3 " style="display: none;">
-												<div class="form-group">
-													<label
-														for="{{form.ubicacion.latitud.id_for_label }}"><b>{{form.ubicacion.latitud.label }}</b>{% if form.ubicacion.latitud.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.ubicacion.latitud.errors }}
-														</span>{% endif %} </label>
-
-													{{form.ubicacion.latitud }}
-												</div>
-											</div>
-											<div class="col-sm-3 ">
-												<div class="form-group" {%if con %} style="display: none;" {%endif%}>
-
-
-													<label
-														for="{{form.ponencia.congreso.id_for_label }}"><b>{{form.ponencia.congreso.label }}</b>{% if form.ponencia.congreso.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.ponencia.congreso.errors }}
-														</span>{% endif %} </label>
-
-													{{form.ponencia.congreso }}
-												</div>
-											</div>
-											<div class="col-sm-3 ">
-												<div class="form-group" {%if bloque %} style="display: none;" {%endif%}>
-
-
-													<label
-														for="{{form.ponencia.bloque.id_for_label }}"><b>{{form.ponencia.bloque.label }}</b>{% if form.ponencia.bloque.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.ponencia.bloque.errors }}
-														</span>{% endif %} </label>
-													
-														{%if blo %}
-														<select name="ponencia-bloque" class="form-control" id="id_ponencia-bloque">
-															<option value="" selected="">---------</option>
-														  {%for b in blo%}
-															<option value="{{b.id}}">{{b.titulo}}</option>
-														  {%endfor%}
-														  
-														  </select>
-														{%else%}
-													{{form.ponencia.bloque }}
-													{% endif %}
-
-												</div>
-											</div>
-											<div class="col-sm-3 ">
-												<div class="form-group">
-
-
-													<label for="id_ponencia-is_info"><b>Tipo de evento en el Programa</b> </label>
-
-													<select name="ponencia-is_info" class="form-control" required="" id="id_ponencia-is_info">
-  <option value="False" selected="">Información</option>
-  <option value="True" selected="">Ponencia</option>
-
-  
-
-</select>
-												</div>
-											</div>
-										</div>
-
-
-
-
-										<div class="row">
-											<div class="col-sm-3 ">
-												<div class="form-group">
-													<label
-														for="{{form.ponencia.published.id_for_label }}"><b>{{form.ponencia.published.label }}</b>{% if form.ponencia.published.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.ponencia.published.errors }}
-														</span>{% endif %} </label>
+							{%if ponencia %}
+							<input type="hidden" name="id" value="{{ponencia.id}}">
+							{%endif%}
+							<section id="basic-tabs-components">
+								<div class="row match-height">
+									<div class="col-xl-12 col-lg-12">
+										<div class="card">
+											
+											
+													<ul class="nav nav-tabs">
+														<li class="nav-item">
+															<a class="nav-link active" id="base-tab1" data-toggle="tab" aria-controls="tab1" href="#tab1" aria-expanded="true">Datos Principales</a>
+														</li>
 														
-													{{form.ponencia.published }}
-												
+														<li class="nav-item">
+															<a class="nav-link" id="base-tab2" data-toggle="tab" aria-controls="tab2" href="#tab2" aria-expanded="false">Meta datos</a>
+														</li>
+														
+														
+														
+													</ul>
+													<div class="tab-content px-1 pt-1">
+														<div role="tabpanel" class="tab-pane active" id="tab1" aria-expanded="true" aria-labelledby="base-tab1">
+															<!-- ///////// -->
+															<div class="form-body">
+																
+																<div class="row">
+																	<div class="col-md-12">
+																		<div class="row">
+																			<div class="col-sm-8 ">
+																				<div class="form-group">
+																					<label
+																						for="{{form.ponencia.titulo.id_for_label }}"><b>{{form.ponencia.titulo.label }}</b>{% if form.ponencia.titulo.errors %}
+																						<span
+																							style="font-size: 15px; color: red;">{{ form.ponencia.titulo.errors }}
+																						</span>{% endif %} </label>
+
+																					{{form.ponencia.titulo }}
+																				</div>
+																			</div>
+																			<div class="col-sm-4 ">
+																				<div class="form-group">
+																					<label
+																						for="{{form.ponencia.fecha_inicio.id_for_label }}"><b>{{form.ponencia.fecha_inicio.label }}</b>{% if form.ponencia.fecha_inicio.errors %}
+																						<span
+																							style="font-size: 15px; color: red;">{{ form.ponencia.fecha_inicio.errors }}
+																						</span>{% endif %} </label>
+
+																					{{form.ponencia.fecha_inicio}}
+																				</div>
+																			</div>
+																		</div>
+																		<div class="row">
+																			<div class="col-sm-12 ">
+																				<div class="form-group">
+																					<label
+																						for="{{form.ponencia.detalle.id_for_label }}"><b>{{form.ponencia.detalle.label }}</b>{% if form.ponencia.detalle.errors %}
+																						<span
+																							style="font-size: 15px; color: red;">{{ form.ponencia.detalle.errors }}
+																						</span>{% endif %} </label>
+
+																					{{form.ponencia.detalle }}
+																				</div>
+																			</div>
+																		</div>
+																		<div class="row">
+
+																			<div class="col-sm-6 ">
+																				<div class="form-group">
+																					<label
+																						for="{{form.ponencia.duracion.id_for_label }}"><b>{{form.ponencia.duracion.label }}</b>{% if form.ponencia.duracion.errors %}
+																						<span
+																							style="font-size: 15px; color: red;">{{ form.ponencia.duracion.errors }}
+																						</span>{% endif %} </label>
+
+																					{{form.ponencia.duracion }}
+																				</div>
+																			</div>
+																			<div class="col-sm-6 ">
+																				<div class="form-group">
+																					<label
+																						for="{{form.ponencia.cod_video.id_for_label }}"><b>Código de inserción del video en Vimeo</b>{% if form.ponencia.cod_video.errors %}
+																						<span
+																							style="font-size: 15px; color: red;">{{ form.ponencia.cod_video.errors }}
+																						</span>{% endif %} </label>
+
+																					{{form.ponencia.cod_video }}
+																				</div>
+																			</div>
+																		</div>
+																		<div class="row">
+																			<div class="col-sm-6 ">
+																				<div class="form-group">
+
+																					{%if imagen_seg_url%}
+																					<label><b>Imagen Actual </b> </label>
+																					<figure class="col-lg-3 col-md-6 col-12" itemprop="associatedMedia"
+																						itemscope=""></figure>
+																					<a href="{{imagen_seg_url}}" itemprop="contentUrl"
+																						data-size="480x360">
+																						<img class="img-thumbnail img-fluid" src="{{imagen_seg_url}}"
+																							itemprop="thumbnail" alt="Image description">
+																					</a>
+
+																					</figure>
+
+																					<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva
+																							Imagen</b> </label>
+																							{% if form.ponencia.imagen.errors %}
+																						<span
+																							style="font-size: 15px; color: red;">{{ form.ponencia.imagen.errors }}
+																						</span>{% endif %}
+																					<input type="file" name="ponencia-imagen" accept="image/*"
+																						class=" form-control " id="id_ponencia-imagen">
+																					{% else%}
+
+
+																					<label
+																						for="{{form.ponencia.imagen.id_for_label }}"><b>{{form.ponencia.imagen.label }}</b>{% if form.ponencia.imagen.errors %}
+																						<span
+																							style="font-size: 15px; color: red;">{{ form.ponencia.imagen.errors }}
+																						</span>{% endif %} </label>
+
+																					{{form.ponencia.imagen }}
+																					{%endif%}
+																				</div>
+																			</div>
+																			{% if not bloque_update%}
+																			<div class="col-sm-6 ">
+																				<div class="form-group">
+																					<label
+																						for="{{form.ponencia_ponente.ponente.id_for_label }}"><b>{{form.ponencia_ponente.ponente.label }}</b>
+																						{% if form.ponencia_ponente.ponente.errors %} <span
+																							style="font-size: 15px; color: red;">{{ form.ponencia_ponente.ponente.errors }}
+																						</span>{% endif %} </label>
+																						<div style="display: none;">
+																							{{form.ponencia_ponente.ponente}}
+																						</div>
+										
+																						<input type="text" name="my_ponente" class="form-control" required=""
+																							id="id_my_ponente">
+																				</div>
+																			</div>
+																			{%endif%}
+
+																		</div>
+																		<div class="row">
+																			<div class="col-sm-6 ">
+																				<div class="form-group">
+																					<label
+																						for="{{form.ubicacion.direccion.id_for_label }}"><b>{{form.ubicacion.direccion.label }}</b>
+																						{% if form.ubicacion.direccion.errors %} <span
+																							style="font-size: 15px; color: red;">{{ form.ubicacion.direccion.errors }}
+																						</span>{% endif %} </label>
+																					{{form.ubicacion.direccion }}
+																				</div>
+																			</div>
+																			<div class="col-ms-1">
+																				<div class="form-group">
+
+																					<label class="mapa">Ver Mapa</label>
+																					<!-- <a onclick="VerMapa()" type="link"  style="display: block;">  <i class="" style="font-size: 43px;"></i> </a> -->
+																					<button type="button" class="btn btn-link" data-toggle="modal"
+																						data-target="#my" style="display: block;">
+																						<span><i class="ft ft-map-pin"
+																								style="font-size: 30px;display: block;margin-top: -13px;"></i></span>
+
+																					</button>
+
+																				</div>
+
+																			</div>
+
+																			<div class="col-sm-3 " style="display: none;">
+																				<div class="form-group">
+																					<label
+																						for="{{form.ubicacion.longitud.id_for_label }}"><b>{{form.ubicacion.longitud.label }}</b>{% if form.ubicacion.longitud.errors %}
+																						<span
+																							style="font-size: 15px; color: red;">{{ form.ubicacion.longitud.errors }}
+																						</span>{% endif %}</label>
+
+																					{{form.ubicacion.longitud }}
+																				</div>
+																			</div>
+																			<div class="col-sm-3 " style="display: none;">
+																				<div class="form-group">
+																					<label
+																						for="{{form.ubicacion.latitud.id_for_label }}"><b>{{form.ubicacion.latitud.label }}</b>{% if form.ubicacion.latitud.errors %}
+																						<span
+																							style="font-size: 15px; color: red;">{{ form.ubicacion.latitud.errors }}
+																						</span>{% endif %} </label>
+
+																					{{form.ubicacion.latitud }}
+																				</div>
+																			</div>
+																			<div class="col-sm-3 ">
+																				<div class="form-group" {%if con or congreso %} style="display: none;" {%endif%}>
+
+
+																					<label
+																						for="{{form.ponencia.congreso.id_for_label }}"><b>{{form.ponencia.congreso.label }}</b>{% if form.ponencia.congreso.errors %}
+																						<span
+																							style="font-size: 15px; color: red;">{{ form.ponencia.congreso.errors }}
+																						</span>{% endif %} </label>
+
+																					{{form.ponencia.congreso }}
+																				</div>
+																			</div>
+																			<div class="col-sm-3 ">
+																				<div class="form-group" {%if bloque %} style="display: none;" {%endif%}>
+
+
+																					<label
+																						for="{{form.ponencia.bloque.id_for_label }}"><b>{{form.ponencia.bloque.label }}</b>{% if form.ponencia.bloque.errors %}
+																						<span
+																							style="font-size: 15px; color: red;">{{ form.ponencia.bloque.errors }}
+																						</span>{% endif %} </label>
+																					
+																						{%if blo %}
+																						<select name="ponencia-bloque" class="form-control" id="id_ponencia-bloque">
+																							<option value="" selected="">---------</option>
+																						{%for b in blo%}
+																							<option value="{{b.id}}">{{b.titulo}}</option>
+																						{%endfor%}
+																						
+																						</select>
+																						{%else%}
+																					{{form.ponencia.bloque }}
+																					{% endif %}
+
+																				</div>
+																			</div>
+																			<div class="col-sm-3 ">
+																				<div class="form-group">
+
+
+																					<label for="id_ponencia-is_info"><b>Tipo de evento en el Programa</b> </label>
+
+																					<select name="ponencia-is_info" class="form-control" required="" id="id_ponencia-is_info">
+								<option value="False" selected="">Información</option>
+								<option value="True" selected="">Ponencia</option>
+
+								
+
+								</select>
+																				</div>
+																			</div>
+																		
+																			<div class="col-md-1"></div>
+																			<div class="col-md-5">
+																				{% if form.ponencia.meta_description.errors %}
+																				<span style="font-size: 15px; color: red;">
+																					{{ form.ponencia.meta_description.errors }}
+																					</span>
+																					{% endif %} 
+																				{% if form.ponencia.meta_og_title.errors %}
+																				<span style="font-size: 15px; color: red;">
+																					{{ form.ponencia.meta_og_title.errors }}
+																					</span>
+																					{% endif %} 
+																				{% if form.ponencia.meta_og_type.errors %}
+																				<span style="font-size: 15px; color: red;">
+																					{{ form.ponencia.meta_og_type.errors }}
+																					</span>
+																					{% endif %}
+																				{% if form.ponencia.meta_og_url.errors %}
+																				<span style="font-size: 15px; color: red;">
+																					{{ form.ponencia.meta_og_url.errors }}
+																				</span>
+																				{% endif %}
+																				{% if form.ponencia.meta_title.errors %}
+																				<span style="font-size: 15px; color: red;">
+																					{{form.ponencia.meta_title.errors }}
+																				</span>
+																				{% endif %}
+																				{% if form.ponencia.meta_keywords.errors %}
+																				<span style="font-size: 15px; color: red;">
+																					{{ form.ponencia.meta_keywords.errors }}
+																					</span>
+																					{% endif %} 
+																				{% if form.ponencia.meta_twitter_card.errors%}
+																				<span style="font-size: 15px; color: red;">
+																					{{form.ponencia.meta_twitter_card.errors}}
+																				</span>
+																				{% endif %}
+																				{% if form.ponencia.meta_og_imagen.errors %}
+																				<span style="font-size: 15px; color: red;">
+																					{{ form.ponencia.meta_og_imagen.errors}}
+																				</span>
+																				{% endif %}
+																				{% if form.ponencia.meta_twitter_creator.errors%}
+																				<span style="font-size: 15px; color: red;">
+																					{{form.ponencia.meta_twitter_creator.errors}}
+																				</span>
+																				{% endif %}
+																				{% if form.ponencia.meta_twitter_site.errors%}
+																				<span style="font-size: 15px; color: red;">
+																					{{form.ponencia.meta_twitter_site.errors}}
+																				</span>
+																				{% endif %}
+																				{% if form.ponencia.meta_og_description.errors %}
+																				<span style="font-size: 15px; color: red;">
+																					{{ form.ponencia.meta_og_description.errors }}
+																					</span>
+																					{% endif %} 
+
+																				
+																			</div>
+																		</div>
+
+
+
+
+																		<div class="row">
+																			<div class="col-sm-3 ">
+																				<div class="form-group">
+																					<label
+																						for="{{form.ponencia.published.id_for_label }}"><b>{{form.ponencia.published.label }}</b>{% if form.ponencia.published.errors %}
+																						<span
+																							style="font-size: 15px; color: red;">{{ form.ponencia.published.errors }}
+																						</span>{% endif %} </label>
+																						
+																					{{form.ponencia.published }}
+																				
+																				</div>
+																			</div>
+																		</div>
+
+																		
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div class="tab-pane" id="tab2" aria-labelledby="base-tab2">
+															<!-- ////////////////////////// -->
+															<!-- META DATOS -->
+							
+																<section id="configuration">
+																	<div class="row">
+																		<div class="col-12">
+																			<div class="card">
+							
+							
+																				<div class="card-content collapse show">
+																					<div class="card-body card-dashboard">
+							
+																						<div class="row">
+																							<div class="col-sm-4">
+																								<h5
+																									style="margin-bottom: 10px;">
+																									<b>Metas Principales </b>
+																								</h5>
+																								<div class="form-group">
+																									<label for="">
+																										<b>Título</b></label>
+							
+							
+																									{{form.ponencia.meta_title}}
+																								</div>
+																								<div class="form-group">
+																									<label for="">
+																										<b>Descripción</b></label>
+							
+																								
+							
+																									{{form.ponencia.meta_description}}
+																								</div>
+																								<div class="form-group">
+																									<label for=""> <b>Palabras
+																											Claves</b><span
+																											id="toggle-method"
+																											data-toggle="tooltip"
+																											data-placement="top"
+																											data-original-title="Palabras separadas por coma(,)">
+																											<i
+																												class="ft ft-info"></i>
+																										</span></label>
+							
+																									
+							
+																									{{form.ponencia.meta_keywords}}
+																								</div>
+																							</div>
+																							<div class="col-sm-4">
+																								<h5
+																									style="margin-bottom: 10px;">
+																									<b>Metas para FaceBook </b>
+																								</h5>
+																								<div class="form-group">
+																									<label for="">
+																										<b>Título</b></label>
+																									
+							
+																									{{form.ponencia.meta_og_title}}
+																								</div>
+																								<div class="form-group">
+																									<label for="">
+																										<b>Descripción</b></label>
+																								
+																									{{form.ponencia.meta_og_description}}
+																								</div>
+																								<div class="form-group">
+																									<label for="">
+																										<b>Tipo</b></label>
+																								
+																									{{form.ponencia.meta_og_type}}
+																								</div>
+																								<div class="form-group">
+																									<label for="">
+																										<b>URL</b></label>
+							
+							
+																									{{form.ponencia.meta_og_url}}
+																								</div>
+																								<div class="form-group">
+																									<label for="">
+																										<b>Imagen</b></label>
+							
+																									{%if imagen_meta%}
+																									<img src="{{imagen_meta}}"
+																										class="img-responsive"
+																										style="width: 126px; padding: 20px;"
+																										alt=""><br>
+																										<input type="checkbox" name="perfiluser-meta_og_imagen-clear" id="perfiluser-meta_og_imagen-clear_id"> Eliminar
+																										<input type="file" name="perfiluser-meta_og_imagen" accept="image/*" class="form-control " id="id_perfiluser-meta_og_imagen">
+																									{%else%}
+																									{{form.ponencia.meta_og_imagen}}
+																									{%endif%}
+																								</div>
+																							</div>
+																							<div class="col-sm-4">
+																								<h5
+																									style="margin-bottom: 10px;">
+																									<b> Metas para Redes
+																										Sociales</b>
+																								</h5>
+							
+																								<div class="form-group">
+																									<label for="">
+																										<b>Card</b></label>
+							
+							
+																									{{form.ponencia.meta_twitter_card}}
+																								</div>
+							
+																								<div class="form-group">
+																									<label for="">
+																										<b>Sitio</b></label>
+							
+							
+																									{{form.ponencia.meta_twitter_site}}
+																								</div>
+																								<div class="form-group">
+																									<label for="">
+																										<b>Creador</b></label>
+							
+																									{{form.ponencia.meta_twitter_creator}}
+																								</div>
+																							</div>
+																						</div>
+																					</div>
+							
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																</section>
+															<!-- END META DATOS -->
+															<!-- /////////////////// -->
+														</div>
+													</div>
+													<div class="form-actions">
+														<div class="text-right">
+														
+															<button id="save" type="submit" class="btn btn-primary">Guardar
+																<i class="ft-save position-right"></i>
+															</button>
+														</div>
+
+													</div>
 												</div>
 											</div>
 										</div>
-
-										<div class="form-actions">
-											<div class="text-right">
-												<button id="atras" type="button" class="btn btn-danger ">Cancelar
-													<i class="ft-x position-right"></i>
-												</button>
-												<button id="save" type="submit" class="btn btn-primary">Guardar
-													<i class="ft-save position-right"></i>
-												</button>
-											</div>
-
-										</div>
-									</div>
-								</div>
-							</div>
+									</section>
 					</div>
 					</form>
 				</div>
@@ -378,8 +608,20 @@
 
 
 <script type="text/javascript">
+
 	$(document).ready(function () {
-	
+
+		$("#id_ponencia_ponente-ponente option[value='{{pon.id}}']").attr("selected", true);
+		$("#id_my_ponente").autocomplete({
+			source: "{% url 'Ponente_autocomp'%}",
+			minLength: 3,
+		});
+		$('#id_my_ponente').change(function () {
+			email = $('#id_my_ponente').val()
+			$("#id_ponencia_ponente-ponente option:contains('" + email + "')").attr("selected", true);
+			if ($("#id_ponencia_ponente-ponente option:selected").text()!= email) 
+            $("#id_ponencia_ponente-ponente").val('')
+		});
 		$('#id_ponencia-congreso').ready(function () {
 				$('#id_ponencia-bloque').empty();
 				$('#id_ponencia-bloque').append($("<option></option").attr('value', '').text('----------'));
@@ -396,9 +638,6 @@
 						for (var i = 0; i < data.length; i++) {
 
 							$('#id_ponencia-bloque').append($("<option></option").attr('value', data[i].id).text(data[i].titulo))
-							{%if update%}
-							$("#id_ponencia-bloque option[value='{{update.id}}']").attr("selected", true);
-							{%endif%}
 							{%if bloque %}
 							$("#id_ponencia-bloque option[value='{{bloque.id}}']").attr("selected", true);
 							{% endif %}
@@ -413,7 +652,7 @@
 
 	
 		});
-		//alert('{{update.id}}');
+		
 	
 	
 		$('#id_ponencia-congreso').change(function () {
@@ -448,7 +687,7 @@
 		$('#atras').click(function () {
 			{%if con %} {
 				{%if bloque %}
-				location.href = "{% url 'MedCongressAdmin:Bloque_ponencias' bloque.path %}";
+				location.href = "{% url 'MedCongressAdmin:Bloque_ponencias' path=bloque.path tipo='congreso'%}";
 				{%else%}
 				location.href = "{% url 'MedCongressAdmin:Congres_ponencias' con.path %}";
 				{% endif %}
@@ -462,9 +701,15 @@
 		
 		{%if con %}
 		$("#id_ponencia-congreso option[value='{{con.id}}']").attr("selected", true);
+		{% endif %}
+		{%if congreso %}
+		$("#id_ponencia-congreso option[value='{{congreso.id}}']").attr("selected", true);
 		
 		{% endif %}
 		{%if bloque %}
+		$("#id_ponencia-bloque option[value='{{bloque.id}}']").attr("selected", true);
+		{% endif %}
+		{%if bloque_update %}
 		$("#id_ponencia-bloque option[value='{{bloque.id}}']").attr("selected", true);
 		{% endif %}
 

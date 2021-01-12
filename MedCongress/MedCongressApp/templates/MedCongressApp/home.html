@@ -3,8 +3,46 @@
 {% block titulo %}
 Inicio
 {%endblock%}
+{% block metadatos%}
+{% if metadatos.meta_title%}
+<meta property="title" content="{{metadatos.meta_title}}">
+{%endif%}
+{% if metadatos.meta_description %}
+<meta name="description" content="{{metadatos.meta_description}}">
+{%endif%}
+{% if metadatos.meta_og_description %}
+<meta property="og:description" content="{{metadatos.meta_og_description}}">
+{%endif%}
+{% if metadatos.meta_og_type %}
+<meta property="og:type" content="{{metadatos.meta_og_type}}">
+{%endif%}
+{% if metadatos.meta_og_title %}
+<meta property="og:title" content="{{metadatos.meta_og_title}}">
+{%endif%}
+{% if metadatos.meta_og_url %}
+<meta property="og:url" content="{{metadatos.meta_og_url}}">
+{%endif%}
+{% if metadatos.meta_og_imagen %}
+<meta property="og:image" content="{% static '/'%}{{metadatos.meta_og_imagen}}">
+{%endif%}
+{% if metadatos.meta_twitter_card %}
+<meta name="twitter:card" content="{{metadatos.meta_twitter_card}}" />
+{%endif%}
+{% if metadatos.meta_twitter_site %}
+<meta name="twitter:site" content="{{metadatos.meta_twitter_site}}" />
+{%endif%}
+{% if metadatos.meta_twitter_creator %}
+<meta name="twitter:creator" content="{{metadatos.meta_twitter_creator}}" />
+{%endif%}
+{% if metadatos.meta_keywords %}
+<meta name="keywords"
+	content="{{metadatos.meta_keywords}}" />
+{%endif%}
+
+{%endblock%}
 {% block contenido %}
-<div class="kode-event-time" style=" background:url({% static 'congreso/AMCIC_sitio_web_1920x1080.png'%}) no-repeat 50% 0; ">
+<div class="kode-event-time"
+	style=" background:url({% static 'congreso/AMCIC_sitio_web_1920x1080.png'%}) no-repeat 50% 0; ">
 	<div class="container">
 		<div class="row">
 
@@ -16,41 +54,42 @@ Inicio
 					<h2>ENCUENTRA TU CONGRESO </h2>
 					<form class="subscribe-form" method="POST" action="{% url 'List_congreso'%}">
 						{% csrf_token %}
-						<input type="text" name="especialidad" id="especialidad"  placeholder="Buscar especialidad">
-						<input type="submit"  name="submit">
+						<input type="text" name="especialidad" id="especialidad" placeholder="Buscar especialidad">
+						<input type="submit" name="submit">
 					</form>
 
-					
-									
+
+
 					{%if nuevo_congreso%}
 					<h2>Siguiente evento:</h2>
 					<div id="countdown" class="simply-countdown"></div>
 					<div class="button-holder">
-										<a href="{%url 'View_congreso' nuevo_congreso.path%}" class="button">Más Información</a>
-									
-									</div>
-									{%else%}
-									<h2>Siguiente evento:</h2>
-							<ul class="countdown">
-								<li>
-									<span class="days">00</span>
-									<p class="days_ref">días</p>
-								</li>
-								<li>
-									<span class="hours">00</span>
-									<p class="hours_ref">horas</p>
-								</li>
-								<li>
-									<span class="minutes">00</span>
-									<p class="minutes_ref">minutos</p>
-								</li>
-								<li>
-									<span class="seconds last">00</span>
-									<p class="seconds_ref">segundos</p>
-								</li>
-							</ul>
-							<a href="{%url 'View_congreso' path='1-simposio-en-ciencias-de-la-salud-AMCIC'%}" class="button" style="margin-top: 30px;">Ver Congreso Actual</a>
-									{% endif%}
+						<a href="{%url 'View_congreso' nuevo_congreso.path%}" class="button">Más Información</a>
+
+					</div>
+					{%else%}
+					<h2>Siguiente evento:</h2>
+					<ul class="countdown">
+						<li>
+							<span class="days">00</span>
+							<p class="days_ref">días</p>
+						</li>
+						<li>
+							<span class="hours">00</span>
+							<p class="hours_ref">horas</p>
+						</li>
+						<li>
+							<span class="minutes">00</span>
+							<p class="minutes_ref">minutos</p>
+						</li>
+						<li>
+							<span class="seconds last">00</span>
+							<p class="seconds_ref">segundos</p>
+						</li>
+					</ul>
+					<a href="{%url 'View_congreso' path='1-simposio-en-ciencias-de-la-salud-AMCIC'%}" class="button"
+						style="margin-top: 30px;">Ver Congreso Actual</a>
+					{% endif%}
 				</div>
 			</div>
 		</div>
@@ -63,27 +102,26 @@ Inicio
 			<div class="row">
 				<div class="col-lg-6 col-md-6">
 					<div class="kf_heading_2">
-						<h3>Somos Med Congress</h3>
-						<span>La medicina un arte sin fronteras</span>
+						{%if quienes_somos%}
+						<h3>{{quienes_somos.titulo}}</h3>
+						<span>{{quienes_somos.sub_titulo}}</span>
 					</div>
 
-					<p>Somos una empresa tecnológica comprometidos con la educación médica continua, haciéndola más
-						flexible, cómoda y accesible para todo medico en el mundo; dando una experiencia del aprendizaje
-						atractivo, efectivo y convincente.</p>
-					<p>La transformación digital en la educación superior no solo es una solución a los desafíos comunes
-						del sector salud, también es un cambio de mentalidad que crea procesos más eficientes en la
-						gerencia y la experiencia pedagógica.</p>
-
+					{{quienes_somos.texto|safe}}
+					{%endif%}
 				</div>
 				<div class="col-lg-6 col-md-6">
 					<div class="event-slider-box">
 						<div class="event-borders">
 						</div>
 						<div class="event-boxslider">
+							{%if quienes_somos_imagenes %}
 							<ul class="bxslider-banner">
-								<li><img src="{% static 'MedCongressApp/images/IMG_1.png'%}" alt="" /></li>
-								<li><img src="{% static 'MedCongressApp/images/IMG_2.png'%}" alt="" /></li>
+								{%for quienes_somos_imagene in quienes_somos_imagenes%}
+								<li><img src="{% static '/'%}{{quienes_somos_imagene.imagen}}" alt="" /></li>
+								{%endfor%}
 							</ul>
+							{%endif%}
 						</div>
 					</div>
 				</div>
@@ -141,106 +179,69 @@ Inicio
 		<div class="kode-slider">
 			<ul class="bxslider-banner">
 				{% for congreso in congresos %}
+				{% if congreso.imagencongreso_set.all.0.imagen%}
 				<li>
 					<img src="{% static '/'%}{{congreso.imagencongreso_set.all.0.imagen}}" alt="" />
 					<div class="kode-content">
 						<div class="container">
 							<div class="row">
 								<div class="kode-slider-content">
-									<h2>{{congreso.titulo}}</h2>{%if congreso.sub_titulo %}<h2 class="mi_h2">{{congreso.sub_titulo }}</h2> {%endif%}
+									<h2>{{congreso.titulo}}</h2>{%if congreso.sub_titulo %}<h2 class="mi_h2">
+										{{congreso.sub_titulo }}</h2> {%endif%}
 
-									<div class="button-holder" style="padding-top: 30px;">
-										<a href="{% url 'View_congreso' congreso.path %}#programas" class="button">Programa</a>
-										<a href="{% url 'View_congreso' congreso.path %}#pagos" class="button">Inscripción</a>
-									</div>
+									
 								</div>
 							</div>
 						</div>
 					</div>
 				</li>
+				{%endif%}
 				{%endfor%}
 
 			</ul>
 
 		</div>
 		<!-- Kode-Slider End -->
-
+		{%if ofrecemos %}
 		<div class="kode-main-services">
 			<div class="container">
 				<div class="kf_heading_1">
 					<h2>Ofrecemos</h2>
 
 				</div>
+				{%for ofrece in ofrecemos %}
+				{% if forloop.first %}
 				<div class="row">
+					{%endif%}
 					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 						<div class="main-service-box">
 							<div class="icon-srvc">
-								<i class="icon-finance-and-business4"></i>
+								<i class="{{ofrece.icono}}"></i>
 							</div>
 							<div class="srvc-content">
-								<h3>Pagos electronicos</h3>
-								<p>Realizar pagos de manera segura y sencilla con tarjeta de débito o crédito. Ahorrando
-									tiempo al poder realizarlo desde cualquier lugar de tu comodidad.</p>
+								<h3>{{ofrece.titulo}}</h3>
+								{{ofrece.texto|safe}}
 								<strong class="bottom-border"></strong>
 							</div>
 						</div>
 						<!-- Kode-main-service-box End -->
 					</div>
-					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-						<div class="main-service-box">
-							<div class="icon-srvc">
-								<i class="icon-businessman277"></i>
-							</div>
-							<div class="srvc-content">
-								<h3>Fomento a la investigación científica</h3>
-								<p>Generar Conocimiento y competencias en el personal del área médica, a través la
-									investigación y resultados científicos, para el beneficio de la salud.</p>
-								<strong class="bottom-border"></strong>
-							</div>
-						</div>
-						<!-- Kode-main-service-box End -->
-					</div>
+					{% if forloop.last %}
 				</div>
-				<div class="row">
-					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-						<div class="main-service-box">
-							<div class="icon-srvc">
-								<i class="icon-books71"></i>
-							</div>
-							<div class="srvc-content">
-								<h3>Congresos Virtuales</h3>
-								<p>Te proporcionamos accesibilidad y comodidad para las inscripciones a congreso
-									virtuales, brindando una exposición internacional llegando a profesionales médicos
-									del mundo, mediante nuestro sistema de hosting, ofreciendo el conocimiento
-									científico a un clic de distancia.</p>
-								<strong class="bottom-border"></strong>
-							</div>
-						</div>
-						<!-- Kode-main-service-box End -->
-					</div>
-					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-						<div class="main-service-box">
-							<div class="icon-srvc">
-								<i class="icon-man161"></i>
-							</div>
-							<div class="srvc-content">
-								<h3>Publicidad de tu evento</h3>
-								<p>Te ayudamos con la publicidad de forma gratuita creando un impacto visual en tu
-									evento, dando a conocer los temas de actualización con los respectivos ponentes.
-									Diversificando tu evento a todos los campos afines a la medicina.</p>
-								<strong class="bottom-border"></strong>
-							</div>
-						</div>
-						<!-- Kode-main-service-box End -->
-					</div>
-				</div>
+				{%endif%}
+
+				{%endfor%}
+				<!-- Kode-main-service-box End -->
 			</div>
 		</div>
-		<!-- Kode-main-service End -->
+	</div>
+</div>
+{%endif%}
+<!-- Kode-main-service End -->
 
 
 
-		<!-- <div class="kode-speaker-frame">
+<!-- <div class="kode-speaker-frame">
 			<div class="container">
 				<div class="kf_heading_1">
 					<h2>GALENUS</h2>
@@ -276,7 +277,7 @@ Inicio
 								</ul>
 							</div>
 							 kode-new speaker over state End -->
-					<!--	</div>
+<!--	</div>
 						{%endfor%}
 						
 						
@@ -288,7 +289,7 @@ Inicio
 
 
 
-		<!-- <div class="kode-event-testimonial">
+<!-- <div class="kode-event-testimonial">
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -317,7 +318,7 @@ Inicio
 							</div>
 							client post slide-->
 
-							<!-- <div class="client-holder">
+<!-- <div class="client-holder">
 								<div class="client-content">
 									<blockquote>
 										<q>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
@@ -334,9 +335,9 @@ Inicio
 								</div>
 
 							</div> -->
-							<!--client post slide-->
+<!--client post slide-->
 
-							<!-- <div class="client-holder">
+<!-- <div class="client-holder">
 								<div class="client-content">
 									<blockquote>
 										<q>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
@@ -353,9 +354,9 @@ Inicio
 								</div>
 
 							</div> -->
-							<!--client post slide-->
+<!--client post slide-->
 
-							<!-- <div class="client-holder">
+<!-- <div class="client-holder">
 								<div class="client-content">
 									<blockquote>
 										<q>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
@@ -372,95 +373,102 @@ Inicio
 								</div>
 
 							</div> -->
-							<!--client post slide-->
-						<!-- </div>
+<!--client post slide-->
+<!-- </div>
 					</div>
 				</div>
 			</div>
-		</div> --> 
-		<!--kode-event-testimonial-->
+		</div> -->
+<!--kode-event-testimonial-->
 
-		<div class="kode-event-contact">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-						<div class="kf_heading_3">
-							<h2>Contacto</h2>
-							<span ></span>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-						<form class="contactusform" action="#">
-
-							<div class="row">
-								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-									<input type="text" placeholder="Nombre">
-									<input type="email" placeholder="Email">
-									<input type="text" placeholder="Asunto">
-								</div>
-								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-									<textarea name="Message" cols="30" rows="10" placeholder="Mensaje"></textarea>
-									<input type="submit" value="Enviar" name="submit">
-								</div>
-							</div>
-						</form>
-					</div>
+<div class="kode-event-contact">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<div class="kf_heading_3">
+					<h2>Contacto</h2>
+					<span></span>
 				</div>
 			</div>
 		</div>
-		<!--kode-event-contact-->
+		<div class="row">
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<form class="contactusform" action="" method="POST" id="form">
+					{% csrf_token %}
+					<div class="row">
+						<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+							<input type="text" required placeholder="Nombre" id="nombre" name="nombre">
+							<input type="email" required placeholder="Email" id="email" name="email">
+							<input type="text" required placeholder="Asunto" id="asunto" name="asunto">
+						</div>
+						<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+							<textarea name="Message" required cols="30" rows="10" placeholder="Mensaje"></textarea>
+							<input type="submit" value="Enviar" name="submit">
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
 	</div>
-	
+</div>
+<!--kode-event-contact-->
+</div>
 
-	{% endblock%}
-	{% block script%}
+
+{% endblock%}
+{% block script%}
 <script src="{% static 'MedCongressApp/js/plugins/simplyCountdown/simplyCountdown.min.js'%}"></script>
 <link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
 <script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
 
 <script>
-simplyCountdown('#countdown', {
-            year: '{{nuevo_congreso.fecha_inicio|date:"Y"}}' , // required
-            month: '{{nuevo_congreso.fecha_inicio|date:"m"}}', // required
-            day: '{{nuevo_congreso.fecha_inicio|date:"d"}}', // required
-            hours: '{{nuevo_congreso.fecha_inicio|date:"h"}}', // Default is 0 [0-23] integer
-            minutes: '{{nuevo_congreso.fecha_inicio|date:"i"}}', // Default is 0 [0-59] integer
-            seconds: '{{fecha|date:"s"}}', // Default is 0 [0-59] integer
-            words: { //words displayed into the countdown
-                days: 'dia',
-                hours: 'hora',
-                minutes: 'minuto',
-                seconds: 'segundo',
-                pluralLetter: 's'
-            },
-            plural: true, //use plurals
-            inline: false, //set to true to get an inline basic countdown like : 24 days, 4 hours, 2 minutes, 5 seconds
-            inlineClass: 'simply-countdown-inline', //inline css span class in case of inline = true
-            // in case of inline set to false
-            enableUtc: true, //Use UTC as default
-            onEnd: function() { return; }, //Callback on countdown end, put your own function here
-            refresh: 1000, // default refresh every 1s
-            sectionClass: 'simply-section', //section css class
-            amountClass: 'simply-amount', // amount css class
-            wordClass: 'simply-word', // word css class
-            zeroPad: false,
-            countUp: false
-    });
+	simplyCountdown('#countdown', {
+		year: '{{nuevo_congreso.fecha_inicio|date:"Y"}}', // required
+		month: '{{nuevo_congreso.fecha_inicio|date:"m"}}', // required
+		day: '{{nuevo_congreso.fecha_inicio|date:"d"}}', // required
+		hours: '{{nuevo_congreso.fecha_inicio|date:"h"}}', // Default is 0 [0-23] integer
+		minutes: '{{nuevo_congreso.fecha_inicio|date:"i"}}', // Default is 0 [0-59] integer
+		seconds: '{{fecha|date:"s"}}', // Default is 0 [0-59] integer
+		words: { //words displayed into the countdown
+			days: 'dia',
+			hours: 'hora',
+			minutes: 'minuto',
+			seconds: 'segundo',
+			pluralLetter: 's'
+		},
+		plural: true, //use plurals
+		inline: false, //set to true to get an inline basic countdown like : 24 days, 4 hours, 2 minutes, 5 seconds
+		inlineClass: 'simply-countdown-inline', //inline css span class in case of inline = true
+		// in case of inline set to false
+		enableUtc: true, //Use UTC as default
+		onEnd: function () { return; }, //Callback on countdown end, put your own function here
+		refresh: 1000, // default refresh every 1s
+		sectionClass: 'simply-section', //section css class
+		amountClass: 'simply-amount', // amount css class
+		wordClass: 'simply-word', // word css class
+		zeroPad: false,
+		countUp: false
+	});
 
 
 </script>
 <script>
 
-	$(function() {
-	  $("#especialidad").autocomplete({
-		source: "{% url 'Especialidades_autocomp'%}",
-		minLength: 3,
-	  });
+	$(function () {
+
+		$('form').submit(function(event) { // o el id de tu formulario
+        if($('#id_congreso').val() == '') {
+            swal("Cancelado", "No existe ese congreso.", "error");
+            return false;
+        }
+    })
+		$("#especialidad").autocomplete({
+			source: "{% url 'Especialidades_autocomp'%}",
+			minLength: 3,
+		});
 	});
-  
-  </script>
-  
+
+</script>
+
 <!--GOOGLE MAP-->
 {%endblock%}

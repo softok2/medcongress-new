@@ -24,6 +24,8 @@
         href="{% static 'MedCongressAdmin/app-assets/css/core/menu/menu-types/vertical-menu-modern.css' %}">
     <link rel="stylesheet" type="text/css"
         href="{% static 'MedCongressAdmin/app-assets/css/core/colors/palette-gradient.css' %}">
+        <link rel="stylesheet" type="text/css"
+        href="{% static 'MedCongressAdmin/app-assets/css/icons.css' %}">
     <link rel="stylesheet" type="text/css"
         href="{% static 'MedCongressAdmin/app-assets/vendors/css/charts/jquery-jvectormap-2.0.3.css' %}">
     <link rel="stylesheet" type="text/css"
@@ -32,9 +34,10 @@
         href="{% static 'MedCongressAdmin/app-assets/fonts/simple-line-icons/style.css' %}">
     <link rel="stylesheet" type="text/css"
         href="{% static 'MedCongressAdmin/app-assets/css/core/colors/palette-gradient.css' %}">
-        <link type="text/css" href="{% static 'MedCongressAdmin/app-assets/multiselect/css/ui.multiselect.css' %}" rel="stylesheet" />
+        <!-- <link type="text/css" href="{% static 'MedCongressAdmin/app-assets/multiselect/css/ui.multiselect.css' %}" rel="stylesheet" /> -->
         <link href="{% static 'MedCongressAdmin/app-assets/datetime/css/bootstrap-datetimepicker.css'%}" rel="stylesheet" media="screen">
     {% block styles %}{% endblock %}
+    
     <!-- END Page Level CSS-->
     <!-- BEGIN Custom CSS-->
     <link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/assets/css/style.css' %}">
@@ -81,12 +84,8 @@
                                     class="avatar avatar-online"><img
                                         src="{% static '/' %}{{user.perfilusuario.foto}}" style="width: 32px;"
                                         alt="avatar"><i></i></span></a>
-                            <div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item" href="#"><i
-                                        class="ft-user"></i> Edit Profile</a><a class="dropdown-item" href="#"><i
-                                        class="ft-mail"></i> My Inbox</a><a class="dropdown-item" href="#"><i
-                                        class="ft-check-square"></i> Task</a><a class="dropdown-item" href="#"><i
-                                        class="ft-message-square"></i> Chats</a>
-                                <div class="dropdown-divider"></div><a class="dropdown-item" href="{% url 'logout' %}"><i
+                            <div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="{% url 'logout' %}"><i
                                         class="ft-power"></i> Logout</a>
                             </div>
                         </li>
@@ -98,75 +97,76 @@
 
     <!-- ////////////////////////////////////////////////////////////////////////////-->
 
-
+    
     <div class="main-menu menu-fixed menu-dark menu-accordion menu-shadow" data-scroll-to-active="true">
         <div class="main-menu-content">
             <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-                <li class=" nav-item"><a href="{% url 'MedCongressAdmin:dashboard' %}"><i
-                            class="la la-home"></i>Dashboard</a>
-
-                </li>
-                <li class=" nav-item"><a href="#"><i class="la la-television"></i><span class="menu-title"
+                
+                <li class=" nav-item"><a href="#"><i class="icon icon-disenio"></i><span class="menu-title"
                             data-i18n="nav.templates.main">Diseño</span></a>
                     <ul class="menu-content">
-                        <li><a class="menu-item" href="#">Menu</a></li>
-                        <li><a class="menu-item" href="#">Página de Inicio</a>
+                        
+                        <li><a class="menu-item" href="#"><i class="icon icon-pagina_inicio" ></i> Página de Inicio</a>
                             <ul class="menu-content">
-                                <li><a class="menu-item" href="#">Ofrecemos</a>
+                                <li><a class="menu-item" href="{% url 'MedCongressAdmin:ofrecemos_list' %}">Ofrecemos</a>
                                 </li>
-                                <li><a class="menu-item" href="#">Quienes somos</a>
+                                <li><a class="menu-item" href="{% url 'MedCongressAdmin:quienes_somos_list' %}">Quienes somos</a>
                                 </li>
                             </ul>
                         </li>
-                        <li><a class="menu-item" href="#">Footer</a></li>
+                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:footer_list' %}"><i class="icon icon-footer" ></i>Footer</a></li>
                     </ul>
                 </li>
-                <li class=" nav-item"><a href="#"><i class="la la-television"></i><span class="menu-title"
+                <li class=" nav-item"><a href="#"><i class="icon icon-evento"></i><span class="menu-title"
                             data-i18n="nav.templates.main">Eventos</span></a>
                     <ul class="menu-content">
-                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a></li>
-                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:bloques_list' %}">Bloques</a></li>
-                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:ponencias_list' %}">Ponencias</a></li>
-                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:talleres_list' %}">Talleres</a></li>
+                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:congress_list' %}"><i class=" icon icon-congreso"></i>Congresos</a></li>
+                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:bloques_list' %}"><i class=" icon icon-block"></i> Bloques</a></li>
+                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:ponencias_list' %}"><i class="icon icon-ponencia"></i> Ponencias</a></li>
+                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:talleres_list' %}"><i class=" icon icon-taller" ></i>Talleres</a></li>
 
-                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:asig_congress_list' %}">Asignar Congreso</a></li>
-                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:asig_talleres_list' %}">Asignar Taller</a></li>
+                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:asig_congress_list' %}"><i class=" icon icon-asignar_congreso" ></i> Asignar Congreso</a></li>
+                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:asig_talleres_list' %}"><i class=" icon icon-asignar_taller" ></i>Asignar Taller</a></li>
 
                     </ul>
                 </li>
-                <li class=" nav-item"><a href="#"><i class="la la-television"></i><span class="menu-title"
+                <li class=" nav-item"><a href="#"><i class="icon icon-gest_usuario"></i><span class="menu-title"
                             data-i18n="nav.templates.main">Gestión de Usuarios</span></a>
                     <ul class="menu-content">
-                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:usuarios_list' %}">Usuarios</a></li>
-                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:Ponentes_list' %}">Ponentes</a></li>
-                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:Moderadores_list' %}">Moderadores</a></li>
-                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:Ver_usuarios' %}">Confirmar Usuarios</a></li>
+                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:usuarios_list' %}"><i class="icon icon-usuario" ></i>Usuarios</a></li>
+                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:Ponentes_list' %}"><i class="icon icon-ponente" ></i>Ponentes</a></li>
+                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:Moderadores_list' %}"><i class="icon icon-moderador" ></i>Moderadores</a></li>
+                        <!-- <li><a class="menu-item" href="{% url 'MedCongressAdmin:Ver_usuarios' %}">Confirmar Usuarios</a></li>
                         <li><a class="menu-item" href="{% url 'MedCongressAdmin:Exportar_usuarios' %}">Exportar Usuarios</a></li>
                         <li><a class="menu-item" href="{% url 'MedCongressAdmin:Usuarios_pagaron' %}">Exportar Usuarios que han pagado Congresos</a></li>
+                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:Rep_RelCongresoUser' %}">Reporte Rel Congreso User</a></li>
+                         -->
                     </ul>
                 </li>
-                <li class=" nav-item"><a href="#"><i class="la la-television"></i><span class="menu-title"
+                <li class=" nav-item"><a href="#"><i class="icon icon-nomencladores"></i><span class="menu-title"
                             data-i18n="nav.templates.main">Nomencladores</span></a>
                     <ul class="menu-content">
-                        <li><a class="menu-item" href="#">Genero </a></li>
+                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:generos_list' %}">Genero </a></li>
                         <li><a class="menu-item" href="{% url 'MedCongressAdmin:country_list' %}">Paises</a></li>
-                        <li><a class="menu-item" href="#">Patrosinadores </a></li>
-                        <li><a class="menu-item" href="#">Categoria de Pagos</a></li>
-                        <li><a class="menu-item" href="#">Categoria de Usuarios</a></li>
-                        <li><a class="menu-item" href="#">Especialidades de Eventos</a></li>
-                        <li><a class="menu-item" href="#">Tipos de Eventos</a></li>
+                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:patrocinadores_list' %}">Patrocinadores </a></li>
+                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:socios_list' %}">Socios </a></li>
+                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:cat_pagos_list' %}">Categoria de Pagos</a></li>
+                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:cat_usuarios_list' %}">Categoria de Usuarios</a></li>
+                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:esp_usuarios_list' %}">Especialidades de Usuarios</a></li>
+                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:esp_eventos_list' %}">Especialidades de Eventos</a></li>
+                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:tipo_eventos_list' %}">Tipos de Eventos</a></li>
                         <li><a class="menu-item" href="{% url 'MedCongressAdmin:otros_list' %}">Otros</a></li>
 
                     </ul>
                 </li>
-                <li class=" nav-item"><a href="#"><i class="la la-television"></i><span class="menu-title"
+                <li class=" nav-item"><a href="#"><i class="icon icon-metadate"></i><span class="menu-title"
                     data-i18n="nav.templates.main">Meta Datos</span></a>
             <ul class="menu-content">
                 
-                <li><a class="menu-item" href="{% url 'MedCongressAdmin:meta_pag_inicio' %}">Página de Inicio</a>
-                    
+                <li><a class="menu-item" href="{% url 'MedCongressAdmin:meta_pag_inicio_list' %}"><i class="icon icon-pagina_inicio" ></i>Página de Inicio</a>
+                   
                 </li>
-                <li><a class="menu-item" href="#">Página Listado de Congreso</a></li>
+                <li><a class="menu-item" href="{% url 'MedCongressAdmin:meta_pag_listar_list' %}"><i class="icon icon-pagina_listar_congreso" ></i>Página Listado de Congreso</a></li>
             </ul>
         </li>
 

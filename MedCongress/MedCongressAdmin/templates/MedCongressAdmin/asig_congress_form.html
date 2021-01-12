@@ -4,6 +4,21 @@
 {% block styles %}
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item active"><a href="{% url 'MedCongressAdmin:asig_congress_list' %}">Usuarios que han pagado Congreso</a>
+
+<li class="breadcrumb-item active"> Asignar Congreso
+</li>
+
+
+</ol>
+</div>
+</div>
+</div>
 <section class="multiple-input-with-labels" id="multiple-input-with-labels">
 	<div class="row">
 		<div class="col-12">
@@ -29,7 +44,7 @@
 									<div class="col-md-12">
 										<div class="row">
 											
-										<div class="col-sm-4 " {%if usuario%}
+										<div class="col-sm-3" {%if usuario%}
 											
 										style="display: none;"  {%endif%}>
 										
@@ -38,23 +53,28 @@
 													for="{{form.user.id_for_label }}"><b>{{form.user.label }}</b>{% if form.user.errors %}
 													<span style="font-size: 15px; color: red;">{{ form.user.errors }}
 													</span>{% endif %} </label>
-													{%if usuario%} {%else%}
+													
 													<input type="text" name="my_user" class="form-control" required="" id="id_my_user">
-													{%endif%}
+													
 													<div style="display: none;">
 													{{ form.user }}
 													</div>
 											</div>
 										</div>
 									
-										<div class="col-sm-4">
+										<div class="col-sm-3">
 											<div class="form-group">
-												<label
-													for="{{form.congreso.id_for_label }}"><b>{{form.congreso.label }}</b>{% if form.congreso.errors %}
-													<span style="font-size: 15px; color: red;">{{ form.congreso.errors }}
+												<label for="{{form.congreso.id_for_label }}"><b>Filtre
+														Congreso</b>{% if form.congreso.errors %}
+													<span
+														style="font-size: 15px; color: red;">{{ form.congreso.errors }}
 													</span>{% endif %} </label>
+												<div style="display: none;">
+													{{form.congreso}}
+												</div>
+												<input type="text" name="my_congress" class="form-control" required=""
+													id="id_my_congress">
 
-												{{form.congreso }}
 											</div>
 										</div>
 										
@@ -76,6 +96,16 @@
 													</span>{% endif %} </label>
 											
 												{{form.is_pagado }}
+											</div>
+										</div>
+										<div class="col-sm-1 ">
+											<div class="form-group">
+												<label
+													for="{{form.cantidad.id_for_label }}"><b>{{form.cantidad.label }}</b>{% if form.cantidad.errors %}
+													<span style="font-size: 15px; color: red;">{{ form.cantidad.errors }}
+													</span>{% endif %} </label>
+											
+												{{form.cantidad }}
 											</div>
 										</div>
 									</div>
@@ -107,13 +137,31 @@ $(function() {
 		source: "{% url 'User_autocomp'%}",
 		minLength: 3,
 	  });
+	  $('#id_my_user').change(function () {
+			email = $('#id_my_user').val()
+			$("#id_user option:contains('" + email + "')").attr("selected", true);
+			if ($("#id_user option:selected").text() != email)
+				$("#id_user").val('')
+		});
+	  $("#id_my_congress").autocomplete({
+            source: "{% url 'Congreso_autocomp'%}",
+            minLength: 3,
+        });
+        $('#id_my_congress').change(function () {
+            email = $('#id_my_congress').val()
+            $("#id_congreso option:contains('" + email + "')").attr("selected", true);
+            if ($("#id_congreso option:selected").text()!= email) 
+            $("#id_congreso").val('')
+
+        });
 	});
 	$(document).ready(function () {
 
 $('#id_my_user').change(function(){
 	email=$('#id_my_user').val()
 $("#id_user option:contains('"+email+"')").attr("selected",true);
-
+if ($("#id_user option:selected").text()!= email) 
+            $("#id_user").val('')
 });
 
 		{%if usuario %}

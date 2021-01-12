@@ -7,6 +7,24 @@
 
 {% endblock %}
 {% block content %}
+
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+		  </li>
+		  
+		  <li class="breadcrumb-item active"><a href="{% url 'MedCongressAdmin:Congres_freg_frecuente' congreso.path %}">Preguntas Frecuentes</a>
+		</li>
+		<li class="breadcrumb-item active">{%if update%} Actualizar Pregunta Frecuente{%else%}Adicionar Pregunta Frecuente{%endif%}</a>
+		</li>
+		
+		</ol>
+	  </div>
+	</div>
+  </div>
 <section class="multiple-input-with-labels" id="multiple-input-with-labels">
 
 
@@ -17,7 +35,7 @@
 			<div class="card">
 				<div class="card-header">
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
-						Adicionar Preguntas Frecuente</h1>
+						{%if update%} Actualizar Pregunta Frecuente{%else%}Adicionar Pregunta Frecuente{%endif%}</h1>
 					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
 					<div class="heading-elements">
 						<ul class="list-inline mb-0">
@@ -65,11 +83,7 @@
 														<span
 															style="font-size: 15px; color: red;">{{ form.published.errors }}
 														</span>{% endif %} </label>
-														<select name=" published" id="id_published" class="form-control">
-														<option value="True" selected>Si</option>
-														<option value="False" >No</option>
-														
-													</select>
+														{{ form.published }}
 													
 													
 												
@@ -91,11 +105,7 @@
 											</div>
 											</div>
 										
-										
-											
-										</div>
-
-									<div class="form-actions">
+										<div class="form-actions">
 										<div class="text-right">
 											<button id="atras" type="button" class="btn btn-danger ">Cancelar
 												<i class="ft-x position-right"></i>
@@ -107,6 +117,10 @@
 
 										</div>
 									</div>
+											
+										</div>
+
+									
 								</div>
 							</div>
 					</div>
@@ -128,15 +142,13 @@
 
 <script type="text/javascript">
 	$('#atras').click(function () {
-		{%if congreso %}
-		location.href = "{% url 'MedCongressAdmin:Congres_cuestionario' congreso.path %}";
-		{%else%}
-		location.href = "{% url 'MedCongressAdmin:bloques_list' %}";
-		{% endif %}
+		
+		location.href = "{% url 'MedCongressAdmin:Congres_freg_frecuente' congreso.path %}";
+		
 	});
-	{%if congreso %}
+	
 	$("#id_congreso option[value='{{congreso.id}}']").attr("selected", true);
-	{% endif %}
+	
 
 	$(document).ready(function () {
 		
@@ -154,40 +166,7 @@
 
 
 	});
-	function AddRespuesta(){
-		jQuery('.respuestas').append(`<div class="row respuesta">
-											<div class="col-sm-8 ">
-												<div class="form-group">
-
-
-													<input type="text" name="respuesta" maxlength="250" class="form-control" required="">
-												</div>
-											</div>
-											<div class="col-sm-2 ">
-												<div class="form-group">
-
-
-													<select name="is_correcto" class="form-control" id="">
-														<option value="True">Verdadera</option>
-														<option value="False" selected>Falsa</option>
-													</select>
-												</div>
-											</div>
-											<div class="col-sm-2 ">
-												<div class="form-group">
-
-
-													<select name="published_resp" class="form-control" id="">
-														<option value="True">Si</option>
-														<option value="False" selected>No</option>
-													</select>
-												</div>
-											</div>
-										
-										</div>`);
-										$('#del').removeAttr('disabled');
-
-	}
+	
 function DeletedRespuesta(){
 	$('.respuesta').last().remove();
 	if($('.respuesta').length==2)

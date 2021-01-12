@@ -60,7 +60,7 @@
                                         <thead>
                                             <tr role="row" style="font-size: 13px;">
                                                 <th style="width:50%">Nombre</th>
-                                                <th>Email</th>
+                                                <th>Correo</th>
                                                 <th style="width:5%">Operaciones</th>
                                             </tr>
                                         </thead>
@@ -73,7 +73,7 @@
                                                   <td>  <a id="del_{{ ponente.pk }}"
                                                         href="javascript:deleteItem('{{ ponente.pk }}')"
                                                         title="Eliminar">
-                                                        <i class="la la-trash "></i>
+                                                        <i class="icon icon-eliminar "></i>
                                                     </a>
 
                                                    
@@ -86,7 +86,7 @@
                                         <tfoot>
                                             <tr style="font-size: 13px;">
                                                 <th style="width:50%">Nombre</th>
-                                                <th>Email</th>
+                                                <th>Correo</th>
                                                 <th style="width:5%">Operaciones</th>
                                             </tr>
                                         </tfoot>
@@ -113,6 +113,29 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $('.table').DataTable({
+    language: {
+        "decimal": "",
+        "emptyTable": "No hay información",
+        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+        "infoPostFix": "",
+        "thousands": ",",
+        "lengthMenu": "Mostrar _MENU_ Entradas",
+        "loadingRecords": "Cargando...",
+        "processing": "Procesando...",
+        "search": "Buscar:",
+        "zeroRecords": "Sin resultados encontrados",
+        "paginate": {
+            "first": "Primero",
+            "last": "Ultimo",
+            "next": "Siguiente",
+            "previous": "Anterior"
+        }
+    },
+ 
+});
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({
             beforeSend: function (xhr, settings) {

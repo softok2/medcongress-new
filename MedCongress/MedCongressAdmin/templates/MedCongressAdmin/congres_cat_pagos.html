@@ -19,6 +19,21 @@
 </style>
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+		  </li>
+		 
+		  <li class="breadcrumb-item active">Categorias de Pago
+		</li>
+		
+		</ol>
+	  </div>
+	</div>
+  </div>
 <section id="configuration">
     <div class="row">
         <div class="col-12">
@@ -64,7 +79,7 @@
                                                 <th>Categoría</th>
                                                 <th>Precio</th>
                                                 <th>Moneda</th>
-                                                
+                                                <th >Operaciones</th>
                                                
                                             </tr>
                                         </thead>
@@ -76,7 +91,21 @@
                                                 <td>{{ cat_pago.categoria.nombre }}</td>
                                                 <td>${{ cat_pago.precio }}</td>
                                                 <td>{{cat_pago.moneda}}</td>
-                                                
+                                                <td style="vertical-align: middle;">
+                                                    <a href="{% url 'MedCongressAdmin:congres_cat_pago_editar' pk=cat_pago.pk %}"
+                                                        title="Editar" style="margin-left: 5px;"><i class="icon-editar" style="padding: 15px;"></i></a>
+                                                    <a id="del_{{ cat_pago.pk }}"
+                                                        href="javascript:deleteItem('{{ cat_pago.pk }}')"
+                                                        title="Eliminar" style="margin-left: 5px;">
+                                                        <i class="icon-eliminar" style="padding: 15px;"></i>
+                                                    </a>
+                                                    
+                                                    
+
+                                                   
+
+                                                    
+                                                </td>
                                                
                                             </tr>
                                             {% endfor %}
@@ -88,6 +117,7 @@
                                                 <th>Categoría</th>
                                                 <th>Precio</th>
                                                 <th>Moneda</th>
+                                                <th >Operaciones</th>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -99,9 +129,7 @@
             </div>
         </div>
     </div>
-    <div style="text-align: right;">  <button id="atras" type="button" class="btn btn-danger " >
-        <i class="ft-skip-back position-right"></i>Atras
-    </button> </div>
+ 
 </section>
 <div class="swal-overlay" tabindex="-1">
     <form id="swall-modal-form" method="POST" style="display: none;">
@@ -116,6 +144,29 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $('.table').DataTable({
+    language: {
+        "decimal": "",
+        "emptyTable": "No hay información",
+        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+        "infoPostFix": "",
+        "thousands": ",",
+        "lengthMenu": "Mostrar _MENU_ Entradas",
+        "loadingRecords": "Cargando...",
+        "processing": "Procesando...",
+        "search": "Buscar:",
+        "zeroRecords": "Sin resultados encontrados",
+        "paginate": {
+            "first": "Primero",
+            "last": "Ultimo",
+            "next": "Siguiente",
+            "previous": "Anterior"
+        }
+    },
+ 
+});
         $('#atras').click(function () {
             location.href = "{% url 'MedCongressAdmin:congress_list' %}";
         });
@@ -134,19 +185,19 @@
     });
     function deleteItem(pk) {
         swal({
-            title: "Estas seguro?",
-            text: "No será capaz de recuperar este elemento!",
+            title: "¿Estás seguro?",
+            text: "¡No será capaz de recuperar este elemento!",
             icon: "warning",
             buttons: {
                 cancel: {
-                    text: "No, cancelar!",
+                    text: "¡No, cancelar!",
                     value: null,
                     visible: true,
                     className: "",
                     closeModal: false,
                 },
                 confirm: {
-                    text: "Sí, eliminarlo!",
+                    text: "¡Sí, eliminarlo!",
                     value: true,
                     visible: true,
                     className: "",
@@ -156,7 +207,7 @@
         })
             .then((isConfirm) => {
                 if (isConfirm) {
-                    url = "{% url 'MedCongressAdmin:country_delete' pk=0 %}";
+                    url = "{% url 'MedCongressAdmin:congres_cat_pago_eliminar' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                         dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
                         swal("Eliminado!", "Este elemento ha sido eliminado.", "success");

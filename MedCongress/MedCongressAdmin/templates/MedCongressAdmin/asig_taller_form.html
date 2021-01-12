@@ -4,6 +4,21 @@
 {% block styles %}
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item active"><a href="{% url 'MedCongressAdmin:asig_talleres_list' %}">Usuarios que han pagado Taller</a>
+
+<li class="breadcrumb-item active"> Asignar Taller
+</li>
+
+
+</ol>
+</div>
+</div>
+</div>
 <section class="multiple-input-with-labels" id="multiple-input-with-labels">
 	<div class="row">
 		<div class="col-12">
@@ -11,7 +26,7 @@
 				<div class="card-header">
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
 						Validar el Pago de un Taller por Usuario</h1>
-					
+
 					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
 					<div class="heading-elements">
 						<ul class="list-inline mb-0">
@@ -28,24 +43,38 @@
 								<div class="row">
 									<div class="col-md-12">
 										<div class="row">
-										<div class="col-sm-4 ">
+											
+										<div class="col-sm-3" {%if usuario%}
+											
+										style="display: none;"  {%endif%}>
+										
 											<div class="form-group">
 												<label
 													for="{{form.user.id_for_label }}"><b>{{form.user.label }}</b>{% if form.user.errors %}
 													<span style="font-size: 15px; color: red;">{{ form.user.errors }}
 													</span>{% endif %} </label>
-
-												{{form.user }}
+													
+													<input type="text" name="my_user" class="form-control" required="" id="id_my_user">
+													
+													<div style="display: none;">
+													{{ form.user }}
+													</div>
 											</div>
 										</div>
-										<div class="col-sm-2">
+									
+										<div class="col-sm-3">
 											<div class="form-group">
-												<label
-													for="{{form.taller.id_for_label }}"><b>{{form.taller.label }}</b>{% if form.taller.errors %}
-													<span style="font-size: 15px; color: red;">{{ form.taller.errors }}
+												<label for="{{form.taller.id_for_label }}"><b>Filtre
+														Taller</b>{% if form.taller.errors %}
+													<span
+														style="font-size: 15px; color: red;">{{ form.taller.errors }}
 													</span>{% endif %} </label>
+												<div style="display: none;">
+													{{form.taller}}
+												</div>
+												<input type="text" name="my_talleres" class="form-control" required=""
+													id="id_my_talleres">
 
-												{{form.taller }}
 											</div>
 										</div>
 										
@@ -69,6 +98,16 @@
 												{{form.is_pagado }}
 											</div>
 										</div>
+										<div class="col-sm-1 ">
+											<div class="form-group">
+												<label
+													for="{{form.cantidad.id_for_label }}"><b>{{form.cantidad.label }}</b>{% if form.cantidad.errors %}
+													<span style="font-size: 15px; color: red;">{{ form.cantidad.errors }}
+													</span>{% endif %} </label>
+											
+												{{form.cantidad }}
+											</div>
+										</div>
 									</div>
 										<div class="form-actions">
 											<div class="text-right">
@@ -90,8 +129,31 @@
 </section>
 {% endblock %}
 {% block scripts %}
+<link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
+<script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
 <script type="text/javascript">
 	$(document).ready(function () {
+		$("#id_my_user").autocomplete({
+			source: "{% url 'User_autocomp'%}",
+			minLength: 3,
+		});
+		$('#id_my_user').change(function () {
+			email = $('#id_my_user').val()
+			$("#id_user option:contains('" + email + "')").attr("selected", true);
+			if ($("#id_user option:selected").text() != email)
+				$("#id_user").val('')
+		});
+		$("#id_my_talleres").autocomplete({
+            source: "{% url 'Taller_autocomp'%}",
+            minLength: 3,
+        });
+        $('#id_my_talleres').change(function () {
+            email = $('#id_my_talleres').val()
+            $("#id_taller option:contains('" + email + "')").attr("selected", true);
+            if ($("#id_taller option:selected").text()!= email) 
+            $("#id_taller").val('')
+
+        });
 		var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
 		$.ajaxSetup({
 			beforeSend: function (xhr, settings) {
@@ -99,10 +161,10 @@
 			}
 		});
 		$('#id_taller').change(function () {
-				$('#id_categoria_pago').empty();
-				$('#id_categoria_pago').append($("<option></option").attr('value', '').text('----------'));
+			$('#id_categoria_pago').empty();
+			$('#id_categoria_pago').append($("<option></option").attr('value', '').text('----------'));
 			if ($('#id_taller').val()) {
-			
+
 				$.ajax({
 					type: "POST",
 					url: "{% url 'MedCongressAdmin:Get_Pago_taller' %}",

@@ -19,6 +19,27 @@
 </style>
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+{%if congres%}
+<li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+</li>
+
+<li class="breadcrumb-item active">Bloques
+</li>
+
+{%else%}
+<li class="breadcrumb-item active"> Bloques
+</li>
+
+{%endif%}
+</ol>
+</div>
+</div>
+</div>
 <section id="configuration">
     <div class="row">
         <div class="col-12">
@@ -35,8 +56,12 @@
                     <div class="row">
                         <div class="col-10">
                             <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Listado
-                                de bloques</h1>
+                                de bloques  <i class="icon-block" style="padding: 15px;"></i></h1>
+                                {%if congres%}
+                                <p class="card-text">Mostrando bloques del Congreso {{congres.titulo}}.</p>
+                                {%else%}
                             <p class="card-text">Mostrando todos los bloques almacenados.</p>
+                            {%endif%}
                         </div>
                         <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
@@ -80,30 +105,41 @@
                                                     <a id=""
                                                     href="{%url 'MedCongressAdmin:Moderadores_bloque' bloque.path%}"
                                                         title="Ponentes">
-                                                        <i class="la la-user-secret " style= "color: blue;" ></i>
+                                                        <i class="icon icon-moderador" style= "color: blue;" ></i>
                                                     </a></td>
                                                 <td>{{ bloque.fecha_inicio }}</td>
                                                 
                                                 <td>  <a id=""
-                                                   
-                                                    href="{%url 'MedCongressAdmin:Bloque_ponencias' bloque.path%}"
-                                                    
+                                                   {% if congres%}
+                                                    href="{%url 'MedCongressAdmin:Bloque_ponencias' path=bloque.path tipo='congreso'%}"
+                                                    {%else%}
+                                                    href="{%url 'MedCongressAdmin:Bloque_ponencias' path=bloque.path tipo='false'%}"
+                                                    {%endif%}
                                                     title="Ponencias ">
-                                                    <i class="la la-graduation-cap " style="color:yellowgreen;"> </i>
+                                                    <i class="icon icon-ponencia " > </i>
                                                 </a>
                                                 <a id=""
-                                                     href="{%url 'MedCongressAdmin:Bloque_talleres' bloque.path%}"
+                                                {% if congres%}
+                                                href="{%url 'MedCongressAdmin:Bloque_talleres' path=bloque.path tipo='congreso'%}"
+                                                {%else%}
+                                                href="{%url 'MedCongressAdmin:Bloque_talleres' path=bloque.path tipo='false'%}"
+                                                {%endif%}
                                                     title="Talleres " style="margin-left: 10px;">
-                                                    <i class="la la-hdd-o " style="color:rgb(40, 4, 124);"> </i>
+                                                    <i class="icon icon-taller " > </i>
                                                 </a></td>
                                                 
                                                 <td style="text-align: center;">
-                                                    <a href="{% url 'MedCongressAdmin:bloque_edit' pk=bloque.pk %}"
-                                                        title="Editar"><i class="la la-pencil-square"></i></a>
-                                                    <a id="del_{{ congres.pk }}"
+                                                    {%if congres%}
+                                                    <a href="{% url 'MedCongressAdmin:bloque_edit' pk=bloque.pk tipo='congreso' %}"
+                                                        title="Editar"><i class="icon icon-editar"></i></a>
+                                                    {%else%}
+                                                    <a href="{% url 'MedCongressAdmin:bloque_edit' pk=bloque.pk tipo='falso' %}"
+                                                        title="Editar"><i class="icon icon-editar"></i></a>
+                                                        {%endif%}
+                                                    <a id="del_{{ bloque.pk }}"
                                                         href="javascript:deleteItem('{{ bloque.pk }}')"
                                                         title="Eliminar">
-                                                        <i class="la la-trash text-danger"></i>
+                                                        <i class="icon icon-eliminar"></i>
                                                     </a>
                                                        
                                                 </td>
@@ -145,7 +181,29 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-
+        $('.table').DataTable({
+    language: {
+        "decimal": "",
+        "emptyTable": "No hay información",
+        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+        "infoPostFix": "",
+        "thousands": ",",
+        "lengthMenu": "Mostrar _MENU_ Entradas",
+        "loadingRecords": "Cargando...",
+        "processing": "Procesando...",
+        "search": "Buscar:",
+        "zeroRecords": "Sin resultados encontrados",
+        "paginate": {
+            "first": "Primero",
+            "last": "Ultimo",
+            "next": "Siguiente",
+            "previous": "Anterior"
+        }
+    },
+ 
+});
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({
             beforeSend: function (xhr, settings) {
@@ -154,7 +212,11 @@
         });
 
         $('#add-btn').click(function () {
+            {%if congres%}
+            location.href = "{% url 'MedCongressAdmin:congres_bloque_add' pk=congres.pk %}"; 
+            {%else%}
             location.href = "{% url 'MedCongressAdmin:bloque_add' %}";
+            {%endif%}
         });
 
         dataTable = $('.zero-configuration').DataTable();
@@ -186,8 +248,14 @@
                 if (isConfirm) {
                     url = "{% url 'MedCongressAdmin:bloque_delete' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
-                        dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
-                        swal("Eliminado!", "Este elemento ha sido eliminado.", "success");
+                        if (data.success){
+                          dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
+
+                        swal("Eliminado!", "Este elemento ha sido eliminado.", "success");  
+                        }
+                        else{
+                            swal("Este Elemento no se puede eliminar!", "Está Asociado a un "+data.evento+".", "error"); 
+                        }
                     });
                 } else {
                     swal("Cancelado", "No se eliminó este elemento.", "error");

@@ -1,5 +1,5 @@
 {% extends 'MedCongressAdmin/base.html' %}
-{% block title %}Congresos{% endblock %}
+{% block title %}Categorias de Pago{% endblock %}
 {% load static %}
 {% block styles %}
 <link rel="stylesheet" type="text/css"
@@ -19,6 +19,19 @@
 </style>
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+			
+		  <li class="breadcrumb-item">Categorias de Pagos
+		  </li>
+
+		</ol>
+	  </div>
+	</div>
+  </div>
 <section id="configuration">
     <div class="row">
         <div class="col-12">
@@ -27,6 +40,7 @@
                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                     <div class="heading-elements">
                         <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
                             <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
                         </ul>
                     </div>
@@ -34,13 +48,12 @@
                 <div class="col-12">
                     <div class="row">
                         <div class="col-10">
-                            <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Listado
-                                de los Talleres del Congreso </h1>
-                            <h3 style="font-style: italic;">{{congres.titulo}}</h3>
+                            <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Categorias de Pago</h1>
+                            
                         </div>
                         <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
-                                <button id="add-btn" type="button" class="btn btn-success" title="Nuevo" 
+                                <button id="add-btn" type="button" class="btn btn-success" title="Add otra categoria de Pago" 
                                     style="float:right; padding: 3px;">
                                     <i class="la la-plus"></i>
                                 </button>
@@ -58,41 +71,21 @@
                                         style="margin-top: 5px!important; margin-bottom: 15px!important;"
                                         id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
                                         <thead>
-                                            <tr role="row" style="font-size: 13px;">
-                                                <th style="width:50%">Nombre</th>
-                                               
-                                                <th>Lugar</th>
-                                                <th>Ponentes</th>
-                                                <th>Fecha</th>
-                                                <th>Public.</th>
+                                            <th style="width:50%">Nombre</th>
                                                 
                                                 <th style="width:5%">Operaciones</th>
-                                            </tr>
                                         </thead>
                                         <tbody>
-                                            {% for taller in talleres %}
+                                            {% for cat_pago in cat_pagos %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
-                                                <td class="sorting_1">{{ taller.titulo }}</td>
-                                                
-                                                <td>{{ taller.lugar }}</td>
-                                                <td style="text-align: center;">
-                                                    
-                                                    <a id=""
-                                                    href="{%url 'MedCongressAdmin:Taller_ponentes' taller.path%}"
-                                                        title="Ponentes">
-                                                        <i class="la la-user-secret " style= "color: blue;" ></i>
-                                                    </a></td>
-                                                <td>{{ taller.fecha_inicio }}</td>
-                                                <td>{%if taller.published%}Si{%else%}No{%endif%}</td>
-                                                
-                                                <td style="text-align: center;">
-                                                    
-                                                    <a id="del_{{ congres.pk }}"
-                                                        href="javascript:deleteItem('{{ country.pk }}')"
+                                               
+                                                <td>{{cat_pago.nombre}}</td>
+                                                  <td> <a href="{% url 'MedCongressAdmin:cat_pago_edit' pk=cat_pago.pk %}"
+                                                    title="Editar"><i class="icon icon-editar"></i></a> <a id="del_{{ cat_pago.pk }}"
+                                                        href="javascript:deleteItem('{{ cat_pago.pk }}')"
                                                         title="Eliminar">
-                                                        <i class="la la-trash text-danger"></i>
+                                                        <i class="icon icon-eliminar"></i>
                                                     </a>
-                                                   
 
                                                    
 
@@ -102,15 +95,9 @@
                                             {% endfor %}
                                         </tbody>
                                         <tfoot>
-                                            <tr style="font-size: 13px;">
-                                                <th style="width:50%">Nombre</th>
-                                               
-                                                <th>Lugar</th>
-                                                <th>Ponentes</th>
-                                                <th>Fecha</th>
-                                                <th>Public.</th>
+                                            
+                                                <th>Denominación</th>
                                                 <th style="width:5%">Operaciones</th>
-                                            </tr>
                                         </tfoot>
                                     </table>
                                 </div>
@@ -121,9 +108,6 @@
             </div>
         </div>
     </div>
-    <div style="text-align: right;">  <button id="atras" type="button" class="btn btn-danger " >
-        <i class="ft-skip-back position-right"></i>Atras
-    </button> </div>
 </section>
 <div class="swal-overlay" tabindex="-1">
     <form id="swall-modal-form" method="POST" style="display: none;">
@@ -138,12 +122,29 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#atras').click(function () {
-            location.href = "{% url 'MedCongressAdmin:congress_list' %}";
-        });
-        $('#add-btn').click(function () {
-            location.href = "{% url 'MedCongressAdmin:congreso_taller_add' congres.pk  %}";
-        });
+        $('.table').DataTable({
+    language: {
+        "decimal": "",
+        "emptyTable": "No hay información",
+        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+        "infoPostFix": "",
+        "thousands": ",",
+        "lengthMenu": "Mostrar _MENU_ Entradas",
+        "loadingRecords": "Cargando...",
+        "processing": "Procesando...",
+        "search": "Buscar:",
+        "zeroRecords": "Sin resultados encontrados",
+        "paginate": {
+            "first": "Primero",
+            "last": "Ultimo",
+            "next": "Siguiente",
+            "previous": "Anterior"
+        }
+    },
+ 
+});
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({
             beforeSend: function (xhr, settings) {
@@ -151,7 +152,9 @@
             }
         });
 
-       
+        $('#add-btn').click(function () {
+            location.href = "{% url 'MedCongressAdmin:cat_pago_add'   %}";
+        });
 
         dataTable = $('.zero-configuration').DataTable();
     });
@@ -179,10 +182,18 @@
         })
             .then((isConfirm) => {
                 if (isConfirm) {
-                    url = "{% url 'MedCongressAdmin:country_delete' pk=0 %}";
+                    url = "{% url 'MedCongressAdmin:cat_pago_delete' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
-                        dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
-                        swal("Eliminado!", "Este elemento ha sido eliminado.", "success");
+
+                        if (data.success){
+                          dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
+
+                        swal("Eliminado!", "Este elemento ha sido eliminado.", "success");  
+                        }
+                        else{
+                            swal("Este Elemento no se puede eliminar!", "Está Asociado a un Evento.", "error"); 
+                        }
+                        
                     });
                 } else {
                     swal("Cancelado", "No se eliminó este elemento.", "error");

@@ -61,7 +61,7 @@
                                         <thead>
                                             <tr role="row" style="font-size: 13px;">
                                                 <th style="width:50%">Nombre</th>
-                                                <th>Email</th>
+                                                <th>Correo</th>
                                                 <th style="width:5%">Operaciones</th>
                                             </tr>
                                         </thead>
@@ -73,8 +73,8 @@
                                                 <td>{{ moderador.moderador.user.usuario.email}}</td>
                                                   <td>  <a id="del_{{ moderador.pk }}"
                                                         href="javascript:deleteItem('{{ moderador.pk }}')"
-                                                        title="Eliminar">
-                                                        <i class="la la-trash "></i>
+                                                        title="Eliminar Vínculo entre Moderador y este Bloque">
+                                                        <i class="icon icon-eliminar_vinculo "></i>
                                                     </a>   
                                                 </td>
                                             </tr>
@@ -83,7 +83,7 @@
                                         <tfoot>
                                             <tr style="font-size: 13px;">
                                                 <th style="width:50%">Nombre</th>
-                                                <th>Email</th>
+                                                <th>Correo</th>
                                                 <th style="width:5%">Operaciones</th>
                                             </tr>
                                         </tfoot>
@@ -110,6 +110,29 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $('.table').DataTable({
+    language: {
+        "decimal": "",
+        "emptyTable": "No hay información",
+        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+        "infoPostFix": "",
+        "thousands": ",",
+        "lengthMenu": "Mostrar _MENU_ Entradas",
+        "loadingRecords": "Cargando...",
+        "processing": "Procesando...",
+        "search": "Buscar:",
+        "zeroRecords": "Sin resultados encontrados",
+        "paginate": {
+            "first": "Primero",
+            "last": "Ultimo",
+            "next": "Siguiente",
+            "previous": "Anterior"
+        }
+    },
+ 
+});
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({
             beforeSend: function (xhr, settings) {
@@ -125,19 +148,19 @@
     });
     function deleteItem(pk) {
         swal({
-            title: "Estas seguro?",
-            text: "No será capaz de recuperar este elemento!",
+            title: "¿Estás seguro?",
+            text: "¡Eliminará la relación del Moderador con este Bloque !",
             icon: "warning",
             buttons: {
                 cancel: {
-                    text: "No, cancelar!",
+                    text: "¡No, cancelar!",
                     value: null,
                     visible: true,
                     className: "",
                     closeModal: false,
                 },
                 confirm: {
-                    text: "Sí, eliminarlo!",
+                    text: "¡Sí, eliminarla!",
                     value: true,
                     visible: true,
                     className: "",
@@ -150,10 +173,10 @@
                     url = "{% url 'MedCongressAdmin:moderador_block_delete' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                         dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
-                        swal("Eliminado!", "Este elemento ha sido eliminado.", "success");
+                        swal("¡Eliminada!", "Esta relación ha sido eliminada.", "success");
                     });
                 } else {
-                    swal("Cancelado", "No se eliminó este elemento.", "error");
+                    swal("¡Cancelado!", "No se eliminó esta relación.", "error");
                 }
             });
     }

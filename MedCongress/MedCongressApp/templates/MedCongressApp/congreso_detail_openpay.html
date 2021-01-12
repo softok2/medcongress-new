@@ -4,6 +4,43 @@
 {% block titulo %}
 {{congreso.titulo}}
 {%endblock%}
+{% block metadatos%}
+{% if congreso.meta_title%}
+<meta property="title" content="{{congreso.meta_title}}">
+{%endif%}
+{% if congreso.meta_description %}
+<meta name="description" content="{{congreso.meta_description}}">
+{%endif%}
+{% if congreso.meta_og_description %}
+<meta property="og:description" content="{{congreso.meta_og_description}}">
+{%endif%}
+{% if congreso.meta_og_type %}
+<meta property="og:type" content="{{congreso.meta_og_type}}">
+{%endif%}
+{% if congreso.meta_og_title %}
+<meta property="og:title" content="{{congreso.meta_og_title}}">
+{%endif%}
+{% if congreso.meta_og_url %}
+<meta property="og:url" content="{{congreso.meta_og_url}}">
+{%endif%}
+{% if congreso.meta_og_imagen %}
+<meta property="og:image" content="{% static '/'%}{{congreso.meta_og_imagen}}">
+{%endif%}
+{% if congreso.meta_twitter_card %}
+<meta name="twitter:card" content="{{congreso.meta_twitter_card}}" />
+{%endif%}
+{% if congreso.meta_twitter_site %}
+<meta name="twitter:site" content="{{congreso.meta_twitter_site}}" />
+{%endif%}
+{% if congreso.meta_twitter_creator %}
+<meta name="twitter:creator" content="{{congreso.meta_twitter_creator}}" />
+{%endif%}
+{% if congreso.meta_keywords %}
+<meta name="keywords"
+	content="{{congreso.meta_keywords}}" />
+{%endif%}
+
+{%endblock%}
 {%block css%}
 <link rel="stylesheet" href="{% static 'MedCongressApp/css/bootstrap-rating.css'%}" type="text/css" media="all">
 <style type="text/css">
@@ -110,8 +147,13 @@
                                                                 <div style="text-align: center;">
                                                                     <p class="text-muted font-size-sm" id="bandera"></p>
                                                                 </div>
-                                                                <input type="hidden" id="rating" class="rating"
-                                                                    data-readonly value="3" />
+                                                                <div id="div_rating">
+                                                                    <input type="hidden" id="rating" class="rating" data-readonly value="3" />
+                                                                </div>
+                                                                <div id="not_rating">
+                                                                   No Evaluado
+                                                                </div>
+                                                                
                                                             </div>
                                                         </div>
                                                     </div>
@@ -211,6 +253,7 @@
 
 </div>
 <!-- Programa -->
+{% if fecha_ponencias %}
 <div class="kode-conference-schedule" id="programas">
     <div class="container">
         <div class="kf_heading_3">
@@ -300,11 +343,12 @@
                                                             </figure>
                                                             <div class="kf_new_conf_orgnizr_name">
                                                                 <button type="button" class="btn btn-link"
-                                                                data-toggle="modal" data-target=".tt"
-                                                                onclick="VerPerfil('{{mod.user.pk}}')">
-                                                                <h6>{{mod.user.usuario.first_name}}{%if mod.user.usuario.first_name|length > 20 or mod.user.usuario.last_name|length > 20 %} <br>{%endif%}
-                                                                    {{mod.user.usuario.last_name}}</h6>
-                                                            </button>
+                                                                    data-toggle="modal" data-target=".tt"
+                                                                    onclick="VerPerfil('{{mod.user.pk}}')">
+                                                                    <h6>{{mod.user.usuario.first_name}}{%if mod.user.usuario.first_name|length > 20 or mod.user.usuario.last_name|length > 20 %}
+                                                                        <br>{%endif%}
+                                                                        {{mod.user.usuario.last_name}}</h6>
+                                                                </button>
                                                                 <span> Moderador</span>
                                                                 <p>
                                                                     {%if mod.user.puesto %}
@@ -337,11 +381,12 @@
                                                             </figure>
                                                             <div class="kf_new_conf_orgnizr_name">
                                                                 <button type="button" class="btn btn-link"
-                                                                data-toggle="modal" data-target=".tt"
-                                                                onclick="VerPerfil('{{ponente.user.pk}}')">
-                                                                <h6>{{ponente.user.usuario.first_name}}{%if ponente.user.usuario.first_name|length > 20 or ponente.user.usuario.last_name|length > 20 %} <br>{%endif%}
-                                                                    {{ponente.user.usuario.last_name}}</h6>
-                                                            </button>
+                                                                    data-toggle="modal" data-target=".tt"
+                                                                    onclick="VerPerfil('{{ponente.user.pk}}')">
+                                                                    <h6>{{ponente.user.usuario.first_name}}{%if ponente.user.usuario.first_name|length > 20 or ponente.user.usuario.last_name|length > 20 %}
+                                                                        <br>{%endif%}
+                                                                        {{ponente.user.usuario.last_name}}</h6>
+                                                                </button>
                                                                 <span> Ponente</span>
                                                                 <p>
                                                                     {%if ponente.user.puesto %}
@@ -349,7 +394,7 @@
                                                                     {%endif%}
                                                                 </p>
                                                             </div>
-                                                             <h5
+                                                            <h5
                                                                 style="color: #00a4ef;padding-bottom: 61px;font-size: 14px;">
                                                                 {%if evento.tipo == 'Taller'%}{{evento.tipo|upper}}
                                                                 {{evento.titulo}}{%else%}
@@ -429,11 +474,12 @@
                                                             </figure>
                                                             <div class="kf_new_conf_orgnizr_name">
                                                                 <button type="button" class="btn btn-link"
-                                                                data-toggle="modal" data-target=".tt"
-                                                                onclick="VerPerfil('{{ponente.user.pk}}')">
-                                                                <h6>{{ponente.user.usuario.first_name}}{%if ponente.user.usuario.first_name|length > 20 or ponente.user.usuario.last_name|length > 20 %} <br>{%endif%}
-                                                                    {{ponente.user.usuario.last_name}}</h6>
-                                                            </button>
+                                                                    data-toggle="modal" data-target=".tt"
+                                                                    onclick="VerPerfil('{{ponente.user.pk}}')">
+                                                                    <h6>{{ponente.user.usuario.first_name}}{%if ponente.user.usuario.first_name|length > 20 or ponente.user.usuario.last_name|length > 20 %}
+                                                                        <br>{%endif%}
+                                                                        {{ponente.user.usuario.last_name}}</h6>
+                                                                </button>
                                                                 <span> Ponente</span>
                                                                 <p>
                                                                     {%if ponente.user.puesto %}
@@ -469,7 +515,11 @@
 
     </div>
 </div>
-<div class="kode-our-pricing" id="pagos">
+{%endif%}
+<!-- /////////////////////////////////////////////-->
+{% if ponencias_video%}
+
+<div class="kode-speaker-frame">
     <div class="container">
         <div class="kf_heading_3">
             <h2>Ponencias</h2>
@@ -477,62 +527,144 @@
         </div>
 
 
-        {%if ponencias_video %}
-        {% for ponencia in ponencias_video %}
-        {%if ponencia.cod_video%}
-
-        {%if forloop.first%}
-        <div class="row">
-            {% endif %}
-            <div class="col-md-4 {{forloop.counter}}" >
-                 <!-- KODE_EVENT_BLOG2 START-->
-               <div class="kode-event-blog3">
-                    <a href="{% url 'View_ponencia' ponencia.path %}" class="">
-                        <figure>
-                            <img src="{% static '/'%}{{ponencia.imagen}}" alt="" />
 
 
-                            <div class="kode-fig-capstion">
-                                <a href="{% url 'View_ponencia' ponencia.path  %}">{{ponencia.titulo }}</a>
-                                {%if ponencia.detalle%} <p style="font-style: italic;">
-                                    {{ponencia.detalle|truncatewords:10 }}</p>{%endif%}
+        {% for ponencia_v in ponencias_video %}
+        <div class="kf_faq_accordian">
+            <div class="kf_accordian_hdg accordion" id="section3">
+                <h5>{{ponencia_v.fecha}}</h5>
+            </div>
+
+            <div class="kf_accordian_des">
+                <div class="kode-our-pricing">
+                   
+                    {%if ponencia_v.ponencias%}
+<div class="kf_heading_3">
+    <h5> <b>Ponencias</b> </h5>
+    <span></span>
+</div>
+                        {% for ponencia in ponencia_v.ponencias %}
+                        {%if ponencia.cod_video%}
+                        {%if forloop.first%}
+                        <div class="row">
+                            {% endif %}
+                            <div class="col-md-4 {{forloop.counter}}">
+                                <!-- KODE_EVENT_BLOG2 START-->
+                                <div class="kode-event-blog3">
+                                   
+                                        <figure>
+                                            <!-- {{ponencia.cod_video|safe }} -->
+                                            <img id="vimeo-{{ponencia.id_video}}" src="" alt="{{ponencia.id_video}}" />
+                                           
+                                        </figure>
+                                  
+                                    <div class="kode-thumb-caption">
+                                        <a href="{% url 'View_ponencia' ponencia.path %}">
+                                            <h4>{{ponencia.titulo }}</h4>
+                                        </a>
+                                        <ul>
+                                            <li><a href="#"><i
+                                                        class="fa fa-calendar"></i>{{ponencia.fecha_inicio|date:"M"}}
+                                                    {{ponencia.fecha_inicio|date:"d"}} /
+                                                    {{ponencia.fecha_inicio|date:"Y"}}</a></li>
+                                            <li><a href="#"><i class="fa fa-user"></i> <b>Ponente:</b> <button
+                                                        style="margin-top: -2px;" type="button" class="btn btn-link"
+                                                        data-toggle="modal" data-target=".tt"
+                                                        onclick="VerPerfil('{{ponencia.ponente.all.0.user.pk}}')"> <span
+                                                            style="font-style: italic;">{{ponencia.ponente.all.0.user.usuario.first_name}}
+                                                            {{ponencia.ponente.all.0.user.usuario.last_name}}</span>
+                                                    </button>
+                                                </a></li>
+                                        </ul>
+                                        <span><a href="{% url 'View_ponencia' ponencia.path %}">Leer Más</a></span>
+                                    </div>
+
+                                </div>
                             </div>
 
-                        </figure>
-                    </a>
-                    <div class="kode-thumb-caption">
-                        <a href="{% url 'View_ponencia' ponencia.path %}">
-                            <h4>{{ponencia.titulo }}</h4>
-                        </a>
-                        <ul>
-                            <li><a href="#"><i class="fa fa-calendar"></i>{{ponencia.fecha_inicio|date:"M"}}
-                                    {{ponencia.fecha_inicio|date:"d"}} / {{ponencia.fecha_inicio|date:"Y"}}</a></li>
-                                    <li><a href="#"><i class="fa fa-user"></i> <b>Ponente:</b> <button style="margin-top: -2px;" type="button" class="btn btn-link"
-                                        data-toggle="modal" data-target=".tt"
-                                        onclick="VerPerfil('{{ponencia.ponente.all.0.user.pk}}')"> <span style="font-style: italic;">{{ponencia.ponente.all.0.user.usuario.first_name}} {{ponencia.ponente.all.0.user.usuario.last_name}}</span> </button>
-                                        </a></li>
-                        </ul>
-                        <span><a href="{% url 'View_ponencia' ponencia.path %}">Leer Más</a></span>
+                            <!--KODE_EVENT_BLOG2 START-->
+                            {%if forloop.counter|divisibleby:3 %}
+                        </div>
+                        <div class='row'>
+                            {%endif%}
+                            {%if forloop.last%}
+                        </div>
+                        {% endif %}
+
+                        {% endif %}
+                        {% endfor %}
+                        {% endif %}
+              
+{%if ponencia_v.talleres%}
+<div class="kf_heading_3">
+    <h5> <b>Talleres</b> </h5>
+    <span></span>
+</div>
+                        {% for ponencia in ponencia_v.talleres %}
+                        {%if ponencia.cod_video%}
+                        {%if forloop.first%}
+                        <div class="row">
+                            {% endif %}
+                            <div class="col-md-4 {{forloop.counter}}">
+                                <!-- KODE_EVENT_BLOG2 START-->
+                                <div class="kode-event-blog3">
+                                   
+                                        <figure>
+                                            <img id="vimeo-{{ponencia.id_video}}" src="" alt="{{ponencia.id_video}}" />
+                                        </figure>
+                                   
+                                    <div class="kode-thumb-caption">
+                                        <a href="{% url 'View_taller' ponencia.path %}">
+                                            <h4>{{ponencia.titulo }}</h4>
+                                        </a>
+                                        <ul>
+                                            <li><a href="#"><i
+                                                        class="fa fa-calendar"></i>{{ponencia.fecha_inicio|date:"M"}}
+                                                    {{ponencia.fecha_inicio|date:"d"}} /
+                                                    {{ponencia.fecha_inicio|date:"Y"}}</a></li>
+                                            <li><a href="#"><i class="fa fa-user"></i> <b>Ponente:</b> <button
+                                                        style="margin-top: -2px;" type="button" class="btn btn-link"
+                                                        data-toggle="modal" data-target=".tt"
+                                                        onclick="VerPerfil('{{ponencia.ponente.all.0.user.pk}}')"> <span
+                                                            style="font-style: italic;">{{ponencia.ponente.all.0.user.usuario.first_name}}
+                                                            {{ponencia.ponente.all.0.user.usuario.last_name}}</span>
+                                                    </button>
+                                                </a></li>
+                                        </ul>
+                                        <span><a href="{% url 'View_taller' ponencia.path %}">Leer Más</a></span>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!--KODE_EVENT_BLOG2 START-->
+                            {%if forloop.counter|divisibleby:3 %}
+                        </div>
+                        <div class='row'>
+                            {%endif%}
+                            {%if forloop.last%}
+                        </div>
+                        {% endif %}
+
+                        {% endif %}
+                        {% endfor %}
+                        {% endif %}
                     </div>
-
-                </div>
-            </div> 
-            
-            <!--KODE_EVENT_BLOG2 START-->
-             {%if forloop.counter|divisibleby:3 %}
+               
+            </div>
         </div>
-        <div class='row'>
-            {%endif%}
-            {%if forloop.last%}
-        </div>
-        {% endif %}
+        {%endfor%}
 
-        {% endif %}
-        {% endfor %}
 
-        {%endif%}
+
+
+
     </div>
 </div>
+
+{%endif%}
+<!--//////////////////////////////////////////////////////////-->
+{%if categorias_pago %}
 <div class="kode-our-pricing" id="pagos">
     <div class="container">
         <div class="kf_heading_3">
@@ -549,12 +681,14 @@
             <p style="margin-top:20px">Información de registro o dudas al <b>WhatsApp</b> <a target="_blank"
                     href=" https://wa.me/525537345007">5537345007</a></p>
         </div>
-        <div class="row">
-            <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
-            {%if categorias_pago %}
             {%for categoria_pago in categorias_pago %}
-
-            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            {%if forloop.first or forloop.counter|divisibleby:3%}
+            <div class="row">
+            
+           
+            <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
+            {%endif%}
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="margin-bottom: 20px;">
                 <div class="price-box-frame first-box">
                     <div class="kode-price-box">
                         <div class="kode-price-header">
@@ -587,39 +721,19 @@
                         </div>
                     </div>
                 </div>
-                <!-- kode-price-box End -->
             </div>
+                <!-- kode-price-box End -->
+                {%if forloop.counter|divisibleby:2%}
+               </div>
+                {%endif%}
             {%endfor%}
-            {%else%}
-            <span> No tiene establecido los precios aún </span>
-            {%endif%}
-        </div>
+            
+       
 
     </div>
 </div>
-<!-- <div class="kode-speaker-frame">
-    <div class="container">
-        <div class="kf_heading_1">
-            <h2>FAQs</h2>
-
-        </div>
-        <div class="kf_faq_accordian">
-            {%for preg_frecuente in preg_frecuentes%}
-            <div class="kf_accordian_hdg accordion" id="section3">
-                <h5>{{preg_frecuente.pregunta}}</h5>
-            </div>
-            <div class="kf_accordian_des">
-                <div class="kode-our-pricing">
-                    <div class="row">
-                        {{preg_frecuente.respuesta|safe}}
-                    </div>
-                </div>
-            </div>
-            {%endfor%}
-        </div>
-    </div>
-</div> -->
-<!-- Talleres-->
+{%endif%}
+{% if talleres %}
 <div class="kode-speaker-frame">
     <div class="container">
         <div class="kf_heading_3">
@@ -702,7 +816,9 @@
 
     </div>
 </div>
+{%endif%}
 <!-- Ponentes-->
+{% if ponentes_congreso %}
 <div class="kode-speaker-frame">
     <div class="container">
         <div class="kf_heading_3">
@@ -779,7 +895,9 @@
 
     </div>
 </div>
+{%endif%}
 <!-- Patrocinadores-->
+{% if patrocinadores %}
 <div class="kode-speaker-frame">
     <div class="container">
         <div class="kf_heading_3">
@@ -787,31 +905,31 @@
             <span>Patrocinadores de este congreso</span>
         </div>
         <div class="row">
+            
             <div id="kode-speaker-causel" class="owl-carousel">
-
+{%for patrocindador in patrocinadores%}
 
                 <div class="kode-newspeaker">
                     <div class="speaker-photo">
-                        <img src="{% static 'patrocinadores/indice.png'%}" alt="">
-                    </div>
+                        <a href="{{patrocindador.aval.url}}" target="_blank">
+                        <img hre src="{% static '/'%}{{patrocindador.aval.logo}}" alt="{{patrocindador.aval.nombre}}">
+                   </a> 
+                </div>
 
 
                     <!-- kode-new speaker over state End -->
 
                 </div>
-                <div class="kode-newspeaker">
-                    <div class="speaker-photo">
-                        <img src="{% static 'patrocinadores/faicic.png'%}" alt="">
-                    </div>
-
-
-                    <!-- kode-new speaker over state End -->
-                </div>
+                {% endfor%}
+                
+            
             </div>
         </div>
     </div>
 </div>
+{%endif%}
 <!-- Socios-->
+{% if socios %}
 <div class="kode-speaker-frame">
     <div class="container">
         <div class="kf_heading_3">
@@ -819,95 +937,22 @@
             <span></span>
         </div>
         <div class="row">
-            <div id="kode-speaker-causel2">
+           
+            <div id="kode-speaker-causel2"> 
+                {%for socio in socios%}
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/1.png'%}" alt="">
+                    <a href="{{socio.socio.url}}" target="_blank">
+                    <img class="img-responsive" src="{% static '/'%}{{socio.socio.logo}}" alt="{{socio.socio.nombre}}">
+                </a>
                 </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/2.png'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/3.png'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/4.png'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/5.png'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/6.png'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/7.png'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/8.png'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/9.png'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/10.jpg'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/11.jpg'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/12.jpg'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/13.jpg'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/14.jpg'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/15.jpg'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/16.jpg'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/17.jpg'%}" alt="">
-                </div>
-                <!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/18.jpg'%}" alt="">
-                </div>
-				<!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/19.jpg'%}" alt="">
-                </div>
-				<!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/20.jpg'%}" alt="">
-                </div>
-				<!-- kode-new speaker over state End -->
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <img class="img-responsive" src="{% static 'socios/21.jpg'%}" alt="">
-                </div>
+                {%endfor%}
+                
             </div>
         </div>
     </div>
 </div>
-<!-- Contactos-->
+{%endif%}
+<!-- Contactos
 <div class="kode-event-contact">
     <div class="container">
         <div class="row">
@@ -937,15 +982,44 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->
 <!--kode-event-contact-->
 
 
 {%endblock%}
 {% block script%}
-<script src="{% static 'MedCongressApp/js/bootstrap-rating.js' %}"></script>
+
 <script type="text/javascript">
     jQuery(document).ready(function ($) {
+        
+      {%if ponencias_video%}
+        {% for ponencia_v in ponencias_video %}
+        {% for ponencia in ponencia_v.ponencias %}
+       
+       var url = "https://vimeo.com/api/v2/video/{{ponencia.id_video}}.json?callback=showThumb";
+
+       var id_img = "#vimeo-{{ponencia.id_video}}";
+
+       var script = document.createElement( 'script' );
+       script.src = url;
+
+       $(id_img).before(script);
+       {%endfor%}
+       {% for ponencia in ponencia_v.talleres %}
+       
+       var url = "https://vimeo.com/api/v2/video/{{ponencia.id_video}}.json?callback=showThumb";
+
+       var id_img = "#vimeo-{{ponencia.id_video}}";
+
+       var script = document.createElement( 'script' );
+       script.src = url;
+
+       $(id_img).before(script);
+       {%endfor%}
+    {%endfor%}
+    {%endif%}
+
+    
         $(".back").click(function (event) {
             event.preventDefault();
             $('html,body').animate({ scrollTop: $(this.hash).offset().top }, 500);
@@ -1072,6 +1146,7 @@
 
         }
     }
+    
     function AgregarCarrito(id, fields, msj) {
         if (msj == 'False') {
             $.ajax({
@@ -1191,16 +1266,17 @@
                 });
         }
     }
+
     function VerPerfil(pk) {
         url = "{% url 'GetPerfil'%}";
         $.get(url, { 'pk': pk }, function (data) {
 
             if (data.foto)
-                $('#foto').html('<img class="img-responsive" src="{% static '/'%}'+data.foto+'" alt=" foto ' + data.nombre + '" >');
+                $('#foto').html('<img class="img-responsive" src="{% static '/'%}'+ data.foto +'" alt=" foto ' + data.nombre + '" >');
             else
                 $('#foto').html('<img class="img-responsive" src="{% static 'MedCongressApp/images/defaulthombre.png' %}" alt="{{request.user.username}}" >');
             if (data.bandera)
-                $('#bandera').html('<img style="width: 100px; display:block;margin:auto;" class="img-responsive" src="{% static ' / '%}' + data.bandera + '" >');
+                $('#bandera').html('<img style="width: 100px; display:block;margin:auto;" class="img-responsive" src="{% static '/'%}'+ data.bandera +'" >');
 
 
             redes = '';
@@ -1260,7 +1336,19 @@
             $('#talleres').html(talleres)
             $('#puesto').html(data.puesto)
             $('#nombre_completo').html(data.nombre_completo)
-            $('#rating').rating('rate', 4.5);
+            if(data.votacion==0){
+              $('#not_rating').show()
+            $('#div_rating').hide()  
+            }
+            else{
+              $('#not_rating').hide()
+            $('#div_rating').show() 
+            $('#rating').rating('rate', data.votacion);
+            }
+            
+            // else
+            // $('#div_rating').html('<input type="hidden" id="rating" class="rating" data-readonly value="'+ data.votacion+'" /> ')
+            // $('#rating').rating('rate', data.votacion);
             //                     $('#rating2').rating({
             //   filled: 'glyphicon glyphicon-heart-empty',
             //   filledSelected: 'glyphicon glyphicon-heart',
@@ -1270,7 +1358,13 @@
 
         });
     }
+    
+function showThumb(data){
+       var id_img = "#vimeo-" + data[0].id;
+       $(id_img).attr('src',data[0].thumbnail_large);
+}
 
+    
 </script>
-
+<script src="{% static 'MedCongressApp/js/bootstrap-rating.js' %}"></script>
 {%endblock%}

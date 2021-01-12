@@ -1,0 +1,204 @@
+{% extends 'MedCongressAdmin/base.html' %}
+{% block title %}Especialidad de Eventos{% endblock %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" type="text/css"
+    href="{% static 'MedCongressAdmin/app-assets/vendors/css/tables/datatable/datatables.min.css' %}">
+<style type="text/css">
+    .custom-select-sm {
+        font-size: 110%;
+    }
+
+    .page-link {
+        padding: 10px 15px;
+    }
+
+    #DataTables_Table_0_length>label {
+        margin-top: 1.2rem;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+			
+		  <li class="breadcrumb-item">Especialidades de los Eventos
+		  </li>
+
+		</ol>
+	  </div>
+	</div>
+  </div>
+<section id="configuration">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-10">
+                            <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Especialidad de Eventos</h1>
+                            
+                        </div>
+                        <div class="col-2">
+                            <div style="margin-right: 45%; margin-top: 1.5rem;">
+                                <button id="add-btn" type="button" class="btn btn-success" title="Add otro Especialidad de Eventos" 
+                                    style="float:right; padding: 3px;">
+                                    <i class="la la-plus"></i>
+                                </button>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-content collapse show">
+                    <div class="card-body card-dashboard">
+                        <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table class="table table-striped table-bordered zero-configuration dataTable"
+                                        style="margin-top: 5px!important; margin-bottom: 15px!important;"
+                                        id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
+                                        <thead>
+                                            <th style="width:50%">Nombre</th>
+                                            
+                                                <th style="width:5%">Operaciones</th>
+                                        </thead>
+                                        <tbody>
+                                            {% for esp_evento in esp_eventos %}
+                                            <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
+                                               
+                                                <td>{{esp_evento.nombre}}</td>
+                                               
+                                                  <td> <a href="{% url 'MedCongressAdmin:esp_evento_edit' pk=esp_evento.pk %}"
+                                                    title="Editar"><i class="icon icon-editar"></i></a> <a id="del_{{ esp_evento.pk }}"
+                                                        href="javascript:deleteItem('{{ esp_evento.pk }}')"
+                                                        title="Eliminar">
+                                                        <i class="icon icon-eliminar "></i>
+                                                    </a>
+
+                                                   
+
+                                                    
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                        <tfoot>
+                                            
+                                                <th>Nombre</th>
+                                                
+                                                <th style="width:5%">Operaciones</th>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="swal-overlay" tabindex="-1">
+    <form id="swall-modal-form" method="POST" style="display: none;">
+        {% csrf_token %}
+    </form>
+
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/extensions/sweetalert.min.js' %}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/tables/datatable/datatables.min.js' %}"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.table').DataTable({
+    language: {
+        "decimal": "",
+        "emptyTable": "No hay información",
+        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+        "infoPostFix": "",
+        "thousands": ",",
+        "lengthMenu": "Mostrar _MENU_ Entradas",
+        "loadingRecords": "Cargando...",
+        "processing": "Procesando...",
+        "search": "Buscar:",
+        "zeroRecords": "Sin resultados encontrados",
+        "paginate": {
+            "first": "Primero",
+            "last": "Ultimo",
+            "next": "Siguiente",
+            "previous": "Anterior"
+        }
+    },
+ 
+}); 
+        var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        });
+
+        $('#add-btn').click(function () {
+            location.href = "{% url 'MedCongressAdmin:esp_evento_add'   %}";
+        });
+
+        dataTable = $('.zero-configuration').DataTable();
+    });
+    function deleteItem(pk) {
+        swal({
+            title: "Estas seguro?",
+            text: "No será capaz de recuperar este elemento!",
+            icon: "warning",
+            buttons: {
+                cancel: {
+                    text: "No, cancelar!",
+                    value: null,
+                    visible: true,
+                    className: "",
+                    closeModal: false,
+                },
+                confirm: {
+                    text: "Sí, eliminarlo!",
+                    value: true,
+                    visible: true,
+                    className: "",
+                    closeModal: false
+                }
+            }
+        })
+            .then((isConfirm) => {
+                if (isConfirm) {
+                    url = "{% url 'MedCongressAdmin:esp_evento_delete' pk=0 %}";
+                    $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
+                        if (data.success){
+                          dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
+
+                        swal("Eliminado!", "Este elemento ha sido eliminado.", "success");  
+                        }
+                        else{
+                            swal("Este Elemento no se puede eliminar!", "Está Asociado a un Evento.", "error"); 
+                        }
+                    });
+                } else {
+                    swal("Cancelado", "No se eliminó este elemento.", "error");
+                }
+            });
+    }
+</script>
+{% endblock %}
