@@ -791,7 +791,6 @@ class ExportarTallerExelForm(forms.ModelForm):
         
             self.add_error('taller','Entre un taller ')
 
-
 class CongresoPatrocinadorForm(forms.ModelForm):
     
     aval=forms.ModelChoiceField(queryset=AvalCongreso.objects.all(),required=False)
