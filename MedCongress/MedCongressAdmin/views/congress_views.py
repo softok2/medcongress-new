@@ -124,16 +124,23 @@ class CongressUpdateView(validarUser,UpdateView):
         kwargs.update(instance={
             'congreso': self.object,
             'ubicacion': self.object.lugar,
+            'imagen_congreso':ImagenCongreso.objects.filter(congreso=self.object).first()
         })
         return kwargs
 
     def get_context_data(self, **kwargs):
         context=super().get_context_data(**kwargs)
+        imagen=ImagenCongreso.objects.filter(congreso=self.object).first()
+        if imagen:
+            context['imagen']=imagen.imagen
         if self.object.imagen_seg:
             context['imagen_seg_url']='/static/%s'%(self.object.imagen_seg)
+        if self.object.programa:
+            context['programa']=self.object.programa
         if self.object.meta_og_imagen:
             context['imagen_meta']='/static/%s'%(self.object.meta_og_imagen)
-        context['foto_constancia']='/static/%s'%(self.object.foto_constancia)
+        if self.object.foto_constancia:
+            context['foto_constancia']='/static/%s'%(self.object.foto_constancia)
         return context
 
     # def get_context_data(self, **kwargs):

@@ -34,24 +34,8 @@
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title" id="myModalLabel">Insertar Foto</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-							aria-hidden="true">&times;</span></button>
-
-				</div>
-				<div class="modal-body">
-					<div class="col-sm-12">
-						<div class="form-group">
-							<label for="{{form.imagen_congreso.imagen.id_for_label }}"><b>{{form.imagen_congreso.imagen.label
-									}}</b>{% if form.imagen_congreso.imagen.errors %}
-								<span style="font-size: 15px; color: red;">{{ form.imagen_congreso.imagen.errors }}
-								</span>{% endif %} </label>
-
-							{{form.imagen_congreso.imagen }}
-						</div>
-					</div>
-				</div>
+				
+				
 				<div class="modal-footer">
 					<a onclick="InsertImagen()" type="button" class="btn btn-primary" data-dismiss="modal">Insertar</a>
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -175,20 +159,53 @@
 													{{form.congreso.sub_titulo }}
 												</div>
 											</div>
-										</div>
-										
-										<div class="row">{%if not imagen_seg_url%}
-											<div class="col-sm-6 ">
+											<div class="col-sm-4 ">
 												<div class="form-group">
-													<label for="{{form.imagen_congreso.imagen.id_for_label }}"><b>Imagen Principal</b>
-														{% if form.imagen_congreso.imagen.errors %} <span
-															style="font-size: 15px; color: red;">{{form.imagen_congreso.imagen.errors }}
-														</span>{% endif %} </label><br>
-
-													{{form.imagen_congreso.imagen }}
+													
+														
+											<label for="{{form.congreso.programa.id_for_label }}"><b>{{form.congreso.programa.label}}</b>{% if form.congreso.programa.errors %}
+												<span style="font-size: 15px; color: red;">{{form.congreso.programa.errors }}
+												</span>{% endif %} </label>
+												{{form.congreso.programa}}
+											
+													
 												</div>
 											</div>
-											{%endif%}
+										</div>
+										
+										<div class="row"><div class="col-sm-6 ">
+												<div class="form-group">
+													
+													{%if imagen%}
+													<label><b>Imagen Actual </b> </label>
+													<figure class="col-lg-3 col-md-6 col-12" itemprop="associatedMedia"
+														itemscope=""></figure>
+													<a href="{% static '/' %}{{imagen}}" itemprop="contentUrl"
+														data-size="480x360">
+														<img class="img-thumbnail img-fluid" src="{% static '/' %}{{imagen}}"
+															itemprop="thumbnail" alt="Image description">
+													</a>
+
+													</figure>
+
+													<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva
+															Imagen</b> </label>
+													{% if form.imagen_congreso.imagen.errors %}<span
+														style="font-size: 15px; color: red;">{{form.imagen_congreso.imagen.errors }}
+													</span>{% endif %}
+													<input type="file" name="imagen_congreso-imagen" accept="image/*"  id="id_imagen_congreso-imagen" value="{{imagen}}"  > 
+													<div style="display: none;"><input type="checkbox" value="true" name="imagen_congreso-update" id="id_imagen_congreso-update"></div>
+													{% else%}
+													<label for="{{form.imagen_congreso.imagen.id_for_label }}"><b>Imagen Primaria</b>{% if form.imagen_congreso.imagen.errors %}
+														<span style="font-size: 15px; color: red;">{{form.imagen_congreso.imagenerrors }}
+														</span>{% endif %} </label><br>
+
+													
+													{{form.imagen_congreso.imagen }}
+													{%endif%}
+												</div>
+											</div>
+										
 											<div class="col-sm-6 ">
 												<div class="form-group">
 													{%if imagen_seg_url%}
@@ -219,6 +236,8 @@
 													{%endif%}
 												</div>
 											</div>
+											
+
 										</div>
 										
 										<div class="row">
