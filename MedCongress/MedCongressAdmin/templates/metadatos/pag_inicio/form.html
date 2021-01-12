@@ -217,6 +217,11 @@
 <script src="{% static 'MedCongressAdmin/app-assets/js/scripts/tooltip/tooltip.js'%}"></script>
 <script type="text/javascript">
     $(document).ready(function () {
+        $('#atras').click(function () {
+		
+		location.href = "{% url 'MedCongressAdmin:meta_pag_inicio_list'%}";
+		
+	});
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({
             beforeSend: function (xhr, settings) {

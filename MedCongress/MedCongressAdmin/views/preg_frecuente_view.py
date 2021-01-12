@@ -25,7 +25,7 @@ class  PregFrecuenteCreateView(validarUser,CreateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
         context['congreso']=congreso
        
         return context

@@ -76,13 +76,13 @@ class  PonenciaCreateView(validarUser,FormView):
 class PonenciaPonenteListView(validarUser,TemplateView):
     template_name= 'MedCongressAdmin/ponencia_ponentes.html' 
     def get(self, request, **kwargs):
-        ponencia=Ponencia.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        ponencia=Ponencia.objects.filter(path=self.kwargs.get('path')).first()
         if ponencia is None:
             return   HttpResponseRedirect(reverse('Error404'))
         return self.render_to_response(self.get_context_data())    
     def get_context_data(self, **kwargs):
         context = super(PonenciaPonenteListView, self).get_context_data(**kwargs)
-        ponencia=Ponencia.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        ponencia=Ponencia.objects.filter(path=self.kwargs.get('path')).first()
         context['ponencia']=ponencia
         context['ponentes']=RelPonenciaPonente.objects.filter(ponencia=ponencia)
         return context        
@@ -114,7 +114,7 @@ class  PonenciaPonenteCreateView(validarUser,CreateView):
 
     def get_context_data(self, **kwargs):
         ctx = super(PonenciaPonenteCreateView, self).get_context_data(**kwargs)
-        pon=Ponencia.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        pon=Ponencia.objects.filter(path=self.kwargs.get('path')).first()
         ctx['pon'] = pon
         ponentes=RelPonenciaPonente.objects.filter(ponencia=pon)
         id=[]
@@ -206,7 +206,7 @@ class vTableAsJSONPonencia(TemplateView):
     template_name = 'MedCongressAdmin/asig_congress_form.html'
     def get(self, request, *args, **kwargs):
         #arreglo con las columnas de la BD a filtrar
-        col_name_map = ['titulo','congreso__titulo','published']
+        col_name_map = ['titulo','congreso__titulo','','published']
            
         #listado que muestra en dependencia de donde estes parado
         if request.GET.get('tipo')=='nada':
@@ -226,7 +226,7 @@ class vTableAsJSONPonencia(TemplateView):
         sort_dir_prefix = (sort_dir == 'desc' and '-' or '') #sufijo para poner en la consulta para ordenar
 
         #para ordenar el listado
-        if sort_col!=4 or sort_col!=2:# columna en la tabla para las operaciones
+        if sort_col!=4 or sort_col!=2 :# columna en la tabla para las operaciones
             sort_colr = col_name_map[sort_col]
             object_list = object_list.order_by('%s%s' % (sort_dir_prefix,sort_colr))
 
@@ -241,7 +241,7 @@ class vTableAsJSONPonencia(TemplateView):
             public='No'
             if objet.published:
                 public='Si'
-            user=''
+            
             # if objet.ponente:
             #     user= '%s %s'%(objet.ponente.first().user.usuario.first_name,objet.ponente.first().user.usuario.last_name)
            
