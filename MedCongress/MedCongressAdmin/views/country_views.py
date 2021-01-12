@@ -59,15 +59,16 @@ class CountryUpdateView(validarUser,UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(CountryUpdateView, self).get_context_data(**kwargs)
-        context['form_title'] = 'Editar'
-        context['delete_url'] = reverse_lazy(
-            'MedCongressAdmin:country_delete', kwargs={'pk': self.object.pk})
+        context['update'] = True
+        if self.object.banderas:
+            context['banderas']='/static/%s'%(self.object.banderas)
+        
         return context
 
-    def form_invalid(self, form):
-        for error in form.errors:
-            form[error].field.widget.attrs['class'] += ' is-invalid'
-        return super(CountryUpdateView, self).form_invalid(form)
+    # def form_invalid(self, form):
+    #     for error in form.errors:
+    #         form[error].field.widget.attrs['class'] += ' is-invalid'
+    #     return super(CountryUpdateView, self).form_invalid(form)
 
 
 class CountryDeleteView(validarUser,DeleteView):

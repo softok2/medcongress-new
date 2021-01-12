@@ -594,8 +594,7 @@ class AsignarTallerForms(forms.ModelForm):
         cleaned_data = super(AsignarTallerForms, self).clean(*args, **kwargs)
         taller = cleaned_data.get('taller', None)
         user = cleaned_data.get('user', None)
-       
-       
+
         if not taller:
             self.add_error('taller', 'No existe ese Taller')
 

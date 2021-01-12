@@ -56,7 +56,7 @@
                     <li class="nav-item mobile-menu d-md-none mr-auto"><a
                             class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i
                                 class="ft-menu font-large-1"></i></a></li>
-                    <li class="nav-item mr-auto"><a class="navbar-brand" href="index.html"><img class="brand-logo"
+                    <li class="nav-item mr-auto"><a class="navbar-brand" href="{% url 'Home'%}"><img class="brand-logo"
                                 alt="modern admin logo"
                                 src="{% static 'MedCongressApp/images/LOGODOSCOLORESSINFONDO.png'%}" style="width: 98px;">
                             <h3 class="brand-text">Admin</h3>
@@ -147,7 +147,7 @@
                             data-i18n="nav.templates.main">Nomencladores</span></a>
                     <ul class="menu-content">
                         <li><a class="menu-item" href="{% url 'MedCongressAdmin:generos_list' %}">Genero </a></li>
-                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:country_list' %}">Paises</a></li>
+                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:country_list' %}">Países</a></li>
                         <li><a class="menu-item" href="{% url 'MedCongressAdmin:patrocinadores_list' %}">Patrocinadores </a></li>
                         <li><a class="menu-item" href="{% url 'MedCongressAdmin:socios_list' %}">Socios </a></li>
                         <li><a class="menu-item" href="{% url 'MedCongressAdmin:cat_pagos_list' %}">Categoria de Pagos</a></li>

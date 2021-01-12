@@ -1,5 +1,5 @@
 {% extends 'MedCongressAdmin/base.html' %}
-{% block title %}MedCongressAdmin | Pais{% endblock %}
+{% block title %}MedCongressAdmin | País{% endblock %}
 {% load static %}
 {% block styles %}
 {% endblock %}
@@ -10,7 +10,7 @@
 	  <div class="breadcrumb-wrapper col-12">
 		<ol class="breadcrumb">
 			
-		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:country_list' %}">Paises</a>
+		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:country_list' %}">Países</a>
 		  </li>
 		  
 		
@@ -45,9 +45,8 @@
 							{% csrf_token %}
 							<div class="form-body">
 								<div class="row">
-									<div class="col-md-12">
 									
-										<fieldset class="form-group col-md-4">
+										<div class="form-group col-md-4">
 											<label>Denominaci&oacute;n</label>
 											{{ form.denominacion }}
 											{% if form.denominacion.errors %}
@@ -56,27 +55,44 @@
 												<small class="danger text-muted">{{ error|escape }}</small>
 												{% endfor %}
 											</p>
-										{%endif%}
-										<label>Bandera</label>
-											{{ form.banderas }}
-											{% if form.banderas.errors %}
-											<p class="text-right">
-												{% for error in form.banderas.errors %}
-												<small class="danger text-muted">{{ error|escape }}</small>
-												{% endfor %}
-											</p>
-										{%endif%}
-											
-										</fieldset>
-										<div class="form-actions">
-											<div class="text-right">
+											{%endif%}
+										</div>
+											<div class="form-group col-md-4">
+											<label>Bandera</label>
+											<!-- {{ form.banderas }} -->
+											{%if banderas%}
+										
+											<label for="banderas-clear_id">Actualmente</label>
+											<img src="{{banderas}}" alt="sdfsdfsdfsd" class="img-fluid">
+											<input type="checkbox" name="banderas-clear" id="banderas-clear_id">
+											<label for="banderas-clear_id">Eliminar</label><br>
+											<label for="banderas-clear_id">Modificar</label>
+											<input type="file" name="banderas" accept="image/*" id="id_banderas">
 												
-												<button id="save" type="submit" class="btn btn-primary">Guardar
-													<i class="ft-save position-right"></i>
-												</button>
+											{%else%}
+												{{ form.banderas }}
+												{%endif%}
+												{% if form.banderas.errors %}
+												<p class="text-right">
+													{% for error in form.banderas.errors %}
+													<small class="danger text-muted">{{ error|escape }}</small>
+													{% endfor %}
+												</p>
+											{%endif%}
 											
 											</div>
-										</div>
+										
+									
+								</div>
+								<div class="form-actions">
+									<div class="text-right">
+										<button id="atras" type="button" class="btn btn-danger ">Cancelar
+											<i class="ft-x position-right"></i>
+										</button>
+										<button id="save" type="submit" class="btn btn-primary">Guardar
+											<i class="ft-save position-right"></i>
+										</button>
+									
 									</div>
 								</div>
 							</div>
@@ -90,6 +106,11 @@
 {% block scripts %}
 <script type="text/javascript">
 	$(document).ready(function () {
+		$('#atras').click(function () {
+		
+		location.href = "{% url 'MedCongressAdmin:country_list' %}";
+		
+	});
 		{% if not delete_url %}
 		$('#save-plus').click(function (event) {
 			event.preventDefault();
