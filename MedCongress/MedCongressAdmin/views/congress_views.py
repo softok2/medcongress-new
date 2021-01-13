@@ -100,9 +100,7 @@ class CongressCreateView(validarUser,FormView):
                 ubicacion=form['ubicacion'].save(commit=True)
                 congress.lugar=ubicacion    
             path=congress.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
-            chars = '0123456789'
-            secret_key = get_random_string(5, chars)
-            congress.path=path+secret_key  
+            congress.path=path  
             congress.save()
             imagen.congreso=congress
             imagen.save()
