@@ -183,6 +183,7 @@ Inicio
 				<li>
 					<img src="{% static '/'%}{{congreso.imagencongreso_set.all.0.imagen}}" alt="" />
 					<div class="kode-content">
+						{%if congreso.ver_titulo%}
 						<div class="container">
 							<div class="row">
 								<div class="kode-slider-content">
@@ -193,6 +194,7 @@ Inicio
 								</div>
 							</div>
 						</div>
+						{%endif%}
 					</div>
 				</li>
 				{%endif%}

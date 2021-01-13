@@ -68,8 +68,9 @@ URL_PDF='dashboard.openpay.mx'
 
 class Email( TemplateView):
    template_name= 'MedCongressApp/recibo_pago.html' 
-# class ConfigEmail(TemplateView):
-#     template_name= 'MedCongressApp/confic_email.html' 
+
+class ContactoExitoso(TemplateView):
+    template_name= 'MedCongressApp/mensaje_exitoso.html' 
     
 
 class Home(TemplateView):
@@ -94,16 +95,17 @@ class Home(TemplateView):
         subject = self.request.POST['asunto'] 
         plain_message = self.request.POST['Message']
         from_email = self.request.POST['email']
+        nombre = self.request.POST['nombre']
         # mail.send_mail(subject, plain_message, from_email, [to],html_message=html_message)
         send_mail(
                 # El usuario escribe el mensaje.
                 subject,
-                "%s... Mensaje de %s"%(plain_message,from_email), 
+                "%s... Mensaje de %s (%s)"%(plain_message,nombre,from_email), 
                 'contacto@medcongress.com.mx', # El destino.
                 ['contacto@medcongress.com.mx'],
                 fail_silently=False,
                 )
-        return HttpResponse('csddfbdgnfg')
+        return HttpResponseRedirect(reverse('mensaje_exitoso'))
 @method_decorator(login_required,name='dispatch')
 class PagoExitoso(TemplateView):
     template_name= 'MedCongressApp/pago_satifactorio.html'

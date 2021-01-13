@@ -6,7 +6,7 @@ AddCart,AddCartTaller,DeletedCart,ConfCart,AvisoPrivacidad,HabilitarUser,Perfil,
 GetCuestionario,SetConstancia,EvaluarPonencia,Resultado_Cuestionario,Get_Constancia,VerTransaccion,GetFactura,
 ViewErrorFact,PerfilUpdateView,CambiarPass,UpdateEvaluarPonencia,UserAutocomplete,ViewErrorRegistrar,RegistroExitoso,
 PonenteAutocomplete,ModeradorAutocomplete,CongresoAutocomplete,PatrocinadorAutocomplete,SocioAutocomplete,ViewTaller,
-EvaluarTaller,UpdateEvaluarTaller,TallerAutocomplete,PonenciaAutocomplete,ViewCart)
+EvaluarTaller,UpdateEvaluarTaller,TallerAutocomplete,PonenciaAutocomplete,ViewCart,ContactoExitoso)
 
 urlpatterns = [
     
@@ -66,8 +66,7 @@ urlpatterns = [
     path('cambiar_pass',CambiarPass.as_view() , name='Cambiar_Pass'),
     path('registro_existoso',RegistroExitoso.as_view() , name='Registro_exitoso'),
     
-    
-    # path('asignar_pass',AsignarPass.as_view() , name='pass'),
+   path('mensaje_exitoso',ContactoExitoso.as_view() , name='mensaje_exitoso'),
     
     
     
