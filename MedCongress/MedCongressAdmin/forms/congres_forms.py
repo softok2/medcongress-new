@@ -24,10 +24,11 @@ class CongresForm(forms.ModelForm):
     fecha_inicio=forms.DateTimeField(widget=forms.TextInput())
     score=forms.IntegerField(label='Puntuación del Congreso')
     imagen_seg=forms.ImageField(label='Buscar Imagen',required=True,)
+    programa=forms.FileField(label='Buscar Programa',required=False)
     class Meta:
         model=Congreso
         fields=['titulo','sub_titulo','imagen_seg','fecha_inicio','published','t_congreso','especialidad','is_openpay','template','foto_constancia','aprobado','cant_preguntas','score','streaming','meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
-        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title']
+        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','programa']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
@@ -75,10 +76,11 @@ class CongresForm(forms.ModelForm):
 
  
 class ImagenCongresoForms(forms.ModelForm):
-    imagen=forms.ImageField()
+    imagen=forms.ImageField(required=False)
+    update=forms.BooleanField(required=False)
     class Meta:
         model=ImagenCongreso
-        fields=['imagen']       
+        fields=['imagen','update']       
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # self.fields['imagen'].widget.attrs.update({'class': 'form-control'}) 
@@ -87,11 +89,14 @@ class ImagenCongresoForms(forms.ModelForm):
         
         cleaned_data = super(ImagenCongresoForms, self).clean(*args, **kwargs)
         imagen = cleaned_data.get('imagen', None)
+        update = cleaned_data.get('update', None)
         if imagen:
             w, h = get_image_dimensions(imagen)
             if w != 1920 or h != 1080:
                 self.add_error('imagen',"Esta imagen tiene %s X %s pixel. Debe ser de 1920 X 1080 pixel" %(w,h) )
-
+        else:
+            if not update:
+                self.add_error('imagen',"Este campo es obligatorio mio" )
 class UbicacionForm(forms.ModelForm):
     direccion=forms.CharField(
                label = 'Lugar',
@@ -626,10 +631,11 @@ class ModeradorBloqueForm(forms.ModelForm):
         if RelBloqueModerador.objects.filter(bloque=bloque,moderador=moderador).exists():
             self.add_error('moderador', 'Este Bloque ya tiene un moderador con ese Correo')
 class ImagenCongForms(forms.ModelForm):
-    imagen=forms.ImageField(label='Buscar Imagen')
+    imagen=forms.ImageField(label='Buscar Imagen',required=False)
+    update=forms.BooleanField(required=False)
     class Meta:
         model=ImagenCongreso
-        fields=['imagen','congreso']
+        fields=['imagen','congreso','update']
 
 
     def __init__(self, *args, **kwargs):
@@ -641,10 +647,14 @@ class ImagenCongForms(forms.ModelForm):
     def clean(self, *args, **kwargs):
         cleaned_data = super(ImagenCongForms, self).clean(*args, **kwargs)
         imagen = cleaned_data.get('imagen', None)
-        w, h = get_image_dimensions(imagen)
-        if w != 1920 or h != 1080:
-            self.add_error('imagen',"Esta imagen tiene %s X %s pixel. Debe ser de 1920 X 1080 pixel" %(w,h) )
-
+        update = cleaned_data.get('updates', None)
+        if imagen:
+            w, h = get_image_dimensions(imagen)
+            if w != 1920 or h != 1080:
+                self.add_error('imagen',"Esta imagen tiene %s X %s pixel. Debe ser de 1920 X 1080 pixel" %(w,h) )
+        else:
+            if not update:
+                self.add_error('imagen',"Este campo es obligatorio mio" )
 class PreguntaForm(forms.ModelForm):
     congreso=forms.ModelChoiceField(queryset=Congreso.objects.all(),label='Congreso')
     published=forms.BooleanField(label='Publicada',required=False)
