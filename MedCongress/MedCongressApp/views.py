@@ -90,21 +90,20 @@ class Home(TemplateView):
         context['ofrecemos'] = Ofrecemos.objects.all()
         context['metadatos']= MetaPagInicio.objects.all().first()
         return context
-    # def post(self, request, **kwargs):
-    #     # subject = self.request.POST['asunto']
-    #     # html_message = ''
-    #     # plain_message = self.request.POST['Message']
-    #     # from_email = self.request.POST['email']
-    #     # to = 'dennis.molinetg@gmail.com'
-    #     # mail.send_mail(subject, plain_message, from_email, [to],html_message=html_message)
-    #     send_mail(
-    #             "<html><body>Dennis</body></html>", # El usuario escribe el mensaje.
-    #             'asunto',
-    #             'dennis.molinetg@gmail.com', # El destino.
-    #             ['mislenis.morenop@gmail.com'],
-    #             fail_silently=False,
-    #             )
-    #     return HttpResponse('csddfbdgnfg')
+    def post(self, request, **kwargs):
+        subject = self.request.POST['asunto'] 
+        plain_message = self.request.POST['Message']
+        from_email = self.request.POST['email']
+        # mail.send_mail(subject, plain_message, from_email, [to],html_message=html_message)
+        send_mail(
+                # El usuario escribe el mensaje.
+                subject,
+                "%s... Mensaje de %s"%(plain_message,from_email), 
+                'contacto@medcongress.com.mx', # El destino.
+                ['contacto@medcongress.com.mx'],
+                fail_silently=False,
+                )
+        return HttpResponse('csddfbdgnfg')
 @method_decorator(login_required,name='dispatch')
 class PagoExitoso(TemplateView):
     template_name= 'MedCongressApp/pago_satifactorio.html'

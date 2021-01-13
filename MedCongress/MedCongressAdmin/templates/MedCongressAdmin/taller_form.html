@@ -148,6 +148,19 @@
 
 										</div>
 										<div class="row">
+											<div class="col-sm-12">
+												<div class="form-group">
+													<label
+														for="{{form.taller.detalles_tipo_boleto.id_for_label }}"><b>{{form.taller.detalles_tipo_boleto.label }}</b>{% if form.taller.detalles_tipo_boleto.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.taller.detalles_tipo_boleto.errors }}
+														</span>{% endif %} </label>
+
+													{{form.taller.detalles_tipo_boleto }}
+												</div>
+											</div>
+										</div>
+										<div class="row">
 											<div class="col-sm-6 ">
 												<div class="form-group">
 													<label
@@ -506,6 +519,8 @@
 {% block scripts %}
 <link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
 <script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/editors/ckeditor/ckeditor.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/editors/editor-ckeditor.js'%}"></script>
 
 
 <script type="text/javascript"

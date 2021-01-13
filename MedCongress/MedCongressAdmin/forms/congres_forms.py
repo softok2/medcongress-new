@@ -19,6 +19,7 @@ class CongresForm(forms.ModelForm):
     titulo=forms.CharField(label='Título')
     template=forms.CharField(label='Template del Congreso',required=False)
     published=forms.BooleanField(label='Publicado',required=False)
+    ver_titulo=forms.BooleanField(label='Ver Título',required=False)
     sub_titulo=forms.CharField(label='Título segundario',required=False) 
     t_congreso=forms.ModelChoiceField(queryset=TipoCongreso.objects.all(),label='Tipo de Congreso')
     fecha_inicio=forms.DateTimeField(widget=forms.TextInput())
@@ -28,7 +29,7 @@ class CongresForm(forms.ModelForm):
     class Meta:
         model=Congreso
         fields=['titulo','sub_titulo','imagen_seg','fecha_inicio','published','t_congreso','especialidad','is_openpay','template','foto_constancia','aprobado','cant_preguntas','score','streaming','meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
-        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','programa']
+        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','programa','detalles_tipo_boleto','detalles_tipo_boleto_taller','ver_titulo']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
@@ -37,7 +38,8 @@ class CongresForm(forms.ModelForm):
         self.fields['sub_titulo'].widget.attrs.update({'class': 'form-control'}) 
         # self.fields['imagen_seg'].widget.attrs.update({'class': ' form-control '}) 
         self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control'})   
-        self.fields['published'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['published'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['ver_titulo'].widget.attrs.update({'class': 'form-control'})    
         self.fields['t_congreso'].widget.attrs.update({'class': 'form-control'})  
         self.fields['especialidad'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['is_openpay'].widget.attrs.update({'class': 'form-control'}) 
@@ -57,7 +59,9 @@ class CongresForm(forms.ModelForm):
         self.fields['meta_twitter_creator'].widget.attrs.update({'class': 'form-control '})  
         self.fields['meta_keywords'].widget.attrs.update({'class': 'form-control','rows':'3'})   
         self.fields['meta_og_imagen'].widget.attrs.update({'class': 'form-control '}) 
-        self.fields['meta_title'].widget.attrs.update({'class': 'form-control'})    
+        self.fields['meta_title'].widget.attrs.update({'class': 'form-control'})  
+        self.fields['detalles_tipo_boleto'].widget.attrs.update({'class': 'form-control ckeditor'})
+        self.fields['detalles_tipo_boleto_taller'].widget.attrs.update({'class': 'form-control ckeditor'})     
     def clean(self, *args, **kwargs):
         cleaned_data = super(CongresForm, self).clean(*args, **kwargs)
         imagen = cleaned_data.get('imagen_seg', None)
@@ -243,6 +247,7 @@ class TallerForm(forms.ModelForm):
         self.fields['meta_og_imagen'].widget.attrs.update({'class': 'form-control '}) 
         self.fields['meta_title'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['cod_video'].widget.attrs.update({'class': 'form-control','rows':'3'}) 
+          
 
     def clean(self, *args, **kwargs):
         cleaned_data = super(TallerForm, self).clean(*args, **kwargs)

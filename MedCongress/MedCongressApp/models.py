@@ -239,7 +239,9 @@ class Congreso(models.Model):
     score=models.IntegerField(null=True)
     streaming=models.TextField(null=True,blank=True)
     programa=models.FileField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='programas',null=True,blank=True)
-
+    detalles_tipo_boleto=models.TextField(null=True,blank=True)
+    detalles_tipo_boleto_taller=models.TextField(null=True,blank=True)
+    ver_titulo=models.BooleanField(default=True)
 
     class Meta:
         verbose_name='congreso'

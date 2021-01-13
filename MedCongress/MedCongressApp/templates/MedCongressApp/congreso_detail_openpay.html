@@ -235,6 +235,7 @@
         {% for imagen in congreso.imagencongreso_set.all%}
         <li>
             <img src="{% static '/'%}{{imagen.imagen}}" alt="" />
+            {%if congreso.ver_titulo%}
             <div class="kode-content">
                 <div class="container">
                     <div class="row">
@@ -247,6 +248,7 @@
                     </div>
                 </div>
             </div>
+            {%endif%}
         </li>
         {%endfor%}
     </ul>
@@ -672,14 +674,10 @@
             <span></span>
         </div>
         <div class="kf_heading_1" style="text-align:center">
-
-            <p style="text-align:left"><b>Preferente:</b> Socio AMCIC, Miembro Médica Sur, Estudiante, Miembro IMSS,
-                Miembro ISSSTE-, Institutos Nacionales de Salud, Hospitales de alta especialidad, Hospitales del
-                Sector
-                Público, Universidad Westhill,Profesores universitarios, Miembros del Sistema Nacional de Investigadores
-                (SNI), Socios ACROM.</p>
-            <p style="margin-top:20px">Información de registro o dudas al <b>WhatsApp</b> <a target="_blank"
-                    href=" https://wa.me/525537345007">5537345007</a></p>
+            {%if congreso.detalles_tipo_boleto %}
+{{congreso.detalles_tipo_boleto|safe}}
+{%endif%}
+           
         </div>
             {%for categoria_pago in categorias_pago %}
             {%if forloop.first or forloop.counter|divisibleby:3%}
@@ -740,14 +738,9 @@
             <h2>Talleres</h2>
             <span></span>
         </div>
-        <span>Si desea tener una constancia del taller es necesario que compre su boleto de acreditación al
-            evento.</span>
-        <p style="text-align:left"><b>Preferente:</b> Socio AMCIC, Miembro Médica Sur, Estudiante, Miembro IMSS,
-            Miembro
-            ISSSTE-, Institutos Nacionales de Salud, Hospitales de alta especialidad, Hospitales del Sector Público,
-            Universidad Westhill, Profesores universitarios, Miembros del Sistema Nacional de Investigadores (SNI).</p>
-
-
+        {%if congreso.detalles_tipo_boleto_taller %}
+        {{congreso.detalles_tipo_boleto_taller|safe}}
+        {%endif%}
 
 
         {% for taller in talleres %}
@@ -839,6 +832,10 @@
             <div class="col-md-3">
                 <!--KODE_EVENT_BLOG2 START-->
                 <div class="kode-newspeaker">
+                    <button
+                    style="margin-top: -2px;" type="button" class="btn btn-link"
+                                                        data-toggle="modal" data-target=".tt"
+                                                        onclick="VerPerfil('{{ponente.id_user}}')">
                     <div class="speaker-photo">
                         {% if ponente.foto%}
 
@@ -875,6 +872,7 @@
                                 </ul> -->
                     </div>
                     <!-- kode-new speaker over state End -->
+               </button>
                 </div>
                 <!--KODE_EVENT_BLOG2 START-->
             </div>
