@@ -238,6 +238,7 @@ class Congreso(models.Model):
     cant_preguntas=models.IntegerField(null=True)
     score=models.IntegerField(null=True)
     streaming=models.TextField(null=True,blank=True)
+    programa=models.FileField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='programas',null=True,blank=True)
 
 
     class Meta:
@@ -254,7 +255,7 @@ class Congreso(models.Model):
 ##### Tabla Imagenes congreso #####
 
 class ImagenCongreso(models.Model):
-    imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso' ,verbose_name='imagen' )
+    imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso')
     congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE, null=True)
 
     class Meta:
