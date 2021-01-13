@@ -83,13 +83,13 @@ class TallerCategPagosListView(TemplateView):
     
 
     def get(self, request, **kwargs):
-        taller=Taller.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        taller=Taller.objects.filter(path=self.kwargs.get('path')).first()
         if taller is None:
             return   HttpResponseRedirect(reverse('Error404'))
         return self.render_to_response(self.get_context_data())    
     def get_context_data(self, **kwargs):
         context = super(TallerCategPagosListView, self).get_context_data(**kwargs)
-        taller=Taller.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        taller=Taller.objects.filter(path=self.kwargs.get('path')).first()
         context['congres']=taller
         context['cat_pagos']=RelTalleresCategoriaPago.objects.filter(taller=taller)
         return context        
@@ -111,7 +111,7 @@ class  TallerCategPagosCreateView(validarUser,CreateView):
 
     def get_context_data(self, **kwargs):
         ctx = super(TallerCategPagosCreateView, self).get_context_data(**kwargs)
-        pon=Taller.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        pon=Taller.objects.filter(path=self.kwargs.get('path')).first()
         ctx['cong'] = pon
         return ctx
 
@@ -174,13 +174,13 @@ class TallerUpdateView(validarUser,FormView):
 class TallerPonenteListView(TemplateView):
     template_name= 'MedCongressAdmin/taller_ponentes.html' 
     def get(self, request, **kwargs):
-        taller=Taller.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        taller=Taller.objects.filter(path=self.kwargs.get('path')).first()
         if taller is None:
             return   HttpResponseRedirect(reverse('Error404'))
         return self.render_to_response(self.get_context_data())    
     def get_context_data(self, **kwargs):
         context = super(TallerPonenteListView, self).get_context_data(**kwargs)
-        taller=Taller.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        taller=Taller.objects.filter(path=self.kwargs.get('path')).first()
         context['taller']=taller
         context['ponentes']=RelTallerPonente.objects.filter(taller=taller)
         return context     
@@ -212,7 +212,7 @@ class  TallerPonenteCreateView(validarUser,CreateView):
 
     def get_context_data(self, **kwargs):
         ctx = super(TallerPonenteCreateView, self).get_context_data(**kwargs)
-        pon=Taller.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        pon=Taller.objects.filter(path=self.kwargs.get('path')).first()
         ctx['pon'] = pon
         ponentes=RelTallerPonente.objects.filter(taller=pon)
         id=[]
