@@ -1312,7 +1312,6 @@ class GetFacturaPrueba(TemplateView):
             "getUrls":True
             }
         if 'uuid' not in response_di[0]:
-            ret
             return HttpResponseRedirect(reverse('FacturaPrueba',kwargs={'invoice':self.kwargs.get('invoice') }))
         
         for cart in self.request.session["car1"][1]:
