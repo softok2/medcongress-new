@@ -158,6 +158,9 @@ $('#btn_edit_'+id).show();
 		}
 
 	function ConfCart(id){
+        var patt = /^\d+$/;
+        valor=$('#cantidad_'+id).val()
+        if (patt.test(valor) == true){
 		$.ajax({
             type: "GET",
             url: "{% url 'Conf_cart'%}",
@@ -178,7 +181,13 @@ $('#btn_edit_'+id).show();
             }
         
 
-	});
+    });
+    
+}
+        else{
+            swal("No se puede", "Debe entrar un Número entero.", "error");
+
+        }
 	}
 
 

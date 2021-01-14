@@ -706,7 +706,7 @@
                                         al Carrito</a>
                                 </div>
                                 <div class="col-sm-4">
-                                    <input class="form-control input-lg" type="number" value="1" style="height: 52px;"
+                                    <input class="form-control input-lg" type="number" value="1" min='1' step="any"  style="height: 52px;"
                                         id="cant_{{categoria_pago.id}}">
                                     <!-- <input class="input-qty-type" type="" name="qty" value="1"> -->
 
@@ -1025,7 +1025,9 @@
     });
 
     function AgregarCarritoTaller(id, fields, msj) {
-
+        var patt = /^\d+$/;
+        valor=$('#' + fields).val()
+        if (patt.test(valor) == true){
         if (msj == 'False') {
             $.ajax({
                 type: "GET",
@@ -1144,8 +1146,18 @@
 
         }
     }
+        else{
+            swal("No se puede", "Debe entrar un Número entero.", "error");
+
+        }
+    
+    }
     
     function AgregarCarrito(id, fields, msj) {
+       
+        valor=$('#' + fields).val()
+        var patt = /^\d+$/;
+        if (patt.test(valor) == true){
         if (msj == 'False') {
             $.ajax({
                 type: "GET",
@@ -1263,6 +1275,13 @@
                     }
                 });
         }
+
+        }
+        else{
+            swal("No se puede", "Debe entrar un Número entero.", "error");
+
+        }
+    
     }
 
     function VerPerfil(pk) {

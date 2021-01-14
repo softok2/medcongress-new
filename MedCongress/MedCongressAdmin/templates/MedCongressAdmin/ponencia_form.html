@@ -232,7 +232,7 @@
 																					{%endif%}
 																				</div>
 																			</div>
-																			{% if not bloque_update%}
+																			
 																			<div class="col-sm-6 ">
 																				<div class="form-group">
 																					<label
@@ -248,7 +248,7 @@
 																							id="id_my_ponente" value="{{ponente}}">
 																				</div>
 																			</div>
-																			{%endif%}
+																			
 
 																		</div>
 																		<div class="row">
@@ -624,12 +624,12 @@
             $("#id_ponencia_ponente-ponente").val('')
 		});
 		
-		$('#id_my_ponente').ready(function () {
-			email = $('#id_my_ponente').val()
-			$("#id_ponencia_ponente-ponente option:contains('" + email + "')").attr("selected", true);
-			if ($("#id_ponencia_ponente-ponente option:selected").text()!= email) 
-            $("#id_ponencia_ponente-ponente").val('')
-		});
+		// $('#id_my_ponente').ready(function () {
+		// 	email = $('#id_my_ponente').val()
+		// 	$("#id_ponencia_ponente-ponente option:contains('" + email + "')").attr("selected", true);
+		// 	if ($("#id_ponencia_ponente-ponente option:selected").text()!= email) 
+        //     $("#id_ponencia_ponente-ponente").val('')
+		// });
 		
 		$('#id_ponencia-congreso').ready(function () {
 				$('#id_ponencia-bloque').empty();

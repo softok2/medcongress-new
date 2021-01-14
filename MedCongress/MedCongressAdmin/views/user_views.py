@@ -191,7 +191,7 @@ class vTableAsJSON(TemplateView):
                                                     <a href="'''+ reverse('MedCongressAdmin:asig_congreso',kwargs={'pk':objet.pk})+'''"
                                                     title="Asignar Congreso"><i class="icon icon-asignar_congreso"></i></a>
                                                     <a id="del_'''+ str(objet.pk) +'''"
-                                                        href="javascript:deleteItem('''+ str(objet.pk) +''')"
+                                                        href="javascript:deleteItem('''+ str(objet.usuario.pk) +''')"
                                                         title="Eliminar">
                                                         <i class="icon icon-eliminar"></i>
                                                     </a>''',

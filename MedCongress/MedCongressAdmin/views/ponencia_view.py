@@ -267,7 +267,7 @@ class vTableAsJSONPonencia(TemplateView):
                                                         <i class="icon icon-eliminar"></i>
                                                     </a>'''
             if request.GET.get('tipo')=='nada':
-                operaciones=''' <a href="'''+ reverse('MedCongressAdmin:Edit_Congreso_ponencia',kwargs={'path':objet.congreso.path,'pk':objet.pk})+'''"
+                operaciones=''' <a href="'''+ reverse('MedCongressAdmin:ponencia_edit',kwargs={'pk':objet.pk})+'''"
                                                     title="Editar"><i class="icon icon-editar"></i></a>
                                                     <a id="del_'''+ str(objet.pk) +'''"
                                                         href="javascript:deleteItem('''+ str(objet.pk) +''')"
@@ -275,7 +275,7 @@ class vTableAsJSONPonencia(TemplateView):
                                                         <i class="icon icon-eliminar"></i>
                                                     </a>'''
             if request.GET.get('tipo')=='congreso':
-                operaciones=''' <a href="'''+ reverse('MedCongressAdmin:ponencia_edit',kwargs={'pk':objet.pk})+'''"
+                operaciones=''' <a href="'''+ reverse('MedCongressAdmin:Edit_Congreso_ponencia',kwargs={'path':objet.congreso.path,'pk':objet.pk})+'''"
                                                     title="Editar"><i class="icon icon-editar"></i></a>
                                                     <a id="del_'''+ str(objet.pk) +'''"
                                                         href="javascript:deleteItem('''+ str(objet.pk) +''')"

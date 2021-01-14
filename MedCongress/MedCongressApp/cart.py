@@ -127,8 +127,6 @@ class Cart:
         self.save()
         print(self.cart)
         return True
-
-
     def save(self):
         self.session["cart"]=self.cart
         self.session.modified=True
