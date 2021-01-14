@@ -62,8 +62,8 @@ ID_KEY='m6ftsapwjvmo7j7y8mop'
 PRIVATE_KEY='sk_34664e85b5504ca39cc19d8f9b8df8a2'
 PUBLIC_KEY='pk_0d4449445a4948899811cea14a469793'
 URL_API='sandbox-api.openpay.mx'
-#URL_SITE='http://medcongress.softok2.mx'
-URL_SITE='http://localhost:8000'
+URL_SITE='http://medcongress.softok2.mx'
+# URL_SITE='http://localhost:8000'
 URL_PDF='dashboard.openpay.mx'
 
 
@@ -138,8 +138,8 @@ class PagoExitoso(TemplateView):
         concepto=[]
         subtotal=0
         for  car in self.request.session["car1"][1]:
-            importe_sin_iva=float(format(car['pagar']/1.16,'.2f'))
-            subtotal=float(subtotal)+float(importe_sin_iva)
+            importe_sin_iva=car['pagar']/1.16
+            subtotal=subtotal+importe_sin_iva
             concepto.append({
                     "cantidad":car['cantidad'],
                     "clave_unidad": "E48",
@@ -147,25 +147,25 @@ class PagoExitoso(TemplateView):
                     "identificador": "6K9MVV MEDCONGRESS",
                     "unidad": car['tipo_evento'],
                     "descripcion": 'Pago del %s %s . '%(car['tipo_evento'],car['nombre_congreso']),
-                    "valor_unitario":float(format(car['precio']/1.16,'.2f')),
-                    "importe":importe_sin_iva,
+                    "valor_unitario":format(round(car['precio']/1.16,2),'.2f'),
+                    "importe": format(round(importe_sin_iva,2),'.2f'),
                     "traslados": [
                     {
                         "impuesto": "002",
-                        "base": importe_sin_iva,
+                        "base": format(round(importe_sin_iva,2),'.2f'),
                         "tipo_factor": "Tasa",
                         "tasa": 0.16,
-                        "importe": importe_sin_iva*0.16
+                        "importe": format(round(importe_sin_iva*0.16,2),'.2f')
                     }]
             })
 
            
-        pago_sin_iva= round(self.request.session["car1"][0]['cant']/1.16,2)
+        pago_sin_iva= self.request.session["car1"][0]['cant']/1.16
        
         params=  {
-        "subtotal":format(subtotal,'.2f'),
-        "total_trasladados": format(subtotal*0.16,'.2f'),
-        "total": float(subtotal+float(format(subtotal*0.16,'.2f'))),
+        "subtotal":format(round(subtotal,2),'.2f'),
+        "total_trasladados": format(round(subtotal*0.16,2),'.2f'),
+        "total": format(round((subtotal+subtotal*0.16),2),'.2f') ,
         "tipo_de_cambio": 1,
         "forma_pago": "04",
         "hide_total_items": True,
@@ -179,7 +179,7 @@ class PagoExitoso(TemplateView):
             {
                 "impuesto": "002",
                 "tasa": 0.16,
-                "importe": format(pago_sin_iva*0.16,'.2f'),
+                "importe": format(round(pago_sin_iva*0.16,2),'.2f'),
                 "tipo_factor": "Tasa"
             }
         ],
@@ -196,7 +196,7 @@ class PagoExitoso(TemplateView):
         "metodo_pago": "PUE",
         "tipo_comprobante": "I"
     }
-
+        # return HttpResponse(json.dumps(params)) 
         headers={'Content-type': 'application/json'}
         response=requests.post(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(params),headers=headers)
         response_dic=response.json()
@@ -1211,7 +1211,7 @@ class GetCuestionario(TemplateView):
         return  HttpResponseRedirect(reverse('Resultado_Cuestionario',kwargs={'path': congreso.path}))
 @method_decorator(login_required,name='dispatch')
 class GetFactura(TemplateView):
-   
+    template_name= 'MedCongressApp/ver_factura.html' 
     def get(self, request,**kwargs):
 
         url1='https://%s/v1/%s/invoices/v33/'%(URL_API,ID_KEY)
@@ -1260,7 +1260,17 @@ class GetFactura(TemplateView):
         if 'http_code' in response_dic:
             self.request.session["error_facturacion"]= response_dic['description']
             return HttpResponseRedirect(reverse('Error_facturacion'))
-        return HttpResponseRedirect( response_dic['public_pdf_link'])
+        self.factura=response_dic
+        return self.render_to_response(self.get_context_data())
+
+    def get_context_data(self, **kwargs):
+        context = super(GetFactura, self).get_context_data(**kwargs)
+        context['factura']=self.factura
+        context['xml']=self.factura['public_xml_link']
+        context['pdf']=self.factura['public_pdf_link']
+                           
+        return context
+
 @method_decorator(login_required,name='dispatch')
 class SetConstancia(TemplateView):
 
