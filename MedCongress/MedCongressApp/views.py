@@ -62,8 +62,8 @@ ID_KEY='m6ftsapwjvmo7j7y8mop'
 PRIVATE_KEY='sk_34664e85b5504ca39cc19d8f9b8df8a2'
 PUBLIC_KEY='pk_0d4449445a4948899811cea14a469793'
 URL_API='sandbox-api.openpay.mx'
-URL_SITE='http://medcongress.softok2.mx'
-# URL_SITE='http://localhost:8000'
+#URL_SITE='http://medcongress.softok2.mx'
+URL_SITE='http://localhost:8000'
 URL_PDF='dashboard.openpay.mx'
 
 
@@ -89,6 +89,7 @@ class Home(TemplateView):
     template_name= 'MedCongressApp/home.html' 
     
     def get_context_data(self, **kwargs):
+        
         context = super().get_context_data(**kwargs)
         datos_in=DatosIniciales.objects.all().first()
         context['datos_ini']=datos_in
@@ -137,8 +138,8 @@ class PagoExitoso(TemplateView):
         concepto=[]
         subtotal=0
         for  car in self.request.session["car1"][1]:
-            importe_sin_iva=round(car['pagar']/1.16,2)
-            subtotal=subtotal+importe_sin_iva
+            importe_sin_iva=float(format(car['pagar']/1.16,'.2f'))
+            subtotal=float(subtotal)+float(importe_sin_iva)
             concepto.append({
                     "cantidad":car['cantidad'],
                     "clave_unidad": "E48",
@@ -146,7 +147,7 @@ class PagoExitoso(TemplateView):
                     "identificador": "6K9MVV MEDCONGRESS",
                     "unidad": car['tipo_evento'],
                     "descripcion": 'Pago del %s %s . '%(car['tipo_evento'],car['nombre_congreso']),
-                    "valor_unitario":round(car['precio']/1.16,2),
+                    "valor_unitario":float(format(car['precio']/1.16,'.2f')),
                     "importe":importe_sin_iva,
                     "traslados": [
                     {
@@ -154,17 +155,17 @@ class PagoExitoso(TemplateView):
                         "base": importe_sin_iva,
                         "tipo_factor": "Tasa",
                         "tasa": 0.16,
-                        "importe": round(importe_sin_iva*0.16,2)
+                        "importe": importe_sin_iva*0.16
                     }]
             })
 
            
         pago_sin_iva= round(self.request.session["car1"][0]['cant']/1.16,2)
-        # return HttpResponse('Total: %s  0.16: %s 0.48: %s'%(round(self.request.session["car1"][0]['cant'],2),round(self.request.session["car1"][0]['cant']*0.16,2),round(self.request.session["car1"][0]['cant'],2)-round(self.request.session["car1"][0]['cant']*0.16,2)))
+       
         params=  {
-        "subtotal":subtotal,
-        "total_trasladados": round(subtotal*0.16,2),
-        "total": subtotal+round(subtotal*0.16,2),
+        "subtotal":format(subtotal,'.2f'),
+        "total_trasladados": format(subtotal*0.16,'.2f'),
+        "total": float(subtotal+float(format(subtotal*0.16,'.2f'))),
         "tipo_de_cambio": 1,
         "forma_pago": "04",
         "hide_total_items": True,
@@ -178,7 +179,7 @@ class PagoExitoso(TemplateView):
             {
                 "impuesto": "002",
                 "tasa": 0.16,
-                "importe": round(pago_sin_iva*0.16,2),
+                "importe": format(pago_sin_iva*0.16,'.2f'),
                 "tipo_factor": "Tasa"
             }
         ],
@@ -195,6 +196,7 @@ class PagoExitoso(TemplateView):
         "metodo_pago": "PUE",
         "tipo_comprobante": "I"
     }
+
         headers={'Content-type': 'application/json'}
         response=requests.post(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(params),headers=headers)
         response_dic=response.json()
