@@ -77,7 +77,8 @@ urlpatterns = [
 
      # Congreso-Ponencias
      path('ponencias/congreso/<str:path>', CongressPonenciasListView.as_view(), name='Congres_ponencias'),
-     path('ponencia/congreso/add/<int:pk>', PonenciaCreateView.as_view(), name='ponente_ponencia_add'),
+     path('ponencia/congreso/add/<str:path>', PonenciaCreateView.as_view(), name='ponente_ponencia_add'),
+    path('ponencia/editar/<str:path>/<int:pk>', PonencicaUpdateView.as_view(), name='Edit_Congreso_ponencia'),
 
      # Congreso-Cuestionarios
      path('cuestionario/congreso/<str:path>', CongressCuestionarioListView.as_view(), name='Congres_cuestionario'),

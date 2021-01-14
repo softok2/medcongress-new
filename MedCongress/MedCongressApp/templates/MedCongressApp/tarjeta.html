@@ -212,7 +212,8 @@ Efectuar Pago
 
 
             </div>
-
+            {{id_key}}<br>
+            {{public_key}}
 
         </div>
     </div>
@@ -255,7 +256,7 @@ Efectuar Pago
 
             OpenPay.setId('{{id_key}}');
             OpenPay.setApiKey('{{public_key}}');
-            
+            OpenPay.setSandboxMode(true);
 
 
 

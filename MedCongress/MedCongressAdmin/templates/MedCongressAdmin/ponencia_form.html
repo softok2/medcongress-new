@@ -245,7 +245,7 @@
 																						</div>
 										
 																						<input type="text" name="my_ponente" class="form-control" required=""
-																							id="id_my_ponente">
+																							id="id_my_ponente" value="{{ponente}}">
 																				</div>
 																			</div>
 																			{%endif%}
@@ -591,6 +591,7 @@
 									</section>
 					</div>
 					</form>
+			
 				</div>
 			</div>
 		</div>
@@ -611,7 +612,7 @@
 
 	$(document).ready(function () {
 
-		$("#id_ponencia_ponente-ponente option[value='{{pon.id}}']").attr("selected", true);
+		$("#id_ponencia_ponente-ponente option[value='{{ponente.id}}']").attr("selected", true);
 		$("#id_my_ponente").autocomplete({
 			source: "{% url 'Ponente_autocomp'%}",
 			minLength: 3,
@@ -622,6 +623,14 @@
 			if ($("#id_ponencia_ponente-ponente option:selected").text()!= email) 
             $("#id_ponencia_ponente-ponente").val('')
 		});
+		
+		$('#id_my_ponente').ready(function () {
+			email = $('#id_my_ponente').val()
+			$("#id_ponencia_ponente-ponente option:contains('" + email + "')").attr("selected", true);
+			if ($("#id_ponencia_ponente-ponente option:selected").text()!= email) 
+            $("#id_ponencia_ponente-ponente").val('')
+		});
+		
 		$('#id_ponencia-congreso').ready(function () {
 				$('#id_ponencia-bloque').empty();
 				$('#id_ponencia-bloque').append($("<option></option").attr('value', '').text('----------'));
