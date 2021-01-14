@@ -68,7 +68,7 @@ class  PonenciaCreateView(validarUser,FormView):
             self.success_url =  reverse_lazy('MedCongressAdmin:Congres_ponencias',kwargs={'path': congreso.path} )
         if self.kwargs.get('pk_block'):
             block=Bloque.objects.get(pk=self.kwargs.get('pk_block'))
-            self.success_url =  reverse_lazy('MedCongressAdmin:Bloque_ponencias',kwargs={'path': block.path} )
+            self.success_url =  reverse_lazy('MedCongressAdmin:Bloque_ponencias',kwargs={'path': block.path,'tipo':False} )
         return self.success_url   
  
 ########## Vista de las Categorias de Pago de un Congreso #############
@@ -149,8 +149,6 @@ class PonencicaUpdateView(validarUser,FormView):
         ponencia=Ponencia.objects.get(pk=self.kwargs.get('pk'))
         self.object=ponencia
         context=super().get_context_data(**kwargs)
-        if self.kwargs.get('path'):
-            context['congres']=Congreso.objects.filter(path=self.kwargs.get('path')).first()
         if self.object.imagen:
             context['imagen_seg_url']='/static/%s'%(self.object.imagen)
         if self.object.meta_og_imagen:
@@ -159,14 +157,23 @@ class PonencicaUpdateView(validarUser,FormView):
         context['update']='update'
         context['ponencia']=self.object
         context['ponente']=self.object.ponente.first()
-        return context
+       
+        if self.kwargs.get('path'):
+            context['con']=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+            context['blo']=Bloque.objects.filter(congreso=context['con'])
+        if self.kwargs.get('pk_block'):
+            context['bloque']=Bloque.objects.filter(path=self.kwargs.get('pk_block')).first()
+            context['congreso']=context['bloque'].congreso
+            context['blo']= None
+        return context 
+      
 
     def get_success_url(self):
         if self.kwargs.get('path'):
             self.success_url =  reverse_lazy('MedCongressAdmin:Congres_ponencias',kwargs={'path':self.kwargs.get('path')} )
         if self.kwargs.get('pk_block'):
-            block=Bloque.objects.get(pk=self.kwargs.get('pk_block'))
-            self.success_url =  reverse_lazy('MedCongressAdmin:Bloque_ponencias',kwargs={'path': block.path} )
+            block=Bloque.objects.filter(path=self.kwargs.get('pk_block')).first()
+            self.success_url =  reverse_lazy('MedCongressAdmin:Bloque_ponencias',kwargs={'path': block.path,'tipo':False} )
         return self.success_url   
   
 
@@ -231,7 +238,7 @@ class vTableAsJSONPonencia(TemplateView):
         if request.GET.get('tipo')=='congreso':
             object_list = Ponencia.objects.filter(congreso__pk=int(request.GET.get('id')))
         if request.GET.get('tipo')=='bloque':
-            object_list = Ponencia.objects.filter(bloque__pk=int(request.GET.get('id')))
+            object_list = Ponencia.objects.filter(bloque__path=request.GET.get('path'))
         
         #parametros 
         search_text = request.GET.get('sSearch', '').lower()# texto a buscar
@@ -282,8 +289,14 @@ class vTableAsJSONPonencia(TemplateView):
                                                         title="Eliminar">
                                                         <i class="icon icon-eliminar"></i>
                                                     </a>'''
-            # if request.GET.get('tipo')=='bloque':
-            #     object_list = Ponencia.objects.filter(bloque__pk=int(request.GET.get('id')))
+            if request.GET.get('tipo')=='bloque':
+                 operaciones=''' <a href="'''+ reverse('MedCongressAdmin:ponencia_bloque_edit',kwargs={'pk_block':str(request.GET.get('path')),'pk':objet.pk})+'''"
+                                                    title="Editar"><i class="icon icon-editar"></i></a>
+                                                    <a id="del_'''+ str(objet.pk) +'''"
+                                                        href="javascript:deleteItem('''+ str(objet.pk) +''')"
+                                                        title="Eliminar">
+                                                        <i class="icon icon-eliminar"></i>
+                                                    </a>'''
                 
 
            #Guardar datos en un dic 

@@ -209,7 +209,7 @@
             aoData.push( { "name": "id", "value": {{congres.pk}} } );
             {%elif bloque%}
             aoData.push( { "name": "tipo", "value": "bloque" } );
-            aoData.push( { "name": "id", "value": {{bloque.pk}} } );
+            aoData.push( { "name": "path", "value": "{{bloque.path}}" } );
            {%else%}
 
             aoData.push( { "name": "tipo", "value": "nada" } );

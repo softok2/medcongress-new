@@ -158,6 +158,7 @@ urlpatterns = [
      # Bloque-Ponencias
      path('ponencias/bloque/<str:path>/<str:tipo>', BloquePonenciasListView.as_view(), name='Bloque_ponencias'),
      path('ponencia/bloque/add/<int:pk_block>', PonenciaCreateView.as_view(), name='ponencia_bloque_add'),
+     path('ponencia/bloque/edit/<str:pk_block>/<int:pk>', PonencicaUpdateView.as_view(), name='ponencia_bloque_edit'),
     path('bloque_ponencia/seleccionar/<str:path>', PonenciaSeleccionarView.as_view(), name='bloque_ponencia_select'),
     
      # Bloque-talleres

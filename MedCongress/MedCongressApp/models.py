@@ -479,8 +479,8 @@ class RelPonenciaPonente(models.Model):
 ##### Tabla pivote Ponencia - Votacion  #####
 
 class RelPonenciaVotacion(models.Model):
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    ponencia = models.ForeignKey(Ponencia, on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    ponencia = models.ForeignKey(Ponencia, on_delete=models.CASCADE)
     votacion=models.IntegerField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
