@@ -6,12 +6,15 @@ from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db.models import Sum
 from django.db import connections
+from datetime import datetime
+from django.core.mail import EmailMessage
 from django.http import (HttpResponse, HttpResponseBadRequest,
                          HttpResponseRedirect, JsonResponse)
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.utils.crypto import get_random_string
 from django.views.generic import ListView, TemplateView
+from PIL import Image, ImageDraw, ImageFont
 from django.views.generic.edit import (CreateView, DeleteView, FormView,
                                        UpdateView)
 from MedCongressAdmin.forms.congres_forms import (AsignarCongresoForms,
@@ -1000,3 +1003,49 @@ class CongressCategPagosUpdateView(validarUser,FormView):
 class CongressCategPagosDeletedView(validarUser,DeleteView):
     model = RelCongresoCategoriaPago
     success_url = reverse_lazy('MedCongressAdmin:cat_usuarios_list')
+
+class AsignarConstancias(validarUser,TemplateView):
+    template_name = 'MedCongressAdmin/asig_constancia.html'
+
+    def post(self, request, **kwargs):
+        congreso=Congreso.objects.filter(titulo=self.request.POST['my_congress']).first()
+        if congreso:
+            rel_usuario_congreso=RelCongresoUser.objects.filter(congreso=congreso ).distinct('user')
+           
+            for usuario in rel_usuario_congreso:
+                    # //////////////
+                nombre='%s %s'%(usuario.user.usuario.first_name,usuario.user.usuario.last_name)
+                
+                cont=len(nombre)
+                comienzo=450-(cont/2*19) 
+                base=Image.open('MedCongressApp/static/%s'%(congreso.foto_constancia)).convert('RGBA')
+                text=Image.new('RGBA',base.size,(255,255,255,0))
+                nombre_font=ImageFont.truetype('calibri.ttf',40)
+                congreso_font=ImageFont.truetype('calibri.ttf',25)
+                fecha_font=ImageFont.truetype('calibri.ttf',25)
+                # cong.set_variation_by_name('Italic')
+                d=ImageDraw.Draw(text)
+                d.text((comienzo,290),nombre,font=nombre_font,fill=(89, 85, 85))
+                
+                
+                out=Image.alpha_composite(base,text)
+                tit=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
+                tit_nombre=nombre.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
+                nombre_img='constancia_%s_%s'%(tit_nombre,tit)  
+                out.save('MedCongressApp/static/congreso/img_constancia/%s.png'%(nombre_img))
+                usuario.is_constancia=True
+                usuario.foto_constancia='%s.png'%(nombre_img)
+                usuario.fecha_constancia=datetime.now()
+                usuario.save()
+                # ////////////////
+                email = EmailMessage('Constancia', 'En este correo se le adjunta la constancia de haber participado en el congreso %s.'%(congreso.titulo), to = [usuario.user.usuario.email])
+                email.attach_file('MedCongressApp/static/congreso/img_constancia/%s.png'%(nombre_img))
+                email.send()
+
+
+
+                # ////
+            return HttpResponse(self.request.POST['my_congress'])
+        else:
+            messages.warning(self.request,'Ese no es un Congreso Válido')
+            return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list'))

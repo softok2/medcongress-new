@@ -15,7 +15,7 @@ from .views.congress_views import (CongressListView,CongressCreateView,CongressU
                                    AsignarCongressDeletedViews,CongressImagenCreateView,CongressCuestionarioListView,CongressPregFrecuenteListView,
                                    Ver_usuarios,Ver_Exel,Exportar_usuarios,Usuarios_pagaron,ReporteRelCongresoUserExcel,CongressPatrocinadorListView,
                                    PatrocinadorSeleccionarView,PatrocinadorSeleccionarDeleted, SocioSeleccionarView,SocioSeleccionarDeleted,CongressSocioListView,
-                                   CongresoDetail,CongressImagenDeletedView,CongressCategPagosUpdateView,CongressCategPagosDeletedView)
+                                   CongresoDetail,CongressImagenDeletedView,CongressCategPagosUpdateView,CongressCategPagosDeletedView,AsignarConstancias)
 from .views.imagen_views import (ImagenCreateView)
 from .views.ponencia_view import (PonenciaListView, PonenciaCreateView,PonenciaPonenteListView,
                                    PonencicaUpdateView,PonenciaPonenteCreateView,PonenciaDeletedView,
@@ -310,6 +310,10 @@ urlpatterns = [
     path('imagen-quienes_somos/eliminar/<int:pk>', QuienesSomosImagenDeletedView.as_view(), name='imagen_quienes_somos_deleted'),
     path('pruebaTablaJson', vTableAsJSON.as_view(), name='table_json'),
     path('pruebaTablaJsonPonencia', vTableAsJSONPonencia.as_view(), name='table_json_ponencia'),
+    
+    #Constancias-Congreso
+    path('asignar_constancias', AsignarConstancias.as_view(), name='asig_constancia_list'),
+    
     
 
 ]

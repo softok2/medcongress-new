@@ -1,0 +1,158 @@
+{% extends 'MedCongressAdmin/base.html' %}
+{% block title %} Asignar Constancia {% endblock %}
+{% load static %}
+{% block styles %}
+{% endblock %}
+{% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+		
+<li class="breadcrumb-item active"> Asignar Constancia
+</li>
+
+
+</ol>
+</div>
+</div>
+</div>
+<section class="multiple-input-with-labels" id="multiple-input-with-labels">
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-header">
+					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
+						Asignar Constancia </h1>
+						
+					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
+					<div class="heading-elements">
+						<ul class="list-inline mb-0">
+							<li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+							<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="card-content collapse show">
+					<div class="card-body">
+						<form id="country-form" method="POST">
+							{% csrf_token %}
+							<div class="form-body">
+								<div class="row">
+									<div class="col-md-6">
+										{% if messages %}
+					<ul class="messages">
+						{% for message in messages %}
+						<li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+							{% endfor %}
+					</ul>
+					{% endif %}
+											<div class="form-group">
+												<label for=""><b>Filtre
+														Congreso</b></label>
+													
+												<input type="text" name="my_congress" class="form-control" required=""
+													id="id_my_congress">
+
+											</div>
+										
+									</div>
+								
+										
+									
+								</div>
+							</div>
+							<div class="form-actions">
+								<div class="text-right">
+									
+							
+									<button id="save" type="submit" class="btn btn-primary">Asignar
+										<i class="ft-save position-right"></i>
+									</button>
+									
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+</section>
+{% endblock %}
+{% block scripts %}
+<link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
+<script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
+<script type="text/javascript">
+$(function() {
+	  $("#id_my_user").autocomplete({
+		source: "{% url 'User_autocomp'%}",
+		minLength: 3,
+	  });
+	  $('#id_my_user').change(function () {
+			email = $('#id_my_user').val()
+			$("#id_user option:contains('" + email + "')").attr("selected", true);
+			if ($("#id_user option:selected").text() != email)
+				$("#id_user").val('')
+		});
+	  $("#id_my_congress").autocomplete({
+            source: "{% url 'Congreso_autocomp'%}",
+            minLength: 3,
+        });
+        $('#id_my_congress').change(function () {
+            email = $('#id_my_congress').val()
+            $("#id_congreso option:contains('" + email + "')").attr("selected", true);
+            if ($("#id_congreso option:selected").text()!= email) 
+            $("#id_congreso").val('')
+
+        });
+	});
+	$(document).ready(function () {
+
+$('#id_my_user').change(function(){
+	email=$('#id_my_user').val()
+$("#id_user option:contains('"+email+"')").attr("selected",true);
+if ($("#id_user option:selected").text()!= email) 
+            $("#id_user").val('')
+});
+
+		{%if usuario %}
+		$("#id_user option[value='{{usuario.id}}']").attr("selected", true);
+		
+		{% endif %}
+
+		var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+		$.ajaxSetup({
+			beforeSend: function (xhr, settings) {
+				xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			}
+		});
+		$('#id_congreso').change(function () {
+				$('#id_categoria_pago').empty();
+				$('#id_categoria_pago').append($("<option></option").attr('value', '').text('----------'));
+			if ($('#id_congreso').val()) {
+			
+				$.ajax({
+					type: "POST",
+					url: "{% url 'MedCongressAdmin:Get_Pago' %}",
+					data: {
+						'congreso_id': $('#id_congreso').val(), // from form
+					},
+					success: function (data) {
+
+						for (var i = 0; i < data.length; i++) {
+
+							$('#id_categoria_pago').append($("<option></option").attr('value', data[i].id).text(data[i].nombre))
+						}
+					}
+				});
+
+
+			}
+
+
+
+		});
+	});
+</script>
+{% endblock %}

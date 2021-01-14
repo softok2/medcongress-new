@@ -48,23 +48,23 @@ from django.utils.html import strip_tags
 ###################
 
 ###### Produccion ##########
-# ID_KEY='mrkdgemoa3sig3imqehg'
-# PRIVATE_KEY='sk_77e831c6a9db4dae8eb25a5ed9c1bbdf'
-# PUBLIC_KEY='pk_644303cc7033454298d199d1464b740f'
-# URL_API='api.openpay.mx'
-# URL_SITE='https://medcongress.com.mx'
-# # URL_SITE='http://localhost:8000'
-# URL_PDF='dashboard.openpay.mx'
+ID_KEY='mrkdgemoa3sig3imqehg'
+PRIVATE_KEY='sk_77e831c6a9db4dae8eb25a5ed9c1bbdf'
+PUBLIC_KEY='pk_644303cc7033454298d199d1464b740f'
+URL_API='api.openpay.mx'
+URL_SITE='https://medcongress.com.mx'
+# URL_SITE='http://localhost:8000'
+URL_PDF='dashboard.openpay.mx'
 
 ###### Prueba ########## Cambiar tambien en el Template tarjeta.html
 
-ID_KEY='m6ftsapwjvmo7j7y8mop'
-PRIVATE_KEY='sk_34664e85b5504ca39cc19d8f9b8df8a2'
-PUBLIC_KEY='pk_0d4449445a4948899811cea14a469793'
-URL_API='sandbox-api.openpay.mx'
-URL_SITE='http://medcongress.softok2.mx'
-# URL_SITE='http://localhost:8000'
-#URL_PDF='dashboard.openpay.mx'
+# ID_KEY='m6ftsapwjvmo7j7y8mop'
+# PRIVATE_KEY='sk_34664e85b5504ca39cc19d8f9b8df8a2'
+# PUBLIC_KEY='pk_0d4449445a4948899811cea14a469793'
+# URL_API='sandbox-api.openpay.mx'
+# URL_SITE='http://medcongress.softok2.mx'
+# # URL_SITE='http://localhost:8000'
+# #URL_PDF='dashboard.openpay.mx'
 
 
 
