@@ -26,7 +26,7 @@ from django.views.generic.edit import UpdateView
 from django.contrib.auth.views import PasswordResetView
 from random import sample
 from PIL import Image, ImageDraw, ImageFont
-
+from .claves import ID_KEY,PRIVATE_KEY,PUBLIC_KEY,URL_API,URL_SITE,URL_PDF,PRUEBA
 from .forms import UserPerfilUser,UserPerfilUserEditar,CambiarPassForm
 from MedCongressAdmin.forms.congres_forms import UsuarioForms
 from .models import (CategoriaPagoCongreso, Congreso, EspecialidadCongreso,
@@ -48,13 +48,14 @@ from django.utils.html import strip_tags
 ###################
 
 ###### Produccion ##########
-ID_KEY='mrkdgemoa3sig3imqehg'
-PRIVATE_KEY='sk_77e831c6a9db4dae8eb25a5ed9c1bbdf'
-PUBLIC_KEY='pk_644303cc7033454298d199d1464b740f'
-URL_API='api.openpay.mx'
-URL_SITE='https://medcongress.com.mx'
-# URL_SITE='http://localhost:8000'
-URL_PDF='dashboard.openpay.mx'
+# ID_KEY='mrkdgemoa3sig3imqehg'
+# PRIVATE_KEY='sk_77e831c6a9db4dae8eb25a5ed9c1bbdf'
+# PUBLIC_KEY='pk_644303cc7033454298d199d1464b740f'
+# URL_API='api.openpay.mx'
+# URL_SITE='https://medcongress.com.mx'
+# # URL_SITE='http://localhost:8000'
+# URL_PDF='dashboard.openpay.mx'
+
 
 ###### Prueba ########## Cambiar tambien en el Template tarjeta.html
 
@@ -635,6 +636,7 @@ class CongresoCardForm(TemplateView):
         context = super(CongresoCardForm, self).get_context_data(**kwargs)
         context['id_key']=ID_KEY
         context['public_key']=PUBLIC_KEY
+        context['prueba']=PRUEBA
         return context
 
     def post(self, request, **kwargs):
