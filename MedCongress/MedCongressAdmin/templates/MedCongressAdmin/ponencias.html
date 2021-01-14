@@ -269,8 +269,8 @@
                 if (isConfirm) {
                     url = "{% url 'MedCongressAdmin:ponencia_delete' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
-                        dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
-                        swal("Eliminado!", "Este elemento ha sido eliminado.", "success");
+                       
+                       location.reload();
                     });
                 } else {
                     swal("Cancelado", "No se eliminó este elemento.", "error");
