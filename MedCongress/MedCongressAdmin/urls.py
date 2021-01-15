@@ -178,7 +178,7 @@ urlpatterns = [
     #Categorias de Pagos-Congreso
      path('categorias_pago/congreso/<str:path>', CongressCategPagosListView.as_view(), name='Congres_pagos'),
      path('categorias_pago-congres/adicinar/<str:path>', CongressCategPagosCreateView.as_view(), name='congres_cat_pago_add'),
-     path('categorias_pago-congres/editar/<int:pk>', CongressCategPagosUpdateView.as_view(), name='congres_cat_pago_editar'),
+     path('categorias_pago-congres/editar/<str:path>/<int:pk>', CongressCategPagosUpdateView.as_view(), name='congres_cat_pago_editar'),
      path('categorias_pago-congres/eliminar/<int:pk>', CongressCategPagosDeletedView.as_view(), name='congres_cat_pago_eliminar'),
 
     #Categorias de Pagos-Taller

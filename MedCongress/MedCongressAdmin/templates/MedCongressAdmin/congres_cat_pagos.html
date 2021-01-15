@@ -92,7 +92,7 @@
                                                 <td>${{ cat_pago.precio }}</td>
                                                 <td>{{cat_pago.moneda}}</td>
                                                 <td style="vertical-align: middle;">
-                                                    <a href="{% url 'MedCongressAdmin:congres_cat_pago_editar' pk=cat_pago.pk %}"
+                                                    <a href="{% url 'MedCongressAdmin:congres_cat_pago_editar' path=congres.path pk=cat_pago.pk  %}"
                                                         title="Editar" style="margin-left: 5px;"><i class="icon-editar" style="padding: 15px;"></i></a>
                                                     <a id="del_{{ cat_pago.pk }}"
                                                         href="javascript:deleteItem('{{ cat_pago.pk }}')"

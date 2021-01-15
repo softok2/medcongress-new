@@ -382,10 +382,11 @@ class CongresoCategPagoForm(forms.ModelForm):
         categoria = cleaned_data.get('categoria', None)
         congreso = cleaned_data.get('congreso', None)
         moneda = cleaned_data.get('moneda', None)
-       
-        if RelCongresoCategoriaPago.objects.filter(congreso=congreso,categoria=categoria,moneda=moneda).exists():
-            self.add_error('categoria', 'Ya existe esta categoria de pago en este Congreso con esta moneda')
-
+        update=cleaned_data.get('update', None)
+        if update=='false':
+            if RelCongresoCategoriaPago.objects.filter(congreso=congreso,categoria=categoria,moneda=moneda).exists():
+                self.add_error('categoria', 'Ya existe esta categoria de pago en este Congreso con esta moneda')
+     
 class TallerCategPagoForm(forms.ModelForm):
     categoria=forms.ModelChoiceField(queryset=CategoriaPagoCongreso.objects.all(),label='Categoría de Pago')
     

@@ -275,9 +275,9 @@ class PagoExitoso(TemplateView):
 
 
 # # ///////////////////////////////////
-#         else:
-#             self.request.session["error_facturacion"]= response_dic['description']
-#             return HttpResponseRedirect(reverse('Error_facturacion'))
+        else:
+            self.request.session["error_facturacion"]= response_dic['description']
+            return HttpResponseRedirect(reverse('Error_facturacion'))
         # 
 
         # url1='https://sandbox-api.openpay.mx/v1/%s/invoices/v33/'%(ID_KEY)
@@ -302,8 +302,10 @@ class Perfil(TemplateView):
     def get_context_data(self, **kwargs):
         
         context = super().get_context_data(**kwargs)
-        congresos=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,is_pagado=True).distinct('congreso','uuid_factura')
+        congresos=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,is_pagado=True)
         context['congresos']=congresos
+        for cong in congresos:
+            print(cong.uuid_factura)
         congresos_pendientes=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,is_pagado=False).distinct('congreso')
         context['congresos_pendientes']=congresos_pendientes
         talleres=RelTallerUser.objects.filter(user=self.request.user.perfilusuario,is_pagado=True).distinct('taller')
@@ -318,10 +320,14 @@ class Perfil(TemplateView):
             context['talleres_pon']=talleres_pon
         constancias=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,is_constancia=True).values('congreso','foto_constancia').distinct()
         constancias_env=[]
+
         for constancia in constancias:
             congreso=Congreso.objects.get(pk=constancia['congreso'])
             constancias_env.append({'congreso':congreso})
         context['constancias']=constancias_env
+
+        facturas_ev=[]
+
         
         # context['ponentes'] = Ponente.objects.all()
         # context['especialidades'] = len(EspecialidadCongreso.objects.all())+datos_in.especialidades
@@ -1320,12 +1326,14 @@ class GetFacturaPrueba(TemplateView):
                 if str(cart['tipo_evento']) == 'Congreso':
                     congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
                     categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                    pagar_congreso=RelCongresoUser.objects.create(user=self.request.user.perfilusuario,congreso=congreso,categoria_pago=categoria,uuid_factura=self.kwargs.get('invoice') )
+                    pagar_congreso=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,congreso=congreso,categoria_pago=categoria).first()
+                    pagar_congreso.uuid_factura=self.kwargs.get('invoice') 
                     pagar_congreso.save()
                 if str(cart['tipo_evento']) == 'Taller':
                     taller=Taller.objects.filter(id=cart['id_congreso']).first()
                     categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                    pagar_congreso=RelTallerUser.objects.create(user=self.request.user.perfilusuario,taller=taller,categoria_pago=categoria,uuid_factura=self.kwargs.get('invoice') )
+                    pagar_congreso=RelTallerUser.objects.filter(user=self.request.user.perfilusuario,taller=taller,categoria_pago=categoria ).first()
+                    pagar_congreso.uuid_factura=self.kwargs.get('invoice') 
                     pagar_congreso.save()
 
         url2='https://%s/v1/%s/invoices/v33/%s/?getUrls=True'%(URL_API,ID_KEY,response_di[0]['uuid'])

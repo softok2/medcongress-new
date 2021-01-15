@@ -42,6 +42,7 @@
 					<div class="card-body">
 						<form id="country-form" method="POST">
 							{% csrf_token %}
+							<input type="hidden" name="update" value="{%if update%}{{categoria.id}}{%else%}false{%endif%}">
 							<div class="form-body">
 								<div class="row">
 									<div class="col-md-12">
