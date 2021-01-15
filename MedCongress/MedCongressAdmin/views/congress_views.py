@@ -135,6 +135,7 @@ class CongressUpdateView(validarUser,UpdateView):
     def get_context_data(self, **kwargs):
         context=super().get_context_data(**kwargs)
         imagen=ImagenCongreso.objects.filter(congreso=self.object).first()
+        context['update']=True
         if imagen:
             context['imagen']=imagen.imagen
         if self.object.imagen_seg:

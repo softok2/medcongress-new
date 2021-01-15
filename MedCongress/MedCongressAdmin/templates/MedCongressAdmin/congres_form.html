@@ -20,10 +20,10 @@
 		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
 		  </li>
 		  {%if imagen_seg_url%}
-		  <li class="breadcrumb-item active">Editar Congresos
+		  <li class="breadcrumb-item active">Actualizar Congresos
 		  </li>
 		  {%else%}
-		  <li class="breadcrumb-item active">Insertar Congresos
+		  <li class="breadcrumb-item active">Adicionar Congresos
 		</li>
 		{%endif%}
 		</ol>
@@ -105,7 +105,7 @@
 			<div class="card">
 				<div class="card-header">
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
-						Adicionar Congreso</h1>
+						{%if update %}Actualizar Congreso{%else%}Adicionar Congreso{%endif%}</h1>
 					{% if messages %}
 					<ul class="messages">
 						{% for message in messages %}
