@@ -1294,7 +1294,8 @@
                 $('#foto').html('<img class="img-responsive" src="{% static 'MedCongressApp/images/defaulthombre.png' %}" alt="{{request.user.username}}" >');
             if (data.bandera)
                 $('#bandera').html('<img style="width: 100px; display:block;margin:auto;" class="img-responsive" src="{% static '/'%}'+ data.bandera +'" >');
-
+            else
+            $('#bandera').html('');
 
             redes = '';
             if (data.facebook)
