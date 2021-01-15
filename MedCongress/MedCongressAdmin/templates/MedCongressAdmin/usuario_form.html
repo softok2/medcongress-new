@@ -321,14 +321,20 @@
 																								</h5>
 																								<div class="form-group">
 																									<label for="">
-																										<b>Título</b></label>
+																										<b>Título</b>{% if form.perfiluser.meta_title.errors %}
+																										<span
+																											style="font-size: 15px; color: red;">{{ form.perfiluser.meta_title.errors }}
+																										</span>{% endif %}</label>
 							
 							
 																									{{form.perfiluser.meta_title}}
 																								</div>
 																								<div class="form-group">
 																									<label for="">
-																										<b>Descripción</b></label>
+																										<b>Descripción</b>{% if form.perfiluser.meta_description.errors %}
+																										<span
+																											style="font-size: 15px; color: red;">{{ form.perfiluser.meta_description.errors }}
+																										</span>{% endif %} </label>
 							
 																								
 							
@@ -343,7 +349,10 @@
 																											data-original-title="Palabras separadas por coma(,)">
 																											<i
 																												class="ft ft-info"></i>
-																										</span></label>
+																										</span>{% if form.perfiluser.meta_keywords.errors %}
+																										<span
+																											style="font-size: 15px; color: red;">{{ form.perfiluser.meta_keywords.errors }}
+																										</span>{% endif %} </label>
 							
 																									
 							
@@ -357,33 +366,48 @@
 																								</h5>
 																								<div class="form-group">
 																									<label for="">
-																										<b>Título</b></label>
+																										<b>Título</b>{% if form.perfiluser.meta_og_title.errors %}
+																										<span
+																											style="font-size: 15px; color: red;">{{ form.perfiluser.meta_og_title.errors }}
+																										</span>{% endif %} </label>
 																									
 							
 																									{{form.perfiluser.meta_og_title}}
 																								</div>
 																								<div class="form-group">
 																									<label for="">
-																										<b>Descripción</b></label>
+																										<b>Descripción</b>{% if form.perfiluser.meta_og_description.errors %}
+																										<span
+																											style="font-size: 15px; color: red;">{{ form.perfiluser.meta_og_description.errors }}
+																										</span>{% endif %} </label>
 																								
 																									{{form.perfiluser.meta_og_description}}
 																								</div>
 																								<div class="form-group">
 																									<label for="">
-																										<b>Tipo</b></label>
+																										<b>Tipo</b>{% if form.perfiluser.meta_og_type.errors %}
+																										<span
+																											style="font-size: 15px; color: red;">{{ form.perfiluser.meta_og_type.errors }}
+																										</span>{% endif %} </label>
 																								
 																									{{form.perfiluser.meta_og_type}}
 																								</div>
 																								<div class="form-group">
 																									<label for="">
-																										<b>URL</b></label>
+																										<b>URL</b>{% if form.perfiluser.meta_og_url.errors %}
+																										<span
+																											style="font-size: 15px; color: red;">{{ form.perfiluser.meta_og_url.errors }}
+																										</span>{% endif %}</label>
 							
 							
 																									{{form.perfiluser.meta_og_url}}
 																								</div>
 																								<div class="form-group">
 																									<label for="">
-																										<b>Imagen</b></label>
+																										<b>Imagen</b>{% if form.perfiluser.meta_og_imagen.errors %}
+																										<span
+																											style="font-size: 15px; color: red;">{{ form.perfiluser.meta_og_imagen.errors }}
+																										</span>{% endif %}</label>
 							
 																									{%if imagen_meta%}
 																									<img src="{{imagen_meta}}"
@@ -406,7 +430,10 @@
 							
 																								<div class="form-group">
 																									<label for="">
-																										<b>Card</b></label>
+																										<b>Card</b>{% if form.perfiluser.meta_twitter_card.errors %}
+																										<span
+																											style="font-size: 15px; color: red;">{{ form.perfiluser.meta_twitter_card.errors }}
+																										</span>{% endif %}</label>
 							
 							
 																									{{form.perfiluser.meta_twitter_card}}
@@ -414,14 +441,20 @@
 							
 																								<div class="form-group">
 																									<label for="">
-																										<b>Sitio</b></label>
+																										<b>Sitio</b>{% if form.perfiluser.meta_twitter_site.errors %}
+																										<span
+																											style="font-size: 15px; color: red;">{{ form.perfiluser.meta_twitter_site.errors }}
+																										</span>{% endif %}</label>
 							
 							
 																									{{form.perfiluser.meta_twitter_site}}
 																								</div>
 																								<div class="form-group">
 																									<label for="">
-																										<b>Creador</b></label>
+																										<b>Creador</b>{% if form.perfiluser.meta_twitter_creator.errors %}
+																										<span
+																											style="font-size: 15px; color: red;">{{ form.perfiluser.meta_twitter_creator.errors }}
+																										</span>{% endif %}</label>
 							
 																									{{form.perfiluser.meta_twitter_creator}}
 																								</div>
