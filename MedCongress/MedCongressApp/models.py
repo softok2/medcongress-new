@@ -38,8 +38,7 @@ class Especialidades(models.Model):
 ##### Tabla País #####
 
 class Pais(models.Model):
-    denominacion = models.CharField(unique=True, max_length=50, validators=[RegexValidator(
-        r'^[a-zA-Záéíóúñ\s]+$', 'Entre un nombre válido. Ej(México)')])
+    denominacion = models.CharField(unique=True, max_length=50)
     banderas=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='banderas',blank=True, null=True )
 
     class Meta:
