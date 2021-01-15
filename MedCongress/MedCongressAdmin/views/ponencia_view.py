@@ -135,7 +135,6 @@ class PonencicaUpdateView(validarUser,FormView):
     
     def get_form_kwargs(self):
         ponencia=Ponencia.objects.get(pk=self.kwargs.get('pk'))
-        ponencia.ponente.first().user.usuario.email
         self.object=ponencia
         kwargs = super(PonencicaUpdateView, self).get_form_kwargs()
         kwargs.update(instance={
