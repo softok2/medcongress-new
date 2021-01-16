@@ -5,8 +5,8 @@ from datetime import datetime
 from django.core.mail import EmailMessage
 
 @shared_task
-def Constancia(x,y):
-    congreso=Congreso.objects.all().first()
+def Constancia(titulo):
+    congreso=Congreso.objects.filter(titulo=titulo).first()
     if congreso:
         rel_usuario_congreso=RelCongresoUser.objects.filter(congreso=congreso ).distinct('user')
         
@@ -18,7 +18,7 @@ def Constancia(x,y):
             comienzo=450-(cont/2*19) 
             base=Image.open('MedCongressApp/static/%s'%(congreso.foto_constancia)).convert('RGBA')
             text=Image.new('RGBA',base.size,(255,255,255,0))
-            # nombre_font=ImageFont.truetype('calibri.ttf',40)
+            #nombre_font=ImageFont.truetype('calibri.ttf',40)
             nombre_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 28, encoding="unic")
             # cong.set_variation_by_name('Italic')
             d=ImageDraw.Draw(text)
@@ -35,10 +35,10 @@ def Constancia(x,y):
             usuario.fecha_constancia=datetime.now()
             usuario.save()
             # ////////////////
-            if usuario.user.usuario.email == 'frankhef91@gmail.com':
-                email = EmailMessage('Constancia', 'En este correo se le adjunta la constancia de haber participado en el congreso %s.'%(congreso.titulo), to = [usuario.user.usuario.email])
-                email.attach_file('MedCongressApp/static/congreso/img_constancia/%s.png'%(nombre_img))
-                email.send()
+           
+            email = EmailMessage('Constancia', 'En este correo se le adjunta la constancia de haber participado en el congreso %s.'%(congreso.titulo), to = [usuario.user.usuario.email])
+            email.attach_file('MedCongressApp/static/congreso/img_constancia/%s.png'%(nombre_img))
+            email.send()
 
 
 

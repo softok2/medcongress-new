@@ -1086,6 +1086,6 @@ class AsignarConstancias(validarUser,TemplateView):
     template_name = 'MedCongressAdmin/asig_constancia.html'
 
     def post(self, request, **kwargs):
-
-        prueba=Constancia.apply_async((2,8))
+        titulo= self.request.POST['my_congress']
+        prueba=Constancia.apply_async(args=[titulo])
         return HttpResponse(prueba)
