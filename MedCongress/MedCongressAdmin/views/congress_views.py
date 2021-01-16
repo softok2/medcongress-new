@@ -115,7 +115,7 @@ class CongressCreateView(validarUser,FormView):
             messages.warning(self.request, e)
             return super().form_invalid(form)
 
-class CongressUpdateView(validarUser,UpdateView):
+class CongressUpdateView(validarUser,FormView):
     form_class = CongresoForms
     success_url = reverse_lazy('MedCongressAdmin:congress_list')
     template_name = 'MedCongressAdmin/congres_form.html'
@@ -125,6 +125,7 @@ class CongressUpdateView(validarUser,UpdateView):
     
     def get_form_kwargs(self):
         kwargs = super(CongressUpdateView, self).get_form_kwargs()
+        self.object=Congreso.objects.get(pk=self.kwargs.get('pk'))
         kwargs.update(instance={
             'congreso': self.object,
             'ubicacion': self.object.lugar,
@@ -135,7 +136,7 @@ class CongressUpdateView(validarUser,UpdateView):
     def get_context_data(self, **kwargs):
         context=super().get_context_data(**kwargs)
         imagen=ImagenCongreso.objects.filter(congreso=self.object).first()
-        context['update']=True
+        context['update']=self.object
         if imagen:
             context['imagen']=imagen.imagen
         if self.object.imagen_seg:
@@ -147,6 +148,31 @@ class CongressUpdateView(validarUser,UpdateView):
         if self.object.foto_constancia:
             context['foto_constancia']='/static/%s'%(self.object.foto_constancia)
         return context
+
+    def form_valid(self, form):
+        update_congreso=Congreso.objects.get(pk=self.request.POST['update']) 
+        try:
+            congress=form['congreso'].save(commit=False)
+            imagen=form['imagen_congreso'].save(commit=False)
+            ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
+            if ubic.exists():
+                congress.lugar=ubic.first()
+            else:
+                ubicacion=form['ubicacion'].save(commit=True)
+                congress.lugar=ubicacion    
+            update_congreso=congress
+            update_congreso.save()
+            imagen.congreso=update_congreso
+            if self.request.POST['imagen_congreso-update']:
+               ImagenCongreso.objects.filter(congreso=update_congreso).delete()
+               imagen.save()
+            else:
+                imagen.save()
+            return super().form_valid(form)
+        except Exception as e:
+            messages.warning(self.request, e)
+            return super().form_invalid(form)
+
 
     # def get_context_data(self, **kwargs):
     #     context = super(CountryUpdateView, self).get_context_data(**kwargs)

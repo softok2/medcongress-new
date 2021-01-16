@@ -80,11 +80,11 @@ class CongresForm(forms.ModelForm):
 
  
 class ImagenCongresoForms(forms.ModelForm):
-    imagen=forms.ImageField(required=False)
-    update=forms.BooleanField(required=False)
+    imagen=forms.ImageField()
+    
     class Meta:
         model=ImagenCongreso
-        fields=['imagen','update']       
+        fields=['imagen']       
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # self.fields['imagen'].widget.attrs.update({'class': 'form-control'}) 
@@ -93,14 +93,12 @@ class ImagenCongresoForms(forms.ModelForm):
         
         cleaned_data = super(ImagenCongresoForms, self).clean(*args, **kwargs)
         imagen = cleaned_data.get('imagen', None)
-        update = cleaned_data.get('update', None)
+       
         if imagen:
             w, h = get_image_dimensions(imagen)
             if w != 1920 or h != 1080:
                 self.add_error('imagen',"Esta imagen tiene %s X %s pixel. Debe ser de 1920 X 1080 pixel" %(w,h) )
-        else:
-            if not update:
-                self.add_error('imagen',"Este campo es obligatorio mio" )
+        
 class UbicacionForm(forms.ModelForm):
     direccion=forms.CharField(
                label = 'Lugar',
