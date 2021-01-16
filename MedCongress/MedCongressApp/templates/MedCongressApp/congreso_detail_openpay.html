@@ -555,8 +555,9 @@
                                 <div class="kode-event-blog3">
                                    
                                         <figure>
-                                            <!-- {{ponencia.cod_video|safe }} -->
-                                            <img id="vimeo-{{ponencia.id_video}}" src="" alt="{{ponencia.id_video}}" />
+                                            <img src="{%static '/'%}{{ponencia.imagen }}" alt="Img-{{ponencia.titulo}}" />
+                                            
+                                            <!-- <img id="vimeo-{{ponencia.id_video}}" src="" alt="{{ponencia.id_video}}" /> -->
                                            
                                         </figure>
                                   
@@ -612,7 +613,8 @@
                                 <div class="kode-event-blog3">
                                    
                                         <figure>
-                                            <img id="vimeo-{{ponencia.id_video}}" src="" alt="{{ponencia.id_video}}" />
+                                            <img src="{%static '/'%}{{ponencia.imagen }}" alt="Img-{{ponencia.titulo}}" />
+                                            <!-- <img id="vimeo-{{ponencia.id_video}}" src="" alt="{{ponencia.id_video}}" /> -->
                                         </figure>
                                    
                                     <div class="kode-thumb-caption">
