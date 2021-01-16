@@ -772,7 +772,7 @@ class PerfilUserCreate(FormView):
         secret_key = get_random_string(60, chars)
         subject = 'Bienvenido a MedCongress'
         # html_message = render_to_string('MedCongressApp/email.html', context={'token':secret_key})
-        plain_message = strip_tags('Aviso..... Usted se a creado un usuario en MedCongress entre a esta dirección https://medcongress.com.mx/habilitar_user/%s  para validar su cuenta en MedCongres'%(secret_key) )
+        plain_message = strip_tags('Aviso..... Usted se ha creado un usuario en MedCongress entre a esta dirección https://medcongress.com.mx/habilitar_user/%s  para validar su cuenta en MedCongres'%(secret_key) )
         from_email = ''
         to = user.email
         mail.send_mail(subject, plain_message, from_email, [to])
