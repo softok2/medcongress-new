@@ -35,10 +35,10 @@ def Constancia(x,y):
             usuario.fecha_constancia=datetime.now()
             usuario.save()
             # ////////////////
-           
-            email = EmailMessage('Constancia', 'En este correo se le adjunta la constancia de haber participado en el congreso %s.'%(congreso.titulo), to = [usuario.user.usuario.email])
-            email.attach_file('MedCongressApp/static/congreso/img_constancia/%s.png'%(nombre_img))
-            email.send()
+            if usuario.user.usuario.email == 'frankhef91@gmail.com':
+                email = EmailMessage('Constancia', 'En este correo se le adjunta la constancia de haber participado en el congreso %s.'%(congreso.titulo), to = [usuario.user.usuario.email])
+                email.attach_file('MedCongressApp/static/congreso/img_constancia/%s.png'%(nombre_img))
+                email.send()
 
 
 
