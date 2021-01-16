@@ -33,7 +33,7 @@ from .models import (CategoriaPagoCongreso, Congreso, EspecialidadCongreso,
                      Ponencia, Ponente, RelCongresoCategoriaPago,
                      RelCongresoUser,RelPonenciaPonente,PerfilUsuario,ImagenCongreso,Taller,RelTalleresCategoriaPago,RelTallerUser,DatosIniciales,
                      CategoriaUsuario,Bloque,Moderador,RelTallerPonente,Pais,CuestionarioPregunta,CuestionarioRespuestas,RelPonenciaVotacion,
-                     PreguntasFrecuentes,Ubicacion,AvalCongreso,SocioCongreso,QuienesSomos,Ofrecemos,ImagenQuienesSomos,RelTallerVotacion,MetaPagInicio,MetaPagListCongreso,
+                     PreguntasFrecuentes,Ubicacion,AvalCongreso,SocioCongreso,QuienesSomos,Ofrecemos,Footer,ImagenQuienesSomos,RelTallerVotacion,MetaPagInicio,MetaPagListCongreso,
                      RelCongresoAval,RelCongresoSocio)
 from .pager import Pager
 from .cart import Cart
@@ -1177,6 +1177,25 @@ class GetPerfil(TemplateView):
                             'votacion':votacion_env}
             return JsonResponse(usuario_json, safe=False)
         return TemplateResponse(request, reverse('dashboard'))
+
+class GetContactos(TemplateView):
+    def get(self, request):
+        if request.is_ajax:
+            contactos=Footer.objects.all().first()
+            if contactos:
+                contactos_json={'direccion':contactos.direccion,
+                                'email':contactos.email,
+                                'telefono':contactos.telefono,
+                                'whatsapp':contactos.whatsapp,
+                                }
+            else:contactos_json={'direccion':'',
+                                'email':'',
+                                'telefono':'',
+                                'whatsapp':'',
+                                }
+            return JsonResponse(contactos_json, safe=False)
+        return TemplateResponse(request, reverse('home'))
+
 @method_decorator(login_required,name='dispatch')
 class GetCuestionario(TemplateView):
     template_name= 'MedCongressApp/congreso_cuestionario.html' 

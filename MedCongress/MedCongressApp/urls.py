@@ -6,7 +6,7 @@ AddCart,AddCartTaller,DeletedCart,ConfCart,AvisoPrivacidad,HabilitarUser,Perfil,
 GetCuestionario,SetConstancia,EvaluarPonencia,Resultado_Cuestionario,Get_Constancia,VerTransaccion,GetFactura,
 ViewErrorFact,PerfilUpdateView,CambiarPass,UpdateEvaluarPonencia,UserAutocomplete,ViewErrorRegistrar,RegistroExitoso,
 PonenteAutocomplete,ModeradorAutocomplete,CongresoAutocomplete,PatrocinadorAutocomplete,SocioAutocomplete,ViewTaller,
-EvaluarTaller,UpdateEvaluarTaller,TallerAutocomplete,PonenciaAutocomplete,ViewCart,ContactoExitoso,GetFacturaPrueba)
+EvaluarTaller,UpdateEvaluarTaller,TallerAutocomplete,PonenciaAutocomplete,ViewCart,ContactoExitoso,GetFacturaPrueba,GetContactos)
 
 urlpatterns = [
     
@@ -50,6 +50,8 @@ urlpatterns = [
     path('perfil',Perfil.as_view() , name='perfil'),
     path('transaccion_exitosa',PagoExitoso.as_view() , name='transaccion_exitosa'),
     path('get_perfil', GetPerfil.as_view() , name='GetPerfil'),
+    path('get_contactos', GetContactos.as_view() , name='GetContactos'),
+    
     path('get_factura', GetFactura.as_view() , name='Factura'),
     path('get_factura_prueba/<str:invoice>', GetFacturaPrueba.as_view() , name='FacturaPrueba'),
     path('cuestionario/congreso/<str:path>',GetCuestionario.as_view() , name='Cuestionario'),

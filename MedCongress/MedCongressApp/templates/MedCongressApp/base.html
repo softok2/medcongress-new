@@ -375,12 +375,9 @@ line-height: 28px;
 							<div style="padding: 50px;">
 								<strong class="title">Contacto</strong>
 								<h3>Med Congress</h3>
-								<ul class="address-nav">
-									<li><i class="fa fa-map-marker"></i>Belisario Dominguez  N° Ext.2470, CP 64060
-										Monterrey, N.L.</li>
-									<li><i class="fa fa-envelope-o"></i><a href="mailto:contacto@medcongress.com.mx">soporte@medcongress.com.mx</a></li>
-									<li><i class="fa fa-phone"></i> (81) 8864-5328</li>
-									<li><a target="_blank" href="https://wa.me/+528121092878"><i class="fa fa-whatsapp"></i> (81)2109-2878</a></li>
+
+								<ul class="address-nav" id="ul">
+									
 								</ul>
 								<ul class="twitterfeed-nav">
 									<li><i class="la la-shield"></i> <a href="{%url 'aviso_privacidad'%}">Aviso de Privacidad</a></li>
@@ -452,6 +449,33 @@ line-height: 28px;
 	{% block script%}
 
 	{%endblock%}
+
+	<script type="text/javascript">
+		jQuery(document).ready(function ($) {
+
+
+url = "{% url 'GetContactos'%}";
+        $.get(url, function (data) {
+			texto='';
+			if(data.direccion)
+			texto+=`<li><i class="fa fa-map-marker"></i>`+data.direccion +`</li>`;
+			if(data.email)
+			texto+=`<li><i class="fa fa-envelope-o"></i><a href="mailto:`+data.email+`">`+data.email+`</a></li>`;
+			if(data.data.telefono)
+			texto+=`<li><i class="fa fa-phone"></i> `+data.telefono+`</li>`;
+			if(data.data.whatsapp)
+			texto+=`<li><a target="_blank" href="https://wa.me/+528121092878"><i class="fa fa-whatsapp"></i> `+data.email+`</li>`;
+			$('#ul').html(texto)
+            
+        });
+
+	});
+
+
+</script>
+
+
+
 	<!-- <script>
 		
 
