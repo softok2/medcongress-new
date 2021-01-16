@@ -302,10 +302,9 @@ class Perfil(TemplateView):
     def get_context_data(self, **kwargs):
         
         context = super().get_context_data(**kwargs)
-        congresos=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,is_pagado=True)
+        congresos=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,is_pagado=True).distinct('congreso')
         context['congresos']=congresos
-        for cong in congresos:
-            print(cong.uuid_factura)
+    
         congresos_pendientes=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,is_pagado=False).distinct('congreso')
         context['congresos_pendientes']=congresos_pendientes
         talleres=RelTallerUser.objects.filter(user=self.request.user.perfilusuario,is_pagado=True).distinct('taller')
@@ -323,10 +322,10 @@ class Perfil(TemplateView):
 
         for constancia in constancias:
             congreso=Congreso.objects.get(pk=constancia['congreso'])
-            constancias_env.append({'congreso':congreso})
+            constancias_env.append({'congreso':congreso,
+            'foto_constancia':constancia['foto_constancia']})
         context['constancias']=constancias_env
 
-        facturas_ev=[]
 
         
         # context['ponentes'] = Ponente.objects.all()

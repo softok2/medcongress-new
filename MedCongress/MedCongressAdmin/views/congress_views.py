@@ -1087,5 +1087,11 @@ class AsignarConstancias(validarUser,TemplateView):
 
     def post(self, request, **kwargs):
         titulo= self.request.POST['my_congress']
-        prueba=Constancia.apply_async(args=[titulo])
-        return HttpResponse(prueba)
+        congreso=Congreso.objects.filter(titulo=self.request.POST['my_congress']).first()
+        if congreso:
+            prueba=Constancia.apply_async(args=[titulo])
+            messages.warning(self.request,'Se le ha envió la constancia a todos los que compraron el Congreso %s'%(titulo))
+            return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list'))
+        else:
+            messages.warning(self.request,'Ese Congreso no existe')
+            return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list'))

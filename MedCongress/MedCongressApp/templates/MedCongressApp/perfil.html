@@ -85,7 +85,12 @@ Detalles del Perfil
                         <img src="{% static 'MedCongressApp/images/defaulthombre.png' %}"
                             alt="{{request.user.username}}">
                         {%endif%}
+                        <div style="text-align: center;margin-top: 10px;">
+                            <h6 ><b>Puntos MedCongress</b> </h6>
 
+                            <h3>{%if request.user.perfilusuario.score%}{{request.user.perfilusuario.score}}{%else%} 0 {%endif%} </h3>
+                        </div>
+                        
                     </figure>
 
                     <div class="kf_who_am_des">
@@ -150,13 +155,7 @@ Detalles del Perfil
 
                             </tr>
                             {%endif%}
-                            {%if request.user.perfilusuario.score%}
-                            <tr >
-                                <td align="center" style="border-top: black solid 1px;"> <b>Puntos en MedCongress</b> </td>
-                                <td >{{request.user.perfilusuario.score}}</td>
-
-                            </tr>
-                            {%endif%}
+                           
                            
                         </table>
 
@@ -216,7 +215,7 @@ Detalles del Perfil
                                             {{congreso.congreso.fecha_inicio|date:"Y"}}</a>
                                         <p>{{congreso.congreso.sub_titulo}}</p>
 
-                                        <a style="margin-top: -10px;color: black;" href=""><i class='fa fa-eye'></i><b>Ver Factura</b> </a><br>
+                                        <a style="margin-top: -10px;color: black;"  href="{% static '/facturas/pdf'%}{{congreso.uuid_factura}}"><i class='fa fa-eye'></i><b>Ver Factura</b> </a><br>
                                     </div>
                                 </li>
                                 {%endfor%}
@@ -251,7 +250,7 @@ background-color: #979494;"> <b> MedCongress Constacias</b></h6>
 
                         {%for constancia in constancias%}
                         <li>
-                            <a href="{%url 'Get_Constancia' path=constancia.congreso.path%}">
+                            <a href="{%static '/congreso/img_constancia/'%}{{constancia.foto_constancia}}" target="_black">
                                 <div class="row">
                                     <div class="col-md-3">
 
@@ -266,16 +265,11 @@ background-color: #979494;"> <b> MedCongress Constacias</b></h6>
 
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <div class="like_fb" style="float: left;">
-                                            <span style="display: inline-block;
-                                width: 40px;
-                                height: 40px;
-                                color: #fff;
-                                font-size: 20px;
-                                line-height: 38px;
-                                text-align: center;background-color: #dd332c;"><i class="fa fa-file-pdf-o"></i> </span>
+                                        
+                                           <i class="fa fa-file-pdf-o" style="font-size: 44px;
+                                           color: red;"></i>
 
-                                        </div>
+                                        
                                     </div>
                                     <div class="col-md-9">
 
