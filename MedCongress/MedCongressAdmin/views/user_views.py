@@ -53,7 +53,7 @@ class UsuarioCreateView(validarUser,FormView):
         perfiluser.save() 
         return super(UsuarioCreateView, self).form_valid(form)
 
-class UsuarioUpdateView(validarUser,UpdateView):
+class UsuarioUpdateView(validarUser,FormView):
     form_class = UsuarioForms
     success_url = reverse_lazy('MedCongressAdmin:usuarios_list')
     template_name = 'MedCongressAdmin/usuario_form.html'
@@ -63,6 +63,7 @@ class UsuarioUpdateView(validarUser,UpdateView):
     
     def get_form_kwargs(self):
         kwargs = super(UsuarioUpdateView, self).get_form_kwargs()
+        self.object=PerfilUsuario.objects.get(pk=self.kwargs.get('pk'))
         kwargs.update(instance={
             'perfiluser': self.object,
             'user': self.object.usuario,
@@ -77,8 +78,27 @@ class UsuarioUpdateView(validarUser,UpdateView):
         if self.object.foto:    
             context['imagen_seg_url']='/static/%s'%(self.object.foto)
         context['update']=True
+        context['usuario']=self.object
         return context
 
+    def form_valid(self, form):
+        perfiluser_update=PerfilUsuario.objects.get(pk=self.kwargs.get('pk'))
+        user_update=perfiluser_update.usuario
+        user = form['user'].save(commit=False)
+        perfiluser = form['perfiluser'].save(commit=False)
+        user_update=user
+        perfiluser_update=perfiluser
+
+        ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
+        
+        if ubic.exists():
+            perfiluser_update.ubicacion=ubic.first()
+        else:
+            ubicacion=form['ubicacion'].save(commit=True)
+            perfiluser_update.ubicacion=ubicacion
+        perfiluser_update.usuario = user_update
+        perfiluser_update.save() 
+        return super(UsuarioUpdateView, self).form_valid(form)
 class UsuarioDeletedView(validarUser,DeleteView):
     model = User
     success_url = reverse_lazy('MedCongressAdmin:usuarios_list')

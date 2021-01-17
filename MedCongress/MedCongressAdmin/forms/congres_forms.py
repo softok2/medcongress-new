@@ -181,10 +181,12 @@ class PonenciaForm(forms.ModelForm):
             if bloq and fecha_inicio.date() != bloq.fecha_inicio.date():
                 self.add_error('fecha_inicio', 'La fecha de inicio no coincide  con las del bloque que pertenece %s '%(bloq.fecha_inicio.date()))
                 return
-            if fecha_inicio < congreso.fecha_inicio:
-                self.add_error('fecha_inicio', 'Esta Fecha no puede ser menor  que la Fecha de inicio del Congreso %s'%(congreso.fecha_inicio))
-                return
-
+            try:
+                if fecha_inicio < congreso.fecha_inicio:
+                    self.add_error('fecha_inicio', 'Esta Fecha no puede ser menor  que la Fecha de inicio del Congreso %s'%(congreso.fecha_inicio))
+                    return
+            except Exception as e:
+                self.add_error('fecha_inicio','Entre bien la Fecha')
         except Exception as e:
             self.add_error('error', e)
 

@@ -52,7 +52,7 @@ class PatrocinadorForm(forms.ModelForm):
 class SocioForm(forms.ModelForm):
 
     logo=forms.ImageField(label='Buscar Logo',required=True)
-    url=forms.URLField(label='URL del Patrocinador')
+    url=forms.URLField(label='URL del Socio')
     class Meta:
         model=SocioCongreso
         fields=['nombre','detalle','url','logo']
