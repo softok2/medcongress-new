@@ -73,7 +73,7 @@ class  TallerCreateView(validarUser,FormView):
             self.success_url =  reverse_lazy('MedCongressAdmin:Congres_talleres',kwargs={'path': congreso.path} )
         if self.kwargs.get('pk_block'):
             block=Bloque.objects.get(pk=self.kwargs.get('pk_block'))
-            self.success_url =  reverse_lazy('MedCongressAdmin:Bloque_talleres',kwargs={'path': block.path} )
+            self.success_url =  reverse_lazy('MedCongressAdmin:Bloque_talleres',kwargs={'path': block.path,'tipo':False} )
         return self.success_url 
 
 ########## Vista de las Categorias de Pago de un Congreso #############
@@ -165,11 +165,11 @@ class TallerUpdateView(validarUser,FormView):
         return super(TallerUpdateView, self).form_valid(form)
     def get_success_url(self):
         if self.kwargs.get('pk'):
-            congreso=Congreso.objects.get(pk=self.kwargs.get('pk'))
-            self.success_url =  reverse_lazy('MedCongressAdmin:Congres_talleres',kwargs={'path': congreso.path} )
+            taller=Taller.objects.get(pk=self.kwargs.get('pk'))
+            self.success_url =  reverse_lazy('MedCongressAdmin:Congres_talleres',kwargs={'path': taller.congreso.path} )
         if self.kwargs.get('pk_block'):
             block=Bloque.objects.get(pk=self.kwargs.get('pk_block'))
-            self.success_url =  reverse_lazy('MedCongressAdmin:Bloque_talleres',kwargs={'path': block.path} )
+            self.success_url =  reverse_lazy('MedCongressAdmin:Bloque_talleres',kwargs={'path': block.path,'tipo':False} )
         return self.success_url  
 class TallerPonenteListView(TemplateView):
     template_name= 'MedCongressAdmin/taller_ponentes.html' 

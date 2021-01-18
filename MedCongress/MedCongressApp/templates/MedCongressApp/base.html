@@ -456,15 +456,27 @@ line-height: 28px;
 
 url = "{% url 'GetContactos'%}";
         $.get(url, function (data) {
+			
 			texto='';
-			if(data.direccion)
-			texto+=`<li><i class="fa fa-map-marker"></i>`+data.direccion +`</li>`;
+			if(data.direccion){
+				
+				texto+='<li><i class="fa fa-map-marker"></i>'+data.direccion +'</li>';
+				
+			}
+			
 			if(data.email)
 			texto+=`<li><i class="fa fa-envelope-o"></i><a href="mailto:`+data.email+`">`+data.email+`</a></li>`;
-			if(data.data.telefono)
+			if(data.telefono)
 			texto+=`<li><i class="fa fa-phone"></i> `+data.telefono+`</li>`;
-			if(data.data.whatsapp)
-			texto+=`<li><a target="_blank" href="https://wa.me/+528121092878"><i class="fa fa-whatsapp"></i> `+data.email+`</li>`;
+			if(data.whatsapp)
+			{
+				what=data.whatsapp.replace(/\(/g,"").replace(/\)/g,"").replace(/-/g,'').replace(/\ +/g,'');
+				texto+=`<li><a target="_blank" href="https://wa.me/+`+what+`"><i class="fa fa-whatsapp"></i> `+data.whatsapp+`</li>`;
+
+			}
+			
+				
+			
 			$('#ul').html(texto)
             
         });

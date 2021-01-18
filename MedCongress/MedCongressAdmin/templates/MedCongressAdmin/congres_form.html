@@ -155,7 +155,14 @@
 													</figure>
 
 													<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva
-															Imagen</b> </label>
+															Imagen</b><span
+															id="toggle-method"
+															data-toggle="tooltip"
+															data-placement="top"
+															data-original-title="Palabras separadas por coma(,)">
+															<i
+																class="ft ft-info"></i>
+														</span> </label>
 													{% if form.imagen_congreso.imagen.errors %}<span
 														style="font-size: 15px; color: red;">{{form.imagen_congreso.imagen.errors }}
 													</span>{% endif %}
