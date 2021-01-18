@@ -103,11 +103,11 @@ class UsuarioDeletedView(validarUser,DeleteView):
     model = User
     success_url = reverse_lazy('MedCongressAdmin:usuarios_list')
 
-class UsuarioAsigCongresoView(TemplateView):
+class UsuarioAsigCongresoUserView(TemplateView):
     template_name = 'MedCongressAdmin/asig_congress_form.html'
 
     def get_context_data(self, **kwargs):
-        ctx = super(UsuarioAsigCongresoView, self).get_context_data(**kwargs)
+        ctx = super(UsuarioAsigCongresoUserView, self).get_context_data(**kwargs)
         usuario=PerfilUsuario.objects.get(pk=self.kwargs.get('pk'))
         ctx['usuario'] = usuario
         return ctx

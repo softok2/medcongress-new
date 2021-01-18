@@ -25,7 +25,7 @@ from .views.taller_view import (TalleresListView,TallerCreateView,TallerCategPag
                                    AsignarTallerAddViews,GetPagosT,AsignarTallerDeletedViews,TallerPonenteDeletedView,TallerBloqueDeleted,
                                    ReporteRelTallerUserExcel)
 from .views.ponente_view import (PonentesListView,PonentesCreateView,PonenteDeletedView)
-from .views.user_views import (UsuariosListView,UsuarioCreateView,UsuarioUpdateView,UsuarioDeletedView,UsuarioAsigCongresoView,vTableAsJSON)
+from .views.user_views import (UsuariosListView,UsuarioCreateView,UsuarioUpdateView,UsuarioDeletedView,vTableAsJSON)
 from .views.bloque_views import (BloquesListView,BloqueCreateView,BloqueDeletedView,BloquePonenciasListView,BloqueTalleresListView,
                                    BloqueUpdateView,BloqueModeradoresListView,page_not_found,BloqueModeradoresCreateView,BloqueModeradoresDeletedView,
                                    PonenciaSeleccionarView)
