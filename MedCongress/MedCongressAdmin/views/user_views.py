@@ -88,7 +88,7 @@ class UsuarioUpdateView(validarUser,FormView):
         perfiluser = form['perfiluser'].save(commit=False)
         user_update=user
         perfiluser_update=perfiluser
-
+        user_update.save()
         ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
         
         if ubic.exists():
@@ -96,6 +96,7 @@ class UsuarioUpdateView(validarUser,FormView):
         else:
             ubicacion=form['ubicacion'].save(commit=True)
             perfiluser_update.ubicacion=ubicacion
+
         perfiluser_update.usuario = user_update
         perfiluser_update.save() 
         return super(UsuarioUpdateView, self).form_valid(form)
