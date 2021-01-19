@@ -3,14 +3,25 @@ from .models import Pais,PerfilUsuario,Ubicacion,CategoriaUsuario,Genero
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
 from django.contrib.auth.forms import PasswordResetForm,SetPasswordForm
+from django.utils.html import strip_tags
+from django.core import mail
 
 class EmailValidationOnForgotPassword(PasswordResetForm):
 
     def clean_email(self):
         email = self.cleaned_data['email']
-        if not User.objects.filter(email__iexact=email, is_active=True).exists():
-            
+        user=User.objects.filter(email__iexact=email)
+        if not user.exists(): 
             self.add_error('email', 'No existe usuario con este Email')
+        else:  
+            if not user.first().is_active:
+                subject = 'Bienvenido a MedCongress'
+        # html_message = render_to_string('MedCongressApp/email.html', context={'token':secret_key})
+                plain_message = strip_tags('Aviso..... Usted se ha creado un usuario en MedCongress entre a esta dirección https://medcongress.com.mx/habilitar_user/%s  para validar su cuenta en MedCongres'%(user.first().perfilusuario.activation_key))
+                from_email = ''
+                to = email
+                mail.send_mail(subject, plain_message, from_email, [to])  
+                self.add_error('email', 'Su usuario no esta activado se le ha enviado un correo para su activación')
         return email
 
 class PasswordChangeOnForgotPassword(SetPasswordForm):
