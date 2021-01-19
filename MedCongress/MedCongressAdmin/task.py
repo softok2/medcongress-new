@@ -15,14 +15,14 @@ def Constancia(titulo):
             nombre='%s %s'%(usuario.user.usuario.first_name,usuario.user.usuario.last_name)
             
             cont=len(nombre)
-            comienzo=450-(cont/2*19) 
+            comienzo=1500-(cont/2*19) 
             base=Image.open('MedCongressApp/static/%s'%(congreso.foto_constancia)).convert('RGBA')
             text=Image.new('RGBA',base.size,(255,255,255,0))
-            # nombre_font=ImageFont.truetype('calibri.ttf',40)
-            nombre_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 28, encoding="unic")
+            nombre_font=ImageFont.truetype('calibri.ttf',150)
+            # nombre_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 28, encoding="unic")
             # cong.set_variation_by_name('Italic')
             d=ImageDraw.Draw(text)
-            d.text((comienzo,290),nombre,font=nombre_font,fill=(89, 85, 85))
+            d.text((comienzo,1200),nombre,font=nombre_font,fill=(89, 85, 85))
             
             
             out=Image.alpha_composite(base,text)
@@ -47,9 +47,9 @@ def Constancia(titulo):
             usuario.save()                              
             # ////////////////
            
-            email = EmailMessage('Constancia', 'En este correo se le adjunta la constancia de haber participado en el congreso %s.'%(congreso.titulo), to = [usuario.user.usuario.email])
-            email.attach_file('MedCongressApp/static/congreso/img_constancia/%s.pdf'%(nombre_img))
-            email.send()
+            # email = EmailMessage('Constancia', 'En este correo se le adjunta la constancia de haber participado en el congreso %s.'%(congreso.titulo), to = [usuario.user.usuario.email])
+            # email.attach_file('MedCongressApp/static/congreso/img_constancia/%s.pdf'%(nombre_img))
+            # email.send()
 
 
 

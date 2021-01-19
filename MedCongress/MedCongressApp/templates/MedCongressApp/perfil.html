@@ -18,7 +18,11 @@
     border-bottom: 1px solid #979494;
    
 }
-
+.kf_experience_list a {
+   
+    margin-bottom: 0px;
+    margin-top: 10px;
+}
 </style>
 {%endblock%}
 {% block titulo %}
@@ -214,8 +218,14 @@ Detalles del Perfil
                                             {{congreso.congreso.fecha_inicio|date:"d"}} /
                                             {{congreso.congreso.fecha_inicio|date:"Y"}}</a>
                                         <p>{{congreso.congreso.sub_titulo}}</p>
-
-                                        <a style="margin-top: -10px;color: black;"  href="{% static '/facturas/pdf'%}{{congreso.uuid_factura}}"><i class='fa fa-eye'></i><b>Ver Factura</b> </a><br>
+                                        <div class="row">
+                                        {%for factura in congreso.facturas%}
+                                        <div class="col-md-3">
+                                        <a style="color: black;" target="_black"  href="{% static '/facturas/pdf/'%}{{factura.factura}}.pdf"><i class='fa fa-eye'></i><b>Ver Factura</b> </a>
+                                        <div style="font-size: 10px;">{{factura.factura}}.pdf</div>
+                                    </div>
+                                        {%endfor%}
+                                    </div>
                                     </div>
                                 </li>
                                 {%endfor%}
