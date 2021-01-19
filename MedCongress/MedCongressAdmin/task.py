@@ -19,7 +19,7 @@ def Constancia(titulo):
             base=Image.open('MedCongressApp/static/%s'%(congreso.foto_constancia)).convert('RGBA')
             text=Image.new('RGBA',base.size,(255,255,255,0))
             # nombre_font=ImageFont.truetype('calibri.ttf',150)
-            nombre_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 90, encoding="unic")
+            nombre_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 100, encoding="unic")
             # cong.set_variation_by_name('Italic')
             d=ImageDraw.Draw(text)
             d.text((comienzo,1200),nombre,font=nombre_font,fill=(89, 85, 85))
@@ -44,7 +44,7 @@ def Constancia(titulo):
                 else:
                     usuario.user.score= usuario.user.score+score
                 usuario.user.save()
-            usuario.save()                              
+            usuario.save()                               
             # ////////////////
            
             email = EmailMessage('Constancia', 'En este correo se le adjunta la constancia de haber participado en el congreso %s.'%(congreso.titulo), to = [usuario.user.usuario.email])
@@ -53,6 +53,6 @@ def Constancia(titulo):
 
 
 
-            # ////
+            # ////  
 #         return HttpResponse(Constancia.delay())
     return congreso.titulo   
