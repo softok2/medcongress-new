@@ -219,11 +219,12 @@ class TallerForm(forms.ModelForm):
     titulo=forms.CharField(label='Título')
     fecha_inicio=forms.DateTimeField()
     published=forms.BooleanField(label='Publicado',required=False)
+    score=forms.IntegerField(label='Puntuación del Taller')
     class Meta:
         model=Taller
         fields=['titulo','duracion','fecha_inicio','imagen','published','congreso','detalle','bloque',
         'meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
-        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','cod_video']
+        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','cod_video','foto_constancia','score']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
@@ -234,6 +235,7 @@ class TallerForm(forms.ModelForm):
         self.fields['bloque'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control'})   
         self.fields['published'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['score'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['detalle'].widget.attrs.update({'class': 'form-control','rows':'3'}) 
         self.fields['meta_og_title'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['meta_description'].widget.attrs.update({'class': 'form-control','rows':'3'}) 
@@ -247,7 +249,7 @@ class TallerForm(forms.ModelForm):
         self.fields['meta_og_imagen'].widget.attrs.update({'class': 'form-control '}) 
         self.fields['meta_title'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['cod_video'].widget.attrs.update({'class': 'form-control','rows':'3'}) 
-          
+        self.fields['foto_constancia'].widget.attrs.update({'class': 'form-control',}) 
 
     def clean(self, *args, **kwargs):
         cleaned_data = super(TallerForm, self).clean(*args, **kwargs)

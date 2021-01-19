@@ -523,8 +523,8 @@ class Taller(models.Model):
     meta_keywords=models.TextField(max_length=250,null=True,blank=True)
     meta_og_imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='metas',blank=True, null=True )
     meta_title=models.CharField(max_length=250,null=True,blank=True)
-    
-
+    foto_constancia=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso/img_constancia',null=True)
+    score=models.IntegerField(null=True)
     class Meta:
         verbose_name='taller'
         verbose_name_plural='talleres'
@@ -600,6 +600,9 @@ class RelTallerUser(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     cantidad=models.IntegerField(null=True)
     uuid_factura=models.CharField(max_length=36,null=True)
+    is_constancia=models.BooleanField(null=True)
+    fecha_constancia=models.DateField(null=True)
+    foto_constancia=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso/img_constancia',null=True)
 
 
     def __str__(self):

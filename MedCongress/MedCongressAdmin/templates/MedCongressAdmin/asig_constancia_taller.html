@@ -24,7 +24,7 @@
 			<div class="card">
 				<div class="card-header">
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
-						Asignar Constancia de un Congreso </h1>
+						Asignar Constancia de un Taller</h1>
 						
 					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
 					<div class="heading-elements">
@@ -50,7 +50,7 @@
 					{% endif %}
 											<div class="form-group">
 												<label for=""><b>Filtre
-														Congreso</b></label>
+														Taller</b></label>
 													
 												<input type="text" name="my_congress" class="form-control" required=""
 													id="id_my_congress">
@@ -85,74 +85,13 @@
 <script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
 <script type="text/javascript">
 $(function() {
-	  $("#id_my_user").autocomplete({
-		source: "{% url 'User_autocomp'%}",
-		minLength: 3,
-	  });
-	  $('#id_my_user').change(function () {
-			email = $('#id_my_user').val()
-			$("#id_user option:contains('" + email + "')").attr("selected", true);
-			if ($("#id_user option:selected").text() != email)
-				$("#id_user").val('')
-		});
+	  
 	  $("#id_my_congress").autocomplete({
-            source: "{% url 'Congreso_autocomp'%}",
+            source: "{% url 'Taller_autocomp'%}",
             minLength: 3,
         });
-        $('#id_my_congress').change(function () {
-            email = $('#id_my_congress').val()
-            $("#id_congreso option:contains('" + email + "')").attr("selected", true);
-            if ($("#id_congreso option:selected").text()!= email) 
-            $("#id_congreso").val('')
-
-        });
+        
 	});
-	$(document).ready(function () {
-
-$('#id_my_user').change(function(){
-	email=$('#id_my_user').val()
-$("#id_user option:contains('"+email+"')").attr("selected",true);
-if ($("#id_user option:selected").text()!= email) 
-            $("#id_user").val('')
-});
-
-		{%if usuario %}
-		$("#id_user option[value='{{usuario.id}}']").attr("selected", true);
-		
-		{% endif %}
-
-		var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
-		$.ajaxSetup({
-			beforeSend: function (xhr, settings) {
-				xhr.setRequestHeader("X-CSRFToken", csrftoken);
-			}
-		});
-		$('#id_congreso').change(function () {
-				$('#id_categoria_pago').empty();
-				$('#id_categoria_pago').append($("<option></option").attr('value', '').text('----------'));
-			if ($('#id_congreso').val()) {
-			
-				$.ajax({
-					type: "POST",
-					url: "{% url 'MedCongressAdmin:Get_Pago' %}",
-					data: {
-						'congreso_id': $('#id_congreso').val(), // from form
-					},
-					success: function (data) {
-
-						for (var i = 0; i < data.length; i++) {
-
-							$('#id_categoria_pago').append($("<option></option").attr('value', data[i].id).text(data[i].nombre))
-						}
-					}
-				});
-
-
-			}
-
-
-
-		});
-	});
+	
 </script>
 {% endblock %}

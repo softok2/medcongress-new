@@ -22,6 +22,7 @@ from openpyxl import Workbook
 from openpyxl.styles import (Alignment, Border, Font, PatternFill, Protection,
                              Side)
 from MedCongressAdmin.apps import validarUser
+from MedCongressAdmin.task import Constanciataller
 
 
 class TalleresListView(validarUser,ListView):
@@ -142,6 +143,8 @@ class TallerUpdateView(validarUser,FormView):
         if self.object.imagen:
             context['imagen_seg_url']='/static/%s'%(self.object.imagen)
         context['update']=self.object.bloque
+        if self.object.foto_constancia:
+            context['foto_constancia']='/static/%s'%(self.object.foto_constancia)
         return context
 
     def form_valid(self, form):
@@ -318,3 +321,17 @@ class ReporteRelTallerUserExcel(TemplateView):
         response["Content-Disposition"] = "attachment; filename=RelTallerUser.xlsx"
         wb.save(response)
         return response
+
+class AsignarConstanciasTaller(validarUser,TemplateView):
+    template_name = 'MedCongressAdmin/asig_constancia_taller.html'
+
+    def post(self, request, **kwargs):
+        titulo= self.request.POST['my_congress']
+        taller=Taller.objects.filter(titulo=self.request.POST['my_congress']).first()
+        if taller:
+            prueba=Constanciataller.apply_async(args=[titulo])
+            messages.warning(self.request,'Se le ha envió la constancia a todos los que participaron el Taller %s'%(titulo))
+            return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_taller'))
+        else:
+            messages.warning(self.request,'Ese Taller no existe')
+            return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_taller'))

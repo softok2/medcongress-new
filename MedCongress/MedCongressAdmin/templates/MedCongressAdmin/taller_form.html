@@ -106,6 +106,39 @@
 													{{form.taller.duracion }}
 												</div>
 											</div>
+											<div class="col-sd-1"></div>
+											<div class="col-sm-3 ">
+												<div class="form-group">
+													{%if foto_constancia%}
+													<label><b>Imagen de la Constancia Actual </b> </label>
+													<figure class="col-lg-3 col-md-6 col-12" itemprop="associatedMedia"
+														itemscope=""></figure>
+													<a href="{{foto_constancia}}" itemprop="contentUrl"
+														data-size="480x360">
+														<img class="img-thumbnail img-fluid" src="{{foto_constancia}}"
+															itemprop="thumbnail" alt="Image description">
+													</a>
+
+													</figure>
+
+													<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva
+															Imagen de Constancia</b> </label>
+													{% if form.taller.foto_constancia.errors %}<span
+														style="font-size: 15px; color: red;">{{form.taller.foto_constancia.errors }}
+													</span>{% endif %}
+													<input type="file" name="taller-foto_constancia" accept="image/*"
+														class=" form-control " id="id_taller-foto_constancia">
+													{% else%}
+													<label for="{{form.taller.foto_constancia.id_for_label }}"><b>Imagen
+															de la Constancia</b>
+															{% if form.taller.foto_constancia.errors %}
+														<span style="font-size: 15px; color: red;">{{ form.taller.foto_constancia.errors }}
+														</span>{% endif %} </label>
+
+													{{form.taller.foto_constancia }}
+													{%endif%}
+												</div>
+											</div>
 
 										</div>
 										<div class="row">
@@ -254,6 +287,17 @@
 														</span>{% endif %} </label>
 
 													{{form.taller.cod_video }}
+												</div>
+											</div>
+											<div class="col-sm-3 ">
+												<div class="form-group">
+													<label
+														for="{{form.taller.score.id_for_label }}"><b>Puntuación del Taller</b>{% if form.ponencia.score.errors %}
+														<span
+															style="font-size: 15px; color: red;">{{ form.taller.score.errors }}
+														</span>{% endif %} </label>
+
+													{{form.taller.score }}
 												</div>
 											</div>
 										</div>
