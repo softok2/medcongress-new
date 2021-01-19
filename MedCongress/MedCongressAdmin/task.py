@@ -47,9 +47,9 @@ def Constancia(titulo):
             usuario.save()                              
             # ////////////////
            
-            # email = EmailMessage('Constancia', 'En este correo se le adjunta la constancia de haber participado en el congreso %s.'%(congreso.titulo), to = [usuario.user.usuario.email])
-            # email.attach_file('MedCongressApp/static/congreso/img_constancia/%s.pdf'%(nombre_img))
-            # email.send()
+            email = EmailMessage('Constancia', 'En este correo se le adjunta la constancia de haber participado en el congreso %s.'%(congreso.titulo), to = [usuario.user.usuario.email])
+            email.attach_file('MedCongressApp/static/congreso/img_constancia/%s.pdf'%(nombre_img))
+            email.send()
 
 
 
