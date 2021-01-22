@@ -553,14 +553,14 @@
                             <div class="col-md-4 {{forloop.counter}}">
                                 <!-- KODE_EVENT_BLOG2 START-->
                                 <div class="kode-event-blog3">
-                                   
+                                   <a  href="{% url 'View_ponencia' ponencia.path %}">
                                         <figure>
                                             <img src="{%static '/'%}{{ponencia.imagen }}" alt="Img-{{ponencia.titulo}}" />
                                             
                                             <!-- <img id="vimeo-{{ponencia.id_video}}" src="" alt="{{ponencia.id_video}}" /> -->
                                            
                                         </figure>
-                                  
+                                    </a>
                                     <div class="kode-thumb-caption">
                                         <a href="{% url 'View_ponencia' ponencia.path %}">
                                             <h4>{{ponencia.titulo }}</h4>

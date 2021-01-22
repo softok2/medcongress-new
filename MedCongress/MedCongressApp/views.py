@@ -34,7 +34,7 @@ from .models import (CategoriaPagoCongreso, Congreso, EspecialidadCongreso,
                      RelCongresoUser,RelPonenciaPonente,PerfilUsuario,ImagenCongreso,Taller,RelTalleresCategoriaPago,RelTallerUser,DatosIniciales,
                      CategoriaUsuario,Bloque,Moderador,RelTallerPonente,Pais,CuestionarioPregunta,CuestionarioRespuestas,RelPonenciaVotacion,
                      PreguntasFrecuentes,Ubicacion,AvalCongreso,SocioCongreso,QuienesSomos,Ofrecemos,Footer,ImagenQuienesSomos,RelTallerVotacion,MetaPagInicio,MetaPagListCongreso,
-                     RelCongresoAval,RelCongresoSocio)
+                     RelCongresoAval,RelCongresoSocio,ImagenHome)
 from .pager import Pager
 from .cart import Cart
 from django_xhtml2pdf.views import PdfMixin
@@ -104,6 +104,7 @@ class Home(TemplateView):
         context['quienes_somos_imagenes']=ImagenQuienesSomos.objects.filter(q_somos=quienes_somos)
         context['ofrecemos'] = Ofrecemos.objects.all()
         context['metadatos']= MetaPagInicio.objects.all().first()
+        context['imagen_home']= ImagenHome.objects.all().first().imagen
         return context
     def post(self, request, **kwargs):
         subject = self.request.POST['asunto'] 
@@ -205,76 +206,7 @@ class PagoExitoso(TemplateView):
         # return HttpResponse(response)
         if 'http_code' not in response_dic:
             return HttpResponseRedirect(reverse('FacturaPrueba',kwargs={'invoice':invoice_id }))
-#         # ///////////////////
-#             url1='https://%s/v1/%s/invoices/v33/'%(URL_API,ID_KEY)
-#             headers={'Content-type': 'application/json'}
-#             response=requests.get(url=url1,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
-#             url1='https://%s/v1/%s/invoices/v33/?id=%s'%(URL_API,ID_KEY,invoice_id)
-#             response_d=response.json()
-#             if 'http_code' in response_d:
-#                 self.request.session["error_facturacion"]= response_d['description']
-#                 return HttpResponseRedirect(reverse('Error_facturacion'))
-#             headers={'Content-type': 'application/json'}
-#             response2=requests.get(url=url1,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
-#             response_di=response2.json()
-#             # return HttpResponse(response2)
-#             # if 'http_code' in response_di:
-#             #     self.request.session["error_facturacion"]= response_di['description']
-#             #     return HttpResponseRedirect(reverse('Error_facturacion'))
-#             if response_di[0]['status']=='error':
-#                 self.request.session["error_facturacion"]= response_di[0]['message']
-#                 return HttpResponseRedirect(reverse('Error_facturacion'))
-#             # return HttpResponse(response2)
-#             para={
-#                 "getUrls":True
-#                 }
-#             if 'uuid' not in response_di[0]:
-#                 return HttpResponseRedirect(reverse('FacturaPrueba',kwargs={'invoice':invoice_id }))
-            
-#             for cart in self.request.session["car1"][1]:
-#                     if str(cart['tipo_evento']) == 'Congreso':
-#                         congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
-#                         categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-#                         pagar_congreso=RelCongresoUser.objects.create(user=self.request.user.perfilusuario,congreso=congreso,categoria_pago=categoria,uuid_factura=invoice_id)
-#                         pagar_congreso.save()
-#                     if str(cart['tipo_evento']) == 'Taller':
-#                         taller=Taller.objects.filter(id=cart['id_congreso']).first()
-#                         categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-#                         pagar_congreso=RelTallerUser.objects.create(user=self.request.user.perfilusuario,taller=taller,categoria_pago=categoria,uuid_factura=invoice_id)
-#                         pagar_congreso.save()
 
-#             url2='https://%s/v1/%s/invoices/v33/%s/?getUrls=True'%(URL_API,ID_KEY,response_di[0]['uuid'])
-#             # return HttpResponse(url2)
-#             headers={'Content-type': 'application/json'}
-#             response3=requests.get(url=url2,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(para),headers=headers)
-#             # return HttpResponse(response3)
-#             response_dic=response3.json()
-#             if 'http_code' in response_dic:
-#                 self.request.session["error_facturacion"]= response_dic['description']
-#                 return HttpResponseRedirect(reverse('Error_facturacion'))
-#             self.factura=response_dic
-#             response_xml = requests.get(response_dic['public_xml_link'])
-#             with open('MedCongressApp/static/facturas/xml/%s.xml'%(invoice_id), 'wb') as file:
-#                 file.write(response_xml.content)
-#             response_pdf = requests.get(response_dic['public_pdf_link'], stream=True)   
-#             with open('MedCongressApp/static/facturas/pdf/%s.pdf'%(invoice_id), 'wb') as fd:
-#                 for chunk in response_pdf.iter_content(2000):
-#                     fd.write(chunk)
-
-
-# # ///////////////// EMAIL
-
-#             email = EmailMessage('Facturas de MedCongress', 'En este correo se le adjunta la factura por la compra que ha realizado en nuestro sitio.', to = [self.request.user.email])
-#             email.attach_file('MedCongressApp/static/facturas/xml/%s.xml'%(invoice_id))
-#             email.attach_file('MedCongressApp/static/facturas/pdf/%s.pdf'%(invoice_id))
-#             email.send()
-
-
-# # /////////////
-#             return HttpResponseRedirect(reverse('Factura'))
-
-
-# # ///////////////////////////////////
         else:
             self.request.session["error_facturacion"]= response_dic['description']
             return HttpResponseRedirect(reverse('Error_facturacion'))
@@ -327,12 +259,20 @@ class Perfil(TemplateView):
             context['talleres_pon']=talleres_pon
         constancias=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,is_constancia=True).values('congreso','foto_constancia').distinct()
         constancias_env=[]
+        constancias_taller=RelTallerUser.objects.filter(user=self.request.user.perfilusuario,is_constancia=True).values('taller','foto_constancia').distinct()
+        constancias_taller_env=[]
 
         for constancia in constancias:
             congreso=Congreso.objects.get(pk=constancia['congreso'])
             constancias_env.append({'congreso':congreso,
             'foto_constancia':constancia['foto_constancia']})
         context['constancias']=constancias_env
+
+        for constancia in constancias_taller:
+            taller=Taller.objects.get(pk=constancia['taller'])
+            constancias_taller_env.append({'taller':taller,
+            'foto_constancia':constancia['foto_constancia']})
+        context['constancias_taller']=constancias_taller_env
 
 
         

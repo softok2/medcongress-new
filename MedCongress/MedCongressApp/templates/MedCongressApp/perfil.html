@@ -297,6 +297,44 @@ background-color: #979494;"> <b> MedCongress Constacias</b></h6>
                         </li>
                         {%endfor%}
 
+                        {%for constancia in constancias_taller%}
+                        <li>
+                            <a href="{%static '/congreso/img_constancia/'%}{{constancia.foto_constancia}}" target="_black">
+                                <div class="row">
+                                    <div class="col-md-3">
+
+
+                                    </div>
+                                    <div class="col-md-9">
+                                        <h6><b>Taller</b> </h6>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        
+                                           <i class="fa fa-file-pdf-o" style="font-size: 44px;
+                                           color: red;"></i>
+
+                                        
+                                    </div>
+                                    <div class="col-md-9">
+
+
+                                        <p>{{constancia.taller.titulo}}</p>
+
+                                    </div>
+
+                                </div>
+
+
+
+                            </a>
+
+                        </li>
+                        {%endfor%}
 
 
 

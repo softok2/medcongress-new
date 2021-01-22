@@ -755,3 +755,13 @@ class Footer(models.Model):
 
     def __str__(self):
         return 'Contactos del Footer'
+
+class ImagenHome(models.Model):
+    imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso' ,verbose_name='imagen', null=False)
+
+    class Meta:
+        verbose_name='Imagen Home'
+        
+
+    def __str__(self):
+        return 'Imagen Home'

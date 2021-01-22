@@ -11,11 +11,10 @@
 	<div class="row breadcrumbs-top">
 	  <div class="breadcrumb-wrapper col-12">
 		<ol class="breadcrumb">
-			
-		  <li class="breadcrumb-item"> Inf. del Footer
-		  </li>
-		  
 		
+		  
+		<li class="breadcrumb-item active"> Imagen|Pag. de Inicio</a>
+		</li>
 		
 		</ol>
 	  </div>
@@ -37,7 +36,7 @@
                 <div class="col-12">
                     <div class="row">
                         <div class="col-10">
-                            <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Footer</h1>
+                            <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Imagen del Home</h1>
                             
                         </div>
                         
@@ -48,23 +47,22 @@
                         <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    {%if footer%}
-                                    {%for foot in footer%}
-                                    <h4> <b>Dirección</b>  <small>{{foot.direccion}}</small></h4>
-                                    <h4> <b>Email</b>  <small>{{foot.email}}</small></h4>
-                                  
-                                    <h4> <b>Teléfono</b>  <label >{{foot.telefono}}</label></h4>
-                                    <h4> <b>Whatsapp</b>  <label >{{foot.whatsapp}}</label></h4>
-                                    <a id="edit-btn" type="button" class="btn btn-success" title="Editar Valores" href=" {% url 'MedCongressAdmin:footer_edit' pk=foot.pk %}"
-                                    style="float: left; padding:7px;font-size: 20px; margin-top: 30px;">
-                                    <i class="ft ft-edit"></i> Editar  </a>
-                                    
+                                    {%if imagenes%}
+                                    {% for imagen in imagenes%}
+                                    <figure class="col-lg-3 col-md-6 col-12" itemprop="associatedMedia" itemscope="" >
+                                      <a href="{% static '/'%}{{imagen.imagen}}" itemprop="contentUrl" data-size="480x360">
+                                          <img class="img-thumbnail img-fluid" src="{% static '/'%}{{imagen.imagen}}" itemprop="thumbnail" alt="Image description">
+                                      </a> 
+                                      <button class="btn " onclick="deleteItem('{{imagen.pk}}')"> <i class="icon icon-eliminar"></i></button>
+                                    </figure>
                                    
                                     {%endfor%}
-                                   
+                                    <a id="edit-btn" type="button" class="btn btn-success" title="Editar Valores" href=" {% url 'MedCongressAdmin:imagen_edit' pk=imagenes.all.0.pk %}"
+                                    style="float: left; padding:7px;font-size: 20px; margin-top: 30px;">
+                                    <i class="ft ft-edit"></i> Editar  </a>
                               
                                 {%else%}
-                                <a id="edit-btn" type="button" class="btn btn-success" title="Editar Valores" href=" {% url 'MedCongressAdmin:footer_add' %}"
+                                <a id="edit-btn" type="button" class="btn btn-success" title="Editar Valores" href=" {% url 'MedCongressAdmin:imagen_home_add' %}"
                                     style="float: left; padding:7px;font-size: 20px; margin-top: 30px;">
                                     <i class="ft ft-plus"></i>Adicionar
                                 </a>
@@ -101,14 +99,7 @@
             }
         });
 
-        $('#add-btn').click(function () {
-            location.href = "{% url 'MedCongressAdmin:cat_pago_add'   %}";
-        });
-        $('#add_img-btn').click(function () {
-            location.href = "{% url 'MedCongressAdmin:imagen-quienes_somos_add'   %}";
-        });
-        
-        dataTable = $('.zero-configuration').DataTable();
+      
     });
     function deleteItem(pk) {
         swal({
@@ -134,7 +125,7 @@
         })
             .then((isConfirm) => {
                 if (isConfirm) {
-                    url = "{% url 'MedCongressAdmin:imagen_quienes_somos_deleted' pk=0 %}";
+                    url = "{% url 'MedCongressAdmin:imagen_deleted' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                        
                        swal("Eliminado!", "Este elemento ha sido eliminado.", "success");

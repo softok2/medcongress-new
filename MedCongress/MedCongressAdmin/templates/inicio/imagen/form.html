@@ -1,5 +1,5 @@
 {% extends 'MedCongressAdmin/base.html' %}
-{% block title %}{% if update %}Editar Footer {%else%} Adicionar Footer{%endif%}{% endblock %}
+{% block title %}{% if update %}Cambiar Imagen {%else%} Adicionar Imagen{%endif%}{% endblock %}
 {% load static %}
 {% block styles %}
 {% endblock %}
@@ -10,10 +10,10 @@
 	  <div class="breadcrumb-wrapper col-12">
 		<ol class="breadcrumb">
 			
-		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:footer_list'%}"> Inf. del Footer</a>
+		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:imagen_list'%}"> Imagen|Pag. de Inicio</a>
 		  </li>
 		  
-		<li class="breadcrumb-item active">{% if update %}Actualizar Inf. del Footer {%else%} Adicionar Inf. del Footer{%endif%}</a>
+		<li class="breadcrumb-item active">{% if update %}Actualizar Imagen {%else%} Adicionar Imagen{%endif%}</a>
 		</li>
 		
 		</ol>
@@ -26,7 +26,7 @@
 			<div class="card">
 				<div class="card-header">
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
-						{% if update %}Editar Footer {%else%} Adicionar Footer{%endif%}</h1>
+						{% if update %}Actualizar Imagen {%else%} Adicionar Imagen{%endif%}</h1>
 
 					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
 					<div class="heading-elements">
@@ -38,61 +38,41 @@
 				</div>
 				<div class="card-content collapse show">
 					<div class="card-body">
-						<form id="country-form" method="POST">
+						<form id="country-form" method="POST" enctype="multipart/form-data">
 							{% csrf_token %}
 							<div class="form-body">
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
-											<label
-												for="{{form.direccion.id_for_label }}"><b>Dirección</b>{% if form.direccion.errors %}
-												<span
-													style="font-size: 15px; color: red;">{{ form.direccion.errors }}
-												</span>{% endif %} </label>
-
-											{{form.direccion }}
+											
+												
+												{%if imagen%}
+										
+											<label for="imagen-clear_id">Actualmente</label>
+											<img src="{%static '/'%}{{imagen}} " alt="sdfsdfsdfsd" class="img-fluid">
+				
+											<label for="imagen-clear_id">Modificar</label>
+											<input type="file" name="imagen" accept="image/*" id="id_imagen">
+												
+											{%else%}
+												{{ form.imagen }}
+												{%endif%}
+												{% if form.imagen.errors %}
+												<p class="text-right">
+													{% for error in form.imagen.errors %}
+													<small class="danger text-muted">{{ error|escape }}</small>
+													{% endfor %}
+												</p>
+											{%endif%}
 										</div>
 									</div>
-									<div class="col-md-6">
-										<div class="form-group">
-											<label
-												for="{{form.email.id_for_label }}"><b>{{form.email.label }}</b>{% if form.email.errors %}
-												<span
-													style="font-size: 15px; color: red;">{{ form.email.errors }}
-												</span>{% endif %} </label>
-
-											{{form.email }}
-										</div>
-									</div>
+									
 								</div>
-								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group">
-											<label
-												for="{{form.telefono.id_for_label }}"><b>Teléfono </b>{% if form.telefono.errors %}
-												<span
-													style="font-size: 15px; color: red;">{{ form.telefono.errors }}
-												</span>{% endif %} </label>
-
-											{{form.telefono }}
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group">
-											<label
-												for="{{form.whatsapp.id_for_label }}"><b>{{form.whatsapp.label }}</b>{% if form.whatsapp.errors %}
-												<span
-													style="font-size: 15px; color: red;">{{ form.whatsapp.errors }}
-												</span>{% endif %} </label>
-
-											{{form.whatsapp }}
-										</div>
-									</div>
-								</div>
+								
 
 									<div class="form-actions">
 										<div class="text-right">
-											<a id="atras" type="button" class="btn btn-danger " href="{%url 'MedCongressAdmin:footer_list'%}">Cancelar
+											<a id="atras" type="button" class="btn btn-danger " href="{%url 'MedCongressAdmin:imagen_list'%}">Cancelar
 												<i class="ft-x position-right"></i>
 											</a>
 											<button id="save" type="submit" class="btn btn-primary">Guardar

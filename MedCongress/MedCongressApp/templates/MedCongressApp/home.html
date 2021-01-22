@@ -1,5 +1,7 @@
 {% extends "MedCongressApp/base.html"%}
 {% load static %}
+{%block css%}
+{%endblock%}
 {% block titulo %}
 Inicio
 {%endblock%}
@@ -42,7 +44,16 @@ Inicio
 {%endblock%}
 {% block contenido %}
 <div class="kode-event-time"
-	style=" background:url({% static 'congreso/internacional.jpg'%}) no-repeat 50% 0; ">
+	style=" background:url({% static '/'%}{{imagen_home}})no-repeat  center;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	height: 100%;
+	width: 100% ;
+	text-align: center;
+	margin-top:50px;
+  ">
 	<div class="container">
 		<div class="row">
 

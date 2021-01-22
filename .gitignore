@@ -1,8 +1,7 @@
 /MedCongress/MedCongressApp/__pycache__
 /MedCongress/MedCongress/__pycache__
 /MedCongress/MedCongress/settings.py
-/MedCongress/MedCongressApp/backends.py
-/MedCongress/MedCongressApp/claves.py
+
 /MedCongress/MedCongressApp/migrations/__pycache__
 /.history
 /MedCongress/MedCongressAdmin/__pycache__
@@ -18,7 +17,5 @@
 /MedCongress/MedCongressAdmin/views_nomencladores/__pycache__
 /MedCongress/MedCongressApp/static/ponencias
 /MedCongress/MedCongressApp/static/talleres
+/MedCongress/MedCongressApp/static/programas
 
-
-
-backends.py

@@ -38,6 +38,8 @@ from .views_nomencladores.esp_evento_views import (EspEventoListView,EspEventoCr
 from .views_nomencladores.tipo_evento_views import (TipoEventoListView,TipoEventoCreateView,TipoEventoDeletedView,TipoEventoUpdateView)
 from .views_nomencladores.esp_usuario_views import (EspUsuarioListView,EspUsuarioCreateView,EspUsuarioDeletedView,EspUsuarioUpdateView)
 from .views_inicio.quienes_somos_views import (QuienesSomosListView,QuienesSomosUpdateView,QuienesSomosCreateView,QuienesSomosImagenCreateView,QuienesSomosImagenDeletedView)
+from .views_inicio.imagen_home_view import ImagenListView,ImagenCreateView,ImagenUpdateView,ImagenDeletedView
+
 from .views_inicio.footer_views import (FooterListView,FooterUpdateView,FooterCreateView)
 from .views_inicio.meta_datos_views import (MetaInicioListView,MetaInicioUpdateView,MetaInicioCreateView,MetaListarListView,MetaListarUpdateView,MetaListarCreateView)
 
@@ -287,6 +289,14 @@ urlpatterns = [
      path('footer', FooterListView.as_view(), name='footer_list'),
      path('footer/editar/<int:pk>', FooterUpdateView.as_view(), name='footer_edit'),
     path('footer/adicionar',FooterCreateView.as_view(), name='footer_add'), 
+
+    #ImagenInicio
+    path('imagen_inicio', ImagenListView.as_view(), name='imagen_list'),
+    path('imagen_inicio/editar/<int:pk>', ImagenUpdateView.as_view(), name='imagen_edit'),
+    path('imagen_inicio/adicionar',ImagenCreateView.as_view(), name='imagen_home_add'), 
+    path('imagen_inicio/deleted/<int:pk>',ImagenDeletedView.as_view(), name='imagen_deleted'), 
+    
+
 
     #Meta Pag Inicio
      path('meta_pag_inicio', MetaInicioListView.as_view(), name='meta_pag_inicio_list'),

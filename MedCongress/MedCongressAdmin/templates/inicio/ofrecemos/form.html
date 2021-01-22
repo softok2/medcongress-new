@@ -4,13 +4,29 @@
 {% block styles %}
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+			
+		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:ofrecemos_list'%}"> Ofrecemos | Pag. de Inicio</a>
+		  </li>
+		  
+		<li class="breadcrumb-item active">{% if update %}Actualizar Ofrecemos | Pag. de Inicio {%else%} Adicionar Ofrecemos | Pag. de Inicio{%endif%}</a>
+		</li>
+		
+		</ol>
+	  </div>
+	</div>
+  </div>
 <section class="multiple-input-with-labels" id="multiple-input-with-labels">
 	<div class="row">
 		<div class="col-12">
 			<div class="card">
 				<div class="card-header">
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
-						{% if update %}Editar Ofrecemos | Página de Inicio {%else%} Adicionar  Ofrecemos | Página de Inicio{%endif%}</h1>
+						{% if update %}Actualizar Ofrecemos | Página de Inicio {%else%} Adicionar  Ofrecemos | Página de Inicio{%endif%}</h1>
 
 					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
 					<div class="heading-elements">
