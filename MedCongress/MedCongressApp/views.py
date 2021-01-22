@@ -104,7 +104,9 @@ class Home(TemplateView):
         context['quienes_somos_imagenes']=ImagenQuienesSomos.objects.filter(q_somos=quienes_somos)
         context['ofrecemos'] = Ofrecemos.objects.all()
         context['metadatos']= MetaPagInicio.objects.all().first()
-        context['imagen_home']= ImagenHome.objects.all().first().imagen
+        imagen = ImagenHome.objects.all()
+        if imagen.exists():
+            context['imagen_home']= imagen.first().imagen
         return context
     def post(self, request, **kwargs):
         subject = self.request.POST['asunto'] 
