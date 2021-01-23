@@ -385,7 +385,7 @@ def GetPagos(request):
        
         results = []
         for cat in categoria:
-            results.append({'nombre':cat.categoria.nombre,'id':cat.categoria.pk})
+            results.append({'nombre':cat.categoria.nombre,'id':cat.categoria.pk,'moneda':cat.moneda})
             data = json.dumps(results)
     mimetype = "application/json"
     return HttpResponse(data, mimetype)   

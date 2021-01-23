@@ -35,7 +35,7 @@
                     <div class="row">
                         <div class="col-10">
                             <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Listado
-                                de las Categorías de pago del Congreso </h1>
+                                de las Categorías de pago del Taller </h1>
                             <h3 style="font-style: italic;">{{congres.titulo}}</h3>
                         </div>
                         <div class="col-2">
@@ -64,7 +64,7 @@
                                                 <th>Categoría</th>
                                                 <th>Precio</th>
                                                 <th>Moneda</th>
-                                                
+                                                <th>Operaciones</th>
                                                
                                             </tr>
                                         </thead>
@@ -76,7 +76,16 @@
                                                 <td>{{ cat_pago.categoria.nombre }}</td>
                                                 <td>${{ cat_pago.precio }}</td>
                                                 <td>{{cat_pago.moneda}}</td>
-                                                
+                                                <td style="vertical-align: middle;">
+                                                    <a href="{% url 'MedCongressAdmin:taller_cat_pago_editar' path=congres.path pk=cat_pago.pk  %}"
+                                                        title="Editar" style="margin-left: 5px;"><i class="icon-editar" style="padding: 15px;"></i></a>
+                                                    <a id="del_{{ cat_pago.pk }}"
+                                                        href="javascript:deleteItem('{{ cat_pago.pk }}')"
+                                                        title="Eliminar" style="margin-left: 5px;">
+                                                        <i class="icon-eliminar" style="padding: 15px;"></i>
+                                                    </a>
+
+                                                </td>
                                                
                                             </tr>
                                             {% endfor %}
@@ -88,6 +97,7 @@
                                                 <th>Categoría</th>
                                                 <th>Precio</th>
                                                 <th>Moneda</th>
+                                                <th>Operaciones</th>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -173,7 +183,7 @@
         })
             .then((isConfirm) => {
                 if (isConfirm) {
-                    url = "{% url 'MedCongressAdmin:country_delete' pk=0 %}";
+                    url = "{% url 'MedCongressAdmin:taller_cat_pago_eliminar' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                         dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
                         swal("Eliminado!", "Este elemento ha sido eliminado.", "success");

@@ -11,7 +11,7 @@ from  MedCongressApp.models import (Congreso,Ubicacion,ImagenCongreso,TipoCongre
                     
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
-
+from django.core.exceptions import NON_FIELD_ERRORS
         
 class CongresForm(forms.ModelForm):
     imagen_seg=forms.ImageField(label='Buscar Imagen',required=False)
@@ -370,7 +370,7 @@ class CongresoCategPagoForm(forms.ModelForm):
     class Meta:
         model=RelCongresoCategoriaPago
         fields=['categoria','congreso','precio','moneda']
-
+       
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
@@ -381,15 +381,13 @@ class CongresoCategPagoForm(forms.ModelForm):
         self.fields['moneda'].widget.attrs.update({'class': 'form-control'}) 
         
     def clean(self, *args, **kwargs):
+      
         cleaned_data = super(CongresoCategPagoForm, self).clean(*args, **kwargs)
-        categoria = cleaned_data.get('categoria', None)
-        congreso = cleaned_data.get('congreso', None)
-        moneda = cleaned_data.get('moneda', None)
-        update=cleaned_data.get('update', None)
-        if update=='false':
-            if RelCongresoCategoriaPago.objects.filter(congreso=congreso,categoria=categoria,moneda=moneda).exists():
-                self.add_error('categoria', 'Ya existe esta categoria de pago en este Congreso con esta moneda')
-     
+        precio=cleaned_data.get('precio', None)
+
+        if precio<0:
+            self.add_error('precio', ' El PRECIO debe ser valor positivo')
+        
 class TallerCategPagoForm(forms.ModelForm):
     categoria=forms.ModelChoiceField(queryset=CategoriaPagoCongreso.objects.all(),label='Categoría de Pago')
     
@@ -405,6 +403,14 @@ class TallerCategPagoForm(forms.ModelForm):
         self.fields['taller'].widget.attrs.update({'class': 'form-control','style':'display:none'}) 
         self.fields['precio'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['moneda'].widget.attrs.update({'class': 'form-control'}) 
+        
+    def clean(self, *args, **kwargs):
+      
+        cleaned_data = super(TallerCategPagoForm, self).clean(*args, **kwargs)
+        precio=cleaned_data.get('precio', None)
+
+        if precio<0:
+            self.add_error('precio', ' El PRECIO debe ser valor positivo')
         
 class UserForm(forms.ModelForm):
     first_name=forms.CharField(
@@ -578,6 +584,7 @@ class AsignarCongresoForms(forms.ModelForm):
     def clean(self, *args, **kwargs):
         cleaned_data = super(AsignarCongresoForms, self).clean(*args, **kwargs)
         congreso = cleaned_data.get('congreso', None)
+        cantidad = cleaned_data.get('cantidad', None)
         user = cleaned_data.get('user', None)
        
        
@@ -586,6 +593,8 @@ class AsignarCongresoForms(forms.ModelForm):
 
         if not user:
             self.add_error('user', 'No existe ese Usuario')
+        if cantidad<0:
+            self.add_error('cantidad', 'El Campo CANTIDAD debe tener un valor positivo')
    
 class AsignarTallerForms(forms.ModelForm):
     user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Email del Usuario',required=False)
@@ -608,12 +617,15 @@ class AsignarTallerForms(forms.ModelForm):
         cleaned_data = super(AsignarTallerForms, self).clean(*args, **kwargs)
         taller = cleaned_data.get('taller', None)
         user = cleaned_data.get('user', None)
+        cantidad = cleaned_data.get('cantidad', None)
 
         if not taller:
             self.add_error('taller', 'No existe ese Taller')
 
         if not user:
             self.add_error('user', 'No existe ese Usuario')  
+        if cantidad<0:
+            self.add_error('cantidad', 'El Campo CANTIDAD debe tener un valor positivo')
           
 class ModeradorBloqueForm(forms.ModelForm):
     moderador=forms.ModelChoiceField(queryset=Moderador.objects.all(),label='Moderador',required=False)

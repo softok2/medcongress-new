@@ -23,7 +23,7 @@ from .views.ponencia_view import (PonenciaListView, PonenciaCreateView,PonenciaP
 from .views.taller_view import (TalleresListView,TallerCreateView,TallerCategPagosListView,TallerCategPagosCreateView,
                                    TallerUpdateView,TallerPonenteListView,TallerPonenteCreateView,TallerDeletedView,AsignarTalleresListView,
                                    AsignarTallerAddViews,GetPagosT,AsignarTallerDeletedViews,TallerPonenteDeletedView,TallerBloqueDeleted,
-                                   ReporteRelTallerUserExcel,AsignarConstanciasTaller)
+                                   ReporteRelTallerUserExcel,AsignarConstanciasTaller,TallerCategPagosUpdateView,TallerCategPagosDeletedView)
 from .views.ponente_view import (PonentesListView,PonentesCreateView,PonenteDeletedView)
 from .views.user_views import (UsuariosListView,UsuarioCreateView,UsuarioUpdateView,UsuarioDeletedView,vTableAsJSON)
 from .views.bloque_views import (BloquesListView,BloqueCreateView,BloqueDeletedView,BloquePonenciasListView,BloqueTalleresListView,
@@ -186,6 +186,9 @@ urlpatterns = [
     #Categorias de Pagos-Taller
      path('categorias_pago/taller/<str:path>', TallerCategPagosListView.as_view(), name='Taller_pagos'),
      path('categoria_pago-taller/adicionar/<str:path>', TallerCategPagosCreateView.as_view(), name='taller_cat_pago_add'),
+     path('categorias_pago-taller/editar/<str:path>/<int:pk>', TallerCategPagosUpdateView.as_view(), name='taller_cat_pago_editar'),
+    path('categorias_pago-taller/eliminar/<int:pk>', TallerCategPagosDeletedView.as_view(), name='taller_cat_pago_eliminar'),
+
 
      #Congreso-Imagenes
      path('imagenes/congreso/<str:path>', CongressImagenesListView.as_view(), name='Congres_imagenes'),

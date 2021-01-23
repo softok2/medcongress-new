@@ -253,7 +253,7 @@ def GetPagosT(request):
         
         results = []
         for cat in categoria:
-            results.append({'nombre':cat.categoria.nombre,'id':cat.categoria.pk})
+            results.append({'nombre':cat.categoria.nombre,'id':cat.categoria.pk,'moneda':cat.moneda})
             data = json.dumps(results)
     mimetype = "application/json"
     return HttpResponse(data, mimetype) 
@@ -335,3 +335,30 @@ class AsignarConstanciasTaller(validarUser,TemplateView):
         else:
             messages.warning(self.request,'Ese Taller no existe')
             return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_taller'))
+
+class TallerCategPagosUpdateView(validarUser,UpdateView):
+
+    form_class = TallerCategPagoForm
+    success_url = reverse_lazy('MedCongressAdmin:taller_list')
+    template_name = 'MedCongressAdmin/taller_cat_pago_form.html'
+
+    def get_queryset(self, **kwargs):
+        return RelTalleresCategoriaPago.objects.filter(pk=self.kwargs.get('pk'))
+
+
+    def get_context_data(self, **kwargs):
+        context=super().get_context_data(**kwargs)
+        context['update']=True
+        
+        pon=Taller.objects.filter(path=self.kwargs.get('path')).first()
+        context['cong'] = pon
+        return context
+    def get_success_url(self):
+           self.success_url =  reverse_lazy('MedCongressAdmin:Taller_pagos',kwargs={'path': self.kwargs.get('path')} )
+           return self.success_url
+
+
+class TallerCategPagosDeletedView(validarUser,DeleteView):
+    model = RelTalleresCategoriaPago
+    success_url = reverse_lazy('MedCongressAdmin:cat_usuarios_list')
+

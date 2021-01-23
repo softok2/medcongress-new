@@ -4,13 +4,14 @@
 {% block styles %}
 {% endblock %}
 {% block content %}
+
 <section class="multiple-input-with-labels" id="multiple-input-with-labels">
 	<div class="row">
 		<div class="col-12">
 			<div class="card">
 				<div class="card-header">
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
-						{{ form_title }} Categoria de Pagos</h1>
+						{%if update%} Actualizar Categoría de Pago{%else%} Adicionar Categoría de Pago{%endif%}</h1></h1>
 					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
 					<div class="heading-elements">
 						<ul class="list-inline mb-0">
@@ -23,6 +24,20 @@
 				</div>
 				<div class="card-content collapse show">
 					<div class="card-body">
+						{% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
 						<form id="country-form" method="POST">
 							{% csrf_token %}
 							<div class="form-body">
@@ -32,9 +47,7 @@
 										<div class="col-sm-4 ">
 											<div class="form-group">
 												<label
-													for="{{form.categoria.id_for_label }}"><b>{{form.categoria.label }}</b>{% if form.categoria.errors %}
-													<span style="font-size: 15px; color: red;">{{ form.categoria.errors }}
-													</span>{% endif %} </label>
+													for="{{form.categoria.id_for_label }}"><b>{{form.categoria.label }}</b></label>
 
 												{{form.categoria }}
 											</div>
@@ -42,9 +55,7 @@
 										<div class="col-sm-2">
 											<div class="form-group">
 												<label
-													for="{{form.precio.id_for_label }}"><b>{{form.precio.label }}</b>{% if form.precio.errors %}
-													<span style="font-size: 15px; color: red;">{{ form.precio.errors }}
-													</span>{% endif %} </label>
+													for="{{form.precio.id_for_label }}"><b>{{form.precio.label }} </b></label>
 
 												{{form.precio }}
 											</div>
@@ -53,9 +64,7 @@
 										<div class="col-sm-2 ">
 											<div class="form-group">
 												<label
-													for="{{form.moneda.id_for_label }}"><b>{{form.moneda.label }}</b>{% if form.moneda.errors %}
-													<span style="font-size: 15px; color: red;">{{ form.moneda.errors }}
-													</span>{% endif %} </label>
+													for="{{form.moneda.id_for_label }}"><b>{{form.moneda.label }}</b></label>
 
 												{{form.moneda }}
 											</div>

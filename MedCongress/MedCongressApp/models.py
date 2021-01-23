@@ -3,6 +3,7 @@ from django.core.files.storage import FileSystemStorage
 from django.core.validators import RegexValidator
 from django.utils import timezone
 from django.db import models
+from django.core.exceptions import NON_FIELD_ERRORS
 
 
 # Create your models here.
@@ -336,6 +337,12 @@ class RelCongresoCategoriaPago(models.Model):
         verbose_name_plural='Relaciones Congreso - Categoría de Pago'
         unique_together = (('categoria','congreso','moneda'),)
 
+    def unique_error_message(self, model_class, unique_check):
+        if model_class == type(self) and unique_check == ('categoria', 'congreso','moneda'):
+            return 'Ya existe una Categoría de pago en este congreso con ese nombre y esa moneda'
+        else:
+            return super(RelCongresoCategoriaPago, self).unique_error_message(model_class, unique_check)   
+
     def __str__(self):
         return 'Relación entre el Congreso %s y la Categoría de Pago %s'%(self.congreso.titulo , self.categoria.nombre)
 
@@ -586,6 +593,12 @@ class RelTalleresCategoriaPago(models.Model):
 
     def __str__(self):
         return 'Relación entre el Taller %s y la Categoría de Pago %s'%(self.taller.titulo , self.categoria.nombre)
+
+    def unique_error_message(self, model_class, unique_check):
+        if model_class == type(self) and unique_check == ('categoria', 'taller','moneda'):
+            return 'Ya existe una Categoría de pago en este taller con ese nombre y esa moneda'
+        else:
+            return super(RelTalleresCategoriaPagos, self).unique_error_message(model_class, unique_check)   
 
 ##### Tabla pivote Taller - Usuario #####
 

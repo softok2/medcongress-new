@@ -37,22 +37,45 @@
 				</div>
 				<div class="card-content collapse show">
 					<div class="card-body">
+						{% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
 						<form id="country-form" method="POST">
 							{% csrf_token %}
 							<div class="form-body">
 								<div class="row">
 									<div class="col-md-12">
 										<div class="row">
-											
+											<div class="col-sm-3">
+												<div class="form-group">
+													<label for="{{form.taller.id_for_label }}"><b>Filtre
+															Taller</b></label>
+													<div style="display: none;">
+														{{form.taller}}
+													</div>
+													<input type="text" name="my_talleres" class="form-control" required=""
+														id="id_my_talleres">
+	
+												</div>
+											</div>
 										<div class="col-sm-3" {%if usuario%}
 											
 										style="display: none;"  {%endif%}>
 										
 											<div class="form-group">
 												<label
-													for="{{form.user.id_for_label }}"><b>{{form.user.label }}</b>{% if form.user.errors %}
-													<span style="font-size: 15px; color: red;">{{ form.user.errors }}
-													</span>{% endif %} </label>
+													for="{{form.user.id_for_label }}"><b>{{form.user.label }}</b></label>
 													
 													<input type="text" name="my_user" class="form-control" required="" id="id_my_user">
 													
@@ -62,28 +85,12 @@
 											</div>
 										</div>
 									
-										<div class="col-sm-3">
-											<div class="form-group">
-												<label for="{{form.taller.id_for_label }}"><b>Filtre
-														Taller</b>{% if form.taller.errors %}
-													<span
-														style="font-size: 15px; color: red;">{{ form.taller.errors }}
-													</span>{% endif %} </label>
-												<div style="display: none;">
-													{{form.taller}}
-												</div>
-												<input type="text" name="my_talleres" class="form-control" required=""
-													id="id_my_talleres">
-
-											</div>
-										</div>
+										
 										
 										<div class="col-sm-2 ">
 											<div class="form-group">
 												<label
-													for="{{form.categoria_pago.id_for_label }}"><b>{{form.categoria_pago.label }}</b>{% if form.categoria_pago.errors %}
-													<span style="font-size: 15px; color: red;">{{ form.categoria_pago.errors }}
-													</span>{% endif %} </label>
+													for="{{form.categoria_pago.id_for_label }}"><b>{{form.categoria_pago.label }}</b></label>
 
 												{{form.categoria_pago }}
 											</div>
@@ -91,19 +98,15 @@
 										<div class="col-sm-2 ">
 											<div class="form-group">
 												<label
-													for="{{form.is_pagado.id_for_label }}"><b>{{form.is_pagado.label }}</b>{% if form.is_pagado.errors %}
-													<span style="font-size: 15px; color: red;">{{ form.is_pagado.errors }}
-													</span>{% endif %} </label>
+													for="{{form.is_pagado.id_for_label }}"><b>{{form.is_pagado.label }}</b></label>
 											
 												{{form.is_pagado }}
 											</div>
 										</div>
-										<div class="col-sm-1 ">
+										<div class="col-sm-2 ">
 											<div class="form-group">
 												<label
-													for="{{form.cantidad.id_for_label }}"><b>{{form.cantidad.label }}</b>{% if form.cantidad.errors %}
-													<span style="font-size: 15px; color: red;">{{ form.cantidad.errors }}
-													</span>{% endif %} </label>
+													for="{{form.cantidad.id_for_label }}"><b>{{form.cantidad.label }}</b> </label>
 											
 												{{form.cantidad }}
 											</div>
@@ -152,15 +155,6 @@
             $("#id_taller option:contains('" + email + "')").attr("selected", true);
             if ($("#id_taller option:selected").text()!= email) 
             $("#id_taller").val('')
-
-        });
-		var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
-		$.ajaxSetup({
-			beforeSend: function (xhr, settings) {
-				xhr.setRequestHeader("X-CSRFToken", csrftoken);
-			}
-		});
-		$('#id_taller').change(function () {
 			$('#id_categoria_pago').empty();
 			$('#id_categoria_pago').append($("<option></option").attr('value', '').text('----------'));
 			if ($('#id_taller').val()) {
@@ -175,17 +169,21 @@
 
 						for (var i = 0; i < data.length; i++) {
 
-							$('#id_categoria_pago').append($("<option></option").attr('value', data[i].id).text(data[i].nombre))
+							$('#id_categoria_pago').append($("<option></option").attr('value', data[i].id).text(data[i].nombre+'|'+data[i].moneda))
 						}
 					}
 				});
 
 
+			}	
+        });
+		var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+		$.ajaxSetup({
+			beforeSend: function (xhr, settings) {
+				xhr.setRequestHeader("X-CSRFToken", csrftoken);
 			}
-
-
-
 		});
+	
 	});
 </script>
 {% endblock %}
