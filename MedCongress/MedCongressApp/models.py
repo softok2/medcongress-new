@@ -759,7 +759,9 @@ class Ofrecemos(models.Model):
 class Footer(models.Model):
     direccion=models.CharField(max_length=250)
     email=models.EmailField()
-    telefono=models.CharField(max_length=20)
+    telefono=models.CharField(max_length=20,validators=[
+            RegexValidator(regex=r"[CL.,CR.,AV.].[0-9]* # [0-9] * - [0-9] * . *", message="Dirección inválida")
+        ])
     whatsapp=models.CharField(max_length=20)
     
     class Meta:
