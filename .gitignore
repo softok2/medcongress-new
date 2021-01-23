@@ -1,10 +1,8 @@
 /MedCongress/MedCongressApp/__pycache__
 /MedCongress/MedCongress/__pycache__
 /MedCongress/MedCongress/settings.py
-
 /MedCongress/MedCongressApp/migrations/__pycache__
 /.history
-/MedCongress/MedCongressApp/claves.py
 /MedCongress/MedCongressAdmin/__pycache__
 /MedCongress/MedCongressAdmin/forms/__pycache__
 /MedCongress/MedCongressAdmin/migrations/__pycache__
@@ -20,3 +18,4 @@
 /MedCongress/MedCongressApp/static/talleres
 /MedCongress/MedCongressApp/static/programas
 
+/MedCongress/MedCongressApp/claves.py
