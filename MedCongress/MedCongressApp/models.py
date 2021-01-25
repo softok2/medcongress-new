@@ -370,7 +370,7 @@ class Ponente(models.Model):
         verbose_name_plural='ponentes'
 
     def __str__(self):
-        return self.user.usuario.email
+        return '%s %s <%s>'%(self.user.usuario.first_name,self.user.usuario.last_name,self.user.usuario.email)
 
 ##### Tabla  moderador  #####
 

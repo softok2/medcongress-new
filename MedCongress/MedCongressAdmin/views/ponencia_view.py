@@ -23,6 +23,9 @@ class  PonenciaCreateView(validarUser,FormView):
     template_name = 'MedCongressAdmin/ponencia_form.html'
     def form_valid(self, form):
         try: 
+            if not self.request.POST.getlist('ponencia_ponente-ponente[]'):
+                messages.warning(self.request, 'Debe al menos entrar un ponente')
+                return super().form_invalid(form) 
             ponencia=form['ponencia'].save(commit=False)
             ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
             relacion=form['ponencia_ponente'].save(commit=False)
@@ -42,9 +45,12 @@ class  PonenciaCreateView(validarUser,FormView):
             ponencia.id_video=id_video[0]
             
             ponencia.save()
-            relacion.ponencia=ponencia
-            relacion.save()
-
+            
+            for ponente in self.request.POST.getlist('ponencia_ponente-ponente[]'):
+                ponente_=Ponente.objects.get(pk=ponente)
+                po= RelPonenciaPonente(ponente=ponente_,ponencia=ponencia)
+                po.save()
+            
             return super(PonenciaCreateView, self).form_valid(form)
         except Exception as e:
             messages.warning(self.request, e)
@@ -140,7 +146,7 @@ class PonencicaUpdateView(validarUser,FormView):
         kwargs.update(instance={
             'ponencia': self.object,
             'ubicacion': self.object.lugar,
-            'ponencia_ponente':RelPonenciaPonente.objects.filter(ponencia=self.object).first()
+            # 'ponencia_ponente':RelPonenciaPonente.objects.filter(ponencia=self.object)
         })
         return kwargs
 
@@ -155,7 +161,21 @@ class PonencicaUpdateView(validarUser,FormView):
         context['bloque_update']=self.object.bloque
         context['update']='update'
         context['ponencia']=self.object
-        context['ponente']=self.object.ponente.first()
+        ponentes=Ponente.objects.all()
+        relaciones=RelPonenciaPonente.objects.filter(ponencia=self.object)
+        ponentes_env=[]
+        activo=False
+        for ponente in ponentes:
+            activo=False
+            for relacion in relaciones:
+                if relacion.ponente.pk==ponente.id:
+                    activo=True
+                
+            ponentes_env.append({'id':ponente.id,
+            'nombre':'%s %s <%s>'%(ponente.user.usuario.first_name,ponente.user.usuario.last_name,ponente.user.usuario.email),
+            'activo':activo})
+        context['ponentes_alls']=ponentes_env
+        context['ponentes']=relaciones
        
         if self.kwargs.get('path'):
             context['con']=Congreso.objects.filter(path=self.kwargs.get('path')).first()
@@ -178,6 +198,9 @@ class PonencicaUpdateView(validarUser,FormView):
 
     def form_valid(self, form):
         try:
+            if not self.request.POST.getlist('ponencia_ponente-ponente[]'):
+                messages.warning(self.request, 'Debe al menos entrar un ponente')
+                return super().form_invalid(form) 
             ponencia=Ponencia.objects.get(pk=self.kwargs.get('pk'))
             self.object=ponencia
             pon=form['ponencia'].save(commit=False)
@@ -196,8 +219,12 @@ class PonencicaUpdateView(validarUser,FormView):
             pon.id_video=id_video[0]
             ponencia=pon
             ponencia.save()
-            relacion.ponencia=ponencia
-            relacion.save()
+            relaciones=RelPonenciaPonente.objects.filter(ponencia=ponencia)
+            relaciones.delete()
+            for ponente in self.request.POST.getlist('ponencia_ponente-ponente[]'):
+                ponente_=Ponente.objects.get(pk=ponente)
+                po= RelPonenciaPonente(ponente=ponente_,ponencia=ponencia)
+                po.save()
             return super(PonencicaUpdateView, self).form_valid(form)
         except Exception as e:
             messages.warning(self.request, e)

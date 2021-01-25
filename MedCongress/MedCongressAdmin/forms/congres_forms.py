@@ -12,7 +12,7 @@ from  MedCongressApp.models import (Congreso,Ubicacion,ImagenCongreso,TipoCongre
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
 from django.core.exceptions import NON_FIELD_ERRORS
-        
+from django.forms.models import ModelMultipleChoiceField        
 class CongresForm(forms.ModelForm):
     imagen_seg=forms.ImageField(label='Buscar Imagen',required=False)
     is_openpay=forms.BooleanField(label='Pagar por OpenPay',required=False)
@@ -127,23 +127,29 @@ class CongresoForms(MultiModelForm):
         'imagen_congreso':ImagenCongresoForms
     }
 
+class MyMultipleModelChoiceField(ModelMultipleChoiceField):
+
+    def label_from_instance(self, obj):
+        return "%s" % (obj.user.usuario.email)
+
 class PonenciaForm(forms.ModelForm):
     imagen=forms.ImageField(label='Buscar Imagen',required=False)
     titulo=forms.CharField(label='Título')
     fecha_inicio=forms.DateTimeField()
     published=forms.BooleanField(label='Publicado',required=False)
+    # ponente=forms.ModelMultipleChoiceField(queryset=Ponente.objects.all(),label='Ponente',required=False)
     # ponente=forms.ModelChoiceField(queryset=Ponente.objects.all(),label='Ponente',required=False)
     error=forms.CharField(required=False)
     class Meta:
         model=Ponencia
         fields=['titulo','duracion','detalle','fecha_inicio','imagen','published','cod_video','congreso','bloque','is_info',
         'meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
-        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','error',]
-
+        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','error']
+        
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
 
-
+        
         self.fields['titulo'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['duracion'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['congreso'].widget.attrs.update({'class': 'form-control'})
@@ -163,7 +169,8 @@ class PonenciaForm(forms.ModelForm):
         self.fields['meta_twitter_creator'].widget.attrs.update({'class': 'form-control '})  
         self.fields['meta_keywords'].widget.attrs.update({'class': 'form-control','rows':'3'})   
         self.fields['meta_og_imagen'].widget.attrs.update({'class': 'form-control '}) 
-        self.fields['meta_title'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['meta_title'].widget.attrs.update({'class': 'form-control'})  
+        # self.fields['ponente'].widget.attrs.update({'class': 'form-control multiple-select-box selectivity-input'})  
     
     def clean(self, *args, **kwargs):
         try:
@@ -193,26 +200,30 @@ class PonenciaForm(forms.ModelForm):
 
 class PonenciaPonenteForm(forms.ModelForm):
    
-    ponente=forms.ModelChoiceField(queryset=Ponente.objects.all(),label='Ponente',required=False)
+    ponente=forms.ModelMultipleChoiceField(queryset=Ponente.objects.all(),label='Ponente',required=False)
   
     class Meta:
-        model=RelPonenciaPonente
+        model=Ponente
         fields=['ponente',]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
-        self.fields['ponente'].widget.attrs.update({'class': 'form-control'})   
-    def clean(self, *args, **kwargs):
-        try:
-            cleaned_data = super(PonenciaPonenteForm, self).clean(*args, **kwargs)
-            ponente = cleaned_data.get('ponente', None)
+        self.fields['ponente'].widget.attrs.update({'class': 'single-select-box selectivity-input'}) 
+        # self.fields['ponente'] = MyMultipleModelChoiceField(
+        #     queryset=Ponente.objects.all(), 
+        #     required=True, 
+        #     widget=forms.SelectMultiple())
+    # def clean(self, *args, **kwargs):
+    #     try:
+    #         cleaned_data = super(PonenciaPonenteForm, self).clean(*args, **kwargs)
+    #         ponente = cleaned_data.items
            
-            if not ponente:
-                self.add_error('ponente', 'Este ponente no existe')
-                return
+    #         # if not ponente:
+    #         #     self.add_error('ponente', 'Este Campo es obligatorio mio')
+    #         #     return
 
-        except Exception as e:
-            self.add_error('error', e)    
+    #     except Exception as e:
+    #         self.add_error('error', e)    
 
 class TallerForm(forms.ModelForm):
     imagen=forms.ImageField(label='Buscar Imagen',required=False)

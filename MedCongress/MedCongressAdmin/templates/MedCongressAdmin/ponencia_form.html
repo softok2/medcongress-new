@@ -2,8 +2,12 @@
 {% block title %}MedCongressAdmin | Congreso{% endblock %}
 {% load static %}
 {% block styles %}
-
+<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/selectivity-full.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/css/plugins/forms/selectivity/selectivity.css' %}">
 </head>
+
+
+
 <style>
 	#geomap {
 		width: 100%;
@@ -240,12 +244,21 @@
 																						{% if form.ponencia_ponente.ponente.errors %} <span
 																							style="font-size: 15px; color: red;">{{ form.ponencia_ponente.ponente.errors }}
 																						</span>{% endif %} </label>
-																						<div style="display: none;">
+																						{%if ponentes%}
+																						<select class="single-select-box selectivity-input " name="ponencia_ponente-ponente" multiple >
+																							{%for ponentes_all in ponentes_alls%}
+																							<option value="{{ponentes_all.id}}" {%if ponentes_all.activo%}selected{%endif%}>{{ponentes_all.nombre}}</option>
+
+																							{%endfor%}
+
+																						</select>
+																						{%else%}
+																						<div >
 																							{{form.ponencia_ponente.ponente}}
 																						</div>
-										
-																						<input type="text" name="my_ponente" class="form-control" required=""
-																							id="id_my_ponente" value="{{ponente}}">
+																						{%endif%}
+																						<!-- <input type="text" name="my_ponente" class="form-control" required=""
+																							id="id_my_ponente" value="{{ponente}}"> -->
 																				</div>
 																			</div>
 																			
@@ -591,7 +604,7 @@
 									</section>
 					</div>
 					</form>
-			
+				
 				</div>
 			</div>
 		</div>
@@ -602,27 +615,37 @@
 <link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
 <script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
 
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/forms/select/selectivity-full.min.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/ui/breadcrumbs-with-stats.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-selectivity.js'%}"></script>
 
 <script type="text/javascript"
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCf3QdCwg8QDNOS3A2vSQ3DqW2mpJ_gSY8"></script>
 <script src="{% static 'MedCongressApp/js/lugar.js'%}"></script>
 
-
 <script type="text/javascript">
 
 	$(document).ready(function () {
 
-		$("#id_ponencia_ponente-ponente option[value='{{ponente.id}}']").attr("selected", true);
-		$("#id_my_ponente").autocomplete({
-			source: "{% url 'Ponente_autocomp'%}",
-			minLength: 3,
-		});
-		$('#id_my_ponente').change(function () {
-			email = $('#id_my_ponente').val()
-			$("#id_ponencia_ponente-ponente option:contains('" + email + "')").attr("selected", true);
-			if ($("#id_ponencia_ponente-ponente option:selected").text()!= email) 
-            $("#id_ponencia_ponente-ponente").val('')
-		});
+// 		{%if ponentes%}
+// 		var checkboxes2 = document.getElementsByName("borrar_contacto");
+// 		{%for ponente in ponentes %}
+//    alert({{ponente.ponente.id}});
+//    $("#id_ponencia_ponente-ponente option[value='{{ponente.ponente.id}}']").attr("selected", true);
+// 		{%endfor%}
+// 		{%endif%}
+// 		$("#id_ponencia_ponente-ponente").addClass('single-select-box selectivity-input')  
+		// $("#id_ponencia_ponente-ponente option[value='{{ponente.id}}']").attr("selected", true);
+		// $("#id_my_ponente").autocomplete({
+		// 	source: "{% url 'Ponente_autocomp'%}",
+		// 	minLength: 3,
+		// });
+		// $('#id_my_ponente').change(function () {
+		// 	email = $('#id_my_ponente').val()
+		// 	$("#id_ponencia_ponente-ponente option:contains('" + email + "')").attr("selected", true);
+		// 	if ($("#id_ponencia_ponente-ponente option:selected").text()!= email) 
+        //     $("#id_ponencia_ponente-ponente").val('')
+		// });
 		
 		// $('#id_my_ponente').ready(function () {
 		// 	email = $('#id_my_ponente').val()
@@ -758,4 +781,5 @@
 		
 
 </script>
+
 {% endblock %}
