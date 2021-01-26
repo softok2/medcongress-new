@@ -14,7 +14,7 @@ from betterforms.multiform import MultiModelForm
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.forms.models import ModelMultipleChoiceField        
 class CongresForm(forms.ModelForm):
-    imagen_seg=forms.ImageField(label='Buscar Imagen',required=False)
+    imagen_seg=forms.ImageField(label='Buscar Imagen',required=True)
     is_openpay=forms.BooleanField(label='Pagar por OpenPay',required=False)
     titulo=forms.CharField(label='Título')
     template=forms.CharField(label='Template del Congreso',required=False)
@@ -24,7 +24,7 @@ class CongresForm(forms.ModelForm):
     t_congreso=forms.ModelChoiceField(queryset=TipoCongreso.objects.all(),label='Tipo de Congreso')
     fecha_inicio=forms.DateTimeField(widget=forms.TextInput())
     score=forms.IntegerField(label='Puntuación del Congreso')
-    imagen_seg=forms.ImageField(label='Buscar Imagen',required=True,)
+    foto_constancia=forms.ImageField(label='Buscar Imagen para la Constancia',required=False,)
     programa=forms.FileField(label='Buscar Programa',required=False)
     class Meta:
         model=Congreso
@@ -231,6 +231,7 @@ class TallerForm(forms.ModelForm):
     fecha_inicio=forms.DateTimeField()
     published=forms.BooleanField(label='Publicado',required=False)
     score=forms.IntegerField(label='Puntuación del Taller')
+    foto_constancia=forms.ImageField(label='Buscar Imagen para la Constancia',required=False,)
     class Meta:
         model=Taller
         fields=['titulo','duracion','fecha_inicio','imagen','published','congreso','detalle','bloque',
