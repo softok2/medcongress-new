@@ -293,7 +293,7 @@ class TallerForms(MultiModelForm):
     }
 
 class PonenteForm(forms.ModelForm):
-    user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Entre Correo del Usuario',required=True)
+    user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Seleccione usuario',required=True)
     class Meta:
         model=Ponente
         fields=['user']
@@ -301,16 +301,16 @@ class PonenteForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
 
-        self.fields['user'].widget.attrs.update({'class': 'single-select-box '}) 
+        self.fields['user'].widget.attrs.update({'class': 'select2 form-control '}) 
 
     def clean(self, *args, **kwargs):
         cleaned_data = super(PonenteForm, self).clean(*args, **kwargs)
         user = cleaned_data.get('user', None)
         if not user:
-            self.add_error('user', 'No existe ese User')
+            self.add_error('user', 'Debe entrar un Usuario')
 
 class ModeradorForm(forms.ModelForm):
-    user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Entre Correo del Usuario', required=False)
+    user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Seleccione usuario',required=True)
     class Meta:
         model=Moderador
         fields=['user']
@@ -318,16 +318,17 @@ class ModeradorForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
 
-        self.fields['user'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['user'].widget.attrs.update({'class': 'select2 form-control'}) 
 
     def clean(self, *args, **kwargs):
         cleaned_data = super(ModeradorForm, self).clean(*args, **kwargs)
         user = cleaned_data.get('user', None)
        
         if not user:
-            self.add_error('user', 'No existe ese User')
+            self.add_error('user', 'Debe entrar un Usuario')
+            
 class PonentePonenciaForm(forms.ModelForm):
-    ponente=forms.ModelChoiceField(queryset=Ponente.objects.all(),label='Entre Correo del Ponente',required=False)
+    ponente=forms.ModelChoiceField(queryset=Ponente.objects.all(),label='Seleccione Usuario',required=True)
   
     class Meta:
         model=RelPonenciaPonente
@@ -337,7 +338,7 @@ class PonentePonenciaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
 
-        self.fields['ponente'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['ponente'].widget.attrs.update({'class': 'select2 form-control'}) 
         self.fields['ponencia'].widget.attrs.update({'class': 'form-control','style':'display:none'}) 
       
     def clean(self, *args, **kwargs):
@@ -346,13 +347,13 @@ class PonentePonenciaForm(forms.ModelForm):
         ponencia = cleaned_data.get('ponencia', None)
        
         if not user:
-            self.add_error('ponente', 'No existe ese Ponente')
+            self.add_error('ponente', 'Entre un Ponente')
 
         if RelPonenciaPonente.objects.filter(ponencia=ponencia,ponente=user).exists():
-            self.add_error('ponente', 'Esta Ponencia ya tiene un ponente con ese Correo')
+            self.add_error('ponente', 'Esta Ponencia ya tiene este Ponente')
 
 class PonenteTallerForm(forms.ModelForm):
-    ponente=forms.ModelChoiceField(queryset=Ponente.objects.all(),label='Entre Correo del Ponentes',required=False)
+    ponente=forms.ModelChoiceField(queryset=Ponente.objects.all(),label='Seleccione Usuario',required=True)
   
     class Meta:
         model=RelTallerPonente
@@ -362,7 +363,7 @@ class PonenteTallerForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
 
-        self.fields['ponente'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['ponente'].widget.attrs.update({'class': 'select2 form-control'}) 
         
         self.fields['taller'].widget.attrs.update({'class': 'form-control','style':'display:none'}) 
     def clean(self, *args, **kwargs):
@@ -371,10 +372,10 @@ class PonenteTallerForm(forms.ModelForm):
         taller = cleaned_data.get('taller', None)
        
         if not user:
-            self.add_error('ponente', 'No existe ese Ponente')
+            self.add_error('ponente', 'Entre un Ponente')
 
         if RelTallerPonente.objects.filter(taller=taller,ponente=user).exists():
-            self.add_error('ponente', 'Este taller ya tiene un ponente con ese Correo')
+            self.add_error('ponente', 'Este taller ya tiene ese Ponente')
 class CongresoCategPagoForm(forms.ModelForm):
     categoria=forms.ModelChoiceField(queryset=CategoriaPagoCongreso.objects.all(),label='Categoría de Pago')
     

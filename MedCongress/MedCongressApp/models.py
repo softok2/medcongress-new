@@ -760,7 +760,7 @@ class Footer(models.Model):
     direccion=models.CharField(max_length=250)
     email=models.EmailField()
     telefono=models.CharField(max_length=20,validators=[
-            RegexValidator(regex=r"[CL.,CR.,AV.].[0-9]* # [0-9] * - [0-9] * . *", message="Dirección inválida")
+            RegexValidator(regex=r"^(\(\+?\d{2,3}\)[\*|\s|\-|\.]?(([\d][\*|\s|\-|\.]?){6})(([\d][\s|\-|\.]?){2})?|(\+?[\d][\s|\-|\.]?){8}(([\d][\s|\-|\.]?){2}(([\d][\s|\-|\.]?){2})?)?)$", message="Entre un No. de teléfono correcto")
         ])
     whatsapp=models.CharField(max_length=20)
     
