@@ -23,7 +23,7 @@ class  PonenciaCreateView(validarUser,FormView):
     template_name = 'MedCongressAdmin/ponencia_form.html'
     def form_valid(self, form):
         try: 
-            if not self.request.POST.getlist('ponencia_ponente-ponente[]'):
+            if not self.request.POST.getlist('ponencia_ponente-ponente'):
                 messages.warning(self.request, 'Debe al menos entrar un ponente')
                 return super().form_invalid(form) 
             ponencia=form['ponencia'].save(commit=False)
@@ -46,7 +46,7 @@ class  PonenciaCreateView(validarUser,FormView):
             
             ponencia.save()
             
-            for ponente in self.request.POST.getlist('ponencia_ponente-ponente[]'):
+            for ponente in self.request.POST.getlist('ponencia_ponente-ponente'):
                 ponente_=Ponente.objects.get(pk=ponente)
                 po= RelPonenciaPonente(ponente=ponente_,ponencia=ponencia)
                 po.save()
@@ -161,6 +161,7 @@ class PonencicaUpdateView(validarUser,FormView):
         context['bloque_update']=self.object.bloque
         context['update']='update'
         context['ponencia']=self.object
+        context['is_info']=self.object.is_info
         ponentes=Ponente.objects.all()
         relaciones=RelPonenciaPonente.objects.filter(ponencia=self.object)
         ponentes_env=[]
@@ -198,7 +199,7 @@ class PonencicaUpdateView(validarUser,FormView):
 
     def form_valid(self, form):
         try:
-            if not self.request.POST.getlist('ponencia_ponente-ponente[]'):
+            if not self.request.POST.getlist('ponencia_ponente-ponente'):
                 messages.warning(self.request, 'Debe al menos entrar un ponente')
                 return super().form_invalid(form) 
             ponencia=Ponencia.objects.get(pk=self.kwargs.get('pk'))
@@ -221,7 +222,7 @@ class PonencicaUpdateView(validarUser,FormView):
             ponencia.save()
             relaciones=RelPonenciaPonente.objects.filter(ponencia=ponencia)
             relaciones.delete()
-            for ponente in self.request.POST.getlist('ponencia_ponente-ponente[]'):
+            for ponente in self.request.POST.getlist('ponencia_ponente-ponente'):
                 ponente_=Ponente.objects.get(pk=ponente)
                 po= RelPonenciaPonente(ponente=ponente_,ponencia=ponencia)
                 po.save()

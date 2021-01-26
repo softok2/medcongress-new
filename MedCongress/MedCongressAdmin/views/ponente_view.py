@@ -21,7 +21,7 @@ class  PonentesCreateView(validarUser,CreateView):
     template_name = 'MedCongressAdmin/ponente_form.html'
 
     def form_valid(self, form):
-       
+        
         taller=form.save(commit=False)
         taller.save()
 

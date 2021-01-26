@@ -208,7 +208,7 @@ class PonenciaPonenteForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
-        self.fields['ponente'].widget.attrs.update({'class': 'single-select-box selectivity-input'}) 
+        self.fields['ponente'].widget.attrs.update({'class': 'select2 form-control','multiple':"multiple"}) 
         # self.fields['ponente'] = MyMultipleModelChoiceField(
         #     queryset=Ponente.objects.all(), 
         #     required=True, 
@@ -289,11 +289,11 @@ class TallerForms(MultiModelForm):
     form_classes = {
         'taller': TallerForm,
         'ubicacion':UbicacionForm,
-        
+        'taller_ponente':PonenciaPonenteForm,
     }
 
 class PonenteForm(forms.ModelForm):
-    user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Entre Correo del Usuario',required=False)
+    user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Entre Correo del Usuario',required=True)
     class Meta:
         model=Ponente
         fields=['user']
@@ -301,7 +301,7 @@ class PonenteForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
 
-        self.fields['user'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['user'].widget.attrs.update({'class': 'single-select-box '}) 
 
     def clean(self, *args, **kwargs):
         cleaned_data = super(PonenteForm, self).clean(*args, **kwargs)

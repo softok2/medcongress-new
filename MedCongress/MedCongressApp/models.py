@@ -122,7 +122,7 @@ class PerfilUsuario(models.Model):
         verbose_name_plural='Perfil de usuarios'
 
     def __str__(self):
-        return self.usuario.email 
+        return '%s %s <%s>'%( self.usuario.first_name,self.usuario.last_name,self.usuario.email)
 
     def is_openpay(self):
         if self.id_openpay :

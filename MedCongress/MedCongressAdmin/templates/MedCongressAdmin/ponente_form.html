@@ -2,6 +2,9 @@
 {% block title %}MedCongressAdmin | Ponente{% endblock %}
 {% load static %}
 {% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/selectivity-full.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/css/plugins/forms/selectivity/selectivity.css' %}">
+
 {% endblock %}
 {% block content %}
 <div class=" col-md-6 col-12 " style="margin-top: -26px;">
@@ -54,10 +57,10 @@
 													<span
 														style="font-size: 15px; color: red;">{{ form.user.errors }}
 													</span>{% endif %} </label>
-													<div style="display: none;">
+													<div >
 														{{form.user}}
 													</div>
-													<input type="text" name="my_user" class="form-control" required="" id="id_my_user">
+													<!-- <input type="text" name="my_user" class="form-control" required="" id="id_my_user"> -->
 													
 											</div>
 										</div>
@@ -87,6 +90,10 @@
 {% block scripts %}
 <link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
 <script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/forms/select/selectivity-full.min.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/ui/breadcrumbs-with-stats.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-selectivity.js'%}"></script>
+
 <script type="text/javascript">
 $(function() {
 

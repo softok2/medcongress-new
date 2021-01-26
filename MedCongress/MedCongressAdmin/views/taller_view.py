@@ -36,7 +36,9 @@ class  TallerCreateView(validarUser,FormView):
     template_name = 'MedCongressAdmin/taller_form.html'
 
     def form_valid(self, form):
-        
+        if not self.request.POST.getlist('taller_ponente-ponente'):
+            messages.warning(self.request, 'Debe al menos entrar un ponente')
+            return super().form_invalid(form) 
         taller=form['taller'].save(commit=False)
         ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
 
@@ -55,6 +57,10 @@ class  TallerCreateView(validarUser,FormView):
             id_video=id_video[-1].split(sep='"')
         taller.id_video=id_video[0]
         taller.save()
+        for ponente in self.request.POST.getlist('taller_ponente-ponente'):
+                ponente_=Ponente.objects.get(pk=ponente)
+                po= RelTallerPonente(ponente=ponente_,taller=taller)
+                po.save()
         return super(TallerCreateView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -145,9 +151,28 @@ class TallerUpdateView(validarUser,FormView):
         context['update']=self.object.bloque
         if self.object.foto_constancia:
             context['foto_constancia']='/static/%s'%(self.object.foto_constancia)
+
+        ponentes=Ponente.objects.all()
+        relaciones=RelTallerPonente.objects.filter(taller=taller)
+        ponentes_env=[]
+        activo=False
+        for ponente in ponentes:
+            activo=False
+            for relacion in relaciones:
+                if relacion.ponente.pk==ponente.id:
+                    activo=True
+                
+            ponentes_env.append({'id':ponente.id,
+            'nombre':'%s %s <%s>'%(ponente.user.usuario.first_name,ponente.user.usuario.last_name,ponente.user.usuario.email),
+            'activo':activo})
+        context['ponentes_alls']=ponentes_env
+        context['ponentes']=relaciones
         return context
 
     def form_valid(self, form):
+        if not self.request.POST.getlist('taller_ponente-ponente'):
+            messages.warning(self.request, 'Debe al menos entrar un ponente')
+            return super().form_invalid(form) 
         taller_update=Taller.objects.get(pk=self.kwargs.get('pk'))
         self.object=taller_update
         taller=form['taller'].save(commit=False)
@@ -165,6 +190,12 @@ class TallerUpdateView(validarUser,FormView):
         taller.id_video=id_video[0]
         taller_update=taller
         taller_update.save()
+        relaciones=RelTallerPonente.objects.filter(taller=taller_update)
+        relaciones.delete()
+        for ponente in self.request.POST.getlist('taller_ponente-ponente'):
+            ponente_=Ponente.objects.get(pk=ponente)
+            po= RelTallerPonente(ponente=ponente_,taller=taller)
+            po.save()
         return super(TallerUpdateView, self).form_valid(form)
     def get_success_url(self):
         if self.kwargs.get('pk'):

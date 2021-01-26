@@ -4,6 +4,7 @@
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/selectivity-full.min.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/css/plugins/forms/selectivity/selectivity.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/select2.min.css' %}">
 </head>
 
 
@@ -89,13 +90,7 @@
 								{% endfor %}
 						</ul>
 						{% endif %}
-						{% if form.ponencia.error.errors %}
-					<ul class="messages">
 						
-						<li  class="" >{{form.ponencia.error.errors }} </li>
-							
-					</ul>
-					{% endif %}
 					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
 					<div class="heading-elements">
 						<ul class="list-inline mb-0">
@@ -107,6 +102,20 @@
 				</div>
 				<div class="card-content collapse show">
 					<div class="card-body">
+						{% if form.errors %}
+						{% for field in form %}
+							{% for error in field.errors %}
+								<div class="alert alert-danger">
+									<strong>{{ error|escape }}</strong>
+								</div>
+							{% endfor %}
+						{% endfor %}
+						{% for error in form.non_field_errors %}
+							<div class="alert alert-danger">
+								<strong>{{ error|escape }}</strong>
+							</div>
+						{% endfor %}
+					{% endif %}
 						<form id="congres-form" method="POST" action="" enctype="multipart/form-data">
 							{% csrf_token %}
 							{%if ponencia %}
@@ -141,10 +150,7 @@
 																			<div class="col-sm-8 ">
 																				<div class="form-group">
 																					<label
-																						for="{{form.ponencia.titulo.id_for_label }}"><b>{{form.ponencia.titulo.label }}</b>{% if form.ponencia.titulo.errors %}
-																						<span
-																							style="font-size: 15px; color: red;">{{ form.ponencia.titulo.errors }}
-																						</span>{% endif %} </label>
+																						for="{{form.ponencia.titulo.id_for_label }}"><b>{{form.ponencia.titulo.label }}</b></label>
 
 																					{{form.ponencia.titulo }}
 																				</div>
@@ -152,10 +158,7 @@
 																			<div class="col-sm-4 ">
 																				<div class="form-group">
 																					<label
-																						for="{{form.ponencia.fecha_inicio.id_for_label }}"><b>{{form.ponencia.fecha_inicio.label }}</b>{% if form.ponencia.fecha_inicio.errors %}
-																						<span
-																							style="font-size: 15px; color: red;">{{ form.ponencia.fecha_inicio.errors }}
-																						</span>{% endif %} </label>
+																						for="{{form.ponencia.fecha_inicio.id_for_label }}"><b>{{form.ponencia.fecha_inicio.label }}</b></label>
 
 																					{{form.ponencia.fecha_inicio}}
 																				</div>
@@ -165,10 +168,7 @@
 																			<div class="col-sm-12 ">
 																				<div class="form-group">
 																					<label
-																						for="{{form.ponencia.detalle.id_for_label }}"><b>{{form.ponencia.detalle.label }}</b>{% if form.ponencia.detalle.errors %}
-																						<span
-																							style="font-size: 15px; color: red;">{{ form.ponencia.detalle.errors }}
-																						</span>{% endif %} </label>
+																						for="{{form.ponencia.detalle.id_for_label }}"><b>{{form.ponencia.detalle.label }}</b></label>
 
 																					{{form.ponencia.detalle }}
 																				</div>
@@ -179,10 +179,7 @@
 																			<div class="col-sm-6 ">
 																				<div class="form-group">
 																					<label
-																						for="{{form.ponencia.duracion.id_for_label }}"><b>{{form.ponencia.duracion.label }}</b>{% if form.ponencia.duracion.errors %}
-																						<span
-																							style="font-size: 15px; color: red;">{{ form.ponencia.duracion.errors }}
-																						</span>{% endif %} </label>
+																						for="{{form.ponencia.duracion.id_for_label }}"><b>{{form.ponencia.duracion.label }}</b></label>
 
 																					{{form.ponencia.duracion }}
 																				</div>
@@ -190,10 +187,7 @@
 																			<div class="col-sm-6 ">
 																				<div class="form-group">
 																					<label
-																						for="{{form.ponencia.cod_video.id_for_label }}"><b>Código de inserción del video en Vimeo</b>{% if form.ponencia.cod_video.errors %}
-																						<span
-																							style="font-size: 15px; color: red;">{{ form.ponencia.cod_video.errors }}
-																						</span>{% endif %} </label>
+																						for="{{form.ponencia.cod_video.id_for_label }}"><b>Código de inserción del video en Vimeo</b></label>
 
 																					{{form.ponencia.cod_video }}
 																				</div>
@@ -217,20 +211,14 @@
 
 																					<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva
 																							Imagen</b> </label>
-																							{% if form.ponencia.imagen.errors %}
-																						<span
-																							style="font-size: 15px; color: red;">{{ form.ponencia.imagen.errors }}
-																						</span>{% endif %}
+																							
 																					<input type="file" name="ponencia-imagen" accept="image/*"
 																						class=" form-control " id="id_ponencia-imagen">
 																					{% else%}
 
 
 																					<label
-																						for="{{form.ponencia.imagen.id_for_label }}"><b>{{form.ponencia.imagen.label }}</b>{% if form.ponencia.imagen.errors %}
-																						<span
-																							style="font-size: 15px; color: red;">{{ form.ponencia.imagen.errors }}
-																						</span>{% endif %} </label>
+																						for="{{form.ponencia.imagen.id_for_label }}"><b>{{form.ponencia.imagen.label }}</b> </label>
 
 																					{{form.ponencia.imagen }}
 																					{%endif%}
@@ -241,11 +229,9 @@
 																				<div class="form-group">
 																					<label
 																						for="{{form.ponencia_ponente.ponente.id_for_label }}"><b>{{form.ponencia_ponente.ponente.label }}</b>
-																						{% if form.ponencia_ponente.ponente.errors %} <span
-																							style="font-size: 15px; color: red;">{{ form.ponencia_ponente.ponente.errors }}
-																						</span>{% endif %} </label>
+																						</label>
 																						{%if ponentes%}
-																						<select class="single-select-box selectivity-input " name="ponencia_ponente-ponente" multiple >
+																						<select class="select2 form-control" multiple="multiple" name="ponencia_ponente-ponente"  >
 																							{%for ponentes_all in ponentes_alls%}
 																							<option value="{{ponentes_all.id}}" {%if ponentes_all.activo%}selected{%endif%}>{{ponentes_all.nombre}}</option>
 
@@ -269,9 +255,7 @@
 																				<div class="form-group">
 																					<label
 																						for="{{form.ubicacion.direccion.id_for_label }}"><b>{{form.ubicacion.direccion.label }}</b>
-																						{% if form.ubicacion.direccion.errors %} <span
-																							style="font-size: 15px; color: red;">{{ form.ubicacion.direccion.errors }}
-																						</span>{% endif %} </label>
+																						</label>
 																					{{form.ubicacion.direccion }}
 																				</div>
 																			</div>
@@ -294,10 +278,7 @@
 																			<div class="col-sm-3 " style="display: none;">
 																				<div class="form-group">
 																					<label
-																						for="{{form.ubicacion.longitud.id_for_label }}"><b>{{form.ubicacion.longitud.label }}</b>{% if form.ubicacion.longitud.errors %}
-																						<span
-																							style="font-size: 15px; color: red;">{{ form.ubicacion.longitud.errors }}
-																						</span>{% endif %}</label>
+																						for="{{form.ubicacion.longitud.id_for_label }}"><b>{{form.ubicacion.longitud.label }}</b></label>
 
 																					{{form.ubicacion.longitud }}
 																				</div>
@@ -305,10 +286,7 @@
 																			<div class="col-sm-3 " style="display: none;">
 																				<div class="form-group">
 																					<label
-																						for="{{form.ubicacion.latitud.id_for_label }}"><b>{{form.ubicacion.latitud.label }}</b>{% if form.ubicacion.latitud.errors %}
-																						<span
-																							style="font-size: 15px; color: red;">{{ form.ubicacion.latitud.errors }}
-																						</span>{% endif %} </label>
+																						for="{{form.ubicacion.latitud.id_for_label }}"><b>{{form.ubicacion.latitud.label }}</b> </label>
 
 																					{{form.ubicacion.latitud }}
 																				</div>
@@ -318,10 +296,7 @@
 
 
 																					<label
-																						for="{{form.ponencia.congreso.id_for_label }}"><b>{{form.ponencia.congreso.label }}</b>{% if form.ponencia.congreso.errors %}
-																						<span
-																							style="font-size: 15px; color: red;">{{ form.ponencia.congreso.errors }}
-																						</span>{% endif %} </label>
+																						for="{{form.ponencia.congreso.id_for_label }}"><b>{{form.ponencia.congreso.label }}</b></label>
 
 																					{{form.ponencia.congreso }}
 																				</div>
@@ -331,10 +306,7 @@
 
 
 																					<label
-																						for="{{form.ponencia.bloque.id_for_label }}"><b>{{form.ponencia.bloque.label }}</b>{% if form.ponencia.bloque.errors %}
-																						<span
-																							style="font-size: 15px; color: red;">{{ form.ponencia.bloque.errors }}
-																						</span>{% endif %} </label>
+																						for="{{form.ponencia.bloque.id_for_label }}"><b>{{form.ponencia.bloque.label }}</b></label>
 																					
 																						{%if blo %}
 																						<select name="ponencia-bloque" class="form-control" id="id_ponencia-bloque">
@@ -357,8 +329,8 @@
 																					<label for="id_ponencia-is_info"><b>Tipo de evento en el Programa</b> </label>
 
 																					<select name="ponencia-is_info" class="form-control" required="" id="id_ponencia-is_info">
-								<option value="False" selected="">Información</option>
-								<option value="True" selected="">Ponencia</option>
+								<option value="False" >Información</option>
+								<option value="True" >Ponencia</option>
 
 								
 
@@ -367,65 +339,7 @@
 																			</div>
 																		
 																			<div class="col-md-1"></div>
-																			<div class="col-md-5">
-																				{% if form.ponencia.meta_description.errors %}
-																				<span style="font-size: 15px; color: red;">
-																					{{ form.ponencia.meta_description.errors }}
-																					</span>
-																					{% endif %} 
-																				{% if form.ponencia.meta_og_title.errors %}
-																				<span style="font-size: 15px; color: red;">
-																					{{ form.ponencia.meta_og_title.errors }}
-																					</span>
-																					{% endif %} 
-																				{% if form.ponencia.meta_og_type.errors %}
-																				<span style="font-size: 15px; color: red;">
-																					{{ form.ponencia.meta_og_type.errors }}
-																					</span>
-																					{% endif %}
-																				{% if form.ponencia.meta_og_url.errors %}
-																				<span style="font-size: 15px; color: red;">
-																					{{ form.ponencia.meta_og_url.errors }}
-																				</span>
-																				{% endif %}
-																				{% if form.ponencia.meta_title.errors %}
-																				<span style="font-size: 15px; color: red;">
-																					{{form.ponencia.meta_title.errors }}
-																				</span>
-																				{% endif %}
-																				{% if form.ponencia.meta_keywords.errors %}
-																				<span style="font-size: 15px; color: red;">
-																					{{ form.ponencia.meta_keywords.errors }}
-																					</span>
-																					{% endif %} 
-																				{% if form.ponencia.meta_twitter_card.errors%}
-																				<span style="font-size: 15px; color: red;">
-																					{{form.ponencia.meta_twitter_card.errors}}
-																				</span>
-																				{% endif %}
-																				{% if form.ponencia.meta_og_imagen.errors %}
-																				<span style="font-size: 15px; color: red;">
-																					{{ form.ponencia.meta_og_imagen.errors}}
-																				</span>
-																				{% endif %}
-																				{% if form.ponencia.meta_twitter_creator.errors%}
-																				<span style="font-size: 15px; color: red;">
-																					{{form.ponencia.meta_twitter_creator.errors}}
-																				</span>
-																				{% endif %}
-																				{% if form.ponencia.meta_twitter_site.errors%}
-																				<span style="font-size: 15px; color: red;">
-																					{{form.ponencia.meta_twitter_site.errors}}
-																				</span>
-																				{% endif %}
-																				{% if form.ponencia.meta_og_description.errors %}
-																				<span style="font-size: 15px; color: red;">
-																					{{ form.ponencia.meta_og_description.errors }}
-																					</span>
-																					{% endif %} 
-
-																				
-																			</div>
+																			
 																		</div>
 
 
@@ -435,10 +349,7 @@
 																			<div class="col-sm-3 ">
 																				<div class="form-group">
 																					<label
-																						for="{{form.ponencia.published.id_for_label }}"><b>{{form.ponencia.published.label }}</b>{% if form.ponencia.published.errors %}
-																						<span
-																							style="font-size: 15px; color: red;">{{ form.ponencia.published.errors }}
-																						</span>{% endif %} </label>
+																						for="{{form.ponencia.published.id_for_label }}"><b>{{form.ponencia.published.label }}</b></label>
 																						
 																					{{form.ponencia.published }}
 																				
@@ -604,7 +515,7 @@
 									</section>
 					</div>
 					</form>
-				
+					{{bloque_update.id}}
 				</div>
 			</div>
 		</div>
@@ -615,9 +526,11 @@
 <link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
 <script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
 
-<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/forms/select/selectivity-full.min.js'%}"></script>
+<!-- <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/forms/select/selectivity-full.min.js'%}"></script>
 <script src="{% static 'MedCongressAdmin/app-assets/js/scripts/ui/breadcrumbs-with-stats.js'%}"></script>
-<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-selectivity.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-selectivity.js'%}"></script> -->
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/forms/select/select2.full.min.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-select2.js'%}"></script>
 
 <script type="text/javascript"
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCf3QdCwg8QDNOS3A2vSQ3DqW2mpJ_gSY8"></script>
@@ -627,6 +540,15 @@
 
 	$(document).ready(function () {
 
+
+		{%if is_info%}
+		
+		$("#id_ponencia-is_info option[value='True']").attr("selected", true);
+		{%else%}
+		
+		$("#id_ponencia-is_info option[value='False']").attr("selected", true);
+
+		{%endif%}
 // 		{%if ponentes%}
 // 		var checkboxes2 = document.getElementsByName("borrar_contacto");
 // 		{%for ponente in ponentes %}
@@ -674,8 +596,17 @@
 							$("#id_ponencia-bloque option[value='{{bloque.id}}']").attr("selected", true);
 							{% endif %}
 						}
-					
-					}
+						{%if bloque %}
+						$("#id_ponencia-bloque option[value='{{bloque.id}}']").attr("selected", true);
+						{% endif %}
+
+						{%if bloque_update %}
+						
+						$("#id_ponencia-bloque option[value='{{bloque_update.id}}']").attr("selected", true);
+
+						{% endif %}
+									
+						}
 				});
 
 
@@ -704,7 +635,15 @@
 
 							$('#id_ponencia-bloque').append($("<option></option").attr('value', data[i].id).text(data[i].titulo))
 						}
-					
+						{%if bloque %}
+		$("#id_ponencia-bloque option[value='{{bloque.id}}']").attr("selected", true);
+		{% endif %}
+
+		{%if bloque_update %}
+		alert('dsdffds')
+		$("#id_ponencia-bloque option[value='{{bloque_update.id}}']").attr("selected", true);
+
+		{% endif %}
 					}
 				});
 
@@ -738,12 +677,8 @@
 		$("#id_ponencia-congreso option[value='{{congreso.id}}']").attr("selected", true);
 		
 		{% endif %}
-		{%if bloque %}
-		$("#id_ponencia-bloque option[value='{{bloque.id}}']").attr("selected", true);
-		{% endif %}
-		{%if bloque_update %}
-		$("#id_ponencia-bloque option[value='{{bloque.id}}']").attr("selected", true);
-		{% endif %}
+
+		
 
 		$('#id_ponencia-fecha_inicio').datetimepicker({
 			language: 'es',

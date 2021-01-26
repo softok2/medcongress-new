@@ -2,6 +2,12 @@
 {% block title %}MedCongressAdmin | Congreso{% endblock %}
 {% load static %}
 {% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/selectivity-full.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/css/plugins/forms/selectivity/selectivity.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/selectize.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/selectize.default.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/css/plugins/forms/selectize/selectize.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/select2.min.css' %}">
 
 </head>
 <style>
@@ -40,6 +46,13 @@
 				<div class="card-header">
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
 						Adicionar Taller</h1>
+						{% if messages %}
+						<ul class="messages">
+							{% for message in messages %}
+							<li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+								{% endfor %}
+						</ul>
+						{%endif%}
 					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
 					<div class="heading-elements">
 						<ul class="list-inline mb-0">
@@ -51,6 +64,20 @@
 				</div>
 				<div class="card-content collapse show">
 					<div class="card-body">
+						{% if form.errors %}
+						{% for field in form %}
+							{% for error in field.errors %}
+								<div class="alert alert-danger">
+									<strong>{{ error|escape }}</strong>
+								</div>
+							{% endfor %}
+						{% endfor %}
+						{% for error in form.non_field_errors %}
+							<div class="alert alert-danger">
+								<strong>{{ error|escape }}</strong>
+							</div>
+						{% endfor %}
+					{% endif %}
 						<form id="congres-form" method="POST" action="" enctype="multipart/form-data">
 							{% csrf_token %}
 							<div class="form-body">
@@ -60,10 +87,7 @@
 											<div class="col-sm-8 ">
 												<div class="form-group">
 													<label
-														for="{{form.taller.titulo.id_for_label }}"><b>{{form.taller.titulo.label }}</b>{% if form.taller.titulo.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.taller.titulo.errors }}
-														</span>{% endif %} </label>
+														for="{{form.taller.titulo.id_for_label }}"><b>{{form.taller.titulo.label }}</b></label>
 
 													{{form.taller.titulo }}
 												</div>
@@ -71,10 +95,7 @@
 											<div class="col-sm-4 ">
 												<div class="form-group">
 													<label
-														for="{{form.taller.fecha_inicio.id_for_label }}"><b>{{form.taller.fecha_inicio.label }}</b>{% if form.taller.fecha_inicio.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.taller.fecha_inicio.errors }}
-														</span>{% endif %} </label>
+														for="{{form.taller.fecha_inicio.id_for_label }}"><b></label>
 
 													{{form.taller.fecha_inicio}}
 												</div>
@@ -84,10 +105,7 @@
 											<div class="col-sm-12 ">
 												<div class="form-group">
 													<label
-														for="{{form.taller.detalle.id_for_label }}"><b>{{form.taller.detalle.label }}</b>{% if form.taller.detalle.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.taller.detalle.errors }}
-														</span>{% endif %} </label>
+														for="{{form.taller.detalle.id_for_label }}"><b>{{form.taller.detalle.label }}</b></label>
 
 													{{form.taller.detalle }}
 												</div>
@@ -98,10 +116,7 @@
 											<div class="col-sm-6 ">
 												<div class="form-group">
 													<label
-														for="{{form.taller.duracion.id_for_label }}"><b>{{form.taller.duracion.label }}</b>{% if form.taller.duracion.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.taller.duracion.errors }}
-														</span>{% endif %} </label>
+														for="{{form.taller.duracion.id_for_label }}"><b>{{form.taller.duracion.label }}</b></label>
 
 													{{form.taller.duracion }}
 												</div>
@@ -123,17 +138,13 @@
 
 													<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva
 															Imagen de Constancia</b> </label>
-													{% if form.taller.foto_constancia.errors %}<span
-														style="font-size: 15px; color: red;">{{form.taller.foto_constancia.errors }}
-													</span>{% endif %}
+													
 													<input type="file" name="taller-foto_constancia" accept="image/*"
 														class=" form-control " id="id_taller-foto_constancia">
 													{% else%}
 													<label for="{{form.taller.foto_constancia.id_for_label }}"><b>Imagen
 															de la Constancia</b>
-															{% if form.taller.foto_constancia.errors %}
-														<span style="font-size: 15px; color: red;">{{ form.taller.foto_constancia.errors }}
-														</span>{% endif %} </label>
+															</label>
 
 													{{form.taller.foto_constancia }}
 													{%endif%}
@@ -158,25 +169,40 @@
 
 													<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva
 															Imagen</b> </label>
-															{% if form.taller.imagen.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.taller.imagen.errors }}
-														</span>{% endif %}
+															
 													<input type="file" name="taller-imagen" accept="image/*"
 														class=" form-control " id="id_taller-imagen">
 													{% else%}
 
 													<label
-														for="{{form.taller.imagen.id_for_label }}"><b>{{form.taller.imagen.label }}</b>{% if form.taller.imagen.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.taller.imagen.errors }}
-														</span>{% endif %} </label>
+														for="{{form.taller.imagen.id_for_label }}"><b>{{form.taller.imagen.label }}</b></label>
 
 													{{form.taller.imagen }}
 													{%endif%}
 												</div>
 											</div>
+											<div class="col-sm-6 ">
+												<div class="form-group">
+													<label
+														for="{{form.taller_ponente.ponente.id_for_label }}"><b>{{form.Taller_ponente.ponente.label }}</b>
+														</label>
+														{%if ponentes%}
+														<select  name="taller_ponente-ponente"  class="select2 form-control" multiple="multiple" >
+															{%for ponentes_all in ponentes_alls%}
+															<option value="{{ponentes_all.id}}" {%if ponentes_all.activo%}selected{%endif%}>{{ponentes_all.nombre}}</option>
 
+															{%endfor%}
+
+														</select>
+														{%else%}
+														<div >
+															{{form.taller_ponente.ponente}}
+														</div>
+														{%endif%}
+														<!-- <input type="text" name="my_ponente" class="form-control" required=""
+															id="id_my_ponente" value="{{ponente}}"> -->
+												</div>
+											</div>
 
 
 										</div>
@@ -184,10 +210,7 @@
 											<div class="col-sm-12">
 												<div class="form-group">
 													<label
-														for="{{form.taller.detalles_tipo_boleto.id_for_label }}"><b>{{form.taller.detalles_tipo_boleto.label }}</b>{% if form.taller.detalles_tipo_boleto.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.taller.detalles_tipo_boleto.errors }}
-														</span>{% endif %} </label>
+														for="{{form.taller.detalles_tipo_boleto.id_for_label }}"><b>{{form.taller.detalles_tipo_boleto.label }}</b> </label>
 
 													{{form.taller.detalles_tipo_boleto }}
 												</div>
@@ -198,9 +221,7 @@
 												<div class="form-group">
 													<label
 														for="{{form.ubicacion.direccion.id_for_label }}"><b>{{form.ubicacion.direccion.label }}</b>
-														{% if form.ubicacion.direccion.errors %} <span
-															style="font-size: 15px; color: red;">{{ form.ubicacion.direccion.errors }}
-														</span>{% endif %} </label>
+														</label>
 													{{form.ubicacion.direccion }}
 												</div>
 											</div>
@@ -223,10 +244,7 @@
 											<div class="col-sm-3 " style="display: none;">
 												<div class="form-group">
 													<label
-														for="{{form.ubicacion.longitud.id_for_label }}"><b>{{form.ubicacion.longitud.label }}</b>{% if form.ubicacion.longitud.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.ubicacion.longitud.errors }}
-														</span>{% endif %}</label>
+														for="{{form.ubicacion.longitud.id_for_label }}"><b>{{form.ubicacion.longitud.label }}</b></label>
 
 													{{form.ubicacion.longitud }}
 												</div>
@@ -234,10 +252,7 @@
 											<div class="col-sm-3 " style="display: none;">
 												<div class="form-group">
 													<label
-														for="{{form.ubicacion.latitud.id_for_label }}"><b>{{form.ubicacion.latitud.label }}</b>{% if form.ubicacion.latitud.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.ubicacion.latitud.errors }}
-														</span>{% endif %} </label>
+														for="{{form.ubicacion.latitud.id_for_label }}"><b>{{form.ubicacion.latitud.label }}</b></label>
 
 													{{form.ubicacion.latitud }}
 												</div>
@@ -245,10 +260,7 @@
 											<div class="col-sm-3 "{%if con %} style="display: none;" {%endif%}>
 												<div class="form-group" >
 													<label
-														for="{{form.taller.congreso.id_for_label }}"><b>{{form.taller.congreso.label }}</b>{% if form.taller.congreso.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.taller.congreso.errors }}
-														</span>{% endif %} </label>
+														for="{{form.taller.congreso.id_for_label }}"><b>{{form.taller.congreso.label }}</b> </label>
 
 													{{form.taller.congreso }}
 												</div>
@@ -258,10 +270,7 @@
 
 
 													<label
-														for="{{form.taller.bloque.id_for_label }}"><b>{{form.taller.bloque.label }}</b>{% if form.taller.bloque.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.taller.bloque.errors }}
-														</span>{% endif %} </label>
+														for="{{form.taller.bloque.id_for_label }}"><b>{{form.taller.bloque.label }}</b></label>
 
 													{%if blo %}
 													<select name="taller-bloque" class="form-control"
@@ -281,10 +290,7 @@
 											<div class="col-sm-6 ">
 												<div class="form-group">
 													<label
-														for="{{form.taller.cod_video.id_for_label }}"><b>Código de inserción del video en Vimeo</b>{% if form.ponencia.cod_video.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.taller.cod_video.errors }}
-														</span>{% endif %} </label>
+														for="{{form.taller.cod_video.id_for_label }}"><b>Código de inserción del video en Vimeo</b></label>
 
 													{{form.taller.cod_video }}
 												</div>
@@ -292,10 +298,7 @@
 											<div class="col-sm-3 ">
 												<div class="form-group">
 													<label
-														for="{{form.taller.score.id_for_label }}"><b>Puntuación del Taller</b>{% if form.ponencia.score.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.taller.score.errors }}
-														</span>{% endif %} </label>
+														for="{{form.taller.score.id_for_label }}"><b>Puntuación del Taller</b></label>
 
 													{{form.taller.score }}
 												</div>
@@ -309,10 +312,7 @@
 											<div class="col-sm-3 ">
 												<div class="form-group">
 													<label
-														for="{{form.ponencia.published.id_for_label }}"><b>{{form.taller.published.label }}</b>{% if form.taller.published.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.taller.published.errors }}
-														</span>{% endif %} </label>
+														for="{{form.ponencia.published.id_for_label }}"><b>{{form.taller.published.label }}</b> </label>
 
 													{{form.taller.published }}
 												</div>
@@ -476,69 +476,7 @@
 
 									 <!-- END META DATOS -->
 											<div class="col-md-1"></div>
-											<div class="col-md-5">
-												{% if form.taller.meta_description.errors %}
-												<span style="font-size: 15px; color: red;">
-													{{ form.taller.meta_description.errors }}
-													</span>
-													{% endif %} 
-												{% if form.taller.meta_og_title.errors %}
-												<span style="font-size: 15px; color: red;">
-													{{ form.taller.meta_og_title.errors }}
-													</span>
-													{% endif %} 
-												{% if form.taller.meta_og_type.errors %}
-												<span style="font-size: 15px; color: red;">
-													{{ form.taller.meta_og_type.errors }}
-													</span>
-													{% endif %}
-												{% if form.taller.meta_og_url.errors %}
-												<span style="font-size: 15px; color: red;">
-													{{ form.taller.meta_og_url.errors }}
-												</span>
-												{% endif %}
-												{% if form.taller.meta_title.errors %}
-												<span style="font-size: 15px; color: red;">
-													{{form.taller.meta_title.errors }}
-												</span>
-												{% endif %}
-												{% if form.taller.meta_keywords.errors %}
-												<span style="font-size: 15px; color: red;">
-													{{ form.taller.meta_keywords.errors }}
-													</span>
-													{% endif %} 
-												{% if form.taller.meta_twitter_card.errors%}
-												<span style="font-size: 15px; color: red;">
-													{{form.taller.meta_twitter_card.errors}}
-												</span>
-												{% endif %}
-												{% if form.taller.meta_og_imagen.errors %}
-												<span style="font-size: 15px; color: red;">
-													{{ form.taller.meta_og_imagen.errors}}
-												</span>
-												{% endif %}
-												{% if form.taller.meta_twitter_creator.errors%}
-												<span style="font-size: 15px; color: red;">
-													{{form.taller.meta_twitter_creator.errors}}
-												</span>
-												{% endif %}
-												{% if form.taller.meta_twitter_site.errors%}
-												<span style="font-size: 15px; color: red;">
-													{{form.taller.meta_twitter_site.errors}}
-												</span>
-												{% endif %}
-												{% if form.taller.meta_og_description.errors %}
-												<span style="font-size: 15px; color: red;">
-													{{ form.taller.meta_og_description.errors }}
-													</span>
-													{% endif %} 
-
-												<button type="button" class="btn btn-link" data-toggle="modal"
-													data-target="#meta">
-													<h6 > Gestionar los Metadatos de este Taller </h6>
-
-												</button>
-											</div>
+											
 										</div>
 										
 
@@ -565,7 +503,12 @@
 <script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/editors/ckeditor/ckeditor.js'%}"></script>
 <script src="{% static 'MedCongressAdmin/app-assets/js/scripts/editors/editor-ckeditor.js'%}"></script>
-
+<!-- <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/forms/select/selectivity-full.min.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/ui/breadcrumbs-with-stats.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-selectivity.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-selectize.js'%}"></script> -->
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/forms/select/select2.full.min.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-select2.js'%}"></script>
 
 <script type="text/javascript"
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCf3QdCwg8QDNOS3A2vSQ3DqW2mpJ_gSY8"></script>
@@ -574,7 +517,6 @@
 
 <script type="text/javascript">
 	$(document).ready(function () {
-
 
 		$('#id_taller-congreso').change(function () {
 				$('#id_taller-bloque').empty();
