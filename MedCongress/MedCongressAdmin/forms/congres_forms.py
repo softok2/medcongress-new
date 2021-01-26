@@ -576,9 +576,9 @@ class OtrosForm(forms.ModelForm):
 
 
 class AsignarCongresoForms(forms.ModelForm):
-    user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Correo del Usuario',required=False)
+    user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Correo del Usuario',required=True)
     categoria_pago=forms.ModelChoiceField(queryset=CategoriaPagoCongreso.objects.all(),label='Categoría de Pago')
-    congreso=forms.ModelChoiceField(queryset=Congreso.objects.all(),label='Congreso',required=False)
+    congreso=forms.ModelChoiceField(queryset=Congreso.objects.all(),label='Congreso',required=True)
     is_pagado=forms.BooleanField(label='Pagó el Congreso')
     cantidad=forms.IntegerField(label='Cantidad',initial=1)
     class Meta:
@@ -588,8 +588,8 @@ class AsignarCongresoForms(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
 
-        self.fields['user'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['congreso'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['user'].widget.attrs.update({'class': 'select2 form-control'}) 
+        self.fields['congreso'].widget.attrs.update({'class': 'select2 form-control'}) 
         self.fields['categoria_pago'].widget.attrs.update({'class': 'form-control','rows':'3'})   
         self.fields['is_pagado'].widget.attrs.update({'class': 'form-control'})   
         self.fields['cantidad'].widget.attrs.update({'class': 'form-control'})  
@@ -609,10 +609,10 @@ class AsignarCongresoForms(forms.ModelForm):
             self.add_error('cantidad', 'El Campo CANTIDAD debe tener un valor positivo')
    
 class AsignarTallerForms(forms.ModelForm):
-    user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Email del Usuario',required=False)
+    user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Email del Usuario',required=True)
     categoria_pago=forms.ModelChoiceField(queryset=CategoriaPagoCongreso.objects.all(),label='Categoría de Pago')
     is_pagado=forms.BooleanField(label='Pagó el Taller')
-    taller=forms.ModelChoiceField(queryset=Taller.objects.all(),label='Taller',required=False)
+    taller=forms.ModelChoiceField(queryset=Taller.objects.all(),label='Taller',required=True)
     class Meta:
         model=RelTallerUser
         fields=['user','taller','categoria_pago','is_pagado','cantidad']
@@ -620,8 +620,8 @@ class AsignarTallerForms(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
 
-        self.fields['user'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['taller'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['user'].widget.attrs.update({'class': 'select2 form-control'}) 
+        self.fields['taller'].widget.attrs.update({'class': 'select2 form-control'}) 
         self.fields['categoria_pago'].widget.attrs.update({'class': 'form-control','rows':'3'})   
         self.fields['is_pagado'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['cantidad'].widget.attrs.update({'class': 'form-control'})  
