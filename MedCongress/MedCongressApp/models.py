@@ -564,8 +564,8 @@ class RelTallerPonente(models.Model):
 ##### Tabla pivote Taller - Votacion  #####
 
 class RelTallerVotacion(models.Model):
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    taller = models.ForeignKey(Taller, on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    taller = models.ForeignKey(Taller, on_delete=models.CASCADE)
     votacion=models.IntegerField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
