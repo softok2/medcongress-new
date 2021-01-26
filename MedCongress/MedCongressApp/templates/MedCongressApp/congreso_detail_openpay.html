@@ -398,8 +398,18 @@
                                                             </div>
                                                             <h5
                                                                 style="color: #00a4ef;padding-bottom: 61px;font-size: 14px;">
-                                                                {%if evento.tipo == 'Taller'%}{{evento.tipo|upper}}
-                                                                {{evento.titulo}}{%else%}
+                                                                {%if evento.tipo == 'Taller'%}
+                                                                {{evento.tipo|upper}}
+                                                                {{evento.titulo}}<br>
+                                                                {%if evento.ver_taller %}
+                                                                <h6 style="margin-top: -33px;"> <a
+                                                                        href="{% url 'View_taller' path=evento.path%}"><b
+                                                                            style="font-style: italic;"><i
+                                                                                class="fa fa-eye"></i>Ver
+                                                                            Taller</b></a>
+                                                                </h6>
+                                                                {%endif%}
+                                                                {%else%}
                                                                 {{evento.titulo}}<br>
                                                                 {%if evento.ver_ponencia %}
                                                                 <span> <a
@@ -407,7 +417,9 @@
                                                                             style="font-style: italic;"><i
                                                                                 class="fa fa-eye"></i>Ver
                                                                             Ponencia</b></a>
-                                                                </span>{%endif%}{%endif%} </h5>
+                                                                </span>
+                                                                {%endif%}
+                                                                {%endif%} </h5>
                                                         </div>
                                                         {%if pon.moderador|length|divisibleby:2%}
 
@@ -442,7 +454,10 @@
                                                     {%else%}
                                                     <div class="kf_new_conf_hdg " id="conf_accord{{forloop.counter0}}">
                                                         {%endif%}
-                                                        <h5>{%if pon.tipo == 'Taller'%}{{pon.tipo|upper}}{%endif%}
+                                                        <h5>{%if pon.tipo == 'Taller'%}{{pon.tipo|upper}}
+                                                            
+    
+                                                            {%endif%}
                                                             {{pon.titulo}} <span style="font-style: italic;"> </span>
                                                         </h5>
 
@@ -452,9 +467,15 @@
                                                     <div class="kf_new_conf_open_wrap">
                                                         <div class="kf_new_conf_des">
                                                             {%if pon.tipo == 'Ponencia' and pon.ver_ponencia%}
-                                                            <h6><a href="{% url 'View_ponencia' path=pon.path%}"><b
+                                                            <h6 ><a href="{% url 'View_ponencia' path=pon.path%}"><b
                                                                         style="font-style: italic;"><i
                                                                             class="fa fa-eye"></i> Ver Ponencia</b> </a>
+                                                            </h6>
+                                                            {%endif%}
+                                                            {%if pon.tipo == 'Taller' and pon.ver_taller%}
+                                                            <h6 style="margin-bottom: 20px;"><a href="{% url 'View_taller' path=pon.path%}"><b
+                                                                        style="font-style: italic;"><i
+                                                                            class="fa fa-eye"></i> Ver Taller</b> </a>
                                                             </h6>
                                                             {%endif%}
                                                         </div>

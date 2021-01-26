@@ -401,8 +401,9 @@ class CongresoDetail(TemplateView):
                     for taller in bloque_talleres: 
                         eventos.append({
                         'id':taller.id,
-                        'path':ponencia.path,
+                        'path':taller.path,
                         'titulo': taller.titulo,
+                        'ver_taller':taller.cod_video,
                         'fecha_inicio': taller.fecha_inicio ,# una relación a otro modelo
                         'detalle':taller.detalle ,
                         'ponentes':Ponente.objects.filter(taller_ponente__pk=taller.id).distinct() ,
@@ -436,6 +437,7 @@ class CongresoDetail(TemplateView):
                     'id':taller.id,
                     'path':taller.path,
                     'titulo': taller.titulo,
+                    'ver_taller':taller.cod_video,
                     'fecha_inicio': taller.fecha_inicio ,# una relación a otro modelo
                     'detalle':taller.detalle ,
                     'ponentes':Ponente.objects.filter(taller_ponente__pk=taller.id).distinct() ,
