@@ -2,6 +2,7 @@
 {% block title %}MedCongressAdmin | Seleccionar Patrocinador{% endblock %}
 {% load static %}
 {% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/select2.min.css' %}">
 {% endblock %}
 {% block content %}
 <div class=" col-md-6 col-12 " style="margin-top: -26px;">
@@ -45,6 +46,20 @@
 				</div>
 				<div class="card-content collapse show">
 					<div class="card-body">
+						{% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
 						<form id="country-form" method="POST">
 							{% csrf_token %}
 							
@@ -58,17 +73,14 @@
 										<div class="col-sm-6 ">
 											<div class="form-group">
 												<label
-													for="{{form.aval.id_for_label }}"><b>Nombre del Patrocinador</b>{% if form.aval.errors %}
-													<span
-														style="font-size: 15px; color: red;">{{ form.aval.errors }}
-													</span>{% endif %} </label>
-													<div style="display: none;">
+													for="{{form.aval.id_for_label }}"><b>Nombre del Patrocinador</b></label>
+													<div >
 														{{form.aval}}
 													</div>
 													<div style="display: none;">
 														{{form.congreso}}
 													</div>
-													<input type="text" name="my_patrocinador" class="form-control" required="" id="id_my_patrocinador">
+													<!-- <input type="text" name="my_patrocinador" class="form-control" required="" id="id_my_patrocinador"> -->
 													
 											</div>
 										</div>
@@ -96,8 +108,9 @@
 </section>
 {% endblock %}
 {% block scripts %}
-<link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
-<script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
+
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/forms/select/select2.full.min.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-select2.js'%}"></script>
 <script type="text/javascript">
 $(function() {
 	{% if congreso %}

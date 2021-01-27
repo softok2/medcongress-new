@@ -847,7 +847,7 @@ class CongresoPatrocinadorForm(forms.ModelForm):
         super().__init__(*args, **kwargs) 
 
         self.fields['congreso'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['aval'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['aval'].widget.attrs.update({'class': 'select2 form-control'}) 
       
     def clean(self, *args, **kwargs):
         cleaned_data = super(CongresoPatrocinadorForm, self).clean(*args, **kwargs)
@@ -855,15 +855,15 @@ class CongresoPatrocinadorForm(forms.ModelForm):
         congreso = cleaned_data.get('congreso', None)
        
         if not aval:
-            self.add_error('aval', 'No existe Patrocinador con ese Nombre')
+            self.add_error('aval', 'Debe entrar un Patrocinador')
 
         if RelCongresoAval.objects.filter(congreso=congreso,aval=aval).exists():
-            self.add_error('aval', 'Este Patrocinador ya esta asociado a este congreso')
+            self.add_error('aval', 'Este Patrocinador ya esta asociado a este Congreso')
 
 
 class CongresoSocioForm(forms.ModelForm):
     
-    socio=forms.ModelChoiceField(queryset=SocioCongreso.objects.all(),required=False)
+    socio=forms.ModelChoiceField(queryset=SocioCongreso.objects.all(),required=True)
     class Meta:
         model=RelCongresoSocio
         fields=['congreso','socio']
@@ -873,7 +873,7 @@ class CongresoSocioForm(forms.ModelForm):
         super().__init__(*args, **kwargs) 
 
         self.fields['congreso'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['socio'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['socio'].widget.attrs.update({'class': 'select2 form-control'}) 
       
     def clean(self, *args, **kwargs):
         cleaned_data = super(CongresoSocioForm, self).clean(*args, **kwargs)
@@ -881,7 +881,7 @@ class CongresoSocioForm(forms.ModelForm):
         congreso = cleaned_data.get('congreso', None)
        
         if not socio:
-            self.add_error('socio', 'No existe Socio con ese Nombre')
+            self.add_error('socio', 'Debe entrar un Socio')
 
         if RelCongresoSocio.objects.filter(congreso=congreso,socio=socio).exists():
             self.add_error('socio', 'Este Socio ya esta asociado a este congreso')
