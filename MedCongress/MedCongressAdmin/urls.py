@@ -24,7 +24,7 @@ from .views.taller_view import (TalleresListView,TallerCreateView,TallerCategPag
                                    TallerUpdateView,TallerPonenteListView,TallerPonenteCreateView,TallerDeletedView,AsignarTalleresListView,
                                    AsignarTallerAddViews,GetPagosT,AsignarTallerDeletedViews,TallerPonenteDeletedView,TallerBloqueDeleted,
                                    ReporteRelTallerUserExcel,AsignarConstanciasTaller,TallerCategPagosUpdateView,TallerCategPagosDeletedView)
-from .views.ponente_view import (PonentesListView,PonentesCreateView,PonenteDeletedView)
+from .views.ponente_view import (PonentesListView,PonentesCreateView,PonenteDeletedView,UserPonenteCreateView)
 from .views.user_views import (UsuariosListView,UsuarioCreateView,UsuarioUpdateView,UsuarioDeletedView,vTableAsJSON)
 from .views.bloque_views import (BloquesListView,BloqueCreateView,BloqueDeletedView,BloquePonenciasListView,BloqueTalleresListView,
                                    BloqueUpdateView,BloqueModeradoresListView,page_not_found,BloqueModeradoresCreateView,BloqueModeradoresDeletedView,
@@ -126,6 +126,7 @@ urlpatterns = [
      path('ponentes', PonentesListView.as_view(), name='Ponentes_list'),
      path('ponente/adicionar', PonentesCreateView.as_view(), name='ponente_add'),
      path('ponente/eliminar/<int:pk>', PonenteDeletedView.as_view(), name='ponente_delete'),
+     path('user-ponente/adicionar', UserPonenteCreateView.as_view(), name='user_ponente_add'),
      path('ponentes/ponencia/<str:path>', PonenciaPonenteListView.as_view(), name='Ponencia_ponentes'),
      path('ponentes/taller/<str:path>', TallerPonenteListView.as_view(), name='Taller_ponentes'),
      path('ponentes-taller/adicionar/<str:path>', TallerPonenteCreateView.as_view(), name='taller_ponente_add'),

@@ -55,7 +55,10 @@
 				<div class="card-header">
 					
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
-						{%if update%} Actualizar Usuario{%else%}Adicionar Usuario{%endif%}</h1>
+						{%if ponente%}
+						Adicionar Ponente
+						{%else%}
+						{%if update%} Actualizar Usuario{%else%}Adicionar Usuario{%endif%}{%endif%}</h1>
 						
 					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
 					

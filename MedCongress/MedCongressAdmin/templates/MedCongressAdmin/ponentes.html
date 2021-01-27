@@ -53,10 +53,17 @@
                         </div>
                         <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
-                                <button id="add-btn" type="button" class="btn btn-success" title="Nuevo" onclick="add()"
+
+                                 <button id="select-btn" type="button" class="btn btn-warning" title="Seleccionar Usuario Existente"
+                                style="float:right;padding: 5px;margin-left: 10px;">
+                                <i class="ft  ft-server"></i>
+                            </button> 
+                               
+                                <button id="add-btn" type="button" class="btn btn-success" title="Add nuevo Ponente" 
                                     style="float:right; padding: 3px;">
                                     <i class="la la-plus"></i>
                                 </button>
+                               
                                 <div class="clearfix"></div>
                             </div>
                         </div>
@@ -156,10 +163,13 @@
             }
         });
 
-        $('#add-btn').click(function () {
+        $('#select-btn').click(function () {
             location.href = "{% url 'MedCongressAdmin:ponente_add' %}";
         });
-
+        
+        $('#add-btn').click(function () {
+            location.href = "{% url 'MedCongressAdmin:user_ponente_add' %}";
+        });
         dataTable = $('.zero-configuration').DataTable();
     });
     function deleteItem(pk) {
