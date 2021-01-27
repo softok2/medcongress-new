@@ -71,8 +71,8 @@ def Constanciataller(titulo):
             comienzo=1500-(cont/2*19) 
             base=Image.open('MedCongressApp/static/%s'%(taller.foto_constancia)).convert('RGBA')
             text=Image.new('RGBA',base.size,(255,255,255,0))
-            nombre_font=ImageFont.truetype('calibri.ttf',150)
-            #nombre_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 100, encoding="unic")
+            #nombre_font=ImageFont.truetype('calibri.ttf',150)
+            nombre_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 100, encoding="unic")
             # cong.set_variation_by_name('Italic')
             d=ImageDraw.Draw(text)
             d.text((comienzo,1200),nombre,font=nombre_font,fill=(89, 85, 85))
@@ -100,25 +100,25 @@ def Constanciataller(titulo):
             usuario.save()                               
             # ////////////////
            
-            email = EmailMessage('Constancia', '''Estimado asistente al Simposio AMCIC 2020,
+#             email = EmailMessage('Constancia', '''Estimado asistente al Simposio AMCIC 2020,
 
  
 
-Por medio del presente, se envía la constancia de asistencia al  taller  del Simposio el cual esperamos haya sido de tu interés y agrado. Recuerda que tienes acceso a las presentaciones del simposio a través de la plataforma de MedCongress, solo tienes que ingresar a la página https://medcongress.com.mx/ y en login ingresar tu correo electrónico y tu contraseña, dentro del programa podrás elegir las ponencias de tu interés que deseas ver.
+# Por medio del presente, se envía la constancia de asistencia al  taller  del Simposio el cual esperamos haya sido de tu interés y agrado. Recuerda que tienes acceso a las presentaciones del simposio a través de la plataforma de MedCongress, solo tienes que ingresar a la página https://medcongress.com.mx/ y en login ingresar tu correo electrónico y tu contraseña, dentro del programa podrás elegir las ponencias de tu interés que deseas ver.
 
  
 
-Si tienes problemas para ingresar a la plataforma, por favor comunícate con nosotros para ayudarte a solucionar tu ingreso.
+# Si tienes problemas para ingresar a la plataforma, por favor comunícate con nosotros para ayudarte a solucionar tu ingreso.
 
  
 
-Recibirás una encuesta de satisfacción en las próximas semanas, te agradeceremos tus comentarios.
+# Recibirás una encuesta de satisfacción en las próximas semanas, te agradeceremos tus comentarios.
 
  
 
-Nos vemos en el 2° Simposio en Ciencias de la Salud AMCIC 2021, el cual se llevará a cabo en el último trimestre del año, modalidad virtual!''', to = [usuario.user.usuario.email])
-            email.attach_file('MedCongressApp/static/congreso/img_constancia/%s.pdf'%(nombre_img[0:50]))
-            email.send()
+# Nos vemos en el 2° Simposio en Ciencias de la Salud AMCIC 2021, el cual se llevará a cabo en el último trimestre del año, modalidad virtual!''', to = [usuario.user.usuario.email])
+#             email.attach_file('MedCongressApp/static/congreso/img_constancia/%s.pdf'%(nombre_img[0:50]))
+#             email.send()
 
 
 
