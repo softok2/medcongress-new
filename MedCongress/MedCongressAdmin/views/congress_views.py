@@ -369,13 +369,14 @@ class CongressBloquesListView(validarUser,TemplateView):
         return context
 
 def GetBloques(request):
+    data = json.dumps([])
     if request.is_ajax():
         query = request.POST['congreso_id']
         bloques=Bloque.objects.filter(congreso=Congreso.objects.get(pk=query))
         results = []
         for bloque in bloques:
             results.append({'titulo':bloque.titulo,'id':bloque.pk})
-            data = json.dumps(results)
+        data = json.dumps(results)
     mimetype = "application/json"
     return HttpResponse(data, mimetype)
 def GetPagos(request):
@@ -1088,10 +1089,14 @@ class AsignarConstancias(validarUser,TemplateView):
     def post(self, request, **kwargs):
         titulo= self.request.POST['my_congress']
         congreso=Congreso.objects.filter(titulo=self.request.POST['my_congress']).first()
-        if congreso:
-            prueba=Constancia.apply_async(args=[titulo])
-            messages.warning(self.request,'Se le ha envió la constancia a todos los que participaron el Congreso %s'%(titulo))
-            return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list'))
+        if congreso.foto_constancia:
+            if congreso:                                        
+                prueba=Constancia.apply_async(args=[titulo])
+                messages.warning(self.request,'Se le ha envió la constancia a todos los que participaron el Congreso %s'%(titulo))
+                return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list'))
+            else:
+                messages.warning(self.request,'Ese Congreso no existe')
+                return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list'))  
         else:
-            messages.warning(self.request,'Ese Congreso no existe')
-            return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list'))
+                messages.warning(self.request,'Error.....Ese Congreso tiene asignada ninguna foto para la constancia')
+                return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list')) 

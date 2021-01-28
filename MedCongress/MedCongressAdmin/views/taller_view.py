@@ -359,13 +359,17 @@ class AsignarConstanciasTaller(validarUser,TemplateView):
     def post(self, request, **kwargs):
         titulo= self.request.POST['my_congress']
         taller=Taller.objects.filter(titulo=self.request.POST['my_congress']).first()
-        if taller:
-            prueba=Constanciataller.apply_async(args=[titulo])
-            messages.warning(self.request,'Se le ha envió la constancia a todos los que participaron el Taller %s'%(titulo))
-            return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_taller'))
+        if taller.foto_constancia:
+            if taller:
+                prueba=Constanciataller.apply_async(args=[titulo])
+                messages.warning(self.request,'Se le ha envió la constancia a todos los que participaron el Taller %s'%(titulo))
+                return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_taller'))
+            else:
+                messages.warning(self.request,'Ese Taller no existe')
+                return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_taller'))
         else:
-            messages.warning(self.request,'Ese Taller no existe')
-            return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_taller'))
+                messages.warning(self.request,'Error.....Ese Taller tiene asignada ninguna foto para la constancia')
+                return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_taller'))
 
 class TallerCategPagosUpdateView(validarUser,UpdateView):
 
