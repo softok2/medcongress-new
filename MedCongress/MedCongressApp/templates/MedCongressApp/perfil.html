@@ -251,12 +251,12 @@ Detalles del Perfil
             </div>
 
             <div class="col-md-4">
-                {% if constancias %}
+                {% if constancias or  constancias_taller%}
                 <div class="kf_aside_folwer">
                     <h6 style="text-align:center; padding:20px;border-bottom: 1px solid #979494;
 background-color: #979494;"> <b> MedCongress Constacias</b></h6>
                     <ul>
-
+                        
 
                         {%for constancia in constancias%}
                         <li>
@@ -296,7 +296,7 @@ background-color: #979494;"> <b> MedCongress Constacias</b></h6>
 
                         </li>
                         {%endfor%}
-
+                       
                         {%for constancia in constancias_taller%}
                         <li>
                             <a href="{%static '/congreso/img_constancia/'%}{{constancia.foto_constancia}}" target="_black">
@@ -335,7 +335,7 @@ background-color: #979494;"> <b> MedCongress Constacias</b></h6>
 
                         </li>
                         {%endfor%}
-
+                       
 
 
 
