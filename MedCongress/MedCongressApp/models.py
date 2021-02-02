@@ -382,7 +382,7 @@ class Moderador(models.Model):
         verbose_name_plural='moderadores'
 
     def __str__(self):
-        return self.user.usuario.email 
+        return '%s %s <%s>'%(self.user.usuario.first_name,self.user.usuario.last_name, self.user.usuario.email )
 
 #### Tabla Bloque #######
 
@@ -760,9 +760,11 @@ class Footer(models.Model):
     direccion=models.CharField(max_length=250)
     email=models.EmailField()
     telefono=models.CharField(max_length=20,validators=[
-            RegexValidator(regex=r"^(\(\+?\d{2,3}\)[\*|\s|\-|\.]?(([\d][\*|\s|\-|\.]?){6})(([\d][\s|\-|\.]?){2})?|(\+?[\d][\s|\-|\.]?){8}(([\d][\s|\-|\.]?){2}(([\d][\s|\-|\.]?){2})?)?)$", message="Entre un No. de teléfono correcto")
+            RegexValidator(regex=r"^[0-9()+-]+$", message="Entre un No. de <b>Teléfono</b> correcto. Ej. <b>(+99)999-999-999</b>")
         ])
-    whatsapp=models.CharField(max_length=20)
+    whatsapp=models.CharField(max_length=20,validators=[
+            RegexValidator(regex=r"^[0-9()+-]+$", message="Entre un No. de <b>Whatsapp</b> correcto. Ej. <b>(+99)999-999-999</b>" )
+        ])
     
     class Meta:
         verbose_name='Contacto footer'

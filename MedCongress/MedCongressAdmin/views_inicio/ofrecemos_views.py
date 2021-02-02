@@ -17,12 +17,25 @@ class OfrecemosListView(validarUser,ListView):
     model = Ofrecemos
     context_object_name = 'ofrecemoss'
     template_name = 'inicio/ofrecemos/index.html'
+    def get_context_data(self, **kwargs):
+        context=super().get_context_data(**kwargs)
+        if self.request.GET.get('search'):
+            context['search']=self.request.GET.get('search')
+        context['ofrecemoss']=Ofrecemos.objects.all()
+        return context
 
 class OfrecemosCreateView(validarUser,CreateView):
     model=Ofrecemos
     form_class = OfrecemosForm
     success_url = reverse_lazy('MedCongressAdmin:ofrecemos_list')
     template_name = 'inicio/ofrecemos/form.html'
+    def get_success_url(self):
+        url =  reverse_lazy('MedCongressAdmin:ofrecemos_list')
+        if self.request.GET.get('search'):
+            self.success_url =  '%s?search=%s'%(url,self.request.GET.get('search'))
+        else:
+            self.success_url =  url
+        return self.success_url
     
 class OfrecemosDeletedView(validarUser,DeleteView):
     model = Ofrecemos
@@ -40,5 +53,9 @@ class OfrecemosUpdateView(validarUser,UpdateView):
         context=super().get_context_data(**kwargs)
         context['update']=True
         return context
-
+    def get_success_url(self):
+        url = reverse_lazy('MedCongressAdmin:ofrecemos_list')
+        self.success_url =  '%s?search=%s'%(url,self.request.GET.get('search'))
+       
+        return self.success_url
 

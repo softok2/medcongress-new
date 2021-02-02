@@ -1,11 +1,12 @@
 {% extends 'MedCongressAdmin/base.html' %}
-{% block title %}MedCongressAdmin | Congreso{% endblock %}
+{% block title %}{%if update%} Actualizar Ponencia{%else%}Adicionar Ponencia{%endif%}{% endblock %}
 {% load static %}
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/selectivity-full.min.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/css/plugins/forms/selectivity/selectivity.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/select2.min.css' %}">
-</head>
+<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/css/core/colors/palette-tooltip.css'%}">
+
 
 
 
@@ -23,35 +24,20 @@
 	<div class="row breadcrumbs-top">
 	  <div class="breadcrumb-wrapper col-12">
 		<ol class="breadcrumb">
-{%if con%}
+{%if con or congreso_bloque%}
     <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
     </li>
-        {%if bloque%}
-            <li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:Congres_bloques' path=bloque.congreso.path %}">Bloques</a>
-			</li>
-			<li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:Bloque_ponencias' path=bloque.path tipo='congreso' %}">Ponencias</a>
-			</li>
-			{%else%}	
-			<li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:Congres_ponencias' path=con.path %}">Ponencias</a>
-			</li>
-	{%endif%}
-	
-    <li class="breadcrumb-item active">{%if ponencia%} Actualizar Ponencia {%else%} Adicionar Ponencia {%endif%}
-    </li>
-{%else%}
-
-
+{%endif%}
 {%if bloque%}
+            <li class="breadcrumb-item active"> <a {%if congreso_bloque%}href="{% url 'MedCongressAdmin:Congres_bloques' path=bloque.congreso.path %}"{%else%}href="{% url 'MedCongressAdmin:bloques_list' %}"{%endif%}>Bloques</a>
+            </li>
+{%endif%}   
 
-<li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:bloques_list' %}">Bloques</a>
+<li class="breadcrumb-item active"><a {%if con%}href="{% url 'MedCongressAdmin:ponencias_list' %}?congreso={{con.path}}"{%elif congreso_bloque%}href="{% url 'MedCongressAdmin:ponencias_list' %}?bloque={{bloque.path}}&congreso_bloque=true"{%else%}href="{% url 'MedCongressAdmin:ponencias_list' %}?bloque={{bloque.path}}"{%endif%}>Ponencias</a>
 </li>
-<li class="breadcrumb-item active">Ponencia
+<li class="breadcrumb-item active">{%if update%} Actualizar Ponencia{%else%}Adicionar Ponencia{%endif%}
 </li>
-{%else%}
-<li class="breadcrumb-item active">Ponencia
-</li>
-{%endif%}
-{%endif%}
+
 </ol>
 </div>
 </div>
@@ -82,14 +68,8 @@
 			<div class="card">
 				<div class="card-header">
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
-						{%if ponencia%} Actualizar Ponencia {%else%} Adicionar Ponencia {%endif%}</h1>
-						{% if messages %}
-						<ul class="messages">
-							{% for message in messages %}
-							<li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
-								{% endfor %}
-						</ul>
-						{% endif %}
+						{%if update%} Actualizar Ponencia{%else%}Adicionar Ponencia{%endif%}</h1>
+						
 						
 					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
 					<div class="heading-elements">
@@ -103,19 +83,26 @@
 				<div class="card-content collapse show">
 					<div class="card-body">
 						{% if form.errors %}
-						{% for field in form %}
-							{% for error in field.errors %}
-								<div class="alert alert-danger">
-									<strong>{{ error|escape }}</strong>
-								</div>
-							{% endfor %}
-						{% endfor %}
-						{% for error in form.non_field_errors %}
-							<div class="alert alert-danger">
-								<strong>{{ error|escape }}</strong>
-							</div>
-						{% endfor %}
-					{% endif %}
+    {% for field in form %}
+        {% for error in field.errors %}
+        
+			<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+				{{ error|safe|escape }}
+			</div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+	<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">×</span>
+		</button>
+		{{ error|safe|escape }}
+	</div>
+    {% endfor %}
+{% endif %} 
 						<form id="congres-form" method="POST" action="" enctype="multipart/form-data">
 							{% csrf_token %}
 							{%if ponencia %}
@@ -125,8 +112,7 @@
 								<div class="row match-height">
 									<div class="col-xl-12 col-lg-12">
 										<div class="card">
-											
-											
+
 													<ul class="nav nav-tabs">
 														<li class="nav-item">
 															<a class="nav-link active" id="base-tab1" data-toggle="tab" aria-controls="tab1" href="#tab1" aria-expanded="true">Datos Principales</a>
@@ -515,7 +501,7 @@
 									</section>
 					</div>
 					</form>
-					{{bloque_update.id}}
+				
 				</div>
 			</div>
 		</div>
@@ -525,16 +511,18 @@
 {% block scripts %}
 <link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
 <script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
-
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/tooltip/tooltip.js'%}"></script>
 <!-- <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/forms/select/selectivity-full.min.js'%}"></script>
 <script src="{% static 'MedCongressAdmin/app-assets/js/scripts/ui/breadcrumbs-with-stats.js'%}"></script>
 <script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-selectivity.js'%}"></script> -->
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/forms/select/select2.full.min.js'%}"></script>
 <script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-select2.js'%}"></script>
 
+
 <script type="text/javascript"
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCf3QdCwg8QDNOS3A2vSQ3DqW2mpJ_gSY8"></script>
 <script src="{% static 'MedCongressApp/js/lugar.js'%}"></script>
+
 
 <script type="text/javascript">
 

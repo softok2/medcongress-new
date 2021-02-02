@@ -4,19 +4,6 @@
 {% block styles %}
 <link rel="stylesheet" type="text/css"
     href="{% static 'MedCongressAdmin/app-assets/vendors/css/tables/datatable/datatables.min.css' %}">
-<style type="text/css">
-    .custom-select-sm {
-        font-size: 110%;
-    }
-
-    .page-link {
-        padding: 10px 15px;
-    }
-
-    #DataTables_Table_0_length>label {
-        margin-top: 1.2rem;
-    }
-</style>
 {% endblock %}
 {% block content %}
 <div class=" col-md-6 col-12 " style="margin-top: -26px;">
@@ -83,7 +70,7 @@
                                                
                                                 <td>{{ofrecemos.titulo}}</td>
                                                 <td>{{ofrecemos.icono}}</td>
-                                                  <td> <a href="{% url 'MedCongressAdmin:ofrecemos_edit' pk=ofrecemos.pk %}"
+                                                  <td> <a href="javascript:editItem('{{ ofrecemos.pk }}')"
                                                     title="Editar"><i class="icon icon-editar"></i></a> <a id="del_{{ ofrecemos.pk }}"
                                                         href="javascript:deleteItem('{{ ofrecemos.pk }}')"
                                                         title="Eliminar">
@@ -158,26 +145,31 @@
         });
 
         $('#add-btn').click(function () {
-            location.href = "{% url 'MedCongressAdmin:ofrecemos_add'   %}";
+            search=$('.dataTables_filter input').val();
+            location.href = "{% url 'MedCongressAdmin:ofrecemos_add'%}?search="+search+"";
         });
+        
 
         dataTable = $('.zero-configuration').DataTable();
+        {%if search%}
+        dataTable.search('{{search}}').draw();
+        {%endif%}
     });
     function deleteItem(pk) {
         swal({
-            title: "Estas seguro?",
-            text: "No será capaz de recuperar este elemento!",
+            title: "¿Estás seguro?",
+            text: "¡No será capaz de recuperar este elemento!",
             icon: "warning",
             buttons: {
                 cancel: {
-                    text: "No, cancelar!",
+                    text: "¡No, cancelar!",
                     value: null,
                     visible: true,
                     className: "",
                     closeModal: false,
                 },
                 confirm: {
-                    text: "Sí, eliminarlo!",
+                    text: "¡Sí, eliminarlo!",
                     value: true,
                     visible: true,
                     className: "",
@@ -198,6 +190,12 @@
                     swal("Cancelado", "No se eliminó este elemento.", "error");
                 }
             });
+    }
+
+    function editItem(pk) {
+            search=$('.dataTables_filter input').val();
+            url = "{% url 'MedCongressAdmin:ofrecemos_edit' pk=0 %}?search="+search+"";
+            location.href = url.replace('/0', '/' + pk);
     }
 </script>
 {% endblock %}

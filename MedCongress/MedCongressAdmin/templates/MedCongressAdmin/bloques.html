@@ -4,19 +4,7 @@
 {% block styles %}
 <link rel="stylesheet" type="text/css"
     href="{% static 'MedCongressAdmin/app-assets/vendors/css/tables/datatable/datatables.min.css' %}">
-<style type="text/css">
-    .custom-select-sm {
-        font-size: 110%;
-    }
 
-    .page-link {
-        padding: 10px 15px;
-    }
-
-    #DataTables_Table_0_length>label {
-        margin-top: 1.2rem;
-    }
-</style>
 {% endblock %}
 {% block content %}
 <div class=" col-md-6 col-12 " style="margin-top: -26px;">
@@ -27,15 +15,11 @@
 {%if congres%}
 <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
 </li>
-
-<li class="breadcrumb-item active">Bloques
-</li>
-
-{%else%}
+{%endif%}
 <li class="breadcrumb-item active"> Bloques
 </li>
 
-{%endif%}
+
 </ol>
 </div>
 </div>
@@ -103,17 +87,18 @@
                                                 <td style="text-align: center;">
                                                     
                                                     <a id=""
-                                                    href="{%url 'MedCongressAdmin:Moderadores_bloque' bloque.path%}"
-                                                        title="Ponentes">
+                                                    href="javascript:moderadorItem('{{ bloque.path }}')"
+                                                    
+                                                        title="Moderadores">
                                                         <i class="icon icon-moderador" style= "color: blue;" ></i>
                                                     </a></td>
                                                 <td>{{ bloque.fecha_inicio }}</td>
                                                 
                                                 <td>  <a id=""
                                                    {% if congres%}
-                                                    href="{%url 'MedCongressAdmin:Bloque_ponencias' path=bloque.path tipo='congreso'%}"
+                                                    href="{%url 'MedCongressAdmin:ponencias_list'%}?bloque={{bloque.path}}&congreso_bloque=true"
                                                     {%else%}
-                                                    href="{%url 'MedCongressAdmin:Bloque_ponencias' path=bloque.path tipo='false'%}"
+                                                    href="{%url 'MedCongressAdmin:ponencias_list'%}?bloque={{bloque.path}}"
                                                     {%endif%}
                                                     title="Ponencias ">
                                                     <i class="icon icon-ponencia " > </i>
@@ -129,13 +114,12 @@
                                                 </a></td>
                                                 
                                                 <td style="text-align: center;">
-                                                    {%if congres%}
-                                                    <a href="{% url 'MedCongressAdmin:bloque_edit' pk=bloque.pk tipo='congreso' %}"
+                                                
+                                                    <a 
+                                                    href="javascript:editItem('{{ bloque.pk }}')"
+                                                   
                                                         title="Editar"><i class="icon icon-editar"></i></a>
-                                                    {%else%}
-                                                    <a href="{% url 'MedCongressAdmin:bloque_edit' pk=bloque.pk tipo='falso' %}"
-                                                        title="Editar"><i class="icon icon-editar"></i></a>
-                                                        {%endif%}
+                                                    
                                                     <a id="del_{{ bloque.pk }}"
                                                         href="javascript:deleteItem('{{ bloque.pk }}')"
                                                         title="Eliminar">
@@ -181,6 +165,9 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        
+       
+   
         $('.table').DataTable({
     language: {
         "decimal": "",
@@ -212,31 +199,35 @@
         });
 
         $('#add-btn').click(function () {
+            search=$('.dataTables_filter input').val();
             {%if congres%}
-            location.href = "{% url 'MedCongressAdmin:congres_bloque_add' pk=congres.pk %}"; 
+            location.href = "{% url 'MedCongressAdmin:congres_bloque_add' pk=congres.pk %}?search="+search+""; 
             {%else%}
-            location.href = "{% url 'MedCongressAdmin:bloque_add' %}";
+            location.href = "{% url 'MedCongressAdmin:bloque_add' %}?search="+search+"";
             {%endif%}
         });
 
         dataTable = $('.zero-configuration').DataTable();
+        {%if search%}
+        dataTable.search('{{search}}').draw();
+        {%endif%}
     });
     
     function deleteItem(pk) {
         swal({
-            title: "Estas seguro?",
+            title: "¿Estás seguro?",
             text: "Eliminará todo lo referente a este evento",
             icon: "warning",
             buttons: {
                 cancel: {
-                    text: "No, cancelar!",
+                    text: "¡No, cancelar!",
                     value: null,
                     visible: true,
                     className: "",
                     closeModal: false,
                 },
                 confirm: {
-                    text: "Sí, eliminarlo!",
+                    text: "¡Sí, eliminarlo!",
                     value: true,
                     visible: true,
                     className: "",
@@ -251,16 +242,44 @@
                         if (data.success){
                           dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
 
-                        swal("Eliminado!", "Este elemento ha sido eliminado.", "success");  
+                        swal("¡Eliminado!", "Este elemento ha sido eliminado.", "success");  
                         }
                         else{
-                            swal("Este Elemento no se puede eliminar!", "Está Asociado a un "+data.evento+".", "error"); 
+                            swal("¡Este Elemento no se puede eliminar!", "Está Asociado a un "+data.evento+".", "error"); 
                         }
                     });
                 } else {
                     swal("Cancelado", "No se eliminó este elemento.", "error");
                 }
             });
+    }
+    function editItem(pk) {
+            search=$('.dataTables_filter input').val();
+            {%if congres%}
+            url = "{% url 'MedCongressAdmin:bloque_edit' pk=0 %}?search="+search+"&congreso=true";
+            location.href = url.replace('/0', '/' + pk);
+            {%else%}
+            url = "{% url 'MedCongressAdmin:bloque_edit' pk=0 %}?search="+search+"";
+            location.href = url.replace('/0', '/' + pk);
+            {%endif%}
+
+            location.href = url.replace('/0', '/' + pk);
+
+    }
+
+    function moderadorItem(pk){
+
+        search=$('.dataTables_filter input').val();
+            {%if congres%}
+            url = "{% url 'MedCongressAdmin:Moderadores_bloque' path=0 %}?search="+search+"&congreso=true";
+            location.href = url.replace('/0', '/' + pk);
+            {%else%}
+            url = "{% url 'MedCongressAdmin:Moderadores_bloque' path=0 %}?search="+search+"";
+            location.href = url.replace('/0', '/' + pk);
+            {%endif%}
+
+
+       
     }
 </script>
 {% endblock %}

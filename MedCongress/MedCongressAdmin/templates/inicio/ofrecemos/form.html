@@ -38,6 +38,27 @@
 				</div>
 				<div class="card-content collapse show">
 					<div class="card-body">
+						{% if form.errors %}
+						{% for field in form %}
+							{% for error in field.errors %}
+							
+								<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+										<span aria-hidden="true">×</span>
+									</button>
+									{{ error|safe|escape }}
+								</div>
+							{% endfor %}
+						{% endfor %}
+						{% for error in form.non_field_errors %}
+						<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">×</span>
+							</button>
+							{{ error|safe|escape }}
+						</div>
+						{% endfor %}
+					{% endif %}
 						<form id="country-form" method="POST">
 							{% csrf_token %}
 							<div class="form-body">
@@ -45,10 +66,7 @@
 									<div class="col-md-8">
 										<div class="form-group">
 											<label
-												for="{{form.titulo.id_for_label }}"><b>Título</b>{% if form.titulo.errors %}
-												<span
-													style="font-size: 15px; color: red;">{{ form.titulo.errors }}
-												</span>{% endif %} </label>
+												for="{{form.titulo.id_for_label }}"><b>Título</b></label>
 
 											{{form.titulo }}
 										</div>
@@ -56,10 +74,7 @@
 									<div class="col-md-4">
 										<div class="form-group">
 											<label
-												for="{{form.icono.id_for_label }}"><b>Ícono</b>{% if form.icono.errors %}
-												<span
-													style="font-size: 15px; color: red;">{{ form.icono.errors }}
-												</span>{% endif %} </label>
+												for="{{form.icono.id_for_label }}"><b>Ícono</b></label>
 
 											{{form.icono }}
 										</div>
@@ -69,10 +84,7 @@
 									<div class="col-md-12">
 										<div class="form-group">
 											<label
-												for="{{form.texto.id_for_label }}"><b>{{form.texto.label }}</b>{% if form.texto.errors %}
-												<span
-													style="font-size: 15px; color: red;">{{ form.texto.errors }}
-												</span>{% endif %} </label>
+												for="{{form.texto.id_for_label }}"><b>{{form.texto.label }}</b></label>
 
 											{{form.texto }}
 										</div>

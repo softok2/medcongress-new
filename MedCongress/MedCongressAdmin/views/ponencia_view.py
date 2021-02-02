@@ -12,15 +12,49 @@ from django.utils.crypto import get_random_string
 from MedCongressAdmin.apps import validarUser
 from django.db.models import Q
 
-class PonenciaListView(validarUser,ListView):
+class PonenciaListView(validarUser,TemplateView):
     model = Ponencia
     context_object_name = 'ponencias'
     template_name = 'MedCongressAdmin/ponencias.html'
-
+    def get(self, request, **kwargs):
+        if self.request.GET.get('congreso'):
+            congreso=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
+            if congreso is None:
+                return   HttpResponseRedirect(reverse('Error404'))
+        if self.request.GET.get('bloque'):
+            congreso=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
+            if congreso is None:
+                return   HttpResponseRedirect(reverse('Error404'))
+        return self.render_to_response(self.get_context_data())
+    def get_context_data(self, **kwargs):
+        context=super(PonenciaListView,self).get_context_data(**kwargs)
+        context['search']=self.request.GET.get('search')
+        context['ponencias']=Ponencia.objects.all()
+        if self.request.GET.get('congreso'):
+            context['congreso']=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
+            context['ponencias']=Ponencia.objects.filter(congreso= context['congreso'])
+        if self.request.GET.get('bloque'):
+            context['bloque']=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
+            context['ponencias']=Ponencia.objects.filter(bloque= context['bloque'])
+            if self.request.GET.get('congreso_bloque'):
+                context['congreso_bloque']=context['bloque'].congreso
+        return context
 class  PonenciaCreateView(validarUser,FormView):
     form_class = PonenciaForms
     success_url = reverse_lazy('MedCongressAdmin:ponencias_list')
     template_name = 'MedCongressAdmin/ponencia_form.html'
+
+    def get(self, request, **kwargs):
+        if self.request.GET.get('congreso'):
+            congreso=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
+            if congreso is None:
+                return   HttpResponseRedirect(reverse('Error404'))
+        if self.request.GET.get('bloque'):
+            congreso=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
+            if congreso is None:
+                return   HttpResponseRedirect(reverse('Error404'))
+        return self.render_to_response(self.get_context_data())
+
     def form_valid(self, form):
         try: 
             if not self.request.POST.getlist('ponencia_ponente-ponente'):
@@ -59,22 +93,27 @@ class  PonenciaCreateView(validarUser,FormView):
     def get_context_data(self, **kwargs):
         
         context = super(PonenciaCreateView, self).get_context_data(**kwargs)
-        if self.kwargs.get('path'):
-            context['con']=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+        if self.request.GET.get('congreso'):
+            context['con']=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
             context['blo']=Bloque.objects.filter(congreso=context['con'])
-        if self.kwargs.get('pk_block'):
-            context['bloque']=Bloque.objects.get(pk=self.kwargs.get('pk_block'))
+        if self.request.GET.get('bloque'):
+            context['bloque']=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
             context['congreso']=context['bloque'].congreso
             context['blo']= None
+        if self.request.GET.get('congreso_bloque'):
+            context['congreso_bloque']=True
         return context 
     
     def get_success_url(self):
-        if self.kwargs.get('pk'):
-            congreso=Congreso.objects.get(pk=self.kwargs.get('pk'))
-            self.success_url =  reverse_lazy('MedCongressAdmin:Congres_ponencias',kwargs={'path': congreso.path} )
-        if self.kwargs.get('pk_block'):
-            block=Bloque.objects.get(pk=self.kwargs.get('pk_block'))
-            self.success_url =  reverse_lazy('MedCongressAdmin:Bloque_ponencias',kwargs={'path': block.path,'tipo':False} )
+        url=reverse_lazy('MedCongressAdmin:ponencias_list')
+        self.success_url='%s?&search=%s'%(url,self.request.GET.get('search'))
+        if self.request.GET.get('congreso'):
+            self.success_url =  '%s?congreso=%s&search=%s'%(url,self.request.GET.get('congreso'),self.request.GET.get('search')) 
+        if self.request.GET.get('bloque'): 
+            self.success_url =  '%s?bloque=%s&search=%s'%(url,self.request.GET.get('bloque'),self.request.GET.get('search')) 
+            if self.request.GET.get('congreso_bloque'):
+                self.success_url =  '%s?bloque=%s&search=%s&congreso_bloque=true'%(url,self.request.GET.get('bloque'),self.request.GET.get('search')) 
+
         return self.success_url   
  
 ########## Vista de las Categorias de Pago de un Congreso #############
@@ -134,6 +173,16 @@ class PonencicaUpdateView(validarUser,FormView):
     success_url = reverse_lazy('MedCongressAdmin:ponencias_list')
     template_name = 'MedCongressAdmin/ponencia_form.html'
 
+    def get(self, request, **kwargs):
+        if self.request.GET.get('congreso'):
+            congreso=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
+            if congreso is None:
+                return   HttpResponseRedirect(reverse('Error404'))
+        if self.request.GET.get('bloque'):
+            congreso=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
+            if congreso is None:
+                return   HttpResponseRedirect(reverse('Error404'))
+        return self.render_to_response(self.get_context_data())
     def get_queryset(self, **kwargs):
         ponencia=Ponencia.objects.get(pk=self.kwargs.get('pk'))
         self.object=ponencia
@@ -178,23 +227,29 @@ class PonencicaUpdateView(validarUser,FormView):
         context['ponentes_alls']=ponentes_env
         context['ponentes']=relaciones
        
-        if self.kwargs.get('path'):
-            context['con']=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+        if self.request.GET.get('congreso'):
+            context['con']=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
             context['blo']=Bloque.objects.filter(congreso=context['con'])
-        if self.kwargs.get('pk_block'):
-            context['bloque']=Bloque.objects.filter(path=self.kwargs.get('pk_block')).first()
+        if self.request.GET.get('bloque'):
+            context['bloque']=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
             context['congreso']=context['bloque'].congreso
             context['blo']= None
+        if self.request.GET.get('congreso_bloque'):
+            context['congreso_bloque']=True
         return context 
       
 
     def get_success_url(self):
-        if self.kwargs.get('path'):
-            self.success_url =  reverse_lazy('MedCongressAdmin:Congres_ponencias',kwargs={'path':self.kwargs.get('path')} )
-        if self.kwargs.get('pk_block'):
-            block=Bloque.objects.filter(path=self.kwargs.get('pk_block')).first()
-            self.success_url =  reverse_lazy('MedCongressAdmin:Bloque_ponencias',kwargs={'path': block.path,'tipo':False} )
-        return self.success_url   
+        url=reverse_lazy('MedCongressAdmin:ponencias_list')
+        self.success_url='%s?&search=%s'%(url,self.request.GET.get('search'))
+        if self.request.GET.get('congreso'):
+            self.success_url =  '%s?congreso=%s&search=%s'%(url,self.request.GET.get('congreso'),self.request.GET.get('search')) 
+        if self.request.GET.get('bloque'): 
+            self.success_url =  '%s?bloque=%s&search=%s'%(url,self.request.GET.get('bloque'),self.request.GET.get('search')) 
+            if self.request.GET.get('congreso_bloque'):
+                self.success_url =  '%s?bloque=%s&search=%s&congreso_bloque=true'%(url,self.request.GET.get('bloque'),self.request.GET.get('search')) 
+
+        return self.success_url       
   
 
     def form_valid(self, form):
@@ -293,7 +348,7 @@ class vTableAsJSONPonencia(TemplateView):
             if objet.published:
                 public='Si'
             operaciones=''
-            operaciones=''' <a href="'''+ reverse('MedCongressAdmin:ponencia_edit',kwargs={'pk':objet.pk})+'''"
+            operaciones=''' <a href="'''+ reverse('MedCongressAdmin:ponencia_edit',kwargs={'pk':objet.pk})+'''?search='''+request.GET.get('search')+'''"
                                                     title="Editar"><i class="icon icon-editar"></i></a>
                                                     <a id="del_'''+ str(objet.pk) +'''"
                                                         href="javascript:deleteItem('''+ str(objet.pk) +''')"
@@ -301,7 +356,7 @@ class vTableAsJSONPonencia(TemplateView):
                                                         <i class="icon icon-eliminar"></i>
                                                     </a>'''
             if request.GET.get('tipo')=='nada':
-                operaciones=''' <a href="'''+ reverse('MedCongressAdmin:ponencia_edit',kwargs={'pk':objet.pk})+'''"
+                operaciones=''' <a href="'''+ reverse('MedCongressAdmin:ponencia_edit',kwargs={'pk':objet.pk})+'''?search='''+request.GET.get('search')+'''"
                                                     title="Editar"><i class="icon icon-editar"></i></a>
                                                     <a id="del_'''+ str(objet.pk) +'''"
                                                         href="javascript:deleteItem('''+ str(objet.pk) +''')"
@@ -309,7 +364,7 @@ class vTableAsJSONPonencia(TemplateView):
                                                         <i class="icon icon-eliminar"></i>
                                                     </a>'''
             if request.GET.get('tipo')=='congreso':
-                operaciones=''' <a href="'''+ reverse('MedCongressAdmin:Edit_Congreso_ponencia',kwargs={'path':objet.congreso.path,'pk':objet.pk})+'''"
+                operaciones=''' <a href="'''+ reverse('MedCongressAdmin:ponencia_edit',kwargs={'pk':objet.pk})+'''?search='''+request.GET.get('search')+'''&congreso='''+request.GET.get('path')+'''"
                                                     title="Editar"><i class="icon icon-editar"></i></a>
                                                     <a id="del_'''+ str(objet.pk) +'''"
                                                         href="javascript:deleteItem('''+ str(objet.pk) +''')"
@@ -317,7 +372,16 @@ class vTableAsJSONPonencia(TemplateView):
                                                         <i class="icon icon-eliminar"></i>
                                                     </a>'''
             if request.GET.get('tipo')=='bloque':
-                 operaciones=''' <a href="'''+ reverse('MedCongressAdmin:ponencia_bloque_edit',kwargs={'pk_block':str(request.GET.get('path')),'pk':objet.pk})+'''"
+                if request.GET.get('congreso_bloque'):
+                    operaciones=''' <a href="'''+ reverse('MedCongressAdmin:ponencia_edit',kwargs={'pk':objet.pk})+'''?search='''+request.GET.get('search')+'''&bloque='''+request.GET.get('path')+'''&congreso_bloque=true"
+                                                    title="Editar"><i class="icon icon-editar"></i></a>
+                                                    <a id="del_'''+ str(objet.pk) +'''"
+                                                        href="javascript:deleteItem('''+ str(objet.pk) +''')"
+                                                        title="Eliminar">
+                                                        <i class="icon icon-eliminar"></i>
+                                                    </a>'''
+                else:
+                    operaciones=''' <a href="'''+ reverse('MedCongressAdmin:ponencia_edit',kwargs={'pk':objet.pk})+'''?search='''+request.GET.get('search')+'''&bloque='''+request.GET.get('path')+'''"
                                                     title="Editar"><i class="icon icon-editar"></i></a>
                                                     <a id="del_'''+ str(objet.pk) +'''"
                                                         href="javascript:deleteItem('''+ str(objet.pk) +''')"

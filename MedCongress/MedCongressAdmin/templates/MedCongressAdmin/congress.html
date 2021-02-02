@@ -4,19 +4,7 @@
 {% block styles %}
 <link rel="stylesheet" type="text/css"
     href="{% static 'MedCongressAdmin/app-assets/vendors/css/tables/datatable/datatables.min.css' %}">
-<style type="text/css">
-    .custom-select-sm {
-        font-size: 110%;
-    }
 
-    .page-link {
-        padding: 10px 15px;
-    }
-
-    #DataTables_Table_0_length>label {
-        margin-top: 1.2rem;
-    }
-</style>
 {% endblock %}
 {% block content %}
 <div class=" col-md-6 col-12 " style="margin-top: -26px;">
@@ -65,11 +53,11 @@
                 </div>
                 <div class="card-content collapse show">
                     <div class="card-body card-dashboard">
-                        <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                        <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4 ">
                             <div class="row">
                                 <div class="col-sm-12">
                                    
-                                    <table  class="table table-striped table-bordered zero-configuration dataTable"
+                                    <table  class="table table-striped table-bordered zero-configuration dataTable "
                                         style="vertical-align: middle;margin-top: 5px!important; margin-bottom: 15px!important;"
                                         id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
                                         <thead>
@@ -99,7 +87,7 @@
                                                     <i class="icon-block " style=" padding:15px ;"> </i>
                                                 </a>
                                                 <a id=""
-                                                    href="{%url 'MedCongressAdmin:Congres_ponencias' congres.path%}"
+                                                    href="{%url 'MedCongressAdmin:ponencias_list'%}?congreso={{congres.path}}"
                                                     title="Ponencias " style="margin-left: 5px;">
                                                     <i class="icon-ponencia " style=" padding:15px"> </i>
                                                 </a>
@@ -145,7 +133,8 @@
                                                     </a> </td>
                                                    
                                                 <td style="vertical-align: middle;">
-                                                    <a href="{% url 'MedCongressAdmin:congres_edit' pk=congres.pk %}"
+                                                    <a 
+                                                    href="javascript:editItem('{{ congres.pk }}')"
                                                         title="Editar" style="margin-left: 5px;"><i class="icon-editar" style="padding: 15px;"></i></a>
                                                     <a id="del_{{ congres.pk }}"
                                                         href="javascript:deleteItem('{{ congres.pk }}')"
@@ -228,26 +217,33 @@
         });
 
         $('#add-btn').click(function () {
-            location.href = "{% url 'MedCongressAdmin:congres_add' %}";
+            search=$('.dataTables_filter input').val();
+            
+            location.href = "{% url 'MedCongressAdmin:congres_add' %}?search="+search+"";
         });
+        dataTable = $('#DataTables_Table_0').DataTable();
+        {%if search%}
+        dataTable.search('{{search}}').draw();
+        {%endif%}
 
-        dataTable = $('.zero-configuration').DataTable();
     });
+    
+
     function deleteItem(pk) {
         swal({
-            title: "Estas seguro?",
-            text: "Eliminará todo lo referente a este evento",
+            title: "¿Estás seguro?",
+            text: "¡Eliminará todo lo referente a este evento",
             icon: "warning",
             buttons: {
                 cancel: {
-                    text: "No, cancelar!",
+                    text: "¡No, cancelar!",
                     value: null,
                     visible: true,
                     className: "",
                     closeModal: false,
                 },
                 confirm: {
-                    text: "Sí, eliminarlo!",
+                    text: "¡Sí, eliminarlo!",
                     value: true,
                     visible: true,
                     className: "",
@@ -260,12 +256,17 @@
                     url = "{% url 'MedCongressAdmin:congress_delete' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                         dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
-                        swal("Eliminado!", "Este elemento ha sido eliminado.", "success");
+                        swal("¡Eliminado!", "Este elemento ha sido eliminado.", "success");
                     });
                 } else {
                     swal("Cancelado", "No se eliminó este elemento.", "error");
                 }
             });
+    }
+    function editItem(pk) {
+            search=$('.dataTables_filter input').val();
+            url = "{% url 'MedCongressAdmin:congres_edit' pk=0 %}?search="+search+"";
+            location.href = url.replace('/0', '/' + pk);
     }
 </script>
 {% endblock %}

@@ -89,7 +89,12 @@ class CongressListView(validarUser,ListView):
     model = Congreso
     context_object_name = 'congress'
     template_name = 'MedCongressAdmin/congress.html'
-
+    def get_context_data(self, **kwargs):
+        context=super().get_context_data(**kwargs)
+        if self.request.GET.get('search'):
+            context['search']=self.request.GET.get('search')
+        context['congress']=Congreso.objects.all()
+        return context
 class CongressCreateView(validarUser,FormView):
     form_class = CongresoForms
     success_url = reverse_lazy('MedCongressAdmin:congress_list')
@@ -115,6 +120,13 @@ class CongressCreateView(validarUser,FormView):
             messages.warning(self.request, e)
             return super().form_invalid(form)
 
+    def get_success_url(self):
+        url =  reverse_lazy('MedCongressAdmin:congress_list')
+        if self.request.GET.get('search'):
+            self.success_url =  '%s?search=%s'%(url,self.request.GET.get('search'))
+        else:
+            self.success_url =  url
+        return self.success_url
 class CongressUpdateView(validarUser,FormView):
     form_class = CongresoForms
     success_url = reverse_lazy('MedCongressAdmin:congress_list')
@@ -172,7 +184,13 @@ class CongressUpdateView(validarUser,FormView):
         except Exception as e:
             messages.warning(self.request, e)
             return super().form_invalid(form)
-
+    def get_success_url(self):
+        url =  reverse_lazy('MedCongressAdmin:congress_list')
+        if self.request.GET.get('search'):
+            self.success_url =  '%s?search=%s'%(url,self.request.GET.get('search'))
+        else:
+            self.success_url =  url
+        return self.success_url
 
     # def get_context_data(self, **kwargs):
     #     context = super(CountryUpdateView, self).get_context_data(**kwargs)
@@ -221,6 +239,7 @@ class CongressPonenciasListView(validarUser,TemplateView):
         context['congres']=congreso
         context['ponencias']=Ponencia.objects.filter(congreso=congreso)
         context['all_ponencias']=Ponencia.objects.filter(published=True).exclude(congreso=congreso)
+        context['search']=self.request.GET.get('search')
         return context
 
 ########## Vista del cuestionario de un Congreso #############
@@ -363,6 +382,9 @@ class CongressBloquesListView(validarUser,TemplateView):
         return self.render_to_response(self.get_context_data())    
     def get_context_data(self, **kwargs):
         context = super(CongressBloquesListView, self).get_context_data(**kwargs)
+        if self.request.GET.get('search'):
+            context['search']=self.request.GET.get('search')
+        context['bloques']=Bloque.objects.all()
         congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
         context['congres']=congreso
         context['bloques']=Bloque.objects.filter(congreso=congreso)

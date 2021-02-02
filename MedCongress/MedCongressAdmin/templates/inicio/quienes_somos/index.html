@@ -137,17 +137,12 @@
 {% endblock %}
 {% block scripts %}
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/extensions/sweetalert.min.js' %}"></script>
-<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/tables/datatable/datatables.min.js' %}"></script>
+
 
 <script type="text/javascript">
     $(document).ready(function () {
         
-        var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
-        $.ajaxSetup({
-            beforeSend: function (xhr, settings) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
-            }
-        });
+      
 
         $('#add-btn').click(function () {
             location.href = "{% url 'MedCongressAdmin:cat_pago_add'   %}";
@@ -155,24 +150,29 @@
         $('#add_img-btn').click(function () {
             location.href = "{% url 'MedCongressAdmin:imagen-quienes_somos_add'   %}";
         });
-        
-        dataTable = $('.zero-configuration').DataTable();
+
     });
+    var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        });
     function deleteItem(pk) {
         swal({
-            title: "Estas seguro?",
-            text: "No será capaz de recuperar este elemento!",
+            title: "¿Estás seguro?",
+            text: "¡No será capaz de recuperar este elemento!",
             icon: "warning",
             buttons: {
                 cancel: {
-                    text: "No, cancelar!",
+                    text: "¡No, cancelar!",
                     value: null,
                     visible: true,
                     className: "",
                     closeModal: false,
                 },
                 confirm: {
-                    text: "Sí, eliminarlo!",
+                    text: "¡Sí, eliminarlo!",
                     value: true,
                     visible: true,
                     className: "",
@@ -185,11 +185,10 @@
                     url = "{% url 'MedCongressAdmin:imagen_quienes_somos_deleted' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                        
-                       swal("Eliminado!", "Este elemento ha sido eliminado.", "success");
+                       swal("¡Eliminado!", "Este elemento ha sido eliminado.", "success");
                        location.reload()
-               
-                        
                     });
+                   
                 } else {
                     swal("Cancelado", "No se eliminó este elemento.", "error");
                 }

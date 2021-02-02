@@ -140,7 +140,7 @@ urlpatterns = [
      path('moderador/adicionar', ModeradorCreateView.as_view(), name='moderador_add'),
      path('moderador/eliminar/<int:pk>', ModeradorDeletedView.as_view(), name='moderador_delete'),
 
-     # Bloque-Moderadores
+     # Bloque-Moderadores-
      path('moderadores/bloque/<str:path>', BloqueModeradoresListView.as_view(), name='Moderadores_bloque'),
      path('moderadores-bloque/adicionar/<str:path>', BloqueModeradoresCreateView.as_view(), name='bloque_moderador_add'),
      path('moderadores-bloque/eliminar/<int:pk>', BloqueModeradoresDeletedView.as_view(), name='moderador_block_delete'),
@@ -149,7 +149,7 @@ urlpatterns = [
      # bloques
      path('bloques', BloquesListView.as_view(), name='bloques_list'),
      path('bloque/adicionar', BloqueCreateView.as_view(), name='bloque_add'), 
-     path('bloque/editar/<int:pk>/<str:tipo>/', BloqueUpdateView.as_view(), name='bloque_edit'),
+     path('bloque/editar/<int:pk>', BloqueUpdateView.as_view(), name='bloque_edit'),
      path('bloque/eliminar/<int:pk>', BloqueDeletedView.as_view(), name='bloque_delete'),
      
      # otros
@@ -320,8 +320,9 @@ urlpatterns = [
 
      #Congreso-Quienes Somos
      
-     path('imagen-quienes_somos/adicinar', QuienesSomosImagenCreateView.as_view(), name='imagen-quienes_somos_add'),
+    path('imagen-quienes_somos/adicinar', QuienesSomosImagenCreateView.as_view(), name='imagen-quienes_somos_add'),
     path('imagen-quienes_somos/eliminar/<int:pk>', QuienesSomosImagenDeletedView.as_view(), name='imagen_quienes_somos_deleted'),
+
     path('pruebaTablaJson', vTableAsJSON.as_view(), name='table_json'),
     path('pruebaTablaJsonPonencia', vTableAsJSONPonencia.as_view(), name='table_json_ponencia'),
     

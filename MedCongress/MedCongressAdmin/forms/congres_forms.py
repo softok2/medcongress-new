@@ -36,6 +36,7 @@ class CongresForm(forms.ModelForm):
 
         self.fields['titulo'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['sub_titulo'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['imagen_seg'].widget.attrs.update({ 'data-toggle':"tooltip",'data-popup':"tooltip-custom", 'data-original-title':"La Imagen debe ser de 1140 X 240 pixel "})  
         # self.fields['imagen_seg'].widget.attrs.update({'class': ' form-control '}) 
         self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control'})   
         self.fields['published'].widget.attrs.update({'class': 'form-control'}) 
@@ -87,7 +88,7 @@ class ImagenCongresoForms(forms.ModelForm):
         fields=['imagen']       
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # self.fields['imagen'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['imagen'].widget.attrs.update({ 'data-toggle':"tooltip",'data-popup':"tooltip-custom", 'data-original-title':"La Imagen debe ser de 1920 X 1080 pixel "})  
 
     def clean(self, *args, **kwargs):
         
@@ -169,7 +170,8 @@ class PonenciaForm(forms.ModelForm):
         self.fields['meta_twitter_creator'].widget.attrs.update({'class': 'form-control '})  
         self.fields['meta_keywords'].widget.attrs.update({'class': 'form-control','rows':'3'})   
         self.fields['meta_og_imagen'].widget.attrs.update({'class': 'form-control '}) 
-        self.fields['meta_title'].widget.attrs.update({'class': 'form-control'})  
+        self.fields['meta_title'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['imagen'].widget.attrs.update({ 'data-toggle':"tooltip",'data-popup':"tooltip-custom", 'data-original-title':"La Imagen debe ser de 1920 X 1080 pixel "})   
         # self.fields['ponente'].widget.attrs.update({'class': 'form-control multiple-select-box selectivity-input'})  
     
     def clean(self, *args, **kwargs):
@@ -200,7 +202,7 @@ class PonenciaForm(forms.ModelForm):
 
 class PonenciaPonenteForm(forms.ModelForm):
    
-    ponente=forms.ModelMultipleChoiceField(queryset=Ponente.objects.all(),label='Ponente',required=False)
+    ponente=forms.ModelMultipleChoiceField(queryset=Ponente.objects.all(),label='Ponente',required=True)
   
     class Meta:
         model=Ponente
@@ -218,9 +220,9 @@ class PonenciaPonenteForm(forms.ModelForm):
     #         cleaned_data = super(PonenciaPonenteForm, self).clean(*args, **kwargs)
     #         ponente = cleaned_data.items
            
-    #         # if not ponente:
-    #         #     self.add_error('ponente', 'Este Campo es obligatorio mio')
-    #         #     return
+    #         if not ponente:
+    #             self.add_error('ponente', 'Este Campo es obligatorio mio')
+    #             return
 
     #     except Exception as e:
     #         self.add_error('error', e)    
@@ -308,7 +310,10 @@ class PonenteForm(forms.ModelForm):
         cleaned_data = super(PonenteForm, self).clean(*args, **kwargs)
         user = cleaned_data.get('user', None)
         if not user:
-            self.add_error('user', 'Debe entrar un Usuario')
+            self.add_error('user', 'Debe entrar un <b>Usuario</b>')
+        else:
+            if Ponente.objects.filter(user=user).exists():
+                self.add_error('user', 'Este <b>Ponente</b> ya existe')
 
 class ModeradorForm(forms.ModelForm):
     user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Seleccione usuario',required=True)
@@ -543,7 +548,7 @@ class BloqueForms(forms.ModelForm):
         self.fields['detalle'].widget.attrs.update({'class': 'form-control','rows':'3'})   
         self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control'})   
         self.fields['published'].widget.attrs.update({'class': 'form-control'})   
-        self.fields['congreso'].widget.attrs.update({'class': 'form-control'})  
+        self.fields['congreso'].widget.attrs.update({'class': 'form-control select2'})  
 
     def clean(self, *args, **kwargs):
         cleaned_data = super(BloqueForms, self).clean(*args, **kwargs)
@@ -552,10 +557,10 @@ class BloqueForms(forms.ModelForm):
         fecha = cleaned_data.get('fecha_inicio', None)
        
         if not congreso:
-            self.add_error('congreso', 'No existe ese Congreso')
+            self.add_error('congreso', 'Debe entrar un  <b>Congreso</b>')
 
         if fecha < congreso.fecha_inicio:
-            self.add_error('fecha_inicio', 'Esta Fecha no puede ser menor  que la Fecha de inicio del Congreso %s'%(congreso.fecha_inicio))
+            self.add_error('fecha_inicio', 'Esta <b>Fecha</b> no puede ser menor  que la <b>Fecha de inicio del Congreso ( %s )  </b>'%(congreso.fecha_inicio))
 
 class OtrosForm(forms.ModelForm):
 
@@ -641,7 +646,7 @@ class AsignarTallerForms(forms.ModelForm):
             self.add_error('cantidad', 'El Campo CANTIDAD debe tener un valor positivo')
           
 class ModeradorBloqueForm(forms.ModelForm):
-    moderador=forms.ModelChoiceField(queryset=Moderador.objects.all(),label='Moderador',required=False)
+    moderador=forms.ModelChoiceField(queryset=Moderador.objects.all(),label='Moderador')
   
     class Meta:
         model=RelBloqueModerador
@@ -651,7 +656,7 @@ class ModeradorBloqueForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
 
-        self.fields['moderador'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['moderador'].widget.attrs.update({'class': 'form-control select2'}) 
         self.fields['bloque'].widget.attrs.update({'class': 'form-control','style':'display:none'}) 
 
     def clean(self, *args, **kwargs):
@@ -660,10 +665,10 @@ class ModeradorBloqueForm(forms.ModelForm):
         bloque = cleaned_data.get('bloque', None)
        
         if not moderador:
-            self.add_error('moderador', 'No existe ese Moderador')
+            self.add_error('moderador', 'Debe entrar un <b>Moderador</b>')
 
         if RelBloqueModerador.objects.filter(bloque=bloque,moderador=moderador).exists():
-            self.add_error('moderador', 'Este Bloque ya tiene un moderador con ese Correo')
+            self.add_error('moderador', 'Este <b>Bloque</b> ya tiene este <b>Moderador</b>')
 class ImagenCongForms(forms.ModelForm):
     imagen=forms.ImageField(label='Buscar Imagen',required=False)
     update=forms.BooleanField(required=False)
@@ -893,22 +898,22 @@ class SelectPonencia(forms.Form):
         self.path = kwargs.pop('path', None)
         super().__init__(*args, **kwargs) 
         bloque=Bloque.objects.filter(path=self.path).first()
-        ponencia=forms.ModelChoiceField(queryset=Ponencia.objects.filter(congreso=bloque.congreso),required=False)
+        ponencia=forms.ModelChoiceField(queryset=Ponencia.objects.filter(congreso=bloque.congreso))
         self.fields['ponencia'].widget.attrs.update({'class': 'form-control'}) 
     
     def clean(self, *args, **kwargs):
         cleaned_data = super(SelectPonencia, self).clean(*args, **kwargs)
         ponencia_titulo = cleaned_data.get('ponencia', None)
         if not ponencia_titulo:
-            self.add_error('ponencia', 'Esta ponencia no existe en este congreso')
+            self.add_error('ponencia', 'Deb entrar una <b>Ponencia</b>')
         else:
             bloque=Bloque.objects.filter(path=self.path).first()
             ponencia=Ponencia.objects.filter(titulo=ponencia_titulo).first()
             if ponencia.bloque==bloque:
-                self.add_error('ponencia', 'Esta Ponencia ya está en este bloque')
+                self.add_error('ponencia', 'Esta <b>Ponencia</b> ya está en este <b> bloque</b>')
                 return
             if ponencia.fecha_inicio.date() != bloque.fecha_inicio.date():
-                self.add_error('ponencia', 'Esta ponencia no tiene la misma fecha de inicio que este Bloque')
+                self.add_error('ponencia', 'Esta <b>Ponencia</b> no tiene la misma <b>fecha de inicio que este Bloque</b>')
 
         # if RelCongresoSocio.objects.filter(congreso=congreso,socio=socio).exists():
         #     self.add_error('socio', 'Este Socio ya esta asociado a este congreso')

@@ -2,6 +2,7 @@
 {% block title %}Adicionar Moderador{% endblock %}
 {% load static %}
 {% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/select2.min.css' %}">
 {% endblock %}
 {% block content %}
 <section class="multiple-input-with-labels" id="multiple-input-with-labels">
@@ -22,6 +23,27 @@
 				</div>
 				<div class="card-content collapse show">
 					<div class="card-body">
+						{% if form.errors %}
+						{% for field in form %}
+							{% for error in field.errors %}
+							
+								<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+										<span aria-hidden="true">×</span>
+									</button>
+									{{ error|safe|escape }}
+								</div>
+							{% endfor %}
+						{% endfor %}
+						{% for error in form.non_field_errors %}
+						<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">×</span>
+							</button>
+							{{ error|safe|escape }}
+						</div>
+						{% endfor %}
+					{% endif %}
 						<form id="country-form" method="POST">
 							{% csrf_token %}
 							<div class="form-body">
@@ -31,11 +53,9 @@
 										<div class="col-sm-6 ">
 											<div class="form-group">
 												<label
-													for="{{form.moderador.id_for_label }}"><b>Entre Correo del Moderador</b>{% if form.moderador.errors %}
-													<span style="font-size: 15px; color: red;">{{ form.moderador.errors }}
-													</span>{% endif %} </label>
-													<input type="text" name="my_user" class="form-control" required="" id="id_my_user">
-													<div style="display: none;">
+													for="{{form.moderador.id_for_label }}"><b>Entre Correo del Moderador</b></label>
+													<!-- <input type="text" name="my_user" class="form-control" required="" id="id_my_user"> -->
+													<div >
 														{{form.moderador}}
 													</div>
 													
@@ -73,6 +93,8 @@
 {% block scripts %}
 <link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
 <script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/forms/select/select2.full.min.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-select2.js'%}"></script>
 <script type="text/javascript">
 	$(document).ready(function () {
 		$("#id_bloque option[value='{{bloq.id}}']").attr("selected",true);

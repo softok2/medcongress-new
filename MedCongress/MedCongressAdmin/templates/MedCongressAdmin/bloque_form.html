@@ -2,7 +2,7 @@
 {% block title %}Adicionar Bloque {% endblock %}
 {% load static %}
 {% block styles %}
-
+<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/select2.min.css' %}">
 <style>
 	#geomap {
 		width: 100%;
@@ -17,38 +17,20 @@
 	<div class="row breadcrumbs-top">
 	  <div class="breadcrumb-wrapper col-12">
 		<ol class="breadcrumb">
-			{%if update%}
+			
 {%if con%}
 <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
 </li>
 <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:Congres_bloques' path=con.path %}">Bloques</a>
 </li>
 
-<li class="breadcrumb-item active">Actualizar Bloque
-</li>
-
 {%else%}
 <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:bloques_list' %}">Bloques</a>
 </li>
-<li class="breadcrumb-item active"> Actualizar Bloque
-</li>
-{%endif%}
-{%else%}
-{%if con%}
-<li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
-</li>
-<li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:Congres_bloques' path=con.path %}">Bloques</a>
-</li>
 
-<li class="breadcrumb-item active">Adicionar Bloque
-</li>
-
-{%else%}
-<li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:bloques_list' %}">Bloques</a>
-</li>
-<li class="breadcrumb-item active"> Adicionar Bloque
-</li>
 {%endif%}
+<li class="breadcrumb-item active">{%if update%}Actualizar Bloque{%else%}Adicionar Bloque
+</li>
 {%endif%}
 </ol>
 </div>
@@ -72,6 +54,27 @@
 				</div>
 				<div class="card-content collapse show">
 					<div class="card-body">
+						{% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+        
+			<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+				{{ error|safe|escape }}
+			</div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+	<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">×</span>
+		</button>
+		{{ error|safe|escape }}
+	</div>
+    {% endfor %}
+{% endif %} 
 						<form id="congres-form" method="POST" action="" enctype="multipart/form-data">
 							{% csrf_token %}
 							<div class="form-body">
@@ -81,10 +84,7 @@
 											<div class="col-sm-4 ">
 												<div class="form-group">
 													<label
-														for="{{form.titulo.id_for_label }}"><b>{{form.titulo.label }}</b>{% if form.titulo.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.titulo.errors }}
-														</span>{% endif %} </label>
+														for="{{form.titulo.id_for_label }}"><b>{{form.titulo.label }}</b></label>
 
 													{{form.titulo }}
 												</div>
@@ -93,10 +93,7 @@
 											<div class="col-sm-4 ">
 												<div class="form-group">
 													<label
-														for="{{form.duracion.id_for_label }}"><b>{{form.duracion.label }}</b>{% if form.duracion %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.duracion.errors }}
-														</span>{% endif %} </label>
+														for="{{form.duracion.id_for_label }}"><b>{{form.duracion.label }}</b></label>
 
 													{{form.duracion}}
 												</div>
@@ -104,10 +101,7 @@
 											<div class="col-sm-4 ">
 												<div class="form-group">
 													<label
-														for="{{form.fecha_inicio.id_for_label }}"><b>{{form.fecha_inicio.label }}</b>{% if form.fecha_inicio.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.fecha_inicio.errors }}
-														</span>{% endif %} </label>
+														for="{{form.fecha_inicio.id_for_label }}"><b>{{form.fecha_inicio.label }}</b> </label>
 
 													{{form.fecha_inicio}}
 												</div>
@@ -117,10 +111,7 @@
 											<div class="col-sm-12 ">
 												<div class="form-group">
 													<label
-														for="{{form.detalle.id_for_label }}"><b>{{form.detalle.label }}</b>{% if form.detalle.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.detalle.errors }}
-														</span>{% endif %} </label>
+														for="{{form.detalle.id_for_label }}"><b>{{form.detalle.label }}</b> </label>
 
 													{{form.detalle }}
 												</div>
@@ -130,10 +121,7 @@
 											<div class="col-sm-6 ">
 												<div class="form-group">
 													<label
-														for="{{form.published.id_for_label }}"><b>{{form.published.label }}</b>{% if form.published.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.published.errors }}
-														</span>{% endif %} </label>
+														for="{{form.published.id_for_label }}"><b>{{form.published.label }}</b> </label>
 
 													{{form.published }}
 												</div>
@@ -143,17 +131,14 @@
 											<div class="col-sm-6 ">
 												<div class="form-group" {%if con %}	style="display: none;" {%endif%}>
 													<label
-														for="{{form.congreso.id_for_label }}"><b>{{form.congreso.label }}</b>{% if form.congreso.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.congreso.errors }}
-														</span>{% endif %} </label>
+														for="{{form.congreso.id_for_label }}"><b>{{form.congreso.label }}</b></label>
 
-														<div style="display: none;">
+														<div >
 															{{form.congreso}}
 														</div>
 														{%if not con %}
-														<input type="text" name="my_user" class="form-control" required=""
-															id="id_my_user">
+														<!-- <input type="text" name="my_user" class="form-control" required="" id="id_my_user">-->
+															
 															{%endif%}
 												</div>
 
@@ -182,6 +167,8 @@
 {% block scripts %}
 <link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
 <script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/forms/select/select2.full.min.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-select2.js'%}"></script>
 
 
 

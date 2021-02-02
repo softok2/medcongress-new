@@ -4,19 +4,7 @@
 {% block styles %}
 <link rel="stylesheet" type="text/css"
     href="{% static 'MedCongressAdmin/app-assets/vendors/css/tables/datatable/datatables.min.css' %}">
-<style type="text/css">
-    .custom-select-sm {
-        font-size: 110%;
-    }
 
-    .page-link {
-        padding: 10px 15px;
-    }
-
-    #DataTables_Table_0_length>label {
-        margin-top: 1.2rem;
-    }
-</style>
 {% endblock %}
 {% block content %}
 <div class=" col-md-6 col-12 " style="margin-top: -26px;">
@@ -24,29 +12,18 @@
 	<div class="row breadcrumbs-top">
 	  <div class="breadcrumb-wrapper col-12">
 		<ol class="breadcrumb">
-{%if congres%}
+{%if congreso or congreso_bloque%}
     <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
     </li>
-        {%if bloque%}
-            <li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:Congres_bloques' path=bloque.congreso.path %}">Bloques</a>
-            </li>
-    {%endif%}
-    <li class="breadcrumb-item active">Ponencias
-    </li>
-{%else%}
-
-
+{%endif%}
 {%if bloque%}
+            <li class="breadcrumb-item active"> <a {%if congreso_bloque%}href="{% url 'MedCongressAdmin:Congres_bloques' path=bloque.congreso.path %}"{%else%}href="{% url 'MedCongressAdmin:bloques_list' %}"{%endif%}>Bloques</a>
+            </li>
+{%endif%}   
 
-<li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:bloques_list' %}">Bloques</a>
-</li>
 <li class="breadcrumb-item active">Ponencias
 </li>
-{%else%}
-<li class="breadcrumb-item active">Ponencias
-</li>
-{%endif%}
-{%endif%}
+
 </ol>
 </div>
 </div>
@@ -77,7 +54,7 @@
                                 style="float:right;padding: 5px;margin-left: 10px;">
                                 <i class="ft  ft-server"></i>
                             </button> {%endif%}
-                                <button id="add-btn" type="button" class="btn btn-success" title="Nuevo" onclick="add()"
+                                <button id="add-btn" type="button" class="btn btn-success" title="Nuevo" 
                                     style="float:right; padding: 3px;">
                                     <i class="la la-plus"></i>
                                 </button>
@@ -170,6 +147,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        
         $('.table').DataTable({
     language: {
         "decimal": "",
@@ -204,17 +182,23 @@
     "bServerSide": true,
     "sAjaxSource": "{% url 'MedCongressAdmin:table_json_ponencia' %}",
     "fnServerParams": function (aoData) {
-        {%if congres%}
+        {%if congreso%}
             aoData.push( { "name": "tipo", "value": "congreso" } );
-            aoData.push( { "name": "id", "value": {{congres.pk}} } );
+            aoData.push( { "name": "path", "value": "{{congreso.path}}" } );
             {%elif bloque%}
             aoData.push( { "name": "tipo", "value": "bloque" } );
             aoData.push( { "name": "path", "value": "{{bloque.path}}" } );
+            {%if congreso_bloque%}
+           
+            aoData.push( { "name": "congreso_bloque", "value": "true" } );
+            {%endif%}
+
            {%else%}
 
             aoData.push( { "name": "tipo", "value": "nada" } );
             
             {%endif%}
+            aoData.push( { "name": "search", "value": $('.dataTables_filter input').val()  } );
         
        }
 });
@@ -226,38 +210,68 @@
         });
 
         $('#add-btn').click(function () {
-            {%if congres%}
-            location.href = "{% url 'MedCongressAdmin:ponente_ponencia_add' path=congres.path %}";
+            search=$('.dataTables_filter input').val();
+            {%if congreso%}
+            location.href = "{% url 'MedCongressAdmin:ponencia_add'%}?search="+search+"&congreso={{congreso.path}}";
             
             {%elif bloque%}
-            location.href = "{% url 'MedCongressAdmin:ponencia_bloque_add' pk_block=bloque.pk %}";
+            {%if congreso_bloque%}
+            location.href = "{% url 'MedCongressAdmin:ponencia_add' %}?search="+search+"&bloque={{bloque.path}}&congreso_bloque=true";
+            {%else%}
+
+            location.href = "{% url 'MedCongressAdmin:ponencia_add' %}?search="+search+"&bloque={{bloque.path}}";
+            
+
+            {%endif%}
            {%else%}
 
-            location.href = "{% url 'MedCongressAdmin:ponencia_add' %}";
+            location.href = "{% url 'MedCongressAdmin:ponencia_add' %}?search="+search+"";
             {%endif%}
         });
         {%if bloque%}
         $('#select-btn').click(function () {
+            search=$('.dataTables_filter input').val();
+            {%if congreso%}
+            location.href = "{% url 'MedCongressAdmin:bloque_ponencia_select' path=bloque.path %}?search="+search+"&congreso={{congreso.path}}";
+            
+            {%elif bloque%}
+            {%if congreso_bloque%}
+            location.href = "{% url 'MedCongressAdmin:bloque_ponencia_select' path=bloque.path  %}?search="+search+"&bloque={{bloque.path}}&congreso_bloque=true";
+            {%else%}
+
+            location.href = "{% url 'MedCongressAdmin:bloque_ponencia_select' path=bloque.path  %}?search="+search+"&bloque={{bloque.path}}";
+            
+
+            {%endif%}
+           {%else%}
+
+            location.href = "{% url 'MedCongressAdmin:bloque_ponencia_select' path=bloque.path  %}?search="+search+"";
+            {%endif%}
           
-            location.href = "{% url 'MedCongressAdmin:bloque_ponencia_select' path=bloque.path  %}";
         });
         {%endif%}
+        dataTable = $('.zero-configuration').DataTable();
+        {%if search%}
+        dataTable.search('{{search}}').draw();
+        {%endif%}
+      
     });
+   
     function deleteItem(pk) {
         swal({
-            title: "Estas seguro?",
-            text: "No será capaz de recuperar este elemento!",
+            title: "¿Estás seguro?",
+            text: "¡No será capaz de recuperar este elemento!",
             icon: "warning",
             buttons: {
                 cancel: {
-                    text: "No, cancelar!",
+                    text: "¡No, cancelar!",
                     value: null,
                     visible: true,
                     className: "",
                     closeModal: false,
                 },
                 confirm: {
-                    text: "Sí, eliminarlo!",
+                    text: "¡Sí, eliminarlo!",
                     value: true,
                     visible: true,
                     className: "",
@@ -269,8 +283,8 @@
                 if (isConfirm) {
                     url = "{% url 'MedCongressAdmin:ponencia_delete' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
-                       
-                       location.reload();
+                        dataTable.row($('#del_' + pk).parents('tr')).remove().draw(); 
+                        swal("¡Eliminado!", "Este elemento ha sido eliminado.", "success");
                     });
                 } else {
                     swal("Cancelado", "No se eliminó este elemento.", "error");

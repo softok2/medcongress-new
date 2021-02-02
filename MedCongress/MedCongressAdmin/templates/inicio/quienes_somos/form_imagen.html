@@ -2,6 +2,7 @@
 {% block title %}MedCongressAdmin | Ponente{% endblock %}
 {% load static %}
 {% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/css/core/colors/palette-tooltip.css'%}">
 {% endblock %}
 {% block content %}
 <div class=" col-md-6 col-12 " style="margin-top: -26px;">
@@ -39,6 +40,27 @@
 				</div>
 				<div class="card-content collapse show">
 					<div class="card-body">
+						{% if form.errors %}
+						{% for field in form %}
+							{% for error in field.errors %}
+							
+								<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+										<span aria-hidden="true">×</span>
+									</button>
+									{{ error|safe|escape }}
+								</div>
+							{% endfor %}
+						{% endfor %}
+						{% for error in form.non_field_errors %}
+						<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">×</span>
+							</button>
+							{{ error|safe|escape }}
+						</div>
+						{% endfor %}
+					{% endif %}
 						<form id="country-form" method="POST" enctype="multipart/form-data" >
 							{% csrf_token %}
 							<div class="form-body">
@@ -47,12 +69,7 @@
 										
 										<div class="col-sm-8 ">
 											<div class="form-group">
-												<label
-													for="{{form.imagen.id_for_label }}"><b>{{form.imagen.label }}</b>{% if form.imagen.errors %}
-													<span
-														style="font-size: 15px; color: red;">{{ form.imagen.errors }}
-													</span>{% endif %} </label>
-
+												
 													{{ form.imagen}}	
 											</div>
 										</div>
@@ -73,7 +90,9 @@
 										</fieldset>
 										<div class="form-actions">
 											<div class="text-right">
-												
+												<a id="atras" type="button" class="btn btn-danger " href="{%url 'MedCongressAdmin:quienes_somos_list'%}">Cancelar
+													<i class="ft-x position-right"></i>
+												</a>
 												<button id="save" type="submit" class="btn btn-primary">Guardar
 													<i class="ft-save position-right"></i>
 												</button>
@@ -91,6 +110,7 @@
 </section>
 {% endblock %}
 {% block scripts %}
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/tooltip/tooltip.js'%}"></script>
 <script type="text/javascript">
 	$(document).ready(function () {
 		{%if cong %}

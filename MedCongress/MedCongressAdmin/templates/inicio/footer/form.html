@@ -41,15 +41,22 @@
 						{% if form.errors %}
     {% for field in form %}
         {% for error in field.errors %}
-            <div class="alert alert-danger">
-                <strong>{{ error|escape }}</strong>
-            </div>
+        
+			<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+				{{ error|safe|escape }}
+			</div>
         {% endfor %}
     {% endfor %}
     {% for error in form.non_field_errors %}
-        <div class="alert alert-danger">
-            <strong>{{ error|escape }}</strong>
-        </div>
+	<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">×</span>
+		</button>
+		{{ error|safe|escape }}
+	</div>
     {% endfor %}
 {% endif %}
 						<form id="country-form" method="POST">
@@ -67,7 +74,7 @@
 									<div class="col-md-6">
 										<div class="form-group">
 											<label
-												for="{{form.email.id_for_label }}"><b></label>
+												for="{{form.email.id_for_label }}"><b> Correo </b></label>
 
 											{{form.email }}
 										</div>
@@ -114,20 +121,4 @@
 </section>
 {% endblock %}
 {% block scripts %}
-<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/editors/ckeditor/ckeditor.js'%}"></script>
-<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/editors/editor-ckeditor.js'%}"></script>
-<script type="text/javascript">
-	
-	
-	$(document).ready(function () {
-
-		var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
-		$.ajaxSetup({
-			beforeSend: function (xhr, settings) {
-				xhr.setRequestHeader("X-CSRFToken", csrftoken);
-			}
-		});
-	
-	});
-</script>
 {% endblock %}
