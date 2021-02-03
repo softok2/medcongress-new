@@ -528,7 +528,10 @@
 
 	$(document).ready(function () {
 
-
+		$('#id_ponencia-fecha_inicio').datetimepicker({
+		format: 'dd/mm/yyyy hh:ii:ss',
+		
+	});
 		{%if is_info%}
 		
 		$("#id_ponencia-is_info option[value='True']").attr("selected", true);

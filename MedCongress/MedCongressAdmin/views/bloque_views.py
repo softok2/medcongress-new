@@ -221,8 +221,16 @@ class  PonenciaSeleccionarView(validarUser,FormView):
         return self.render_to_response(self.get_context_data())
 
     def get_success_url(self):
-           self.success_url =  reverse_lazy('MedCongressAdmin:Bloque_ponencias',kwargs={'path': self.kwargs.get('path')} )
-           return self.success_url
+        url=reverse_lazy('MedCongressAdmin:ponencias_list')
+        self.success_url='%s?&search=%s'%(url,self.request.GET.get('search'))
+        if self.request.GET.get('congreso'):
+            self.success_url =  '%s?congreso=%s&search=%s'%(url,self.request.GET.get('congreso'),self.request.GET.get('search')) 
+        if self.request.GET.get('bloque'): 
+            self.success_url =  '%s?bloque=%s&search=%s'%(url,self.request.GET.get('bloque'),self.request.GET.get('search')) 
+            if self.request.GET.get('congreso_bloque'):
+                self.success_url =  '%s?bloque=%s&search=%s&congreso_bloque=true'%(url,self.request.GET.get('bloque'),self.request.GET.get('search')) 
+
+        return self.success_url 
 
     def get_context_data(self, **kwargs):
        

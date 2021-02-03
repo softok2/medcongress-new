@@ -1,5 +1,5 @@
 from django import forms
-from datetime import date
+from datetime import date,datetime
 from django.contrib import messages
 from django.core.files.images import get_image_dimensions
 from  MedCongressApp.models import (Congreso,Ubicacion,ImagenCongreso,TipoCongreso,Ponencia,Taller,
@@ -69,7 +69,7 @@ class CongresForm(forms.ModelForm):
         if imagen:
             w, h = get_image_dimensions(imagen)
             if w != 1140 or h != 240:
-                self.add_error('imagen_seg',"Esta imagen tiene %s X %s pixel. Debe ser de 1140 X 240 pixel" %(w,h) )
+                self.add_error('imagen_seg',"La <b>Imagen Segundaria</b> tiene %s X %s pixel. Debe ser de <b>1140 X 240 pixel</b>" %(w,h) )
    
     
     # def clean(self, *args, **kwargs):
@@ -98,7 +98,7 @@ class ImagenCongresoForms(forms.ModelForm):
         if imagen:
             w, h = get_image_dimensions(imagen)
             if w != 1920 or h != 1080:
-                self.add_error('imagen',"Esta imagen tiene %s X %s pixel. Debe ser de 1920 X 1080 pixel" %(w,h) )
+                self.add_error('imagen',"La <b> Imagen Principal</b> tiene %s X %s pixel. Debe ser de<b> 1920 X 1080 pixel</b>" %(w,h) )
         
 class UbicacionForm(forms.ModelForm):
     direccion=forms.CharField(
@@ -533,8 +533,8 @@ class BloqueForms(forms.ModelForm):
     titulo=forms.CharField(label='Título')
     duracion=forms.CharField(label='Duración')
     published=forms.BooleanField(label='Publicado',required=False)
-    congreso=forms.ModelChoiceField(queryset=Congreso.objects.all(),label='Congreso',required=False)
-   
+    congreso=forms.ModelChoiceField(queryset=Congreso.objects.all(),label='Congreso',required=True)
+    # fecha_inicio=forms.DateTimeField(required=True)
     
     class Meta:
         model=Bloque
@@ -542,7 +542,7 @@ class BloqueForms(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
-
+        # self.fields['fecha_inicio'].input_formats = ['%d/%m/%Y %H:%M:%S']
         self.fields['titulo'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['duracion'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['detalle'].widget.attrs.update({'class': 'form-control','rows':'3'})   
@@ -554,14 +554,17 @@ class BloqueForms(forms.ModelForm):
         cleaned_data = super(BloqueForms, self).clean(*args, **kwargs)
         congreso = cleaned_data.get('congreso', None)
         titulo = cleaned_data.get('titulo', None)
-        fecha = cleaned_data.get('fecha_inicio', None)
-       
+        fecha = cleaned_data.get('fecha_inicio')
         if not congreso:
             self.add_error('congreso', 'Debe entrar un  <b>Congreso</b>')
-
-        if fecha < congreso.fecha_inicio:
-            self.add_error('fecha_inicio', 'Esta <b>Fecha</b> no puede ser menor  que la <b>Fecha de inicio del Congreso ( %s )  </b>'%(congreso.fecha_inicio))
-
+            return
+        if fecha:
+            if fecha < congreso.fecha_inicio:
+                self.add_error('fecha_inicio', 'Esta <b>Fecha</b> no puede ser menor  que la <b>Fecha de inicio del Congreso ( %s )  </b>'%(congreso.fecha_inicio))
+   
+       
+        
+        
 class OtrosForm(forms.ModelForm):
 
     class Meta:

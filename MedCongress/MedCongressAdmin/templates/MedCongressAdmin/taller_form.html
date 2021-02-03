@@ -517,7 +517,10 @@
 
 <script type="text/javascript">
 	$(document).ready(function () {
-
+		$('#id_taller-fecha_inicio').datetimepicker({
+		format: 'dd/mm/yyyy hh:ii:ss',
+		
+	});
 		$('#id_taller-congreso').change(function () {
 				$('#id_taller-bloque').empty();
 				$('#id_taller-bloque').append($("<option></option").attr('value', '').text('----------'));
