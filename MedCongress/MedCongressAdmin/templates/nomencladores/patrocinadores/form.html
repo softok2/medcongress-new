@@ -45,6 +45,27 @@
 				</div>
 				<div class="card-content collapse show">
 					<div class="card-body">
+						{% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+        
+			<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+				{{ error|safe|escape }}
+			</div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+	<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">×</span>
+		</button>
+		{{ error|safe|escape }}
+	</div>
+    {% endfor %}
+{% endif %} 
 						<form id="country-form" method="POST" enctype="multipart/form-data">
 							{% csrf_token %}
 							{% if congreso%}
@@ -57,10 +78,7 @@
 											<div class="col-md-12">
 												<div class="form-group">
 													<label
-														for="{{form.nombre.id_for_label }}"><b>{{form.nombre.label }}</b>{% if form.nombre.errors %}
-														<span
-															style="font-size: 15px; color: red;">{{ form.nombre.errors }}
-														</span>{% endif %} </label>
+														for="{{form.nombre.id_for_label }}"><b>{{form.nombre.label }}</b> </label>
 
 													{{form.nombre }}
 												</div>
@@ -68,9 +86,7 @@
 											<div class="col-md-12">
 												<div class="form-group">
 													<label
-														for="{{form.url.id_for_label }}"><b>{{form.url.label }}</b>{% if form.url.errors %}
-														<span style="font-size: 15px; color: red;">{{ form.url.errors }}
-														</span>{% endif %} </label>
+														for="{{form.url.id_for_label }}"><b>{{form.url.label }}</b></label>
 		
 													{{form.url }}
 												</div>
@@ -85,18 +101,14 @@
 										<img src="{{logo}}" class="img-responsive" style="height: 115px;" alt="">
 
 										<label
-											for="{{form.logo.id_for_label }}"><b>{{form.logo.label }}</b>{% if form.logo.errors %}
-											<span style="font-size: 15px; color: red;">{{ form.logo.errors }}
-											</span>{% endif %} </label>
+											for="{{form.logo.id_for_label }}"><b>{{form.logo.label }}</b> </label>
 										<input type="file" name="logo" accept="image/*" class=" form-control "
 											id="id_logo">
 
 										{%else%}
 										<div class="form-group">
 											<label
-												for="{{form.logo.id_for_label }}"><b>{{form.logo.label }}</b>{% if form.logo.errors %}
-												<span style="font-size: 15px; color: red;">{{ form.logo.errors }}
-												</span>{% endif %} </label>
+												for="{{form.logo.id_for_label }}"><b>{{form.logo.label }}</b></label>
 
 											{{form.logo }}
 										</div>
@@ -111,9 +123,7 @@
 									<div class="col-md-12">
 										<div class="form-group">
 											<label
-												for="{{form.detalle.id_for_label }}"><b>{{form.detalle.label }}</b>{% if form.detalle.errors %}
-												<span style="font-size: 15px; color: red;">{{ form.detalle.errors }}
-												</span>{% endif %} </label>
+												for="{{form.detalle.id_for_label }}"><b>{{form.detalle.label }}</b></label>
 
 											{{form.detalle }}
 										</div>

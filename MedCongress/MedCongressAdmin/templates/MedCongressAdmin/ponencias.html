@@ -183,6 +183,7 @@
     "sAjaxSource": "{% url 'MedCongressAdmin:table_json_ponencia' %}",
     "fnServerParams": function (aoData) {
         {%if congreso%}
+        
             aoData.push( { "name": "tipo", "value": "congreso" } );
             aoData.push( { "name": "path", "value": "{{congreso.path}}" } );
             {%elif bloque%}

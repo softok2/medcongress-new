@@ -130,6 +130,12 @@ class PonenciaPonenteListView(validarUser,TemplateView):
         ponencia=Ponencia.objects.filter(path=self.kwargs.get('path')).first()
         context['ponencia']=ponencia
         context['ponentes']=RelPonenciaPonente.objects.filter(ponencia=ponencia)
+        if self.request.GET.get('congreso'):
+            context['congreso']=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()   
+        if self.request.GET.get('bloque'):
+            context['bloque']=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
+            if self.request.GET.get('congreso_bloque'):
+                context['congreso_bloque']=context['bloque'].congreso
         return context        
 
 class  PonenciaPonenteCreateView(validarUser,CreateView):
@@ -318,7 +324,7 @@ class vTableAsJSONPonencia(TemplateView):
         if request.GET.get('tipo')=='nada':
             object_list = Ponencia.objects.all()
         if request.GET.get('tipo')=='congreso':
-            object_list = Ponencia.objects.filter(congreso__pk=int(request.GET.get('id')))
+            object_list = Ponencia.objects.filter(congreso__path=request.GET.get('path'))
         if request.GET.get('tipo')=='bloque':
             object_list = Ponencia.objects.filter(bloque__path=request.GET.get('path'))
         
@@ -364,6 +370,7 @@ class vTableAsJSONPonencia(TemplateView):
                                                         <i class="icon icon-eliminar"></i>
                                                     </a>'''
             if request.GET.get('tipo')=='congreso':
+                
                 operaciones=''' <a href="'''+ reverse('MedCongressAdmin:ponencia_edit',kwargs={'pk':objet.pk})+'''?search='''+request.GET.get('search')+'''&congreso='''+request.GET.get('path')+'''"
                                                     title="Editar"><i class="icon icon-editar"></i></a>
                                                     <a id="del_'''+ str(objet.pk) +'''"
@@ -389,15 +396,42 @@ class vTableAsJSONPonencia(TemplateView):
                                                         <i class="icon icon-eliminar"></i>
                                                     </a>'''
                 
-
-           #Guardar datos en un dic 
-
-            enviar.append({ 'nombre':objet.titulo,
-                            'congreso': objet.congreso.titulo,
-                            'ponentes':''' <a  href="'''+ reverse('MedCongressAdmin:Ponencia_ponentes',kwargs={'path':objet.path})+'''"
+            ponentes=''
+            ponentes=''' <a  href="'''+ reverse('MedCongressAdmin:Ponencia_ponentes',kwargs={'path':objet.path})+'''"
                                                         title="Ponentes">
                                                         <i class="icon icon-ponente " style= "color: blue;" ></i>
-                                                    </a>''',
+                                                    </a>'''
+            if request.GET.get('tipo')=='nada':
+                ponentes=''' <a  href="'''+ reverse('MedCongressAdmin:Ponencia_ponentes',kwargs={'path':objet.path})+'''"
+                                                        title="Ponentes">
+                                                        <i class="icon icon-ponente " style= "color: blue;" ></i>
+                                                    </a>'''
+            if request.GET.get('tipo')=='congreso':
+                ponentes=''' <a  href="'''+ reverse('MedCongressAdmin:Ponencia_ponentes',kwargs={'path':objet.path})+'''?congreso='''+request.GET.get('path')+'''"
+                                                        title="Ponentes">
+                                                        <i class="icon icon-ponente " style= "color: blue;" ></i>
+                                                    </a>'''
+                
+                
+            if request.GET.get('tipo')=='bloque':
+                if request.GET.get('congreso_bloque'):
+                    ponentes=''' <a  href="'''+ reverse('MedCongressAdmin:Ponencia_ponentes',kwargs={'path':objet.path})+'''?bloque='''+request.GET.get('path')+'''&congreso_bloque=true"
+                                                        title="Ponentes">
+                                                        <i class="icon icon-ponente " style= "color: blue;" ></i>
+                                                    </a>'''
+                    
+                else:
+                    ponentes=''' <a  href="'''+ reverse('MedCongressAdmin:Ponencia_ponentes',kwargs={'path':objet.path})+'''?bloque='''+request.GET.get('path')+'''"
+                                                        title="Ponentes">
+                                                        <i class="icon icon-ponente " style= "color: blue;" ></i>
+                                                    </a>'''
+                    
+                
+           #Guardar datos en un dic 
+            
+            enviar.append({ 'nombre':objet.titulo,
+                            'congreso': objet.congreso.titulo,
+                            'ponentes':ponentes,
                             'public' : public,
                             'operaciones' : operaciones,
                             

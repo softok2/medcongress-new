@@ -271,10 +271,10 @@
 
         search=$('.dataTables_filter input').val();
             {%if congres%}
-            url = "{% url 'MedCongressAdmin:Moderadores_bloque' path=0 %}?search="+search+"&congreso=true";
+            url = "{% url 'MedCongressAdmin:Moderadores_bloque' path=0 %}?congreso=true";
             location.href = url.replace('/0', '/' + pk);
             {%else%}
-            url = "{% url 'MedCongressAdmin:Moderadores_bloque' path=0 %}?search="+search+"";
+            url = "{% url 'MedCongressAdmin:Moderadores_bloque' path=0 %}";
             location.href = url.replace('/0', '/' + pk);
             {%endif%}
 

@@ -49,6 +49,14 @@ class PatrocinadorForm(forms.ModelForm):
         self.fields['logo'].widget.attrs.update({'class': ' form-control '}) 
         self.fields['url'].widget.attrs.update({'class': ' form-control '})
 
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(PatrocinadorForm, self).clean(*args, **kwargs)
+        nombre = cleaned_data.get('nombre', None)
+       
+        if AvalCongreso.objects.filter(nombre=nombre).exists():
+           self.add_error('nombre',"Ya existe un <b>Patrocinador</b> con ese <b> Nombre</b>" )
+       
+
 class SocioForm(forms.ModelForm):
 
     logo=forms.ImageField(label='Buscar Logo',required=True)
@@ -64,7 +72,13 @@ class SocioForm(forms.ModelForm):
         self.fields['detalle'].widget.attrs.update({'class': 'form-control ckeditor'})  
         self.fields['logo'].widget.attrs.update({'class': ' form-control '}) 
         self.fields['url'].widget.attrs.update({'class': ' form-control '})
-
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(SocioForm, self).clean(*args, **kwargs)
+        nombre = cleaned_data.get('nombre', None)
+       
+        if SocioCongreso.objects.filter(nombre=nombre).exists():
+           self.add_error('nombre',"Ya existe un <b>Socio</b> con ese <b> Nombre</b>" )
+       
 class CatUsuarioForm(forms.ModelForm):
     published=forms.BooleanField(label='Publicado',required=False)
     class Meta:
