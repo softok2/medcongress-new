@@ -1,0 +1,237 @@
+{% extends 'MedCongressAdmin/base.html' %}
+{% block title %}Documentos{% endblock %}
+{% load static %}
+{% block styles %}
+<style>
+    .text {
+  -ms-word-break: break-all;
+  word-break: break-all;
+  word-break: break-word;
+  /* Sólo WebKit -NO DOCUMENTADO */
+  -ms-hyphens: auto;
+  /* Guiones para separar en sílabas */
+  -moz-hyphens: auto;
+  /*  depende de lang en <html>      */
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+</style>
+
+<link rel="stylesheet" type="text/css"
+    href="{% static 'MedCongressAdmin/app-assets/vendors/css/tables/datatable/datatables.min.css' %}">
+
+{% endblock %}
+{% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+			
+		  <li class="breadcrumb-item">Documentos
+		  </li>
+
+		</ol>
+	  </div>
+	</div>
+  </div>
+<section id="configuration">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-10">
+                            <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Repositorio</h1>
+                            <p class="card-text">Listado de los Documentos Almacenados.</p>
+                        </div>
+                        <div class="col-2">
+                            <div style="margin-right: 45%; margin-top: 1.5rem;">
+                                <button id="add-btn" type="button" class="btn btn-success" title="Nuevo" 
+                                    style="float:right; padding: 3px;">
+                                    <i class="la la-plus"></i>
+                                </button>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-content collapse show">
+                    <div class="card-body card-dashboard">
+                        <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table id="table" class="table table-striped table-bordered zero-configuration dataTable"
+                                        style="margin-top: 5px!important; margin-bottom: 15px!important;"
+                                        id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
+                                        <thead>
+                                            <tr role="row">
+                                                <th>Título</th>
+                                                <th >URL Pública</th>
+                                                <th style="width:5%">Operaciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for documento in documentos %}
+                                            <tr role="row" class="{% cycle 'odd' 'even' %}">
+                                                <td class="sorting_1">{{ documento.titulo }}</td>
+                                                <td ><p id="doc_{{ documento.pk }}" class="text"  >{{request.get_host}}/static/{{documento.documento}}
+                                                </a></td>
+                                                <td style="text-align: center;">
+                                                    <a id="del_{{ documento.pk }}"
+                                                    href="javascript:copiarAlPortapapeles('doc_{{ documento.pk }}')"
+                                                    title="Copiar URL">
+                                                    <i class="icon icon-copy_link"></i> 
+                                                    <a id="" target="_blank"
+                                                    href="{%static '/' %}{{ documento.documento }}"
+                                                        title="Descargar" style="margin-left: 5px;">
+                                                        <i class="icon icon-downloads" > </i>
+                                                    </a> 
+                                                    <a id="del_{{ documento.pk }}"
+                                                        href="javascript:deleteItem('{{ documento.pk }}')"
+                                                        title="Eliminar">
+                                                        <i class="icon icon-eliminar"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Título</th>
+                                                <th>URL Pública</th>
+                                                <th>Operaciones</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="swal-overlay" tabindex="-1">
+    <form id="swall-modal-form" method="POST" style="display: none;">
+        {% csrf_token %}
+    </form>
+    
+</div>
+{% endblock %}
+{% block scripts %}
+
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/tables/datatable/datatables.min.js' %}"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#table').DataTable( {
+    
+    language: {
+        "decimal": "",
+        "emptyTable": "No hay información",
+        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+        "infoPostFix": "",
+        "thousands": ",",
+        "lengthMenu": "Mostrar _MENU_ Entradas",
+        "loadingRecords": "Cargando...",
+        "processing": "Procesando...",
+        "search": "Buscar:",
+        "zeroRecords": "Sin resultados encontrados",
+        "paginate": {
+            "first": "Primero",
+            "last": "Ultimo",
+            "next": "Siguiente",
+            "previous": "Anterior"
+        }
+    },
+ 
+});
+        var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        });
+
+        $('#add-btn').click(function () {
+            location.href = "{% url 'MedCongressAdmin:documento_add' %}";
+        });
+
+        dataTable = $('.zero-configuration').DataTable();
+    });
+    function deleteItem(pk) {
+        swal({
+            title: "¿Estás seguro?",
+            text: "¡No será capaz de recuperar este elemento!",
+            icon: "warning",
+            buttons: {
+                cancel: {
+                    text: "¡No, cancelar!",
+                    value: null,
+                    visible: true,
+                    className: "",
+                    closeModal: false,
+                },
+                confirm: {
+                    text: "¡Sí, eliminarlo!",
+                    value: true,
+                    visible: true,
+                    className: "",
+                    closeModal: false
+                }
+            }
+        })
+            .then((isConfirm) => {
+                if (isConfirm) {
+                    url = "{% url 'MedCongressAdmin:documento_delete' pk=0 %}";
+                    $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
+                        if(data.success){
+
+                            dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
+                        swal("¡Eliminado!", "Este elemento ha sido eliminado.", "success"); 
+                        }
+                       else{
+                        swal("Cancelado", data.mensaje, "error");
+                       }
+                    });
+                } else {
+                    swal("Cancelado", "No se eliminó este elemento.", "error");
+                }
+            });
+    }
+    function copiarAlPortapapeles(id_elemento) {
+
+// Crea un campo de texto "oculto"
+var aux = document.createElement("input");
+
+// Asigna el contenido del elemento especificado al valor del campo
+aux.setAttribute("value", document.getElementById(id_elemento).innerHTML);
+
+// Añade el campo a la página
+document.body.appendChild(aux);
+
+// Selecciona el contenido del campo
+aux.select();
+
+// Copia el texto seleccionado
+document.execCommand("copy");
+
+// Elimina el campo de la página
+document.body.removeChild(aux);
+
+}
+</script>
+
+{% endblock %}

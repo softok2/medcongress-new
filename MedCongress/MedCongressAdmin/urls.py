@@ -29,6 +29,7 @@ from .views.user_views import (UsuariosListView,UsuarioCreateView,UsuarioUpdateV
 from .views.bloque_views import (BloquesListView,BloqueCreateView,BloqueDeletedView,BloquePonenciasListView,BloqueTalleresListView,
                                    BloqueUpdateView,BloqueModeradoresListView,page_not_found,BloqueModeradoresCreateView,BloqueModeradoresDeletedView,
                                    PonenciaSeleccionarView)
+from .views.repositorio_view import DocumentosListView,DocumentoCreateView,DocumentoDeletedView
 from .views_nomencladores.genero_views import (GeneroListView,GeneroCreateView,GeneroDeletedView,GeneroUpdateView)
 from .views_nomencladores.cat_pago_views import (CatPagoListView,CatPagoCreateView,CatPagoDeletedView,CatPagoUpdateView)
 from .views_nomencladores.patrocinador_views import (PatrocinadorListView,PatrocinadorCreateView,PatrocinadorDeletedView,PatrocinadorUpdateView)
@@ -332,5 +333,9 @@ urlpatterns = [
         #Constancias-Taller
     path('asig_constancia_taller', AsignarConstanciasTaller.as_view(), name='asig_constancia_taller'),
     
-
+    # Repositorio
+     path('documentos', DocumentosListView.as_view(), name='documentos_list'),
+    path('documento/adicionar',DocumentoCreateView.as_view(), name='documento_add'), 
+    #  path('genero/editar/<int:pk>', GeneroUpdateView.as_view(), name='genero_edit'),
+    path('documento/eliminar/<int:pk>', DocumentoDeletedView.as_view(), name='documento_delete'),
 ]

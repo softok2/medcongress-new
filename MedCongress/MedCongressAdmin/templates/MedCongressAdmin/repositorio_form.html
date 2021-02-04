@@ -1,0 +1,112 @@
+{% extends 'MedCongressAdmin/base.html' %}
+{% block title %}Adicionar Documentos{% endblock %}
+{% load static %}
+{% block styles %}
+{% endblock %}
+{% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+			
+		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:documentos_list' %}">Documentos</a>
+		  </li>
+		  
+		
+	
+		<li class="breadcrumb-item active"> Adicionar Documento</a>
+		</li>
+		
+		</ol>
+	  </div>
+	</div>
+  </div>
+<section class="multiple-input-with-labels" id="multiple-input-with-labels">
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-header">
+					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
+						Adicionar País</h1>
+					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
+					<div class="heading-elements">
+						<ul class="list-inline mb-0">
+							<li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+							
+							<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+							
+						</ul>
+					</div>
+				</div>
+				<div class="card-content collapse show">
+					<div class="card-body">
+						<form id="country-form" method="POST" enctype="multipart/form-data"> 
+							{% csrf_token %}
+							<div class="form-body">
+								<div class="row">
+									
+										<div class="form-group col-md-4">
+											<label>Título</label>
+											{{ form.titulo }}
+											
+										</div>
+											<div class="form-group col-md-4">
+											<label>Documento</label>
+											<!-- {{ form.banderas }} -->
+											
+												{{ form.documento }}
+												
+											
+											</div>
+										
+									
+								</div>
+								<div class="form-actions">
+									<div class="text-right">
+										<button id="atras" type="button" class="btn btn-danger ">Cancelar
+											<i class="ft-x position-right"></i>
+										</button>
+										<button id="save" type="submit" class="btn btn-primary">Guardar
+											<i class="ft-save position-right"></i>
+										</button>
+									
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+	$(document).ready(function () {
+		$('#atras').click(function () {
+		
+		location.href = "{% url 'MedCongressAdmin:country_list' %}";
+		
+	});
+		{% if not delete_url %}
+		$('#save-plus').click(function (event) {
+			event.preventDefault();
+			$('#country-form').attr('action', "{% url 'MedCongressAdmin:country_add_plus' param='+' %}");
+			$('#country-form').submit();
+		});
+		$('#save-edit').click(function (event) {
+			event.preventDefault();
+			$('#country-form').attr('action', "{% url 'MedCongressAdmin:country_add_plus' param='+->' %}");
+			$('#country-form').submit();
+		});
+		{% else %}
+		$('#delete').click(function (event) {
+			event.preventDefault();
+			$('#country-form').attr('action', "{{ delete_url }}");
+			$('#country-form').submit();
+		});
+		{% endif %}
+	});
+</script>
+{% endblock %}

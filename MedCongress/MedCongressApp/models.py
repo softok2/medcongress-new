@@ -782,3 +782,12 @@ class ImagenHome(models.Model):
 
     def __str__(self):
         return 'Imagen Home'
+
+class Documento(models.Model):
+    documento=models.FileField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='documentos')
+    titulo=models.CharField(max_length=25)
+    class Meta:
+        verbose_name='Documento'
+
+    def __str__(self):
+        return 'Documento'
