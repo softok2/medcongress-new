@@ -25,7 +25,7 @@ class RepositorioForm(forms.ModelForm):
                 not filename.endswith(".doc") and not filename.endswith(".docx") and
                 not filename.endswith(".pdf") and not filename.endswith(".jpg") and
                 not filename.endswith(".png") and not filename.endswith(".txt")) :
-                self.add_error('documento',"No está <b> permitido </b> subir ese <b>tipo de archivo</b>.<br> Los permitidos son <b> .zip, .rar, .doc, .docx, .txt, .pdf, .jpg, .png</b>."  )
+                self.add_error('documento',"No está <b> permitido </b> subir ese <b>tipo de archivo</b>. Los permitidos son <b> .zip, .rar, .doc, .docx, .txt, .pdf, .jpg, .png</b>."  )
 
 # class OfrecemosForm(forms.ModelForm):
 
