@@ -15,7 +15,17 @@ class RepositorioForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields['titulo'].widget.attrs.update({'class': 'form-control'})  
-        
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(RepositorioForm, self).clean(*args, **kwargs)
+        documento = cleaned_data.get('documento', None)
+        if documento:
+            filename = documento.name
+            
+            if( not filename.endswith(".zip") and not filename.endswith(".rar") and
+                not filename.endswith(".doc") and not filename.endswith(".docx") and
+                not filename.endswith(".pdf") and not filename.endswith(".jpg") and
+                not filename.endswith(".png") ) :
+                self.add_error('documento',"No está <b> permitido </b> subir ese <b>tipo de archivo</b>.<br> Los permitidos son <b> .zip, .rar, .doc, .docx, .pdf, .jpg, .png</b>."  )
 
 # class OfrecemosForm(forms.ModelForm):
 

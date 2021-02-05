@@ -10,6 +10,7 @@ from MedCongressApp.models import Documento
 from MedCongressAdmin.forms.repositorio_form import RepositorioForm
 from MedCongressAdmin.apps import validarUser
 from django.http import JsonResponse
+from  MedCongressApp.claves import URL_SITE
 
 
 class DocumentosListView(validarUser,ListView):
@@ -18,8 +19,8 @@ class DocumentosListView(validarUser,ListView):
     template_name = 'MedCongressAdmin/repositorio_list.html'
     def get_context_data(self, **kwargs):
         context=super().get_context_data(**kwargs)
-        context['documentos']=Documento.objects.all()
-        context['host']=self.request.get_host()
+        context['documentos']=Documento.objects.all().order_by('pk')
+        context['host']=URL_SITE
         return context
 
 

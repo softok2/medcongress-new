@@ -83,7 +83,7 @@
                                             {% for documento in documentos %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}">
                                                 <td class="sorting_1">{{ documento.titulo }}</td>
-                                                <td ><p id="doc_{{ documento.pk }}" class="text"  >{{request.get_host}}/static/{{documento.documento}}
+                                                <td ><p id="doc_{{ documento.pk }}" class="text"  >{{host}}/static/{{documento.documento}}
                                                 </a></td>
                                                 <td style="text-align: center;">
                                                     <a id="del_{{ documento.pk }}"
