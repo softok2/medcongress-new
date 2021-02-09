@@ -1,5 +1,7 @@
 import json
+
 import os
+from django.views.decorators.csrf import csrf_exempt
 from collections import namedtuple
 from datetime import date,datetime
 import openpay
@@ -1702,3 +1704,40 @@ class RegistroExitoso(TemplateView):
 class ViewCart(TemplateView):
     template_name='MedCongressApp/ver_carrito.html' 
 
+class Enviar(TemplateView):
+    template_name='MedCongressApp/ver_carrito.html'
+    def get(self, request, **kwargs):
+        url='http://localhost:8000/webhook'
+        
+        params= {
+                    "type" : "verification",
+                    "event_date" : "2013-11-22T11:04:49-06:00",
+                    "verification_code" : "UY1qqrxw"
+                }
+
+            
+        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+        response=requests.post(url=url,data=json.dumps(params),headers=headers)
+        # response_dic=response.json()
+        return HttpResponse(response)
+
+@csrf_exempt
+def Webhook(request):
+    
+    if request.method=='POST':
+        
+        received_json_data=json.loads(request.body)
+         ##### EMAIL #####
+        if received_json_data['type']== "verification":
+            subject = 'Código de verificación'
+            # html_message = render_to_string('MedCongressApp/recibo_pago.html', context={'car':enviar,'date':response_dict['operation_date'],'numero':response_dict['authorization'],'importe':response_dict['amount'],'card':response_dict['card']['card_number'],'orden_id':response_dict['order_id']})
+            plain_message = strip_tags('El cdigo de verificación de los WebHook de Openpay es %s'%(received_json_data['verification_code']))
+        from_email = ' Contacto MedCongress <contacto@medcongress.com.mx>'
+
+        mail.send_mail(subject, plain_message, from_email, ['dennis.molinetg@gmail.com','a.morell.cu@icloud.com','frankhef91@gmail.com','aleruiz.cu@gmail.com'])
+        ####END EMAIL ######
+        
+    return HttpResponse()
+            
+       
+        
