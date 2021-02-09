@@ -23,18 +23,50 @@ from openpyxl.styles import (Alignment, Border, Font, PatternFill, Protection,
                              Side)
 from MedCongressAdmin.apps import validarUser
 from MedCongressAdmin.task import Constanciataller
+from django.db.models import Q
 
 
-class TalleresListView(validarUser,ListView):
+class TalleresListView(validarUser,TemplateView):
     model = Taller
     context_object_name = 'talleres'
     template_name = 'MedCongressAdmin/talleres.html'
-
+    def get(self, request, **kwargs):
+        if self.request.GET.get('congreso'):
+            congreso=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
+            if congreso is None:
+                return   HttpResponseRedirect(reverse('Error404'))
+        if self.request.GET.get('bloque'):
+            congreso=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
+            if congreso is None:
+                return   HttpResponseRedirect(reverse('Error404'))
+        return self.render_to_response(self.get_context_data())
+    def get_context_data(self, **kwargs):
+        context=super(TalleresListView,self).get_context_data(**kwargs)
+        context['search']=self.request.GET.get('search')
+        context['talleres']=Taller.objects.all()
+        if self.request.GET.get('congreso'):
+            context['congreso']=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
+            context['talleres']=Taller.objects.filter(congreso= context['congreso'])
+        if self.request.GET.get('bloque'):
+            context['bloque']=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
+            context['talleres']=Taller.objects.filter(bloque= context['bloque'])
+            if self.request.GET.get('congreso_bloque'):
+                context['congreso_bloque']=context['bloque'].congreso
+        return context
 class  TallerCreateView(validarUser,FormView):
     form_class = TallerForms
     success_url = reverse_lazy('MedCongressAdmin:talleres_list')
     template_name = 'MedCongressAdmin/taller_form.html'
-
+    def get(self, request, **kwargs):
+        if self.request.GET.get('congreso'):
+            congreso=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
+            if congreso is None:
+                return   HttpResponseRedirect(reverse('Error404'))
+        if self.request.GET.get('bloque'):
+            congreso=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
+            if congreso is None:
+                return   HttpResponseRedirect(reverse('Error404'))
+        return self.render_to_response(self.get_context_data())
     def form_valid(self, form):
         if not self.request.POST.getlist('taller_ponente-ponente'):
             messages.warning(self.request, 'Debe al menos entrar un ponente')
@@ -66,21 +98,26 @@ class  TallerCreateView(validarUser,FormView):
     def get_context_data(self, **kwargs):
         
         context = super(TallerCreateView, self).get_context_data(**kwargs)
-        if self.kwargs.get('pk'):
-            context['con']=Congreso.objects.get(pk=self.kwargs.get('pk'))
+        if self.request.GET.get('congreso'):
+            context['con']=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
             context['blo']=Bloque.objects.filter(congreso=context['con'])
-        if self.kwargs.get('pk_block'):
-            context['bloque']=Bloque.objects.get(pk=self.kwargs.get('pk_block'))
-            context['con']=context['bloque'].congreso
+        if self.request.GET.get('bloque'):
+            context['bloque']=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
+            context['congreso']=context['bloque'].congreso
             context['blo']= None
+        if self.request.GET.get('congreso_bloque'):
+            context['congreso_bloque']=True
         return context 
     def get_success_url(self):
-        if self.kwargs.get('pk'):
-            congreso=Congreso.objects.get(pk=self.kwargs.get('pk'))
-            self.success_url =  reverse_lazy('MedCongressAdmin:Congres_talleres',kwargs={'path': congreso.path} )
-        if self.kwargs.get('pk_block'):
-            block=Bloque.objects.get(pk=self.kwargs.get('pk_block'))
-            self.success_url =  reverse_lazy('MedCongressAdmin:Bloque_talleres',kwargs={'path': block.path,'tipo':False} )
+        url=reverse_lazy('MedCongressAdmin:talleres_list')
+        self.success_url='%s?&search=%s'%(url,self.request.GET.get('search'))
+        if self.request.GET.get('congreso'):
+            self.success_url =  '%s?congreso=%s&search=%s'%(url,self.request.GET.get('congreso'),self.request.GET.get('search')) 
+        if self.request.GET.get('bloque'): 
+            self.success_url =  '%s?bloque=%s&search=%s'%(url,self.request.GET.get('bloque'),self.request.GET.get('search')) 
+            if self.request.GET.get('congreso_bloque'):
+                self.success_url =  '%s?bloque=%s&search=%s&congreso_bloque=true'%(url,self.request.GET.get('bloque'),self.request.GET.get('search')) 
+
         return self.success_url 
 
 ########## Vista de las Categorias de Pago de un Congreso #############
@@ -126,7 +163,16 @@ class TallerUpdateView(validarUser,FormView):
     form_class = TallerForms
     success_url = reverse_lazy('MedCongressAdmin:talleres_list')
     template_name = 'MedCongressAdmin/taller_form.html'
-
+    def get(self, request, **kwargs):
+        if self.request.GET.get('congreso'):
+            congreso=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
+            if congreso is None:
+                return   HttpResponseRedirect(reverse('Error404'))
+        if self.request.GET.get('bloque'):
+            congreso=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
+            if congreso is None:
+                return   HttpResponseRedirect(reverse('Error404'))
+        return self.render_to_response(self.get_context_data())
     def get_queryset(self, **kwargs):
         return Taller.objects.filter(pk=self.kwargs.get('pk'))
     
@@ -148,10 +194,10 @@ class TallerUpdateView(validarUser,FormView):
             context['imagen_meta']='/static/%s'%(self.object.meta_og_imagen)
         if self.object.imagen:
             context['imagen_seg_url']='/static/%s'%(self.object.imagen)
-        context['update']=self.object.bloque
+        context['bloque_update']=self.object.bloque
         if self.object.foto_constancia:
             context['foto_constancia']='/static/%s'%(self.object.foto_constancia)
-
+        context['update']='update'
         ponentes=Ponente.objects.all()
         relaciones=RelTallerPonente.objects.filter(taller=taller)
         ponentes_env=[]
@@ -167,7 +213,17 @@ class TallerUpdateView(validarUser,FormView):
             'activo':activo})
         context['ponentes_alls']=ponentes_env
         context['ponentes']=relaciones
-        return context
+        if self.request.GET.get('congreso'):
+            context['con']=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
+            context['blo']=Bloque.objects.filter(congreso=context['con'])
+        if self.request.GET.get('bloque'):
+            context['bloque']=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
+            context['congreso']=context['bloque'].congreso
+            context['blo']= None
+        if self.request.GET.get('congreso_bloque'):
+            context['congreso_bloque']=True
+        return context 
+      
 
     def form_valid(self, form):
         if not self.request.POST.getlist('taller_ponente-ponente'):
@@ -198,12 +254,15 @@ class TallerUpdateView(validarUser,FormView):
             po.save()
         return super(TallerUpdateView, self).form_valid(form)
     def get_success_url(self):
-        if self.kwargs.get('pk'):
-            taller=Taller.objects.get(pk=self.kwargs.get('pk'))
-            self.success_url =  reverse_lazy('MedCongressAdmin:Congres_talleres',kwargs={'path': taller.congreso.path} )
-        if self.kwargs.get('pk_block'):
-            block=Bloque.objects.get(pk=self.kwargs.get('pk_block'))
-            self.success_url =  reverse_lazy('MedCongressAdmin:Bloque_talleres',kwargs={'path': block.path,'tipo':False} )
+        url=reverse_lazy('MedCongressAdmin:talleres_list')
+        self.success_url='%s?&search=%s'%(url,self.request.GET.get('search'))
+        if self.request.GET.get('congreso'):
+            self.success_url =  '%s?congreso=%s&search=%s'%(url,self.request.GET.get('congreso'),self.request.GET.get('search')) 
+        if self.request.GET.get('bloque'): 
+            self.success_url =  '%s?bloque=%s&search=%s'%(url,self.request.GET.get('bloque'),self.request.GET.get('search')) 
+            if self.request.GET.get('congreso_bloque'):
+                self.success_url =  '%s?bloque=%s&search=%s&congreso_bloque=true'%(url,self.request.GET.get('bloque'),self.request.GET.get('search')) 
+
         return self.success_url  
 class TallerPonenteListView(TemplateView):
     template_name= 'MedCongressAdmin/taller_ponentes.html' 
@@ -217,6 +276,15 @@ class TallerPonenteListView(TemplateView):
         taller=Taller.objects.filter(path=self.kwargs.get('path')).first()
         context['taller']=taller
         context['ponentes']=RelTallerPonente.objects.filter(taller=taller)
+        if self.request.GET.get('congreso'):
+            context['con']=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
+            
+        if self.request.GET.get('bloque'):
+            context['bloque']=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
+            
+        if self.request.GET.get('congreso_bloque'):
+            context['congreso_bloque']=True
+        return context
         return context     
 
 class  TallerPonenteCreateView(validarUser,CreateView):
@@ -397,3 +465,168 @@ class TallerCategPagosDeletedView(validarUser,DeleteView):
     model = RelTalleresCategoriaPago
     success_url = reverse_lazy('MedCongressAdmin:cat_usuarios_list')
 
+class vTableAsJSONTaller(TemplateView):
+    template_name = 'MedCongressAdmin/asig_congress_form.html'
+    def get(self, request, *args, **kwargs):
+        #arreglo con las columnas de la BD a filtrar
+        col_name_map = ['titulo','congreso__titulo','','published']
+           
+        #listado que muestra en dependencia de donde estes parado
+       
+        if request.GET.get('tipo')=='nada':
+            object_list = Taller.objects.all()
+        if request.GET.get('tipo')=='congreso':
+            object_list = Taller.objects.filter(congreso__path=request.GET.get('path'))
+        if request.GET.get('tipo')=='bloque':
+            object_list = Taller.objects.filter(bloque__path=request.GET.get('path'))
+        
+        #parametros 
+        search_text = request.GET.get('sSearch', '').lower()# texto a buscar
+        start = int(request.GET.get('iDisplayStart', 0))#por donde empezar a mostrar
+        delta = int(request.GET.get('iDisplayLength', 10))#cantidad a mostrar
+        sort_dir = request.GET.get('sSortDir_0', 'asc')# direccion a ordenar
+        sort_col = int(request.GET.get('iSortCol_0', 0)) # numero de la columna a ordenar
+        sort_col_name = request.GET.get('mDataProp_%s' % sort_col, '1')
+        sort_dir_prefix = (sort_dir == 'desc' and '-' or '') #sufijo para poner en la consulta para ordenar
+
+        #para ordenar el listado
+        if sort_col!=4 or sort_col!=2 :# columna en la tabla para las operaciones
+            sort_colr = col_name_map[sort_col]
+            object_list = object_list.order_by('%s%s' % (sort_dir_prefix,sort_colr))
+
+        #para filtrar el listado
+        filtered_object_list = object_list
+        if len(search_text) > 0:
+            filtered_object_list = object_list.filter(Q(titulo__icontains=search_text) | Q(congreso__titulo__icontains=search_text))
+
+        #Guardar datos en un 
+        enviar =[]
+        for objet in filtered_object_list[start:(start+delta)]:
+            public='No'
+            if objet.published:
+                public='Si'
+            operaciones=''
+            operaciones=''' <a href="'''+ reverse('MedCongressAdmin:taller_edit',kwargs={'pk':objet.pk})+'''?search='''+request.GET.get('search')+'''"
+                                                    title="Editar"><i class="icon icon-editar"></i></a>
+                                                    <a id="del_'''+ str(objet.pk) +'''"
+                                                        href="javascript:deleteItem('''+ str(objet.pk) +''')"
+                                                        title="Eliminar">
+                                                        <i class="icon icon-eliminar"></i>
+                                                    </a>'''
+            if request.GET.get('tipo')=='nada':
+                operaciones=''' <a href="'''+ reverse('MedCongressAdmin:taller_edit',kwargs={'pk':objet.pk})+'''?search='''+request.GET.get('search')+'''"
+                                                    title="Editar"><i class="icon icon-editar"></i></a>
+                                                    <a id="del_'''+ str(objet.pk) +'''"
+                                                        href="javascript:deleteItem('''+ str(objet.pk) +''')"
+                                                        title="Eliminar">
+                                                        <i class="icon icon-eliminar"></i>
+                                                    </a>'''
+            if request.GET.get('tipo')=='congreso':
+                
+                operaciones=''' <a href="'''+ reverse('MedCongressAdmin:taller_edit',kwargs={'pk':objet.pk})+'''?search='''+request.GET.get('search')+'''&congreso='''+request.GET.get('path')+'''"
+                                                    title="Editar"><i class="icon icon-editar"></i></a>
+                                                    <a id="del_'''+ str(objet.pk) +'''"
+                                                        href="javascript:deleteItem('''+ str(objet.pk) +''')"
+                                                        title="Eliminar">
+                                                        <i class="icon icon-eliminar"></i>
+                                                    </a>'''
+            if request.GET.get('tipo')=='bloque':
+                if request.GET.get('congreso_bloque'):
+                    operaciones=''' <a href="'''+ reverse('MedCongressAdmin:taller_edit',kwargs={'pk':objet.pk})+'''?search='''+request.GET.get('search')+'''&bloque='''+request.GET.get('path')+'''&congreso_bloque=true"
+                                                    title="Editar"><i class="icon icon-editar"></i></a>
+                                                    <a id="del_'''+ str(objet.pk) +'''"
+                                                        href="javascript:deleteItem('''+ str(objet.pk) +''')"
+                                                        title="Eliminar">
+                                                        <i class="icon icon-eliminar"></i>
+                                                    </a>'''
+                else:
+                    operaciones=''' <a href="'''+ reverse('MedCongressAdmin:taller_edit',kwargs={'pk':objet.pk})+'''?search='''+request.GET.get('search')+'''&bloque='''+request.GET.get('path')+'''"
+                                                    title="Editar"><i class="icon icon-editar"></i></a>
+                                                    <a id="del_'''+ str(objet.pk) +'''"
+                                                        href="javascript:deleteItem('''+ str(objet.pk) +''')"
+                                                        title="Eliminar">
+                                                        <i class="icon icon-eliminar"></i>
+                                                    </a>'''
+                
+            ponentes=''
+            ponentes=''' <a  href="'''+ reverse('MedCongressAdmin:Taller_ponentes',kwargs={'path':objet.path})+'''"
+                                                        title="Ponentes">
+                                                        <i class="icon icon-ponente " style= "color: blue;" ></i>
+                                                    </a>'''
+            if request.GET.get('tipo')=='nada':
+                ponentes=''' <a  href="'''+ reverse('MedCongressAdmin:Taller_ponentes',kwargs={'path':objet.path})+'''"
+                                                        title="Ponentes">
+                                                        <i class="icon icon-ponente " style= "color: blue;" ></i>
+                                                    </a>'''
+            if request.GET.get('tipo')=='congreso':
+                ponentes=''' <a  href="'''+ reverse('MedCongressAdmin:Taller_ponentes',kwargs={'path':objet.path})+'''?congreso='''+request.GET.get('path')+'''"
+                                                        title="Ponentes">
+                                                        <i class="icon icon-ponente " style= "color: blue;" ></i>
+                                                    </a>'''
+                
+                
+            if request.GET.get('tipo')=='bloque':
+                if request.GET.get('congreso_bloque'):
+                    ponentes=''' <a  href="'''+ reverse('MedCongressAdmin:Taller_ponentes',kwargs={'path':objet.path})+'''?bloque='''+request.GET.get('path')+'''&congreso_bloque=true"
+                                                        title="Ponentes">
+                                                        <i class="icon icon-ponente " style= "color: blue;" ></i>
+                                                    </a>'''
+                    
+                else:
+                    ponentes=''' <a  href="'''+ reverse('MedCongressAdmin:Taller_ponentes',kwargs={'path':objet.path})+'''?bloque='''+request.GET.get('path')+'''"
+                                                        title="Ponentes">
+                                                        <i class="icon icon-ponente " style= "color: blue;" ></i>
+                                                    </a>'''
+                    
+            cat_pago=''
+            cat_pago=''' <a  href="'''+ reverse('MedCongressAdmin:Taller_pagos',kwargs={'path':objet.path})+'''"
+                                                        title="Categorias de pago">
+                                                        <i class="icon icon-pago " style= "color: blue;" ></i>
+                                                    </a>'''
+            if request.GET.get('tipo')=='nada':
+                cat_pago=''' <a  href="'''+ reverse('MedCongressAdmin:Taller_pagos',kwargs={'path':objet.path})+'''"
+                                                        title="Categorias de pago">
+                                                        <i class="icon icon-pago " style= "color: blue;" ></i>
+                                                    </a>'''
+            if request.GET.get('tipo')=='congreso':
+                cat_pago=''' <a  href="'''+ reverse('MedCongressAdmin:Taller_pagos',kwargs={'path':objet.path})+'''?congreso='''+request.GET.get('path')+'''"
+                                                        title="Categorias de pago">
+                                                        <i class="icon icon-pago " style= "color: blue;" ></i>
+                                                    </a>'''
+                
+                
+            if request.GET.get('tipo')=='bloque':
+                if request.GET.get('congreso_bloque'):
+                    cat_pago=''' <a  href="'''+ reverse('MedCongressAdmin:Taller_pagos',kwargs={'path':objet.path})+'''?bloque='''+request.GET.get('path')+'''&congreso_bloque=true"
+                                                        title="Categorias de pago">
+                                                        <i class="icon icon-pago " style= "color: blue;" ></i>
+                                                    </a>'''
+                    
+                else:
+                    cat_pago=''' <a  href="'''+ reverse('MedCongressAdmin:Taller_pagos',kwargs={'path':objet.path})+'''?bloque='''+request.GET.get('path')+'''"
+                                                        title="Categorias de pago">
+                                                        <i class="icon icon-pago " style= "color: blue;" ></i>
+                                                    </a>'''
+                      
+           #Guardar datos en un dic 
+            
+            enviar.append({ 'nombre':objet.titulo,
+                            'congreso': objet.congreso.titulo,
+                            'ponentes':ponentes,
+                            'public' : public,
+                            'cat_pago':cat_pago,
+                            'operaciones' : operaciones,
+                            
+            })
+        #parametros para la respuesta
+        jsoner = {
+            
+            "iTotalRecords": filtered_object_list.count(),
+            "iTotalDisplayRecords": filtered_object_list.count(),
+            "sEcho": request.GET.get('sEcho', 1),
+            "data": enviar
+        }
+        data = json.dumps(jsoner)
+        mimetype = "application/json"
+        #Enviar
+        return HttpResponse(data, mimetype)

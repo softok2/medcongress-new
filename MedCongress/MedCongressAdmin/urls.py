@@ -23,7 +23,7 @@ from .views.ponencia_view import (PonenciaListView, PonenciaCreateView,PonenciaP
 from .views.taller_view import (TalleresListView,TallerCreateView,TallerCategPagosListView,TallerCategPagosCreateView,
                                    TallerUpdateView,TallerPonenteListView,TallerPonenteCreateView,TallerDeletedView,AsignarTalleresListView,
                                    AsignarTallerAddViews,GetPagosT,AsignarTallerDeletedViews,TallerPonenteDeletedView,TallerBloqueDeleted,
-                                   ReporteRelTallerUserExcel,AsignarConstanciasTaller,TallerCategPagosUpdateView,TallerCategPagosDeletedView)
+                                   ReporteRelTallerUserExcel,AsignarConstanciasTaller,TallerCategPagosUpdateView,TallerCategPagosDeletedView,vTableAsJSONTaller)
 from .views.ponente_view import (PonentesListView,PonentesCreateView,PonenteDeletedView,UserPonenteCreateView)
 from .views.user_views import (UsuariosListView,UsuarioCreateView,UsuarioUpdateView,UsuarioDeletedView,vTableAsJSON)
 from .views.bloque_views import (BloquesListView,BloqueCreateView,BloqueDeletedView,BloquePonenciasListView,BloqueTalleresListView,
@@ -326,6 +326,8 @@ urlpatterns = [
 
     path('pruebaTablaJson', vTableAsJSON.as_view(), name='table_json'),
     path('pruebaTablaJsonPonencia', vTableAsJSONPonencia.as_view(), name='table_json_ponencia'),
+    path('pruebaTablaJsonTaller', vTableAsJSONTaller.as_view(), name='table_json_taller'),
+
     
     #Constancias-Congreso
     path('asignar_constancias', AsignarConstancias.as_view(), name='asig_constancia_list'),

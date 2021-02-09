@@ -24,29 +24,18 @@
 	<div class="row breadcrumbs-top">
 	  <div class="breadcrumb-wrapper col-12">
 		<ol class="breadcrumb">
-{%if congres%}
+{%if congreso or congreso_bloque%}
     <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
     </li>
-        {%if bloc%}
-            <li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:Congres_bloques' path=bloc.congreso.path %}">Bloques</a>
+{%endif%}
+{%if bloque%}
+            <li class="breadcrumb-item active"> <a {%if congreso_bloque%}href="{% url 'MedCongressAdmin:Congres_bloques' path=bloque.congreso.path %}"{%else%}href="{% url 'MedCongressAdmin:bloques_list' %}"{%endif%}>Bloques</a>
             </li>
-    {%endif%}
-    <li class="breadcrumb-item active">Talleres
-    </li>
-{%else%}
+{%endif%}   
 
-
-{%if bloc%}
-
-<li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:bloques_list' %}">Bloques</a>
-</li>
 <li class="breadcrumb-item active">Talleres
 </li>
-{%else%}
-<li class="breadcrumb-item active">Talleres
-</li>
-{%endif%}
-{%endif%}
+
 </ol>
 </div>
 </div>
@@ -102,7 +91,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for taller in talleres %}
+                                            <!-- {% for taller in talleres %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
                                                 <td class="sorting_1">{{ taller.titulo }}</td>
                                                 <td class="sorting_1">{{ taller.congreso.titulo }}</td>
@@ -113,9 +102,9 @@
                                                         title="Ponentes">
                                                         <i class="icon icon-ponente " ></i>
                                                     </a></td>
-                                                <!-- <td>{{ taller.lugar }}</td>
+                                                <td>{{ taller.lugar }}</td>
                                                 <td>{{ taller.fecha_inicio }}</td> -->
-                                                <td>{%if taller.published%}Si{%else%}No{%endif%}</td>
+                                                <!-- <td>{%if taller.published%}Si{%else%}No{%endif%}</td>
                                                 <td><a id=""
                                                         href="{%url 'MedCongressAdmin:Taller_pagos' taller.path %}"
                                                         title="Categorias de pago">
@@ -131,8 +120,8 @@
                                                         <i class="icon icon-eliminar"></i>
                                                     </a>
                                                 </td>
-                                            </tr>
-                                            {% endfor %}
+                                            </tr> 
+                                            {% endfor %} -->
                                         </tbody>
                                         <tfoot>
                                             <tr>
@@ -190,6 +179,41 @@
             "previous": "Anterior"
         }
     },
+    "columns": [
+       
+        {'data':'nombre','orderable': true},
+        {'data':'congreso','orderable': true},
+        {'data':'ponentes','orderable':false},
+        {'data':'public','orderable': true },
+        {'data':'cat_pago','orderable': false },
+        {'data':'operaciones','orderable': false }
+       
+    ],
+    "ordering": true,
+    "bServerSide": true,
+    "sAjaxSource": "{% url 'MedCongressAdmin:table_json_taller' %}",
+    "fnServerParams": function (aoData) {
+        {%if congreso%}
+        
+            aoData.push( { "name": "tipo", "value": "congreso" } );
+            aoData.push( { "name": "path", "value": "{{congreso.path}}" } );
+            {%elif bloque%}
+            aoData.push( { "name": "tipo", "value": "bloque" } );
+            aoData.push( { "name": "path", "value": "{{bloque.path}}" } );
+            {%if congreso_bloque%}
+           
+            aoData.push( { "name": "congreso_bloque", "value": "true" } );
+            {%endif%}
+
+           {%else%}
+
+            aoData.push( { "name": "tipo", "value": "nada" } );
+            
+            {%endif%}
+           
+            aoData.push( { "name": "search", "value": $('.dataTables_filter input').val()} );
+        
+       }
  
 });
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
@@ -200,18 +224,29 @@
         });
 
         $('#add-btn').click(function () {
-            {%if congres%}
-            location.href = "{% url 'MedCongressAdmin:congreso_taller_add' pk=congres.pk %}";
+            search=$('.dataTables_filter input').val();
+            {%if congreso%}
+            location.href = "{% url 'MedCongressAdmin:taller_add'%}?search="+search+"&congreso={{congreso.path}}";
             
-            {%elif bloc%}
-            location.href = "{% url 'MedCongressAdmin:taller_bloque_add' pk_block=bloc.pk %}";
+            {%elif bloque%}
+            {%if congreso_bloque%}
+            location.href = "{% url 'MedCongressAdmin:taller_add' %}?search="+search+"&bloque={{bloque.path}}&congreso_bloque=true";
+            {%else%}
+
+            location.href = "{% url 'MedCongressAdmin:taller_add' %}?search="+search+"&bloque={{bloque.path}}";
+            
+
+            {%endif%}
            {%else%}
 
-            location.href = "{% url 'MedCongressAdmin:taller_add' %}";
+            location.href = "{% url 'MedCongressAdmin:taller_add' %}?search="+search+"";
             {%endif%}
         });
 
         dataTable = $('.zero-configuration').DataTable();
+        {%if search%}
+        dataTable.search('{{search}}').draw();
+        {%endif%}
     });
     function deleteItem(pk) {
         swal({

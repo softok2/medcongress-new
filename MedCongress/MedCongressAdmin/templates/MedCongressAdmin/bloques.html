@@ -105,10 +105,10 @@
                                                 </a>
                                                 <a id=""
                                                 {% if congres%}
-                                                href="{%url 'MedCongressAdmin:Bloque_talleres' path=bloque.path tipo='congreso'%}"
-                                                {%else%}
-                                                href="{%url 'MedCongressAdmin:Bloque_talleres' path=bloque.path tipo='false'%}"
-                                                {%endif%}
+                                                    href="{%url 'MedCongressAdmin:talleres_list'%}?bloque={{bloque.path}}&congreso_bloque=true"
+                                                    {%else%}
+                                                    href="{%url 'MedCongressAdmin:talleres_list'%}?bloque={{bloque.path}}"
+                                                    {%endif%}
                                                     title="Talleres " style="margin-left: 10px;">
                                                     <i class="icon icon-taller " > </i>
                                                 </a></td>

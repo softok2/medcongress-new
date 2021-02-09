@@ -274,12 +274,12 @@ class TallerForm(forms.ModelForm):
         if imagen:
             w, h = get_image_dimensions(imagen)
             if w != 1920 or h != 1080:
-                self.add_error('imagen',"Esta imagen tiene %s X %s pixel. Debe ser de 1920 X 1080 pixel" %(w,h) )
+                self.add_error('imagen',"La <b> Imagen Principal </b>tiene %s X %s pixel. Debe ser de <b> 1920 X 1080 pixel</b>" %(w,h) )
         try:
             if bloq and fecha_inicio.date() != bloq.fecha_inicio.date():
-                self.add_error('fecha_inicio', 'La fecha de inicio no coincide  con las del bloque que pertenece %s '%(bloq.fecha_inicio.date()))
+                self.add_error('fecha_inicio', 'La <b> Fecha de Inicio</b> no coincide con la del bloque que pertenece <b> %s</b> '%(bloq.fecha_inicio.date()))
         except Exception as e:
-            self.add_error('fecha_inicio','Entre bien la Fecha')
+            self.add_error('fecha_inicio','Entre bien la <b>Fecha de Inicio</b>')
 class PonenciaForms(MultiModelForm):
     form_classes = {
         'ponencia': PonenciaForm,

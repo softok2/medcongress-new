@@ -70,6 +70,8 @@ urlpatterns = [
     path('registro_existoso',RegistroExitoso.as_view() , name='Registro_exitoso'),
     
    path('mensaje_exitoso',ContactoExitoso.as_view() , name='mensaje_exitoso'),
+
+
     
     
     

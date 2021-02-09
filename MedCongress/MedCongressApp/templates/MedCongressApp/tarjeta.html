@@ -13,7 +13,7 @@ Efectuar Pago
 <div class="kode-event-time">
     <div class="kode-event-contact">
         <div class="container">
-            <div class="row well" style="margin-top: 70px;">
+            <div class="row well" >
                 <h4>Desglose de los boletos a comprar</h4>
                 <table class="table table-hover">
                     <thead>
@@ -28,7 +28,7 @@ Efectuar Pago
                         </tr>
                     </thead>
                     <tbody>
-                        {%if  request.session.cart.1 %}
+                        {%if request.session.cart.1 %}
                         {%for car in request.session.cart.1 %}
                         <tr>
                             <th scope="row">{{forloop.counter}}</th>
@@ -56,10 +56,10 @@ Efectuar Pago
 
 
             </div>
-            <div class="row">
+            <div class="row ">
                 <div class="kf_heading_3">
 
-                    <div class=" col-sm-7 ">
+                    <div class=" col-sm-12 ">
 
                         <h2>Tarjeta de crédito o débito</h2>
 
@@ -108,11 +108,6 @@ Efectuar Pago
                                     </div>
                                 </div>
 
-
-
-
-
-
                                 <div class="col-sm-6 ">
                                     <div class="form-group">
                                         <label>Fecha de expiración</label>
@@ -155,7 +150,8 @@ Efectuar Pago
                                         <div class="row">
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                                 <input type="text" placeholder="CVV" autocomplete="off"
-                                                    data-openpay-card="cvv2" name="cant" maxlength="4"></div>
+                                                    data-openpay-card="cvv2" name="cant" maxlength="4">
+                                            </div>
 
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                                 <img src="{% static 'MedCongressApp/images/cvv.png'%}">
@@ -166,10 +162,10 @@ Efectuar Pago
                                     </div>
 
                                 </div>
-                                
+
                             </div>
                             <div class="row">
-                                <div class=" col-sm-6" >
+                                <div class=" col-sm-6">
                                     Transacciones realizadas vía: <img
                                         src="{% static 'MedCongressApp/images/openpay.png'%}">
                                 </div>
@@ -180,39 +176,66 @@ Efectuar Pago
                             </div>
 
 
-
+                            <div class="col-md-5"></div>
                             <div class="col-sm-6 ">
                                 <button class="button rght" style="color: black;" type="submit" id="pay-button">Pagar
                                 </button>
                             </div>
 
-                 
-                    </form>
+
+                        </form>
+                    </div>
                 </div>
-                <div class=" col-sm-5 ">
-                    <h2>Pagar en Efectivo</h2>
-
-                    <p class="">Pasos</p>
-                    <ol class="">
-                        <li class="">Seleccionar opción <b> Pagar en Efectivo</b> </li>
-                        <li class="">Guardar el documento con el código de barra generado </li>
-                        <li class="">Presentarse en cualquier tienda donde se pueda efectuar pagos en <b>OpenPay
-                            </b> </li>
-                    </ol>
-                    <form action="" method="POST" target="_black">
-                        {% csrf_token %}
-                        <div class="col-sm-6 " style="margin: 50px;">
-                            <input type="hidden" name="pagar_efectivo" value="1" id="token_id">
-                            <button class="button rght" style="color: black;" type="submit" id="pay-button">Pagar en
-                                Efectivo</button>
-                        </div>
-                    </form>
-
-                </div>
-
-
             </div>
-        
+            <div class="row" style="margin-top: 20px;">
+                <div class="kf_heading_3">
+                    <div class=" col-sm-6 ">
+                        <h2>Pagar en Efectivo</h2>
+
+                        <p class=""> <b>Pasos: </b> </p>
+                        <ol class="">
+                            <li class="">Seleccionar opción <b> Pagar en Efectivo</b> </li>
+                            <li class="">Guardar el documento con el código de barra generado </li>
+                            <li class="">Presentarse en cualquier tienda donde se pueda efectuar pagos en <b>OpenPay
+                                </b> </li>
+                        </ol>
+                        <form action="" method="POST" target="_black">
+                            {% csrf_token %}
+                            <div class="col-sm-6 " style="margin: 50px;">
+                                <input type="hidden" name="pagar_efectivo" value="1" id="token_id">
+                                <button class="button rght" style="color: black;" type="submit" id="pay-button">Pagar en
+                                    Efectivo</button>
+                            </div>
+                        </form>
+
+                    </div>
+                    <div class=" col-sm-6 ">
+                        <h2>Pagar por Transferencia interbancaria (SPEI)</h2>
+
+                        <p class=""> <b>Pasos: </b> </p>
+                        <ol class="">
+                            <li class="">Seleccionar opción <b> Pagar por Transferencia</b> </li>
+                            <li class="">Guardar el documento Generado </li>
+                            <li class="">Seguir las indicaciones de dicho documento </li>
+                        </ol>
+                        <form action="" method="POST" target="_black">
+                            {% csrf_token %}
+                            <div class="col-sm-6 " style="margin: 50px;">
+                                <input type="hidden" name="pagar_efectivo" value="2" id="token_id">
+                                <button class="button rght" style="color: black;" type="submit" id="pay-button">Pagar
+                                    por Transferencia</button>
+                            </div>
+                        </form>
+
+                    </div>
+
+
+
+
+
+                </div>
+            </div>
+
 
         </div>
     </div>
@@ -231,8 +254,8 @@ Efectuar Pago
     <script type="text/javascript">
         $(document).ready(function () {
 
-           
-        
+
+
             $('#numero1').keyup(function () {
 
                 $('#numero').val($('#numero1').val().replace(/-/g, ''));
@@ -255,9 +278,9 @@ Efectuar Pago
 
             OpenPay.setId('{{id_key}}');
             OpenPay.setApiKey('{{public_key}}');
-            {%if prueba%}
+            {%if prueba %}
             OpenPay.setSandboxMode(true);
-            {%endif%}
+            {% endif %}
 
 
 
@@ -266,9 +289,9 @@ Efectuar Pago
             const csrftoken = getCookie('csrftoken');
             $('#pay-button').on('click', function (event) {
 
-              
-                  
-                    
+
+
+
                 event.preventDefault();
                 $("#pay-button").prop("disabled", true);
                 OpenPay.token.extractFormAndCreate('payment-form', sucess_callbak, error_callbak);
