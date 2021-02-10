@@ -1707,7 +1707,7 @@ class ViewCart(TemplateView):
 class Enviar(TemplateView):
     template_name='MedCongressApp/ver_carrito.html'
     def get(self, request, **kwargs):
-        url='http://localhost:8000/webhook'
+        url='%s/webhook'%(URL_SITE)
         
         params= {
                     "type" : "verification",
