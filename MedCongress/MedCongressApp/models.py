@@ -238,7 +238,7 @@ class Congreso(models.Model):
     cant_preguntas=models.IntegerField(null=True)
     score=models.IntegerField(null=True)
     streaming=models.TextField(null=True,blank=True)
-    programa=models.FileField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='programas',null=True,blank=True)
+   
     detalles_tipo_boleto=models.TextField(null=True,blank=True)
     detalles_tipo_boleto_taller=models.TextField(null=True,blank=True)
     ver_titulo=models.BooleanField(default=True)
@@ -788,6 +788,28 @@ class Documento(models.Model):
     titulo=models.CharField(max_length=25)
     class Meta:
         verbose_name='Documento'
+
+    def __str__(self):
+        return 'Documento'
+##### Tabla Idiomas #####
+
+class Idioma(models.Model):
+    nombre= models.CharField(max_length=20,unique=True)
+    abreviatura= models.CharField(max_length=4,unique=True)
+    class Meta:
+        verbose_name='idioma'
+        verbose_name_plural='idiomas'
+        
+    def __str__(self):
+        return self.nombre
+
+class DocumentoPrograma(models.Model):
+    documento=models.FileField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='programas')
+    texto=models.CharField(max_length=25)
+    idioma=models.ForeignKey(Idioma,on_delete=models.CASCADE)
+    congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
+    class Meta:
+        verbose_name='DocumentoPrograma'
 
     def __str__(self):
         return 'Documento'

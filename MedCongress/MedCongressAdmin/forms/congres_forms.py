@@ -7,7 +7,8 @@ from  MedCongressApp.models import (Congreso,Ubicacion,ImagenCongreso,TipoCongre
                                     CategoriaPagoCongreso,RelTalleresCategoriaPago,Genero,CategoriaUsuario,
                                     RelTallerPonente,Bloque,DatosIniciales,RelCongresoUser,RelTallerUser,
                                     Moderador,RelBloqueModerador,ImagenCongreso,CuestionarioPregunta,CuestionarioRespuestas,
-                                    MetaPagInicio,MetaPagListCongreso,PreguntasFrecuentes,RelCongresoAval, AvalCongreso,RelCongresoSocio,SocioCongreso)
+                                    MetaPagInicio,MetaPagListCongreso,PreguntasFrecuentes,RelCongresoAval, AvalCongreso,RelCongresoSocio,SocioCongreso,
+                                    Idioma,DocumentoPrograma)
                     
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
@@ -25,11 +26,11 @@ class CongresForm(forms.ModelForm):
     fecha_inicio=forms.DateTimeField(widget=forms.TextInput())
     score=forms.IntegerField(label='Puntuación del Congreso')
     foto_constancia=forms.ImageField(label='Buscar Imagen para la Constancia',required=False,)
-    programa=forms.FileField(label='Buscar Programa',required=False)
+
     class Meta:
         model=Congreso
         fields=['titulo','sub_titulo','imagen_seg','fecha_inicio','published','t_congreso','especialidad','is_openpay','template','foto_constancia','aprobado','cant_preguntas','score','streaming','meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
-        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','programa','detalles_tipo_boleto','detalles_tipo_boleto_taller','ver_titulo']
+        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','detalles_tipo_boleto','detalles_tipo_boleto_taller','ver_titulo']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
@@ -920,3 +921,29 @@ class SelectPonencia(forms.Form):
 
         # if RelCongresoSocio.objects.filter(congreso=congreso,socio=socio).exists():
         #     self.add_error('socio', 'Este Socio ya esta asociado a este congreso')
+
+class CongresoProgramaForm(forms.ModelForm):
+    idioma=forms.ModelChoiceField(queryset=Idioma.objects.all(),label='Idioma')
+    
+    class Meta:
+        model=DocumentoPrograma
+        fields=['idioma','congreso','documento','texto']
+       
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+
+        self.fields['idioma'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['congreso'].widget.attrs.update({'class': 'form-control','style':'display:none'}) 
+        self.fields['texto'].widget.attrs.update({'class': 'form-control'}) 
+        
+        
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(CongresoProgramaForm, self).clean(*args, **kwargs)
+        documento = cleaned_data.get('documento', None)
+        if documento:
+            filename = documento.name
+            
+            if(not filename.endswith(".doc") and not filename.endswith(".docx") and
+                not filename.endswith(".pdf") ) :
+                self.add_error('documento',"No está <b> permitido </b> subir ese <b>tipo de archivo</b>. Los permitidos son <b>  .doc, .docx, .pdf, </b>."  )

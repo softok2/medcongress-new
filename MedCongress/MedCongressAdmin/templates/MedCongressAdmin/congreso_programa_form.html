@@ -1,0 +1,150 @@
+{% extends 'MedCongressAdmin/base.html' %}
+{% block title %}{%if update%} Actualizar Programa{%else%} Adicionar Programa{%endif%}{% endblock %}
+{% load static %}
+{% block styles %}
+{% endblock %}
+{% block content %}
+
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+		  </li>
+		 
+		  <li class="breadcrumb-item active"><a href="{% url 'MedCongressAdmin:Congres_programas' path=cong.path %}">Doc. de Programas</a>
+		</li>
+		<li class="breadcrumb-item active">{%if update%} Actualizar Programa{%else%} Adicionar Programa{%endif%}
+		</li>
+		
+		</ol>
+	  </div>
+	</div>
+  </div>
+<section class="multiple-input-with-labels" id="multiple-input-with-labels">
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-header">
+					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
+						{%if update%} Actualizar Programa{%else%} Adicionar Programa{%endif%}</h1>
+					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
+					<div class="heading-elements">
+						<ul class="list-inline mb-0">
+							<li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+						
+							<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+						
+						</ul>
+					</div>
+				</div>
+				<div class="card-content collapse show">
+					<div class="card-body">
+						{% if form.errors %}
+						{% for field in form %}
+							{% for error in field.errors %}
+							
+								<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+										<span aria-hidden="true">×</span>
+									</button>
+									{{ error|safe|escape }}
+								</div>
+							{% endfor %}
+						{% endfor %}
+						{% for error in form.non_field_errors %}
+						<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">×</span>
+							</button>
+							{{ error|safe|escape }}
+						</div>
+						{% endfor %}
+					{% endif %} 
+						<form id="country-form" method="POST" enctype="multipart/form-data">
+							{% csrf_token %}
+							<input type="hidden" name="update" value="{%if update%}{{categoria.id}}{%else%}false{%endif%}">
+							<div class="form-body">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="row">
+										<div class="col-sm-2 ">
+											<div class="form-group">
+												<label
+													for="{{form.idioma.id_for_label }}"><b>{{form.idioma.label }}</b></label>
+
+												{{form.idioma }}
+											</div>
+										</div>
+										<div class="col-sm-3 ">
+											<div class="form-group">
+												<label
+													for="{{form.texto.id_for_label }}"><b>Texto a mostrar en el Vínculo</b></label>
+
+												{{form.texto }}
+											</div>
+										</div>
+										<div class="col-sm-7">
+											<div class="form-group">
+												{%if programa%}
+													<a href="{% static '/' %}{{programa.documento}}" itemprop="contentUrl"
+														data-size="480x360">
+														Ver Programa
+													</a>
+													
+													<label for=""> <b>Cambiar Documento</b> </label><br>
+													<input type="file" name="documento" id="id_documento">
+
+												
+													{%else%}
+
+											<label for="{{form.documento.id_for_label }}"><b>{{form.documento.label}}</b> </label><br>
+												{{form.documento}}
+											{%endif%}
+											</div>
+										</div>
+										
+										
+										<div class="col-sm-2 ">
+											<div class="form-group">
+												
+													
+
+												{{form.congreso }}
+											</div>
+										</div>
+									</div>
+										<div class="form-actions">
+											<div class="text-right">
+												<button id="atras" type="button" class="btn btn-danger " >
+													<i class="ft-skip-back position-right"></i>Atras
+												</button> 
+												<button id="save" type="submit" class="btn btn-primary">Guardar
+													<i class="ft-save position-right"></i>
+												</button>
+												
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div style="text-align: right;"> </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+ $('#atras').click(function () {
+            location.href = "{% url 'MedCongressAdmin:Congres_programas' path=cong.path %}";
+        });
+	$(document).ready(function () {
+		$("#id_congreso option[value='{{cong.id}}']").attr("selected",true);
+	
+	});
+</script>
+{% endblock %}

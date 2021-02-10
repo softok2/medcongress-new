@@ -154,4 +154,14 @@
     background: url('../images/icons/repository.ico') no-repeat center center;
    
 }
+.icon-lang
+{
+    background: url('../images/icons/lang.ico') no-repeat center center;
+   
+}
 
+.icon-docu
+{
+    background: url('../images/icons/doc.ico') no-repeat center center;
+   
+}

@@ -263,11 +263,11 @@
             <span>{{congreso.titulo}}</span>{%if congreso.sub_titulo %}<span
                 style="font-size:80%;font-style: italic;">{{congreso.sub_titulo }}</span>{%endif%}
         </div>
-        {%if congreso.programa%}
+        {%if programas%}
         <div class="col-sm-6" style="margin-bottom: 20px;">
-            <a href="{% static '/'%}{{congreso.programa}}" style="font-size: 18px;"><i class="fa fa-download"></i> Descargar
-                Programa</a><br />
-            
+            {%for programa in programas%}
+            <a href="{% static '/'%}{{programa.documento}}" style="font-size: 18px;"><i class="fa fa-download"></i> {{programa.texto}}</a><br />
+            {%endfor%}
         </div>
 {%endif%}
         <div class="row">

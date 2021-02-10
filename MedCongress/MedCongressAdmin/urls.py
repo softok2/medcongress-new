@@ -15,7 +15,8 @@ from .views.congress_views import (CongressListView,CongressCreateView,CongressU
                                    AsignarCongressDeletedViews,CongressImagenCreateView,CongressCuestionarioListView,CongressPregFrecuenteListView,
                                    Ver_usuarios,Ver_Exel,Exportar_usuarios,Usuarios_pagaron,ReporteRelCongresoUserExcel,CongressPatrocinadorListView,
                                    PatrocinadorSeleccionarView,PatrocinadorSeleccionarDeleted, SocioSeleccionarView,SocioSeleccionarDeleted,CongressSocioListView,
-                                   CongresoDetail,CongressImagenDeletedView,CongressCategPagosUpdateView,CongressCategPagosDeletedView,AsignarConstancias)
+                                   CongresoDetail,CongressImagenDeletedView,CongressCategPagosUpdateView,CongressCategPagosDeletedView,AsignarConstancias
+                                   ,CongressProgramaUpdateView,CongressProgramaDeletedView,CongressProgramaCreateView,CongressProgramaListView)
 from .views.imagen_views import (ImagenCreateView)
 from .views.ponencia_view import (PonenciaListView, PonenciaCreateView,PonenciaPonenteListView,
                                    PonencicaUpdateView,PonenciaPonenteCreateView,PonenciaDeletedView,
@@ -37,6 +38,7 @@ from .views_nomencladores.socio_views import (SocioListView,SocioCreateView,Soci
 from .views_nomencladores.cat_usuario_views import (CatUsuarioListView,CatUsuarioCreateView,CatUsuarioDeletedView,CatUsuarioUpdateView)
 from .views_nomencladores.esp_evento_views import (EspEventoListView,EspEventoCreateView,EspEventoDeletedView,EspEventoUpdateView)
 from .views_nomencladores.tipo_evento_views import (TipoEventoListView,TipoEventoCreateView,TipoEventoDeletedView,TipoEventoUpdateView)
+from .views_nomencladores.idioma_views import (IdiomaListView,IdiomaCreateView,IdiomaDeletedView,IdiomaUpdateView)
 from .views_nomencladores.esp_usuario_views import (EspUsuarioListView,EspUsuarioCreateView,EspUsuarioDeletedView,EspUsuarioUpdateView)
 from .views_inicio.quienes_somos_views import (QuienesSomosListView,QuienesSomosUpdateView,QuienesSomosCreateView,QuienesSomosImagenCreateView,QuienesSomosImagenDeletedView)
 from .views_inicio.imagen_home_view import ImagenListView,ImagenCreateView,ImagenUpdateView,ImagenDeletedView
@@ -185,6 +187,13 @@ urlpatterns = [
      path('categorias_pago-congres/editar/<str:path>/<int:pk>', CongressCategPagosUpdateView.as_view(), name='congres_cat_pago_editar'),
      path('categorias_pago-congres/eliminar/<int:pk>', CongressCategPagosDeletedView.as_view(), name='congres_cat_pago_eliminar'),
 
+      #Programa-Congreso
+     path('programas/congreso/<str:path>', CongressProgramaListView.as_view(), name='Congres_programas'),
+     path('programa-congres/adicinar/<str:path>', CongressProgramaCreateView.as_view(), name='congres_programa_add'),
+     path('programa-congres/editar/<str:path>/<int:pk>', CongressProgramaUpdateView.as_view(), name='congres_programa_editar'),
+     path('programa-congres/eliminar/<int:pk>', CongressProgramaDeletedView.as_view(), name='congres_programa_eliminar'),
+
+
     #Categorias de Pagos-Taller
      path('categorias_pago/taller/<str:path>', TallerCategPagosListView.as_view(), name='Taller_pagos'),
      path('categoria_pago-taller/adicionar/<str:path>', TallerCategPagosCreateView.as_view(), name='taller_cat_pago_add'),
@@ -278,6 +287,11 @@ urlpatterns = [
      path('esp_usuario/editar/<int:pk>', EspUsuarioUpdateView.as_view(), name='esp_usuario_edit'),
      path('esp_usuario/eliminar/<int:pk>', EspUsuarioDeletedView.as_view(), name='esp_usuario_delete'),
 
+      # Idiomas
+     path('idiomas', IdiomaListView.as_view(), name='idiomas_list'),
+     path('idioma/adicionar',IdiomaCreateView.as_view(), name='idioma_add'), 
+     path('idioma/editar/<int:pk>', IdiomaUpdateView.as_view(), name='idioma_edit'),
+     path('idioma/eliminar/<int:pk>', IdiomaDeletedView.as_view(), name='idioma_delete'),
      # Tipos de Eventos
      path('tipo_evento', TipoEventoListView.as_view(), name='tipo_eventos_list'),
      path('tipo_evento/adicionar',TipoEventoCreateView.as_view(), name='tipo_evento_add'), 

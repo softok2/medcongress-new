@@ -36,7 +36,7 @@ from .models import (CategoriaPagoCongreso, Congreso, EspecialidadCongreso,
                      RelCongresoUser,RelPonenciaPonente,PerfilUsuario,ImagenCongreso,Taller,RelTalleresCategoriaPago,RelTallerUser,DatosIniciales,
                      CategoriaUsuario,Bloque,Moderador,RelTallerPonente,Pais,CuestionarioPregunta,CuestionarioRespuestas,RelPonenciaVotacion,
                      PreguntasFrecuentes,Ubicacion,AvalCongreso,SocioCongreso,QuienesSomos,Ofrecemos,Footer,ImagenQuienesSomos,RelTallerVotacion,MetaPagInicio,MetaPagListCongreso,
-                     RelCongresoAval,RelCongresoSocio,ImagenHome)
+                     RelCongresoAval,RelCongresoSocio,ImagenHome,DocumentoPrograma)
 from .pager import Pager
 from .cart import Cart
 from django_xhtml2pdf.views import PdfMixin
@@ -579,7 +579,7 @@ class CongresoDetail(TemplateView):
                 context['talleres']=ver
                 context['permiso'] = False  
             context['categorias_pago']=cat_pago
-
+            context['programas']=DocumentoPrograma.objects.filter(congreso=congreso)
             context['preg_frecuentes']=PreguntasFrecuentes.objects.filter(congreso=congreso,published=True)
 
         return context

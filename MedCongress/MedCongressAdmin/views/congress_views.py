@@ -25,7 +25,7 @@ from MedCongressAdmin.forms.congres_forms import (AsignarCongresoForms,
                                                   CongresoSocioForm,
                                                   ExportarExelForm,
                                                   ImagenCongForms,
-                                                  PonenciaForms)
+                                                  PonenciaForms,CongresoProgramaForm)
 from MedCongressApp.models import (AvalCongreso, Bloque, CategoriaPagoCongreso,
                                    Congreso, CuestionarioPregunta,
                                    CuestionarioRespuestas, ImagenCongreso,
@@ -34,7 +34,7 @@ from MedCongressApp.models import (AvalCongreso, Bloque, CategoriaPagoCongreso,
                                    RelCongresoCategoriaPago, RelCongresoSocio,
                                    RelCongresoUser, SocioCongreso, Taller,
                                    Ubicacion, User,Moderador,RelPonenciaPonente,RelTalleresCategoriaPago,
-                                   RelTallerUser)
+                                   RelTallerUser,DocumentoPrograma)
 from openpyxl import Workbook
 from openpyxl.styles import (Alignment, Border, Font, PatternFill, Protection,
                              Side)
@@ -153,8 +153,6 @@ class CongressUpdateView(validarUser,FormView):
             context['imagen']=imagen.imagen
         if self.object.imagen_seg:
             context['imagen_seg_url']='/static/%s'%(self.object.imagen_seg)
-        if self.object.programa:
-            context['programa']=self.object.programa
         if self.object.meta_og_imagen:
             context['imagen_meta']='/static/%s'%(self.object.meta_og_imagen)
         if self.object.foto_constancia:
@@ -1122,3 +1120,70 @@ class AsignarConstancias(validarUser,TemplateView):
         else:
                 messages.warning(self.request,'Error.....Ese Congreso tiene asignada ninguna foto para la constancia')
                 return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list')) 
+
+########## Vista de las Programas de un Congreso #############
+
+class CongressProgramaListView(validarUser,TemplateView):
+    template_name= 'MedCongressAdmin/congres_programa.html' 
+    
+
+    def get(self, request, **kwargs):
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+        if congreso is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        return self.render_to_response(self.get_context_data())    
+    def get_context_data(self, **kwargs):
+        context = super(CongressProgramaListView, self).get_context_data(**kwargs)
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+        context['congres']=congreso
+        context['programas']=DocumentoPrograma.objects.filter(congreso=congreso)
+        return context        
+ 
+class  CongressProgramaCreateView(validarUser,CreateView):
+    info_sended =Congreso()
+    form_class = CongresoProgramaForm
+    # success_url = reverse_lazy('MedCongressAdmin:ponencias_list')
+    template_name = 'MedCongressAdmin/congreso_programa_form.html'
+    def form_valid(self, form):
+        congreso=form.save(commit=False)
+  
+        congreso.save()
+        return super(CongressProgramaCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+           self.success_url =  reverse_lazy('MedCongressAdmin:Congres_programas',kwargs={'path': self.kwargs.get('path')} )
+           return self.success_url
+
+    def get_context_data(self, **kwargs):
+        ctx = super(CongressProgramaCreateView, self).get_context_data(**kwargs)
+        pon=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+        ctx['cong'] = pon
+        return ctx
+class CongressProgramaUpdateView(validarUser,UpdateView):
+
+    form_class = CongresoProgramaForm
+    template_name = 'MedCongressAdmin/congreso_programa_form.html'
+
+    def get_queryset(self, **kwargs):
+        return DocumentoPrograma.objects.filter(pk=self.kwargs.get('pk'))
+
+    def form_valid(self, form):
+        congreso=form.save(commit=False)
+  
+        congreso.save()
+        return super(CongressProgramaUpdateView, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context=super().get_context_data(**kwargs)
+        context['update']=True
+        context['programa']= DocumentoPrograma.objects.get(pk=self.kwargs.get('pk'))
+        pon=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+        context['cong'] = pon
+        return context
+    def get_success_url(self):
+           self.success_url =  reverse_lazy('MedCongressAdmin:Congres_programas',kwargs={'path': self.kwargs.get('path')} )
+           return self.success_url
+    
+class CongressProgramaDeletedView(validarUser,DeleteView):
+    model = DocumentoPrograma
+    success_url = reverse_lazy('MedCongressAdmin:cat_usuarios_list')

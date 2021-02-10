@@ -2,7 +2,7 @@
 from django import forms
 
 from  MedCongressApp.models import (Genero,CategoriaPagoCongreso,AvalCongreso,CategoriaUsuario,EspecialidadCongreso,
-Especialidades, TipoCongreso,SocioCongreso)
+Especialidades, TipoCongreso,SocioCongreso,Idioma)
 
 
 class GeneroForm(forms.ModelForm):
@@ -16,6 +16,20 @@ class GeneroForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields['denominacion'].widget.attrs.update({'class': 'form-control'})  
+
+class IdiomaForm(forms.ModelForm):
+   
+    nombre= forms.CharField(label='Idioma')
+    abreviatura=forms.CharField(label='Abreviatura')
+    class Meta:
+        model=Idioma
+        fields=['nombre','abreviatura']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['nombre'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['abreviatura'].widget.attrs.update({'class': 'form-control'})   
 
     
       
