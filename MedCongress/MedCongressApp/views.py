@@ -1728,13 +1728,13 @@ def Webhook(request):
         
         received_json_data=json.loads(request.body)
          ##### EMAIL #####
-        if received_json_data['type']== "verification":
-            subject = 'Código de verificación'
-            # html_message = render_to_string('MedCongressApp/recibo_pago.html', context={'car':enviar,'date':response_dict['operation_date'],'numero':response_dict['authorization'],'importe':response_dict['amount'],'card':response_dict['card']['card_number'],'orden_id':response_dict['order_id']})
-            plain_message = strip_tags('El código de verificación de los WebHook de Openpay es %s'%(received_json_data['verification_code']))
-            from_email = ' Contacto MedCongress <alex@softok2.com>'
+        # if received_json_data['type']== "verification":
+        subject = 'Código de verificación'
+        # html_message = render_to_string('MedCongressApp/recibo_pago.html', context={'car':enviar,'date':response_dict['operation_date'],'numero':response_dict['authorization'],'importe':response_dict['amount'],'card':response_dict['card']['card_number'],'orden_id':response_dict['order_id']})
+        plain_message = strip_tags('El tipo es %s'%(received_json_data['type']))
+        from_email = ''
 
-            mail.send_mail(subject, plain_message, from_email, ['dennis.molinetg@gmail.com','a.morell.cu@icloud.com','frankhef91@gmail.com','aleruiz.cu@gmail.com'])
+        mail.send_mail(subject, plain_message, from_email, ['dennis.molinetg@gmail.com'])
         ####END EMAIL ######
         
     return HttpResponse('echo')
