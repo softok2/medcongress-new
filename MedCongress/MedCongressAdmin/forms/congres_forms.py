@@ -945,5 +945,6 @@ class CongresoProgramaForm(forms.ModelForm):
             filename = documento.name
             
             if(not filename.endswith(".doc") and not filename.endswith(".docx") and
-                not filename.endswith(".pdf") ) :
-                self.add_error('documento',"No está <b> permitido </b> subir ese <b>tipo de archivo</b>. Los permitidos son <b>  .doc, .docx, .pdf, </b>."  )
+                not filename.endswith(".pdf") and not filename.endswith(".zip") and
+                not filename.endswith(".rar") ) :
+                self.add_error('documento',"No está <b> permitido </b> subir ese <b>tipo de archivo</b>. Los permitidos son <b>  .doc, .docx, .pdf, .rar, .zip </b>."  )
