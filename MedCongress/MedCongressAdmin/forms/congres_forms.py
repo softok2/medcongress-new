@@ -808,7 +808,7 @@ class PregFrecuenteForm(forms.ModelForm):
 
 class ExportarExelForm(forms.ModelForm):
     
-    congreso=forms.ModelChoiceField(queryset=Congreso.objects.all(),label='Filtrar Congreso',required=False)
+    congreso=forms.ModelChoiceField(queryset=Congreso.objects.all(),label='Filtrar Congreso',required=True)
 
     class Meta:
         model=RelCongresoUser
@@ -816,7 +816,7 @@ class ExportarExelForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
 
-        self.fields['congreso'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['congreso'].widget.attrs.update({'class': 'form-control select2'}) 
        
     def clean(self, *args, **kwargs):
         cleaned_data = super(ExportarExelForm, self).clean(*args, **kwargs)
@@ -827,7 +827,7 @@ class ExportarExelForm(forms.ModelForm):
 
 class ExportarTallerExelForm(forms.ModelForm):
     
-    taller=forms.ModelChoiceField(queryset=Taller.objects.all(),label='Filtrar Congreso',required=False)
+    taller=forms.ModelChoiceField(queryset=Taller.objects.all(),label='Filtrar Congreso',required=True)
 
     class Meta:
         model=RelTallerUser
@@ -835,7 +835,7 @@ class ExportarTallerExelForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
 
-        self.fields['taller'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['taller'].widget.attrs.update({'class': 'form-control select2'}) 
        
     def clean(self, *args, **kwargs):
         cleaned_data = super(ExportarTallerExelForm, self).clean(*args, **kwargs)

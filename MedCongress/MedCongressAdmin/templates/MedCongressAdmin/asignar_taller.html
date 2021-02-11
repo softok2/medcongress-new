@@ -4,6 +4,7 @@
 {% block styles %}
 <link rel="stylesheet" type="text/css"
     href="{% static 'MedCongressAdmin/app-assets/vendors/css/tables/datatable/datatables.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/select2.min.css' %}">
 <style type="text/css">
     .custom-select-sm {
         font-size: 110%;
@@ -86,11 +87,11 @@
                                                         <span
                                                             style="font-size: 15px; color: red;">{{ form.taller.errors }}
                                                         </span>{% endif %} </label>
-                                                    <div style="display: none;">
+                                                    <div>
                                                         {{form.taller}}
                                                     </div>
-                                                    <input type="text" name="my_user" class="form-control" required=""
-                                                        id="id_my_user">
+                                                    <!-- <input type="text" name="my_user" class="form-control" required=""
+                                                        id="id_my_user"> -->
 
                                                 </div>
                                             </div>
@@ -188,7 +189,8 @@
 <script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/extensions/sweetalert.min.js' %}"></script>
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/tables/datatable/datatables.min.js' %}"></script>
-
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/forms/select/select2.full.min.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-select2.js'%}"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         $('.table').DataTable({
