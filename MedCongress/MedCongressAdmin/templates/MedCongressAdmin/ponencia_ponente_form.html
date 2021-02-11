@@ -1,18 +1,44 @@
 {% extends 'MedCongressAdmin/base.html' %}
-{% block title %}MedCongressAdmin | Ponente{% endblock %}
+{% block title %}Adicionar Ponente{% endblock %}
 {% load static %}
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/select2.min.css' %}">
 
 {% endblock %}
 {% block content %}
+<div class=" col-md-12 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+{%if congreso or congreso_bloque%}
+    <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+    </li>
+{%endif%}
+{%if bloque%}
+            <li class="breadcrumb-item active"> <a {%if congreso_bloque%}href="{% url 'MedCongressAdmin:Congres_bloques' path=bloque.congreso.path %}"{%else%}href="{% url 'MedCongressAdmin:bloques_list' %}"{%endif%}>Bloques</a>
+            </li>
+{%endif%}   
+
+<li class="breadcrumb-item active"><a {%if congreso%}href="{% url 'MedCongressAdmin:ponencias_list' %}?congreso={{congreso.path}}"{%elif congreso_bloque%}href="{% url 'MedCongressAdmin:ponencias_list' %}?bloque={{bloque.path}}&congreso_bloque=true"{%else%}href="{% url 'MedCongressAdmin:ponencias_list' %}?bloque={{bloque.path}}"{%endif%}>Ponencias</a>
+</li>
+<li class="breadcrumb-item active"><a {%if congreso%}href="{% url 'MedCongressAdmin:Ponencia_ponentes' path=pon.path %}?congreso={{congreso.path}}"{%elif congreso_bloque%}href="{% url 'MedCongressAdmin:Ponencia_ponentes' path=pon.path %}?bloque={{bloque.path}}&congreso_bloque=true"{%else%}href="{% url 'MedCongressAdmin:Ponencia_ponentes' path=pon.path %}?bloque={{bloque.path}}"{%endif%}>Ponentes-Ponencia</a>
+</li>
+
+<li class="breadcrumb-item active"> Adicionar Ponente
+</li>
+
+</ol>
+</div>
+</div>
+</div>
 <section class="multiple-input-with-labels" id="multiple-input-with-labels">
 	<div class="row">
 		<div class="col-12">
 			<div class="card">
 				<div class="card-header">
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
-						Adicionar Ponentes</h1>
+						Adicionar Ponente</h1>
 					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
 					<div class="heading-elements">
 						<ul class="list-inline mb-0">
@@ -67,7 +93,9 @@
 										</fieldset>
 										<div class="form-actions">
 											<div class="text-right">
-
+												<button id="atras" type="button" class="btn btn-danger ">Cancelar
+													<i class="ft-x position-right"></i>
+												</button>
 												<button id="save" type="submit" class="btn btn-primary">Guardar
 													<i class="ft-save position-right"></i>
 												</button>
@@ -96,6 +124,18 @@
 			source: "{% url 'Ponente_autocomp'%}",
 			minLength: 3,
 		});
+		$('#atras').click(function () {
+
+{%if congreso %} 
+	location.href = "{% url 'MedCongressAdmin:Ponencia_ponentes' path=pon.path %}?congreso={{congreso.path}}";
+{%elif congreso_bloque%}
+	location.href = "{% url 'MedCongressAdmin:Ponencia_ponentes' path=pon.path %}?bloque={{bloque.path}}&congreso_bloque=true";
+{%else%}
+	location.href ="{% url 'MedCongressAdmin:Ponencia_ponentes' path=pon.path %}?bloque={{bloque.path}}";
+{% endif %}
+
+});
+	
 		$('#id_my_ponente').change(function () {
 			email = $('#id_my_ponente').val()
 			$("#id_ponente option:contains('" + email + "')").attr("selected", true);

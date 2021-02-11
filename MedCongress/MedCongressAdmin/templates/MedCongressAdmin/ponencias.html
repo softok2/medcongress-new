@@ -212,6 +212,7 @@
 
         $('#add-btn').click(function () {
             search=$('.dataTables_filter input').val();
+
             {%if congreso%}
             location.href = "{% url 'MedCongressAdmin:ponencia_add'%}?search="+search+"&congreso={{congreso.path}}";
             
@@ -221,14 +222,13 @@
             {%else%}
 
             location.href = "{% url 'MedCongressAdmin:ponencia_add' %}?search="+search+"&bloque={{bloque.path}}";
-            
-
             {%endif%}
            {%else%}
 
             location.href = "{% url 'MedCongressAdmin:ponencia_add' %}?search="+search+"";
             {%endif%}
         });
+        
         {%if bloque%}
         $('#select-btn').click(function () {
             search=$('.dataTables_filter input').val();

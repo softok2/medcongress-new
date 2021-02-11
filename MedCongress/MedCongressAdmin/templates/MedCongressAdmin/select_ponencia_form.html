@@ -96,6 +96,9 @@
 										</fieldset>
 										<div class="form-actions">
 											<div class="text-right">
+												<button id="atras" type="button" class="btn btn-danger ">Cancelar
+													<i class="ft-x position-right"></i>
+												</button>
 												
 												<button id="save" type="submit" class="btn btn-primary">Guardar
 													<i class="ft-save position-right"></i>
@@ -119,7 +122,17 @@
 <script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-select2.js'%}"></script>
 <script type="text/javascript">
 
+$('#atras').click(function () {
 
+{%if con %} 
+	location.href = "{% url 'MedCongressAdmin:ponencias_list' %}?congreso={{con.path}}";
+{%elif congreso_bloque%}
+	location.href = "{% url 'MedCongressAdmin:ponencias_list' %}?bloque={{bloque.path}}&congreso_bloque=true";
+{%else%}
+	location.href ="{% url 'MedCongressAdmin:ponencias_list' %}?bloque={{bloque.path}}";
+{% endif %}
+
+});
 
 </script>
 {% endblock %}

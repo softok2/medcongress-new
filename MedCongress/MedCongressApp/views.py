@@ -1590,12 +1590,12 @@ class VerTransaccion(TemplateView):
                     if str(cart['tipo_evento']) == 'Congreso':
                         congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
                         categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                        pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=self.request.GET['id'],is_pagado=True)
+                        pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=self.request.GET['id'],is_pagado=True, cantidad=cart['cantidad'])
                         pagar_congreso.save()
                     if str(cart['tipo_evento']) == 'Taller':
                         taller=Taller.objects.filter(id=cart['id_congreso']).first()
                         categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                        pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dict['id'],is_pagado=True)
+                        pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dict['id'],is_pagado=True,cantidad=cart['cantidad'])
                         pagar_congreso.save()
 
                 self.request.session["car1"]=self.request.session["cart"]
@@ -1728,13 +1728,13 @@ def Webhook(request):
         
         received_json_data=json.loads(request.body)
          ##### EMAIL #####
-        if received_json_data['type']== "verification":
-            subject = 'Código de verificación'
-            # html_message = render_to_string('MedCongressApp/recibo_pago.html', context={'car':enviar,'date':response_dict['operation_date'],'numero':response_dict['authorization'],'importe':response_dict['amount'],'card':response_dict['card']['card_number'],'orden_id':response_dict['order_id']})
-            plain_message = strip_tags('El código de verificación de los WebHook de Openpay es %s'%(received_json_data['verification_code']))
-            from_email = ''
+        # if received_json_data['type']== "verification":
+        subject = 'Tipo de Mensaje'
+        # html_message = render_to_string('MedCongressApp/recibo_pago.html', context={'car':enviar,'date':response_dict['operation_date'],'numero':response_dict['authorization'],'importe':response_dict['amount'],'card':response_dict['card']['card_number'],'orden_id':response_dict['order_id']})
+        plain_message = strip_tags('El tipo de mensaje fue un <%s>'%(received_json_data))
+        from_email = ''
 
-            mail.send_mail(subject, plain_message, from_email, ['dennis.molinetg@gmail.com'])
+        mail.send_mail(subject, plain_message, from_email, ['dennis.molinetg@gmail.com'])
         ####END EMAIL ######
         
     return HttpResponse('echo')

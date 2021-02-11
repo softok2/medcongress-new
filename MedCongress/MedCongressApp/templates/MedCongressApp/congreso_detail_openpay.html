@@ -796,12 +796,12 @@
                                         <div class="">
                                             <div class="col-sm-8">
                                                 <a
-                                                    onclick="AgregarCarritoTaller({{cat.pk}},'cant_{{cat.pk}}','{{taller.2}}')">Agregar
+                                                    onclick="AgregarCarritoTaller({{cat.pk}},'taller_{{cat.pk}}','{{taller.2}}')">Agregar
                                                     al Carrito</a>
                                             </div>
                                             <div class="col-sm-4">
-                                                <input class="form-control input-lg" type="number" value="1"
-                                                    style="height: 52px;" id="cant_{{cat.pk}}">
+                                                <input class="form-control input-lg" type="number" value="1" min='1'
+                                                    style="height: 52px;" id="taller_{{cat.pk}}">
                                                 <!-- <input class="input-qty-type" type="" name="qty" value="1"> -->
 
                                             </div>
@@ -1050,6 +1050,7 @@
     function AgregarCarritoTaller(id, fields, msj) {
         var patt = /^\d+$/;
         valor=$('#' + fields).val()
+        alert(valor);
         if (patt.test(valor) == true){
         if (msj == 'False') {
             $.ajax({

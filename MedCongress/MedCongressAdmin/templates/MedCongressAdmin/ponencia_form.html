@@ -488,7 +488,9 @@
 													</div>
 													<div class="form-actions">
 														<div class="text-right">
-														
+															<button id="atras" type="button" class="btn btn-danger ">Cancelar
+																<i class="ft-x position-right"></i>
+															</button>
 															<button id="save" type="submit" class="btn btn-primary">Guardar
 																<i class="ft-save position-right"></i>
 															</button>
@@ -566,6 +568,7 @@
 		// 	if ($("#id_ponencia_ponente-ponente option:selected").text()!= email) 
         //     $("#id_ponencia_ponente-ponente").val('')
 		// });
+
 		
 		$('#id_ponencia-congreso').ready(function () {
 				$('#id_ponencia-bloque').empty();
@@ -647,20 +650,17 @@
 
 
 		$('#atras').click(function () {
-			{%if con %} {
-				{%if bloque %}
-				location.href = "{% url 'MedCongressAdmin:Bloque_ponencias' path=bloque.path tipo='congreso'%}";
-				{%else%}
-				location.href = "{% url 'MedCongressAdmin:Congres_ponencias' con.path %}";
-				{% endif %}
-			}
 
+			{%if con %} 
+				location.href = "{% url 'MedCongressAdmin:ponencias_list' %}?congreso={{con.path}}";
+			{%elif congreso_bloque%}
+				location.href = "{% url 'MedCongressAdmin:ponencias_list' %}?bloque={{bloque.path}}&congreso_bloque=true";
 			{%else%}
-			location.href = "{% url 'MedCongressAdmin:ponencias_list' %}";
+				location.href ="{% url 'MedCongressAdmin:ponencias_list' %}?bloque={{bloque.path}}";
 			{% endif %}
+
 		});
 
-		
 		{%if con %}
 		$("#id_ponencia-congreso option[value='{{con.id}}']").attr("selected", true);
 		{% endif %}

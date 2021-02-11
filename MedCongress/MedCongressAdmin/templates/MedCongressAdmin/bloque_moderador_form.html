@@ -5,6 +5,29 @@
 <link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/select2.min.css' %}">
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+{%if congreso%}
+<li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+</li>
+<li class="breadcrumb-item"><a href="{%url 'MedCongressAdmin:Congres_bloques' congreso.path%}">Bloques</a>
+</li>
+{%else%}
+<li class="breadcrumb-item"><a href="{%url 'MedCongressAdmin:bloques_list' %}">Bloques</a>
+</li>
+{%endif%}
+<li class="breadcrumb-item "><a {%if congreso%} href="{% url 'MedCongressAdmin:Moderadores_bloque' path=bloq.path %}?congreso=true"{%else%}href="{% url 'MedCongressAdmin:Moderadores_bloque' path=bloq.path %}" {%endif%}>Moderadores</a> 
+</li>
+<li class="breadcrumb-item active"> Adicionar Moderador
+</li>
+
+</ol>
+</div>
+</div>
+</div>
 <section class="multiple-input-with-labels" id="multiple-input-with-labels">
 	<div class="row">
 		<div class="col-12">

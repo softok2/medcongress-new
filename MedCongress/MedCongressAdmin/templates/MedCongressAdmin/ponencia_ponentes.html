@@ -167,7 +167,24 @@
         });
 
         $('#add-btn').click(function () {
-            location.href = "{% url 'MedCongressAdmin:ponecia_ponente_add' ponencia.path %}";
+
+            search=$('.dataTables_filter input').val();
+
+            {%if congreso%}
+            location.href = "{% url 'MedCongressAdmin:ponecia_ponente_add' ponencia.path %}?search="+search+"&congreso={{congreso.path}}";
+            
+            {%elif bloque%}
+            {%if congreso_bloque%}
+            location.href = "{% url 'MedCongressAdmin:ponecia_ponente_add' ponencia.path %}?search="+search+"&bloque={{bloque.path}}&congreso_bloque=true";
+            {%else%}
+
+            location.href = "{% url 'MedCongressAdmin:ponecia_ponente_add' ponencia.path %}?search="+search+"&bloque={{bloque.path}}";
+            {%endif%}
+           {%else%}
+
+            location.href = "{% url 'MedCongressAdmin:ponecia_ponente_add' ponencia.path %}?search="+search+"";
+            {%endif%}
+            //location.href = "{% url 'MedCongressAdmin:ponecia_ponente_add' ponencia.path %}";
         });
 
         dataTable = $('.zero-configuration').DataTable();

@@ -303,8 +303,16 @@ class  TallerPonenteCreateView(validarUser,CreateView):
 
     def get_success_url(self):
         
-           self.success_url =  reverse_lazy('MedCongressAdmin:Taller_ponentes',kwargs={'path': self.kwargs.get('path')} )
-           return self.success_url
+        url =  reverse_lazy('MedCongressAdmin:Taller_ponentes',kwargs={'path': self.kwargs.get('path')} )
+        self.success_url='%s?&search=%s'%(url,self.request.GET.get('search'))
+        if self.request.GET.get('congreso'):
+            self.success_url =  '%s?congreso=%s&search=%s'%(url,self.request.GET.get('congreso'),self.request.GET.get('search')) 
+        if self.request.GET.get('bloque'): 
+            self.success_url =  '%s?bloque=%s&search=%s'%(url,self.request.GET.get('bloque'),self.request.GET.get('search')) 
+            if self.request.GET.get('congreso_bloque'):
+                self.success_url =  '%s?bloque=%s&search=%s&congreso_bloque=true'%(url,self.request.GET.get('bloque'),self.request.GET.get('search')) 
+
+        return self.success_url 
 
     # def form_invalid(self, form):
     #     for error in form.errors:
@@ -321,7 +329,14 @@ class  TallerPonenteCreateView(validarUser,CreateView):
         for ponente in ponentes:
             id.append(ponente.ponente.pk)
         ctx['ponentes']=Ponente.objects.exclude(id__in=id)
+        if self.request.GET.get('congreso'):
+            ctx['congreso']=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()   
+        if self.request.GET.get('bloque'):
+            ctx['bloque']=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
+            if self.request.GET.get('congreso_bloque'):
+                ctx['congreso_bloque']=ctx['bloque'].congreso   
         return ctx
+
 
 class TallerDeletedView(validarUser,DeleteView):
     model = Taller
