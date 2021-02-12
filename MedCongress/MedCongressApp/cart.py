@@ -120,9 +120,9 @@ class Cart:
         for car in self.cart[1]:
             if str(car['mi_id'])==str(id) :
                 self.cart[1][cont]['cantidad']=cant
-                self.cart[0]['cant']=float(self.cart[0]['cant'])-float(car['pagar'])
-                self.cart[1][cont]['pagar']=float(self.cart[1][cont]['precio'])*float(cant)
-                self.cart[0]['cant']=float(self.cart[0]['cant'])+float(self.cart[1][cont]['pagar'])
+                self.cart[0]['cant']=round(float(self.cart[0]['cant'])-float(car['pagar']),2)
+                self.cart[1][cont]['pagar']=round(float(self.cart[1][cont]['precio'])*float(cant),2)
+                self.cart[0]['cant']=round(float(self.cart[0]['cant'])+float(self.cart[1][cont]['pagar']),2)
             cont=cont+1
         self.save()
         print(self.cart)

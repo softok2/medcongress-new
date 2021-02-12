@@ -144,9 +144,11 @@ class PagoExitoso(TemplateView):
         invoice_id='%s-%s-%s_%s'%(today.year,today.month,today.day,secret_key)
         concepto=[]
         subtotal=0
+        total_impustos_traslado=0
         for  car in self.request.session["car1"][1]:
             importe_sin_iva=car['pagar']/1.16
             subtotal=subtotal+importe_sin_iva
+            total_impustos_traslado=total_impustos_traslado+importe_sin_iva*0.16
             concepto.append({
                     "cantidad":car['cantidad'],
                     "clave_unidad": "E48",
@@ -154,15 +156,15 @@ class PagoExitoso(TemplateView):
                     "identificador": "6K9MVV MEDCONGRESS",
                     "unidad": car['tipo_evento'],
                     "descripcion": 'Pago del %s %s . '%(car['tipo_evento'],car['nombre_congreso']),
-                    "valor_unitario":format(round(car['precio']/1.16,2),'.2f'),
-                    "importe": format(round(importe_sin_iva,2),'.2f'),
+                    "valor_unitario":format(car['precio']/1.16,'.2f'),
+                    "importe": format(importe_sin_iva,'.2f'),
                     "traslados": [
                     {
                         "impuesto": "002",
-                        "base": format(round(importe_sin_iva,2),'.2f'),
+                        "base": format(importe_sin_iva,'.2f'),
                         "tipo_factor": "Tasa",
                         "tasa": 0.16,
-                        "importe": format(round(importe_sin_iva*0.16,2),'.2f')
+                        "importe": format(importe_sin_iva*0.16,'.2f')
                     }]
             })
 
@@ -170,9 +172,9 @@ class PagoExitoso(TemplateView):
         pago_sin_iva= self.request.session["car1"][0]['cant']/1.16
        
         params=  {
-        "subtotal":format(round(subtotal,2),'.2f'),
-        "total_trasladados": format(round(subtotal*0.16,2),'.2f'),
-        "total": format(round((subtotal+subtotal*0.16),2),'.2f') ,
+        "subtotal":format(subtotal,'.2f'),
+        "total_trasladados": format(total_impustos_traslado,'.2f'),
+        "total": format(self.request.session["car1"][0]['cant'],'.2f') ,
         "tipo_de_cambio": 1,
         "forma_pago": "04",
         "hide_total_items": True,
@@ -186,7 +188,7 @@ class PagoExitoso(TemplateView):
             {
                 "impuesto": "002",
                 "tasa": 0.16,
-                "importe": format(round(pago_sin_iva*0.16,2),'.2f'),
+                "importe": format(total_impustos_traslado,'.2f'),
                 "tipo_factor": "Tasa"
             }
         ],
@@ -241,7 +243,7 @@ class Perfil(TemplateView):
         congresos=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,is_pagado=True).distinct('congreso')
         congreso_env=[]
         for congreso in congresos:
-            facturas=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,congreso=congreso.congreso,is_pagado=True,uuid_factura__isnull=False)
+            facturas=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,congreso=congreso.congreso,is_pagado=True,uuid_factura__isnull=False).distinct('uuid_factura')
             facturas_env=[]
             for factura in facturas:
                 facturas_env.append({'factura':factura.uuid_factura})
@@ -1330,13 +1332,13 @@ class GetFacturaPrueba(TemplateView):
                 if str(cart['tipo_evento']) == 'Congreso':
                     congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
                     categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                    pagar_congreso=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,congreso=congreso,categoria_pago=categoria).first()
+                    pagar_congreso=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,congreso=congreso,categoria_pago=categoria).last()
                     pagar_congreso.uuid_factura=self.kwargs.get('invoice') 
                     pagar_congreso.save()
                 if str(cart['tipo_evento']) == 'Taller':
                     taller=Taller.objects.filter(id=cart['id_congreso']).first()
                     categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                    pagar_congreso=RelTallerUser.objects.filter(user=self.request.user.perfilusuario,taller=taller,categoria_pago=categoria ).first()
+                    pagar_congreso=RelTallerUser.objects.filter(user=self.request.user.perfilusuario,taller=taller,categoria_pago=categoria ).last()
                     pagar_congreso.uuid_factura=self.kwargs.get('invoice') 
                     pagar_congreso.save()
 

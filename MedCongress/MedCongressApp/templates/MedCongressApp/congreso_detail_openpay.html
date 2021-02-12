@@ -1050,7 +1050,7 @@
     function AgregarCarritoTaller(id, fields, msj) {
         var patt = /^\d+$/;
         valor=$('#' + fields).val()
-        alert(valor);
+        
         if (patt.test(valor) == true){
         if (msj == 'False') {
             $.ajax({
