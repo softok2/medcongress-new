@@ -763,6 +763,7 @@ class CongresoDetail(validarUser,TemplateView):
     
 
     def get(self, request, **kwargs):
+     
         congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
         if congreso is None:
             return   HttpResponseRedirect(reverse('Error404'))
@@ -777,6 +778,14 @@ class CongresoDetail(validarUser,TemplateView):
         return template_name
 
     def get_context_data(self, **kwargs):
+
+        # # /////////////////
+        # url = "https://vimeo.com/api/v2/video/494532060.json"        
+        # headers={'Content-type': 'application/json'}
+        # response=requests.post(url=url,headers=headers)
+        # return response.json() 
+        # # /////////////////////
+
         context = super(CongresoDetail, self).get_context_data(**kwargs)
         congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
         context['patrocinadores']=RelCongresoAval.objects.filter(congreso=congreso)
@@ -833,8 +842,9 @@ class CongresoDetail(validarUser,TemplateView):
                     for taller in bloque_talleres: 
                         eventos.append({
                         'id':taller.id,
-                        'path':ponencia.path,
+                        'path':taller.path,
                         'titulo': taller.titulo,
+                        'ver_taller':taller.cod_video,
                         'fecha_inicio': taller.fecha_inicio ,# una relación a otro modelo
                         'detalle':taller.detalle ,
                         'ponentes':Ponente.objects.filter(taller_ponente__pk=taller.id).distinct() ,
@@ -843,7 +853,7 @@ class CongresoDetail(validarUser,TemplateView):
                     eventos = sorted(eventos, key=lambda k: k['fecha_inicio'])
                     result.append({
                     'id':bloque.id,
-                    'path':ponencia.path,
+                    'path':bloque.path,
                     'moderador':Moderador.objects.filter(bloque_moderador__pk=bloque.id).distinct() ,
                     'titulo': bloque.titulo,
                     'fecha_inicio': bloque.fecha_inicio ,# una relación a otro modelo
@@ -868,6 +878,7 @@ class CongresoDetail(validarUser,TemplateView):
                     'id':taller.id,
                     'path':taller.path,
                     'titulo': taller.titulo,
+                    'ver_taller':taller.cod_video,
                     'fecha_inicio': taller.fecha_inicio ,# una relación a otro modelo
                     'detalle':taller.detalle ,
                     'ponentes':Ponente.objects.filter(taller_ponente__pk=taller.id).distinct() ,
@@ -1007,11 +1018,11 @@ class CongresoDetail(validarUser,TemplateView):
                 context['talleres']=ver
                 context['permiso'] = False  
             context['categorias_pago']=cat_pago
-
+            context['programas']=DocumentoPrograma.objects.filter(congreso=congreso)
             context['preg_frecuentes']=PreguntasFrecuentes.objects.filter(congreso=congreso,published=True)
 
         return context
-
+    
 class CongressCategPagosUpdateView(validarUser,UpdateView):
 
     form_class = CongresoCategPagoForm
