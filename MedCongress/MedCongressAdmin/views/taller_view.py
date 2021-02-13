@@ -349,7 +349,69 @@ class AsignarTalleresListView(validarUser,ListView,FormView):
     form_class=ExportarTallerExelForm
 
     def form_valid(self, form):
-        return super().form_valid(form)
+        self.object_list = self.get_queryset()
+        #Obtenemos todas las personas de nuestra base de datos
+        taller=self.request.POST['taller']
+        query= RelTallerUser.objects.filter(taller=taller,is_pagado=True).values('user__usuario__first_name','user__usuario__last_name','user__usuario__email','taller__titulo','categoria_pago__nombre').annotate(Sum('cantidad'))
+        
+        #Creamos el libro de trabajo
+        wb = Workbook()
+        #Definimos como nuestra hoja de trabajo, la hoja activa, por defecto la primera del libro
+        ws = wb.active
+        if query:
+            #En la celda B1 ponemos el texto 'REPORTE DE PERSONAS'
+            ws['B1'] = 'Usuarios que han comprado el Taller%s'%( query[0]['taller__titulo'])
+            ws['B1'].font = Font(size=12,bold=True)
+            ws['B1'].alignment = Alignment(mergeCell='center',horizontal='center') 
+            
+            #Juntamos las celdas desde la B1 hasta la E1, formando una sola celda
+            ws.merge_cells('B1:E1')
+            #Creamos los encabezados desde la celda B3 hasta la E3
+            ws['A3'] = 'No.'
+            ws['B3'] = 'Nombre'
+            ws['C3'] = 'Email'
+            ws['D3'] = 'Taller'
+            ws['E3'] = 'Categoria de Pago'
+            ws['F3'] = 'Cantidad'        
+            cont=4
+            #Recorremos el conjunto de personas y vamos escribiendo cada uno de los datos en las celdas
+            for quer in query:
+                ws.cell(row=cont,column=1).value = cont-3
+                ws.cell(row=cont,column=2).value = '%s %s'%(quer['user__usuario__first_name'],quer['user__usuario__last_name'])
+                ws.cell(row=cont,column=3).value = quer['user__usuario__email']
+                ws.cell(row=cont,column=4).value = quer['taller__titulo']
+                ws.cell(row=cont,column=5).value = quer['categoria_pago__nombre']
+                ws.cell(row=cont,column=6).value = quer['cantidad__sum']
+                cont = cont + 1
+          
+            response = HttpResponse(content_type="application/ms-excel") 
+            response["Content-Disposition"] = "attachment; filename=RelTallerUser.xlsx"
+            wb.save(response)
+            return response
+        else:
+            taller=Taller.objects.get(pk=taller)
+            messages.warning(self.request, 'Todavía ningún usuario ha comprado este Taller')
+            return HttpResponseRedirect(reverse_lazy('MedCongressAdmin:asig_talleres_list')+'?exportar=%s'%(taller.path))
+
+    def get_context_data(self, **kwargs):
+        context = super(AsignarTalleresListView, self).get_context_data(**kwargs)
+        if self.request.GET.get('exportar'):
+            taller_evn=[]
+            talleres= Taller.objects.all()
+            activo=False
+            for taller in talleres:
+                if taller.path == self.request.GET.get('exportar'):
+                    activo=True
+                else:
+                    activo=False
+                taller_evn.append({ 'id':taller.pk,
+                                    'titulo':taller.titulo,
+                                        'activo':activo,
+
+                })
+            context['exportar']= taller_evn
+            
+        return context  
 
 
 class AsignarTallerAddViews(validarUser,FormView):

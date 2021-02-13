@@ -13,7 +13,7 @@ from .views.congress_views import (CongressListView,CongressCreateView,CongressU
                                    CongressImagenesListView,AddPonenciaCongreso,CongressCategPagosCreateView,
                                    CongressDeletedView,CongressBloquesListView,GetBloques,AsignarCongressListView,AsignarCongressAddViews,GetPagos,
                                    AsignarCongressDeletedViews,CongressImagenCreateView,CongressCuestionarioListView,CongressPregFrecuenteListView,
-                                   Ver_usuarios,Ver_Exel,Exportar_usuarios,Usuarios_pagaron,ReporteRelCongresoUserExcel,CongressPatrocinadorListView,
+                                   Ver_usuarios,Ver_Exel,Exportar_usuarios,Usuarios_pagaron,CongressPatrocinadorListView,
                                    PatrocinadorSeleccionarView,PatrocinadorSeleccionarDeleted, SocioSeleccionarView,SocioSeleccionarDeleted,CongressSocioListView,
                                    CongresoDetail,CongressImagenDeletedView,CongressCategPagosUpdateView,CongressCategPagosDeletedView,AsignarConstancias
                                    ,CongressProgramaUpdateView,CongressProgramaDeletedView,CongressProgramaCreateView,CongressProgramaListView)
@@ -242,7 +242,7 @@ urlpatterns = [
      
 
      #Reportes
-     path('reporte_congreso_user', ReporteRelCongresoUserExcel.as_view(), name='Rep_RelCongresoUser'),
+    path('reporte_congreso_user', ReporteRelTallerUserExcel.as_view(), name='Rep_RelCongresoUser'),
       path('reporte_taller_user', ReporteRelTallerUserExcel.as_view(), name='Rep_RelTallerUser'),
      
       # Genero

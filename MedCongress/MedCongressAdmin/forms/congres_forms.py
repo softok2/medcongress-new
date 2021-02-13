@@ -1,6 +1,7 @@
 from django import forms
 from datetime import date,datetime
 from django.contrib import messages
+from django.db.models import Sum
 from django.core.files.images import get_image_dimensions
 from  MedCongressApp.models import (Congreso,Ubicacion,ImagenCongreso,TipoCongreso,Ponencia,Taller,
                                     Ponente,PerfilUsuario,RelPonenciaPonente,RelCongresoCategoriaPago,
@@ -818,12 +819,14 @@ class ExportarExelForm(forms.ModelForm):
 
         self.fields['congreso'].widget.attrs.update({'class': 'form-control select2'}) 
        
-    def clean(self, *args, **kwargs):
-        cleaned_data = super(ExportarExelForm, self).clean(*args, **kwargs)
-        congreso = cleaned_data.get('congreso', None)
+    # def clean(self, *args, **kwargs):
+    #     cleaned_data = super(ExportarExelForm, self).clean(*args, **kwargs)
+    #     congreso = cleaned_data.get('congreso', None)
       
-        if not congreso:
-            self.add_error('congreso','Entre un congreso ')
+    #     if not congreso:
+    #         self.add_error('congreso','Entre un congreso ')
+    #     if not RelCongresoUser.objects.filter(congreso=congreso).values('user__usuario__first_name','user__usuario__last_name','user__usuario__email','congreso__titulo','categoria_pago__nombre').annotate(Sum('cantidad')).exists():
+    #         self.add_error('congreso','Entre un congreso ')
 
 class ExportarTallerExelForm(forms.ModelForm):
     
@@ -837,12 +840,12 @@ class ExportarTallerExelForm(forms.ModelForm):
 
         self.fields['taller'].widget.attrs.update({'class': 'form-control select2'}) 
        
-    def clean(self, *args, **kwargs):
-        cleaned_data = super(ExportarTallerExelForm, self).clean(*args, **kwargs)
-        taller = cleaned_data.get('taller', None)
-        if not taller:
+    # def clean(self, *args, **kwargs):
+    #     cleaned_data = super(ExportarTallerExelForm, self).clean(*args, **kwargs)
+    #     taller = cleaned_data.get('taller', None)
+    #     if not taller:
         
-            self.add_error('taller','Entre un taller ')
+    #         self.add_error('taller','Entre un taller ')
 
 class CongresoPatrocinadorForm(forms.ModelForm):
     

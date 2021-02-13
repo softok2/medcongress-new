@@ -71,14 +71,46 @@
                         </div>
 
                     </div>
-                    <div class="row card-content collapse show" style="display: none;" id='mostrar'>
+                    <div class="row card-content collapse show" {%if not exportar%} style="display: none;" {%endif%} id='mostrar'>
                          
                                 
-                           
+                      
                         <div class="col-md-6"></div>
                         <div class="col-md-6" style="float: right;">
-                            
-                            <form id="form" method="POST" action="{%url 'MedCongressAdmin:Rep_RelCongresoUser'%}">
+                            {% if messages %}
+
+{% for message in messages %}
+<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">×</span>
+    </button>
+    {{ message|safe|escape }}
+</div>
+{% endfor %}
+
+{% endif %}
+                            {% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+        
+			<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+				{{ error|safe|escape }}
+			</div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+	<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">×</span>
+		</button>
+		{{ error|safe|escape }}
+	</div>
+    {% endfor %}
+{% endif %} 
+                            <form id="form" method="POST" action="">
                                 {% csrf_token %}
                                 <div class="form-body">
                                     <div class="row">
@@ -87,12 +119,19 @@
                                             <div class="col-sm-12 ">
                                                 <div class="form-group">
                                                     <label for="{{form.congreso.id_for_label }}"><b>Filtre
-                                                            Congreso</b>{% if form.congreso.errors %}
-                                                        <span
-                                                            style="font-size: 15px; color: red;">{{ form.congreso.errors }}
-                                                        </span>{% endif %} </label>
-                                                    <div >
+                                                            Congreso</b></label>
+                                                            
+                                                    <div >{%if exportar%}
+                                                        <select name="congreso" class="form-control select2 select2-hidden-accessible" required="" id="id_congreso" tabindex="-1" aria-hidden="true">
+                                                            <option value="" selected="">---------</option>
+                                                          {%for export in exportar%}
+                                                            <option value="{{export.id}}" {%if export.activo%} selected {%endif%}>{{export.titulo}}</option>
+                                                          
+                                                           {%endfor%}
+                                                          </select>
+                                                        {%else%}
                                                         {{form.congreso}}
+                                                        {%endif%}
                                                     </div>
                                                     <!-- <input type="text" name="my_user" class="form-control" required=""
                                                         id="id_my_user"> -->
@@ -229,17 +268,9 @@
             return false;
         }
     })
-        $("#id_my_user").autocomplete({
-            source: "{% url 'Congreso_autocomp'%}",
-            minLength: 3,
-        });
-        $('#id_my_user').change(function () {
-            email = $('#id_my_user').val()
-            $("#id_congreso option:contains('" + email + "')").attr("selected", true);
-            if ($("#id_congreso option:selected").text()!= email) 
-            $("#id_congreso").val('')
-
-        });
+        
+      
+       
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({
             beforeSend: function (xhr, settings) {
