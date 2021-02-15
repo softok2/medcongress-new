@@ -1325,10 +1325,11 @@
                 $('#foto').html('<img class="img-responsive" src="{% static '/'%}'+ data.foto +'" alt=" foto ' + data.nombre + '" >');
             else
                 $('#foto').html('<img class="img-responsive" src="{% static 'MedCongressApp/images/defaulthombre.png' %}" alt="{{request.user.username}}" >');
+            
             if (data.bandera)
                 $('#bandera').html('<img style="width: 100px; display:block;margin:auto;" class="img-responsive" src="{% static '/'%}'+ data.bandera +'" >');
             else
-            $('#bandera').html('');
+                $('#bandera').html('');
 
             redes = '';
             if (data.facebook)
@@ -1344,19 +1345,22 @@
             $('#especialidad').html(data.especialidad);
 
             constancia = '';
+     
             if (data.constancias) {
                 constancia = '<div class="row gutters-sm mb-3"><div class="col-sm-12" ><div class="card h-100" ><h6 class="mb-0" style="padding: 20px;"><b>Logros Académicos</b></h6><div class="card-body" >' + data.constancias + '</div> </div> </div></div> ';
                 $('#constancia').html(constancia);
             }
             else
-                $('#constancia').html();
+                $('#constancia').html('');
+
             publicaciones = '';
+
             if (data.publicaciones) {
                 publicaciones = '<div class="row gutters-sm mb-3"><div class="col-sm-12" ><div class="card h-100" ><h6 class="mb-0" style="padding: 20px;"><b>Publicaciones</b></h6><div class="card-body" >' + data.publicaciones + '</div> </div> </div></div> ';
                 $('#publicaciones').html(publicaciones);
             }
             else
-                $('#publicaciones').html();
+                $('#publicaciones').html('');
 
 
 
@@ -1385,7 +1389,10 @@
             }
 
             $('#talleres').html(talleres)
+            if(data.puesto)
             $('#puesto').html(data.puesto)
+            else
+            $('#puesto').html('')
             $('#nombre_completo').html(data.nombre_completo)
             if(data.votacion==0){
               $('#not_rating').show()

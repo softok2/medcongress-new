@@ -1099,9 +1099,9 @@ class GetPerfil(TemplateView):
             publicaciones_env=''
             if usuario.publicaciones:
                 publicaciones_env=usuario.publicaciones
-            constancia_env=''
+            constancia_env = False
             if usuario.detalle:
-                constancia_env=usuario.detalle
+                constancia_env=str(usuario.detalle)
             datos_env=''
             if usuario.datos_interes:
                 datos_env=usuario.datos_interes 
