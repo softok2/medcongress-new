@@ -723,6 +723,17 @@ class CongresoCardForm(TemplateView):
               
                 response_dic=response.json()
                 if response.status_code==200:
+                    for cart in self.request.session["cart"][1]:
+                        if str(cart['tipo_evento']) == 'Congreso':
+                            congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
+                            categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
+                            pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False, cantidad=cart['cantidad'])
+                            pagar_congreso.save()
+                        if str(cart['tipo_evento']) == 'Taller':
+                            taller=Taller.objects.filter(id=cart['id_congreso']).first()
+                            categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
+                            pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False,cantidad=cart['cantidad'])
+                            pagar_congreso.save()
                     car=Cart(self.request)
                     car.clear() 
                     return HttpResponseRedirect('https://%s/spei-pdf/%s/%s'%(URL_PDF,ID_KEY,response_dic['id']) )
@@ -1722,12 +1733,7 @@ class Enviar(TemplateView):
     def get(self, request, **kwargs):
         url='%s/webhook'%(URL_SITE)
         
-        params= {
-                    "type" : "verification",
-                    "event_date" : "2013-11-22T11:04:49-06:00",
-                    "verification_code" : "UY1qqrxw"
-                }
-
+        params= {'type': 'charge.succeeded', 'event_date': '2021-02-12T09:35:09-06:00', 'transaction': {'id': 'trm6iibrfpz4wfrup0ri', 'authorization': '9961675', 'operation_type': 'in', 'transaction_type': 'charge', 'status': 'completed', 'conciliated': False, 'creation_date': '2021-02-12T09:33:19-06:00', 'operation_date': '2021-02-12T09:35:08-06:00', 'description': 'Pago del Congreso Congres2 .', 'error_message': None, 'order_id': None, 'due_date': '2021-03-14T23:59:59-06:00', 'currency': 'MXN', 'amount': 11.31, 'customer': {'name': 'Dennis', 'last_name': 'Molinet', 'email': 'dennis.molinetg@gmail.com', 'phone_number': None, 'address': None, 'creation_date': '2021-02-12T09:33:19-06:00', 'external_id': None, 'clabe': None}, 'fee': {'amount': 8.0, 'tax': 1.28, 'currency': 'MXN'}, 'payment_method': {'type': 'bank_transfer', 'bank': 'BBVA Bancomer', 'clabe': '000000000000000000', 'agreement': '0000000', 'name': '11031080506226794216'}, 'method': 'bank_account'}}
             
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         response=requests.post(url=url,data=json.dumps(params),headers=headers)
@@ -1745,9 +1751,11 @@ def Webhook(request):
             pagos_congreso=RelCongresoUser.objects.filter(id_transaccion=received_json_data['transaction']['id'])
             for pago_congreso in pagos_congreso:
                 pago_congreso.is_pagado=True
+                pago_congreso.save()
             pagos_taller=RelTallerUser.objects.filter(id_transaccion=received_json_data['transaction']['id'])
             for pago_taller in pagos_taller:
                 pago_taller.is_pagado=True 
+                pago_taller.save()
             plain_message = strip_tags('El tipo de mensaje fue un <%s>'%(received_json_data))
             if received_json_data['transaction']['method']== 'store':
                 plain_message = strip_tags('El tipo de mensaje fue un <%s>....... Se hizo el Pago en efectivo'%(received_json_data))
@@ -1768,7 +1776,7 @@ def Webhook(request):
             from_email = ''
 
             mail.send_mail(subject, plain_message, from_email, ['dennis.molinetg@gmail.com','a.morell.cu@icloud.com'])
-    return HttpResponse('echo')
+    return JsonResponse({'success':'true'})
             
        
         
