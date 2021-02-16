@@ -1762,7 +1762,12 @@ def Webhook(request):
 
             mail.send_mail(subject, plain_message, from_email, ['dennis.molinetg@gmail.com'])
         ####END EMAIL ######
-        
+        if received_json_data['type']== "verification":
+            plain_message = strip_tags('El código de verificación es:  <%s>'%(received_json_data['verification_code'])) 
+            subject = 'Código de verificación del Openpay'
+            from_email = ''
+
+            mail.send_mail(subject, plain_message, from_email, ['dennis.molinetg@gmail.com','a.morell.cu@icloud.com'])
     return HttpResponse('echo')
             
        
