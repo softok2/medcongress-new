@@ -666,9 +666,20 @@ class CongresoCardForm(TemplateView):
                     }
                 headers={'Content-type': 'application/json'}
                 response=requests.post(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(params),headers=headers)
-              
+               
                 response_dic=response.json()
                 if response.status_code==200:
+                    for cart in self.request.session["cart"][1]:
+                        if str(cart['tipo_evento']) == 'Congreso':
+                            congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
+                            categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
+                            pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False, cantidad=cart['cantidad'])
+                            pagar_congreso.save()
+                        if str(cart['tipo_evento']) == 'Taller':
+                            taller=Taller.objects.filter(id=cart['id_congreso']).first()
+                            categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
+                            pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False,cantidad=cart['cantidad'])
+                            pagar_congreso.save()
                     car=Cart(self.request)
                     car.clear() 
                     return HttpResponseRedirect('https://%s/paynet-pdf/%s/%s'%(URL_PDF,ID_KEY,response_dic['payment_method']['reference']) )
@@ -1730,13 +1741,26 @@ def Webhook(request):
         
         received_json_data=json.loads(request.body)
          ##### EMAIL #####
-        # if received_json_data['type']== "verification":
-        subject = 'Tipo de Mensaje'
-        # html_message = render_to_string('MedCongressApp/recibo_pago.html', context={'car':enviar,'date':response_dict['operation_date'],'numero':response_dict['authorization'],'importe':response_dict['amount'],'card':response_dict['card']['card_number'],'orden_id':response_dict['order_id']})
-        plain_message = strip_tags('El tipo de mensaje fue un <%s>'%(received_json_data))
-        from_email = ''
+        if received_json_data['type']== "charge.succeeded":
+            pagos_congreso=RelCongresoUser.objects.filter(id_transaccion=received_json_data['transaction']['id'])
+            for pago_congreso in pagos_congreso:
+                pago_congreso.is_pagado=True
+            pagos_taller=RelTallerUser.objects.filter(id_transaccion=received_json_data['transaction']['id'])
+            for pago_taller in pagos_taller:
+                pago_taller.is_pagado=True 
+            plain_message = strip_tags('El tipo de mensaje fue un <%s>'%(received_json_data))
+            if received_json_data['transaction']['method']== 'store':
+                plain_message = strip_tags('El tipo de mensaje fue un <%s>....... Se hizo el Pago en efectivo'%(received_json_data))
+            if received_json_data['transaction']['method']== 'card':
+                plain_message = strip_tags('El tipo de mensaje fue un <%s>....... Se hizo el Pago por Tarjeta'%(received_json_data))
+            if received_json_data['transaction']['method']== 'bank_account':
+                plain_message = strip_tags('El tipo de mensaje fue un <%s>....... Se hizo el Pago por Tranferencia Bancaria'%(received_json_data))
+            subject = 'Tipo de Mensaje'
+            # html_message = render_to_string('MedCongressApp/recibo_pago.html', context={'car':enviar,'date':response_dict['operation_date'],'numero':response_dict['authorization'],'importe':response_dict['amount'],'card':response_dict['card']['card_number'],'orden_id':response_dict['order_id']})
+           
+            from_email = ''
 
-        mail.send_mail(subject, plain_message, from_email, ['dennis.molinetg@gmail.com'])
+            mail.send_mail(subject, plain_message, from_email, ['dennis.molinetg@gmail.com'])
         ####END EMAIL ######
         
     return HttpResponse('echo')
