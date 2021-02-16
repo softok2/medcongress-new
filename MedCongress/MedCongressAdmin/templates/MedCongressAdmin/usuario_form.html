@@ -73,6 +73,27 @@
 				</div>
 				<div class="card-content collapse show">
 					<div class="card-body">
+						{% if form.errors %}
+						{% for field in form %}
+							{% for error in field.errors %}
+							
+								<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+										<span aria-hidden="true">×</span>
+									</button>
+									{{ error|safe|escape }}
+								</div>
+							{% endfor %}
+						{% endfor %}
+						{% for error in form.non_field_errors %}
+						<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">×</span>
+							</button>
+							{{ error|safe|escape }}
+						</div>
+						{% endfor %}
+					{% endif %} 
 						<form id="congres-form" method="POST" action="" enctype="multipart/form-data">
 							{% csrf_token %}
 							<div class="form-body">
