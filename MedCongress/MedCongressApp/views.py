@@ -1733,7 +1733,11 @@ class Enviar(TemplateView):
     def get(self, request, **kwargs):
         url='%s/webhook'%(URL_SITE)
         
-        params= {'type': 'charge.succeeded', 'event_date': '2021-02-12T09:35:09-06:00', 'transaction': {'id': 'trm6iibrfpz4wfrup0ri', 'authorization': '9961675', 'operation_type': 'in', 'transaction_type': 'charge', 'status': 'completed', 'conciliated': False, 'creation_date': '2021-02-12T09:33:19-06:00', 'operation_date': '2021-02-12T09:35:08-06:00', 'description': 'Pago del Congreso Congres2 .', 'error_message': None, 'order_id': None, 'due_date': '2021-03-14T23:59:59-06:00', 'currency': 'MXN', 'amount': 11.31, 'customer': {'name': 'Dennis', 'last_name': 'Molinet', 'email': 'dennis.molinetg@gmail.com', 'phone_number': None, 'address': None, 'creation_date': '2021-02-12T09:33:19-06:00', 'external_id': None, 'clabe': None}, 'fee': {'amount': 8.0, 'tax': 1.28, 'currency': 'MXN'}, 'payment_method': {'type': 'bank_transfer', 'bank': 'BBVA Bancomer', 'clabe': '000000000000000000', 'agreement': '0000000', 'name': '11031080506226794216'}, 'method': 'bank_account'}}
+        params= {
+                "type" : "verification",
+                "event_date" : "2013-11-22T11:04:49-06:00",
+                "verification_code" : "UY1qqrxw"
+            }
             
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         response=requests.post(url=url,data=json.dumps(params),headers=headers)
@@ -1771,7 +1775,7 @@ def Webhook(request):
             mail.send_mail(subject, plain_message, from_email, ['dennis.molinetg@gmail.com'])
         ####END EMAIL ######
         if received_json_data['type']== "verification":
-            plain_message = strip_tags('El código de verificación es:  <%s>'%(received_json_data['verification_code'])) 
+            plain_message = strip_tags('El código de verificación es:  <%s>'%(received_json_data)) 
             subject = 'Código de verificación del Openpay'
             from_email = ''
 
