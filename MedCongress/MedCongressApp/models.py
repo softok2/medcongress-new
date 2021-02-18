@@ -11,7 +11,8 @@ from django.core.exceptions import NON_FIELD_ERRORS
 ##### Tabla Categoria del usuario  ###
 
 class CategoriaUsuario(models.Model):
-    nombre=models.CharField(max_length=50)
+    nombre=models.CharField(max_length=50,error_messages={
+"max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"})
     published=models.BooleanField(null=True)
     detalle=models.TextField(null=True,blank=True)
 
@@ -26,7 +27,8 @@ class CategoriaUsuario(models.Model):
 ##### Tabla Especialidades  ###
 
 class Especialidades(models.Model):
-    nombre=models.CharField(max_length=50,unique=True)
+    nombre=models.CharField(max_length=50,unique=True,error_messages={
+"max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"})
     detalle=models.TextField(null=True,blank=True)
 
     class Meta:
@@ -39,7 +41,8 @@ class Especialidades(models.Model):
 ##### Tabla País #####
 
 class Pais(models.Model):
-    denominacion = models.CharField(unique=True, max_length=50)
+    denominacion = models.CharField(unique=True, max_length=50,error_messages={
+"max_length": "El Campo <b>Denominación</b> debe tener máximo 50 caracteres"})
     banderas=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='banderas',blank=True, null=True )
 
     class Meta:
@@ -52,7 +55,8 @@ class Pais(models.Model):
 ##### Tabla Género #####
 
 class Genero(models.Model):
-    denominacion= models.CharField(max_length=20,unique=True)
+    denominacion= models.CharField(max_length=20,unique=True,error_messages={
+"max_length": "El Campo <b>Denominación</b> debe tener máximo 20 caracteres"})
 
     class Meta:
         verbose_name='genero'
@@ -64,7 +68,8 @@ class Genero(models.Model):
 ##### Tabla Ubicacion #####
 
 class Ubicacion(models.Model):
-    direccion= models.CharField(max_length=250)
+    direccion= models.CharField(max_length=250,error_messages={
+"max_length": "El Campo <b>Dirección</b> debe tener máximo 250 caracteres"})
     latitud=models.FloatField()
     longitud=models.FloatField()
 
@@ -97,23 +102,37 @@ class PerfilUsuario(models.Model):
     ubicacion=models.ForeignKey(Ubicacion,on_delete=models.DO_NOTHING,null=True)
     genero=models.ForeignKey(Genero,on_delete=models.DO_NOTHING,null=True)
     datos_interes=models.TextField(null=True,blank=True)
-    linkedin=models.CharField(max_length=50,null=True)
-    facebook=models.CharField(max_length=50,null=True)
-    twitter=models.CharField(max_length=50,null=True)
-    youtube=models.CharField(max_length=50,null=True)
+    linkedin=models.CharField(max_length=50,null=True,error_messages={
+"max_length": "El Campo <b>Linkedin</b> debe tener máximo 50 caracteres"})
+    facebook=models.CharField(max_length=50,null=True,error_messages={
+"max_length": "El Campo <b> Facebook</b> debe tener máximo 50 caracteres"})
+    twitter=models.CharField(max_length=50,null=True,error_messages={
+"max_length": "El Campo <b>Twitter</b> debe tener máximo 50 caracteres"})
+    youtube=models.CharField(max_length=50,null=True,error_messages={
+"max_length": "El Campo <b>Youtube</b> debe tener máximo 50 caracteres"})
     publicaciones=models.TextField(null=True,blank=True)
     puesto=models.TextField(max_length=250,null=True,blank=True)
-    meta_og_title=models.CharField(max_length=50,null=True,blank=True)
-    meta_description=models.TextField(max_length=160,null=True,blank=True)
-    meta_og_description=models.TextField(max_length=160,null=True,blank=True)
-    meta_og_type=models.CharField(max_length=50,null=True,blank=True)
-    meta_og_url=models.CharField(max_length=50,null=True,blank=True)
-    meta_twitter_card=models.CharField(max_length=50,null=True,blank=True)
-    meta_twitter_site=models.CharField(max_length=50,null=True,blank=True)
-    meta_twitter_creator=models.CharField(max_length=50,null=True,blank=True)
-    meta_keywords=models.TextField(max_length=250,null=True,blank=True)
+    meta_og_title=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook Título</b> debe tener máximo 50 caracteres"})
+    meta_description=models.TextField(max_length=160,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas Principales Descripción</b> debe tener máximo 160 caracteres"})
+    meta_og_description=models.TextField(max_length=160,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook Descripción</b> debe tener máximo 160 caracteres"})
+    meta_og_type=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook Tipo</b> debe tener máximo 50 caracteres"})
+    meta_og_url=models.CharField(max_length=250,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook URL</b> debe tener máximo 250 caracteres"})
+    meta_twitter_card=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para Redes Sociales Card</b> debe tener máximo 50 caracteres"})
+    meta_twitter_site=models.CharField(max_length=250,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para Redes Sociales Sitio</b> debe tener máximo 250 caracteres"})
+    meta_twitter_creator=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para Redes Sociales Creador</b> debe tener máximo 50 caracteres"})
+    meta_keywords=models.TextField(max_length=250,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas Principales Palabras Claves </b> debe tener máximo 250 caracteres"})
     meta_og_imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='metas',blank=True, null=True )
-    meta_title=models.CharField(max_length=250,null=True,blank=True)
+    meta_title=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas Principales Título </b> debe tener máximo 50 caracteres"})
     score=models.IntegerField(null=True)
     fecha_nacimiento=models.DateField(null=True)
     num_telefono=models.CharField(max_length=20,null=True)
@@ -134,7 +153,8 @@ class PerfilUsuario(models.Model):
 #### Tabla Tipo de Congresos que hay ######
 
 class TipoCongreso(models.Model):
-    nombre=models.CharField(max_length=50,unique=True)
+    nombre=models.CharField(max_length=50,unique=True,error_messages={
+"max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"})
     detalle=models.TextField(null=True,blank=True)
 
     class Meta:
@@ -147,7 +167,8 @@ class TipoCongreso(models.Model):
 #### Tabla Especialidad de Congresos que hay ######
 
 class EspecialidadCongreso(models.Model):
-    nombre=models.CharField(max_length=50,unique=True)
+    nombre=models.CharField(max_length=50,unique=True,error_messages={
+"max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"})
     detalle=models.TextField(null=True,blank=True)
 
     class Meta:
@@ -162,7 +183,8 @@ class EspecialidadCongreso(models.Model):
 #### Tabla Aval de Congresos que hay ######
 
 class AvalCongreso(models.Model):
-    nombre=models.CharField(max_length=50,unique=True)
+    nombre=models.CharField(max_length=50,unique=True,error_messages={
+"max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"})
     detalle=models.TextField(null=True,blank=True)
     logo=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='patrocinadores' )
     url= models.CharField(max_length=250)
@@ -177,10 +199,12 @@ class AvalCongreso(models.Model):
     #### Tabla Socio de Congresos que hay ######
 
 class SocioCongreso(models.Model):
-    nombre=models.CharField(max_length=50,unique=True)
+    nombre=models.CharField(max_length=50,unique=True,error_messages={
+"max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"})
     detalle=models.TextField(null=True,blank=True)
     logo=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='socios' )
-    url= models.CharField(max_length=250)
+    url= models.CharField(max_length=250,error_messages={
+"max_length": "El Campo <b>URL</b> debe tener máximo 250 caracteres"})
 
     class Meta:
         verbose_name='socio del congreso'
@@ -192,7 +216,8 @@ class SocioCongreso(models.Model):
 #### Tabla Categorias de Pago para Congresos ######
 
 class CategoriaPagoCongreso(models.Model):
-    nombre=models.CharField(max_length=50,unique=True)
+    nombre=models.CharField(max_length=50,unique=True,error_messages={
+"max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"})
     path=models.CharField(max_length=250, help_text='campo para identificarlo por la URL')
     detalle=models.TextField(null=True,blank=True)
 
@@ -206,8 +231,10 @@ class CategoriaPagoCongreso(models.Model):
 #### Tabla Congresos #######
 
 class Congreso(models.Model):
-    titulo=models.CharField(max_length=250,unique=True)
-    sub_titulo=models.CharField(max_length=250,null=True)
+    titulo=models.CharField(max_length=250,unique=True,error_messages={
+"max_length": "El Campo <b>Título</b> debe tener máximo 250 caracteres"})
+    sub_titulo=models.CharField(max_length=250,null=True, error_messages={
+"max_length": "El Campo <b>SubTítulo</b> debe tener máximo 250 caracteres"})
     imagen_seg=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso')
     path=models.CharField(max_length=250, help_text='campo para identificarlo por la URL',unique=True)
     lugar=models.ForeignKey(Ubicacion,on_delete=models.DO_NOTHING)
@@ -222,17 +249,27 @@ class Congreso(models.Model):
     categoria_pago = models.ManyToManyField(CategoriaPagoCongreso, through='RelCongresoCategoriaPago',related_name='congreso_cat_pago')
     is_openpay=models.BooleanField(null=True)
     template=models.CharField(max_length=50,null=True)
-    meta_og_title=models.CharField(max_length=50,null=True,blank=True)
-    meta_description=models.TextField(max_length=160,null=True,blank=True)
-    meta_og_description=models.TextField(max_length=160,null=True,blank=True)
-    meta_og_type=models.CharField(max_length=50,null=True,blank=True)
-    meta_og_url=models.CharField(max_length=50,null=True,blank=True)
-    meta_twitter_card=models.CharField(max_length=50,null=True,blank=True)
-    meta_twitter_site=models.CharField(max_length=50,null=True,blank=True)
-    meta_twitter_creator=models.CharField(max_length=50,null=True,blank=True)
-    meta_keywords=models.TextField(max_length=250,null=True,blank=True)
+    meta_og_title=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook Título</b> debe tener máximo 50 caracteres"})
+    meta_description=models.TextField(max_length=160,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas Principales Descripción</b> debe tener máximo 160 caracteres"})
+    meta_og_description=models.TextField(max_length=160,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook Descripción</b> debe tener máximo 160 caracteres"})
+    meta_og_type=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook Tipo</b> debe tener máximo 50 caracteres"})
+    meta_og_url=models.CharField(max_length=250,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook URL</b> debe tener máximo 250 caracteres"})
+    meta_twitter_card=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para Redes Sociales Card</b> debe tener máximo 50 caracteres"})
+    meta_twitter_site=models.CharField(max_length=250,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para Redes Sociales Sitio</b> debe tener máximo 250 caracteres"})
+    meta_twitter_creator=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para Redes Sociales Creador</b> debe tener máximo 50 caracteres"})
+    meta_keywords=models.TextField(max_length=250,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas Principales Palabras Claves </b> debe tener máximo 250 caracteres"})
     meta_og_imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='metas',blank=True, null=True )
-    meta_title=models.CharField(max_length=250,null=True,blank=True)
+    meta_title=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas Principales Título </b> debe tener máximo 50 caracteres"})
     foto_constancia=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso/img_constancia',null=True)
     aprobado=models.IntegerField(null=True)
     cant_preguntas=models.IntegerField(null=True)
@@ -387,8 +424,10 @@ class Moderador(models.Model):
 #### Tabla Bloque #######
 
 class Bloque(models.Model):
-    titulo=models.CharField(max_length=250)
-    duracion=models.CharField(max_length=250)
+    titulo=models.CharField(max_length=250,error_messages={
+"max_length": "El Campo <b>Título </b> debe tener máximo 250 caracteres"})
+    duracion=models.CharField(max_length=250,error_messages={
+"max_length": "El Campo <b>Duración </b> debe tener máximo 250 caracteres"})
     detalle=models.TextField(null=True,blank=True)
     fecha_inicio=models.DateTimeField()
     path=models.CharField(max_length=250, help_text='campo para identificarlo por la URL')
@@ -424,8 +463,10 @@ class RelBloqueModerador(models.Model):
 #### Tabla Ponencia #######
 
 class Ponencia(models.Model):
-    titulo=models.CharField(max_length=250)
-    duracion=models.CharField(max_length=250)
+    titulo=models.CharField(max_length=250,error_messages={
+"max_length": "El Campo <b>Título </b> debe tener máximo 250 caracteres"})
+    duracion=models.CharField(max_length=250,error_messages={
+"max_length": "El Campo <b>Duración </b> debe tener máximo 250 caracteres"})
     detalle=models.TextField(null=True,blank=True)
     cod_video=models.TextField(null=True,blank=True)
     id_video=models.TextField(null=True,blank=True)
@@ -440,17 +481,27 @@ class Ponencia(models.Model):
     bloque=models.ForeignKey(Bloque,on_delete=models.CASCADE,null=True,blank=True)
     ponente = models.ManyToManyField(Ponente, through='RelPonenciaPonente',related_name='ponencia_ponente')
     votacion = models.ManyToManyField(User, through='RelPonenciaVotacion')
-    meta_og_title=models.CharField(max_length=50,null=True,blank=True)
-    meta_description=models.TextField(max_length=160,null=True,blank=True)
-    meta_og_description=models.TextField(max_length=160,null=True,blank=True)
-    meta_og_type=models.CharField(max_length=50,null=True,blank=True)
-    meta_og_url=models.CharField(max_length=50,null=True,blank=True)
-    meta_twitter_card=models.CharField(max_length=50,null=True,blank=True)
-    meta_twitter_site=models.CharField(max_length=50,null=True,blank=True)
-    meta_twitter_creator=models.CharField(max_length=50,null=True,blank=True)
-    meta_keywords=models.TextField(max_length=250,null=True,blank=True)
+    meta_og_title=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook Título</b> debe tener máximo 50 caracteres"})
+    meta_description=models.TextField(max_length=160,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas Principales Descripción</b> debe tener máximo 160 caracteres"})
+    meta_og_description=models.TextField(max_length=160,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook Descripción</b> debe tener máximo 160 caracteres"})
+    meta_og_type=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook Tipo</b> debe tener máximo 50 caracteres"})
+    meta_og_url=models.CharField(max_length=250,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook URL</b> debe tener máximo 250 caracteres"})
+    meta_twitter_card=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para Redes Sociales Card</b> debe tener máximo 50 caracteres"})
+    meta_twitter_site=models.CharField(max_length=250,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para Redes Sociales Sitio</b> debe tener máximo 250 caracteres"})
+    meta_twitter_creator=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para Redes Sociales Creador</b> debe tener máximo 50 caracteres"})
+    meta_keywords=models.TextField(max_length=250,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas Principales Palabras Claves </b> debe tener máximo 250 caracteres"})
     meta_og_imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='metas',blank=True, null=True )
-    meta_title=models.CharField(max_length=250,null=True,blank=True)
+    meta_title=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas Principales Título </b> debe tener máximo 50 caracteres"})
     is_info=models.BooleanField(null=True)
     
     class Meta:
@@ -502,8 +553,10 @@ class RelPonenciaVotacion(models.Model):
 #### Tabla Taller #######
 
 class Taller(models.Model):
-    titulo=models.CharField(max_length=250)
-    duracion=models.CharField(max_length=250) 
+    titulo=models.CharField(max_length=250,error_messages={
+"max_length": "El Campo <b>Título </b> debe tener máximo 250 caracteres"})
+    duracion=models.CharField(max_length=250,error_messages={
+"max_length": "El Campo <b>Duración </b> debe tener máximo 250 caracteres"}) 
     fecha_inicio=models.DateTimeField()
     cod_video=models.TextField(null=True,blank=True)
     id_video=models.TextField(null=True,blank=True)
@@ -519,17 +572,27 @@ class Taller(models.Model):
     ponente = models.ManyToManyField(Ponente, through='RelTallerPonente',related_name='taller_ponente')
     votacion = models.ManyToManyField(User, through='RelTallerVotacion')
     categoria_pago = models.ManyToManyField(CategoriaPagoCongreso, through='RelTalleresCategoriaPago',related_name='talleres_cat_pago')
-    meta_og_title=models.CharField(max_length=50,null=True,blank=True)
-    meta_description=models.TextField(max_length=160,null=True,blank=True)
-    meta_og_description=models.TextField(max_length=160,null=True,blank=True)
-    meta_og_type=models.CharField(max_length=50,null=True,blank=True)
-    meta_og_url=models.CharField(max_length=50,null=True,blank=True)
-    meta_twitter_card=models.CharField(max_length=50,null=True,blank=True)
-    meta_twitter_site=models.CharField(max_length=50,null=True,blank=True)
-    meta_twitter_creator=models.CharField(max_length=50,null=True,blank=True)
-    meta_keywords=models.TextField(max_length=250,null=True,blank=True)
+    meta_og_title=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook Título</b> debe tener máximo 50 caracteres"})
+    meta_description=models.TextField(max_length=160,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas Principales Descripción</b> debe tener máximo 160 caracteres"})
+    meta_og_description=models.TextField(max_length=160,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook Descripción</b> debe tener máximo 160 caracteres"})
+    meta_og_type=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook Tipo</b> debe tener máximo 50 caracteres"})
+    meta_og_url=models.CharField(max_length=250,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook URL</b> debe tener máximo 250 caracteres"})
+    meta_twitter_card=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para Redes Sociales Card</b> debe tener máximo 50 caracteres"})
+    meta_twitter_site=models.CharField(max_length=250,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para Redes Sociales Sitio</b> debe tener máximo 250 caracteres"})
+    meta_twitter_creator=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para Redes Sociales Creador</b> debe tener máximo 50 caracteres"})
+    meta_keywords=models.TextField(max_length=250,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas Principales Palabras Claves </b> debe tener máximo 250 caracteres"})
     meta_og_imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='metas',blank=True, null=True )
-    meta_title=models.CharField(max_length=250,null=True,blank=True)
+    meta_title=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas Principales Título </b> debe tener máximo 50 caracteres"})
     foto_constancia=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso/img_constancia',null=True)
     score=models.IntegerField(null=True)
     class Meta:
@@ -642,7 +705,8 @@ class DatosIniciales(models.Model):
 
 class CuestionarioPregunta(models.Model):
     congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
-    pregunta= models.CharField(max_length=250)
+    pregunta= models.CharField(max_length=250,error_messages={
+"max_length": "El Campo <b>Pregunta </b> debe tener máximo 250 caracteres"})
     published=models.BooleanField(null=True)
     def __str__(self):
         return pregunta
@@ -654,24 +718,35 @@ class CuestionarioPregunta(models.Model):
 
 class CuestionarioRespuestas(models.Model):
     pregunta=models.ForeignKey(CuestionarioPregunta,on_delete=models.CASCADE)
-    respuesta= models.CharField(max_length=250)
+    respuesta= models.CharField(max_length=250,error_messages={
+"max_length": "El Campo <b>Respuesta </b> debe tener máximo 250 caracteres"})
     is_correcto=models.BooleanField()
     published=models.BooleanField(null=True)
 
 #####  Tabla metadatos de la pagina Inicio 
 
 class MetaPagInicio(models.Model): 
-    meta_og_title=models.CharField(max_length=50,null=True,blank=True)
-    meta_description=models.TextField(max_length=160,null=True,blank=True)
-    meta_og_description=models.TextField(max_length=160,null=True,blank=True)
-    meta_og_type=models.CharField(max_length=50,null=True,blank=True)
-    meta_og_url=models.CharField(max_length=50,null=True,blank=True)
-    meta_twitter_card=models.CharField(max_length=50,null=True,blank=True)
-    meta_twitter_site=models.CharField(max_length=50,null=True,blank=True)
-    meta_twitter_creator=models.CharField(max_length=50,null=True,blank=True)
-    meta_keywords=models.TextField(max_length=250,null=True,blank=True)
+    meta_og_title=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook Título</b> debe tener máximo 50 caracteres"})
+    meta_description=models.TextField(max_length=160,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas Principales Descripción</b> debe tener máximo 160 caracteres"})
+    meta_og_description=models.TextField(max_length=160,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook Descripción</b> debe tener máximo 160 caracteres"})
+    meta_og_type=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook Tipo</b> debe tener máximo 50 caracteres"})
+    meta_og_url=models.CharField(max_length=250,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook URL</b> debe tener máximo 250 caracteres"})
+    meta_twitter_card=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para Redes Sociales Card</b> debe tener máximo 50 caracteres"})
+    meta_twitter_site=models.CharField(max_length=250,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para Redes Sociales Sitio</b> debe tener máximo 250 caracteres"})
+    meta_twitter_creator=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para Redes Sociales Creador</b> debe tener máximo 50 caracteres"})
+    meta_keywords=models.TextField(max_length=250,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas Principales Palabras Claves </b> debe tener máximo 250 caracteres"})
     meta_og_imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='metas',blank=True, null=True )
-    meta_title=models.CharField(max_length=250,null=True,blank=True)
+    meta_title=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas Principales Título </b> debe tener máximo 50 caracteres"})
     class Meta:
         verbose_name='El Meta de la Página Inicio'
         verbose_name_plural='Los Metas de la Página de Inicio'
@@ -683,17 +758,27 @@ class MetaPagInicio(models.Model):
 #####  Tabla metadatos de la pagina Listar Congreso 
 
 class MetaPagListCongreso(models.Model): 
-    meta_og_title=models.CharField(max_length=50,null=True,blank=True)
-    meta_description=models.TextField(max_length=160,null=True,blank=True)
-    meta_og_description=models.TextField(max_length=160,null=True,blank=True)
-    meta_og_type=models.CharField(max_length=50,null=True,blank=True)
-    meta_og_url=models.CharField(max_length=50,null=True,blank=True)
-    meta_twitter_card=models.CharField(max_length=50,null=True,blank=True)
-    meta_twitter_site=models.CharField(max_length=50,null=True,blank=True)
-    meta_twitter_creator=models.CharField(max_length=50,null=True,blank=True)
-    meta_keywords=models.TextField(max_length=250,null=True,blank=True)
+    meta_og_title=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook Título</b> debe tener máximo 50 caracteres"})
+    meta_description=models.TextField(max_length=160,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas Principales Descripción</b> debe tener máximo 160 caracteres"})
+    meta_og_description=models.TextField(max_length=160,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook Descripción</b> debe tener máximo 160 caracteres"})
+    meta_og_type=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook Tipo</b> debe tener máximo 50 caracteres"})
+    meta_og_url=models.CharField(max_length=250,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook URL</b> debe tener máximo 250 caracteres"})
+    meta_twitter_card=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para Redes Sociales Card</b> debe tener máximo 50 caracteres"})
+    meta_twitter_site=models.CharField(max_length=250,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para Redes Sociales Sitio</b> debe tener máximo 250 caracteres"})
+    meta_twitter_creator=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para Redes Sociales Creador</b> debe tener máximo 50 caracteres"})
+    meta_keywords=models.TextField(max_length=250,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas Principales Palabras Claves </b> debe tener máximo 250 caracteres"})
     meta_og_imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='metas',blank=True, null=True )
-    meta_title=models.CharField(max_length=250,null=True,blank=True)
+    meta_title=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas Principales Título </b> debe tener máximo 50 caracteres"})
     class Meta:
         verbose_name='El Meta de la Página Listar Congresos'
         verbose_name_plural='Los Metas de la Página Listar Congresos'
@@ -703,7 +788,8 @@ class MetaPagListCongreso(models.Model):
 
 
 class PreguntasFrecuentes(models.Model):
-    pregunta=models.CharField(max_length=250)
+    pregunta=models.CharField(max_length=250,error_messages={
+"max_length": "El Campo <b>Pregunta </b> debe tener máximo 250 caracteres"})
     respuesta=models.TextField()
     congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
     published=models.BooleanField(null=True)
@@ -717,8 +803,10 @@ class PreguntasFrecuentes(models.Model):
 
 ##### Tabla de Información de quienes somos en la Pagina de Inicio #####
 class QuienesSomos(models.Model):
-    titulo=models.CharField(max_length=250, )
-    sub_titulo=models.CharField(max_length=250)
+    titulo=models.CharField(max_length=250,error_messages={
+"max_length": "El Campo <b>Título </b> debe tener máximo 250 caracteres"} )
+    sub_titulo=models.CharField(max_length=250,error_messages={
+"max_length": "El Campo <b>SubTítulo </b> debe tener máximo 250 caracteres"})
     texto=models.TextField()
     
     class Meta:
@@ -745,8 +833,10 @@ class ImagenQuienesSomos(models.Model):
 
 ##### Tabla de Información de Ofrecemos en la Pagina de Inicio #####
 class Ofrecemos(models.Model):
-    titulo=models.CharField(max_length=250, )
-    icono=models.CharField(max_length=250)
+    titulo=models.CharField(max_length=250,error_messages={
+"max_length": "El Campo <b>Título </b> debe tener máximo 250 caracteres"} )
+    icono=models.CharField(max_length=250,error_messages={
+"max_length": "El Campo <b>Icono </b> debe tener máximo 250 caracteres"})
     texto=models.TextField()
     
     class Meta:
@@ -757,14 +847,17 @@ class Ofrecemos(models.Model):
         return self.titulo 
 
 class Footer(models.Model):
-    direccion=models.CharField(max_length=250)
+    direccion=models.CharField(max_length=250,error_messages={
+"max_length": "El Campo <b>Dirección </b> debe tener máximo 250 caracteres"})
     email=models.EmailField()
     telefono=models.CharField(max_length=20,validators=[
             RegexValidator(regex=r"^[0-9()+-]+$", message="Entre un No. de <b>Teléfono</b> correcto. Ej. <b>(+99)999-999-999</b>")
-        ])
+        ],error_messages={
+"max_length": "El Campo <b>Teléfono </b> debe tener máximo 20 caracteres"})
     whatsapp=models.CharField(max_length=20,validators=[
             RegexValidator(regex=r"^[0-9()+-]+$", message="Entre un No. de <b>Whatsapp</b> correcto. Ej. <b>(+99)999-999-999</b>" )
-        ])
+        ],error_messages={
+"max_length": "El Campo <b>Whatsapp </b> debe tener máximo 20 caracteres"})
     
     class Meta:
         verbose_name='Contacto footer'
@@ -785,7 +878,8 @@ class ImagenHome(models.Model):
 
 class Documento(models.Model):
     documento=models.FileField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='documentos')
-    titulo=models.CharField(max_length=25)
+    titulo=models.CharField(max_length=25,error_messages={
+"max_length": "El Campo <b>Título </b> debe tener máximo 25 caracteres"})
     class Meta:
         verbose_name='Documento'
 
@@ -794,8 +888,10 @@ class Documento(models.Model):
 ##### Tabla Idiomas #####
 
 class Idioma(models.Model):
-    nombre= models.CharField(max_length=20,unique=True)
-    abreviatura= models.CharField(max_length=4,unique=True)
+    nombre= models.CharField(max_length=20,unique=True,error_messages={
+"max_length": "El Campo <b>Nombre </b> debe tener máximo 20 caracteres"})
+    abreviatura= models.CharField(max_length=4,unique=True,error_messages={
+"max_length": "El Campo <b>Abreviatura </b> debe tener máximo 4 caracteres"})
     class Meta:
         verbose_name='idioma'
         verbose_name_plural='idiomas'
@@ -805,7 +901,8 @@ class Idioma(models.Model):
 
 class DocumentoPrograma(models.Model):
     documento=models.FileField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='programas')
-    texto=models.CharField(max_length=25)
+    texto=models.CharField(max_length=25,error_messages={
+"max_length": "El Campo <b>Texto </b> debe tener máximo 25 caracteres"})
     idioma=models.ForeignKey(Idioma,on_delete=models.CASCADE)
     congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
     class Meta:
