@@ -21,21 +21,31 @@ class Cart:
 
             
             if exist is False:
-                self.cart[1].append(
-                    {
-                        'mi_id':int(self.cart[1][-1]['mi_id'])+1,
-                        'id':relCongresoCategoriaPago.pk,
-                        'tipo_evento':'Congreso',
-                        'id_congreso':relCongresoCategoriaPago.congreso.pk,
-                        'nombre_congreso':relCongresoCategoriaPago.congreso.titulo,
-                        'id_cat_pago':relCongresoCategoriaPago.categoria.pk,
-                        'nombre_cat_pago':relCongresoCategoriaPago.categoria.nombre,
-                        'precio':relCongresoCategoriaPago.precio,
-                        'pagar':round(float(relCongresoCategoriaPago.precio)*float(cant),2),
-                        'moneda':relCongresoCategoriaPago.moneda,
-                        'cantidad': cant
-                    }
-                )
+                esta=False
+                cont=0
+                for car in self.cart[1]:
+                    if car['id_congreso']==relCongresoCategoriaPago.congreso.pk and car['id_cat_pago']==relCongresoCategoriaPago.categoria.pk and car['tipo_evento']=='Congreso':
+                       self.cart[1][cont]['cantidad']= int(self.cart[1][cont]['cantidad'])+int(cant)
+                       self.cart[1][cont]['pagar']= float(self.cart[1][cont]['pagar'])+round(float(relCongresoCategoriaPago.precio)*float(cant),2)
+                       esta=True
+                    cont=cont+1   
+
+                if not esta:   
+                    self.cart[1].append(
+                        {
+                            'mi_id':int(self.cart[1][-1]['mi_id'])+1,
+                            'id':relCongresoCategoriaPago.pk,
+                            'tipo_evento':'Congreso',
+                            'id_congreso':relCongresoCategoriaPago.congreso.pk,
+                            'nombre_congreso':relCongresoCategoriaPago.congreso.titulo,
+                            'id_cat_pago':relCongresoCategoriaPago.categoria.pk,
+                            'nombre_cat_pago':relCongresoCategoriaPago.categoria.nombre,
+                            'precio':relCongresoCategoriaPago.precio,
+                            'pagar':round(float(relCongresoCategoriaPago.precio)*float(cant),2),
+                            'moneda':relCongresoCategoriaPago.moneda,
+                            'cantidad': cant
+                        }
+                    )
                 self.cart[0]['cant']=round(self.cart[0]['cant']+float(relCongresoCategoriaPago.precio)*float(cant),2)
                 self.save()
                 return True
@@ -73,21 +83,31 @@ class Cart:
             if self.request.user.groups.filter(name='Laboratorio').exists():
                 exist=False
             if exist is False:
-                self.cart[1].append(
-                    {
-                        'mi_id':int(self.cart[1][-1]['mi_id'])+1,
-                        'id':relTallerCategoriaPago.pk,
-                        'tipo_evento':'Taller',
-                        'id_congreso':relTallerCategoriaPago.taller.pk,
-                        'nombre_congreso':relTallerCategoriaPago.taller.titulo,
-                        'id_cat_pago':relTallerCategoriaPago.categoria.pk,
-                        'nombre_cat_pago':relTallerCategoriaPago.categoria.nombre,
-                        'precio':relTallerCategoriaPago.precio,
-                        'pagar':round(float(relTallerCategoriaPago.precio)*float(cant),2),
-                        'moneda':relTallerCategoriaPago.moneda,
-                        'cantidad': cant
-                    }
-                )
+                esta=False
+                cont=0
+                for car in self.cart[1]:
+                    if car['id_congreso']==relTallerCategoriaPago.taller.pk and car['id_cat_pago']==relTallerCategoriaPago.categoria.pk and car['tipo_evento']=='Taller':
+                       self.cart[1][cont]['cantidad']= int(self.cart[1][cont]['cantidad'])+int(cant)
+                       self.cart[1][cont]['pagar']= float(self.cart[1][cont]['pagar'])+round(float(relTallerCategoriaPago.precio)*float(cant),2)
+                       esta=True
+                    cont=cont+1   
+
+                if not esta: 
+                    self.cart[1].append(
+                        {
+                            'mi_id':int(self.cart[1][-1]['mi_id'])+1,
+                            'id':relTallerCategoriaPago.pk,
+                            'tipo_evento':'Taller',
+                            'id_congreso':relTallerCategoriaPago.taller.pk,
+                            'nombre_congreso':relTallerCategoriaPago.taller.titulo,
+                            'id_cat_pago':relTallerCategoriaPago.categoria.pk,
+                            'nombre_cat_pago':relTallerCategoriaPago.categoria.nombre,
+                            'precio':relTallerCategoriaPago.precio,
+                            'pagar':round(float(relTallerCategoriaPago.precio)*float(cant),2),
+                            'moneda':relTallerCategoriaPago.moneda,
+                            'cantidad': cant
+                        }
+                    )
                 self.cart[0]['cant']=round(self.cart[0]['cant']+float(relTallerCategoriaPago.precio)*float(cant),2)
                 self.save()
                 return True
