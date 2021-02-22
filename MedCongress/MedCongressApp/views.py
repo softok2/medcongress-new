@@ -128,14 +128,208 @@ class Home(TemplateView):
 @method_decorator(login_required,name='dispatch')
 class PagoExitoso(TemplateView):
 
+    def get(self, request, **kwargs):
+       
+        if self.request.GET.get('id_transaccion'):
+            cart=[{'cant':0},[]]
+            pagos_congreso=RelCongresoUser.objects.filter(id_transaccion=self.request.GET.get('id_transaccion'))
+            for pago_congreso in pagos_congreso:
+                pago_congreso.is_pagado=True
+                pago_congreso.save()
+                ################################
+                relCongresoCategoriaPago=RelCongresoCategoriaPago.objects.filter(congreso=pago_congreso.congreso.pk,categoria=pago_congreso.categoria_pago.pk).first()
+              
+                if len(cart[1])>0:
+                    cart[1].append(
+                        {
+                            'mi_id':int(cart[1][-1]['mi_id'])+1,
+                            'id':0,
+                            'tipo_evento':'Congreso',
+                            'id_congreso':pago_congreso.congreso.pk,
+                            'nombre_congreso':pago_congreso.congreso.titulo,
+                            'id_cat_pago':pago_congreso.categoria_pago.pk,
+                            'nombre_cat_pago':pago_congreso.categoria_pago.nombre,
+                            'precio':relCongresoCategoriaPago.precio,
+                            'pagar':round(float(relCongresoCategoriaPago.precio)*float(pago_congreso.cantidad),2),
+                            'moneda':relCongresoCategoriaPago.moneda,
+                            'cantidad': pago_congreso.cantidad
+                        }
+                    )
+               
+               
+                else:
+                    cart[1].append(
+                            {
+                                'mi_id':1,
+                                'id':0,
+                                'tipo_evento':'Congreso',
+                                'id_congreso':pago_congreso.congreso.pk,
+                                'nombre_congreso':pago_congreso.congreso.titulo,
+                                'id_cat_pago':pago_congreso.categoria_pago.pk,
+                                'nombre_cat_pago':pago_congreso.categoria_pago.nombre,
+                                'precio':relCongresoCategoriaPago.precio,
+                                'pagar':round(float(relCongresoCategoriaPago.precio)*float(pago_congreso.cantidad),2),
+                                'moneda':relCongresoCategoriaPago.moneda,
+                                'cantidad': pago_congreso.cantidad
+                            }
+                        )  
+                cart[0]['cant']=round(cart[0]['cant']+float(relCongresoCategoriaPago.precio)*float(pago_congreso.cantidad),2)
+          
+                ##################################
+
+
+            pagos_taller=RelTallerUser.objects.filter(id_transaccion=self.request.GET.get('id_transaccion'))
+            for pago_taller in pagos_taller:
+                pago_taller.is_pagado=True 
+                pago_taller.save()
+                 ################################
+                relCongresoCategoriaPago=RelTalleresCategoriaPago.objects.filter(taller=pago_taller.taller.pk,categoria=pago_taller.categoria_pago.pk).first()
+              
+                if len(cart[1])>0:
+                    cart[1].append(
+                        {
+                            'mi_id':int(cart[1][-1]['mi_id'])+1,
+                            'id':0,
+                            'tipo_evento':'Taller',
+                            'id_congreso':pago_taller.taller.pk,
+                            'nombre_congreso':pago_taller.taller.titulo,
+                            'id_cat_pago':pago_taller.categoria_pago.pk,
+                            'nombre_cat_pago':pago_taller.categoria_pago.nombre,
+                            'precio':relCongresoCategoriaPago.precio,
+                            'pagar':round(float(relCongresoCategoriaPago.precio)*float(pago_taller.cantidad),2),
+                            'moneda':relCongresoCategoriaPago.moneda,
+                            'cantidad': pago_taller.cantidad
+                        }
+                    )
+               
+               
+                else:
+                    cart[1].append(
+                            {
+                                'mi_id':1,
+                                'id':0,
+                                'tipo_evento':'Taller',
+                                'id_congreso':pago_taller.taller.pk,
+                                'nombre_congreso':pago_taller.taller.titulo,
+                                'id_cat_pago':pago_taller.categoria_pago.pk,
+                                'nombre_cat_pago':pago_taller.categoria_pago.nombre,
+                                'precio':relCongresoCategoriaPago.precio,
+                                'pagar':round(float(relCongresoCategoriaPago.precio)*float(pago_taller.cantidad),2),
+                                'moneda':relCongresoCategoriaPago.moneda,
+                                'cantidad': pago_taller.cantidad
+                            }
+                        )  
+                cart[0]['cant']=round(cart[0]['cant']+float(relCongresoCategoriaPago.precio)*float(pago_taller.cantidad),2)
+          
+                ####END EMAIL ######    
+                ##################################
+
+           
+        return self.render_to_response(self.get_context_data())
+
     template_name= 'MedCongressApp/pago_satifactorio.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['car']=self.request.session["car1"]
+        if self.request.GET.get('id_transaccion'):
+            cart=[{'cant':0},[]]
+            pagos_congreso=RelCongresoUser.objects.filter(id_transaccion=self.request.GET.get('id_transaccion'))
+            for pago_congreso in pagos_congreso:
+                pago_congreso.is_pagado=True
+                pago_congreso.save()
+                ################################
+                relCongresoCategoriaPago=RelCongresoCategoriaPago.objects.filter(congreso=pago_congreso.congreso.pk,categoria=pago_congreso.categoria_pago.pk).first()
+              
+                if len(cart[1])>0:
+                    cart[1].append(
+                        {
+                            'mi_id':int(cart[1][-1]['mi_id'])+1,
+                            'id':0,
+                            'tipo_evento':'Congreso',
+                            'id_congreso':pago_congreso.congreso.pk,
+                            'nombre_congreso':pago_congreso.congreso.titulo,
+                            'id_cat_pago':pago_congreso.categoria_pago.pk,
+                            'nombre_cat_pago':pago_congreso.categoria_pago.nombre,
+                            'precio':relCongresoCategoriaPago.precio,
+                            'pagar':round(float(relCongresoCategoriaPago.precio)*float(pago_congreso.cantidad),2),
+                            'moneda':relCongresoCategoriaPago.moneda,
+                            'cantidad': pago_congreso.cantidad
+                        }
+                    )
+               
+               
+                else:
+                    cart[1].append(
+                            {
+                                'mi_id':1,
+                                'id':0,
+                                'tipo_evento':'Congreso',
+                                'id_congreso':pago_congreso.congreso.pk,
+                                'nombre_congreso':pago_congreso.congreso.titulo,
+                                'id_cat_pago':pago_congreso.categoria_pago.pk,
+                                'nombre_cat_pago':pago_congreso.categoria_pago.nombre,
+                                'precio':relCongresoCategoriaPago.precio,
+                                'pagar':round(float(relCongresoCategoriaPago.precio)*float(pago_congreso.cantidad),2),
+                                'moneda':relCongresoCategoriaPago.moneda,
+                                'cantidad': pago_congreso.cantidad
+                            }
+                        )  
+                cart[0]['cant']=round(cart[0]['cant']+float(relCongresoCategoriaPago.precio)*float(pago_congreso.cantidad),2)
+          
+                ##################################
+
+
+            pagos_taller=RelTallerUser.objects.filter(id_transaccion=self.request.GET.get('id_transaccion'))
+            for pago_taller in pagos_taller:
+                pago_taller.is_pagado=True 
+                pago_taller.save()
+                 ################################
+                relCongresoCategoriaPago=RelTalleresCategoriaPago.objects.filter(taller=pago_taller.taller.pk,categoria=pago_taller.categoria_pago.pk).first()
+              
+                if len(cart[1])>0:
+                    cart[1].append(
+                        {
+                            'mi_id':int(cart[1][-1]['mi_id'])+1,
+                            'id':0,
+                            'tipo_evento':'Taller',
+                            'id_congreso':pago_taller.taller.pk,
+                            'nombre_congreso':pago_taller.taller.titulo,
+                            'id_cat_pago':pago_taller.categoria_pago.pk,
+                            'nombre_cat_pago':pago_taller.categoria_pago.nombre,
+                            'precio':relCongresoCategoriaPago.precio,
+                            'pagar':round(float(relCongresoCategoriaPago.precio)*float(pago_taller.cantidad),2),
+                            'moneda':relCongresoCategoriaPago.moneda,
+                            'cantidad': pago_taller.cantidad
+                        }
+                    )
+               
+               
+                else:
+                    cart[1].append(
+                            {
+                                'mi_id':1,
+                                'id':0,
+                                'tipo_evento':'Taller',
+                                'id_congreso':pago_taller.taller.pk,
+                                'nombre_congreso':pago_taller.taller.titulo,
+                                'id_cat_pago':pago_taller.categoria_pago.pk,
+                                'nombre_cat_pago':pago_taller.categoria_pago.nombre,
+                                'precio':relCongresoCategoriaPago.precio,
+                                'pagar':round(float(relCongresoCategoriaPago.precio)*float(pago_taller.cantidad),2),
+                                'moneda':relCongresoCategoriaPago.moneda,
+                                'cantidad': pago_taller.cantidad
+                            }
+                        )  
+                cart[0]['cant']=round(cart[0]['cant']+float(relCongresoCategoriaPago.precio)*float(pago_taller.cantidad),2)
+          
+            context['car']=self.request.session["car1"]=cart
+        else:
+
+            context['car']=self.request.session["car1"]
        
         return context
 
     def post(self, request, **kwargs):
+        print(self.request.session["car1"][1])
         url='https://%s/v1/%s/invoices/v33'%(URL_API,ID_KEY)
         chars = '0123456789'
         secret_key = get_random_string(8, chars)
@@ -1733,12 +1927,41 @@ class Enviar(TemplateView):
     def get(self, request, **kwargs):
         url='%s/webhook'%(URL_SITE)
         
-        params= {
-                "type" : "verification",
-                "event_date" : "2013-11-22T11:04:49-06:00",
-                "verification_code" : "UY1qqrxw"
-            }
-            
+        params= {'type': 'charge.succeeded',
+            'event_date': '2021-02-22T14:10:03-06:00',
+            'transaction': {'id': 'tr8xjar13rv6mlpgvty9',
+                            'authorization': '3689135', 
+                            'operation_type': 'in', 
+                            'transaction_type': 'charge',
+                            'status': 'completed', 
+                            'conciliated': False, 
+                            'creation_date': '2021-02-22T14:06:51-06:00',
+                            'operation_date': '2021-02-22T14:10:03-06:00',
+                            'description': 'Pago del Congreso Congreso de prueba nuevo2 . Pago del Taller Prueba de taller .',
+                            'error_message': None,
+                            'order_id': None, 
+                            'due_date': '2021-03-24T23:59:59-06:00', 
+                            'payment_method': {'type': 'bank_transfer', 
+                                            'bank': 'BBVA Bancomer', 
+                                            'clabe': '000000000000000000',
+                                            'agreement': '0000000',
+                                            'name': '11014569804426897213'},
+                            'currency': 'MXN', 
+                            'amount': 2270.0,
+                            'customer': {'name': 'Dennis', 
+                                        'last_name': 'Molinet', 
+                                        'email': 'dennis.molinetg@gmail.com',
+                                        'phone_number': None, 
+                                        'address': None, 
+                                        'creation_date': '2021-02-22T14:06:51-06:00', 
+                                        'external_id': None,
+                                        'clabe': None},
+                            'fee': {'amount': 8.0,
+                                    'tax': 1.28, 
+                                    'currency': 'MXN'}, 
+                            'method': 'bank_account'}
+                            }
+                
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         response=requests.post(url=url,data=json.dumps(params),headers=headers)
         # response_dic=response.json()
@@ -1752,27 +1975,108 @@ def Webhook(request):
         received_json_data=json.loads(request.body)
          ##### EMAIL #####
         if received_json_data['type']== "charge.succeeded":
+            cart=[{'cant':0},[]]
             pagos_congreso=RelCongresoUser.objects.filter(id_transaccion=received_json_data['transaction']['id'])
             for pago_congreso in pagos_congreso:
                 pago_congreso.is_pagado=True
                 pago_congreso.save()
+                ################################
+                relCongresoCategoriaPago=RelCongresoCategoriaPago.objects.filter(congreso=pago_congreso.congreso.pk,categoria=pago_congreso.categoria_pago.pk).first()
+              
+                if len(cart[1])>0:
+                    cart[1].append(
+                        {
+                            'mi_id':int(cart[1][-1]['mi_id'])+1,
+                            'id':0,
+                            'tipo_evento':'Congreso',
+                            'id_congreso':pago_congreso.congreso.pk,
+                            'nombre_congreso':pago_congreso.congreso.titulo,
+                            'id_cat_pago':pago_congreso.categoria_pago.pk,
+                            'nombre_cat_pago':pago_congreso.categoria_pago.nombre,
+                            'precio':relCongresoCategoriaPago.precio,
+                            'pagar':round(float(relCongresoCategoriaPago.precio)*float(pago_congreso.cantidad),2),
+                            'moneda':relCongresoCategoriaPago.moneda,
+                            'cantidad': pago_congreso.cantidad
+                        }
+                    )
+               
+               
+                else:
+                    cart[1].append(
+                            {
+                                'mi_id':1,
+                                'id':0,
+                                'tipo_evento':'Congreso',
+                                'id_congreso':pago_congreso.congreso.pk,
+                                'nombre_congreso':pago_congreso.congreso.titulo,
+                                'id_cat_pago':pago_congreso.categoria_pago.pk,
+                                'nombre_cat_pago':pago_congreso.categoria_pago.nombre,
+                                'precio':relCongresoCategoriaPago.precio,
+                                'pagar':round(float(relCongresoCategoriaPago.precio)*float(pago_congreso.cantidad),2),
+                                'moneda':relCongresoCategoriaPago.moneda,
+                                'cantidad': pago_congreso.cantidad
+                            }
+                        )  
+                cart[0]['cant']=round(cart[0]['cant']+float(relCongresoCategoriaPago.precio)*float(pago_congreso.cantidad),2)
+          
+                ##################################
+
+
             pagos_taller=RelTallerUser.objects.filter(id_transaccion=received_json_data['transaction']['id'])
             for pago_taller in pagos_taller:
                 pago_taller.is_pagado=True 
                 pago_taller.save()
-            plain_message = strip_tags('El tipo de mensaje fue un <%s>'%(received_json_data))
-            if received_json_data['transaction']['method']== 'store':
-                plain_message = strip_tags('El tipo de mensaje fue un <%s>....... Se hizo el Pago en efectivo'%(received_json_data))
-            if received_json_data['transaction']['method']== 'card':
-                plain_message = strip_tags('El tipo de mensaje fue un <%s>....... Se hizo el Pago por Tarjeta'%(received_json_data))
-            if received_json_data['transaction']['method']== 'bank_account':
-                plain_message = strip_tags('El tipo de mensaje fue un <%s>....... Se hizo el Pago por Tranferencia Bancaria'%(received_json_data))
-            subject = 'Tipo de Mensaje'
-            # html_message = render_to_string('MedCongressApp/recibo_pago.html', context={'car':enviar,'date':response_dict['operation_date'],'numero':response_dict['authorization'],'importe':response_dict['amount'],'card':response_dict['card']['card_number'],'orden_id':response_dict['order_id']})
-           
-            from_email = ''
+                 ################################
+                relCongresoCategoriaPago=RelTalleresCategoriaPago.objects.filter(taller=pago_taller.taller.pk,categoria=pago_taller.categoria_pago.pk).first()
+              
+                if len(cart[1])>0:
+                    cart[1].append(
+                        {
+                            'mi_id':int(cart[1][-1]['mi_id'])+1,
+                            'id':0,
+                            'tipo_evento':'Taller',
+                            'id_congreso':pago_taller.taller.pk,
+                            'nombre_congreso':pago_taller.taller.titulo,
+                            'id_cat_pago':pago_taller.categoria_pago.pk,
+                            'nombre_cat_pago':pago_taller.categoria_pago.nombre,
+                            'precio':relCongresoCategoriaPago.precio,
+                            'pagar':round(float(relCongresoCategoriaPago.precio)*float(pago_taller.cantidad),2),
+                            'moneda':relCongresoCategoriaPago.moneda,
+                            'cantidad': pago_taller.cantidad
+                        }
+                    )
+               
+               
+                else:
+                    cart[1].append(
+                            {
+                                'mi_id':1,
+                                'id':0,
+                                'tipo_evento':'Taller',
+                                'id_congreso':pago_taller.taller.pk,
+                                'nombre_congreso':pago_taller.taller.titulo,
+                                'id_cat_pago':pago_taller.categoria_pago.pk,
+                                'nombre_cat_pago':pago_taller.categoria_pago.nombre,
+                                'precio':relCongresoCategoriaPago.precio,
+                                'pagar':round(float(relCongresoCategoriaPago.precio)*float(pago_taller.cantidad),2),
+                                'moneda':relCongresoCategoriaPago.moneda,
+                                'cantidad': pago_taller.cantidad
+                            }
+                        )  
+                cart[0]['cant']=round(cart[0]['cant']+float(relCongresoCategoriaPago.precio)*float(pago_taller.cantidad),2)
+          
+                ####END EMAIL ######    
+                ##################################
 
-            mail.send_mail(subject, plain_message, from_email, ['dennis.molinetg@gmail.com'])
+
+            if cart[0]['cant'] >0:
+                subject = 'Comprobante de Pago de MedCongress'
+                html_message = render_to_string('MedCongressApp/recibo_pago.html', context={'car':cart,'date':received_json_data['event_date'],'numero':received_json_data['transaction']['authorization'],'importe':cart[0]['cant'],'card':'','orden_id':received_json_data['transaction']['order_id'],'id_transaccion':received_json_data['transaction']['id'],'tipo':received_json_data['transaction']['method'],'site':URL_SITE })
+                plain_message = strip_tags('Aviso..... Usted se a comprado eventos en MedCongres')
+                from_email = ''
+                to = received_json_data['transaction']['customer']['email']
+                mail.send_mail(subject, plain_message, from_email, [to],html_message=html_message)
+
         ####END EMAIL ######
         if received_json_data['type']== "verification":
             plain_message = strip_tags('El código de verificación es:  <%s>'%(received_json_data)) 

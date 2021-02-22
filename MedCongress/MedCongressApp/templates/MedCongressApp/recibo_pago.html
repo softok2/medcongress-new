@@ -26,10 +26,21 @@
 		<td> <b>Importe Pagado: </b> </td>
 		<td style="padding: 10px;">{{importe}}</td>
 	</tr>
+	{%if tipo%}
+	<tr>
+		<td><b>Tipo de Pago: </b>  </td>
+		{%if tipo == 'bank_account'%}
+		<td style="padding: 10px;">Tranferencia Bancaria</td>
+		{%else%}
+		<td style="padding: 10px;">Pago en Efectivo</td>
+		{%endif%}
+	</tr>
+	{%else%}
 	<tr>
 		<td><b>Número de la Tarjeta: </b>  </td>
 		<td style="padding: 10px;">{{card}}</td>
 	</tr>
+	{%endif%}
 </table>
 
 <h3 style="margin-top: px;"><b>Detalle de la Orden </b></h3>
@@ -75,8 +86,14 @@
 		</tbody>
 	</table>
 	<br>
+	{%if site%}
+	<h5> " <a
+		href="{{site}}/transaccion_exitosa?id_transaccion={{id_transaccion}}"> EMITIR FACTURA </a>"</h5>
+{%endif%}
+	<br>
 	<p>"Ahora puede acceder a sus eventos comprados."</p> <br><h5> En caso de cualquier incidente contactar a <a
 		href="mailto:soporte@medcongress.com.mx">soporte@medcongress.com.mx </a>"</h5>
+
 
 
 </body>

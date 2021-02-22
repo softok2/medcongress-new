@@ -190,7 +190,7 @@ Inicio
 		<div class="kode-slider">
 			<ul class="bxslider-banner">
 				{% for congreso in congresos %}
-				{% if congreso.imagencongreso_set.all.0.imagen%}
+				{% if congreso.imagencongreso_set.all.0.imagen %}
 				<li>
 					<img src="{% static '/'%}{{congreso.imagencongreso_set.all.0.imagen}}" alt="" />
 					<div class="kode-content">
