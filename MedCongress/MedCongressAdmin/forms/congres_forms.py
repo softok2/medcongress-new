@@ -31,7 +31,7 @@ class CongresForm(forms.ModelForm):
     class Meta:
         model=Congreso
         fields=['titulo','sub_titulo','imagen_seg','fecha_inicio','published','t_congreso','especialidad','is_openpay','template','foto_constancia','aprobado','cant_preguntas','score','streaming','meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
-        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','detalles_tipo_boleto','detalles_tipo_boleto_taller','ver_titulo']
+        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','detalles_tipo_boleto','detalles_tipo_boleto_taller','ver_titulo','vid_publicidad']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
@@ -52,6 +52,7 @@ class CongresForm(forms.ModelForm):
         self.fields['cant_preguntas'].widget.attrs.update({'class': 'form-control',})                        
         self.fields['score'].widget.attrs.update({'class': 'form-control',})   
         self.fields['streaming'].widget.attrs.update({'class': 'form-control','rows':'3'}) 
+        self.fields['vid_publicidad'].widget.attrs.update({'class': 'form-control','rows':'3'})
         self.fields['meta_og_title'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['meta_description'].widget.attrs.update({'class': 'form-control','rows':'3'}) 
         self.fields['meta_og_description'].widget.attrs.update({'class': 'form-control','rows':'3'})   

@@ -276,6 +276,9 @@
                 {%if pagado and  congreso.streaming%}
                 {{congreso.streaming|safe }}
                 {%endif%}
+                {%if congreso.vid_publicidad%}
+                {{congreso.vid_publicidad|safe }}
+                {%endif%}
                 <div class="schedule-banner">
                     <img src="{% static '/'%}{{congreso.imagen_seg}}" alt="" />
                     <div class="scheduletabs">

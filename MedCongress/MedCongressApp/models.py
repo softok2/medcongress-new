@@ -275,7 +275,7 @@ class Congreso(models.Model):
     cant_preguntas=models.IntegerField(null=True)
     score=models.IntegerField(null=True)
     streaming=models.TextField(null=True,blank=True)
-   
+    vid_publicidad=models.TextField(null=True,blank=True)
     detalles_tipo_boleto=models.TextField(null=True,blank=True)
     detalles_tipo_boleto_taller=models.TextField(null=True,blank=True)
     ver_titulo=models.BooleanField(default=True)
