@@ -468,7 +468,7 @@ class UserForm(forms.ModelForm):
         email = cleaned_data.get('email', None)
         username= cleaned_data.get('username',None)
         if User.objects.filter(email=email).exclude(username=username).count():
-            self.add_error('email', 'Ese Correo ya existe! ')
+            self.add_error('email', '¡Ese Correo ya existe! ')
         nombre = cleaned_data.get('first_name', None)
         apellido = cleaned_data.get('last_name', None)                                                      
         if not re.match(r"^[A-Za-zñÑáéíóúÁÉÍÓÚ. ]+$",nombre):
