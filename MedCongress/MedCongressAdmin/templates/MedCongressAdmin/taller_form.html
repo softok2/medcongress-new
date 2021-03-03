@@ -193,14 +193,20 @@
 
 													<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva
 															Imagen</b> </label>
-															
+															<br> 
+															<span style="font-size: 12px; color: red;">(<b>*</b> Debe ser de <b>1920 X 1080</b> pixel) </span>
+														
+																	
 													<input type="file" name="taller-imagen" accept="image/*"
 														class=" form-control " id="id_taller-imagen">
 													{% else%}
 
 													<label
 														for="{{form.taller.imagen.id_for_label }}"><b>{{form.taller.imagen.label }}</b></label>
-
+														<br> 
+														<span style="font-size: 12px; color: red;">(<b>*</b> Debe ser de <b>1920 X 1080</b> pixel) </span>
+													
+																
 													{{form.taller.imagen }}
 													{%endif%}
 												</div>
@@ -490,6 +496,7 @@
 													</section>
 												</div>
 												<div class="modal-footer">
+												
 													<button type="button" class="btn btn-default"
 														data-dismiss="modal">Aplicar</button>
 
@@ -505,10 +512,14 @@
 										
 
 										<div class="form-actions">
-
-											<button id="save" type="submit" class="btn btn-primary" style="float: right;">Guardar
+											<div class="text-right">
+											<button id="atras" type="button" class="btn btn-danger ">Cancelar
+												<i class="ft-x position-right"></i>
+											</button>
+											<button id="save" type="submit" class="btn btn-primary">Guardar
 												<i class="ft-save position-right"></i>
 											</button>
+											</div>
 
 										</div>
 									</div>
@@ -608,7 +619,17 @@
 
 		});
 
+		$('#atras').click(function () {
 
+{%if con %} 
+	location.href = "{% url 'MedCongressAdmin:talleres_list' %}?congreso={{con.path}}";
+{%elif congreso_bloque%}
+	location.href = "{% url 'MedCongressAdmin:talleres_list' %}?bloque={{bloque.path}}&congreso_bloque=true";
+{%else%}
+	location.href ="{% url 'MedCongressAdmin:talleres_list' %}?bloque={{bloque.path}}";
+{% endif %}
+
+});
 
 		{%if con %}
 		$("#id_taller-congreso option[value='{{con.id}}']").attr("selected", true);

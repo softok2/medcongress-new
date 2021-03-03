@@ -140,19 +140,19 @@
     });
     function deleteItem(pk) {
         swal({
-            title: "Estas seguro?",
-            text: "No será capaz de recuperar este elemento!",
+            title: "¿Estás seguro?",
+            text: "¡No será capaz de recuperar este elemento!",
             icon: "warning",
             buttons: {
                 cancel: {
-                    text: "No, cancelar!",
+                    text: "¡No, cancelar!",
                     value: null,
                     visible: true,
                     className: "",
                     closeModal: false,
                 },
                 confirm: {
-                    text: "Sí, eliminarlo!",
+                    text: "¡Sí, eliminarlo!",
                     value: true,
                     visible: true,
                     className: "",
@@ -165,7 +165,7 @@
                     url = "{% url 'MedCongressAdmin:preg_frecuente_delete' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                         dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
-                        swal("Eliminado!", "Este elemento ha sido eliminado.", "success");
+                        swal("¡Eliminado!", "Este elemento ha sido eliminado.", "success");
                     document.location.reload()
                     });
                 } else {

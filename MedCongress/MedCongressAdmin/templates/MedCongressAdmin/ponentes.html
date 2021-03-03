@@ -85,7 +85,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for ponente in ponentes %}
+                                            <!-- {% for ponente in ponentes %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
                                                 <td class="sorting_1">{{ ponente.user.usuario.first_name }} {{ ponente.user.usuario.last_name}}</td>
                                                 
@@ -101,7 +101,7 @@
                                                     
                                                 </td>
                                             </tr>
-                                            {% endfor %}
+                                            {% endfor %} -->
                                         </tbody>
                                         <tfoot>
                                             <tr style="font-size: 13px;">
@@ -154,7 +154,16 @@
             "previous": "Anterior"
         }
     },
- 
+    "columns": [
+       
+       {'data':'nombre','orderable': true},
+       {'data':'email','orderable': true},
+       {'data':'operaciones','orderable': false }
+      
+   ],
+   "bServerSide": true,
+   "sAjaxSource":"{% url 'MedCongressAdmin:table_json_ponentes' %}",
+   
 });
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({
@@ -164,29 +173,34 @@
         });
 
         $('#select-btn').click(function () {
-            location.href = "{% url 'MedCongressAdmin:ponente_add' %}";
+            search=$('.dataTables_filter input').val();
+            location.href = "{% url 'MedCongressAdmin:ponente_add' %}?search="+search;
         });
         
         $('#add-btn').click(function () {
-            location.href = "{% url 'MedCongressAdmin:user_ponente_add' %}";
+            search=$('.dataTables_filter input').val();
+            location.href = "{% url 'MedCongressAdmin:user_ponente_add' %}?search="+search;
         });
         dataTable = $('.zero-configuration').DataTable();
+        {%if search%}
+        dataTable.search('{{search}}').draw();
+        {%endif%}
     });
     function deleteItem(pk) {
         swal({
-            title: "Estas seguro?",
-            text: "No será capaz de recuperar este elemento!",
+            title: "¿Estás seguro?",
+            text: "¡No será capaz de recuperar este elemento!",
             icon: "warning",
             buttons: {
                 cancel: {
-                    text: "No, cancelar!",
+                    text: "¡No, cancelar!",
                     value: null,
                     visible: true,
                     className: "",
                     closeModal: false,
                 },
                 confirm: {
-                    text: "Sí, eliminarlo!",
+                    text: "¡Sí, eliminarlo!",
                     value: true,
                     visible: true,
                     className: "",
@@ -201,10 +215,10 @@
                         if (data.success){
                           dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
 
-                        swal("Eliminado!", "Este elemento ha sido eliminado.", "success");  
+                        swal("¡Eliminado!", "Este elemento ha sido eliminado.", "success");  
                         }
                         else{
-                            swal("Este Ponente no se puede eliminar!", "Está Asociado a una Ponencia.", "error"); 
+                            swal("¡Este Ponente no se puede eliminar!", "Está Asociado a una Ponencia.", "error"); 
                         }
                     });
                 } else {

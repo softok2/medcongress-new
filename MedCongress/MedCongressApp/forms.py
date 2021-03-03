@@ -1,10 +1,12 @@
 from django import forms
-from .models import Pais,PerfilUsuario,Ubicacion,CategoriaUsuario,Genero
+from .models import Pais,PerfilUsuario,Ubicacion,CategoriaUsuario,Genero,Session
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
-from django.contrib.auth.forms import PasswordResetForm,SetPasswordForm
+from django.contrib.auth.forms import PasswordResetForm,SetPasswordForm,AuthenticationForm
 from django.utils.html import strip_tags
 from django.core import mail
+from django.contrib.auth import authenticate
+import re
 
 class EmailValidationOnForgotPassword(PasswordResetForm):
 
@@ -68,8 +70,14 @@ class UserForm(forms.ModelForm):
         email = cleaned_data.get('email', None)
         username= cleaned_data.get('username',None)
         if User.objects.filter(email=email).exclude(username=username).count():
-            self.add_error('email', 'Ese Email ya existe! ')                                                    
-            
+            self.add_error('email', 'Ya existe un usuario con ese Correo ') 
+        nombre = cleaned_data.get('first_name', None)
+        apellido = cleaned_data.get('last_name', None)
+
+        if not re.match(r"^[A-Za-zñÑáéíóúÁÉÍÓÚ. ]+$",nombre):
+           self.add_error('first_name', 'El Campo <b> Nombre</b> solo admite letras ')
+        if not re.match(r"^[A-Za-zñÑáéíóúÁÉÍÓÚ. ]+$",apellido):
+           self.add_error('first_name', 'El Campo <b> Apellidos</b> solo admite letras ')  
        
 class UserFormEdit(forms.ModelForm):
     first_name=forms.CharField(
@@ -99,8 +107,13 @@ class UserFormEdit(forms.ModelForm):
         email = cleaned_data.get('email', None)
         username= cleaned_data.get('username',None)
         if User.objects.filter(email=email).exclude(username=username).count():
-            self.add_error('email', 'Ese Email ya existe! ')                                                    
-            
+            self.add_error('email', 'Ya existe un usuario con ese Correo ')  
+        nombre = cleaned_data.get('first_name', None)
+        apellido = cleaned_data.get('last_name', None)                                                      
+        if not re.match(r"^[A-Za-zñÑáéíóúÁÉÍÓÚ. ]+$",nombre):
+            self.add_error('first_name', 'El Campo <b> Nombre</b> solo admite letras ')
+        if not re.match(r"^[A-Za-zñÑáéíóúÁÉÍÓÚ. ]+$",apellido):
+            self.add_error('first_name', 'El Campo <b> Apellidos</b> solo admite letras ')  
        
 class PerfilUserForm(forms.ModelForm):
     cel_profecional=forms.CharField(
@@ -202,3 +215,33 @@ class CambiarPassForm(forms.ModelForm):
         password1 = cleaned_data.get('password1', None)
         if password!=password1 :
             self.add_error('password1', 'No coinciden los password ')
+
+class ExtAuthenticationForm(AuthenticationForm):
+    
+    def clean(self):
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+        try:
+            if username and password:
+                usuario=User.objects.get(email=username)
+                if usuario.check_password(password):
+                    # if Session.objects.filter(usuario=usuario).exists():
+                    #     self.add_error('username', 'Este <b>Usuario</b> ya esta autentificado en otro dispositivo')
+                    #     return self.cleaned_data
+                    self.user_cache = authenticate(username=username,
+                                           password=password,request=self.request)
+                    if self.user_cache is None:
+                        self.add_error('username', 'Ese <b>Usuario</b> no Existe')
+                        return self.cleaned_data
+
+                    else:
+                        self.confirm_login_allowed(self.user_cache)
+                else:
+                    self.add_error('username', 'Entró mal la <b>Contraseña </b>de este Usuario')
+                    return self.cleaned_data  
+            else:
+                self.add_error('username', 'Estos campos son obligatorios')
+                return self.cleaned_data 
+        except User.DoesNotExist:
+            self.add_error('username', 'Ese <b>Usuario</b> no Existe')
+            return self.cleaned_data   

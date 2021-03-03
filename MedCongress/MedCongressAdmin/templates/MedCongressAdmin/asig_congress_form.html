@@ -10,8 +10,11 @@
 	<div class="row breadcrumbs-top">
 	  <div class="breadcrumb-wrapper col-12">
 		<ol class="breadcrumb">
+			{%if ponente%}
+			<li class="breadcrumb-item active"><a href="{% url 'MedCongressAdmin:usuarios_list' %}">Usuarios </a>
+			{%else%}
 			<li class="breadcrumb-item active"><a href="{% url 'MedCongressAdmin:asig_congress_list' %}">Usuarios que han pagado Congreso</a>
-
+{%endif%}
 <li class="breadcrumb-item active"> Asignar Congreso
 </li>
 
@@ -116,7 +119,9 @@
 									</div>
 										<div class="form-actions">
 											<div class="text-right">
-												
+												<button id="atras" type="button" class="btn btn-danger ">Cancelar
+													<i class="ft-x position-right"></i>
+												</button>
 												<button id="save" type="submit" class="btn btn-primary">Guardar
 													<i class="ft-save position-right"></i>
 												</button>
@@ -140,6 +145,14 @@
 <script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-select2.js'%}"></script>
 <script type="text/javascript">
 $(function() {
+	$('#atras').click(function () {
+		{%if ponente%}
+		location.href = "{% url 'MedCongressAdmin:usuarios_list' %}?search={{search}}";
+		{%else%}
+		location.href = "{% url 'MedCongressAdmin:asig_congress_list' %}?search={{search}}";
+		{%endif%}
+	});
+	
 	  $("#id_my_user").autocomplete({
 		source: "{% url 'User_autocomp'%}",
 		minLength: 3,

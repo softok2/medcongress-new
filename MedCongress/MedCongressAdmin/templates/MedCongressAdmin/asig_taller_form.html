@@ -116,7 +116,9 @@
 									</div>
 										<div class="form-actions">
 											<div class="text-right">
-												
+												<button id="atras" type="button" class="btn btn-danger ">Cancelar
+													<i class="ft-x position-right"></i>
+												</button>
 												<button id="save" type="submit" class="btn btn-primary">Guardar
 													<i class="ft-save position-right"></i>
 												</button>
@@ -140,6 +142,10 @@
 <script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-select2.js'%}"></script>
 <script type="text/javascript">
 	$(document).ready(function () {
+
+		$('#atras').click(function () {
+		location.href = "{% url 'MedCongressAdmin:asig_talleres_list' %}?search={{search}}";
+	});
 		$("#id_my_user").autocomplete({
 			source: "{% url 'User_autocomp'%}",
 			minLength: 3,

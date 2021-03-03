@@ -162,19 +162,19 @@
     });
     function deleteItem(pk) {
         swal({
-            title: "Estas seguro?",
-            text: "No será capaz de recuperar este elemento!",
+            title: "¿Estás seguro?",
+            text: "¡No será capaz de recuperar este elemento!",
             icon: "warning",
             buttons: {
                 cancel: {
-                    text: "No, cancelar!",
+                    text: "¡No, cancelar!",
                     value: null,
                     visible: true,
                     className: "",
                     closeModal: false,
                 },
                 confirm: {
-                    text: "Sí, eliminarlo!",
+                    text: "¡Sí, eliminarlo!",
                     value: true,
                     visible: true,
                     className: "",
@@ -189,10 +189,10 @@
                         if (data.success){
                           dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
 
-                        swal("Eliminado!", "Este elemento ha sido eliminado.", "success");  
+                        swal("¡Eliminado!", "Este elemento ha sido eliminado.", "success");  
                         }
                         else{
-                            swal("Este Elemento no se puede eliminar!", "Está Asociado a un Evento.", "error"); 
+                            swal("¡Este Elemento no se puede eliminar!", "Está Asociado a un Evento.", "error"); 
                         }
                     });
                 } else {

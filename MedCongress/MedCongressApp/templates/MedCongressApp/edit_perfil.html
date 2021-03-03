@@ -51,7 +51,27 @@ Registrarse
 
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-
+                    {% if form.errors %}
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                        
+                            <div class="alert alert-danger alert-dismissible mb-2" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                                {{ error|safe|escape }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger alert-dismissible mb-2" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        {{ error|safe|escape }}
+                    </div>
+                    {% endfor %}
+                {% endif %}
                     <form class="contactusform" action="" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="tab-content">
@@ -85,9 +105,7 @@ Registrarse
 
                                             <label for=" " style="margin-top: 20px;"> <b>Insertar Nueva Imagen</b>
                                             </label>
-                                            {% if form.perfiluser.foto.errors %}
-                                            <span style="font-size: 15px; color: red;">{{ form.perfiluser.foto.errors }}
-                                            </span>{% endif %}
+                                           
                                             <input type="file" name="perfiluser-foto" accept="image/*"
                                                 class=" form-control " id="id_perfiluser-foto">
 
@@ -102,10 +120,7 @@ Registrarse
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label
-                                                        for="{{form.user.first_name.id_for_label }}"><b>{{form.user.first_name.label }}</b>{% if form.user.first_name.errors %}
-                                                        <span
-                                                            style="font-size: 15px; color: red;">{{ form.user.first_name.errors }}
-                                                        </span>{% endif %} </label>
+                                                        for="{{form.user.first_name.id_for_label }}"><b>{{form.user.first_name.label }}</b> </label>
 
                                                     {{form.user.first_name }} {{form.user.first_name.help_text }}
                                                 </div>
@@ -113,10 +128,7 @@ Registrarse
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label
-                                                        for="{{form.user.last_name.id_for_label }}"><b>{{form.user.last_name.label }}</b>{% if form.user.last_name.errors %}
-                                                        <span
-                                                            style="font-size: 15px; color: red;">{{ form.user.last_name.errors }}
-                                                        </span>{% endif %} </label>
+                                                        for="{{form.user.last_name.id_for_label }}"><b>{{form.user.last_name.label }}</b> </label>
 
                                                     {{form.user.last_name }}
                                                 </div>
@@ -126,10 +138,7 @@ Registrarse
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label
-                                                        for="{{form.user.email.id_for_label }}"><b>{{form.user.email.label }}</b>{% if form.user.email.errors %}
-                                                        <span
-                                                            style="font-size: 15px; color: red;">{{ form.user.email.errors }}
-                                                        </span>{% endif %} </label>
+                                                        for="{{form.user.email.id_for_label }}"><b>{{form.user.email.label }}</b> </label>
 
                                                     {{form.user.email }}
                                                 </div>
@@ -139,9 +148,7 @@ Registrarse
                                             <div class="col-sm-3 " style="display: none;">
                                                 <div class="form-group">
                                                     <label for="{{form.user.username.id_for_label }}"><b>{{form.user.username.label }}
-                                                        </b> {% if form.user.username.errors %} <span
-                                                            style="font-size: 15px; color: red;">{{ form.user.username.errors }}
-                                                        </span>{% endif %} </label>
+                                                        </b> </label>
 
                                                     {{form.user.username }}
                                                 </div>
@@ -150,9 +157,7 @@ Registrarse
                                                 <div class="form-group">
                                                     <label
                                                         for="{{form.ubicacion.direccion.id_for_label }}"><b>{{form.ubicacion.direccion.label }}</b>
-                                                        {% if form.ubicacion.direccion.errors %} <span
-                                                            style="font-size: 15px; color: red;">{{ form.ubicacion.direccion.errors }}
-                                                        </span>{% endif %} </label>
+                                                        </label>
 
                                                     {{form.ubicacion.direccion }}
                                                 </div>
@@ -177,10 +182,7 @@ Registrarse
                                             <div class="col-sm-3 ">
                                                 <div class="form-group">
                                                     <label
-                                                        for="{{form.perfiluser.num_telefono.id_for_label }}"><b>{{form.perfiluser.num_telefono.label }}</b>{% if form.perfiluser.num_telefono.errors %}
-                                                        <span
-                                                            style="font-size: 15px; color: red;">{{ form.perfiluser.num_telefono.errors }}
-                                                        </span>{% endif %}</label>
+                                                        for="{{form.perfiluser.num_telefono.id_for_label }}"><b>{{form.perfiluser.num_telefono.label }}</b></label>
 
                                                     {{form.perfiluser.num_telefono }}
                                                 </div>
@@ -188,10 +190,7 @@ Registrarse
                                             <div class="col-sm-3 ">
                                                 <div class="form-group">
                                                     <label
-                                                        for="{{form.perfiluser.fecha_nacimiento.id_for_label }}"><b>{{form.perfiluser.fecha_nacimiento.label }}</b>{% if form.perfiluser.cel_profecional.errors %}
-                                                        <span
-                                                            style="font-size: 15px; color: red;">{{ form.perfiluser.fecha_nacimiento.errors }}
-                                                        </span>{% endif %}</label>
+                                                        for="{{form.perfiluser.fecha_nacimiento.id_for_label }}"><b>{{form.perfiluser.fecha_nacimiento.label }}</b></label>
 
                                                         <input type="date" name="perfiluser-fecha_nacimiento" class="form-control" id="id_perfiluser-fecha_nacimiento">
                                                 </div>
@@ -203,10 +202,7 @@ Registrarse
                                             <div class="col-sm-3 ">
                                                 <div class="form-group">
                                                     <label
-                                                        for="{{form.perfiluser.genero.id_for_label }}"><b>{{form.perfiluser.genero.label }}</b>{% if form.perfiluser.genero.errors %}
-                                                        <span
-                                                            style="font-size: 15px; color: red;">{{ form.perfiluser.genero.errors }}
-                                                        </span>{% endif %}</label>
+                                                        for="{{form.perfiluser.genero.id_for_label }}"><b>{{form.perfiluser.genero.label }}</b></label>
                                                     {{form.perfiluser.genero }}
                                                 </div>
                                             </div>
@@ -218,10 +214,7 @@ Registrarse
                                             <div class="col-sm-3 ">
                                                 <div class="form-group">
                                                     <label
-                                                        for="{{form.perfiluser.categoria.id_for_label }}"><b>{{form.perfiluser.categoria.label }}</b>{% if form.perfiluser.categoria.errors %}
-                                                        <span
-                                                            style="font-size: 15px; color: red;">{{ form.perfiluser.categoria.errors }}
-                                                        </span>{% endif %}</label>
+                                                        for="{{form.perfiluser.categoria.id_for_label }}"><b>{{form.perfiluser.categoria.label }}</b></label>
 
                                                     {{form.perfiluser.categoria }}
                                                 </div>
@@ -229,10 +222,7 @@ Registrarse
                                             <div class="col-sm-3 " id="new_cat">
                                                 <div class="form-group">
                                                     <label
-                                                        for="{{form.categoria.nombre.id_for_label }}"><b>{{form.categoria.nombre.label }}</b>{% if form.categoria.nombre.errors %}
-                                                        <span
-                                                            style="font-size: 15px; color: red;">{{ form.categoria.nombre.errors }}
-                                                        </span>{% endif %}</label>
+                                                        for="{{form.categoria.nombre.id_for_label }}"><b>{{form.categoria.nombre.label }}</b></label>
                                                     {{form.categoria.nombre}}
                                                 </div>
                                             </div>
@@ -240,20 +230,14 @@ Registrarse
                                             <div class="col-sm-3 " id="esp_div">
                                                 <div class="form-group">
                                                     <label
-                                                        for="{{form.perfiluser.especialidad.id_for_label }}"><b>{{form.perfiluser.especialidad.label }}</b>{% if form.perfiluser.especialidad.errors %}
-                                                        <span
-                                                            style="font-size: 15px; color: red;">{{ form.perfiluser.especialidad.errors }}
-                                                        </span>{% endif %}</label>
+                                                        for="{{form.perfiluser.especialidad.id_for_label }}"><b>{{form.perfiluser.especialidad.label }}</b></label>
                                                     {{form.perfiluser.especialidad }}
                                                 </div>
                                             </div>
                                             <div class="col-sm-3 " id="cel_prof">
                                                 <div class="form-group">
                                                     <label
-                                                        for="{{form.perfiluser.cel_profecional.id_for_label }}"><b>{{form.perfiluser.cel_profecional.label }}</b>{% if form.perfiluser.cel_profecional.errors %}
-                                                        <span
-                                                            style="font-size: 15px; color: red;">{{ form.perfiluser.cel_profecional.errors }}
-                                                        </span>{% endif %}</label>
+                                                        for="{{form.perfiluser.cel_profecional.id_for_label }}"><b>{{form.perfiluser.cel_profecional.label }}</b></label>
 
                                                     {{form.perfiluser.cel_profecional }}
                                                 </div>
@@ -274,10 +258,7 @@ Registrarse
                                             <div class="col-sm-3 ">
                                                 <div class="form-group" style="display: none;">
                                                     <label
-                                                        for="{{form.ubicacion.longitud.id_for_label }}"><b>{{form.ubicacion.longitud.label }}</b>{% if form.ubicacion.longitud.errors %}
-                                                        <span
-                                                            style="font-size: 15px; color: red;">{{ form.ubicacion.longitud.errors }}
-                                                        </span>{% endif %}</label>
+                                                        for="{{form.ubicacion.longitud.id_for_label }}"><b>{{form.ubicacion.longitud.label }}</b></label>
 
                                                     {{form.ubicacion.longitud }}
                                                 </div>
@@ -285,10 +266,7 @@ Registrarse
                                             <div class="col-sm-3 " style="display: none;">
                                                 <div class="form-group">
                                                     <label
-                                                        for="{{form.ubicacion.latitud.id_for_label }}"><b>{{form.ubicacion.latitud.label }}</b>{% if form.ubicacion.latitud.errors %}
-                                                        <span
-                                                            style="font-size: 15px; color: red;">{{ form.ubicacion.latitud.errors }}
-                                                        </span>{% endif %} </label>
+                                                        for="{{form.ubicacion.latitud.id_for_label }}"><b>{{form.ubicacion.latitud.label }}</b> </label>
 
                                                     {{form.ubicacion.latitud }}
                                                 </div>
@@ -308,10 +286,7 @@ Registrarse
                                     <div class="col-sm-8">
                                         <div class="form-group">
                                             <label for="{{form.perfiluser.puesto.id_for_label }}"><b>Puesto
-                                                    Actual</b>{% if form.perfiluser.puesto.errors %}
-                                                <span
-                                                    style="font-size: 15px; color: red;">{{ form.perfiluser.puesto.errors }}
-                                                </span>{% endif %}</label>
+                                                    Actual</b></label>
 
                                             {{form.perfiluser.puesto }}
                                         </div>
@@ -321,10 +296,7 @@ Registrarse
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label for="{{form.perfiluser.detalle.id_for_label }}"><b>Logros
-                                                    Académicos</b>{% if form.perfiluser.detalle.errors %}
-                                                <span
-                                                    style="font-size: 15px; color: red;">{{ form.perfiluser.detalle.errors }}
-                                                </span>{% endif %}</label>
+                                                    Académicos</b></label>
 
                                             {{form.perfiluser.detalle }}
                                         </div>
@@ -334,10 +306,7 @@ Registrarse
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label
-                                                for="{{form.perfiluser.publicaciones.id_for_label }}"><b>Publicaciones</b>{% if form.perfiluser.publicaciones.errors %}
-                                                <span
-                                                    style="font-size: 15px; color: red;">{{ form.perfiluser.publicaciones.errors }}
-                                                </span>{% endif %}</label>
+                                                for="{{form.perfiluser.publicaciones.id_for_label }}"><b>Publicaciones</b></label>
 
                                             {{form.perfiluser.publicaciones }}
                                         </div>
@@ -348,10 +317,7 @@ Registrarse
                                         <div class="form-group">
                                             <label for="{{form.perfiluser.datos_interes.id_for_label }}"><b>Otros Datos
                                                     de
-                                                    Interes</b>{% if form.perfiluser.datos_interes.errors %}
-                                                <span
-                                                    style="font-size: 15px; color: red;">{{ form.perfiluser.datos_interes.errors }}
-                                                </span>{% endif %}</label>
+                                                    Interes</b></label>
 
                                             {{form.perfiluser.datos_interes }}
                                         </div>

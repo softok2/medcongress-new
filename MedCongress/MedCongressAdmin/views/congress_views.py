@@ -40,6 +40,7 @@ from openpyxl.styles import (Alignment, Border, Font, PatternFill, Protection,
                              Side, NamedStyle)
 from MedCongressAdmin.apps import validarUser
 from MedCongressAdmin.task import Constancia
+from django.db.models import Q
 
 
 # class ReporteRelCongresoUserExcel(TemplateView):
@@ -203,35 +204,35 @@ class CongressPonenciasListView(validarUser,TemplateView):
 
 ########## Vista del cuestionario de un Congreso #############
 
-class CongressCuestionarioListView(validarUser,TemplateView):
-    template_name= 'MedCongressAdmin/cuestionarios.html' 
-    def get(self, request, **kwargs):
-        congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
-        if congreso is None:
-            return   HttpResponseRedirect(reverse('Error404'))
-        return self.render_to_response(self.get_context_data()) 
+# class CongressCuestionarioListView(validarUser,TemplateView):
+#     template_name= 'MedCongressAdmin/cuestionarios.html' 
+#     def get(self, request, **kwargs):
+#         congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+#         if congreso is None:
+#             return   HttpResponseRedirect(reverse('Error404'))
+#         return self.render_to_response(self.get_context_data()) 
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
-        preguntas_env=[]
-        preguntas=CuestionarioPregunta.objects.filter(congreso=congreso)
-        for pregunta in preguntas:
-            respuesta_list=[]
-            respuestas=CuestionarioRespuestas.objects.filter(pregunta=pregunta)
-            for respuesta in respuestas:
-                respuesta_list.append({'texto':respuesta.respuesta,
-                                        'is_correcta':respuesta.is_correcto,
-                                        'publicada':respuesta.published,
-                                        })
-            preguntas_env.append({'texto':pregunta.pregunta,
-                                    'publicada':pregunta.published,
-                                    'id':pregunta.pk,
-                                    'respuestas':respuesta_list,})
-        context['preguntas']=preguntas_env
-        context['congreso']=congreso
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+#         preguntas_env=[]
+#         preguntas=CuestionarioPregunta.objects.filter(congreso=congreso)
+#         for pregunta in preguntas:
+#             respuesta_list=[]
+#             respuestas=CuestionarioRespuestas.objects.filter(pregunta=pregunta)
+#             for respuesta in respuestas:
+#                 respuesta_list.append({'texto':respuesta.respuesta,
+#                                         'is_correcta':respuesta.is_correcto,
+#                                         'publicada':respuesta.published,
+#                                         })
+#             preguntas_env.append({'texto':pregunta.pregunta,
+#                                     'publicada':pregunta.published,
+#                                     'id':pregunta.pk,
+#                                     'respuestas':respuesta_list,})
+#         context['preguntas']=preguntas_env
+#         context['congreso']=congreso
        
-        return context
+#         return context
     
 ########## Vista de las Categorias de Pago de un Congreso #############
 
@@ -527,6 +528,7 @@ class AsignarCongressListView(validarUser,ListView,FormView):
 
     def get_context_data(self, **kwargs):
         context = super(AsignarCongressListView, self).get_context_data(**kwargs)
+        context['search']=self.request.GET.get('search')
         if self.request.GET.get('exportar'):
             congreso_evn=[]
             congresos= Congreso.objects.all()
@@ -558,12 +560,23 @@ class AsignarCongressAddViews(validarUser,FormView):
 
     def get_context_data(self, **kwargs):
         ctx = super(AsignarCongressAddViews, self).get_context_data(**kwargs)
+        ctx['search']=self.request.GET.get('search')
+
+        if self.request.GET.get('ponente'):
+             ctx['ponente']=self.request.GET.get('ponente')
         if self.kwargs.get('pk'):
             usuario=PerfilUsuario.objects.get(pk=self.kwargs.get('pk'))
             ctx['usuario'] = usuario
-
-       
-        return ctx    
+        return ctx 
+    def get_success_url(self):
+        if self.request.GET.get('ponente'):
+            url=reverse_lazy('MedCongressAdmin:usuarios_list') 
+        else:
+            url=reverse_lazy('MedCongressAdmin:asig_congress_list')
+        self.success_url='%s?search=%s'%(url,self.request.GET.get('search'))
+        
+        return self.success_url          
+          
 
 class AsignarCongressDeletedViews(validarUser,DeleteView):
     model = RelCongresoUser
@@ -1246,9 +1259,14 @@ class CongressCategPagosDeletedView(validarUser,DeleteView):
 class AsignarConstancias(validarUser,TemplateView):
     template_name = 'MedCongressAdmin/asig_constancia.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(AsignarConstancias, self).get_context_data(**kwargs)
+        congreso=Congreso.objects.all()
+        context['congresos']=congreso
+        return context 
     def post(self, request, **kwargs):
         titulo= self.request.POST['my_congress']
-        congreso=Congreso.objects.filter(titulo=self.request.POST['my_congress']).first()
+        congreso=Congreso.objects.get(pk=self.request.POST['my_congress'])
         if congreso.foto_constancia:
             if congreso:                                        
                 prueba=Constancia.apply_async(args=[titulo])
@@ -1258,7 +1276,7 @@ class AsignarConstancias(validarUser,TemplateView):
                 messages.warning(self.request,'Ese Congreso no existe')
                 return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list'))  
         else:
-                messages.warning(self.request,'Error.....Ese Congreso tiene asignada ninguna foto para la constancia')
+                messages.warning(self.request,'Error.....Ese Congreso no tiene asignada ninguna foto para su constancia')
                 return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list')) 
 
 ########## Vista de las Programas de un Congreso #############
@@ -1327,3 +1345,72 @@ class CongressProgramaUpdateView(validarUser,UpdateView):
 class CongressProgramaDeletedView(validarUser,DeleteView):
     model = DocumentoPrograma
     success_url = reverse_lazy('MedCongressAdmin:cat_usuarios_list')
+
+
+class vTableAsJSONAsigCongreso(TemplateView):
+    template_name = 'MedCongressAdmin/asig_congress_form.html'
+    
+    def get(self, request, *args, **kwargs):
+        #arreglo con las columnas de la BD a filtrar
+        col_name_map = ['user__usuario__first_name','user__usuario__email','congreso__titulo','cantidad','categoria_pago__nombre','is_pagado']
+           
+        #listado que muestra en dependencia de donde estes parado
+        object_list = RelCongresoUser.objects.all()
+        
+        #parametros 
+        search_text = request.GET.get('sSearch', '').lower()# texto a buscar
+        start = int(request.GET.get('iDisplayStart', 0))#por donde empezar a mostrar
+        delta = int(request.GET.get('iDisplayLength', 10))#cantidad a mostrar
+        sort_dir = request.GET.get('sSortDir_0', 'asc')# direccion a ordenar
+        sort_col = int(request.GET.get('iSortCol_0', 0)) # numero de la columna a ordenar
+        sort_col_name = request.GET.get('mDataProp_%s' % sort_col, '1')
+        sort_dir_prefix = (sort_dir == 'desc' and '-' or '') #sufijo para poner en la consulta para ordenar
+
+        #para ordenar el listado
+        
+        sort_colr = col_name_map[sort_col]
+        object_list = object_list.order_by('%s%s' % (sort_dir_prefix,sort_colr))
+
+        #para filtrar el listado
+        filtered_object_list = object_list
+        if len(search_text) > 0:
+            filtered_object_list = object_list.filter(Q(user__usuario__last_name__icontains=search_text) | Q(user__usuario__email__icontains=search_text)|Q(user__usuario__first_name__icontains=search_text)|Q(congreso__titulo__icontains=search_text)|Q(cantidad__icontains=search_text)|Q(categoria_pago__nombre__icontains=search_text))
+
+        #Guardar datos en un 
+        enviar =[]
+       
+            # if objet.ponente:
+            #     user= '%s %s'%(objet.ponente.first().user.usuario.first_name,objet.ponente.first().user.usuario.last_name)
+           
+           #Guardar datos en un dic 
+        for objet in filtered_object_list[start:(start+delta)]:
+            pagado='No'
+            if objet.is_pagado:
+                pagado='Si'
+                
+            enviar.append({ 'usuario':'%s %s'%(objet.user.usuario.first_name,objet.user.usuario.last_name),
+                            'email': objet.user.usuario.email,
+                            'congreso' : objet.congreso.titulo,
+                            'cantidad' : objet.cantidad,
+                            'cat_pago':objet.categoria_pago.nombre,
+                            'pagado':pagado,
+                            'operaciones' : 
+                                                    '''<a id="del_'''+ str(objet.pk)+'''"
+                                                        href="javascript:deleteItem('''+ str(objet.pk)+''')"
+                                                        title="Eliminar">
+                                                        <i class="icon icon-eliminar"></i>
+                                                    </a>''',
+                            
+            })
+        #parametros para la respuesta
+        jsoner = {
+            
+            "iTotalRecords": filtered_object_list.count(),
+            "iTotalDisplayRecords": filtered_object_list.count(),
+            "sEcho": request.GET.get('sEcho', 1),
+            "data": enviar
+        }
+        data = json.dumps(jsoner)
+        mimetype = "application/json"
+        #Enviar
+        return HttpResponse(data, mimetype)    

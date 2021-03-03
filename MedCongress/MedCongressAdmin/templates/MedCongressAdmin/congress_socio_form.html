@@ -91,7 +91,14 @@
 										</fieldset>
 										<div class="form-actions">
 											<div class="text-right">
-												
+												<a id="atras" type="button" class="btn btn-danger "
+										{%if congreso%}
+										href="{%url 'MedCongressAdmin:Congres_socios' path=congreso.path%}">Cancelar
+										{%else%}
+											href="{%url 'MedCongressAdmin:socios_list'%}">Cancelar
+											{%endif%}
+											<i class="ft-x position-right"></i>
+										</a>
 												<button id="save" type="submit" class="btn btn-primary">Guardar
 													<i class="ft-save position-right"></i>
 												</button>

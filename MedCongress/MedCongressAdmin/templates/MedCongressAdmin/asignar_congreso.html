@@ -174,10 +174,10 @@
                                             <th>Cant.</th>
                                             <th>Categoría de Pago</th>
                                             <th>Pagado</th>
-                                            <th style="width:5%">Operaciones</th>
+                                            <th >Elim.</th>
                                         </thead>
                                         <tbody>
-                                            {% for congres in congress %}
+                                            <!-- {% for congres in congress %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
                                                 <td class="sorting_1" style="vertical-align: middle;">{{ congres.user.usuario.first_name }}
                                                     {{ congres.user.usuario.last_name}}</td>
@@ -201,7 +201,7 @@
 
                                                 </td>
                                             </tr>
-                                            {% endfor %}
+                                            {% endfor %} -->
                                         </tbody>
                                         <tfoot>
                                             <th style="width:50%">Usuario</th>
@@ -210,7 +210,7 @@
                                             <th>Cant.</th>
                                             <th>Categoría de Pago</th>
                                             <th>Pagado</th>
-                                            <th style="width:5%">Operaciones</th>
+                                            <th >Elim.</th>
                                         </tfoot>
                                     </table>
                                 </div>
@@ -260,7 +260,19 @@
             "previous": "Anterior"
         }
     },
- 
+    "columns": [
+       
+       {'data':'usuario','orderable': true},
+       {'data':'email','orderable': true},
+       {'data':'congreso','orderable': true },
+       {'data':'cantidad','orderable': true },
+       {'data':'cat_pago','orderable': true },
+       {'data':'pagado','orderable': true },
+       {'data':'operaciones','orderable': false },
+      
+   ],
+   "bServerSide": true,
+   "sAjaxSource":"{% url 'MedCongressAdmin:table_json_asig_congreso' %}"
 });
         $('form').submit(function(event) { // o el id de tu formulario
         if($('#id_congreso').val() == '') {
@@ -279,10 +291,14 @@
         });
 
         $('#add-btn').click(function () {
-            location.href = "{% url 'MedCongressAdmin:asignar_congress_add'   %}";
+            search=$('.dataTables_filter input').val();
+            location.href = "{% url 'MedCongressAdmin:asignar_congress_add'   %}?search="+search;
         });
 
         dataTable = $('.zero-configuration').DataTable();
+        {%if search%}
+        dataTable.search('{{search}}').draw();
+        {%endif%}
     });
     function deleteItem(pk) {
         swal({

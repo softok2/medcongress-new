@@ -7,10 +7,10 @@ GetCuestionario,SetConstancia,EvaluarPonencia,Resultado_Cuestionario,Get_Constan
 ViewErrorFact,PerfilUpdateView,CambiarPass,UpdateEvaluarPonencia,UserAutocomplete,ViewErrorRegistrar,RegistroExitoso,
 PonenteAutocomplete,ModeradorAutocomplete,CongresoAutocomplete,PatrocinadorAutocomplete,SocioAutocomplete,ViewTaller,
 EvaluarTaller,UpdateEvaluarTaller,TallerAutocomplete,PonenciaAutocomplete,ViewCart,ContactoExitoso,GetFacturaPrueba,GetContactos,Enviar,
-Webhook)
+Webhook,login)
 
 urlpatterns = [
-    
+    # path('login',login,name='auth'),
     path('', Home.as_view(),name='Home'),
     path('congresos', CongresoListView.as_view(),name='List_congreso'),
     path('congreso/<str:path>', CongresoDetail.as_view(), name='View_congreso'),

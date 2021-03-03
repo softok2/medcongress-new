@@ -11,14 +11,38 @@ from django.views.generic.edit import DeleteView, FormView, UpdateView
 from MedCongressAdmin.forms.congres_forms import CuestionarioForms,PreguntaForm
 from MedCongressApp.models import CuestionarioPregunta,CuestionarioRespuestas,Congreso
 from MedCongressAdmin.apps import validarUser
-    
+from django.db.models import Q    
 
-class CuestionarioListView(validarUser,ListView):
-    model = CuestionarioPregunta
-    context_object_name = 'cuestionarios'
+class CuestionarioListView(validarUser,TemplateView):
+  
     template_name = 'MedCongressAdmin/cuestionarios.html'
+    
+    def get(self, request, **kwargs):
+        user = get_object_or_404(Congreso,path=self.kwargs.get('path'))
+        return self.render_to_response(self.get_context_data())
 
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+        preguntas_env=[]
+        preguntas=CuestionarioPregunta.objects.filter(congreso=congreso)
+        for pregunta in preguntas:
+            respuesta_list=[]
+            respuestas=CuestionarioRespuestas.objects.filter(pregunta=pregunta)
+            for respuesta in respuestas:
+                respuesta_list.append({'texto':respuesta.respuesta,
+                                        'is_correcta':respuesta.is_correcto,
+                                        'publicada':respuesta.published,
+                                        })
+            preguntas_env.append({'texto':pregunta.pregunta,
+                                    'publicada':pregunta.published,
+                                    'id':pregunta.pk,
+                                    'respuestas':respuesta_list,})
+        context['preguntas']=preguntas_env
+        context['congreso']=congreso
+        context['search']=self.request.GET.get('search')
+       
+        return context
 class PreguntaCreateView(validarUser,FormView):
     form_class = PreguntaForm
     success_url = reverse_lazy('MedCongressAdmin:ponencias_list')
@@ -35,14 +59,14 @@ class PreguntaCreateView(validarUser,FormView):
         return super(PreguntaCreateView, self).form_valid(form)
     
     def get_success_url(self):
-        if self.kwargs.get('path'):
-            congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
-            self.success_url =  reverse_lazy('MedCongressAdmin:Congres_cuestionario',kwargs={'path': congreso.path} )
+        user = get_object_or_404(Congreso,path=self.request.GET.get('congreso'))
+        url= reverse_lazy('MedCongressAdmin:Congres_cuestionario',kwargs={'path': self.request.GET.get('congreso')} )    
+        self.success_url =  '%s?search=%s'%(url,self.request.GET.get('search')) 
         return self.success_url  
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+        congreso=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
         context['congreso']=congreso
        
         return context
@@ -82,12 +106,13 @@ class CustionarioUpdateView(validarUser,FormView):
         return initial
 
     def get_success_url(self):
-        if self.kwargs.get('pk'):
-            pregunta=CuestionarioPregunta.objects.get(pk=self.kwargs.get('pk'))
-            
-            self.success_url =  reverse_lazy('MedCongressAdmin:Congres_cuestionario',kwargs={'path': pregunta.congreso.path} )
+
+        pregunta=CuestionarioPregunta.objects.get(pk=self.kwargs.get('pk'))    
+        url =  reverse_lazy('MedCongressAdmin:Congres_cuestionario',kwargs={'path': pregunta.congreso.path} )
+        self.success_url =  '%s?search=%s'%(url,self.request.GET.get('search')) 
         return self.success_url 
 
 class CustionarioDeletedView(validarUser,DeleteView):
     model = CuestionarioPregunta
     success_url = reverse_lazy('MedCongressAdmin:asig_congress_list')
+

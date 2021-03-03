@@ -14,7 +14,8 @@ from  MedCongressApp.models import (Congreso,Ubicacion,ImagenCongreso,TipoCongre
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
 from django.core.exceptions import NON_FIELD_ERRORS
-from django.forms.models import ModelMultipleChoiceField        
+from django.forms.models import ModelMultipleChoiceField   
+import re     
 class CongresForm(forms.ModelForm):
     imagen_seg=forms.ImageField(label='Buscar Imagen',required=True)
     is_openpay=forms.BooleanField(label='Pagar por OpenPay',required=False)
@@ -24,7 +25,7 @@ class CongresForm(forms.ModelForm):
     ver_titulo=forms.BooleanField(label='Ver Título',required=False)
     sub_titulo=forms.CharField(label='Título segundario',required=False) 
     t_congreso=forms.ModelChoiceField(queryset=TipoCongreso.objects.all(),label='Tipo de Congreso')
-    fecha_inicio=forms.DateTimeField(widget=forms.TextInput())
+    # fecha_inicio=forms.DateTimeField()
     score=forms.IntegerField(label='Puntuación del Congreso')
     foto_constancia=forms.ImageField(label='Buscar Imagen para la Constancia',required=False,)
 
@@ -396,7 +397,7 @@ class CongresoCategPagoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
 
-        self.fields['categoria'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['categoria'].widget.attrs.update({'class': 'form-control select2'}) 
         self.fields['congreso'].widget.attrs.update({'class': 'form-control','style':'display:none'}) 
         self.fields['precio'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['moneda'].widget.attrs.update({'class': 'form-control'}) 
@@ -468,7 +469,12 @@ class UserForm(forms.ModelForm):
         username= cleaned_data.get('username',None)
         if User.objects.filter(email=email).exclude(username=username).count():
             self.add_error('email', 'Ese Correo ya existe! ')
-
+        nombre = cleaned_data.get('first_name', None)
+        apellido = cleaned_data.get('last_name', None)                                                      
+        if not re.match(r"^[A-Za-zñÑáéíóúÁÉÍÓÚ. ]+$",nombre):
+            self.add_error('first_name', 'El Campo <b> Nombre</b> solo admite letras ')
+        if not re.match(r"^[A-Za-zñÑáéíóúÁÉÍÓÚ. ]+$",apellido):
+            self.add_error('first_name', 'El Campo <b> Apellidos</b> solo admite letras ') 
 class PerfilUserForm(forms.ModelForm):
     cel_profecional=forms.CharField(
                label = 'Cédula Profecional',
@@ -937,7 +943,7 @@ class CongresoProgramaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
 
-        self.fields['idioma'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['idioma'].widget.attrs.update({'class': 'form-control select2'}) 
         self.fields['congreso'].widget.attrs.update({'class': 'form-control','style':'display:none'}) 
         self.fields['texto'].widget.attrs.update({'class': 'form-control'}) 
         

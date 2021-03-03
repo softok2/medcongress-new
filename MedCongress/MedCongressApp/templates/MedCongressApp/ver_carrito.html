@@ -60,7 +60,9 @@ Mi Carrito de Compra
                                 
                         </tr>
                         {%else%}
-                        <li>No ha puesto ningún evento en el carrito</li>
+                        <tr >
+                            <td colspan="7" style="text-align: center;color: red;"> <b>No hay ningún evento a comprar</b> </td>
+                           </tr>
                         {%endif%}
                         
                     </tbody>
@@ -96,6 +98,30 @@ Mi Carrito de Compra
 		
 
 		function EliminarCart(id){
+            swal({
+            title: "¿Estás seguro?",
+            text: "¡Eliminará este evento de su carrito!",
+            icon: "warning",
+            buttons: {
+                cancel: {
+                    text: "¡No, cancelar!",
+                    value: null,
+                    visible: true,
+                    className: "",
+                    closeModal: false,
+                },
+                confirm: {
+                    text: "¡Sí, eliminarlo!",
+                    value: true,
+                    visible: true,
+                    className: "",
+                    closeModal: false
+                }
+            }
+        })
+            .then((isConfirm) => {
+                if (isConfirm) {
+
 			$.ajax({
             type: "GET",
             url: "{% url 'Deleted_cart'%}",
@@ -136,8 +162,12 @@ Mi Carrito de Compra
                 swal("No se pudo eliminar", "Póngase en contacto con el administrador.", "error"); 
             }
         });
-
-		}
+    } else {
+                    swal("Cancelado", "No se eliminó este elemento.", "error");
+                }
+            });
+    }
+		
 		function Mensaje(mensaje){
 			swal("Atención", mensaje, "warning"); 
 		}

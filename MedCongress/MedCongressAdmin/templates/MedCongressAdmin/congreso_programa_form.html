@@ -2,6 +2,7 @@
 {% block title %}{%if update%} Actualizar Programa{%else%} Adicionar Programa{%endif%}{% endblock %}
 {% load static %}
 {% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/select2.min.css' %}">
 {% endblock %}
 {% block content %}
 
@@ -138,6 +139,8 @@
 </section>
 {% endblock %}
 {% block scripts %}
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/forms/select/select2.full.min.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-select2.js'%}"></script>
 <script type="text/javascript">
  $('#atras').click(function () {
             location.href = "{% url 'MedCongressAdmin:Congres_programas' path=cong.path %}";

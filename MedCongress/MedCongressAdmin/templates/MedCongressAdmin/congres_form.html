@@ -9,7 +9,12 @@
 		height: 400px;
 	}
 </style>
+<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/css/core/menu/menu-types/horizontal-menu.css'%}">
+<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/css/core/colors/palette-gradient.css'%}">
+
 <link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/css/core/colors/palette-tooltip.css'%}">
+
+<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/assets/css/style.css'%}">
 {% endblock %}
 {% block content %}
 <div class=" col-md-6 col-12 " style="margin-top: -26px;">
@@ -97,6 +102,7 @@
 	</div>
     {% endfor %}
 {% endif %} 
+
 						<form id="congres-form" method="POST" action="" enctype="multipart/form-data">
 							{% csrf_token %}
 							{%if update%}
@@ -148,6 +154,7 @@
 
 													{{form.congreso.sub_titulo }}
 												</div>
+												
 											</div>
 											<div class="col-sm-4 ">
 												<div class="form-group">
@@ -188,16 +195,27 @@
 
 													</figure>
 
-													<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva
+													<label for=" " style="margin-top: 20px;"  > <b>Insertar Nueva
 															Imagen</b></label>
+															<br> 
+														<span style="font-size: 12px; color: red;">(<b>*</b> Debe ser de <b>1920 X 1080</b> pixel) </span>
 													
+																
+														
 														<input type="file" name="imagen_congreso-imagen" accept="image/*" data-toggle="tooltip" data-popup="tooltip-custom" data-original-title="La Imagen debe ser de 1920 X 1080 pixel " id="id_imagen_congreso-imagen">
 													<input type="hidden" value="true" name="imagen_congreso-update" >
 													{% else%}
-													<label for="{{form.imagen_congreso.imagen.id_for_label }}"><b>Imagen Primaria</b></label><br>
+													<label for="{{form.imagen_congreso.imagen.id_for_label }}"> 
+														
+														<b>Imagen Primaria</b></label>
+														<br> 
+														<span style="font-size: 12px; color: red;">(<b>*</b> Debe ser de <b>1920 X 1080</b> pixel) </span>
+													
+													<br>
 														<input type="hidden" value="false" name="imagen_congreso-update" >
 													
-													{{form.imagen_congreso.imagen }}
+													{{form.imagen_congreso.imagen }} <br>
+													
 													{%endif%}
 												</div>
 											</div>
@@ -218,10 +236,14 @@
 
 													<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva
 															Imagen</b> </label>
-													
+															<br> 
+															<span style="font-size: 12px; color: red;">(<b>*</b> Debe ser de <b>1140 X 240</b> pixel) </span>
 															<input type="file" name="congreso-imagen_seg" accept="image/*" data-toggle="tooltip" data-popup="tooltip-custom" data-original-title="La Imagen debe ser de 1140 X 240 pixel "  id="id_congreso-imagen_seg">
 													{% else%}
-													<label for="{{form.congreso.imagen_seg.id_for_label }}"><b>Imagen Segundaria</b> </label><br>
+													<label for="{{form.congreso.imagen_seg.id_for_label }}"><b>Imagen Segundaria</b> </label>
+													<br> 
+														<span style="font-size: 12px; color: red;">(<b>*</b> Debe ser de <b>1140 X 240</b> pixel) </span>
+														<br>
 
 													{{form.congreso.imagen_seg }}
 													{%endif%}
@@ -377,6 +399,7 @@
 
 													{{form.congreso.published }}
 												</div>
+												
 											</div>
 											<div class="col-sm-3 ">
 												<div class="form-group">
@@ -602,10 +625,14 @@
 {% endblock %}
 {% block scripts %}
 <link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
-<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/tooltip/tooltip.js'%}"></script>
+
 <script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/editors/ckeditor/ckeditor.js'%}"></script>
-<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/editors/editor-ckeditor.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/ui/jquery.sticky.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/charts/jquery.sparkline.min.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/ui/breadcrumbs-with-stats.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/tooltip/tooltip.js'%}"></script>
+<!-- <script src="{% static 'MedCongressAdmin/app-assets/js/scripts/editors/editor-ckeditor.js'%}"></script> -->
 
 
 
@@ -647,16 +674,16 @@ $('#id_congreso-fecha_inicio').datetimepicker({
 		});
 
 
-		$('#id_congreso-fecha_inicio').datetimepicker({
-			//language:  'fr',
-			weekStart: 1,
-			todayBtn: 1,
-			autoclose: 1,
-			todayHighlight: 1,
-			startView: 2,
-			forceParse: 0,
-			showMeridian: 1
-		});
+		// $('#id_congreso-fecha_inicio').datetimepicker({
+		// 	//language:  'fr',
+		// 	weekStart: 1,
+		// 	todayBtn: 1,
+		// 	autoclose: 1,
+		// 	todayHighlight: 1,
+		// 	startView: 2,
+		// 	forceParse: 0,
+		// 	showMeridian: 1
+		// });
 
 
 

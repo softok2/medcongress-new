@@ -12,7 +12,9 @@ from django.core.exceptions import NON_FIELD_ERRORS
 
 class CategoriaUsuario(models.Model):
     nombre=models.CharField(max_length=50,error_messages={
-"max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"})
+"max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"},validators=[
+            RegexValidator(regex=r"^[A-Za-zñÑáéíóúÁÉÍÓÚ. ]+$", message="El Campo <b> Nombre </b> solo admite letras " )
+        ],)
     published=models.BooleanField(null=True)
     detalle=models.TextField(null=True,blank=True)
 
@@ -28,7 +30,9 @@ class CategoriaUsuario(models.Model):
 
 class Especialidades(models.Model):
     nombre=models.CharField(max_length=50,unique=True,error_messages={
-"max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"})
+"max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"},validators=[
+            RegexValidator(regex=r"^[A-Za-zñÑáéíóúÁÉÍÓÚ. ]+$", message="El Campo <b> Nombre </b> solo admite letras " )
+        ],)
     detalle=models.TextField(null=True,blank=True)
 
     class Meta:
@@ -42,7 +46,9 @@ class Especialidades(models.Model):
 
 class Pais(models.Model):
     denominacion = models.CharField(unique=True, max_length=50,error_messages={
-"max_length": "El Campo <b>Denominación</b> debe tener máximo 50 caracteres"})
+"max_length": "El Campo <b>Denominación</b> debe tener máximo 50 caracteres"},validators=[
+            RegexValidator(regex=r"^[A-Za-zñÑáéíóúÁÉÍÓÚ. ]+$", message="El Campo <b> País </b> solo admite letras " )
+        ],)
     banderas=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='banderas',blank=True, null=True )
 
     class Meta:
@@ -56,7 +62,9 @@ class Pais(models.Model):
 
 class Genero(models.Model):
     denominacion= models.CharField(max_length=20,unique=True,error_messages={
-"max_length": "El Campo <b>Denominación</b> debe tener máximo 20 caracteres"})
+"max_length": "El Campo <b>Denominación</b> debe tener máximo 20 caracteres"},validators=[
+            RegexValidator(regex=r"^[A-Za-zñÑáéíóúÁÉÍÓÚ. ]+$", message="El Campo <b> Género </b> solo admite letras " )
+        ],)
 
     class Meta:
         verbose_name='genero'
@@ -135,7 +143,9 @@ class PerfilUsuario(models.Model):
 "max_length": "El Campo <b>Metas Principales Título </b> debe tener máximo 50 caracteres"})
     score=models.IntegerField(null=True)
     fecha_nacimiento=models.DateField(null=True)
-    num_telefono=models.CharField(max_length=20,null=True)
+    num_telefono=models.CharField(max_length=20,null=True,validators=[
+            RegexValidator(regex=r"^[0-9()+-]+$", message="Entre un No. de <b>Teléfono</b> correcto. Ej. <b>(+99)999-999-999</b>")
+        ],)
     class Meta:
         verbose_name='Perfil usuario'
         verbose_name_plural='Perfil de usuarios'
@@ -168,7 +178,9 @@ class TipoCongreso(models.Model):
 
 class EspecialidadCongreso(models.Model):
     nombre=models.CharField(max_length=50,unique=True,error_messages={
-"max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"})
+"max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"},validators=[
+            RegexValidator(regex=r"^[A-Za-zñÑáéíóúÁÉÍÓÚ. ]+$", message="El Campo <b> Nombre </b> solo admite letras " )
+        ],)
     detalle=models.TextField(null=True,blank=True)
 
     class Meta:
@@ -187,7 +199,8 @@ class AvalCongreso(models.Model):
 "max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"})
     detalle=models.TextField(null=True,blank=True)
     logo=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='patrocinadores' )
-    url= models.CharField(max_length=250)
+    url= models.URLField(max_length=250,error_messages={
+"max_length": "El Campo <b>URL</b> debe tener máximo 250 caracteres"})
 
     class Meta:
         verbose_name='aval del congreso'
@@ -203,7 +216,7 @@ class SocioCongreso(models.Model):
 "max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"})
     detalle=models.TextField(null=True,blank=True)
     logo=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='socios' )
-    url= models.CharField(max_length=250,error_messages={
+    url= models.URLField(max_length=250,error_messages={
 "max_length": "El Campo <b>URL</b> debe tener máximo 250 caracteres"})
 
     class Meta:
@@ -217,7 +230,9 @@ class SocioCongreso(models.Model):
 
 class CategoriaPagoCongreso(models.Model):
     nombre=models.CharField(max_length=50,unique=True,error_messages={
-"max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"})
+"max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"},validators=[
+            RegexValidator(regex=r"^[A-Za-zñÑáéíóúÁÉÍÓÚ. ]+$", message="El Campo <b> Nombre </b> solo admite letras " )
+        ],)
     path=models.CharField(max_length=250, help_text='campo para identificarlo por la URL')
     detalle=models.TextField(null=True,blank=True)
 
@@ -910,3 +925,30 @@ class DocumentoPrograma(models.Model):
 
     def __str__(self):
         return 'Documento'
+
+class Carrito(models.Model):
+    id_congreso_cat_pago=models.IntegerField()
+    tipo_evento=models.CharField(max_length=20)                        
+    id_evento=models.IntegerField()                        
+    nombre_congreso=models.CharField(max_length=250) 
+    id_cat_pago=models.IntegerField()
+    nombre_cat_pago=models.CharField(max_length=250) 
+    precio=models.FloatField() 
+    pagar=models.FloatField() 
+    moneda=models.CharField(max_length=3)                       
+    cantidad=models.IntegerField()
+    usuario=models.ForeignKey(User,on_delete=models.CASCADE)                       
+    class Meta:
+        verbose_name='Cart'
+
+    def __str__(self):
+        return 'Carrito de Compra'
+
+class Session(models.Model):
+    usuario=models.OneToOneField(User,on_delete=models.CASCADE,primary_key=True,unique=True) 
+    fecha_inicio=models.DateTimeField() 
+    class Meta:
+        verbose_name='Session'
+
+    def __str__(self):
+        return 'Session usuario <%s>' %(self.usuario.email)  

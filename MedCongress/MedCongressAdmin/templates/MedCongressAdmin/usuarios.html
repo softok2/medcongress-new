@@ -179,7 +179,11 @@
        
     ],
     "bServerSide": true,
-    "sAjaxSource":"{% url 'MedCongressAdmin:table_json' %}"
+    "sAjaxSource":"{% url 'MedCongressAdmin:table_json' %}",
+    "fnServerParams": function (aoData) {
+            aoData.push( { "name": "search", "value": $('.dataTables_filter input').val()  } );
+        
+       }
 });
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({
@@ -189,26 +193,30 @@
         });
 
         $('#add-btn').click(function () {
-            location.href = "{% url 'MedCongressAdmin:usuario_add' %}";
+            search=$('.dataTables_filter input').val();
+            location.href = "{% url 'MedCongressAdmin:usuario_add' %}?search="+search;
         });
 
         dataTable = $('.zero-configuration').DataTable();
+        {%if search%}
+        dataTable.search('{{search}}').draw();
+        {%endif%}
     });
     function deleteItem(pk) {
         swal({
-            title: "Estas seguro?",
-            text: "Eliminará todo lo referente a este evento",
+            title: "¿Estás seguro?",
+            text: "¡Eliminará todo lo referente a este evento",
             icon: "warning",
             buttons: {
                 cancel: {
-                    text: "No, cancelar!",
+                    text: "¡No, cancelar!",
                     value: null,
                     visible: true,
                     className: "",
                     closeModal: false,
                 },
                 confirm: {
-                    text: "Sí, eliminarlo!",
+                    text: "¡Sí, eliminarlo!",
                     value: true,
                     visible: true,
                     className: "",
@@ -221,7 +229,7 @@
                     url = "{% url 'MedCongressAdmin:user_delete' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                         dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
-                        swal("Eliminado!", "Este elemento ha sido eliminado.", "success");
+                        swal("¡Eliminado!", "Este elemento ha sido eliminado.", "success");
                     });
                 } else {
                     swal("Cancelado", "No se eliminó este elemento.", "error");

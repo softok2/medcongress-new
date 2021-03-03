@@ -48,7 +48,10 @@ Efectuar Pago
 
                         </tr>
                         {%else%}
-                        <li>No ha puesto ningún evento en el carrito</li>
+                       <tr >
+                        <td colspan="7" style="text-align: center;color: red;"> <b>No hay ningún evento a comprar</b> </td>
+                       </tr>
+                        
                         {%endif%}
 
                     </tbody>
@@ -56,6 +59,7 @@ Efectuar Pago
 
 
             </div>
+            {%if cantidad%}
             <div class="row ">
                 <div class="kf_heading_3">
 
@@ -236,6 +240,7 @@ Efectuar Pago
                 </div>
             </div>
 
+{%endif%}
 
         </div>
     </div>
@@ -288,13 +293,11 @@ Efectuar Pago
             var deviceSessionId = OpenPay.deviceData.setup("payment-form", "deviceIdHiddenFieldName");
             const csrftoken = getCookie('csrftoken');
             $('#pay-button').on('click', function (event) {
-
-
-
-
+                
                 event.preventDefault();
                 $("#pay-button").prop("disabled", true);
                 OpenPay.token.extractFormAndCreate('payment-form', sucess_callbak, error_callbak);
+
             });
 
             var sucess_callbak = function (response) {

@@ -8,13 +8,14 @@ import openpay
 from django.core.mail import send_mail
 import requests
 import urllib3
+from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group, User
 from django.db import connections
 from django.http import HttpResponse, HttpResponseRedirect,JsonResponse
-from django.shortcuts import render,render_to_response
+from django.shortcuts import render,render_to_response,redirect
 from django.core.mail import EmailMessage
 from django.template.response import TemplateResponse
 from django.urls import reverse, reverse_lazy
@@ -25,11 +26,11 @@ from django.views.generic import (CreateView, DetailView, FormView, ListView,
 from requests.auth import HTTPBasicAuth
 from django.db.models import Sum
 from django.views.generic.edit import UpdateView
-from django.contrib.auth.views import PasswordResetView
+from django.contrib.auth.views import PasswordResetView,LoginView
 from random import sample
 from PIL import Image, ImageDraw, ImageFont
 from .claves import ID_KEY,PRIVATE_KEY,PUBLIC_KEY,URL_API,URL_SITE,URL_PDF,PRUEBA
-from .forms import UserPerfilUser,UserPerfilUserEditar,CambiarPassForm
+from .forms import UserPerfilUser,UserPerfilUserEditar,CambiarPassForm,ExtAuthenticationForm
 from MedCongressAdmin.forms.congres_forms import UsuarioForms
 from .models import (CategoriaPagoCongreso, Congreso, EspecialidadCongreso,
                      Ponencia, Ponente, RelCongresoCategoriaPago,
@@ -43,8 +44,32 @@ from django_xhtml2pdf.views import PdfMixin
 from django.core import mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from django.contrib.auth import authenticate
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login as do_login
+from django.template import RequestContext
+from django.shortcuts import render_to_response
+#...
+#404: página no encontrada
+def mi_error_404(request, exception, template_name="MedCongressApp/404.html"):
+    response = render_to_response("MedCongressApp/404.html")
+    response.statues_code=404
+    return response
+ 
+#500: error en el servidor
+def mi_error_500(request, template_name="MedCongressApp/500.html"):
+    response = render_to_response("MedCongressApp/500.html")
+    response.status_code=500
+    return response
+def mi_error_400(request, template_name="MedCongressApp/400.html"):
+    response = render_to_response("MedCongressApp/400.html")
+    response.status_code=400
+    return response
 
-
+def mi_error_403(request, template_name="MedCongressApp/403.html"):
+    response = render_to_response("MedCongressApp/403.html")
+    response.status_code=403
+    return response
 ###################
 ####  OpenPay  ####
 ###################
@@ -521,9 +546,10 @@ class CongresoDetail(TemplateView):
         # response=requests.get(url=url,headers={ 'Authorization': 'Bearer ef977a79f8ddf1902334a4a3a9c64215','Accept': 'application/vnd.vimeo.*+json;version=3.4' })
         # return HttpResponse(response.json() )  
         # # # /////////////////////
-        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
-        if congreso is None:
-            return   HttpResponseRedirect(reverse('Error404'))
+        user = get_object_or_404(Congreso,path=self.kwargs.get('path'))
+        # congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        # if congreso is None:
+        #     return   HttpResponseRedirect(reverse('Error404'))
         return self.render_to_response(self.get_context_data())
 
     def get_template_names(self):
@@ -792,165 +818,169 @@ class CongresoCardForm(TemplateView):
         context['id_key']=ID_KEY
         context['public_key']=PUBLIC_KEY
         context['prueba']=PRUEBA
+        if self.request.session['cart'][0]['cant']!=0:
+            context['cantidad']=True
         return context
 
     def post(self, request, **kwargs):
-        
-        # congreso= Congreso.objects.filter(path=self.kwargs.get('path_congreso')).first()
-        # categoria= CategoriaPagoCongreso.objects.filter(path=self.kwargs.get('path_categoria')).first()
-        # pago= RelCongresoCategoriaPago.objects.get(congreso=congreso.pk,categoria=categoria.pk,moneda=self.kwargs.get('moneda'))
-        user_perfil=PerfilUsuario.objects.filter(usuario=self.request.user.pk).first()
-        pagar_efectivo= self.request.POST['pagar_efectivo']
+        if self.request.session['cart'][0]['cant']!=0:
+            # congreso= Congreso.objects.filter(path=self.kwargs.get('path_congreso')).first()
+            # categoria= CategoriaPagoCongreso.objects.filter(path=self.kwargs.get('path_categoria')).first()
+            # pago= RelCongresoCategoriaPago.objects.get(congreso=congreso.pk,categoria=categoria.pk,moneda=self.kwargs.get('moneda'))
+            user_perfil=PerfilUsuario.objects.filter(usuario=self.request.user.pk).first()
+            pagar_efectivo= self.request.POST['pagar_efectivo']
 
 
-        descripcion =''
-        for cart in self.request.session["cart"][1]:
-            descripcion= descripcion + 'Pago del %s %s . '%(cart['tipo_evento'],cart['nombre_congreso'])
-        
-        if pagar_efectivo == '0':
-            if request.POST["deviceIdHiddenFieldName"] is None:
-                self.request.session["error_opempay"]= 'Error de Conección con Openpay'
-                return HttpResponseRedirect(reverse('Error_openpay'))
-
-            url='https://%s/v1/%s/charges'%(URL_API,ID_KEY)
+            descripcion =''
+            for cart in self.request.session["cart"][1]:
+                descripcion= descripcion + 'Pago del %s %s . '%(cart['tipo_evento'],cart['nombre_congreso'])
             
-            params= {
-                    "source_id" : request.POST["token_id"],
-                    "method" : "card",
-                    "amount" : self.request.session["cart"][0]['cant'],
-                    "currency" : 'MXN',
-                    "description" :  descripcion,
-                    "device_session_id" : request.POST["deviceIdHiddenFieldName"],
-                    "customer" : {
-                            "name" : self.request.user.first_name,
-                            "last_name" : self.request.user.last_name,
-                            "email" : self.request.user.email
-                    },
-                    "use_3d_secure":True,
-                    "redirect_url":'%s/ver_transaccion'%(URL_SITE),
-                    
-                }
+            if pagar_efectivo == '0':
+                if request.POST["deviceIdHiddenFieldName"] is None:
+                    self.request.session["error_opempay"]= 'Error de Conección con Openpay'
+                    return HttpResponseRedirect(reverse('Error_openpay'))
 
-                
-            headers={'Content-type': 'application/json'}
-            response=requests.post(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(params),headers=headers)
-            response_dic=response.json()
-            
-            if response.status_code==200:
-                return HttpResponseRedirect(response.json()['payment_method']['url']) 
-            else:
-                self.request.session["error_opempay"]=response.json()['description']
-                return HttpResponseRedirect(reverse('Error_openpay'))
-        
-        elif pagar_efectivo == '1':
-            
-            try:
                 url='https://%s/v1/%s/charges'%(URL_API,ID_KEY)
+                
                 params= {
-                        
-                        "method" : "store",
+                        "source_id" : request.POST["token_id"],
+                        "method" : "card",
                         "amount" : self.request.session["cart"][0]['cant'],
                         "currency" : 'MXN',
                         "description" :  descripcion,
+                        "device_session_id" : request.POST["deviceIdHiddenFieldName"],
                         "customer" : {
                                 "name" : self.request.user.first_name,
                                 "last_name" : self.request.user.last_name,
                                 "email" : self.request.user.email
-                        }
+                        },
+                        "use_3d_secure":True,
+                        "redirect_url":'%s/ver_transaccion'%(URL_SITE),
+                        
                     }
-                headers={'Content-type': 'application/json'}
-                response=requests.post(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(params),headers=headers)
-               
-                response_dic=response.json()
-                if response.status_code==200:
-                    for cart in self.request.session["cart"][1]:
-                        if str(cart['tipo_evento']) == 'Congreso':
-                            congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
-                            categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                            pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False, cantidad=cart['cantidad'])
-                            pagar_congreso.save()
-                        if str(cart['tipo_evento']) == 'Taller':
-                            taller=Taller.objects.filter(id=cart['id_congreso']).first()
-                            categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                            pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False,cantidad=cart['cantidad'])
-                            pagar_congreso.save()
-                    car=Cart(self.request)
-                    car.clear() 
-                    return HttpResponseRedirect('https://%s/paynet-pdf/%s/%s'%(URL_PDF,ID_KEY,response_dic['payment_method']['reference']) )
-                else:
-                    self.request.session["error_opempay"]=response.json()['description']
-                    return HttpResponseRedirect(reverse('Error_openpay'))
-            except openpay.APIConnectionError as e:
-                self.request.session["error_opempay"]='Error de Conección con Openpay'
-                return HttpResponseRedirect(reverse('Error_openpay'))
-            except openpay.AuthenticationError as e:
-                self.request.session["error_opempay"]='Error en la autentificación en openpay '
-                return HttpResponseRedirect(reverse('Error_openpay'))
-            except openpay.APIError as e:
-                self.request.session["error_opempay"]=e.json_body['description']
-                return HttpResponseRedirect(reverse('Error_openpay'))
-            except openpay.InvalidRequestError as e:
-                
-                if isinstance(e,dict):
-                    self.request.session["error_opempay"]=e.json_body['description']
-                else:
-                    self.request.session["error_opempay"]='Póngase en contacto con el Admin'
-               
-                return HttpResponseRedirect(reverse('Error_openpay'))
 
-        else:
-            try:
-                url='https://%s/v1/%s/charges'%(URL_API,ID_KEY)
-                params= {
-                "method" : "bank_account",
-                "amount" : self.request.session["cart"][0]['cant'],
-                "description" : descripcion,
-                
-                 "customer" : {
-                            "name" : self.request.user.first_name,
-                            "last_name" : self.request.user.last_name,
-                            "email" : self.request.user.email
-                    },
-                }    
+                    
                 headers={'Content-type': 'application/json'}
                 response=requests.post(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(params),headers=headers)
-              
                 response_dic=response.json()
+                
                 if response.status_code==200:
-                    for cart in self.request.session["cart"][1]:
-                        if str(cart['tipo_evento']) == 'Congreso':
-                            congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
-                            categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                            pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False, cantidad=cart['cantidad'])
-                            pagar_congreso.save()
-                        if str(cart['tipo_evento']) == 'Taller':
-                            taller=Taller.objects.filter(id=cart['id_congreso']).first()
-                            categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                            pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False,cantidad=cart['cantidad'])
-                            pagar_congreso.save()
-                    car=Cart(self.request)
-                    car.clear() 
-                    return HttpResponseRedirect('https://%s/spei-pdf/%s/%s'%(URL_PDF,ID_KEY,response_dic['id']) )
+                    return HttpResponseRedirect(response.json()['payment_method']['url']) 
                 else:
                     self.request.session["error_opempay"]=response.json()['description']
                     return HttpResponseRedirect(reverse('Error_openpay'))
-            except openpay.APIConnectionError as e:
-                self.request.session["error_opempay"]='Error de Conección con Openpay'
-                return HttpResponseRedirect(reverse('Error_openpay'))
-            except openpay.AuthenticationError as e:
-                self.request.session["error_opempay"]='Error en la autentificación en openpay '
-                return HttpResponseRedirect(reverse('Error_openpay'))
-            except openpay.APIError as e:
-                self.request.session["error_opempay"]=e.json_body['description']
-                return HttpResponseRedirect(reverse('Error_openpay'))
-            except openpay.InvalidRequestError as e:
+            
+            elif pagar_efectivo == '1':
                 
-                if isinstance(e,dict):
+                try:
+                    url='https://%s/v1/%s/charges'%(URL_API,ID_KEY)
+                    params= {
+                            
+                            "method" : "store",
+                            "amount" : self.request.session["cart"][0]['cant'],
+                            "currency" : 'MXN',
+                            "description" :  descripcion,
+                            "customer" : {
+                                    "name" : self.request.user.first_name,
+                                    "last_name" : self.request.user.last_name,
+                                    "email" : self.request.user.email
+                            }
+                        }
+                    headers={'Content-type': 'application/json'}
+                    response=requests.post(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(params),headers=headers)
+                
+                    response_dic=response.json()
+                    if response.status_code==200:
+                        for cart in self.request.session["cart"][1]:
+                            if str(cart['tipo_evento']) == 'Congreso':
+                                congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
+                                categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
+                                pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False, cantidad=cart['cantidad'])
+                                pagar_congreso.save()
+                            if str(cart['tipo_evento']) == 'Taller':
+                                taller=Taller.objects.filter(id=cart['id_congreso']).first()
+                                categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
+                                pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False,cantidad=cart['cantidad'])
+                                pagar_congreso.save()
+                        car=Cart(self.request)
+                        car.clear() 
+                        return HttpResponseRedirect('https://%s/paynet-pdf/%s/%s'%(URL_PDF,ID_KEY,response_dic['payment_method']['reference']) )
+                    else:
+                        self.request.session["error_opempay"]=response.json()['description']
+                        return HttpResponseRedirect(reverse('Error_openpay'))
+                except openpay.APIConnectionError as e:
+                    self.request.session["error_opempay"]='Error de Conección con Openpay'
+                    return HttpResponseRedirect(reverse('Error_openpay'))
+                except openpay.AuthenticationError as e:
+                    self.request.session["error_opempay"]='Error en la autentificación en openpay '
+                    return HttpResponseRedirect(reverse('Error_openpay'))
+                except openpay.APIError as e:
                     self.request.session["error_opempay"]=e.json_body['description']
-                else:
-                    self.request.session["error_opempay"]='Póngase en contacto con el Admin'
-               
-                return HttpResponseRedirect(reverse('Error_openpay'))
+                    return HttpResponseRedirect(reverse('Error_openpay'))
+                except openpay.InvalidRequestError as e:
+                    
+                    if isinstance(e,dict):
+                        self.request.session["error_opempay"]=e.json_body['description']
+                    else:
+                        self.request.session["error_opempay"]='Póngase en contacto con el Admin'
+                
+                    return HttpResponseRedirect(reverse('Error_openpay'))
+
+            else:
+                try:
+                    url='https://%s/v1/%s/charges'%(URL_API,ID_KEY)
+                    params= {
+                    "method" : "bank_account",
+                    "amount" : self.request.session["cart"][0]['cant'],
+                    "description" : descripcion,
+                    
+                    "customer" : {
+                                "name" : self.request.user.first_name,
+                                "last_name" : self.request.user.last_name,
+                                "email" : self.request.user.email
+                        },
+                    }    
+                    headers={'Content-type': 'application/json'}
+                    response=requests.post(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(params),headers=headers)
+                
+                    response_dic=response.json()
+                    if response.status_code==200:
+                        for cart in self.request.session["cart"][1]:
+                            if str(cart['tipo_evento']) == 'Congreso':
+                                congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
+                                categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
+                                pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False, cantidad=cart['cantidad'])
+                                pagar_congreso.save()
+                            if str(cart['tipo_evento']) == 'Taller':
+                                taller=Taller.objects.filter(id=cart['id_congreso']).first()
+                                categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
+                                pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False,cantidad=cart['cantidad'])
+                                pagar_congreso.save()
+                        car=Cart(self.request)
+                        car.clear() 
+                        return HttpResponseRedirect('https://%s/spei-pdf/%s/%s'%(URL_PDF,ID_KEY,response_dic['id']) )
+                    else:
+                        self.request.session["error_opempay"]=response.json()['description']
+                        return HttpResponseRedirect(reverse('Error_openpay'))
+                except openpay.APIConnectionError as e:
+                    self.request.session["error_opempay"]='Error de Conección con Openpay'
+                    return HttpResponseRedirect(reverse('Error_openpay'))
+                except openpay.AuthenticationError as e:
+                    self.request.session["error_opempay"]='Error en la autentificación en openpay '
+                    return HttpResponseRedirect(reverse('Error_openpay'))
+                except openpay.APIError as e:
+                    self.request.session["error_opempay"]=e.json_body['description']
+                    return HttpResponseRedirect(reverse('Error_openpay'))
+                except openpay.InvalidRequestError as e:
+                    
+                    if isinstance(e,dict):
+                        self.request.session["error_opempay"]=e.json_body['description']
+                    else:
+                        self.request.session["error_opempay"]='Póngase en contacto con el Admin'
+                
+                    return HttpResponseRedirect(reverse('Error_openpay'))
+        else:
+            return HttpResponseRedirect(reverse('Pagar'))
 
 ##### Formulario para registrar usuario #####
 
@@ -1799,7 +1829,7 @@ class VerTransaccion(TemplateView):
                 subject = 'Comprobante de Pago de MedCongress'
                 html_message = render_to_string('MedCongressApp/recibo_pago.html', context={'car':enviar,'date':response_dict['operation_date'],'numero':response_dict['authorization'],'importe':response_dict['amount'],'card':response_dict['card']['card_number'],'orden_id':response_dict['order_id']})
                 plain_message = strip_tags('Aviso..... Usted se a comprado eventos en MedCongres')
-                from_email = ' Contacto MedCongress <contacto@medcongress.com.mx>'
+                from_email = ''
                 to = self.request.user.email
                 mail.send_mail(subject, plain_message, from_email, [to],html_message=html_message)
                 ####END EMAIL ######
@@ -2086,5 +2116,16 @@ def Webhook(request):
             mail.send_mail(subject, plain_message, from_email, ['dennis.molinetg@gmail.com','a.morell.cu@icloud.com'])
     return JsonResponse({'success':'true'})
             
-       
+def login(request):
+    # Creamos el formulario de autenticación vacío
+    form = ExtAuthenticationForm()
+    if request.method == "POST":
+        form = ExtAuthenticationForm(data=request.POST,request=request)
+        if form.is_valid():
+            if request.GET['next']:
+                print(request.GET['next'])
+                return redirect('/%s'%(request.GET['next']))
+            return redirect('/')
+    # Si llegamos al final renderizamos el formulario
+    return render(request, "registration/login.html", {'form': form})       
         

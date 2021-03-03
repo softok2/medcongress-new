@@ -2,6 +2,7 @@
 {% block title %}MedCongressAdmin |  Categoria de pago{% endblock %}
 {% load static %}
 {% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/select2.min.css' %}">
 {% endblock %}
 {% block content %}
 
@@ -99,7 +100,7 @@
 										<div class="form-actions">
 											<div class="text-right">
 												<button id="atras" type="button" class="btn btn-danger " >
-													<i class="ft-skip-back position-right"></i>Atras
+													Cancelar<i class="ft-x"></i>
 												</button> 
 												<button id="save" type="submit" class="btn btn-primary">Guardar
 													<i class="ft-save position-right"></i>
@@ -119,6 +120,8 @@
 </section>
 {% endblock %}
 {% block scripts %}
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/forms/select/select2.full.min.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-select2.js'%}"></script>
 <script type="text/javascript">
  $('#atras').click(function () {
             location.href = "{% url 'MedCongressAdmin:Congres_pagos' path=cong.path %}";

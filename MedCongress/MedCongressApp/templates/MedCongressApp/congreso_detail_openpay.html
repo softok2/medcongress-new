@@ -44,6 +44,24 @@
 {%block css%}
 <link rel="stylesheet" href="{% static 'MedCongressApp/css/bootstrap-rating.css'%}" type="text/css" media="all">
 <style type="text/css">
+.taller.accordion-close:after {
+    margin-top: -33px;
+    /* symbol for "opening" panels */
+    font-family: 'Glyphicons Halflings';  /* essential for enabling glyphicon */
+    content: "\e114";    /* adjust as needed, taken from bootstrap.css */
+    float: right;        /* adjust as needed */
+    color: #00a4ef;         /* adjust as needed */
+}
+.taller.accordion-open:after {
+    /* symbol for "collapsed" panels */
+    content: "\e080";    /* adjust as needed, taken from bootstrap.css */
+      /* adjust as needed, taken from bootstrap.css */
+    float: right;        /* adjust as needed */
+    color: #00a4ef;  
+    margin-top: -33px;
+    font-family: 'Glyphicons Halflings';
+}
+
     .main-body {
         padding: 15px;
     }
@@ -557,8 +575,8 @@
 
         {% for ponencia_v in ponencias_video %}
         <div class="kf_faq_accordian">
-            <div class="kf_accordian_hdg accordion" id="section3">
-                <h5>{{ponencia_v.fecha}}</h5>
+            <div class="kf_accordian_hdg accordion taller" id="section3">
+                <h4>{{ponencia_v.fecha}}</h4>
             </div>
 
             <div class="kf_accordian_des">
@@ -772,8 +790,8 @@
         {% for taller in talleres %}
         
         <div class="kf_faq_accordian" style="margin-bottom: 20px;">
-            <div class="kf_accordian_hdg accordion" id="section3">
-                <h5>Taller #{{forloop.counter}}: {{taller.0.titulo}}</h5>
+            <div class="kf_accordian_hdg accordion taller" id="section3">
+                <h6> <b>Taller #{{forloop.counter}}: {{taller.0.titulo}}</b> </h6>
             </div>
             <div class="kf_accordian_des">
                 <div class="kode-our-pricing">
@@ -874,7 +892,7 @@
                     <div class="speaker-photo">
                         {% if ponente.foto%}
 
-                        <img src="{% static '/'%}{{ponente.foto}}" alt="image de {{ponente.usuario.username}}">
+                             <img src="{% static '/'%}{{ponente.foto}}" alt="image de {{ponente.usuario.username}}">
                         {%else%}
                         <img src="{% static 'MedCongressApp/images/defaulthombre.png' %}"
                             alt="image de {{ponente.usuario.username}}">
@@ -985,6 +1003,8 @@
     </div>
 </div>
 {%endif%}
+
+
 <!-- Contactos
 <div class="kode-event-contact">
     <div class="container">
