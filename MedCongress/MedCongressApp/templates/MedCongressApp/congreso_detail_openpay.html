@@ -281,13 +281,110 @@
             <span>{{congreso.titulo}}</span>{%if congreso.sub_titulo %}<span
                 style="font-size:80%;font-style: italic;">{{congreso.sub_titulo }}</span>{%endif%}
         </div>
+        <div class="text-right" style="margin-bottom: 15px;">
         {%if programas%}
-        <div class="col-sm-6" style="margin-bottom: 20px;">
+        <!-- <div class="col-sm-6" style="margin-bottom: 20px;">
             {%for programa in programas%}
             <a href="{% static '/'%}{{programa.documento}}" style="font-size: 18px;"><i class="fa fa-download"></i> {{programa.texto}}</a><br />
             {%endfor%}
-        </div>
+        </div> -->
+        <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modal-programa">
+            PROGRAMA
+          </button>
 {%endif%}
+
+        {%if trabajos%}
+        
+            <!-- Button trigger modal -->
+    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modal-trabajos">
+    INVESTIGACIONES
+  </button>
+        
+        {%endif%}
+        
+    </div>
+    {%if trabajos%}
+        <div class="modal fade bs-example-modal-lg" id="modal-trabajos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content" style="background:url({% static 'MedCongressApp/images/fondo.png'%}) no-repeat 100% 100%  white">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                  <h4 class="modal-title" id="myModalLabel">Trabajos de Investigación</h4>
+                </div>
+                <div class="modal-body">
+                    {%for trabajo in trabajos%}
+                    <div class="row view-work">
+                        <div class="col-md-2 my_col_center" >
+                            {% if trabajo.foto%}
+
+                            <img src="{% static '/'%}{{trabajo.foto}}"
+                                alt="image de {{trabajo.autor}}" class="img-responsive img-circle">
+                            {%else%}
+                            <img src="{% static 'MedCongressApp/images/avatar.png' %}"
+                                alt="image de {{trabajo.autor}}" class="img-responsive img-circle">
+                            {%endif%}
+                        </div>
+                        <div class="col-md-8 my_col_middle" >
+                            <div class="row view-author">
+                               <h5>{{trabajo.autor}} </h5> 
+                               
+                            </div>
+                           <div class="row">
+                              <b>{{trabajo.titulo}}  </b> 
+                              
+                           </div>
+                          
+                            
+                        </div>
+                        <div class="col-md-1 my_col_bottom"  >
+                        <div class="row show_video">
+                            {%if trabajo.cod_video%}
+                            <a href="{% static '/'%}{{programa.documento}}" > <b> Ver Video</b></a><br />
+                            {%endif%}
+                        </div>
+                        <div class="row show_donwload">
+                             <a href="{% static '/'%}{{trabajo.documento}}" target="_blank"  class="btn btn-primary "> DESCARGAR</a>
+                        </div>
+                           
+                        </div>
+                       
+                    </div>
+                   
+                    {%endfor%}
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                 
+                </div>
+              </div>
+            </div>
+          </div>
+          {%endif%}
+          {%if programas%}
+        <div class="modal fade bs-example-modal-sm" id="modal-programa" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+            <div class="modal-dialog modal-sm">
+              <div class="modal-content" style="background:url({% static 'MedCongressApp/images/fondo.png'%}) no-repeat 100% 100%  white">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                  <h4 class="modal-title" id="myModalLabel">Programa</h4>
+                </div>
+                <div class="modal-body">
+                    {%for programa in programas%}
+                    <div class="row view-work">
+                        
+                        <a href="{% static '/'%}{{programa.documento}}" target="_blank" style="font-size: 18px;"><i class="fa fa-download"></i> {{programa.texto}} ({{programa.idioma.abreviatura}})</a><br />
+                    </div>
+                   
+                    {%endfor%}
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                 
+                </div>
+              </div>
+            </div>
+          </div>
+          {%endif%}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <!-- <div style='padding:56.25% 0 0 0;position:relative;margin:25px 0'><iframe src='https://vimeo.com/showcase/6787538/embed' allowfullscreen frameborder='0' style='position:absolute;top:0;left:0;width:100%;height:100%;'></iframe></div> -->

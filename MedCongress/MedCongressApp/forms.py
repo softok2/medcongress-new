@@ -38,7 +38,7 @@ class PasswordChangeOnForgotPassword(SetPasswordForm):
         
 class UserForm(forms.ModelForm):
     first_name=forms.CharField(
-               label = 'Nombre',
+               label = 'Nombre'
                )
     last_name=forms.CharField(
                 label = 'Apellidos',
@@ -66,7 +66,7 @@ class UserForm(forms.ModelForm):
         password = cleaned_data.get('password', None)
         password1 = cleaned_data.get('password1', None)
         if password!=password1 :
-            self.add_error('password1', 'No coinciden los password ')
+            self.add_error('password1', 'No coinciden las contraseñas ')
         email = cleaned_data.get('email', None)
         username= cleaned_data.get('username',None)
         if User.objects.filter(email=email).exclude(username=username).count():
@@ -214,7 +214,7 @@ class CambiarPassForm(forms.ModelForm):
         password = cleaned_data.get('password', None)
         password1 = cleaned_data.get('password1', None)
         if password!=password1 :
-            self.add_error('password1', 'No coinciden los password ')
+            self.add_error('password1', 'No coinciden las contraseñas ')
 
 class ExtAuthenticationForm(AuthenticationForm):
     

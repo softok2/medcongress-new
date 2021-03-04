@@ -22,6 +22,7 @@
 	<link rel="shortcut icon" type="image/x-icon"
         href="{% static 'MedCongressApp/images/favicon.png' %}">
 	<!-- Bootstrap min css -->
+	<link href="{% static 'MedCongressApp/css/my_style.css'%}" rel="stylesheet" />
 	<link rel="stylesheet" href="{% static 'MedCongressApp/css/bootstrap.min.css'%}" type="text/css" media="all">
 
 	<!-- bxSlider CSS file -->
@@ -48,6 +49,7 @@
 	<link rel="stylesheet" href="{% static 'MedCongressApp/css/responsive.css'%}" type="text/css" media="all">
 	<!-- Color css -->
 	<link rel="stylesheet" href="{% static 'MedCongressApp/css/color.css'%}" type="text/css" media="all">
+	<link href="{% static 'MedCongressApp/css/my_style.css'%}" rel="stylesheet" type="text/css" media="all" />
 <style>
 
 .navbar-icon-top .navbar-nav .nav-link > .fa {
@@ -445,7 +447,8 @@ line-height: 28px;
 
 	<script src="{% static 'MedCongressApp/js/sweetalert.min.js' %}"></script>
 	<script type="text/javascript"
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCf3QdCwg8QDNOS3A2vSQ3DqW2mpJ_gSY8"></script>
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCf3QdCwg8QDNOS3A2vSQ3DqW2mpJ_gSY8"></script>
+	<script src="{% static 'MedCongressApp/js/my_js.js'%}"></script>
 	{% block script%}
 
 	{%endblock%}

@@ -9,7 +9,7 @@ from  MedCongressApp.models import (Congreso,Ubicacion,ImagenCongreso,TipoCongre
                                     RelTallerPonente,Bloque,DatosIniciales,RelCongresoUser,RelTallerUser,
                                     Moderador,RelBloqueModerador,ImagenCongreso,CuestionarioPregunta,CuestionarioRespuestas,
                                     MetaPagInicio,MetaPagListCongreso,PreguntasFrecuentes,RelCongresoAval, AvalCongreso,RelCongresoSocio,SocioCongreso,
-                                    Idioma,DocumentoPrograma)
+                                    Idioma,DocumentoPrograma,TrabajosInvestigacion)
                     
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
@@ -958,3 +958,31 @@ class CongresoProgramaForm(forms.ModelForm):
                 not filename.endswith(".pdf") and not filename.endswith(".zip") and
                 not filename.endswith(".rar") ) :
                 self.add_error('documento',"No está <b> permitido </b> subir ese <b>tipo de archivo</b>. Los permitidos son <b>  .doc, .docx, .pdf, .rar, .zip </b>."  )
+
+class CongresoTrabajoForm(forms.ModelForm):
+    titulo=forms.CharField(label='Título',required=True)
+    
+    class Meta:
+        model=TrabajosInvestigacion
+        fields=['titulo','congreso','documento','descripcion','autor','cod_video','foto']
+       
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+
+        self.fields['descripcion'].widget.attrs.update({'class': 'form-control ckeditor'}) 
+        self.fields['congreso'].widget.attrs.update({'class': 'form-control','style':'display:none'}) 
+        self.fields['titulo'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['autor'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['cod_video'].widget.attrs.update({'class': 'form-control','rows':'7'}) 
+        
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(CongresoTrabajoForm, self).clean(*args, **kwargs)
+        documento = cleaned_data.get('documento', None)
+        if documento:
+            filename = documento.name
+            
+            if(not filename.endswith(".doc") and not filename.endswith(".docx") and
+                not filename.endswith(".pdf") and not filename.endswith(".zip") and
+                not filename.endswith(".rar") ) :
+                self.add_error('documento',"En el Campo <b> Documento </b> no está <b> permitido </b> subir ese <b>tipo de archivo</b>. Los permitidos son <b>  .doc, .docx, .pdf, .rar, .zip </b>."  )

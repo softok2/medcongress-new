@@ -952,3 +952,21 @@ class Session(models.Model):
 
     def __str__(self):
         return 'Session usuario <%s>' %(self.usuario.email)  
+
+class TrabajosInvestigacion(models.Model):
+    documento=models.FileField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='trabajos')
+    titulo=models.CharField(max_length=250, null=True,error_messages={
+                            "max_length": "El Campo <b>Título</b> debe tener máximo 250 caracteres"})
+    descripcion=models.TextField(null=True,blank=True)
+    congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
+    autor= models.CharField( max_length=50,error_messages={
+                            "max_length": "El Campo <b>Denominación</b> debe tener máximo 50 caracteres"},validators=[
+                            RegexValidator(regex=r"^[A-Za-zñÑáéíóúÁÉÍÓÚ. ]+$", message="El Campo <b> País </b> solo admite letras " )
+                            ],)
+    cod_video=models.TextField(null=True,blank=True)
+    foto=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='usuarios',blank=True, null=True )
+    class Meta:
+        verbose_name='TrabajosInvestigacion'
+
+    def __str__(self):
+        return 'TrabajosInvestigacion'
