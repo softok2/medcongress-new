@@ -2,6 +2,7 @@
 {% block title %} Asignar Constancia {% endblock %}
 {% load static %}
 {% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/select2.min.css' %}">
 {% endblock %}
 {% block content %}
 <div class=" col-md-6 col-12 " style="margin-top: -26px;">
@@ -52,8 +53,12 @@
 												<label for=""><b>Filtre
 														Taller</b></label>
 													
-												<input type="text" name="my_congress" class="form-control" required=""
-													id="id_my_congress">
+														<select name="my_congress" id="" class="form-control select2" required="">
+															{%for congreso in congresos%}
+															<option value="{{congreso.pk}}">{{congreso.titulo}}</option>
+															{%endfor%}
+															
+																											</select>
 
 											</div>
 										
@@ -83,6 +88,8 @@
 {% block scripts %}
 <link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
 <script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/forms/select/select2.full.min.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-select2.js'%}"></script>
 <script type="text/javascript">
 $(function() {
 	  

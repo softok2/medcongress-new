@@ -145,18 +145,12 @@
 																					  </figure>
 								
 																			<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva Imagen</b> </label>
-																			{% if form.perfiluser.foto.errors %}
-																				<span
-																					style="font-size: 15px; color: red;">{{ form.perfiluser.foto.errors }}
-																				</span>{% endif %}
+																			
 																			<input type="file" name="perfiluser-foto" accept="image/*" class=" form-control " id="id_perfiluser-foto">
 																			
 																			{% else%}
 																			<label
-																				for="{{form.perfiluser.foto.id_for_label }}"><b>{{form.perfiluser.foto.label }}</b>{% if form.taller.congreso.errors %}
-																				<span
-																					style="font-size: 15px; color: red;">{{ form.perfiluser.foto.errors }}
-																				</span>{% endif %} </label>
+																				for="{{form.perfiluser.foto.id_for_label }}"><b>{{form.perfiluser.foto.label }}</b></label>
 								
 																				{{form.perfiluser.foto }}
 																				{%endif%}
@@ -167,10 +161,7 @@
 																			<div class="col-sm-6 ">
 																				<div class="form-group">
 																					<label
-																						for="{{form.user.first_name.id_for_label }}"><b>{{form.user.first_name.label }}</b>{% if form.user.first_name.errors %}
-																						<span
-																							style="font-size: 15px; color: red;">{{ form.user.first_name.errors }}{{ form.user.username.errors }}
-																						</span>{% endif %} </label>
+																						for="{{form.user.first_name.id_for_label }}"><b>{{form.user.first_name.label }}</b> </label>
 									
 																					{{form.user.first_name }}
 																				</div>
@@ -178,10 +169,7 @@
 																			<div class="col-sm-6 ">
 																				<div class="form-group">
 																					<label
-																						for="{{form.user.last_name.id_for_label }}"><b>{{form.user.last_name.label }}</b>{% if form.user.last_name.errors %}
-																						<span
-																							style="font-size: 15px; color: red;">{{ form.user.last_name.errors }}
-																						</span>{% endif %} </label>
+																						for="{{form.user.last_name.id_for_label }}"><b>{{form.user.last_name.label }}</b></label>
 									
 																					{{form.user.last_name }}
 																				</div>
@@ -191,10 +179,7 @@
 																			<div class="col-sm-3 " style="display: none;">
 																				<div class="form-group">
 																					<label
-																						for="{{form.user.username.id_for_label }}"><b>{{form.user.username.label }}</b>{% if form.user.username.errors %}
-																						<span
-																							style="font-size: 15px; color: red;">{{ form.user.username.errors }}
-																						</span>{% endif %} </label>
+																						for="{{form.user.username.id_for_label }}"><b>{{form.user.username.label }}</b></label>
 									
 																					{{form.user.username }}
 																				</div>
@@ -202,10 +187,7 @@
 																			<div class="col-sm-6 ">
 																				<div class="form-group">
 																					<label
-																						for="{form.user.email.id_for_label }}"><b>{{form.user.email.label }}</b>{% if form.user.email.errors %}
-																						<span
-																							style="font-size: 15px; color: red;">{{ form.user.email.errors }}
-																						</span>{% endif %} </label>
+																						for="{form.user.email.id_for_label }}"><b>{{form.user.email.label }}</b></label>
 									
 																					{{form.user.email}}
 																				</div>
@@ -213,9 +195,7 @@
 																			<div class="col-sm-4 ">
 																				<div class="form-group">
 																					<label
-																						for="{{form.perfiluser.genero.id_for_label }}"><b>{{form.perfiluser.genero.label }}</b>{% if form.perfiluser.genero.errors %}
-																						<span style="font-size: 15px; color: red;">{{ form.perfiluser.genero.errors }}
-																						</span>{% endif %}</label>
+																						for="{{form.perfiluser.genero.id_for_label }}"><b>{{form.perfiluser.genero.label }}</b></label>
 																					{{form.perfiluser.genero }}
 																				</div>
 																			</div>
@@ -226,10 +206,7 @@
 																			<div class="col-sm-4 ">
 																				<div class="form-group">
 																					<label
-																						for="{{form.perfiluser.categoria.id_for_label }}"><b>{{form.perfiluser.categoria.label }}</b>{% if form.perfiluser.categoria.errors %}
-																						<span
-																							style="font-size: 15px; color: red;">{{ form.perfiluser.categoria.errors }}
-																						</span>{% endif %}</label>
+																						for="{{form.perfiluser.categoria.id_for_label }}"><b>{{form.perfiluser.categoria.label }}</b></label>
 												
 																					{{form.perfiluser.categoria }}
 																				</div>
@@ -238,20 +215,14 @@
 																			<div class="col-sm-4 " id="esp_div">
 																				<div class="form-group">
 																					<label
-																						for="{{form.perfiluser.especialidad.id_for_label }}"><b>{{form.perfiluser.especialidad.label }}</b>{% if form.perfiluser.especialidad.errors %}
-																						<span
-																							style="font-size: 15px; color: red;">{{ form.perfiluser.especialidad.errors }}
-																						</span>{% endif %}</label>
+																						for="{{form.perfiluser.especialidad.id_for_label }}"><b>{{form.perfiluser.especialidad.label }}</b></label>
 																					{{form.perfiluser.especialidad }}
 																				</div>
 																			</div>
 																			<div class="col-sm-4 " id="cel_prof">
 																				<div class="form-group">
 																					<label
-																						for="{{form.perfiluser.cel_profecional.id_for_label }}"><b>{{form.perfiluser.cel_profecional.label }}</b>{% if form.perfiluser.cel_profecional.errors %}
-																						<span
-																							style="font-size: 15px; color: red;">{{ form.perfiluser.cel_profecional.errors }}
-																						</span>{% endif %}</label>
+																						for="{{form.perfiluser.cel_profecional.id_for_label }}"><b>{{form.perfiluser.cel_profecional.label }}</b></label>
 												
 																					{{form.perfiluser.cel_profecional }}
 																				</div>
@@ -264,10 +235,7 @@
 																			<div class="col-sm-8" >
 																				<div class="form-group">
 																					<label
-																						for="{{form.perfiluser.puesto.id_for_label }}"><b>Puesto Actual</b>{% if form.perfiluser.puesto.errors %}
-																						<span
-																							style="font-size: 15px; color: red;">{{ form.perfiluser.puesto.errors }}
-																						</span>{% endif %}</label>
+																						for="{{form.perfiluser.puesto.id_for_label }}"><b>Puesto Actual</b></label>
 												
 																					{{form.perfiluser.puesto }}
 																				</div>
@@ -280,9 +248,7 @@
 																				<div class="form-group">
 																					<label
 																						for="{{form.ubicacion.direccion.id_for_label }}"><b>{{form.ubicacion.direccion.label }}</b>
-																						{% if form.ubicacion.direccion.errors %} <span
-																							style="font-size: 15px; color: red;">{{ form.ubicacion.direccion.errors }}
-																						</span>{% endif %} </label>
+																						</label>
 																					{{form.ubicacion.direccion }}
 																				</div>
 																			</div>
@@ -307,10 +273,7 @@
 																			<div class="col-sm-3 " style="display: none;">
 																				<div class="form-group">
 																					<label
-																						for="{{form.ubicacion.longitud.id_for_label }}"><b>{{form.ubicacion.longitud.label }}</b>{% if form.ubicacion.longitud.errors %}
-																						<span
-																							style="font-size: 15px; color: red;">{{ form.ubicacion.longitud.errors }}
-																						</span>{% endif %}</label>
+																						for="{{form.ubicacion.longitud.id_for_label }}"><b>{{form.ubicacion.longitud.label }}</b></label>
 									
 																					{{form.ubicacion.longitud }}
 																				</div>
@@ -318,10 +281,7 @@
 																			<div class="col-sm-3 " style="display: none;">
 																				<div class="form-group">
 																					<label
-																						for="{{form.ubicacion.latitud.id_for_label }}"><b>{{form.ubicacion.latitud.label }}</b>{% if form.ubicacion.latitud.errors %}
-																						<span
-																							style="font-size: 15px; color: red;">{{ form.ubicacion.latitud.errors }}
-																						</span>{% endif %} </label>
+																						for="{{form.ubicacion.latitud.id_for_label }}"><b>{{form.ubicacion.latitud.label }}</b></label>
 									
 																					{{form.ubicacion.latitud }}
 																				</div>
@@ -354,20 +314,14 @@
 																								</h5>
 																								<div class="form-group">
 																									<label for="">
-																										<b>Título</b>{% if form.perfiluser.meta_title.errors %}
-																										<span
-																											style="font-size: 15px; color: red;">{{ form.perfiluser.meta_title.errors }}
-																										</span>{% endif %}</label>
+																										<b>Título</b></label>
 							
 							
 																									{{form.perfiluser.meta_title}}
 																								</div>
 																								<div class="form-group">
 																									<label for="">
-																										<b>Descripción</b>{% if form.perfiluser.meta_description.errors %}
-																										<span
-																											style="font-size: 15px; color: red;">{{ form.perfiluser.meta_description.errors }}
-																										</span>{% endif %} </label>
+																										<b>Descripción</b> </label>
 							
 																								
 							
@@ -399,48 +353,33 @@
 																								</h5>
 																								<div class="form-group">
 																									<label for="">
-																										<b>Título</b>{% if form.perfiluser.meta_og_title.errors %}
-																										<span
-																											style="font-size: 15px; color: red;">{{ form.perfiluser.meta_og_title.errors }}
-																										</span>{% endif %} </label>
+																										<b>Título</b> </label>
 																									
 							
 																									{{form.perfiluser.meta_og_title}}
 																								</div>
 																								<div class="form-group">
 																									<label for="">
-																										<b>Descripción</b>{% if form.perfiluser.meta_og_description.errors %}
-																										<span
-																											style="font-size: 15px; color: red;">{{ form.perfiluser.meta_og_description.errors }}
-																										</span>{% endif %} </label>
+																										<b>Descripción</b> </label>
 																								
 																									{{form.perfiluser.meta_og_description}}
 																								</div>
 																								<div class="form-group">
 																									<label for="">
-																										<b>Tipo</b>{% if form.perfiluser.meta_og_type.errors %}
-																										<span
-																											style="font-size: 15px; color: red;">{{ form.perfiluser.meta_og_type.errors }}
-																										</span>{% endif %} </label>
+																										<b>Tipo</b> </label>
 																								
 																									{{form.perfiluser.meta_og_type}}
 																								</div>
 																								<div class="form-group">
 																									<label for="">
-																										<b>URL</b>{% if form.perfiluser.meta_og_url.errors %}
-																										<span
-																											style="font-size: 15px; color: red;">{{ form.perfiluser.meta_og_url.errors }}
-																										</span>{% endif %}</label>
+																										<b>URL</b></label>
 							
 							
 																									{{form.perfiluser.meta_og_url}}
 																								</div>
 																								<div class="form-group">
 																									<label for="">
-																										<b>Imagen</b>{% if form.perfiluser.meta_og_imagen.errors %}
-																										<span
-																											style="font-size: 15px; color: red;">{{ form.perfiluser.meta_og_imagen.errors }}
-																										</span>{% endif %}</label>
+																										<b>Imagen</b></label>
 							
 																									{%if imagen_meta%}
 																									<img src="{{imagen_meta}}"
@@ -463,10 +402,7 @@
 							
 																								<div class="form-group">
 																									<label for="">
-																										<b>Card</b>{% if form.perfiluser.meta_twitter_card.errors %}
-																										<span
-																											style="font-size: 15px; color: red;">{{ form.perfiluser.meta_twitter_card.errors }}
-																										</span>{% endif %}</label>
+																										<b>Card</b></label>
 							
 							
 																									{{form.perfiluser.meta_twitter_card}}
@@ -474,20 +410,14 @@
 							
 																								<div class="form-group">
 																									<label for="">
-																										<b>Sitio</b>{% if form.perfiluser.meta_twitter_site.errors %}
-																										<span
-																											style="font-size: 15px; color: red;">{{ form.perfiluser.meta_twitter_site.errors }}
-																										</span>{% endif %}</label>
+																										<b>Sitio</b></label>
 							
 							
 																									{{form.perfiluser.meta_twitter_site}}
 																								</div>
 																								<div class="form-group">
 																									<label for="">
-																										<b>Creador</b>{% if form.perfiluser.meta_twitter_creator.errors %}
-																										<span
-																											style="font-size: 15px; color: red;">{{ form.perfiluser.meta_twitter_creator.errors }}
-																										</span>{% endif %}</label>
+																										<b>Creador</b></label>
 							
 																									{{form.perfiluser.meta_twitter_creator}}
 																								</div>
@@ -553,10 +483,7 @@
 																<div class="col-sm-12" >
 																	<div class="form-group">
 																		<label
-																			for="{{form.perfiluser.detalle.id_for_label }}"><b>Logros Académicos</b>{% if form.perfiluser.detalle.errors %}
-																			<span
-																				style="font-size: 15px; color: red;">{{ form.perfiluser.detalle.errors }}
-																			</span>{% endif %}</label>
+																			for="{{form.perfiluser.detalle.id_for_label }}"><b>Logros Académicos</b></label>
 									
 																		{{form.perfiluser.detalle }}
 																	</div>
@@ -566,10 +493,7 @@
 																<div class="col-sm-12" >
 																	<div class="form-group">
 																		<label
-																			for="{{form.perfiluser.publicaciones.id_for_label }}"><b>Publicaciones</b>{% if form.perfiluser.publicaciones.errors %}
-																			<span
-																				style="font-size: 15px; color: red;">{{ form.perfiluser.publicaciones.errors }}
-																			</span>{% endif %}</label>
+																			for="{{form.perfiluser.publicaciones.id_for_label }}"><b>Publicaciones</b></label>
 									
 																		{{form.perfiluser.publicaciones }}
 																	</div>
@@ -579,10 +503,7 @@
 																<div class="col-sm-12" >
 																	<div class="form-group">
 																		<label
-																			for="{{form.perfiluser.datos_interes.id_for_label }}"><b>Otros Datos de Interés</b>{% if form.perfiluser.datos_interes.errors %}
-																			<span
-																				style="font-size: 15px; color: red;">{{ form.perfiluser.datos_interes.errors }}
-																			</span>{% endif %}</label>
+																			for="{{form.perfiluser.datos_interes.id_for_label }}"><b>Otros Datos de Interés</b></label>
 									
 																		{{form.perfiluser.datos_interes }}
 																	</div>

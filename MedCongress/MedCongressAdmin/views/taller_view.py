@@ -661,10 +661,14 @@ class ReporteRelTallerUserExcel(TemplateView):
 
 class AsignarConstanciasTaller(validarUser,TemplateView):
     template_name = 'MedCongressAdmin/asig_constancia_taller.html'
-
+    def get_context_data(self, **kwargs):
+        context = super(AsignarConstanciasTaller, self).get_context_data(**kwargs)
+        congreso=Taller.objects.all()
+        context['congresos']=congreso
+        return context 
     def post(self, request, **kwargs):
         titulo= self.request.POST['my_congress']
-        taller=Taller.objects.filter(titulo=self.request.POST['my_congress']).first()
+        taller=Taller.objects.get(pk=self.request.POST['my_congress'])
         if taller.foto_constancia:
             if taller:
                 prueba=Constanciataller.apply_async(args=[titulo])
