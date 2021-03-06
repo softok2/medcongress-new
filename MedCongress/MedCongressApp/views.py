@@ -1936,7 +1936,7 @@ class CambiarPass(FormView):
 
 class RegistroExitoso(TemplateView):
     template_name='MedCongressApp/registro_exitoso.html' 
-class PagoExitoso(TemplateView):
+class PagoExitoso2(TemplateView):
     template_name='MedCongressApp/pago_exitoso.html' 
     
 @method_decorator(login_required,name='dispatch')

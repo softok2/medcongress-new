@@ -7,7 +7,7 @@ GetCuestionario,SetConstancia,EvaluarPonencia,Resultado_Cuestionario,Get_Constan
 ViewErrorFact,PerfilUpdateView,CambiarPass,UpdateEvaluarPonencia,UserAutocomplete,ViewErrorRegistrar,RegistroExitoso,
 PonenteAutocomplete,ModeradorAutocomplete,CongresoAutocomplete,PatrocinadorAutocomplete,SocioAutocomplete,ViewTaller,
 EvaluarTaller,UpdateEvaluarTaller,TallerAutocomplete,PonenciaAutocomplete,ViewCart,ContactoExitoso,GetFacturaPrueba,GetContactos,Enviar,
-Webhook,PagoExitoso)
+Webhook,PagoExitoso2)
 
 urlpatterns = [
     # path('login',login,name='auth'),
@@ -69,7 +69,7 @@ urlpatterns = [
     path('ver_transaccion',VerTransaccion.as_view() , name='ver_transaccion'),
     path('cambiar_pass',CambiarPass.as_view() , name='Cambiar_Pass'),
     path('registro_existoso',RegistroExitoso.as_view() , name='Registro_exitoso'),
-    path('pago_existoso',PagoExitoso.as_view() , name='Pago_exitoso'),
+    path('pago_existoso',PagoExitoso2.as_view() , name='Pago_exitoso'),
     
     path('mensaje_exitoso',ContactoExitoso.as_view() , name='mensaje_exitoso'),
     path('enviar',Enviar.as_view() , name='enviar'),
