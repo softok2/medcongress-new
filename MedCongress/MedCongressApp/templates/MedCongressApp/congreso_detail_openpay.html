@@ -339,7 +339,18 @@
                         <div class="col-md-1 my_col_bottom"  >
                         <div class="row show_video">
                             {%if trabajo.cod_video%}
-                            <a href="{% static '/'%}{{programa.documento}}" > <b> Ver Video</b></a><br />
+                            <a href="#"  data-toggle="modal" data-target="#modal-video_{{forloop.counter}}"> <b> Ver Video</b></a><br />
+                            <div class="modal fade bs-example-modal-lg cerrar" id="modal-video_{{forloop.counter}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin: -17px;" >
+                                <div class="modal-dialog modal-lg">
+                                  <div class="modal-content" >
+                                    
+                                    <div class="modal-body">
+                                        {{trabajo.cod_video|safe}}
+                                    </div>
+                                    
+                                  </div>
+                                </div>
+                              </div>
                             {%endif%}
                         </div>
                         <div class="row show_donwload">
@@ -359,6 +370,9 @@
               </div>
             </div>
           </div>
+
+
+          
           {%endif%}
           {%if programas%}
         <div class="modal fade bs-example-modal-sm" id="modal-programa" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
@@ -1138,10 +1152,18 @@
 
 {%endblock%}
 {% block script%}
-
+<script src="{% static 'MedCongressApp/js/vimeo/src/jquery.vimeo.api.js'%}"></script>
 <script type="text/javascript">
     jQuery(document).ready(function ($) {
-        
+        $(".cerrar").on('hidden.bs.modal', function () {
+            alert('asdacsdfds');
+            $("#qqqq").vimeo("pause");
+
+    });
+    $("#qqqq").vimeo("paused",function(data){ 
+  alert('sacdcsdv');
+    })
+
       {%if ponencias_video%}
         {% for ponencia_v in ponencias_video %}
         {% for ponencia in ponencia_v.ponencias %}

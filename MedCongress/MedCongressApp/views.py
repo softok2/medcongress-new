@@ -814,6 +814,11 @@ class CongresoDetail(TemplateView):
 class CongresoCardForm(TemplateView):
    
     template_name= 'MedCongressApp/tarjeta.html'
+    def get(self,request):
+        if "cart"  in request.session:
+           return self.render_to_response(self.get_context_data()) 
+        else:
+            return HttpResponseRedirect(reverse('Error404'))
     def get_context_data(self, **kwargs):
         context = super(CongresoCardForm, self).get_context_data(**kwargs)
         context['id_key']=ID_KEY
@@ -864,8 +869,21 @@ class CongresoCardForm(TemplateView):
                 headers={'Content-type': 'application/json'}
                 response=requests.post(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(params),headers=headers)
                 response_dic=response.json()
-                
+               
                 if response.status_code==200:
+                    for cart in self.request.session["cart"][1]:
+                        if str(cart['tipo_evento']) == 'Congreso':
+                            congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
+                            categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
+                            pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False, cantidad=cart['cantidad'])
+                            pagar_congreso.save()
+                        if str(cart['tipo_evento']) == 'Taller':
+                            taller=Taller.objects.filter(id=cart['id_congreso']).first()
+                            categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
+                            pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False,cantidad=cart['cantidad'])
+                            pagar_congreso.save()
+                    car=Cart(self.request)
+                    car.clear()
                     return HttpResponseRedirect(response.json()['payment_method']['url']) 
                 else:
                     self.request.session["error_opempay"]=response.json()['description']
@@ -1809,7 +1827,7 @@ class Resultado_Cuestionario(TemplateView):
         context['informacion']='%s de %s para  un %s'%(cont,len(preguntas),porciento)+'%'
         context['preguntas']=cuestionario_env
         return context
-@method_decorator(login_required,name='dispatch')
+
 class VerTransaccion(TemplateView):
     template_name= 'MedCongressApp/confic_email.html' 
 
@@ -1817,60 +1835,31 @@ class VerTransaccion(TemplateView):
         
         # #  url='https://sandbox-api.openpay.mx/v1/%s/charges'
         url=' https://%s/v1/%s/charges/%s'%(URL_API,ID_KEY,self.request.GET['id'])
-    
         headers={'Content-type': 'application/json'}
         response=requests.get(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
-        
+        # return HttpResponse(response)
         response_dict=response.json()
-        if 'cart' in request.session:
-            if response_dict['status'] =="completed":
-                user_perfil=PerfilUsuario.objects.filter(usuario=self.request.user.pk).first()
-                enviar=self.request.session["cart"]
-                    ##### EMAIL #####
-                subject = 'Comprobante de Pago de MedCongress'
-                html_message = render_to_string('MedCongressApp/recibo_pago.html', context={'car':enviar,'date':response_dict['operation_date'],'numero':response_dict['authorization'],'importe':response_dict['amount'],'card':response_dict['card']['card_number'],'orden_id':response_dict['order_id']})
-                plain_message = strip_tags('Aviso..... Usted se a comprado eventos en MedCongres')
-                from_email = ''
-                to = self.request.user.email
-                mail.send_mail(subject, plain_message, from_email, [to],html_message=html_message)
-                ####END EMAIL ######
+        if response_dict['status'] =="completed":
+            return HttpResponseRedirect(reverse('Pago_exitoso'))
+
+        if response_dict['status'] =="failed": 
+            if response_dict['error_code'] == 3001:
+                self.request.session["error_opempay"]='La tarjeta fue rechazada.'
+            if response_dict['error_code'] == 3002:
+                self.request.session["error_opempay"]='La tarjeta ha expirado.'
+            if response_dict['error_code'] == 3003:
+                self.request.session["error_opempay"]='La tarjeta no tiene fondos suficientes.'
+            if response_dict['error_code'] == 3004:
+                self.request.session["error_opempay"]='La tarjeta ha sido identificada como una tarjeta robada.'
+            if response_dict['error_code'] == 3005:
+                self.request.session["error_opempay"]='La tarjeta ha sido rechazada por el sistema antifraudes.'  
             
-                for cart in self.request.session["cart"][1]:
-                    if str(cart['tipo_evento']) == 'Congreso':
-                        congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
-                        categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                        pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=self.request.GET['id'],is_pagado=True, cantidad=cart['cantidad'])
-                        pagar_congreso.save()
-                    if str(cart['tipo_evento']) == 'Taller':
-                        taller=Taller.objects.filter(id=cart['id_congreso']).first()
-                        categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                        pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dict['id'],is_pagado=True,cantidad=cart['cantidad'])
-                        pagar_congreso.save()
+            # self.request.session["error_opempay"]='Código de error %s  Transacción no exitosa.'%(response_dict['error_code'])  
+            return HttpResponseRedirect(reverse('Error_openpay'))
 
-                self.request.session["car1"]=self.request.session["cart"]
-                car=Cart(self.request)
-                car.clear() 
-                return HttpResponseRedirect(reverse('transaccion_exitosa' ))
-
-            if response_dict['status'] =="failed": 
-                if response_dict['error_code'] == 3001:
-                    self.request.session["error_opempay"]='La tarjeta fue rechazada.'
-                if response_dict['error_code'] == 3002:
-                    self.request.session["error_opempay"]='La tarjeta ha expirado.'
-                if response_dict['error_code'] == 3003:
-                    self.request.session["error_opempay"]='La tarjeta no tiene fondos suficientes.'
-                if response_dict['error_code'] == 3004:
-                    self.request.session["error_opempay"]='La tarjeta ha sido identificada como una tarjeta robada.'
-                if response_dict['error_code'] == 3005:
-                    self.request.session["error_opempay"]='La tarjeta ha sido rechazada por el sistema antifraudes.'  
-                
-                # self.request.session["error_opempay"]='Código de error %s  Transacción no exitosa.'%(response_dict['error_code'])  
-                return HttpResponseRedirect(reverse('Error_openpay'))
-
-            self.request.session["error_opempay"]='Transacción no Completada'  
-            return HttpResponseRedirect(reverse('Error_openpay'))  
-        else:
-            return HttpResponseRedirect(reverse('View_cart'))
+        self.request.session["error_opempay"]='Transacción no Completada'  
+        return HttpResponseRedirect(reverse('Error_openpay'))  
+    
 @method_decorator(login_required,name='dispatch') 
 
 class PerfilUpdateView(FormView):
@@ -1947,7 +1936,8 @@ class CambiarPass(FormView):
 
 class RegistroExitoso(TemplateView):
     template_name='MedCongressApp/registro_exitoso.html' 
-
+class PagoExitoso(TemplateView):
+    template_name='MedCongressApp/pago_exitoso.html' 
     
 @method_decorator(login_required,name='dispatch')
 class ViewCart(TemplateView):
@@ -1958,40 +1948,7 @@ class Enviar(TemplateView):
     def get(self, request, **kwargs):
         url='%s/webhook'%(URL_SITE)
         
-        params= {'type': 'charge.succeeded',
-            'event_date': '2021-02-22T14:10:03-06:00',
-            'transaction': {'id': 'tr8xjar13rv6mlpgvty9',
-                            'authorization': '3689135', 
-                            'operation_type': 'in', 
-                            'transaction_type': 'charge',
-                            'status': 'completed', 
-                            'conciliated': False, 
-                            'creation_date': '2021-02-22T14:06:51-06:00',
-                            'operation_date': '2021-02-22T14:10:03-06:00',
-                            'description': 'Pago del Congreso Congreso de prueba nuevo2 . Pago del Taller Prueba de taller .',
-                            'error_message': None,
-                            'order_id': None, 
-                            'due_date': '2021-03-24T23:59:59-06:00', 
-                            'payment_method': {'type': 'bank_transfer', 
-                                            'bank': 'BBVA Bancomer', 
-                                            'clabe': '000000000000000000',
-                                            'agreement': '0000000',
-                                            'name': '11014569804426897213'},
-                            'currency': 'MXN', 
-                            'amount': 2270.0,
-                            'customer': {'name': 'Dennis', 
-                                        'last_name': 'Molinet', 
-                                        'email': 'dennis.molinetg@gmail.com',
-                                        'phone_number': None, 
-                                        'address': None, 
-                                        'creation_date': '2021-02-22T14:06:51-06:00', 
-                                        'external_id': None,
-                                        'clabe': None},
-                            'fee': {'amount': 8.0,
-                                    'tax': 1.28, 
-                                    'currency': 'MXN'}, 
-                            'method': 'bank_account'}
-                            }
+        params= {'type': 'charge.succeeded', 'event_date': '2021-02-24T16:18:55-06:00', 'transaction': {'id': 'tro1hwzc7j6dqa5p4qpp', 'authorization': '722213', 'operation_type': 'in', 'transaction_type': 'charge', 'status': 'completed', 'conciliated': False, 'creation_date': '2021-02-22T07:19:49-06:00', 'operation_date': '2021-02-24T16:18:55-06:00', 'description': 'Pago del Congreso 6 Congreso  Internacional AMEXPCTND .', 'error_message': None, 'order_id': None, 'payment_method': {'type': 'store', 'reference': '1010103609290467', 'barcode_url': 'https://api.openpay.mx/barcode/1010103609290467?width=1&height=45&text=false'}, 'amount': 1740.0, 'customer': {'name': 'Gloria Yvette', 'last_name': 'Herrera González', 'email': 'dennis.molinetg@gmail.com', 'phone_number': None, 'address': None, 'creation_date': '2021-02-22T07:19:49-06:00', 'external_id': None, 'clabe': None}, 'currency': 'MXN', 'fee': {'amount': 52.96, 'tax': 8.4736, 'currency': 'MXN'}, 'method': 'store'}}
                 
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         response=requests.post(url=url,data=json.dumps(params),headers=headers)
@@ -2099,10 +2056,12 @@ def Webhook(request):
                 ####END EMAIL ######    
                 ##################################
 
-
+            card=''
+            if 'card' in received_json_data['transaction']:
+                card=received_json_data['transaction']['card']['card_number']
             if cart[0]['cant'] >0:
                 subject = 'Comprobante de Pago de MedCongress'
-                html_message = render_to_string('MedCongressApp/recibo_pago.html', context={'car':cart,'date':received_json_data['event_date'],'numero':received_json_data['transaction']['authorization'],'importe':cart[0]['cant'],'card':'','orden_id':received_json_data['transaction']['order_id'],'id_transaccion':received_json_data['transaction']['id'],'tipo':received_json_data['transaction']['method'],'site':URL_SITE })
+                html_message = render_to_string('MedCongressApp/recibo_pago.html', context={'car':cart,'date':received_json_data['event_date'],'numero':received_json_data['transaction']['authorization'],'importe':cart[0]['cant'],'card':card,'orden_id':received_json_data['transaction']['order_id'],'id_transaccion':received_json_data['transaction']['id'],'tipo':received_json_data['transaction']['method'],'site':URL_SITE })
                 plain_message = strip_tags('Aviso..... Usted se a comprado eventos en MedCongres')
                 from_email = ''
                 to = received_json_data['transaction']['customer']['email']
@@ -2117,16 +2076,16 @@ def Webhook(request):
             mail.send_mail(subject, plain_message, from_email, ['dennis.molinetg@gmail.com','a.morell.cu@icloud.com'])
     return JsonResponse({'success':'true'})
             
-def login(request):
-    # Creamos el formulario de autenticación vacío
-    form = ExtAuthenticationForm()
-    if request.method == "POST":
-        form = ExtAuthenticationForm(data=request.POST,request=request)
-        if form.is_valid():
-            if request.GET['next']:
-                print(request.GET['next'])
-                return redirect('/%s'%(request.GET['next']))
-            return redirect('/')
-    # Si llegamos al final renderizamos el formulario
-    return render(request, "registration/login.html", {'form': form})       
+# def login(request):
+#     # Creamos el formulario de autenticación vacío
+#     form = ExtAuthenticationForm()
+#     if request.method == "POST":
+#         form = ExtAuthenticationForm(data=request.POST,request=request)
+#         if form.is_valid():
+#             if request.GET['next']:
+#                 print(request.GET['next'])
+#                 return redirect('/%s'%(request.GET['next']))
+#             return redirect('/')
+#     # Si llegamos al final renderizamos el formulario
+#     return render(request, "registration/login.html", {'form': form})       
         
