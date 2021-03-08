@@ -960,8 +960,8 @@ class TrabajosInvestigacion(models.Model):
     descripcion=models.TextField(null=True,blank=True)
     congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
     autor= models.CharField( max_length=50,error_messages={
-                            "max_length": "El Campo <b>Denominación</b> debe tener máximo 50 caracteres"},validators=[
-                            RegexValidator(regex=r"^[A-Za-zñÑáéíóúÁÉÍÓÚ. ]+$", message="El Campo <b> País </b> solo admite letras " )
+                            "max_length": "El Campo <b>Autor</b> debe tener máximo 50 caracteres"},validators=[
+                            RegexValidator(regex=r"^[A-Za-zñÑáéíóúÁÉÍÓÚ., ]+$", message="El Campo <b> Autor </b> solo admite letras " )
                             ],)
     cod_video=models.TextField(null=True,blank=True)
     foto=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='usuarios',blank=True, null=True )
