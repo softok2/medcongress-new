@@ -205,7 +205,7 @@
         })
             .then((isConfirm) => {
                 if (isConfirm) {
-                    url = "{% url 'MedCongressAdmin:congres_programa_eliminar' pk=0 %}";
+                    url = "{% url 'MedCongressAdmin:congres_trabajo_eliminar' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                         dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
                         swal("¡Eliminado!", "Este elemento ha sido eliminado.", "success");

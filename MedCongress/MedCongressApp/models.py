@@ -955,7 +955,7 @@ class Session(models.Model):
 
 class TrabajosInvestigacion(models.Model):
     documento=models.FileField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='trabajos')
-    titulo=models.CharField(max_length=250, null=True,error_messages={
+    titulo=models.CharField(max_length=250, null=False,unique=True,error_messages={
                             "max_length": "El Campo <b>Título</b> debe tener máximo 250 caracteres"})
     descripcion=models.TextField(null=True,blank=True)
     congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
@@ -965,6 +965,7 @@ class TrabajosInvestigacion(models.Model):
                             ],)
     cod_video=models.TextField(null=True,blank=True)
     foto=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='usuarios',blank=True, null=True )
+    path=models.CharField(max_length=250, unique=True,null=True, help_text='campo para identificarlo por la URL')
     class Meta:
         verbose_name='TrabajosInvestigacion'
 

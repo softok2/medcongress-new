@@ -36,7 +36,8 @@ class  CongressTrabajoCreateView(validarUser,CreateView):
     template_name = 'MedCongressAdmin/congreso_trabajo_form.html'
     def form_valid(self, form):
         congreso=form.save(commit=False)
-  
+        path=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
+        congreso.path=path  
         congreso.save()
         return super(CongressTrabajoCreateView, self).form_valid(form)
 
@@ -61,8 +62,9 @@ class CongressTrabajoUpdateView(validarUser,UpdateView):
 
     def form_valid(self, form):
         congreso=form.save(commit=False)
-  
+       
         congreso.save()
+        
         return super(CongressTrabajoUpdateView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -78,3 +80,22 @@ class CongressTrabajoUpdateView(validarUser,UpdateView):
            self.success_url =  reverse_lazy('MedCongressAdmin:Congres_trabajos',kwargs={'path': self.kwargs.get('path')} )
            return self.success_url
     
+class CongressTrabajoDeletedView(validarUser,DeleteView):
+    model = TrabajosInvestigacion
+    success_url = reverse_lazy('MedCongressAdmin:cat_usuarios_list')
+
+    def delete(self,request, *args, **kwargs):
+
+        try:    
+            documento=TrabajosInvestigacion.objects.get(pk=self.kwargs.get('pk'))
+            remove('MedCongressApp/static/%s'%(documento.documento))
+            documento.delete()
+            
+            return JsonResponse({'success':True}, safe=False)
+        except FileNotFoundError :
+            return JsonResponse({'success':False,'mensaje':'No se pudo eliminar este Documento'}, safe=False)
+        # if RelCongresoAval.objects.filter(aval=patrocinadores).exists():
+        #     return JsonResponse({'success':False}, safe=False)
+        # else:
+        #     patrocinadores.delete()
+        #     

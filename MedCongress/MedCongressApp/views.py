@@ -2088,4 +2088,21 @@ def Webhook(request):
 #             return redirect('/')
 #     # Si llegamos al final renderizamos el formulario
 #     return render(request, "registration/login.html", {'form': form})       
-        
+
+
+class ViewTrabajo(TemplateView):
+    template_name= 'MedCongressApp/video_trabajo.html' 
+
+    def get(self, request, **kwargs):
+        tranbajo=TrabajosInvestigacion.objects.filter(path=self.kwargs.get('path')).first()
+        if tranbajo is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        if tranbajo.cod_video is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        return self.render_to_response(self.get_context_data())    
+
+    def get_context_data(self, **kwargs):
+        context = super(ViewTrabajo, self).get_context_data(**kwargs)
+        trabajo=TrabajosInvestigacion.objects.filter(path=self.kwargs.get('path')).first() 
+        context['trabajo']=trabajo
+        return context

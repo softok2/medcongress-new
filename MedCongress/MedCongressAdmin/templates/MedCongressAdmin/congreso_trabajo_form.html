@@ -158,17 +158,18 @@
 											</div>
 										</div>
 									</div>
-										<div class="form-actions">
-											<div class="text-right">
-												<button id="atras" type="button" class="btn btn-danger " >
-													<i class="ft-skip-back position-right"></i>Atras
-												</button> 
-												<button id="save" type="submit" class="btn btn-primary">Guardar
-													<i class="ft-save position-right"></i>
-												</button>
-												
-											</div>
+									<div class="form-actions">
+										<div class="text-right">
+											<button id="atras" type="button" class="btn btn-danger ">Cancelar
+												<i class="ft-x position-right"></i>
+											</button>
+
+											<button id="save" type="submit" class="btn btn-primary">Guardar
+												<i class="ft-save position-right"></i>
+											</button>
+
 										</div>
+									</div>
 									</div>
 								</div>
 							</div>
@@ -185,12 +186,12 @@
 <script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-select2.js'%}"></script>
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/editors/ckeditor/ckeditor.js'%}"></script>
 <script type="text/javascript">
- $('#atras').click(function () {
-            location.href = "{% url 'MedCongressAdmin:Congres_programas' path=cong.path %}";
-        });
+ 
 	$(document).ready(function () {
 		$("#id_congreso option[value='{{cong.id}}']").attr("selected",true);
-	
+		$('#atras').click(function () {
+            location.href = "{% url 'MedCongressAdmin:Congres_trabajos' path=cong.path %}";
+        });
 	});
 </script>
 {% endblock %}

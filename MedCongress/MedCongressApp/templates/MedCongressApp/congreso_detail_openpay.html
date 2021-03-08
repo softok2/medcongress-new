@@ -339,18 +339,8 @@
                         <div class="col-md-1 my_col_bottom"  >
                         <div class="row show_video">
                             {%if trabajo.cod_video%}
-                            <a href="#"  data-toggle="modal" data-target="#modal-video_{{forloop.counter}}"> <b> Ver Video</b></a><br />
-                            <div class="modal fade bs-example-modal-lg cerrar" id="modal-video_{{forloop.counter}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin: -17px;" >
-                                <div class="modal-dialog modal-lg">
-                                  <div class="modal-content" >
-                                    
-                                    <div class="modal-body">
-                                        {{trabajo.cod_video|safe}}
-                                    </div>
-                                    
-                                  </div>
-                                </div>
-                              </div>
+                            <a href="{% url 'View_trabajo' path=trabajo.path%}" style="font-size: 12px;" target="_blank"><i class="fa fa-eye"></i> Ver Video</a><br />
+                            
                             {%endif%}
                         </div>
                         <div class="row show_donwload">

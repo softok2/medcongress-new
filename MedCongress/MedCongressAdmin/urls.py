@@ -49,7 +49,7 @@ from .views_inicio.meta_datos_views import (MetaInicioListView,MetaInicioUpdateV
 from .views_inicio.ofrecemos_views import (OfrecemosListView,OfrecemosCreateView,OfrecemosDeletedView,OfrecemosUpdateView)
 from .views.otros_views import (OtrosListView,OtroUpdateView)
 from .views.cuestionario_views import (PreguntaCreateView,CustionarioUpdateView,CustionarioDeletedView,CuestionarioListView)
-from .views.trabajos_views import (TrabajosListView,CongressTrabajoCreateView,CongressTrabajoUpdateView)
+from .views.trabajos_views import (TrabajosListView,CongressTrabajoCreateView,CongressTrabajoUpdateView,CongressTrabajoDeletedView)
 from .views.moderador_view import ModeradoresListView,ModeradorCreateView,ModeradorDeletedView,vTableAsJSONModeradores,UserModeradorCreateView
 from .views.meta_views import MetaPagInicioView,MetaPagInicioUpdateView
 from .views.preg_frecuente_view import PregFrecuenteCreateView,PregFrecuenteUpdateView,PregFrecuenteDeletView
@@ -366,6 +366,6 @@ urlpatterns = [
       path('trabajos/congreso/<str:path>', TrabajosListView.as_view(), name='Congres_trabajos'),
       path('trabajos-congres/adicinar/<str:path>', CongressTrabajoCreateView.as_view(), name='congres_trabajo_add'),
       path('trabajos-congres/editar/<str:path>/<int:pk>', CongressTrabajoUpdateView.as_view(), name='congres_trabajo_editar'),
-      # path('trabajos-congres/eliminar/<int:pk>', CongressProgramaDeletedView.as_view(), name='congres_programa_eliminar'),
+      path('trabajos-congres/eliminar/<int:pk>', CongressTrabajoDeletedView.as_view(), name='congres_trabajo_eliminar'),
 
   ]
