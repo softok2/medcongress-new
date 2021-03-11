@@ -1024,7 +1024,7 @@ class PerfilUserCreate(FormView):
         secret_key = get_random_string(60, chars)
         subject = 'Bienvenido a MedCongress'
         # html_message = render_to_string('MedCongressApp/email.html', context={'token':secret_key})
-        plain_message = strip_tags('Aviso..... Usted se ha creado un usuario en MedCongress entre a esta dirección https://medcongress.com.mx/habilitar_user/%s  para validar su cuenta en MedCongres'%(secret_key) )
+        plain_message = strip_tags('Usted se ha creado un usuario en MedCongress entre a esta dirección https://medcongress.com.mx/habilitar_user/%s  para validar su cuenta en MedCongres'%(secret_key) )
         from_email = ''
         to = user.email
         mail.send_mail(subject, plain_message, from_email, [to])
@@ -2063,7 +2063,7 @@ def Webhook(request):
             if cart[0]['cant'] >0:
                 subject = 'Comprobante de Pago de MedCongress'
                 html_message = render_to_string('MedCongressApp/recibo_pago.html', context={'car':cart,'date':received_json_data['event_date'],'numero':received_json_data['transaction']['authorization'],'importe':cart[0]['cant'],'card':card,'orden_id':received_json_data['transaction']['order_id'],'id_transaccion':received_json_data['transaction']['id'],'tipo':received_json_data['transaction']['method'],'site':URL_SITE })
-                plain_message = strip_tags('Aviso..... Usted se a comprado eventos en MedCongres')
+                plain_message = strip_tags('Usted se a comprado eventos en MedCongres')
                 from_email = ''
                 to = received_json_data['transaction']['customer']['email']
                 mail.send_mail(subject, plain_message, from_email, [to],html_message=html_message)
