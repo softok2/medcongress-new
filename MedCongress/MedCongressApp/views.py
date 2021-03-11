@@ -1045,6 +1045,7 @@ class PerfilUserCreate(FormView):
         perfil.usuario = us
         path=us.username.replace(".","").replace("@","-")
         perfil.path=path
+        perfil.foto='usuarios/defaulthombre.png'
         perfil.save()
         
 

@@ -73,9 +73,12 @@ Congresos
 <div class="kode-blog-style-2" style="margin-top: 82px;">
     <div class="container">
         <!--FIRST ROW START-->
-        <div class="row">
+        
             {%if congreso_list %}
             {% for congreso in congreso_list %}
+            {% if forloop.first %}
+            <div class="row">
+                {%endif%}
             <div class="col-md-4">
                 <!--KODE_EVENT_BLOG2 START-->
                 <div class="kode-event-blog3">
@@ -103,6 +106,13 @@ Congresos
                 </div>
                 <!--KODE_EVENT_BLOG2 START-->
             </div>
+            {%if forloop.counter|divisibleby:3 %}
+        </div>
+        <div class='row'>
+            {%endif%}
+            {%if forloop.last%}
+        </div>
+        {% endif %}
             {% endfor %}
             {%else%}
             <span>No encontro ningún Evento</span>

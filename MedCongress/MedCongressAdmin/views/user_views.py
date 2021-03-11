@@ -1,5 +1,6 @@
 from django import forms
 import json
+import base64 
 from django.contrib import messages
 from django.http import HttpResponseBadRequest, HttpResponseRedirect,HttpResponse
 from django.urls import reverse_lazy,reverse
@@ -38,7 +39,6 @@ class UsuarioCreateView(validarUser,FormView):
         self.success_url='%s?&search=%s'%(url,self.request.GET.get('search'))
         return self.success_url  
     def form_valid(self, form):
-
         user = form['user'].save(commit=False)
         perfiluser = form['perfiluser'].save(commit=False)
         ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
@@ -56,6 +56,16 @@ class UsuarioCreateView(validarUser,FormView):
         us.save()
         perfiluser.usuario = us
         perfiluser.path=us.username
+        if self.request.POST['prueba']:
+            image_64_encode=self.request.POST['prueba']
+            campo = image_64_encode.split(",")
+            image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
+            nombre=user.email.replace('.','_')
+            image_result = open('MedCongressApp/static/usuarios/foto_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+            image_result.write(image_64_decode)
+            perfiluser.foto='usuarios/foto_%s.png'%(nombre)
+        else:
+            perfiluser.foto='usuarios/defaulthombre.png'
         perfiluser.save() 
         return super(UsuarioCreateView, self).form_valid(form)
 
@@ -82,7 +92,7 @@ class UsuarioUpdateView(validarUser,FormView):
         if self.object.meta_og_imagen:
             context['imagen_meta']='/static/%s'%(self.object.meta_og_imagen)
         if self.object.foto:    
-            context['imagen_seg_url']='/static/%s'%(self.object.foto)
+            context['imagen_seg_url']=self.object.foto
         context['update']=True
         context['usuario']=self.object
         return context
@@ -104,6 +114,17 @@ class UsuarioUpdateView(validarUser,FormView):
             perfiluser_update.ubicacion=ubicacion
 
         perfiluser_update.usuario = user_update
+        if self.request.POST['prueba']:
+            image_64_encode=self.request.POST['prueba']
+            campo = image_64_encode.split(",")
+            image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
+            nombre=user.email.replace('.','_')
+            image_result = open('MedCongressApp/static/usuarios/foto_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+            image_result.write(image_64_decode)
+            perfiluser.foto='usuarios/foto_%s.png'%(nombre)
+        else:
+            if not perfiluser.foto :
+                perfiluser.foto='usuarios/defaulthombre.png'
         perfiluser_update.save() 
         return super(UsuarioUpdateView, self).form_valid(form)
     def get_success_url(self):
