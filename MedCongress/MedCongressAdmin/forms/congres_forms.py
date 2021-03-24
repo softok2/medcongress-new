@@ -17,9 +17,11 @@ from django.core.exceptions import NON_FIELD_ERRORS
 from django.forms.models import ModelMultipleChoiceField   
 import re     
 class CongresForm(forms.ModelForm):
-    imagen_seg=forms.ImageField(label='Buscar Imagen',required=True)
+    
     is_openpay=forms.BooleanField(label='Pagar por OpenPay',required=False)
     titulo=forms.CharField(label='Título')
+    prueba=forms.CharField(required=False)
+    prueba1=forms.CharField(required=False)
     template=forms.CharField(label='Template del Congreso',required=False)
     published=forms.BooleanField(label='Publicado',required=False)
     ver_titulo=forms.BooleanField(label='Ver Título',required=False)
@@ -31,15 +33,15 @@ class CongresForm(forms.ModelForm):
 
     class Meta:
         model=Congreso
-        fields=['titulo','sub_titulo','imagen_seg','fecha_inicio','published','t_congreso','especialidad','is_openpay','template','foto_constancia','aprobado','cant_preguntas','score','streaming','meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
-        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','detalles_tipo_boleto','detalles_tipo_boleto_taller','ver_titulo','vid_publicidad']
-
+        fields=['titulo','sub_titulo','fecha_inicio','published','t_congreso','especialidad','is_openpay','template','foto_constancia','aprobado','cant_preguntas','score','streaming','meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
+        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','detalles_tipo_boleto','detalles_tipo_boleto_taller','ver_titulo','vid_publicidad','prueba','prueba1']
+       
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
 
         self.fields['titulo'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['sub_titulo'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['imagen_seg'].widget.attrs.update({ 'data-toggle':"tooltip",'data-popup':"tooltip-custom", 'data-original-title':"La Imagen debe ser de 1140 X 240 pixel "})  
+        # self.fields['imagen_seg'].widget.attrs.update({ 'data-toggle':"tooltip",'data-popup':"tooltip-custom", 'data-original-title':"La Imagen debe ser de 1140 X 240 pixel "})  
         # self.fields['imagen_seg'].widget.attrs.update({'class': ' form-control '}) 
         self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control'})   
         self.fields['published'].widget.attrs.update({'class': 'form-control'}) 
@@ -67,22 +69,17 @@ class CongresForm(forms.ModelForm):
         self.fields['meta_title'].widget.attrs.update({'class': 'form-control'})  
         self.fields['detalles_tipo_boleto'].widget.attrs.update({'class': 'form-control ckeditor'})
         self.fields['detalles_tipo_boleto_taller'].widget.attrs.update({'class': 'form-control ckeditor'})     
-    def clean(self, *args, **kwargs):
-        cleaned_data = super(CongresForm, self).clean(*args, **kwargs)
-        imagen = cleaned_data.get('imagen_seg', None)
-        if imagen:
-            w, h = get_image_dimensions(imagen)
-            if w != 1140 or h != 240:
-                self.add_error('imagen_seg',"La <b>Imagen Segundaria</b> tiene %s X %s pixel. Debe ser de <b>1140 X 240 pixel</b>" %(w,h) )
    
     
-    # def clean(self, *args, **kwargs):
-    #     cleaned_data = super(UserForm, self).clean(*args, **kwargs)
-    #     password = cleaned_data.get('password', None)
-    #     password1 = cleaned_data.get('password1', None)
-    #     if password!=password1 :
-    #         self.add_error('password1', 'No coinciden los password ')
-
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(CongresForm, self).clean(*args, **kwargs)
+        imagenes = cleaned_data.get('prueba', None)
+        
+        imagen_seg = cleaned_data.get('prueba1', None)
+        if not imagenes :
+            self.add_error('prueba', 'Debe al menos entrar una <b>Imagen Principal</b>')
+        if not imagen_seg :
+            self.add_error('prueba1', 'Debe  entrar una <b>Imagen Segundaria</b>')
  
 class ImagenCongresoForms(forms.ModelForm):
     imagen=forms.ImageField()
@@ -129,7 +126,7 @@ class CongresoForms(MultiModelForm):
     form_classes = {
         'congreso': CongresForm,
         'ubicacion':UbicacionForm,
-        'imagen_congreso':ImagenCongresoForms
+        # 'imagen_congreso':ImagenCongresoForms
     }
 
 class MyMultipleModelChoiceField(ModelMultipleChoiceField):
@@ -138,7 +135,7 @@ class MyMultipleModelChoiceField(ModelMultipleChoiceField):
         return "%s" % (obj.user.usuario.email)
 
 class PonenciaForm(forms.ModelForm):
-    imagen=forms.ImageField(label='Buscar Imagen',required=False)
+    prueba=forms.CharField(required=False)
     titulo=forms.CharField(label='Título')
     fecha_inicio=forms.DateTimeField()
     published=forms.BooleanField(label='Publicado',required=False)
@@ -147,9 +144,9 @@ class PonenciaForm(forms.ModelForm):
     error=forms.CharField(required=False)
     class Meta:
         model=Ponencia
-        fields=['titulo','duracion','detalle','fecha_inicio','imagen','published','cod_video','congreso','bloque','is_info',
+        fields=['titulo','duracion','detalle','fecha_inicio','published','cod_video','congreso','bloque','is_info',
         'meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
-        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','error']
+        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','error','prueba']
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
@@ -162,7 +159,7 @@ class PonenciaForm(forms.ModelForm):
         self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control'})   
         self.fields['published'].widget.attrs.update({'class': 'form-control'})  
         # self.fields['ponente'].widget.attrs.update({'class': 'form-control'})   
-        self.fields['cod_video'].widget.attrs.update({'class': 'form-control','rows':'3'}) 
+        self.fields['cod_video'].widget.attrs.update({'class': 'form-control','rows':'6'}) 
         self.fields['detalle'].widget.attrs.update({'class': 'form-control','rows':'3'})  
         self.fields['meta_og_title'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['meta_description'].widget.attrs.update({'class': 'form-control','rows':'3'}) 
@@ -175,7 +172,7 @@ class PonenciaForm(forms.ModelForm):
         self.fields['meta_keywords'].widget.attrs.update({'class': 'form-control','rows':'3'})   
         self.fields['meta_og_imagen'].widget.attrs.update({'class': 'form-control '}) 
         self.fields['meta_title'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['imagen'].widget.attrs.update({ 'data-toggle':"tooltip",'data-popup':"tooltip-custom", 'data-original-title':"La Imagen debe ser de 1920 X 1080 pixel "})   
+       
         # self.fields['ponente'].widget.attrs.update({'class': 'form-control multiple-select-box selectivity-input'})  
     
     def clean(self, *args, **kwargs):
@@ -184,11 +181,11 @@ class PonenciaForm(forms.ModelForm):
             fecha_inicio = cleaned_data.get('fecha_inicio', None)
             bloq = cleaned_data.get('bloque', None)
             congreso=cleaned_data.get('congreso', None)
-            imagen = cleaned_data.get('imagen', None)
-            if imagen:
-                w, h = get_image_dimensions(imagen)
-                if w != 1920 or h != 1080:
-                    self.add_error('imagen',"Esta imagen tiene %s X %s pixel. Debe ser de 1920 X 1080 pixel" %(w,h) )
+            imagenes = cleaned_data.get('prueba', None)
+        
+        
+            if not imagenes :
+                self.add_error('prueba', 'Debe entrar una <b>Imagen </b> a la ponencia')
 
 
             if bloq and fecha_inicio.date() != bloq.fecha_inicio.date():
@@ -232,7 +229,7 @@ class PonenciaPonenteForm(forms.ModelForm):
     #         self.add_error('error', e)    
 
 class TallerForm(forms.ModelForm):
-    imagen=forms.ImageField(label='Buscar Imagen',required=False)
+    prueba=forms.CharField(required=False)
     titulo=forms.CharField(label='Título')
     fecha_inicio=forms.DateTimeField()
     published=forms.BooleanField(label='Publicado',required=False)
@@ -240,7 +237,7 @@ class TallerForm(forms.ModelForm):
     foto_constancia=forms.ImageField(label='Buscar Imagen para la Constancia',required=False,)
     class Meta:
         model=Taller
-        fields=['titulo','duracion','fecha_inicio','imagen','published','congreso','detalle','bloque',
+        fields=['titulo','duracion','fecha_inicio','prueba','published','congreso','detalle','bloque',
         'meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
         'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','cod_video','foto_constancia','score']
 
@@ -274,11 +271,9 @@ class TallerForm(forms.ModelForm):
         fecha_inicio = cleaned_data.get('fecha_inicio', None)
         bloq = cleaned_data.get('bloque', None)
         # bloque=Bloque.objects.get(pk=int(bloq))
-        imagen = cleaned_data.get('imagen', None)
-        if imagen:
-            w, h = get_image_dimensions(imagen)
-            if w != 1920 or h != 1080:
-                self.add_error('imagen',"La <b> Imagen Principal </b>tiene %s X %s pixel. Debe ser de <b> 1920 X 1080 pixel</b>" %(w,h) )
+        imagen = cleaned_data.get('prueba', None)
+        if not imagen :
+                self.add_error('prueba', 'Debe entrar una <b>Imagen </b> al Taller')
         try:
             if bloq and fecha_inicio.date() != bloq.fecha_inicio.date():
                 self.add_error('fecha_inicio', 'La <b> Fecha de Inicio</b> no coincide con la del bloque que pertenece <b> %s</b> '%(bloq.fecha_inicio.date()))

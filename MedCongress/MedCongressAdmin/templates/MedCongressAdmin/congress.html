@@ -63,9 +63,6 @@
                                         <thead>
                                             <tr role="row" style="font-size: 13px;">
                                                 <th style="width:50%">Nombre</th>
-                                               
-                                                <!-- <th>T. de Congreso</th>
-                                                <th>Especialidad</th> -->
                                                 <th>Public.</th>
                                                 <th style="width:12%">Programa</th>
                                                 <th>Otros &nbsp;&nbsp;  </th>
@@ -73,13 +70,13 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for congres in congress %}
+                                            <!-- {% for congres in congress %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
                                                 <td class="sorting_1" >{{ congres.titulo }}</td>
                                                 
-                                                <!-- <td>{{ congres.t_congreso.nombre }}</td>
+                                                <td>{{ congres.t_congreso.nombre }}</td>
                                                 <td>{{ congres.especialidad.nombre }}</td> -->
-                                                <td style="vertical-align: middle;">{%if congres.published%}Si{%else%}No{%endif%}</td>
+                                                <!-- <td style="vertical-align: middle;">{%if congres.published%}Si{%else%}No{%endif%}</td>
                                                 <td style="vertical-align: middle;"> 
                                                     <a id=""
                                                     href="{%url 'MedCongressAdmin:Congres_bloques' congres.path%}"
@@ -159,8 +156,8 @@
 
                                                     
                                                 </td>
-                                            </tr>
-                                            {% endfor %}
+                                            </tr> 
+                                            {% endfor %} -->
                                         </tbody>
                                         <tfoot>
                                             <tr style="font-size: 13px;">
@@ -218,6 +215,21 @@
             "previous": "Anterior"
         }
     },
+    "columns": [
+       
+        {'data':'titulo','orderable': true},
+        {'data':'publicado','orderable': true},
+        {'data':'programa','orderable': false },
+        {'data':'otros','orderable': false },
+        {'data':'operaciones','orderable': false }
+       
+    ],
+    "bServerSide": true,
+    "sAjaxSource":"{% url 'MedCongressAdmin:table_json_congresos' %}",
+    "fnServerParams": function (aoData) {
+            aoData.push( { "name": "search", "value": $('.dataTables_filter input').val()  } );
+        
+       }
  
 });
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();

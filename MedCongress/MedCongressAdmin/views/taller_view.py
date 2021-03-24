@@ -1,5 +1,6 @@
 import json
-
+import base64 
+from os import remove
 from django import forms
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -88,6 +89,15 @@ class  TallerCreateView(validarUser,FormView):
             id_video=taller.cod_video.split(sep='https://player.vimeo.com/video/')
             id_video=id_video[-1].split(sep='"')
         taller.id_video=id_video[0]
+        image_64_encode=self.request.POST['taller-prueba']
+        campo = image_64_encode.split(",")
+        image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
+        chars = '0123456789'
+        nombre = get_random_string(5, chars)
+        image_result = open('MedCongressApp/static/talleres/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+        image_result.write(image_64_decode)
+        taller.imagen='talleres/imagen_%s.png'%(nombre)
+        
         taller.save()
         for ponente in self.request.POST.getlist('taller_ponente-ponente'):
                 ponente_=Ponente.objects.get(pk=ponente)
@@ -193,7 +203,7 @@ class TallerUpdateView(validarUser,FormView):
         if self.object.meta_og_imagen:
             context['imagen_meta']='/static/%s'%(self.object.meta_og_imagen)
         if self.object.imagen:
-            context['imagen_seg_url']='/static/%s'%(self.object.imagen)
+            context['imagen_seg_url']=self.object.imagen
         context['bloque_update']=self.object.bloque
         if self.object.foto_constancia:
             context['foto_constancia']='/static/%s'%(self.object.foto_constancia)
@@ -244,6 +254,18 @@ class TallerUpdateView(validarUser,FormView):
             id_video=taller.cod_video.split(sep='https://player.vimeo.com/video/')
             id_video=id_video[-1].split(sep='"')
         taller.id_video=id_video[0]
+        imagen_seg=self.request.POST['taller-prueba']
+        if 'talleres/' not in imagen_seg:
+            image_64_encode=self.request.POST['taller-prueba']
+            campo = image_64_encode.split(",")
+            chars = '0123456789'
+            nombre = get_random_string(5, chars)
+            image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
+            image_result = open('MedCongressApp/static/talleres/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+            image_result.write(image_64_decode)
+            if taller.imagen:
+                remove('MedCongressApp/static/%s'%( taller.imagen))
+            taller.imagen='talleres/imagen_%s.png'%(nombre)
         taller_update=taller
         taller_update.save()
         relaciones=RelTallerPonente.objects.filter(taller=taller_update)
@@ -570,7 +592,8 @@ class AsignarTallerAddViews(validarUser,FormView):
     template_name = 'MedCongressAdmin/asig_taller_form.html'
 
     def form_valid(self, form):
-        congress=form.save(commit=True)
+        taller=form.save(commit=True)
+        
         return super().form_valid(form)
     def get_context_data(self, **kwargs):
         ctx = super(AsignarTallerAddViews, self).get_context_data(**kwargs)

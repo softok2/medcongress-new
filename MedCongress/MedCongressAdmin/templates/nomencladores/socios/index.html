@@ -80,11 +80,11 @@
                                         id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
                                         <thead>
                                             <th style="width:50%">Nombre</th>
-                                            <th style="width:50%">Logo</th>  
+                                           
                                                 <th style="width:5%">Operaciones</th>
                                         </thead>
                                         <tbody>
-                                            {% for socio in socios %}
+                                            <!-- {% for socio in socios %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
                                                
                                                 <td>{{socio.nombre}}</td>
@@ -112,12 +112,12 @@
                                                     
                                                 </td>
                                             </tr>
-                                            {% endfor %}
+                                            {% endfor %} -->
                                         </tbody>
                                         <tfoot>
                                             
                                                 <th>Denominación</th>
-                                                <th style="width:50%">Logo</th>  
+                                               
                                                 <th style="width:5%">Operaciones</th>
                                         </tfoot>
                                     </table>
@@ -164,7 +164,21 @@
             "previous": "Anterior"
         }
     },
- 
+    "columns": [
+       
+       {'data':'nombre','orderable': true},
+       
+       {'data':'operaciones','orderable': false }
+      
+   ],
+   "bServerSide": true,
+   "sAjaxSource":"{% url 'MedCongressAdmin:table_json_socios' %}",
+   "fnServerParams": function (aoData) {
+           aoData.push( { "name": "search", "value": $('.dataTables_filter input').val()  } );
+           {%if congreso%}
+           aoData.push( { "name": "congreso", "value": {{congreso.pk}}  } );
+            {%endif%}
+      }
 });
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({

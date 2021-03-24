@@ -218,23 +218,25 @@ Inicio
 				{% for congreso in congresos %}
 				{% if congreso.imagencongreso_set.all.0.imagen %}
 			  <div class="item {% if forloop.first %} active {% endif %}"  >
-				<img src="{% static '/'%}{{congreso.imagencongreso_set.all.0.imagen}}" >
+				<a href="{%url 'View_congreso' congreso.path%}"><img src="{% static '/'%}{{congreso.imagencongreso_set.all.0.imagen}}" >
 				<div class="kode-content" >
-					{%if congreso.ver_titulo%}
+					
 					<div class="container">
 						<div class="row">
+							{%if congreso.ver_titulo%}
 							<div class="kode-slider-content" >
 								<h2>{{congreso.titulo}}</h2>{%if congreso.sub_titulo %}<h2 class="mi_h2">
 									{{congreso.sub_titulo }}</h2> {%endif%}
 
 								
 							</div>
+								{%endif%}
 						</div>
-						<div class="row " style="text-align: center;"><a href="{%url 'View_congreso' congreso.path%}" class="button my_boton"
-							>Ver Congreso</a></div>
+						
 					</div>
-					{%endif%}
+				
 				</div>
+			</a>
 			  </div>
 			  {% endif %}
 			  {% endfor %}

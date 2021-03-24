@@ -1,5 +1,5 @@
 import json
-
+import base64 
 import os
 from django.views.decorators.csrf import csrf_exempt
 from collections import namedtuple
@@ -1881,33 +1881,38 @@ class PerfilUpdateView(FormView):
 
 
     def form_valid(self, form):
-
+        perfiluser_update=PerfilUsuario.objects.get(pk=self.kwargs.get('pk'))
+        user_update=perfiluser_update.usuario
         user = form['user'].save(commit=False)
         perfiluser = form['perfiluser'].save(commit=False)
-        
+        user_update=user
+        perfiluser_update=perfiluser
+        user_update.save()
         ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
         
-        us=User.objects.get(username=form['user'].instance.username)
-
-        perfil_edit =PerfilUsuario.objects.filter(usuario=us).first()
-        
         if ubic.exists():
-            perfiluser.ubicacion=ubic.first()
+            perfiluser_update.ubicacion=ubic.first()
         else:
-            new_ubicacion=Ubicacion(direccion=form['ubicacion'].instance.direccion,longitud= form['ubicacion'].instance.longitud,latitud =form['ubicacion'].instance.latitud)
-            new_ubicacion.save()
-            perfiluser.ubicacion=new_ubicacion
+            ubicacion=form['ubicacion'].save(commit=True)
+            perfiluser_update.ubicacion=ubicacion
 
-        perfil_edit=form['perfiluser']
-       
-        us.first_name=user.first_name
-        us.last_name=user.last_name
-        us.email=user.email
-        us.is_active = True
-        us.save()
-        
-        perfil_edit.save()
-       
+        perfiluser_update.usuario = user_update
+        if self.request.POST['prueba']:
+            image_64_encode=self.request.POST['prueba']
+            campo = image_64_encode.split(",")
+            image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
+            nombre=user.email.replace('.','_')
+            chars = '0123456789'
+            nom= get_random_string(5, chars)
+            image_result = open('MedCongressApp/static/usuarios/foto_%s_%s.png'%(nombre,nom), 'wb') # create a writable image and write the decoding result
+            image_result.write(image_64_decode)
+            if perfiluser.foto:
+                os.remove('MedCongressApp/static/%s'%( perfiluser.foto))
+            perfiluser.foto='usuarios/foto_%s_%s.png'%(nombre,nom)
+        else:
+            if not perfiluser.foto :
+                perfiluser.foto='usuarios/defaulthombre.png'
+        perfiluser_update.save() 
         return super(PerfilUpdateView, self).form_valid(form)
 
 
@@ -1916,7 +1921,7 @@ class PerfilUpdateView(FormView):
         context['update']=True
         perfil_edit =PerfilUsuario.objects.get(pk=self.kwargs.get('pk'))
         if perfil_edit.foto:
-            context['imagen_seg_url']='/static/%s'%(perfil_edit.foto)
+            context['imagen_seg_url']=perfil_edit.foto
         else:
             context['imagen_seg_url']=False
         return context

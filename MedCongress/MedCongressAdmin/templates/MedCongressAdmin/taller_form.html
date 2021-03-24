@@ -2,45 +2,63 @@
 {% block title %}{%if update%} Actualizar Taller{%else%}Adicionar Taller{%endif%}{% endblock %}
 {% load static %}
 {% block styles %}
-<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/selectivity-full.min.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/css/plugins/forms/selectivity/selectivity.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/selectize.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/selectize.default.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/css/plugins/forms/selectize/selectize.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/select2.min.css' %}">
+<link rel="stylesheet" type="text/css"
+	href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/selectivity-full.min.css' %}">
+<link rel="stylesheet" type="text/css"
+	href="{% static 'MedCongressAdmin/app-assets/css/plugins/forms/selectivity/selectivity.css' %}">
+<link rel="stylesheet" type="text/css"
+	href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/selectize.css' %}">
+<link rel="stylesheet" type="text/css"
+	href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/selectize.default.css' %}">
+<link rel="stylesheet" type="text/css"
+	href="{% static 'MedCongressAdmin/app-assets/css/plugins/forms/selectize/selectize.css' %}">
+<link rel="stylesheet" type="text/css"
+	href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/select2.min.css' %}">
 
-</head>
+
+<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/assets/css/cropper.css' %}">
+
+
+
+
 <style>
 	#geomap {
 		width: 100%;
 		height: 400px;
+	}
+
+	.img-container img {
+		max-width: 100%;
 	}
 </style>
 
 {% endblock %}
 {% block content %}
 <div class=" col-md-6 col-12 " style="margin-top: -26px;">
-						
+
 	<div class="row breadcrumbs-top">
-	  <div class="breadcrumb-wrapper col-12">
-		<ol class="breadcrumb">
-{%if con or congreso_bloque%}
-    <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
-    </li>
-{%endif%}
-{%if bloque%}
-            <li class="breadcrumb-item active"> <a {%if congreso_bloque%}href="{% url 'MedCongressAdmin:Congres_bloques' path=bloque.congreso.path %}"{%else%}href="{% url 'MedCongressAdmin:bloques_list' %}"{%endif%}>Bloques</a>
-            </li>
-{%endif%}   
+		<div class="breadcrumb-wrapper col-12">
+			<ol class="breadcrumb">
+				{%if con or congreso_bloque%}
+				<li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+				</li>
+				{%endif%}
+				{%if bloque%}
+				<li class="breadcrumb-item active"> <a {%if congreso_bloque%}href="{% url 'MedCongressAdmin:Congres_bloques' path=bloque.congreso.path %}"
+						{%else%}href="{% url 'MedCongressAdmin:bloques_list' %}" {%endif%}>Bloques</a>
+				</li>
+				{%endif%}
 
-<li class="breadcrumb-item active"><a {%if con%}href="{% url 'MedCongressAdmin:talleres_list' %}?congreso={{con.path}}"{%elif congreso_bloque%}href="{% url 'MedCongressAdmin:talleres_list' %}?bloque={{bloque.path}}&congreso_bloque=true"{%else%}href="{% url 'MedCongressAdmin:talleres_list' %}?bloque={{bloque.path}}"{%endif%}>Talleres</a>
-</li>
-<li class="breadcrumb-item active">{%if update%} Actualizar Taller{%else%}Adicionar Taller{%endif%}
-</li>
+				<li class="breadcrumb-item active"><a {%if con%} href="{% url 'MedCongressAdmin:talleres_list' %}?congreso={{con.path}}" {%elif congreso_bloque%}href="{% url 'MedCongressAdmin:talleres_list' %}?bloque={{bloque.path}}&congreso_bloque=true"
+						{%else%}href="{% url 'MedCongressAdmin:talleres_list' %}?bloque={{bloque.path}}"
+						{%endif%}>Talleres</a>
+				</li>
+				<li class="breadcrumb-item active">{%if update%} Actualizar Taller{%else%}Adicionar Taller{%endif%}
+				</li>
 
-</ol>
-</div>
-</div>
+			</ol>
+		</div>
+	</div>
 </div>
 <section class="multiple-input-with-labels" id="multiple-input-with-labels">
 
@@ -69,7 +87,7 @@
 				<div class="card-header">
 					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
 						{%if update%} Actualizar Taller{%else%}Adicionar Taller{%endif%}</h1>
-						
+
 					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
 					<div class="heading-elements">
 						<ul class="list-inline mb-0">
@@ -82,455 +100,560 @@
 				<div class="card-content collapse show">
 					<div class="card-body">
 						{% if form.errors %}
-    {% for field in form %}
-        {% for error in field.errors %}
-        
-			<div class="alert alert-danger alert-dismissible mb-2" role="alert">
-				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-					<span aria-hidden="true">×</span>
-				</button>
-				{{ error|safe|escape }}
-			</div>
-        {% endfor %}
-    {% endfor %}
-    {% for error in form.non_field_errors %}
-	<div class="alert alert-danger alert-dismissible mb-2" role="alert">
-		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-			<span aria-hidden="true">×</span>
-		</button>
-		{{ error|safe|escape }}
-	</div>
-    {% endfor %}
-{% endif %} 
+						{% for field in form %}
+						{% for error in field.errors %}
+
+						<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">×</span>
+							</button>
+							{{ error|safe|escape }}
+						</div>
+						{% endfor %}
+						{% endfor %}
+						{% for error in form.non_field_errors %}
+						<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">×</span>
+							</button>
+							{{ error|safe|escape }}
+						</div>
+						{% endfor %}
+						{% endif %}
 						<form id="congres-form" method="POST" action="" enctype="multipart/form-data">
 							{% csrf_token %}
-							<div class="form-body">
-								<div class="row">
-									<div class="col-md-12">
-										<div class="row">
-											<div class="col-sm-8 ">
-												<div class="form-group">
-													<label
-														for="{{form.taller.titulo.id_for_label }}"><b>{{form.taller.titulo.label }}</b></label>
+							<section id="basic-tabs-components">
+								<div class="row match-height">
+									<div class="col-xl-12 col-lg-12">
+										<div class="card">
 
-													{{form.taller.titulo }}
-												</div>
-											</div>
-											<div class="col-sm-4 ">
-												<div class="form-group">
-													<label
-														for="{{form.taller.fecha_inicio.id_for_label }}"><b></label>
-
-													{{form.taller.fecha_inicio}}
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-sm-12 ">
-												<div class="form-group">
-													<label
-														for="{{form.taller.detalle.id_for_label }}"><b>{{form.taller.detalle.label }}</b></label>
-
-													{{form.taller.detalle }}
-												</div>
-											</div>
-										</div>
-										<div class="row">
-
-											<div class="col-sm-6 ">
-												<div class="form-group">
-													<label
-														for="{{form.taller.duracion.id_for_label }}"><b>{{form.taller.duracion.label }}</b></label>
-
-													{{form.taller.duracion }}
-												</div>
-											</div>
-											<div class="col-sd-1"></div>
-											<div class="col-sm-3 ">
-												<div class="form-group">
-													{%if foto_constancia%}
-													<label><b>Imagen de la Constancia Actual </b> </label>
-													<figure class="col-lg-3 col-md-6 col-12" itemprop="associatedMedia"
-														itemscope=""></figure>
-													<a href="{{foto_constancia}}" itemprop="contentUrl"
-														data-size="480x360">
-														<img class="img-thumbnail img-fluid" src="{{foto_constancia}}"
-															itemprop="thumbnail" alt="Image description">
-													</a>
-
-													</figure>
-
-													<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva
-															Imagen de Constancia</b> </label>
-													
-													<input type="file" name="taller-foto_constancia" accept="image/*"
-														class=" form-control " id="id_taller-foto_constancia">
-													{% else%}
-													<label for="{{form.taller.foto_constancia.id_for_label }}"><b>Imagen
-															de la Constancia</b>
-															</label>
-
-													{{form.taller.foto_constancia }}
-													{%endif%}
-												</div>
-											</div>
-
-										</div>
-										<div class="row">
-											<div class="col-sm-6 ">
-												<div class="form-group">
-													{%if imagen_seg_url%}
-													<label><b>Imagen Actual </b> </label>
-													<figure class="col-lg-3 col-md-6 col-12" itemprop="associatedMedia"
-														itemscope=""></figure>
-													<a href="{{imagen_seg_url}}" itemprop="contentUrl"
-														data-size="480x360">
-														<img class="img-thumbnail img-fluid" src="{{imagen_seg_url}}"
-															itemprop="thumbnail" alt="Image description">
-													</a>
-
-													</figure>
-
-													<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva
-															Imagen</b> </label>
-															<br> 
-															<span style="font-size: 12px; color: red;">(<b>*</b> Debe ser de <b>1920 X 1080</b> pixel) </span>
-														
-																	
-													<input type="file" name="taller-imagen" accept="image/*"
-														class=" form-control " id="id_taller-imagen">
-													{% else%}
-
-													<label
-														for="{{form.taller.imagen.id_for_label }}"><b>{{form.taller.imagen.label }}</b></label>
-														<br> 
-														<span style="font-size: 12px; color: red;">(<b>*</b> Debe ser de <b>1920 X 1080</b> pixel) </span>
-													
-																
-													{{form.taller.imagen }}
-													{%endif%}
-												</div>
-											</div>
-											<div class="col-sm-6 ">
-												<div class="form-group">
-													<label
-														for="{{form.taller_ponente.ponente.id_for_label }}"><b>{{form.taller_ponente.ponente.label }}</b>
-														</label>
-														{%if ponentes%}
-														<select  name="taller_ponente-ponente"  class="select2 form-control" multiple="multiple" >
-															{%for ponentes_all in ponentes_alls%}
-															<option value="{{ponentes_all.id}}" {%if ponentes_all.activo%}selected{%endif%}>{{ponentes_all.nombre}}</option>
-
-															{%endfor%}
-
-														</select>
-														{%else%}
-														<div >
-															{{form.taller_ponente.ponente}}
-														</div>
-														{%endif%}
-														<!-- <input type="text" name="my_ponente" class="form-control" required=""
-															id="id_my_ponente" value="{{ponente}}"> -->
-												</div>
-											</div>
-
-
-										</div>
-										<div class="row">
-											<div class="col-sm-12">
-												<div class="form-group">
-													<label
-														for="{{form.taller.detalles_tipo_boleto.id_for_label }}"><b>{{form.taller.detalles_tipo_boleto.label }}</b> </label>
-
-													{{form.taller.detalles_tipo_boleto }}
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-sm-6 ">
-												<div class="form-group">
-													<label
-														for="{{form.ubicacion.direccion.id_for_label }}"><b>{{form.ubicacion.direccion.label }}</b>
-														</label>
-													{{form.ubicacion.direccion }}
-												</div>
-											</div>
-											<div class="col-ms-1">
-												<div class="form-group">
-
-													<label class="mapa">Ver Mapa</label>
-													<!-- <a onclick="VerMapa()" type="link"  style="display: block;">  <i class="" style="font-size: 43px;"></i> </a> -->
-													<button type="button" class="btn btn-link" data-toggle="modal"
-														data-target="#my" style="display: block;">
-														<span><i class="ft ft-map-pin"
-																style="font-size: 30px;display: block;margin-top: -13px;"></i></span>
-
-													</button>
-
-												</div>
-
-											</div>
-
-											<div class="col-sm-3 " style="display: none;">
-												<div class="form-group">
-													<label
-														for="{{form.ubicacion.longitud.id_for_label }}"><b>{{form.ubicacion.longitud.label }}</b></label>
-
-													{{form.ubicacion.longitud }}
-												</div>
-											</div>
-											<div class="col-sm-3 " style="display: none;">
-												<div class="form-group">
-													<label
-														for="{{form.ubicacion.latitud.id_for_label }}"><b>{{form.ubicacion.latitud.label }}</b></label>
-
-													{{form.ubicacion.latitud }}
-												</div>
-											</div>
-											<div class="col-sm-3 "{%if con or congreso %} style="display: none;" {%endif%}>
-												<div class="form-group" >
-													<label
-														for="{{form.taller.congreso.id_for_label }}"><b>{{form.taller.congreso.label }}</b> </label>
-
-													{{form.taller.congreso }}
-												</div>
-											</div>
-											<div class="col-sm-3 " {%if bloque %} style="display: none;" {%endif%}>
-												<div class="form-group">
-
-
-													<label
-														for="{{form.taller.bloque.id_for_label }}"><b>{{form.taller.bloque.label }}</b></label>
-
-													{%if blo %}
-													<select name="taller-bloque" class="form-control"
-														id="id_taller-bloque">
-														<option value="" selected="">---------</option>
-														{%for b in blo%}
-														<option value="{{b.id}}">{{b.titulo}}</option>
-														{%endfor%}
-
-													</select>
-													{%else%}
-													{{form.taller.bloque }}
-													{% endif %}
-
-												</div>
-											</div>
-											<div class="col-sm-6 ">
-												<div class="form-group">
-													<label
-														for="{{form.taller.cod_video.id_for_label }}"><b>Código de inserción del video en Vimeo</b></label>
-
-													{{form.taller.cod_video }}
-												</div>
-											</div>
-											<div class="col-sm-3 ">
-												<div class="form-group">
-													<label
-														for="{{form.taller.score.id_for_label }}"><b>Puntuación del Taller</b></label>
-
-													{{form.taller.score }}
-												</div>
-											</div>
-										</div>
+											<ul class="nav nav-tabs">
+												<li class="nav-item">
+													<a class="nav-link active" id="base-tab1" data-toggle="tab"
+														aria-controls="tab1" href="#tab1" aria-expanded="true">Datos
+														Principales</a>
+												</li>
+												<li class="nav-item">
+													<a class="nav-link" id="base-tab3" data-toggle="tab"
+														aria-controls="tab3" href="#tab3" aria-expanded="false">Imagen
+														del Taller</a>
+												</li>
+												<li class="nav-item">
+													<a class="nav-link" id="base-tab2" data-toggle="tab"
+														aria-controls="tab2" href="#tab2" aria-expanded="false">Meta
+														datos</a>
+												</li>
 
 
 
-
-										<div class="row">
-											<div class="col-sm-3 ">
-												<div class="form-group">
-													<label
-														for="{{form.ponencia.published.id_for_label }}"><b>{{form.taller.published.label }}</b> </label>
-
-													{{form.taller.published }}
-												</div>
-											</div>
-											<!-- META DATOS -->
-										<div class="modal fade bs-example-modal-lg" id="meta" tabindex="-1"
-										role="dialog" aria-labelledby="myModalLabel">
-										<div class="modal-dialog  modal-lg" role="document">
-											<div class="modal-content">
-												<div class="modal-header">
-
-													<h4 class="modal-title" id="myModalLabel">Meta datos de este Taller</h4>
-													<button type="button" class="close" data-dismiss="modal"
-														aria-label="Close"><span
-															aria-hidden="true">&times;</span></button>
-												</div>
-												<div class="modal-body">
-													<section id="configuration">
+											</ul>
+											<div class="tab-content px-1 pt-1">
+												<div role="tabpanel" class="tab-pane active" id="tab1"
+													aria-expanded="true" aria-labelledby="base-tab1">
+													<!-- ///////// -->
+													<div class="form-body">
 														<div class="row">
-															<div class="col-12">
-																<div class="card">
+															<div class="col-md-12">
+																<div class="row">
+																	<div class="col-sm-8 ">
+																		<div class="form-group">
+																			<label
+																				for="{{form.taller.titulo.id_for_label }}"><b>{{form.taller.titulo.label}}</b></label>
+
+																			{{form.taller.titulo }}
+																		</div>
+																	</div>
+																	<div class="col-sm-4 ">
+																		<div class="form-group">
+																			<label
+																				for="{{form.taller.fecha_inicio.id_for_label }}"><b>Fecha de Inicio</b></label>
+
+																			{{form.taller.fecha_inicio}}
+																		</div>
+																	</div>
+																</div>
+																<div class="row">
+																	<div class="col-sm-12 ">
+																		<div class="form-group">
+																			<label
+																				for="{{form.taller.detalle.id_for_label }}"><b>{{form.taller.detalle.label}}</b></label>
+
+																			{{form.taller.detalle}}
+																		</div>
+																	</div>
+																</div>
+																<div class="row">
+
+																	<div class="col-sm-6 ">
+																		<div class="form-group">
+																			<label
+																				for="{{form.taller.duracion.id_for_label }}"><b>Duración</b></label>
+
+																			{{form.taller.duracion }}
+																		</div>
+																	</div>
+																	<div class="col-sd-1"></div>
+																	<div class="col-sm-3 ">
+																		<div class="form-group">
+																			{%if foto_constancia%}
+																			<label><b>Imagen de la Constancia Actual
+																				</b> </label>
+																			<figure class="col-lg-3 col-md-6 col-12"
+																				itemprop="associatedMedia" itemscope="">
+																			</figure>
+																			<a href="{{foto_constancia}}"
+																				itemprop="contentUrl"
+																				data-size="480x360">
+																				<img class="img-thumbnail img-fluid"
+																					src="{{foto_constancia}}"
+																					itemprop="thumbnail"
+																					alt="Image description">
+																			</a>
+
+																			</figure>
+
+																			<label for=" " style="margin-top: 20px;">
+																				<b>Insertar Nueva
+																					Imagen de Constancia</b> </label>
+
+																			<input type="file"
+																				name="taller-foto_constancia"
+																				accept="image/*" class=" form-control "
+																				id="id_taller-foto_constancia">
+																			{% else%}
+																			<label
+																				for="{{form.taller.foto_constancia.id_for_label }}"><b>Imagen
+																					de la Constancia</b>
+																			</label>
+
+																			{{form.taller.foto_constancia }}
+																			{%endif%}
+																		</div>
+																	</div>
+
+																</div>
+																<div class="row">
+																	<!-- <div class="col-sm-6 ">
+																		<div class="form-group">
+																			{%if imagen_seg_url%}
+																			<label><b>Imagen Actual </b> </label>
+																			<figure class="col-lg-3 col-md-6 col-12"
+																				itemprop="associatedMedia" itemscope="">
+																			</figure>
+																			<a href="{{imagen_seg_url}}"
+																				itemprop="contentUrl"
+																				data-size="480x360">
+																				<img class="img-thumbnail img-fluid"
+																					src="{{imagen_seg_url}}"
+																					itemprop="thumbnail"
+																					alt="Image description">
+																			</a>
+
+																			</figure>
+
+																			<label for=" " style="margin-top: 20px;">
+																				<b>Insertar Nueva
+																					Imagen</b> </label>
+																			<br>
+																			<span
+																				style="font-size: 12px; color: red;">(<b>*</b>
+																				Debe ser de <b>1920 X 1080</b> pixel)
+																			</span>
 
 
-																	<div class="card-content collapse show">
-																		<div class="card-body card-dashboard">
+																			<input type="file" name="taller-imagen"
+																				accept="image/*" class=" form-control "
+																				id="id_taller-imagen">
+																			{% else%}
 
-																			<div class="row">
-																				<div class="col-sm-4">
-																					<h5
-																						style="margin-bottom: 10px;">
-																						<b>Metas Principales </b>
-																					</h5>
-																					<div class="form-group">
-																						<label for="">
-																							<b>Título</b></label>
-
-
-																						{{form.taller.meta_title}}
-																					</div>
-																					<div class="form-group">
-																						<label for="">
-																							<b>Descripción</b></label>
-
-																					
-
-																						{{form.taller.meta_description}}
-																					</div>
-																					<div class="form-group">
-																						<label for=""> <b>Palabras
-																								Claves</b><span
-																								id="toggle-method"
-																								data-toggle="tooltip"
-																								data-placement="top"
-																								data-original-title="Palabras separadas por coma(,)">
-																								<i
-																									class="ft ft-info"></i>
-																							</span></label>
-
-																						
-
-																						{{form.taller.meta_keywords}}
-																					</div>
-																				</div>
-																				<div class="col-sm-4">
-																					<h5
-																						style="margin-bottom: 10px;">
-																						<b>Metas para FaceBook </b>
-																					</h5>
-																					<div class="form-group">
-																						<label for="">
-																							<b>Título</b></label>
-																						
-
-																						{{form.taller.meta_og_title}}
-																					</div>
-																					<div class="form-group">
-																						<label for="">
-																							<b>Descripción</b></label>
-																					
-																						{{form.taller.meta_og_description}}
-																					</div>
-																					<div class="form-group">
-																						<label for="">
-																							<b>Tipo</b></label>
-																					
-																						{{form.taller.meta_og_type}}
-																					</div>
-																					<div class="form-group">
-																						<label for="">
-																							<b>URL</b></label>
+																			<label
+																				for="{{form.taller.imagen.id_for_label }}"><b>{{form.taller.imagen.label}}</b></label>
+																			<br>
+																			<span
+																				style="font-size: 12px; color: red;">(<b>*</b>
+																				Debe ser de <b>1920 X 1080</b> pixel)
+																			</span>
 
 
-																						{{form.taller.meta_og_url}}
-																					</div>
-																					<div class="form-group">
-																						<label for="">
-																							<b>Imagen</b></label>
+																			{{form.taller.imagen }}
+																			{%endif%}
+																		</div>
+																	</div> -->
+																	<div class="col-sm-6 ">
+																		<div class="form-group">
+																			<label
+																				for="{{form.taller_ponente.ponente.id_for_label }}"><b>{{form.taller_ponente.ponente.label}}</b>
+																			</label>
+																			{%if ponentes%}
+																			<select name="taller_ponente-ponente"
+																				class="select2 form-control"
+																				multiple="multiple">
+																				{%for ponentes_all in ponentes_alls%}
+																				<option value="{{ponentes_all.id}}" {%if ponentes_all.activo%}
+																				selected
+																				{%endif%}>
+																					{{ponentes_all.nombre}}</option>
 
-																						{%if imagen_meta%}
-																						<img src="{{imagen_meta}}"
-																							class="img-responsive"
-																							style="width: 126px; padding: 20px;"
-																							alt=""><br>
-																							<input type="checkbox" name="taller-meta_og_imagen-clear" id="taller-meta_og_imagen-clear_id"> Eliminar
-																						<input type="file"
-																							name="taller-meta_og_imagen"
-																							accept="image/*"
-																							class="form-control "
-																							id="id_taller-meta_og_imagen">
-																						{%else%}
-																						{{form.taller.meta_og_imagen}}
-																						{%endif%}
-																					</div>
-																				</div>
-																				<div class="col-sm-4">
-																					<h5
-																						style="margin-bottom: 10px;">
-																						<b> Metas para Redes
-																							Sociales</b>
-																					</h5>
+																				{%endfor%}
 
-																					<div class="form-group">
-																						<label for="">
-																							<b>Card</b></label>
-
-
-																						{{form.taller.meta_twitter_card}}
-																					</div>
-
-																					<div class="form-group">
-																						<label for="">
-																							<b>Sitio</b></label>
-
-
-																						{{form.taller.meta_twitter_site}}
-																					</div>
-																					<div class="form-group">
-																						<label for="">
-																							<b>Creador</b></label>
-
-																						{{form.taller.meta_twitter_creator}}
-																					</div>
-																				</div>
+																			</select>
+																			{%else%}
+																			<div>
+																				{{form.taller_ponente.ponente}}
 																			</div>
+																			{%endif%}
+																			<!-- <input type="text" name="my_ponente" class="form-control" required=""
+																							id="id_my_ponente" value="{{ponente}}"> -->
+																		</div>
+																	</div>
+
+
+																</div>
+																<div class="row">
+																	<div class="col-sm-12">
+																		<div class="form-group">
+																			<label
+																				for="{{form.taller.detalles_tipo_boleto.id_for_label }}"><b>{{form.taller.detalles_tipo_boleto.label}}</b> </label>
+
+																			{{form.taller.detalles_tipo_boleto }}
+																		</div>
+																	</div>
+																</div>
+																<div class="row">
+																	<div class="col-sm-6 ">
+																		<div class="form-group">
+																			<label
+																				for="{{form.ubicacion.direccion.id_for_label }}"><b>{{form.ubicacion.direccion.label}}</b>
+																			</label>
+																			{{form.ubicacion.direccion }}
+																		</div>
+																	</div>
+																	<div class="col-ms-1">
+																		<div class="form-group">
+
+																			<label class="mapa">Ver Mapa</label>
+																			<!-- <a onclick="VerMapa()" type="link"  style="display: block;">  <i class="" style="font-size: 43px;"></i> </a> -->
+																			<button type="button" class="btn btn-link"
+																				data-toggle="modal" data-target="#my"
+																				style="display: block;">
+																				<span><i class="ft ft-map-pin"
+																						style="font-size: 30px;display: block;margin-top: -13px;"></i></span>
+
+																			</button>
+
 																		</div>
 
 																	</div>
+
+																	<div class="col-sm-3 " style="display: none;">
+																		<div class="form-group">
+																			<label
+																				for="{{form.ubicacion.longitud.id_for_label }}"><b>{{form.ubicacion.longitud.label}}</b></label>
+
+																			{{form.ubicacion.longitud }}
+																		</div>
+																	</div>
+																	<div class="col-sm-3 " style="display: none;">
+																		<div class="form-group">
+																			<label
+																				for="{{form.ubicacion.latitud.id_for_label }}"><b>{{form.ubicacion.latitud.label}}</b></label>
+
+																			{{form.ubicacion.latitud }}
+																		</div>
+																	</div>
+																	<div class="col-sm-3 " {%if con or congreso %}
+																		style="display: none;" {%endif%}>
+																		<div class="form-group">
+																			<label
+																				for="{{form.taller.congreso.id_for_label }}"><b>{{form.taller.congreso.label}}</b> </label>
+
+																			{{form.taller.congreso }}
+																		</div>
+																	</div>
+																	<div class="col-sm-3 " {%if bloque %}
+																		style="display: none;" {%endif%}>
+																		<div class="form-group">
+
+
+																			<label
+																				for="{{form.taller.bloque.id_for_label }}"><b>{{form.taller.bloque.label}}</b></label>
+
+																			{%if blo %}
+																			<select name="taller-bloque"
+																				class="form-control"
+																				id="id_taller-bloque">
+																				<option value="" selected="">---------
+																				</option>
+																				{%for b in blo%}
+																				<option value="{{b.id}}">{{b.titulo}}
+																				</option>
+																				{%endfor%}
+
+																			</select>
+																			{%else%}
+																			{{form.taller.bloque }}
+																			{% endif %}
+
+																		</div>
+																	</div>
+																	<div class="col-sm-6 ">
+																		<div class="form-group">
+																			<label
+																				for="{{form.taller.cod_video.id_for_label }}"><b>Código
+																					de inserción del video en
+																					Vimeo</b></label>
+
+																			{{form.taller.cod_video }}
+																		</div>
+																	</div>
+																	<div class="col-sm-3 ">
+																		<div class="form-group">
+																			<label
+																				for="{{form.taller.score.id_for_label }}"><b>Puntuación
+																					del Taller</b></label>
+
+																			{{form.taller.score }}
+																		</div>
+																	</div>
 																</div>
+
+
+
+
+																<div class="row">
+																	<div class="col-sm-3 ">
+																		<div class="form-group">
+																			<label
+																				for="{{form.taller.published.id_for_label }}"><b>{{form.taller.published.label}}</b> </label>
+
+																			{{form.taller.published }}
+																		</div>
+																	</div>
+																</div>
+
+
 															</div>
 														</div>
-													</section>
+													</div>
 												</div>
-												<div class="modal-footer">
-												
-													<button type="button" class="btn btn-default"
-														data-dismiss="modal">Aplicar</button>
-
-												</div>
-											</div>
-										</div>
-									</div>
-
-									 <!-- END META DATOS -->
-											<div class="col-md-1"></div>
 											
-										</div>
-										
+								
+					
+					<div class="tab-pane" id="tab2" aria-labelledby="base-tab2">
+						<!-- ////////////////////////// -->
+						<!-- META DATOS -->
 
-										<div class="form-actions">
-											<div class="text-right">
-											<button id="atras" type="button" class="btn btn-danger ">Cancelar
-												<i class="ft-x position-right"></i>
-											</button>
-											<button id="save" type="submit" class="btn btn-primary">Guardar
-												<i class="ft-save position-right"></i>
-											</button>
+						<section id="configuration">
+							<div class="row">
+								<div class="col-12">
+									<div class="card">
+
+
+										<div class="card-content collapse show">
+											<div class="card-body card-dashboard">
+
+												<div class="row">
+													<div class="col-sm-4">
+														<h5 style="margin-bottom: 10px;">
+															<b>Metas Principales </b>
+														</h5>
+														<div class="form-group">
+															<label for="">
+																<b>Título</b></label>
+
+
+															{{form.taller.meta_title}}
+														</div>
+														<div class="form-group">
+															<label for="">
+																<b>Descripción</b></label>
+
+
+
+															{{form.taller.meta_description}}
+														</div>
+														<div class="form-group">
+															<label for=""> <b>Palabras
+																	Claves</b><span id="toggle-method"
+																	data-toggle="tooltip" data-placement="top"
+																	data-original-title="Palabras separadas por coma(,)">
+																	<i class="ft ft-info"></i>
+																</span></label>
+
+
+
+															{{form.taller.meta_keywords}}
+														</div>
+													</div>
+													<div class="col-sm-4">
+														<h5 style="margin-bottom: 10px;">
+															<b>Metas para FaceBook </b>
+														</h5>
+														<div class="form-group">
+															<label for="">
+																<b>Título</b></label>
+
+
+															{{form.taller.meta_og_title}}
+														</div>
+														<div class="form-group">
+															<label for="">
+																<b>Descripción</b></label>
+
+															{{form.taller.meta_og_description}}
+														</div>
+														<div class="form-group">
+															<label for="">
+																<b>Tipo</b></label>
+
+															{{form.taller.meta_og_type}}
+														</div>
+														<div class="form-group">
+															<label for="">
+																<b>URL</b></label>
+
+
+															{{form.taller.meta_og_url}}
+														</div>
+														<div class="form-group">
+															<label for="">
+																<b>Imagen <span style="font-size: 80%; color: darkgrey;"> (1920 X 1080)</span></b></label>
+
+															{%if imagen_meta%}
+															<img src="{{imagen_meta}}" class="img-responsive"
+																style="width: 126px; padding: 20px;" alt=""><br>
+															<input type="checkbox"
+																name="perfiluser-meta_og_imagen-clear"
+																id="perfiluser-meta_og_imagen-clear_id"> Eliminar
+															<input type="file" name="perfiluser-meta_og_imagen"
+																accept="image/*" class="form-control "
+																id="id_perfiluser-meta_og_imagen">
+															{%else%}
+															{{form.taller.meta_og_imagen}}
+															{%endif%}
+														</div>
+													</div>
+													<div class="col-sm-4">
+														<h5 style="margin-bottom: 10px;">
+															<b> Metas para Redes
+																Sociales</b>
+														</h5>
+
+														<div class="form-group">
+															<label for="">
+																<b>Card</b></label>
+
+
+															{{form.taller.meta_twitter_card}}
+														</div>
+
+														<div class="form-group">
+															<label for="">
+																<b>Sitio</b></label>
+
+
+															{{form.taller.meta_twitter_site}}
+														</div>
+														<div class="form-group">
+															<label for="">
+																<b>Creador</b></label>
+
+															{{form.taller.meta_twitter_creator}}
+														</div>
+													</div>
+												</div>
 											</div>
 
 										</div>
 									</div>
 								</div>
 							</div>
+						</section>
+						<!-- END META DATOS -->
+						<!-- /////////////////// -->
 					</div>
-					</form>
+					<div role="tabpanel" class="tab-pane " id="tab3" aria-expanded="true" aria-labelledby="base-tab3">
+						<div class="row">
+							<div class="col-sm-6 ">
+								<div class="form-group">
+									<label for="" style="margin-bottom: 40px;"> <b>Imagen </b> </label>
+									{%if imagen_seg_url%}
+									<label class="label" data-toggle="tooltip" title="Clic para cambiar foto">
+										<div id="ver"><img class="img-fluid" id="avatar"
+												src="{%static '/'%}{{imagen_seg_url}}" alt="avatar"></div>
+										<input type="file" class="sr-only" id="input" name="image" accept="image/*">
+										<input type="hidden" id="taller-prueba" name="taller-prueba"
+											value="{{imagen_seg_url}}">
+									</label>
+
+									{% else%}
+									<br>
+									<label class="label" data-toggle="tooltip" title="Clic para cambiar foto">
+										<div id="ver"><span id="avatar"> <i class="icon icon-add_imagen"></i></span>
+										</div>
+										<input type="file" class="sr-only" id="input" name="image" accept="image/*">
+										<input type="hidden" id="taller-prueba" name="taller-prueba">
+									</label>
+									{%endif%}
+
+
+									<div class="alert" role="alert" id="alert"></div>
+									<div class="modal fade " id="modal" tabindex="-1" role="dialog"
+										aria-labelledby="modalLabel" aria-hidden="true">
+										<div class="modal-dialog " role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="modalLabel">Editar la Imagen</h5>
+													<button type="button" class="close" data-dismiss="modal"
+														aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<div class="modal-body">
+													<div class="img-container ">
+														<img id="image"
+															src="https://avatars0.githubusercontent.com/u/3456749">
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary"
+														data-dismiss="modal">Cancel</button>
+													<button type="button" class="btn btn-primary"
+														id="crop">Guardar</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+
+
+							</div>
+						</div>
+
+
+					</div>
+					<div class="form-actions">
+						<div class="text-right">
+							<button id="atras" type="button" class="btn btn-danger ">Cancelar
+								<i class="ft-x position-right"></i>
+							</button>
+							<button id="save" type="submit" class="btn btn-primary">Guardar
+								<i class="ft-save position-right"></i>
+							</button>
+						</div>
+
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+</section>
+</div>
+</form>
+</div>
+</div>
+</div>
+</div>
 </section>
 {% endblock %}
 {% block scripts %}
@@ -544,7 +667,7 @@
 <script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-selectize.js'%}"></script> -->
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/forms/select/select2.full.min.js'%}"></script>
 <script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-select2.js'%}"></script>
-
+<script src="{% static 'MedCongressAdmin/assets/js/cropper.js'%}"></script> 
 <script type="text/javascript"
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCf3QdCwg8QDNOS3A2vSQ3DqW2mpJ_gSY8"></script>
 <script src="{% static 'MedCongressApp/js/lugar.js'%}"></script>
@@ -553,14 +676,14 @@
 <script type="text/javascript">
 	$(document).ready(function () {
 		$('#id_taller-fecha_inicio').datetimepicker({
-		format: 'dd/mm/yyyy hh:ii:ss',
-		
-	});
+			format: 'dd/mm/yyyy hh:ii:ss',
+
+		});
 		$('#id_taller-congreso').change(function () {
-				$('#id_taller-bloque').empty();
-				$('#id_taller-bloque').append($("<option></option").attr('value', '').text('----------'));
+			$('#id_taller-bloque').empty();
+			$('#id_taller-bloque').append($("<option></option").attr('value', '').text('----------'));
 			if ($('#id_taller-congreso').val()) {
-			
+
 				$.ajax({
 					type: "POST",
 					url: "{% url 'MedCongressAdmin:Get_Bloque' %}",
@@ -583,12 +706,12 @@
 
 
 		});
-		
+
 		$('#id_taller-congreso').ready(function () {
-				$('#id_taller-bloque').empty();
-				$('#id_taller-bloque').append($("<option></option").attr('value', '').text('----------'));
-			if ($('#id_taller-congreso').val() ) {
-			
+			$('#id_taller-bloque').empty();
+			$('#id_taller-bloque').append($("<option></option").attr('value', '').text('----------'));
+			if ($('#id_taller-congreso').val()) {
+
 				$.ajax({
 					type: "POST",
 					url: "{% url 'MedCongressAdmin:Get_Bloque' %}",
@@ -600,18 +723,18 @@
 						for (var i = 0; i < data.length; i++) {
 
 							$('#id_taller-bloque').append($("<option></option").attr('value', data[i].id).text(data[i].titulo))
-							{%if bloque_update%}
-								$("#id_taller-bloque option[value='{{bloque_update.id}}']").attr("selected", true);
-							{%endif%}
+							{%if bloque_update %}
+							$("#id_taller-bloque option[value='{{bloque_update.id}}']").attr("selected", true);
+							{% endif %}
 
 							{%if bloque %}
-								$("#id_taller-bloque option[value='{{bloque.id}}']").attr("selected", true);
+							$("#id_taller-bloque option[value='{{bloque.id}}']").attr("selected", true);
 							{% endif %}
 						}
-					
+
 					}
 				});
-			
+
 
 			}
 
@@ -621,29 +744,29 @@
 
 		$('#atras').click(function () {
 
-{%if con %} 
-	location.href = "{% url 'MedCongressAdmin:talleres_list' %}?congreso={{con.path}}";
-{%elif congreso_bloque%}
-	location.href = "{% url 'MedCongressAdmin:talleres_list' %}?bloque={{bloque.path}}&congreso_bloque=true";
-{%else%}
-	location.href ="{% url 'MedCongressAdmin:talleres_list' %}?bloque={{bloque.path}}";
-{% endif %}
+			{%if con %}
+			location.href = "{% url 'MedCongressAdmin:talleres_list' %}?congreso={{con.path}}";
+			{% elif congreso_bloque %}
+			location.href = "{% url 'MedCongressAdmin:talleres_list' %}?bloque={{bloque.path}}&congreso_bloque=true";
+			{%else%}
+			location.href = "{% url 'MedCongressAdmin:talleres_list' %}?bloque={{bloque.path}}";
+			{% endif %}
 
-});
+		});
 
 		{%if con %}
 		$("#id_taller-congreso option[value='{{con.id}}']").attr("selected", true);
 		{% endif %}
 		{%if congreso %}
 		$("#id_taller-congreso option[value='{{congreso.id}}']").attr("selected", true);
-		
+
 		{% endif %}
 		{%if bloque %}
 
 		$("#id_taller-bloque option[value='{{bloque.id}}']").attr("selected", true);
 
 		{% endif %}
-		
+
 		$('#id_taller-fecha_inicio').datetimepicker({
 			//language:  'fr',
 			weekStart: 1,
@@ -669,10 +792,110 @@
 			$('#id_ubicacion-longitud').val('');
 
 		});
-		
+
 	});
-
-
+	window.addEventListener('DOMContentLoaded', function () {
+      var avatar = document.getElementById('avatar');
+      var image = document.getElementById('image');
+	  var input = document.getElementById('input');
+	  
 	
+	
+      var $alert = $('#alert');
+      var $modal = $('#modal');
+	  var cropper;
+	  
+	  
+
+      $('[data-toggle="tooltip"]').tooltip();
+
+      input.addEventListener('change', function (e) {
+		
+        var files = e.target.files;
+        var done = function (url) {
+          input.value = '';
+          image.src = url;
+          $alert.hide();
+          $modal.modal('show');
+        };
+        var reader;
+        var file;
+        var url;
+
+        if (files && files.length > 0) {
+		  file = files[0];
+		 
+			tipo_imagen=files[0].name.split('.');
+			if(tipo_imagen[1]!='jpg' && tipo_imagen[1]!='png')
+			{
+				
+				swal("Cancelado", "Solo admimite archivos .jpg y .png.", "error");
+				return;	
+			}
+          if (URL) {
+            done(URL.createObjectURL(file));
+          } else if (FileReader) {
+            reader = new FileReader();
+            reader.onload = function (e) {
+              done(reader.result);
+            };
+            reader.readAsDataURL(file);
+          }
+        }
+      });
+
+
+      $modal.on('shown.bs.modal', function () {
+		
+
+		$('#image').width($modal.width());
+		
+		
+        cropper = new Cropper(image, {
+          aspectRatio: 1920/1080,
+		  viewMode: 1,
+		  
+		  
+		  ready: function () {
+            //Should set crop box data first here
+            cropper.setCropBoxData(cropBoxData).setCanvasData(canvasData);
+          }
+        });
+      }).on('hidden.bs.modal', function () {
+        cropper.destroy();
+        cropper = null;
+      });
+
+
+      document.getElementById('crop').addEventListener('click', function () {
+		
+        var initialAvatarURL;
+        var canvas;
+		
+        $modal.modal('hide');
+
+        if (cropper) {
+          	canvas = cropper.getCroppedCanvas({
+            width: 1920,
+            height: 1080,
+          });
+          	initialAvatarURL = avatar.src;
+			avatar.src = canvas.toDataURL();
+		
+
+		  $('#ver').html(`<img class="img-fluid" id="avatar" id="avatar" src="`+ canvas.toDataURL()+`"  alt="avatar">`);
+			$('#taller-prueba').val(canvas.toDataURL());									
+		
+		  $alert.removeClass('alert-success alert-warning');  
+		  $alert.show().addClass('alert-success').text('Nueva Imagen Cargada');
+      
+        }
+	  });
+
+
+
+    });
+
+
 </script>
 {% endblock %}

@@ -1,5 +1,6 @@
 import json
-
+import base64 
+from os import remove
 import pandas as pd
 from django import forms
 from django.contrib import messages
@@ -65,7 +66,7 @@ class CongressCreateView(validarUser,FormView):
     def form_valid(self, form):
         try:
             congress=form['congreso'].save(commit=False)
-            imagen=form['imagen_congreso'].save(commit=False)
+            # imagen=form['imagen_congreso'].save(commit=False)
             ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
             if ubic.exists():
                 congress.lugar=ubic.first()
@@ -74,9 +75,32 @@ class CongressCreateView(validarUser,FormView):
                 congress.lugar=ubicacion    
             path=congress.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
             congress.path=path  
+            
+            image_64_encode=self.request.POST['congreso-prueba1']
+            campo = image_64_encode.split(",")
+            image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
+            chars = '0123456789'
+            nombre = get_random_string(5, chars)
+            image_result = open('MedCongressApp/static/congreso/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+            image_result.write(image_64_decode)
+            congress.imagen_seg='congreso/imagen_%s.png'%(nombre)
+           
             congress.save()
-            imagen.congreso=congress
-            imagen.save()
+            
+            for respuesta in self.request.POST.getlist('congreso-prueba'):
+                image_64_encode=respuesta
+                campo = image_64_encode.split(",")
+                image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
+                chars = '0123456789'
+                nombre = get_random_string(5, chars)
+                image_result = open('MedCongressApp/static/congreso/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+                image_result.write(image_64_decode)
+                campo_imagen='congreso/imagen_%s.png'%(nombre)
+                imagen=ImagenCongreso(congreso=congress,imagen=campo_imagen)
+                imagen.save()
+           
+
+            
             return super().form_valid(form)
         except Exception as e:
             messages.warning(self.request, e)
@@ -103,18 +127,19 @@ class CongressUpdateView(validarUser,FormView):
         kwargs.update(instance={
             'congreso': self.object,
             'ubicacion': self.object.lugar,
-            'imagen_congreso':ImagenCongreso.objects.filter(congreso=self.object).first()
+            
         })
         return kwargs
 
     def get_context_data(self, **kwargs):
         context=super().get_context_data(**kwargs)
-        imagen=ImagenCongreso.objects.filter(congreso=self.object).first()
+        self.object=Congreso.objects.get(pk=self.kwargs.get('pk'))
+        imagenes=ImagenCongreso.objects.filter(congreso=self.object)
         context['update']=self.object
-        if imagen:
-            context['imagen']=imagen.imagen
+        if imagenes:
+            context['imagenes']=imagenes
         if self.object.imagen_seg:
-            context['imagen_seg_url']='/static/%s'%(self.object.imagen_seg)
+            context['imagen_seg_url']=self.object.imagen_seg
         if self.object.meta_og_imagen:
             context['imagen_meta']='/static/%s'%(self.object.meta_og_imagen)
         if self.object.foto_constancia:
@@ -123,27 +148,52 @@ class CongressUpdateView(validarUser,FormView):
 
     def form_valid(self, form):
         update_congreso=Congreso.objects.get(pk=self.request.POST['update']) 
-        try:
-            congress=form['congreso'].save(commit=False)
-            imagen=form['imagen_congreso'].save(commit=False)
-            ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
-            if ubic.exists():
-                congress.lugar=ubic.first()
-            else:
-                ubicacion=form['ubicacion'].save(commit=True)
-                congress.lugar=ubicacion    
-            update_congreso=congress
-            update_congreso.save()
-            imagen.congreso=update_congreso
-            if self.request.POST['imagen_congreso-update']:
-               ImagenCongreso.objects.filter(congreso=update_congreso).delete()
-               imagen.save()
-            else:
+        # try:
+        congress=form['congreso'].save(commit=False)
+        # imagen=form['imagen_congreso'].save(commit=False)
+        ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
+        if ubic.exists():
+            congress.lugar=ubic.first()
+        else:
+            ubicacion=form['ubicacion'].save(commit=True)
+            congress.lugar=ubicacion
+        
+        imagen_seg=self.request.POST['congreso-prueba1']
+        if 'congreso/' not in imagen_seg:
+           
+            image_64_encode=self.request.POST['congreso-prueba1']
+            campo = image_64_encode.split(",")
+            chars = '0123456789'
+            nombre = get_random_string(5, chars)
+            image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
+            image_result = open('MedCongressApp/static/congreso/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+            image_result.write(image_64_decode)
+            remove('MedCongressApp/static/%s'%( update_congreso.imagen_seg))
+            congress.imagen_seg='congreso/imagen_%s.png'%(nombre)
+            
+        update_congreso=congress
+        update_congreso.save()
+        ImagenCongreso.objects.filter(congreso=update_congreso).delete()
+        for respuesta in self.request.POST.getlist('congreso-prueba'):
+            if 'congreso/' in respuesta:
+                imagen=ImagenCongreso(congreso=update_congreso,imagen=respuesta)
                 imagen.save()
-            return super().form_valid(form)
-        except Exception as e:
-            messages.warning(self.request, e)
-            return super().form_invalid(form)
+            else:
+                image_64_encode=respuesta
+                campo = image_64_encode.split(",")
+                image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
+                chars = '0123456789'
+                nombre = get_random_string(5, chars)
+                image_result = open('MedCongressApp/static/congreso/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+                image_result.write(image_64_decode)
+                campo_imagen='congreso/imagen_%s.png'%(nombre)
+                imagen=ImagenCongreso(congreso=update_congreso,imagen=campo_imagen)
+                imagen.save()
+        
+        return super().form_valid(form)
+        # except Exception as e:
+        #     messages.warning(self.request, e)
+        #     return super().form_invalid(form)
     def get_success_url(self):
         url =  reverse_lazy('MedCongressAdmin:congress_list')
         if self.request.GET.get('search'):
@@ -1414,3 +1464,145 @@ class vTableAsJSONAsigCongreso(TemplateView):
         mimetype = "application/json"
         #Enviar
         return HttpResponse(data, mimetype)    
+
+class vTableAsJSONCongresos(TemplateView):
+    template_name = 'MedCongressAdmin/asig_congress_form.html'
+    
+    def get(self, request, *args, **kwargs):
+        #arreglo con las columnas de la BD a filtrar
+        col_name_map = ['titulo','published']
+           
+        #listado que muestra en dependencia de donde estes parado
+        object_list = Congreso.objects.all()
+        
+        #parametros 
+        search_text = request.GET.get('sSearch', '').lower()# texto a buscar
+        start = int(request.GET.get('iDisplayStart', 0))#por donde empezar a mostrar
+        delta = int(request.GET.get('iDisplayLength', 10))#cantidad a mostrar
+        sort_dir = request.GET.get('sSortDir_0', 'asc')# direccion a ordenar
+        sort_col = int(request.GET.get('iSortCol_0', 0)) # numero de la columna a ordenar
+        sort_col_name = request.GET.get('mDataProp_%s' % sort_col, '1')
+        sort_dir_prefix = (sort_dir == 'desc' and '-' or '') #sufijo para poner en la consulta para ordenar
+
+        #para ordenar el listado
+        
+        sort_colr = col_name_map[sort_col]
+        object_list = object_list.order_by('%s%s' % (sort_dir_prefix,sort_colr))
+
+        #para filtrar el listado
+        filtered_object_list = object_list
+        if len(search_text) > 0:
+            filtered_object_list = object_list.filter(Q(titulo__icontains=search_text))
+
+        #Guardar datos en un 
+        enviar =[]
+       
+            # if objet.ponente:
+            #     user= '%s %s'%(objet.ponente.first().user.usuario.first_name,objet.ponente.first().user.usuario.last_name)
+           
+           #Guardar datos en un dic 
+        for objet in filtered_object_list[start:(start+delta)]:
+            pagado='No'
+            if objet.published:
+                pagado='Si'
+                
+            enviar.append({ 'titulo':objet.titulo,
+                            'publicado': pagado,
+                           
+                            'programa' : ''' <a id=""
+                                                    href="'''+ reverse('MedCongressAdmin:Congres_bloques',kwargs={'path':objet.path})+'''"
+                                                    title="Bloques " style="margin-left: 5px;">
+                                                    <i class="icon-block " style=" padding:15px ;"> </i>
+                                                </a>
+                                                
+                                                <a id=""
+                                                    href="'''+ reverse('MedCongressAdmin:ponencias_list')+'''?congreso='''+ str(objet.path)+'''"
+                                                    title="Ponencias " style="margin-left: 5px;">
+                                                    <i class="icon-ponencia " style=" padding:15px"> </i>
+                                                </a>
+                                               
+                                                <a id=""
+                                                     href=" '''+ reverse('MedCongressAdmin:talleres_list')+'''?congreso='''+ str(objet.path)+'''"
+                                                    title="Talleres " style="margin-left: 5px;">
+                                                    <i class="icon-taller " style=" padding:15px"> </i>
+                                                </a>
+                                                
+                                                <a id=""
+                                                href="'''+ reverse('MedCongressAdmin:Congres_cuestionario',kwargs={'path':objet.path})+'''"
+                                               title="Cuestionario " style="margin-left: 5px;">
+                                               <i class="icon-cuestionario " style=" padding:15px"> </i>
+                                           </a>
+                                           
+                                           <a id=""
+                                           href="'''+ reverse('MedCongressAdmin:Congres_programas',kwargs={'path':objet.path})+'''"
+                                          title="Documentos de Programa " style="margin-left: 5px;">
+                                          <i  class="icon icon-docu" > </i>
+                                      </a>''',
+                                      
+                            'otros'     : ''' <a id=""
+                                                    href="'''+ reverse('MedCongressAdmin:Congres_imagenes',kwargs={'path':objet.path})+'''"
+                                                        title="Imagenes" style="margin-left: 5px;">
+                                                        <i class=" icon icon-imagen " > </i>
+                                                    </a>
+                                                   
+                                                    <a id=""
+                                                    href=" '''+ reverse('MedCongressAdmin:Congres_trabajos',kwargs={'path':objet.path})+'''"
+                                                        title="Trabajos Investigativos" style="margin-left: 5px;">
+                                                        <i class=" icon icon-inv " > </i>
+                                                    </a>  
+                                                     
+                                                    <a id=""
+                                                    href="'''+ reverse('MedCongressAdmin:Congres_freg_frecuente',kwargs={'path':objet.path})+'''"
+                                                        title="Preguntas Frecuentes" style="margin-left: 5px;">
+                                                        <i class="icon-preguntas" style=" padding:15px"> </i>
+                                                    </a> 
+                                                   
+                                                    <a id=""
+                                                    href=" '''+ reverse('MedCongressAdmin:Congres_pagos',kwargs={'path':objet.path})+'''"
+                                                        title="Categorias de pago" style="margin-left: 5px;">
+                                                        <i class="icon-pago" style=" padding:15px"> </i>
+                                                    </a> 
+                                                     
+                                                    <a id=""
+                                                    href="'''+ reverse('MedCongressAdmin:Congres_patrocinadores',kwargs={'path':objet.path})+'''"
+                                                        title="Patrocinadores" style="margin-left: 5px;">
+                                                        <i class="icon-patrocinador" style=" padding:15px"> </i>
+                                                    </a>
+                                                   
+                                                    <a id=""
+                                                    href=" '''+ reverse('MedCongressAdmin:Congres_socios',kwargs={'path':objet.path})+'''"
+                                                        title="Socios" style="margin-left: 5px;">
+                                                        <i class="icon-socio" style=" padding:15px"> </i>
+                                                    </a>
+                                                    
+                                                    <a id="" target="_blank"
+                                                    href=" '''+ reverse('MedCongressAdmin:congress_previsualizar',kwargs={'path':objet.path})+'''"
+                                                        title="Previsualizar" style="margin-left: 5px;">
+                                                        <i class="icon icon-visualizar" > </i>
+                                                    </a> ''',
+                           
+                            'operaciones' : 
+                                                    ''' <a 
+                                                    href="javascript:editItem('''+ str(objet.pk)+''')"
+                                                        title="Editar" style="margin-left: 5px;"><i class="icon-editar" style="padding: 15px;"></i></a>
+                                                    <a id="del_'''+ str(objet.pk)+'''"
+                                                        href="javascript:deleteItem('''+ str(objet.pk)+''')"
+                                                        title="Eliminar" style="margin-left: 5px;">
+                                                        <i class="icon-eliminar" style="padding: 15px;"></i>
+                                                    </a>''',
+                            
+            })
+        #parametros para la respuesta
+        jsoner = {
+            
+            "iTotalRecords": filtered_object_list.count(),
+            "iTotalDisplayRecords": filtered_object_list.count(),
+            "sEcho": request.GET.get('sEcho', 1),
+            "data": enviar
+        }
+        data = json.dumps(jsoner)
+        mimetype = "application/json"
+        #Enviar
+        return HttpResponse(data, mimetype)    
+
+        

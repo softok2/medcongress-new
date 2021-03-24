@@ -1,4 +1,6 @@
 from django import forms
+import base64 
+from os import remove
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.views.defaults import page_not_found
@@ -23,10 +25,34 @@ class ImagenCreateView(validarUser,CreateView):
     form_class = ImagenHomeForm
     success_url = reverse_lazy('MedCongressAdmin:imagen_list')
     template_name = 'inicio/imagen/form.html'
-    
+
+    def form_valid(self, form):
+       
+        imagen = form.save(commit=False)
+       
+        if self.request.POST['prueba']:
+            image_64_encode=self.request.POST['prueba']
+            campo = image_64_encode.split(",")
+            image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
+            image_result = open('MedCongressApp/static/congreso/imagen_home.png', 'wb') # create a writable image and write the decoding result
+            image_result.write(image_64_decode)
+            imagen.imagen='congreso/imagen_home.png'
+        else:
+            imagen.imagen='congreso/imagen1920X1080.png'
+
+        imagen.save() 
+        return super(ImagenCreateView, self).form_valid(form)
+
 class ImagenDeletedView(validarUser,DeleteView):
     model = ImagenHome
     success_url = reverse_lazy('MedCongressAdmin:imagen_list')
+    def delete(self,request, *args, **kwargs):
+            
+        imagen=ImagenHome.objects.get(pk=self.kwargs.get('pk'))
+        if imagen.imagen:
+            remove('MedCongressApp/static/%s'%( imagen.imagen))
+        imagen.delete()
+        return JsonResponse({'success':True}, safe=False)
 
 class ImagenUpdateView(validarUser,UpdateView):
     form_class = ImagenHomeForm
@@ -41,5 +67,23 @@ class ImagenUpdateView(validarUser,UpdateView):
         context['update']=True
         context['imagen']=ImagenHome.objects.get(pk=self.kwargs.get('pk')).imagen
         return context
+    def form_valid(self, form):
+       
+        imagen = form.save(commit=False)
 
+        
+        image_64_encode=self.request.POST['prueba']
+        campo = image_64_encode.split(",")
+        chars = '0123456789'
+        nom= get_random_string(3, chars)
+        image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
+        image_result = open('MedCongressApp/static/congreso/imagen_home_%s.png'%(nom), 'wb') # create a writable image and write the decoding result
+        image_result.write(image_64_decode)
+        if imagen.imagen:
+            remove('MedCongressApp/static/%s'%( imagen.imagen))
+        imagen.imagen='congreso/imagen_home_%s.png'%(nom)
+        imagen.save()     
+            
+           
+        return super(ImagenUpdateView, self).form_valid(form)
 

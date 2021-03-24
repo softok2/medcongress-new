@@ -1,10 +1,12 @@
 from django import forms
 import json
 import base64 
+from os import remove
 from django.contrib import messages
 from django.http import HttpResponseBadRequest, HttpResponseRedirect,HttpResponse
 from django.urls import reverse_lazy,reverse
 from django.shortcuts import redirect
+from django.utils.crypto import get_random_string
 from django.core.paginator import Paginator
 from django.views.generic import ListView,CreateView,TemplateView
 from django.contrib.auth.mixins import UserPassesTestMixin,AccessMixin
@@ -119,9 +121,13 @@ class UsuarioUpdateView(validarUser,FormView):
             campo = image_64_encode.split(",")
             image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
             nombre=user.email.replace('.','_')
-            image_result = open('MedCongressApp/static/usuarios/foto_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+            chars = '0123456789'
+            nom= get_random_string(5, chars)
+            image_result = open('MedCongressApp/static/usuarios/foto_%s_%s.png'%(nombre,nom), 'wb') # create a writable image and write the decoding result
             image_result.write(image_64_decode)
-            perfiluser.foto='usuarios/foto_%s.png'%(nombre)
+            if perfiluser.foto:
+                remove('MedCongressApp/static/%s'%( perfiluser.foto))
+            perfiluser.foto='usuarios/foto_%s_%s.png'%(nombre,nom)
         else:
             if not perfiluser.foto :
                 perfiluser.foto='usuarios/defaulthombre.png'

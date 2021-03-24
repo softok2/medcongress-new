@@ -171,4 +171,13 @@
     background: url('../images/icons/invest.ico') no-repeat center center;
    
 }
-
+.icon-add_imagen
+{
+    background: url('../images/icons/add_imagen.ico') no-repeat center center;
+   
+}
+.icon-change_imagen
+{
+    background: url('../images/icons/change_imagen.ico') no-repeat center center;
+   
+}

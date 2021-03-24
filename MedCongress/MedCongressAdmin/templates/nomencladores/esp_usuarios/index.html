@@ -75,7 +75,7 @@
                                                
                                         </thead>
                                         <tbody>
-                                            {% for esp_usuario in esp_usuarios %}
+                                            <!-- {% for esp_usuario in esp_usuarios %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
                                                
                                                 <td>{{esp_usuario.nombre}}</td>
@@ -92,7 +92,7 @@
                                                     
                                                 </td>
                                             </tr>
-                                            {% endfor %}
+                                            {% endfor %} -->
                                         </tbody>
                                         <tfoot>
                                             
@@ -144,7 +144,19 @@
             "previous": "Anterior"
         }
     },
- 
+    "columns": [
+       
+       {'data':'nombre','orderable': true},
+      
+       {'data':'operaciones','orderable': false }
+      
+   ],
+   "bServerSide": true,
+   "sAjaxSource":"{% url 'MedCongressAdmin:table_json_esp_usuarios' %}",
+   "fnServerParams": function (aoData) {
+           aoData.push( { "name": "search", "value": $('.dataTables_filter input').val()  } );
+       
+      }
 });
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({

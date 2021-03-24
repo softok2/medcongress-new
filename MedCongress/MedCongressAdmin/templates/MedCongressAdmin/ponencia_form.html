@@ -6,6 +6,8 @@
 <link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/css/plugins/forms/selectivity/selectivity.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/select2.min.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/css/core/colors/palette-tooltip.css'%}">
+<link rel="stylesheet" type="text/css"
+    href="{% static 'MedCongressAdmin/assets/css/cropper.css' %}">
 
 
 
@@ -15,6 +17,11 @@
 		width: 100%;
 		height: 400px;
 	}
+
+	.img-container img {
+      max-width: 100%;
+    }
+
 </style>
 
 {% endblock %}
@@ -117,7 +124,9 @@
 														<li class="nav-item">
 															<a class="nav-link active" id="base-tab1" data-toggle="tab" aria-controls="tab1" href="#tab1" aria-expanded="true">Datos Principales</a>
 														</li>
-														
+														<li class="nav-item">
+															<a class="nav-link" id="base-tab3" data-toggle="tab" aria-controls="tab3" href="#tab3" aria-expanded="false">Imagen de la Ponencia</a>
+														</li>
 														<li class="nav-item">
 															<a class="nav-link" id="base-tab2" data-toggle="tab" aria-controls="tab2" href="#tab2" aria-expanded="false">Meta datos</a>
 														</li>
@@ -163,11 +172,46 @@
 																		<div class="row">
 
 																			<div class="col-sm-6 ">
+																				<div class="row">
+																			
+																			
+																					<div class="col-sm-12 ">
+																						<div class="form-group">
+																							<label
+																								for="{{form.ponencia_ponente.ponente.id_for_label }}"><b>{{form.ponencia_ponente.ponente.label }}</b>
+																								</label>
+																								{%if ponentes%}
+																								<select class="select2 form-control" multiple="multiple" name="ponencia_ponente-ponente"  >
+																									{%for ponentes_all in ponentes_alls%}
+																									<option value="{{ponentes_all.id}}" {%if ponentes_all.activo%}selected{%endif%}>{{ponentes_all.nombre}}</option>
+		
+																									{%endfor%}
+		
+																								</select>
+																								{%else%}
+																								<div >
+																									{{form.ponencia_ponente.ponente}}
+																								</div>
+																								{%endif%}
+																								<!-- <input type="text" name="my_ponente" class="form-control" required=""
+																									id="id_my_ponente" value="{{ponente}}"> -->
+																						</div>
+																					</div>
+																					
+		
+																				</div>
+																				<div class="row">
+																			
+																			
+																					<div class="col-sm-12 ">
 																				<div class="form-group">
 																					<label
 																						for="{{form.ponencia.duracion.id_for_label }}"><b>{{form.ponencia.duracion.label }}</b></label>
 
 																					{{form.ponencia.duracion }}
+																				</div>
+																				</div>
+																				
 																				</div>
 																			</div>
 																			<div class="col-sm-6 ">
@@ -179,69 +223,7 @@
 																				</div>
 																			</div>
 																		</div>
-																		<div class="row">
-																			<div class="col-sm-6 ">
-																				<div class="form-group">
-
-																					{%if imagen_seg_url%}
-																					<label><b>Imagen Actual </b> </label>
-																					<figure class="col-lg-3 col-md-6 col-12" itemprop="associatedMedia"
-																						itemscope=""></figure>
-																					<a href="{{imagen_seg_url}}" itemprop="contentUrl"
-																						data-size="480x360">
-																						<img class="img-thumbnail img-fluid" src="{{imagen_seg_url}}"
-																							itemprop="thumbnail" alt="Image description">
-																					</a>
-
-																					</figure>
-
-																					<label for=" " style="margin-top: 20px;"> <b>Insertar Nueva
-																							Imagen</b> </label>
-																							<br> 
-																							<span style="font-size: 12px; color: red;">(<b>*</b> Debe ser de <b>1920 X 1080</b> pixel) </span>
-																						
-																									
-																					<input type="file" name="ponencia-imagen" accept="image/*"
-																						class=" form-control " id="id_ponencia-imagen">
-																					{% else%}
-
-
-																					<label
-																						for="{{form.ponencia.imagen.id_for_label }}"><b>{{form.ponencia.imagen.label }}</b> </label>
-																						<br> 
-																						<span style="font-size: 12px; color: red;">(<b>*</b> Debe ser de <b>1920 X 1080</b> pixel) </span>
-																					
-																								
-																					{{form.ponencia.imagen }}
-																					{%endif%}
-																				</div>
-																			</div>
-																			
-																			<div class="col-sm-6 ">
-																				<div class="form-group">
-																					<label
-																						for="{{form.ponencia_ponente.ponente.id_for_label }}"><b>{{form.ponencia_ponente.ponente.label }}</b>
-																						</label>
-																						{%if ponentes%}
-																						<select class="select2 form-control" multiple="multiple" name="ponencia_ponente-ponente"  >
-																							{%for ponentes_all in ponentes_alls%}
-																							<option value="{{ponentes_all.id}}" {%if ponentes_all.activo%}selected{%endif%}>{{ponentes_all.nombre}}</option>
-
-																							{%endfor%}
-
-																						</select>
-																						{%else%}
-																						<div >
-																							{{form.ponencia_ponente.ponente}}
-																						</div>
-																						{%endif%}
-																						<!-- <input type="text" name="my_ponente" class="form-control" required=""
-																							id="id_my_ponente" value="{{ponente}}"> -->
-																				</div>
-																			</div>
-																			
-
-																		</div>
+																		
 																		<div class="row">
 																			<div class="col-sm-6 ">
 																				<div class="form-group">
@@ -491,7 +473,59 @@
 															<!-- END META DATOS -->
 															<!-- /////////////////// -->
 														</div>
-													</div>
+														<div role="tabpanel" class="tab-pane " id="tab3" aria-expanded="true" aria-labelledby="base-tab3">
+															<div class="row">
+																<div class="col-sm-6 ">
+																	<div class="form-group">
+																		<label for="" style="margin-bottom: 40px;"> <b>Imagen <span style="font-size: 80%; color: darkgrey;"> (1920 X 1080)</span></b> </label>
+																		{%if imagen_seg_url%}	
+																		<label class="label" data-toggle="tooltip" title="Clic para cambiar foto">
+																			<div id="ver"><img class="img-fluid" id="avatar" src="{%static '/'%}{{imagen_seg_url}}"  alt="avatar"></div>	
+																				<input type="file" class="sr-only" id="input" name="image" accept="image/*">
+																				<input type="hidden" id="ponencia-prueba" name="ponencia-prueba" value="{{imagen_seg_url}}">
+																			  </label>
+																	  
+																	{% else%}
+					<br>
+																	<label class="label" data-toggle="tooltip" title="Clic para cambiar foto">
+																	<div id="ver"><span id="avatar"> <i class="icon icon-add_imagen"></i></span></div>	
+																		<input type="file" class="sr-only" id="input" name="image" accept="image/*">
+																		<input type="hidden" id="ponencia-prueba" name="ponencia-prueba">
+																	  </label>
+																		{%endif%}
+																		
+																		
+																		  <div class="alert" role="alert" id="alert"></div>
+																		  <div class="modal fade " id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+																			<div class="modal-dialog " role="document">
+																			  <div class="modal-content">
+																				<div class="modal-header">
+																				  <h5 class="modal-title" id="modalLabel">Editar la Imagen</h5>
+																				  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																					<span aria-hidden="true">&times;</span>
+																				  </button>
+																				</div>
+																				<div class="modal-body">
+																				  <div class="img-container ">
+																					<img id="image" src="https://avatars0.githubusercontent.com/u/3456749">
+																				  </div>
+																				</div>
+																				<div class="modal-footer">
+																				  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+																				  <button type="button" class="btn btn-primary" id="crop">Guardar</button>
+																				</div>
+																			  </div>
+																			</div>
+																		  </div>
+																	</div>
+																
+																
+					
+															</div>
+															</div>
+													
+														
+														</div>
 													<div class="form-actions">
 														<div class="text-right">
 															<button id="atras" type="button" class="btn btn-danger ">Cancelar
@@ -525,7 +559,7 @@
 <script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-selectivity.js'%}"></script> -->
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/forms/select/select2.full.min.js'%}"></script>
 <script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-select2.js'%}"></script>
-
+<script src="{% static 'MedCongressAdmin/assets/js/cropper.js'%}"></script>
 
 <script type="text/javascript"
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCf3QdCwg8QDNOS3A2vSQ3DqW2mpJ_gSY8"></script>
@@ -704,8 +738,145 @@
 		});
 		
 	});
+	var id=0;
+	window.addEventListener('DOMContentLoaded', function () {
+      var avatar = document.getElementById('avatar');
+      var image = document.getElementById('image');
+	  var input = document.getElementById('input');
+	  
+	
+	
+      var $alert = $('#alert');
+      var $modal = $('#modal');
+	  var cropper;
+	  
+	  
+
+      $('[data-toggle="tooltip"]').tooltip();
+
+      input.addEventListener('change', function (e) {
+		
+        var files = e.target.files;
+        var done = function (url) {
+          input.value = '';
+          image.src = url;
+          $alert.hide();
+          $modal.modal('show');
+        };
+        var reader;
+        var file;
+        var url;
+
+        if (files && files.length > 0) {
+		  file = files[0];
+		 
+			tipo_imagen=files[0].name.split('.');
+			if(tipo_imagen[1]!='jpg' && tipo_imagen[1]!='png')
+			{
+				
+				swal("Cancelado", "Solo admimite archivos .jpg y .png.", "error");
+				return;	
+			}
+          if (URL) {
+            done(URL.createObjectURL(file));
+          } else if (FileReader) {
+            reader = new FileReader();
+            reader.onload = function (e) {
+              done(reader.result);
+            };
+            reader.readAsDataURL(file);
+          }
+        }
+      });
 
 
+      $modal.on('shown.bs.modal', function () {
+		
+
+		$('#image').width($modal.width());
+		
+		
+        cropper = new Cropper(image, {
+          aspectRatio: 1920/1080,
+		  viewMode: 1,
+		  
+		  
+		  ready: function () {
+            //Should set crop box data first here
+            cropper.setCropBoxData(cropBoxData).setCanvasData(canvasData);
+          }
+        });
+      }).on('hidden.bs.modal', function () {
+        cropper.destroy();
+        cropper = null;
+      });
+
+
+      document.getElementById('crop').addEventListener('click', function () {
+		
+        var initialAvatarURL;
+        var canvas;
+		
+        $modal.modal('hide');
+
+        if (cropper) {
+          	canvas = cropper.getCroppedCanvas({
+            width: 1920,
+            height: 1080,
+          });
+          	initialAvatarURL = avatar.src;
+			avatar.src = canvas.toDataURL();
+		
+
+		  $('#ver').html(`<img class="img-fluid" id="avatar" id="avatar" src="`+ canvas.toDataURL()+`"  alt="avatar">`);
+			$('#ponencia-prueba').val(canvas.toDataURL());									
+		
+		  $alert.removeClass('alert-success alert-warning');  
+		  $alert.show().addClass('alert-success').text('Nueva Imagen Cargada');
+      
+        }
+	  });
+
+
+
+    });
+
+	function deleteImagen(pk) {
+        swal({
+            title: "¿Estás seguro?",
+            text: "¡Eliminará esta Imagen!",
+            icon: "warning",
+            buttons: {
+                cancel: {
+                    text: "¡No, cancelar!",
+                    value: null,
+                    visible: true,
+                    className: "",
+                    closeModal: false,
+                },
+                confirm: {
+                    text: "¡Sí, eliminarlo!",
+                    value: true,
+                    visible: true,
+                    className: "",
+                    closeModal: false
+                }
+            }
+        })
+            .then((isConfirm) => {
+                if (isConfirm) {
+					
+				   $('#'+pk).remove();
+				   $('#imagen_'+pk).remove();
+				   $('#alert').show().addClass('alert-warning').text('Imagen Eliminada');
+				   swal("¡Eliminado!", "Este elemento ha sido eliminado.", "success");
+                } else {
+					swal("Cancelado", "No se eliminó este Imagen.", "error");
+					
+                }
+            });
+    }
+	
 
 
 

@@ -16,7 +16,7 @@ from .views.congress_views import (CongressListView,CongressCreateView,CongressU
                                    Ver_usuarios,Ver_Exel,Exportar_usuarios,Usuarios_pagaron,CongressPatrocinadorListView,
                                    PatrocinadorSeleccionarView,PatrocinadorSeleccionarDeleted, SocioSeleccionarView,SocioSeleccionarDeleted,CongressSocioListView,
                                    CongresoDetail,CongressImagenDeletedView,CongressCategPagosUpdateView,CongressCategPagosDeletedView,AsignarConstancias
-                                   ,CongressProgramaUpdateView,CongressProgramaDeletedView,CongressProgramaCreateView,CongressProgramaListView,vTableAsJSONAsigCongreso)
+                                   ,CongressProgramaUpdateView,CongressProgramaDeletedView,CongressProgramaCreateView,CongressProgramaListView,vTableAsJSONAsigCongreso,vTableAsJSONCongresos)
 from .views.imagen_views import (ImagenCreateView)
 from .views.ponencia_view import (PonenciaListView, PonenciaCreateView,PonenciaPonenteListView,
                                    PonencicaUpdateView,PonenciaPonenteCreateView,PonenciaDeletedView,
@@ -30,16 +30,16 @@ from .views.user_views import (UsuariosListView,UsuarioCreateView,UsuarioUpdateV
 from .views.bloque_views import (BloquesListView,BloqueCreateView,BloqueDeletedView,BloquePonenciasListView,BloqueTalleresListView,
                                    BloqueUpdateView,BloqueModeradoresListView,page_not_found,BloqueModeradoresCreateView,BloqueModeradoresDeletedView,
                                    PonenciaSeleccionarView)
-from .views.repositorio_view import DocumentosListView,DocumentoCreateView,DocumentoDeletedView
-from .views_nomencladores.genero_views import (GeneroListView,GeneroCreateView,GeneroDeletedView,GeneroUpdateView)
-from .views_nomencladores.cat_pago_views import (CatPagoListView,CatPagoCreateView,CatPagoDeletedView,CatPagoUpdateView)
-from .views_nomencladores.patrocinador_views import (PatrocinadorListView,PatrocinadorCreateView,PatrocinadorDeletedView,PatrocinadorUpdateView)
-from .views_nomencladores.socio_views import (SocioListView,SocioCreateView,SocioDeletedView,SocioUpdateView)
-from .views_nomencladores.cat_usuario_views import (CatUsuarioListView,CatUsuarioCreateView,CatUsuarioDeletedView,CatUsuarioUpdateView)
-from .views_nomencladores.esp_evento_views import (EspEventoListView,EspEventoCreateView,EspEventoDeletedView,EspEventoUpdateView)
-from .views_nomencladores.tipo_evento_views import (TipoEventoListView,TipoEventoCreateView,TipoEventoDeletedView,TipoEventoUpdateView)
-from .views_nomencladores.idioma_views import (IdiomaListView,IdiomaCreateView,IdiomaDeletedView,IdiomaUpdateView)
-from .views_nomencladores.esp_usuario_views import (EspUsuarioListView,EspUsuarioCreateView,EspUsuarioDeletedView,EspUsuarioUpdateView)
+from .views.repositorio_view import vTableAsJSONRepositorio,DocumentosListView,DocumentoCreateView,DocumentoDeletedView
+from .views_nomencladores.genero_views import (GeneroListView,GeneroCreateView,GeneroDeletedView,GeneroUpdateView,vTableAsJSONGenero)
+from .views_nomencladores.cat_pago_views import (vTableAsJSONCatPago,CatPagoListView,CatPagoCreateView,CatPagoDeletedView,CatPagoUpdateView)
+from .views_nomencladores.patrocinador_views import (vTableAsJSONPatrocinador,PatrocinadorListView,PatrocinadorCreateView,PatrocinadorDeletedView,PatrocinadorUpdateView)
+from .views_nomencladores.socio_views import (vTableAsJSONSocio,SocioListView,SocioCreateView,SocioDeletedView,SocioUpdateView)
+from .views_nomencladores.cat_usuario_views import (vTableAsJSONCatUsuario,CatUsuarioListView,CatUsuarioCreateView,CatUsuarioDeletedView,CatUsuarioUpdateView)
+from .views_nomencladores.esp_evento_views import (vTableAsJSONEspEventos,EspEventoListView,EspEventoCreateView,EspEventoDeletedView,EspEventoUpdateView)
+from .views_nomencladores.tipo_evento_views import (vTableAsJSONTipoEvento,TipoEventoListView,TipoEventoCreateView,TipoEventoDeletedView,TipoEventoUpdateView)
+from .views_nomencladores.idioma_views import (vTableAsJSONIdioma,IdiomaListView,IdiomaCreateView,IdiomaDeletedView,IdiomaUpdateView)
+from .views_nomencladores.esp_usuario_views import (vTableAsJSONEspUsuario,EspUsuarioListView,EspUsuarioCreateView,EspUsuarioDeletedView,EspUsuarioUpdateView)
 from .views_inicio.quienes_somos_views import (QuienesSomosListView,QuienesSomosUpdateView,QuienesSomosCreateView,QuienesSomosImagenCreateView,QuienesSomosImagenDeletedView)
 from .views_inicio.imagen_home_view import ImagenListView,ImagenCreateView,ImagenUpdateView,ImagenDeletedView
 
@@ -340,14 +340,6 @@ urlpatterns = [
       path('imagen-quienes_somos/adicinar', QuienesSomosImagenCreateView.as_view(), name='imagen-quienes_somos_add'),
       path('imagen-quienes_somos/eliminar/<int:pk>', QuienesSomosImagenDeletedView.as_view(), name='imagen_quienes_somos_deleted'),
 
-      path('pruebaTablaJson', vTableAsJSON.as_view(), name='table_json'),
-      path('pruebaTablaJsonPonencia', vTableAsJSONPonencia.as_view(), name='table_json_ponencia'),
-      path('pruebaTablaJsonTaller', vTableAsJSONTaller.as_view(), name='table_json_taller'),
-       path('pruebaTablaJsonAsigCongreso', vTableAsJSONAsigCongreso.as_view(), name='table_json_asig_congreso'),
-       path('pruebaTablaJsonAsigTaller', vTableAsJSONAsigTaller.as_view(), name='table_json_asig_taller'),
-      path('pruebaTablaJsonPonentes', vTableAsJSONPonentes.as_view(), name='table_json_ponentes'),
-       path('pruebaTablaJsonModeradores', vTableAsJSONModeradores.as_view(), name='table_json_moderadores'),
-
       #Constancias-Congreso
       path('asignar_constancias', AsignarConstancias.as_view(), name='asig_constancia_list'),
       
@@ -367,5 +359,28 @@ urlpatterns = [
       path('trabajos-congres/adicinar/<str:path>', CongressTrabajoCreateView.as_view(), name='congres_trabajo_add'),
       path('trabajos-congres/editar/<str:path>/<int:pk>', CongressTrabajoUpdateView.as_view(), name='congres_trabajo_editar'),
       path('trabajos-congres/eliminar/<int:pk>', CongressTrabajoDeletedView.as_view(), name='congres_trabajo_eliminar'),
+
+## Tablas en JSON
+
+
+      path('pruebaTablaJson', vTableAsJSON.as_view(), name='table_json'),
+      path('pruebaTablaJsonPonencia', vTableAsJSONPonencia.as_view(), name='table_json_ponencia'),
+      path('pruebaTablaJsonTaller', vTableAsJSONTaller.as_view(), name='table_json_taller'),
+       path('pruebaTablaJsonAsigCongreso', vTableAsJSONAsigCongreso.as_view(), name='table_json_asig_congreso'),
+       path('pruebaTablaJsonAsigTaller', vTableAsJSONAsigTaller.as_view(), name='table_json_asig_taller'),
+      path('pruebaTablaJsonPonentes', vTableAsJSONPonentes.as_view(), name='table_json_ponentes'),
+       path('pruebaTablaJsonModeradores', vTableAsJSONModeradores.as_view(), name='table_json_moderadores'),
+      path('pruebaTablaJsonCongresos', vTableAsJSONCongresos.as_view(), name='table_json_congresos'),
+      path('pruebaTablaJsonGenero', vTableAsJSONGenero.as_view(), name='table_json_generos'),
+      path('pruebaTablaJsonCatPago', vTableAsJSONCatPago.as_view(), name='table_json_catpagos'),
+    path('pruebaTablaJsonCatUsuario', vTableAsJSONCatUsuario.as_view(), name='table_json_catusuarios'),
+    path('pruebaTablaJsonEspEvento', vTableAsJSONEspEventos.as_view(), name='table_json_esp_eventos'),
+    path('pruebaTablaJsonEspUsuario', vTableAsJSONEspUsuario.as_view(), name='table_json_esp_usuarios'),
+    path('pruebaTablaJsonIndioma', vTableAsJSONIdioma.as_view(), name='table_json_idiomas'),
+    path('pruebaTablaJsonPatrocinador', vTableAsJSONPatrocinador.as_view(), name='table_json_patrocinadores'),
+    path('pruebaTablaJsonSocio', vTableAsJSONSocio.as_view(), name='table_json_socios'),
+     path('pruebaTablaJsonTipoEvento', vTableAsJSONTipoEvento.as_view(), name='table_json_tipo_eventos'),
+     path('pruebaTablaJsonRepositorio', vTableAsJSONRepositorio.as_view(), name='table_json_documentos'),
+
 
   ]

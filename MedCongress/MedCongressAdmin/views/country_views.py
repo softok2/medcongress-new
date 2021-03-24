@@ -1,6 +1,9 @@
+import base64 
+from os import remove
+from django.utils.crypto import get_random_string
 from django import forms
 from django.contrib import messages
-from django.http import HttpResponseBadRequest, HttpResponseRedirect
+from django.http import HttpResponseBadRequest, HttpResponseRedirect,JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import ListView
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -16,17 +19,22 @@ class CountryListView(validarUser,ListView):
 
 
 class CountryForm(validarUser,forms.ModelForm):
-
+    prueba=forms.CharField(required=False)
     class Meta:
         model = Pais
-        fields = ['denominacion','banderas']
+        fields = ['denominacion','prueba']
         widgets = {'denominacion': forms.TextInput(
             attrs={'class': 'form-control'})}
         error_messages = {
             'denominacion':{
-                'unique': 'Este nombre ya esta registrado.'
+                'unique': 'Este <b>País</b> ya esta registrado.'
             },
         }
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(CountryForm, self).clean(*args, **kwargs)
+        banderas = cleaned_data.get('prueba', None)
+        if not banderas :
+            self.add_error('prueba', 'Debe  entrar una <b>Bandera</b>')
 
 
 class CountryCreateView(validarUser,CreateView):
@@ -39,13 +47,20 @@ class CountryCreateView(validarUser,CreateView):
         context['form_title'] = 'Nuevo'
         return context
 
-    def form_invalid(self, form):
-        for error in form.errors:
-            form[error].field.widget.attrs['class'] += ' is-invalid'
-        return super(CountryCreateView, self).form_invalid(form)
+    
 
     def form_valid(self, form):
-        pais=form.save(commit=True)
+        pais=form.save(commit=False)
+        
+        image_64_encode=self.request.POST['prueba']
+        campo = image_64_encode.split(",")
+        image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
+        chars = '0123456789'
+        nombre = get_random_string(5, chars)
+        image_result = open('MedCongressApp/static/banderas/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+        image_result.write(image_64_decode)
+        pais.banderas='banderas/imagen_%s.png'%(nombre)
+        pais.save()
         return super().form_valid(form)
 
 
@@ -65,11 +80,23 @@ class CountryUpdateView(validarUser,UpdateView):
         
         return context
 
-    # def form_invalid(self, form):
-    #     for error in form.errors:
-    #         form[error].field.widget.attrs['class'] += ' is-invalid'
-    #     return super(CountryUpdateView, self).form_invalid(form)
-
+    def form_valid(self, form):
+        
+        pais=form.save(commit=False)
+        banderas=self.request.POST['prueba']
+        if 'banderas/' not in banderas:
+            image_64_encode=self.request.POST['prueba']
+            campo = image_64_encode.split(",")
+            chars = '0123456789'
+            nombre = get_random_string(5, chars)
+            image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
+            image_result = open('MedCongressApp/static/banderas/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+            image_result.write(image_64_decode)
+            if pais.banderas:
+                remove('MedCongressApp/static/%s'%( pais.banderas))
+            pais.banderas='banderas/imagen_%s.png'%(nombre)
+        pais.save()
+        return super().form_valid(form)
 
 class CountryDeleteView(validarUser,DeleteView):
     model = Pais
@@ -81,3 +108,10 @@ class CountryDeleteView(validarUser,DeleteView):
         context['form_title'] = 'Eliminar'
         context['delete_value'] = self.object.denominacion
         return context
+    def delete(self,request, *args, **kwargs):
+            
+        pais=Pais.objects.get(pk=self.kwargs.get('pk'))
+        if pais.banderas:
+            remove('MedCongressApp/static/%s'%( pais.banderas))
+        pais.delete()
+        return JsonResponse({'success':True}, safe=False)

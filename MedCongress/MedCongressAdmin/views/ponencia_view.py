@@ -1,4 +1,6 @@
 import json
+import base64 
+from os import remove
 from django import forms
 from django.contrib import messages
 from django.http import HttpResponseBadRequest, HttpResponseRedirect, HttpResponse
@@ -77,7 +79,14 @@ class  PonenciaCreateView(validarUser,FormView):
                 id_video=ponencia.cod_video.split(sep='https://player.vimeo.com/video/')
                 id_video=id_video[-1].split(sep='"')
             ponencia.id_video=id_video[0]
-            
+            image_64_encode=self.request.POST['ponencia-prueba']
+            campo = image_64_encode.split(",")
+            image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
+            chars = '0123456789'
+            nombre = get_random_string(5, chars)
+            image_result = open('MedCongressApp/static/ponencias/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+            image_result.write(image_64_decode)
+            ponencia.imagen='ponencias/imagen_%s.png'%(nombre)
             ponencia.save()
             
             for ponente in self.request.POST.getlist('ponencia_ponente-ponente'):
@@ -218,7 +227,7 @@ class PonencicaUpdateView(validarUser,FormView):
         self.object=ponencia
         context=super().get_context_data(**kwargs)
         if self.object.imagen:
-            context['imagen_seg_url']='/static/%s'%(self.object.imagen)
+            context['imagen_seg_url']=self.object.imagen
         if self.object.meta_og_imagen:
             context['imagen_meta']='/static/%s'%(self.object.meta_og_imagen)
         context['bloque_update']=self.object.bloque
@@ -267,38 +276,52 @@ class PonencicaUpdateView(validarUser,FormView):
   
 
     def form_valid(self, form):
-        try:
-            if not self.request.POST.getlist('ponencia_ponente-ponente'):
-                messages.warning(self.request, 'Debe al menos entrar un ponente')
-                return super().form_invalid(form) 
-            ponencia=Ponencia.objects.get(pk=self.kwargs.get('pk'))
-            self.object=ponencia
-            pon=form['ponencia'].save(commit=False)
-            relacion=form['ponencia_ponente'].save(commit=False)
-            ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
+        # try:
+        if not self.request.POST.getlist('ponencia_ponente-ponente'):
+            messages.warning(self.request, 'Debe al menos entrar un ponente')
+            return super().form_invalid(form) 
+        ponencia=Ponencia.objects.get(pk=self.kwargs.get('pk'))
+        self.object=ponencia
+        pon=form['ponencia'].save(commit=False)
+        relacion=form['ponencia_ponente'].save(commit=False)
+        ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
 
-            if ubic.exists():
-                pon.lugar=ubic.first()
-            else:
-                ubicacion=form['ubicacion'].save(commit=True)
-                pon.lugar=ubicacion
-            id_video=['']
-            if pon.cod_video:
-                id_video=pon.cod_video.split(sep='https://player.vimeo.com/video/')
-                id_video=id_video[-1].split(sep='"')
-            pon.id_video=id_video[0]
-            ponencia=pon
-            ponencia.save()
-            relaciones=RelPonenciaPonente.objects.filter(ponencia=ponencia)
-            relaciones.delete()
-            for ponente in self.request.POST.getlist('ponencia_ponente-ponente'):
-                ponente_=Ponente.objects.get(pk=ponente)
-                po= RelPonenciaPonente(ponente=ponente_,ponencia=ponencia)
-                po.save()
-            return super(PonencicaUpdateView, self).form_valid(form)
-        except Exception as e:
-            messages.warning(self.request, e)
-            return super().form_invalid(form)
+        if ubic.exists():
+            pon.lugar=ubic.first()
+        else:
+            ubicacion=form['ubicacion'].save(commit=True)
+            pon.lugar=ubicacion
+        id_video=['']
+        if pon.cod_video:
+            id_video=pon.cod_video.split(sep='https://player.vimeo.com/video/')
+            id_video=id_video[-1].split(sep='"')
+        pon.id_video=id_video[0]
+        ponencia=pon
+        imagen_seg=self.request.POST['ponencia-prueba']
+        if 'ponencias/' not in imagen_seg:
+            image_64_encode=self.request.POST['ponencia-prueba']
+            campo = image_64_encode.split(",")
+            chars = '0123456789'
+            nombre = get_random_string(5, chars)
+            image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
+            image_result = open('MedCongressApp/static/ponencias/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+            image_result.write(image_64_decode)
+            remove('MedCongressApp/static/%s'%( ponencia.imagen))
+            ponencia.imagen='ponencias/imagen_%s.png'%(nombre)
+
+        ponencia.save()
+        
+
+        relaciones=RelPonenciaPonente.objects.filter(ponencia=ponencia)
+        relaciones.delete()
+        for ponente in self.request.POST.getlist('ponencia_ponente-ponente'):
+            ponente_=Ponente.objects.get(pk=ponente)
+            po= RelPonenciaPonente(ponente=ponente_,ponencia=ponencia)
+            po.save()
+        return super(PonencicaUpdateView, self).form_valid(form)
+        # except Exception as e:
+        #     messages.warning(self.request, e)
+        #     return super().form_invalid(form)
             
 class PonenciaDeletedView(validarUser,DeleteView):
     model = Ponencia

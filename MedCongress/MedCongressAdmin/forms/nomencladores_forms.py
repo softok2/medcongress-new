@@ -49,49 +49,50 @@ class CatPagoForm(forms.ModelForm):
 
 class PatrocinadorForm(forms.ModelForm):
 
-    logo=forms.ImageField(label='Buscar Logo',required=True)
+    prueba=forms.CharField(required=False)
     url=forms.URLField(label='URL del Patrocinador')
     class Meta:
         model=AvalCongreso
-        fields=['nombre','detalle','url','logo']
+        fields=['nombre','detalle','url','prueba']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.fields['nombre'].widget.attrs.update({'class': 'form-control'})  
         self.fields['detalle'].widget.attrs.update({'class': 'form-control ckeditor'})  
-        self.fields['logo'].widget.attrs.update({'class': ' form-control '}) 
+        
         self.fields['url'].widget.attrs.update({'class': ' form-control '})
 
     def clean(self, *args, **kwargs):
         cleaned_data = super(PatrocinadorForm, self).clean(*args, **kwargs)
-        nombre = cleaned_data.get('nombre', None)
-       
-        if AvalCongreso.objects.filter(nombre=nombre).exists():
-           self.add_error('nombre',"Ya existe un <b>Patrocinador</b> con ese <b> Nombre</b>" )
+        
+        logo = cleaned_data.get('prueba', None)
+        if not logo :
+                self.add_error('prueba', 'Debe entrar una <b>Logo </b> para este Patrocinador')
+        # if AvalCongreso.objects.filter(nombre=nombre).exists():
+        #    self.add_error('nombre',"Ya existe un <b>Patrocinador</b> con ese <b> Nombre</b>" )
        
 
 class SocioForm(forms.ModelForm):
 
-    logo=forms.ImageField(label='Buscar Logo',required=True)
+    prueba=forms.CharField(required=False)
     url=forms.URLField(label='URL del Socio')
     class Meta:
         model=SocioCongreso
-        fields=['nombre','detalle','url','logo']
+        fields=['nombre','detalle','url','prueba']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.fields['nombre'].widget.attrs.update({'class': 'form-control'})  
         self.fields['detalle'].widget.attrs.update({'class': 'form-control ckeditor'})  
-        self.fields['logo'].widget.attrs.update({'class': ' form-control '}) 
+        
         self.fields['url'].widget.attrs.update({'class': ' form-control '})
     def clean(self, *args, **kwargs):
         cleaned_data = super(SocioForm, self).clean(*args, **kwargs)
-        nombre = cleaned_data.get('nombre', None)
-       
-        if SocioCongreso.objects.filter(nombre=nombre).exists():
-           self.add_error('nombre',"Ya existe un <b>Socio</b> con ese <b> Nombre</b>" )
+        logo = cleaned_data.get('prueba', None)
+        if not logo :
+            self.add_error('prueba', 'Debe entrar una <b>Logo </b> para este Socio')
        
 class CatUsuarioForm(forms.ModelForm):
     published=forms.BooleanField(label='Publicado',required=False)

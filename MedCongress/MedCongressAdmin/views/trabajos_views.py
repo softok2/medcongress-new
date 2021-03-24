@@ -1,5 +1,7 @@
 from os import remove
+import base64
 from django import forms
+from django.utils.crypto import get_random_string
 from django.contrib import messages
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.urls import reverse_lazy,reverse
@@ -37,7 +39,18 @@ class  CongressTrabajoCreateView(validarUser,CreateView):
     def form_valid(self, form):
         congreso=form.save(commit=False)
         path=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
-        congreso.path=path  
+        congreso.path=path 
+        if self.request.POST['prueba']:
+            image_64_encode=self.request.POST['prueba']
+            campo = image_64_encode.split(",")
+            image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
+            chars = '0123456789'
+            nom= get_random_string(5, chars)
+            image_result = open('MedCongressApp/static/usuarios/foto_%s.png'%(nom), 'wb') # create a writable image and write the decoding result
+            image_result.write(image_64_decode)
+            congreso.foto='usuarios/foto_%s.png'%(nom)
+        else:
+            congreso.foto='usuarios/defaulthombre.png' 
         congreso.save()
         return super(CongressTrabajoCreateView, self).form_valid(form)
 
@@ -62,7 +75,17 @@ class CongressTrabajoUpdateView(validarUser,UpdateView):
 
     def form_valid(self, form):
         congreso=form.save(commit=False)
-       
+        if self.request.POST['prueba']:
+            image_64_encode=self.request.POST['prueba']
+            campo = image_64_encode.split(",")
+            image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
+            chars = '0123456789'
+            nom= get_random_string(5, chars)
+            image_result = open('MedCongressApp/static/usuarios/foto_%s.png'%(nom), 'wb') # create a writable image and write the decoding result
+            image_result.write(image_64_decode)
+            congreso.foto='usuarios/foto_%s.png'%(nom)
+        else:
+            congreso.foto='usuarios/defaulthombre.png'
         congreso.save()
         
         return super(CongressTrabajoUpdateView, self).form_valid(form)

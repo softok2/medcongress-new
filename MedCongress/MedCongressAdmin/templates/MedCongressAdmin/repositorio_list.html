@@ -80,7 +80,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for documento in documentos %}
+                                            <!-- {% for documento in documentos %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}">
                                                 <td class="sorting_1">{{ documento.titulo }}</td>
                                                 <td ><p id="doc_{{ documento.pk }}" class="text"  >{{host}}/static/{{documento.documento}}
@@ -102,7 +102,7 @@
                                                     </a>
                                                 </td>
                                             </tr>
-                                            {% endfor %}
+                                            {% endfor %} -->
                                         </tbody>
                                         <tfoot>
                                             <tr>
@@ -156,7 +156,19 @@
             "previous": "Anterior"
         }
     },
- 
+    "columns": [
+       
+       {'data':'nombre','orderable': true},
+       {'data':'url','orderable': false},
+       {'data':'operaciones','orderable': false }
+      
+   ],
+   "bServerSide": true,
+   "sAjaxSource":"{% url 'MedCongressAdmin:table_json_documentos' %}",
+   "fnServerParams": function (aoData) {
+           aoData.push( { "name": "search", "value": $('.dataTables_filter input').val()  } );
+       
+      }
 });
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({

@@ -196,7 +196,7 @@ class EspecialidadCongreso(models.Model):
 
 class AvalCongreso(models.Model):
     nombre=models.CharField(max_length=50,unique=True,error_messages={
-"max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"})
+"max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres","unique":"Ya existe un <b> Patrocinador</b> con este <b>Nombre</b>"})
     detalle=models.TextField(null=True,blank=True)
     logo=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='patrocinadores' )
     url= models.URLField(max_length=250,error_messages={
@@ -213,7 +213,7 @@ class AvalCongreso(models.Model):
 
 class SocioCongreso(models.Model):
     nombre=models.CharField(max_length=50,unique=True,error_messages={
-"max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"})
+"max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres","unique":"Ya existe un <b> Patrocinador</b> con este <b>Nombre</b>"})
     detalle=models.TextField(null=True,blank=True)
     logo=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='socios' )
     url= models.URLField(max_length=250,error_messages={
@@ -250,7 +250,8 @@ class Congreso(models.Model):
 "max_length": "El Campo <b>Título</b> debe tener máximo 250 caracteres"})
     sub_titulo=models.CharField(max_length=250,null=True, error_messages={
 "max_length": "El Campo <b>SubTítulo</b> debe tener máximo 250 caracteres"})
-    imagen_seg=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso')
+    imagen_seg=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso',error_messages={
+"blank": 'Debe  entrar una <b> Imagen Segundaria22 </b>'})
     path=models.CharField(max_length=250, help_text='campo para identificarlo por la URL',unique=True)
     lugar=models.ForeignKey(Ubicacion,on_delete=models.DO_NOTHING)
     fecha_inicio=models.DateTimeField()
@@ -956,7 +957,7 @@ class Session(models.Model):
 class TrabajosInvestigacion(models.Model):
     documento=models.FileField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='trabajos')
     titulo=models.CharField(max_length=250, null=False,unique=True,error_messages={
-                            "max_length": "El Campo <b>Título</b> debe tener máximo 250 caracteres"})
+                            "max_length": "El Campo <b>Título</b> debe tener máximo 250 caracteres","unique":"Ya existe un <b> Trabajo de Investigación</b> con ese título"})
     descripcion=models.TextField(null=True,blank=True)
     congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
     autor= models.CharField( max_length=50,error_messages={

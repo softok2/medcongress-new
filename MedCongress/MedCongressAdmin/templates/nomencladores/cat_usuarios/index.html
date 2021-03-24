@@ -76,7 +76,7 @@
                                                 <th style="width:5%">Operaciones</th>
                                         </thead>
                                         <tbody>
-                                            {% for cat_usuario in cat_usuarios %}
+                                            <!-- {% for cat_usuario in cat_usuarios %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
                                                
                                                 <td>{{cat_usuario.nombre}}</td>
@@ -93,7 +93,7 @@
                                                     
                                                 </td>
                                             </tr>
-                                            {% endfor %}
+                                            {% endfor %} -->
                                         </tbody>
                                         <tfoot>
                                             
@@ -145,7 +145,19 @@
             "previous": "Anterior"
         }
     },
- 
+    "columns": [
+       
+       {'data':'nombre','orderable': true},
+       {'data':'publicado','orderable': true},
+       {'data':'operaciones','orderable': false }
+      
+   ],
+   "bServerSide": true,
+   "sAjaxSource":"{% url 'MedCongressAdmin:table_json_catusuarios' %}",
+   "fnServerParams": function (aoData) {
+           aoData.push( { "name": "search", "value": $('.dataTables_filter input').val()  } );
+       
+      }
 });
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({
