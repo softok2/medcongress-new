@@ -489,8 +489,11 @@ class Perfil(TemplateView):
 
         for constancia in constancias:
             congreso=Congreso.objects.get(pk=constancia['congreso'])
+            con=False
+            if 'congreso/img_constancia' in constancia['foto_constancia']:
+                con=True
             constancias_env.append({'congreso':congreso,
-            'foto_constancia':constancia['foto_constancia']})
+            'foto_constancia':constancia['foto_constancia'],'tipo_constancia':con})
         context['constancias']=constancias_env
 
         for constancia in constancias_taller:

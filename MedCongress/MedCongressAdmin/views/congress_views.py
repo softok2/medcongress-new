@@ -26,7 +26,7 @@ from MedCongressAdmin.forms.congres_forms import (AsignarCongresoForms,
                                                   CongresoSocioForm,
                                                   ExportarExelForm,
                                                   ImagenCongForms,
-                                                  PonenciaForms,CongresoProgramaForm)
+                                                  PonenciaForms,CongresoProgramaForm,AsignarConstanciaUserForms)
 from MedCongressApp.models import (AvalCongreso, Bloque, CategoriaPagoCongreso,
                                    Congreso, CuestionarioPregunta,
                                    CuestionarioRespuestas, ImagenCongreso,
@@ -1263,48 +1263,62 @@ class CongressCategPagosDeletedView(validarUser,DeleteView):
     model = RelCongresoCategoriaPago
     success_url = reverse_lazy('MedCongressAdmin:cat_usuarios_list')
 
-# class AsignarConstancias(validarUser,TemplateView):
-#     template_name = 'MedCongressAdmin/asig_constancia.html'
+class AsignarConstanciasUsuario(validarUser,FormView):
+    form_class = AsignarConstanciaUserForms
+   
+    template_name = 'MedCongressAdmin/asig_constancia_usuario.html'
 
-#     def post(self, request, **kwargs):
-#         # congreso=Congreso.objects.filter(titulo=self.request.POST['my_congress']).first()
-#         # if congreso:
-#         #     rel_usuario_congreso=RelCongresoUser.objects.filter(congreso=congreso ).distinct('user')
-           
-#         #     for usuario in rel_usuario_congreso:
-#         #             # //////////////
-#         #         nombre='%s %s'%(usuario.user.usuario.first_name,usuario.user.usuario.last_name)
-                
-#         #         cont=len(nombre)
-#         #         comienzo=450-(cont/2*19) 
-#         #         base=Image.open('MedCongressApp/static/%s'%(congreso.foto_constancia)).convert('RGBA')
-#         #         text=Image.new('RGBA',base.size,(255,255,255,0))
-#         #         # nombre_font=ImageFont.truetype('calibri.ttf',40)
-#         #         nombre_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 28, encoding="unic")
-#         #         # cong.set_variation_by_name('Italic')
-#         #         d=ImageDraw.Draw(text)
-#         #         d.text((comienzo,290),nombre,font=nombre_font,fill=(89, 85, 85))
-                
-                
-#         #         out=Image.alpha_composite(base,text)
-#         #         tit=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
-#         #         tit_nombre=nombre.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
-#         #         nombre_img='constancia_%s_%s'%(tit_nombre,tit)  
-#         #         out.save('MedCongressApp/static/congreso/img_constancia/%s.png'%(nombre_img))
-#         #         usuario.is_constancia=True
-#         #         usuario.foto_constancia='%s.png'%(nombre_img)
-#         #         usuario.fecha_constancia=datetime.now()
-#         #         usuario.save()
-#         #         # ////////////////
-#         #         if usuario.user.usuario.email =='frankhef91@gmail.com':
-#         #             email = EmailMessage('Constancia', 'En este correo se le adjunta la constancia de haber participado en el congreso %s.'%(congreso.titulo), to = [usuario.user.usuario.email])
-#         #             email.attach_file('MedCongressApp/static/congreso/img_constancia/%s.png'%(nombre_img))
-#         #             email.send()
+    # def get_queryset(self, **kwargs):
+    #     return RelCongresoUser.objects.filter(pk=self.kwargs.get('pk'))
 
+    # def get_context_data(self, **kwargs):
+    #     context=super().get_context_data(**kwargs)
+    #     context['update']=True
+    #     context['categoria']= RelCongresoCategoriaPago.objects.get(pk=self.kwargs.get('pk'))
+    #     pon=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+    #     context['cong'] = pon
+    #     return context
+    
+    def get_success_url(self):
+        url =  reverse_lazy('MedCongressAdmin:asig_congress_list' )
+        self.success_url='%s?search=%s'%(url,self.request.GET.get('search'))
+        return self.success_url
+
+    def form_valid(self, form):
         
+        
+        relacion=RelCongresoUser.objects.get(pk=self.kwargs.get('pk'))
+        relacion.foto_constancia=self.request.FILES['foto_constancia']
+        relacion.is_constancia=True
+        relacion.fecha_constancia=datetime.now()
+        
+        score=0
+        if relacion.congreso.score:
+            score=relacion.congreso.score
+        if relacion.user.score is None:
+            relacion.user.score=score
+        else:
+            relacion.user.score= relacion.user.score+score
+        relacion.user.save()
+                                       
+        relacion.save()
+        
+        email = EmailMessage('Constancia', '''Estimado usuario de MedCongress. Por medio del presente, se le informa que la constancia de asistencia al congreso  '''+relacion.congreso.titulo +''', el cual esperamos haya sido de tu interés y agrado, ya está en su perfil en nuestra plataforma https://medcongress.com.mx/ 
+        
+        Recuerda que tienes acceso a las presentaciones del simposio a través de la plataforma de MedCongress, solo tienes que ingresar a la página https://medcongress.com.mx/ y en login ingresar tu correo electrónico y tu contraseña, dentro del programa podrás elegir las ponencias de tu interés que deseas ver.''', to = [relacion.user.usuario.email] )
 
-#                 # ////
-#         return HttpResponse(Constancia.delay())
+        email.send()
+
+        return super(AsignarConstanciasUsuario, self).form_valid(form)
+   
+
+    # def get_success_url(self):
+    #     if self.kwargs.get('pk'):
+    #         pregunta=CuestionarioPregunta.objects.get(pk=self.kwargs.get('pk'))
+            
+    #         self.success_url =  reverse_lazy('MedCongressAdmin:Congres_cuestionario',kwargs={'path': pregunta.congreso.path} )
+    #     return self.success_url 
+
 
 class AsignarConstancias(validarUser,TemplateView):
     template_name = 'MedCongressAdmin/asig_constancia.html'
@@ -1402,10 +1416,10 @@ class vTableAsJSONAsigCongreso(TemplateView):
     
     def get(self, request, *args, **kwargs):
         #arreglo con las columnas de la BD a filtrar
-        col_name_map = ['user__usuario__first_name','user__usuario__email','congreso__titulo','cantidad','categoria_pago__nombre','is_pagado']
+        col_name_map = ['user__usuario__first_name','user__usuario__email','congreso__titulo','cantidad','categoria_pago__nombre','is_pagado','is_constancia']
            
         #listado que muestra en dependencia de donde estes parado
-        object_list = RelCongresoUser.objects.all()
+        object_list = RelCongresoUser.objects.filter(is_pagado=True)
         
         #parametros 
         search_text = request.GET.get('sSearch', '').lower()# texto a buscar
@@ -1434,16 +1448,24 @@ class vTableAsJSONAsigCongreso(TemplateView):
            
            #Guardar datos en un dic 
         for objet in filtered_object_list[start:(start+delta)]:
-            pagado='No'
-            if objet.is_pagado:
-                pagado='Si'
-                
+           
+           
+            constancia='Si'
+            
+            if objet.foto_constancia or RelCongresoUser.objects.filter(congreso=objet.congreso,user=objet.user,is_constancia=True).exists():
+                        constancia='''Si'''                                         
+            else:
+                constancia= '''<a href="'''+ reverse('MedCongressAdmin:constancia_usuario_add',kwargs={'pk':objet.pk})+'''?search='''+request.GET.get('search')+'''"
+                                                    title="Asignar Constancia">
+                                                    <i class="icon icon-constancia"></i>
+                                                </a>'''   
+           
             enviar.append({ 'usuario':'%s %s'%(objet.user.usuario.first_name,objet.user.usuario.last_name),
-                            'email': objet.user.usuario.email,
+                            'email':'<p class="text"  >'+ objet.user.usuario.email+'</p>',
                             'congreso' : objet.congreso.titulo,
                             'cantidad' : objet.cantidad,
                             'cat_pago':objet.categoria_pago.nombre,
-                            'pagado':pagado,
+                            'constancia':constancia,
                             'operaciones' : 
                                                     '''<a id="del_'''+ str(objet.pk)+'''"
                                                         href="javascript:deleteItem('''+ str(objet.pk)+''')"

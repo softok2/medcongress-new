@@ -620,7 +620,26 @@ class AsignarCongresoForms(forms.ModelForm):
             self.add_error('user', 'No existe ese Usuario')
         if cantidad<0:
             self.add_error('cantidad', 'El Campo CANTIDAD debe tener un valor positivo')
-   
+
+class AsignarConstanciaUserForms(forms.ModelForm):
+    
+    foto_constancia=forms.FileField(required=False)
+    class Meta:
+        model=RelCongresoUser
+        fields=['foto_constancia']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(AsignarConstanciaUserForms, self).clean(*args, **kwargs)
+        constancia = cleaned_data.get('foto_constancia', None)
+        if constancia:
+            filename = constancia.name
+            if not filename.endswith(".pdf")  :
+                self.add_error('foto_constancia',"No está <b> permitido </b> subir ese <b>tipo de archivo</b>. Es solo PDF"  )
+        else:
+            self.add_error('foto_constancia',"Debe subir un <b> PDF </b>"  )
 class AsignarTallerForms(forms.ModelForm):
     user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Email del Usuario',required=True)
     categoria_pago=forms.ModelChoiceField(queryset=CategoriaPagoCongreso.objects.all(),label='Categoría de Pago')

@@ -8,7 +8,7 @@ from django.urls import path,include
 
 from .views.country_views import (CountryCreateView, CountryDeleteView,
                                   CountryListView, CountryUpdateView)
-from .views.congress_views import (CongressListView,CongressCreateView,CongressUpdateView,
+from .views.congress_views import (AsignarConstanciasUsuario,CongressListView,CongressCreateView,CongressUpdateView,
                                    CongressTalleresListView,CongressPonenciasListView,CongressCategPagosListView,
                                    CongressImagenesListView,AddPonenciaCongreso,CongressCategPagosCreateView,
                                    CongressDeletedView,CongressBloquesListView,GetBloques,AsignarCongressListView,AsignarCongressAddViews,GetPagos,
@@ -382,5 +382,6 @@ urlpatterns = [
      path('pruebaTablaJsonTipoEvento', vTableAsJSONTipoEvento.as_view(), name='table_json_tipo_eventos'),
      path('pruebaTablaJsonRepositorio', vTableAsJSONRepositorio.as_view(), name='table_json_documentos'),
 
-
+#Constancia Usuario
+path('constancia-usuario/add/<int:pk>', AsignarConstanciasUsuario.as_view(), name='constancia_usuario_add'),
   ]

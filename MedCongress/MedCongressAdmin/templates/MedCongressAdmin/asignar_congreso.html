@@ -17,6 +17,18 @@
     #DataTables_Table_0_length>label {
         margin-top: 1.2rem;
     }
+    .text {
+  -ms-word-break: break-all;
+  word-break: break-all;
+  word-break: break-word;
+  /* Sólo WebKit -NO DOCUMENTADO */
+  -ms-hyphens: auto;
+  /* Guiones para separar en sílabas */
+  -moz-hyphens: auto;
+  /*  depende de lang en <html>      */
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
 </style>
 {% endblock %}
 {% block content %}
@@ -162,18 +174,20 @@
                     <div class="card-body card-dashboard">
                         <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4">
                             <div class="row">
-                                <div class="col-sm-12">
-                                    <table class="table table-striped table-bordered zero-configuration dataTable"
-                                        style="margin-top: 5px!important; margin-bottom: 15px!important;"
-                                        id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
+                                <div class="">
+                                    
+                                    <table id="table" class="table table-striped table-bordered zero-configuration dataTable"
+                                    style="margin-top: 5px!important; margin-bottom: 15px!important;"
+                                    id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
                                         <thead>
                                             <th style="width:50%">Usuario</th>
-                                            <th>Correo</th>
+                                            <th>Correo Electrónico</th>
                                             <th>Congreso</th>
 
                                             <th>Cant.</th>
-                                            <th>Categoría de Pago</th>
-                                            <th>Pagado</th>
+                                            <th>Cat. de Pago</th>
+                                            
+                                            <th>Constancia</th>
                                             <th >Elim.</th>
                                         </thead>
                                         <tbody>
@@ -205,11 +219,12 @@
                                         </tbody>
                                         <tfoot>
                                             <th style="width:50%">Usuario</th>
-                                            <th>Correo</th>
+                                            <th>Correo Electrónico</th>
                                             <th>Congreso</th>
                                             <th>Cant.</th>
-                                            <th>Categoría de Pago</th>
-                                            <th>Pagado</th>
+                                            <th>Cat. de Pago</th>
+                                            <th>Constancia</th>
+                                           
                                             <th >Elim.</th>
                                         </tfoot>
                                     </table>
@@ -260,6 +275,8 @@
             "previous": "Anterior"
         }
     },
+    
+
     "columns": [
        
        {'data':'usuario','orderable': true},
@@ -267,12 +284,18 @@
        {'data':'congreso','orderable': true },
        {'data':'cantidad','orderable': true },
        {'data':'cat_pago','orderable': true },
-       {'data':'pagado','orderable': true },
+       
+       {'data':'constancia','orderable': true },
        {'data':'operaciones','orderable': false },
       
    ],
    "bServerSide": true,
-   "sAjaxSource":"{% url 'MedCongressAdmin:table_json_asig_congreso' %}"
+   "sAjaxSource":"{% url 'MedCongressAdmin:table_json_asig_congreso' %}",
+   "fnServerParams": function (aoData) {
+        
+            aoData.push( { "name": "search", "value": $('.dataTables_filter input').val()  } );
+        
+       }
 });
         $('form').submit(function(event) { // o el id de tu formulario
         if($('#id_congreso').val() == '') {

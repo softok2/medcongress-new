@@ -260,7 +260,7 @@ background-color: #979494;"> <b> MedCongress Constacias</b></h6>
 
                         {%for constancia in constancias%}
                         <li>
-                            <a href="{%static '/congreso/img_constancia/'%}{{constancia.foto_constancia}}" target="_black">
+                            <a href="{% if constancia.tipo_constancia%} {%static '/'%}{{constancia.foto_constancia}}{%else%}{%static '/congreso/img_constancia/'%}{{constancia.foto_constancia}}{%endif%}" target="_black">
                                 <div class="row">
                                     <div class="col-md-3">
 
