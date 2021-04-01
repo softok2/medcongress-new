@@ -193,46 +193,8 @@
 																		</div>
 																	</div>
 																	<div class="col-sd-1"></div>
-																	<div class="col-sm-3 ">
-																		<div class="form-group">
-																			{%if foto_constancia%}
-																			<label><b>Imagen de la Constancia Actual
-																				</b> </label>
-																			<figure class="col-lg-3 col-md-6 col-12"
-																				itemprop="associatedMedia" itemscope="">
-																			</figure>
-																			<a href="{{foto_constancia}}"
-																				itemprop="contentUrl"
-																				data-size="480x360">
-																				<img class="img-thumbnail img-fluid"
-																					src="{{foto_constancia}}"
-																					itemprop="thumbnail"
-																					alt="Image description">
-																			</a>
+																	
 
-																			</figure>
-
-																			<label for=" " style="margin-top: 20px;">
-																				<b>Insertar Nueva
-																					Imagen de Constancia</b> </label>
-
-																			<input type="file"
-																				name="taller-foto_constancia"
-																				accept="image/*" class=" form-control "
-																				id="id_taller-foto_constancia">
-																			{% else%}
-																			<label
-																				for="{{form.taller.foto_constancia.id_for_label }}"><b>Imagen
-																					de la Constancia</b>
-																			</label>
-
-																			{{form.taller.foto_constancia }}
-																			{%endif%}
-																		</div>
-																	</div>
-
-																</div>
-																<div class="row">
 																	<!-- <div class="col-sm-6 ">
 																		<div class="form-group">
 																			{%if imagen_seg_url%}
@@ -576,7 +538,7 @@
 						<div class="row">
 							<div class="col-sm-6 ">
 								<div class="form-group">
-									<label for="" style="margin-bottom: 40px;"> <b>Imagen </b> </label>
+									<label for="" > <b>Imagen <span style="font-size: 80%; color: darkgrey;"> (1140 X 240)</span></b> </label>
 									{%if imagen_seg_url%}
 									<label class="label" data-toggle="tooltip" title="Clic para cambiar foto">
 										<div id="ver"><img class="img-fluid" id="avatar"
@@ -630,7 +592,85 @@
 
 							</div>
 						</div>
-
+						<div class="row">
+							<div class="col-sm-6 ">
+								<div class="form-group">
+									<label for="" >
+										<b>Imagen de la Constancia <span style="font-size: 80%; color: darkgrey;"> (3625 X 2600)</span></b> </label>
+									{%if foto_constancia%}
+									<label class="label" data-toggle="tooltip"
+										title="Clic para cambiar foto">
+										<div id="ver"><img class="img-fluid"
+												id="avatar2"
+												src="{{foto_constancia}}"
+												alt="avatar"></div>
+										<input type="file" class="sr-only"
+											id="input2" name="image"
+											accept="image/*">
+										<input type="hidden"
+											id="taller-constancia"
+											name="taller-constancia"
+											value="{{foto_constancia}}">
+									</label>
+						
+									{% else%}
+									<br>
+									<label class="label" data-toggle="tooltip"
+										title="Clic para cambiar foto">
+										<div id="ver2"><span id="avatar2"> <i
+													class="icon icon-add_imagen"></i></span>
+										</div>
+										<input type="file" class="sr-only"
+											id="input2" name="image2"
+											accept="image/*">
+										<input type="hidden"
+											id="taller-constancia"
+											name="taller-constancia">
+									</label>
+									{%endif%}
+						
+						
+									<div class="alert" role="alert" id="alert2">
+									</div>
+									<div class="modal fade " id="modal2"
+										tabindex="-1" role="dialog"
+										aria-labelledby="modalLabel"
+										aria-hidden="true">
+										<div class="modal-dialog "
+											role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title"
+														id="modalLabel">Editar
+														la Imagen</h5>
+													<button type="button"
+														class="close"
+														data-dismiss="modal"
+														aria-label="Close">
+														<span
+															aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<div class="modal-body">
+													<div class="img-container ">
+														<img id="image2"
+															src="https://avatars0.githubusercontent.com/u/3456749">
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button"
+														class="btn btn-secondary"
+														data-dismiss="modal">Cancel</button>
+													<button type="button"
+														class="btn btn-primary"
+														id="crop2">Guardar</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+						</div>
+						</div>
 
 					</div>
 					<div class="form-actions">
@@ -795,16 +835,21 @@
 
 	});
 	window.addEventListener('DOMContentLoaded', function () {
-      var avatar = document.getElementById('avatar');
-      var image = document.getElementById('image');
-	  var input = document.getElementById('input');
-	  
-	
-	
-      var $alert = $('#alert');
-      var $modal = $('#modal');
-	  var cropper;
-	  
+		var avatar = document.getElementById('avatar');
+		var image = document.getElementById('image');
+		var input = document.getElementById('input');
+		
+		var avatar2 = document.getElementById('avatar2');
+		var image2 = document.getElementById('image2');
+		var input2 = document.getElementById('input2');
+
+		var $alert = $('#alert');
+		var $modal = $('#modal');
+		var cropper;
+		
+		var $alert2 = $('#alert2');
+		var $modal2 = $('#modal2');
+		var cropper2;
 	  
 
       $('[data-toggle="tooltip"]').tooltip();
@@ -817,6 +862,41 @@
           image.src = url;
           $alert.hide();
           $modal.modal('show');
+        };
+        var reader;
+        var file;
+        var url;
+
+        if (files && files.length > 0) {
+		  file = files[0];
+		 
+			tipo_imagen=files[0].name.split('.');
+			if(tipo_imagen[1]!='jpg' && tipo_imagen[1]!='png')
+			{
+				
+				swal("Cancelado", "Solo admimite archivos .jpg y .png.", "error");
+				return;	
+			}
+          if (URL) {
+            done(URL.createObjectURL(file));
+          } else if (FileReader) {
+            reader = new FileReader();
+            reader.onload = function (e) {
+              done(reader.result);
+            };
+            reader.readAsDataURL(file);
+          }
+        }
+      });
+
+	  input2.addEventListener('change', function (e) {
+		
+        var files = e.target.files;
+        var done = function (url) {
+          input.value = '';
+          image2.src = url;
+          $alert2.hide();
+          $modal2.modal('show');
         };
         var reader;
         var file;
@@ -866,6 +946,26 @@
         cropper = null;
       });
 
+	  $modal2.on('shown.bs.modal', function () {
+		
+
+		$('#image2').width($modal2.width());
+		
+		
+        cropper2 = new Cropper(image2, {
+          aspectRatio: 3625/2600,
+		  viewMode: 1,
+		  
+		  
+		  ready: function () {
+            //Should set crop box data first here
+            cropper2.setCropBoxData(cropBoxData).setCanvasData(canvasData);
+          }
+        });
+      }).on('hidden.bs.modal', function () {
+        cropper2.destroy();
+        cropper2 = null;
+      });
 
       document.getElementById('crop').addEventListener('click', function () {
 		
@@ -888,6 +988,31 @@
 		
 		  $alert.removeClass('alert-success alert-warning');  
 		  $alert.show().addClass('alert-success').text('Nueva Imagen Cargada');
+      
+        }
+	  });
+
+	  document.getElementById('crop2').addEventListener('click', function () {
+		
+        var initialAvatarURL2;
+        var canvas2;
+		
+        $modal2.modal('hide');
+
+        if (cropper2) {
+          	canvas2 = cropper2.getCroppedCanvas({
+            width: 3625,
+            height: 2600,
+          });
+          	initialAvatarURL2 = avatar2.src;
+			avatar2.src = canvas2.toDataURL();
+		
+
+		  $('#ver2').html(`<img class="img-fluid" id="avatar2" id="avatar" src="`+ canvas2 .toDataURL()+`"  alt="avatar">`);
+			$('#taller-constancia').val(canvas2.toDataURL());									
+		
+		  $alert2.removeClass('alert-success alert-warning');  
+		  $alert2.show().addClass('alert-success').text('Nueva Imagen Cargada');
       
         }
 	  });

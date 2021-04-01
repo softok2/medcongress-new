@@ -97,7 +97,15 @@ class  TallerCreateView(validarUser,FormView):
         image_result = open('MedCongressApp/static/talleres/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
         image_result.write(image_64_decode)
         taller.imagen='talleres/imagen_%s.png'%(nombre)
-        
+        if self.request.POST['taller-constancia']:
+                image_64_encode=self.request.POST['taller-constancia']
+                campo = image_64_encode.split(",")
+                image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
+                chars = '0123456789'
+                nombre = get_random_string(5, chars)
+                image_result = open('MedCongressApp/static/congreso/img_constancia/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+                image_result.write(image_64_decode)
+                taller.foto_constancia='congreso/img_constancia/imagen_%s.png'%(nombre)
         taller.save()
         for ponente in self.request.POST.getlist('taller_ponente-ponente'):
                 ponente_=Ponente.objects.get(pk=ponente)
@@ -266,6 +274,20 @@ class TallerUpdateView(validarUser,FormView):
             if taller.imagen:
                 remove('MedCongressApp/static/%s'%( taller.imagen))
             taller.imagen='talleres/imagen_%s.png'%(nombre)
+        if self.request.POST['taller-constancia']:
+            constancia=self.request.POST['taller-constancia']
+            if 'congreso/' not in constancia:
+            
+                image_64_encode=self.request.POST['taller-constancia']
+                campo = image_64_encode.split(",")
+                chars = '0123456789'
+                nombre = get_random_string(5, chars)
+                image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
+                image_result = open('MedCongressApp/static/congreso/img_constancia/taller_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+                image_result.write(image_64_decode)
+                if  taller_update.foto_constancia:
+                    remove('MedCongressApp/static/%s'%( taller_update.foto_constancia))
+                taller.foto_constancia='congreso/img_constancia/taller_%s.png'%(nombre)   
         taller_update=taller
         taller_update.save()
         relaciones=RelTallerPonente.objects.filter(taller=taller_update)

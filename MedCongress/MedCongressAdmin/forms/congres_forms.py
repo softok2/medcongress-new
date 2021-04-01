@@ -22,6 +22,7 @@ class CongresForm(forms.ModelForm):
     titulo=forms.CharField(label='Título')
     prueba=forms.CharField(required=False)
     prueba1=forms.CharField(required=False)
+    constancia=forms.CharField(required=False)
     template=forms.CharField(label='Template del Congreso',required=False)
     published=forms.BooleanField(label='Publicado',required=False)
     ver_titulo=forms.BooleanField(label='Ver Título',required=False)
@@ -29,11 +30,11 @@ class CongresForm(forms.ModelForm):
     t_congreso=forms.ModelChoiceField(queryset=TipoCongreso.objects.all(),label='Tipo de Congreso')
     # fecha_inicio=forms.DateTimeField()
     score=forms.IntegerField(label='Puntuación del Congreso')
-    foto_constancia=forms.ImageField(label='Buscar Imagen para la Constancia',required=False,)
+    # foto_constancia=forms.ImageField(label='Buscar Imagen para la Constancia',required=False,)
 
     class Meta:
         model=Congreso
-        fields=['titulo','sub_titulo','fecha_inicio','published','t_congreso','especialidad','is_openpay','template','foto_constancia','aprobado','cant_preguntas','score','streaming','meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
+        fields=['titulo','sub_titulo','fecha_inicio','published','t_congreso','especialidad','is_openpay','template','constancia','aprobado','cant_preguntas','score','streaming','meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
         'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','detalles_tipo_boleto','detalles_tipo_boleto_taller','ver_titulo','vid_publicidad','prueba','prueba1']
        
     def __init__(self, *args, **kwargs):
@@ -50,7 +51,7 @@ class CongresForm(forms.ModelForm):
         self.fields['especialidad'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['is_openpay'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['template'].widget.attrs.update({'class': 'form-control',})
-        self.fields['foto_constancia'].widget.attrs.update({'class': 'form-control',}) 
+        # self.fields['foto_constancia'].widget.attrs.update({'class': 'form-control',}) 
         self.fields['aprobado'].widget.attrs.update({'class': 'form-control',})  
         self.fields['cant_preguntas'].widget.attrs.update({'class': 'form-control',})                        
         self.fields['score'].widget.attrs.update({'class': 'form-control',})   
@@ -76,11 +77,12 @@ class CongresForm(forms.ModelForm):
         imagenes = cleaned_data.get('prueba', None)
         
         imagen_seg = cleaned_data.get('prueba1', None)
+        constancia = cleaned_data.get('constancia', None)
         if not imagenes :
             self.add_error('prueba', 'Debe al menos entrar una <b>Imagen Principal</b>')
         if not imagen_seg :
             self.add_error('prueba1', 'Debe  entrar una <b>Imagen Segundaria</b>')
- 
+      
 class ImagenCongresoForms(forms.ModelForm):
     imagen=forms.ImageField()
     
@@ -230,6 +232,7 @@ class PonenciaPonenteForm(forms.ModelForm):
 
 class TallerForm(forms.ModelForm):
     prueba=forms.CharField(required=False)
+    
     titulo=forms.CharField(label='Título')
     fecha_inicio=forms.DateTimeField()
     published=forms.BooleanField(label='Publicado',required=False)
@@ -239,7 +242,7 @@ class TallerForm(forms.ModelForm):
         model=Taller
         fields=['titulo','duracion','fecha_inicio','prueba','published','congreso','detalle','bloque',
         'meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
-        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','cod_video','foto_constancia','score']
+        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','cod_video','score']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
@@ -264,7 +267,7 @@ class TallerForm(forms.ModelForm):
         self.fields['meta_og_imagen'].widget.attrs.update({'class': 'form-control '}) 
         self.fields['meta_title'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['cod_video'].widget.attrs.update({'class': 'form-control','rows':'3'}) 
-        self.fields['foto_constancia'].widget.attrs.update({'class': 'form-control',}) 
+        
 
     def clean(self, *args, **kwargs):
         cleaned_data = super(TallerForm, self).clean(*args, **kwargs)
