@@ -1358,7 +1358,7 @@ class AsignarConstancias(validarUser,TemplateView):
         if congreso.foto_constancia:
             if congreso:                                        
                 prueba=Constancia.apply_async(args=[titulo])
-                messages.warning(self.request,'Se le envió la constancia a todos los que participaron el Congreso %s'%(titulo))
+                messages.warning(self.request,'Se le envió la constancia a todos los que participaron el Congreso %s'%(congreso.titulo))
                 return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list'))
             else:
                 messages.warning(self.request,'Ese Congreso no existe')

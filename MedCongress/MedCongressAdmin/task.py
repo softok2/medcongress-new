@@ -6,7 +6,8 @@ from django.core.mail import EmailMessage
 
 @shared_task
 def Constancia(titulo):
-    congreso=Congreso.objects.filter(titulo=titulo).first()
+    congreso=Congreso.objects.get(pk=titulo)
+    print(titulo)
     if congreso:
         rel_usuario_congreso=RelCongresoUser.objects.filter(congreso=congreso ).distinct('user')
         
@@ -18,7 +19,7 @@ def Constancia(titulo):
             comienzo=1500-(cont/2*19) 
             base=Image.open('MedCongressApp/static/%s'%(congreso.foto_constancia)).convert('RGBA')
             text=Image.new('RGBA',base.size,(255,255,255,0))
-            # nombre_font=ImageFont.truetype('calibri.ttf',150)
+            #nombre_font=ImageFont.truetype('calibri.ttf',150)
             nombre_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 100, encoding="unic")
             # cong.set_variation_by_name('Italic')
             d=ImageDraw.Draw(text)
@@ -26,7 +27,7 @@ def Constancia(titulo):
             
             
             out=Image.alpha_composite(base,text)
-            tit=taller.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n").replace(",","-").replace(":","-")
+            tit=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n").replace(",","-").replace(":","-")
             tit_nombre=nombre.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n").replace(",","-").replace(":","-")
             nombre_img='constancia_%s_%s'%(tit_nombre,tit)
             imagen_pdf=out.convert('RGB')  
