@@ -717,7 +717,7 @@ class AsignarConstanciasTaller(validarUser,TemplateView):
         if taller.foto_constancia:
             if taller:
                 prueba=Constanciataller.apply_async(args=[titulo])
-                messages.warning(self.request,'Se creo la constancia a todos los que participaron el Taller %s'%(titulo))
+                messages.warning(self.request,'Se creo la constancia a todos los que participaron el Taller %s'%(taller.titulo))
                 return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_taller'))
             else:
                 messages.warning(self.request,'Ese Taller no existe')
