@@ -7,9 +7,9 @@ from django.core.mail import EmailMessage
 @shared_task
 def Constancia(titulo):
     congreso=Congreso.objects.get(pk=titulo)
-    print(titulo)
+    
     if congreso:
-        rel_usuario_congreso=RelCongresoUser.objects.filter(congreso=congreso ).distinct('user')
+        rel_usuario_congreso=RelCongresoUser.objects.filter(congreso=congreso,is_pagado=True ).distinct('user')
         
         for usuario in rel_usuario_congreso:
                 # //////////////
@@ -60,9 +60,9 @@ def Constancia(titulo):
 
 @shared_task
 def Constanciataller(titulo):
-    taller=Taller.objects.filter(titulo=titulo).first()
+    taller=Taller.objects.get(pk=titulo)
     if taller:
-        rel_usuario_congreso=RelTallerUser.objects.filter(taller=taller ).distinct('user')
+        rel_usuario_congreso=RelTallerUser.objects.filter(taller=taller,is_pagado=True ).distinct('user')
         
         for usuario in rel_usuario_congreso:
                 # //////////////
