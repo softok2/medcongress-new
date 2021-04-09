@@ -627,9 +627,11 @@
                                                                 </button>
                                                                 <span> Ponente</span>
                                                                 <p>
-                                                                    {%if ponente.user.puesto %}
-                                                                    {{ponente.user.puesto}}
-                                                                    {%endif%}
+                                                                     <a href="{% url 'View_taller' path=evento.path%}" class="more d-block "><strong> Ver Taller</strong></a>
+    
+                                                            {%else%}
+                                                            <a href="{% url 'View_ponencia' path=evento.path%}" class="more d-block "><strong>Ver Ponencia</strong></a>
+                                                            {%endif%}
                                                                 </p>
                                                             </div>
                                                         </div>
@@ -907,9 +909,10 @@
                         <div class="row">
                         
                        
-                        <div class="col-lg-2 col-md-2col-sm-2 col-xs-12"></div>
-                        {%endif%}
+                        <div class="col-lg-2 col-md-2col-sm-2 col-xs-12">
                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="margin-bottom: 20px;">
+                        {%endif%}
+                       
                             <div class="price-box-frame first-box">
                                 <div class="kode-price-box">
                                     <div class="kode-price-header">
@@ -944,18 +947,17 @@
                             </div>
                             <!-- kode-price-box End -->
                         </div>
-                        {%if forloop.counter|divisibleby:2%}
+                        {%if  forloop.counter|divisibleby:2%}
                     </div>
-                     {%endif%}
-                        {%endfor%}
-                    </div> 
+                        <div class="row">
+                            <div class="col-lg-2 col-md-2col-sm-2 col-xs-12">
+                                {%else%}
+                                <div class="col-md-4 mt-md-0 mt-5">
                         {%endif%}
-
-                    
-                    </div> 
-            </div>
-        </div>
-        {%endfor%}
+                        {%if forloop.last %}
+                    </div>
+                    {%endif%}
+             {%endfor%}
 
 
 

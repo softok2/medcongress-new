@@ -455,7 +455,7 @@
                         {% if user.is_authenticated %}
 
                             <div class="col-sm-8">
-                                <a href="#" class="cta"  onclick="AgregarCarrito({{categoria_pago.pk}},'cant_{{categoria_pago.id}}','{{permiso}}')">AGREGAR AL CARRITO</a>
+                                <a href="javascript:AgregarCarrito({{categoria_pago.pk}},'cant_{{categoria_pago.id}}','{{permiso}}')" class="cta"  >AGREGAR AL CARRITO</a>
                             </div>
                             <div class="col-sm-4">
                                 <input class="form-control input-lg" type="number" value="1" min='1' step="any"  style="height: 52px;"
@@ -522,36 +522,66 @@
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="heading-{{forloop.counter}}">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{forloop.counter}}" aria-expanded="true" aria-controls="collapse-{{forloop.counter}}">
-                        Taller #1: James Lind. Buenas prácticas clínicas GCP E6 R2
+                            Taller #{{forloop.counter}}: {{taller.0.titulo}}
                         </button>
                         </h2>
                         <div id="collapse-{{forloop.counter}}" class="accordion-collapse collapse" aria-labelledby="heading-{{forloop.counter}}" data-bs-parent="#accordion-{{forloop.counter}}">
                             <div class="accordion-body">
+                                {%if taller.1 is True%}
+                                <span> No tiene establecido los precios aún </span>
+                        
+                                {%else%}
+                                {%for cat in taller.1%}
+                                {%if forloop.first %}
                                 <div class="row my-5">
                                     <div class="offset-md-2 col-md-4">
+                                {%endif%}
+                               
                                         <div class="ticket">
-                                            <div class="title">PREFERENTE</div>
-                                            <h5 class="price">$348.0<br />MXN</h5>
+                                            <div class="title">{{cat.categoria.nombre}}</div>
+                                            <h5 class="price">$ {{cat.precio}} <br> {{cat.moneda}}</h5>
                                             <span class="iva">IVA incluído</span>
                                             <div class="actions">
-                                                <a href="#" class="cta">AGREGAR AL CARRITO</a>
+                                                {% if user.is_authenticated %}
+                                                <div class="row">
+                                                <div class="col-sm-8">
+                                                    <a href="javascript:AgregarCarritoTaller({{cat.pk}},'taller_{{cat.pk}}','{{taller.2}}')"
+                                                    class="cta" onclick="">AGREGAR AL CARRITO
+                                                </a>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <input class="form-control input-lg" type="number" value="1" min='1'
+                                                        style="height: 52px;" id="taller_{{cat.pk}}">
+                                                    <!-- <input class="input-qty-type" type="" name="qty" value="1"> -->
+    
+                                                </div>
+                                            </div>
+                                                {%else%}
+                                                <a href="{%url 'login'%}" class="cta">AGREGAR AL CARRITO</a>
+                                                {%endif%}
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 mt-md-0 mt-5">
-                                        <div class="ticket">
-                                            <div class="title">PREFERENTE</div>
-                                            <h5 class="price">$464.0<br />MXN</h5>
-                                            <span class="iva">IVA incluído</span>
-                                            <div class="actions">
-                                                <a href="#" class="cta">AGREGAR AL CARRITO</a>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    {%if  forloop.counter|divisibleby:2%}
                                 </div>
-                            </div>
+                                    <div class="row">
+                                        <div class="offset-md-2 col-md-4">
+                                            {%else%}
+                                            <div class="col-md-4 mt-md-0 mt-5">
+                                    {%endif%}
+                                    {%if forloop.last %}
+                                </div>
+                                {%endif%}
+                         {%endfor%}
                         </div>
-                    </div>
+                         {%endif%}        
+                                
+                            
+                        
+                        </div>
+                        
+                        </div>
+                        </div>
                 </div>
             </div>
         </div>
@@ -560,6 +590,7 @@
     </div>
 </section>
 {%endif%}
+{% if ponentes_congreso %}
 <section class="congreso-ponentes">
     <div class="container-fluid">
         <div class="row mb-5">
@@ -582,74 +613,33 @@
 
 <section class="congreso-ponentes-secundary">
     <div class="container-fluid">
-        <div class="row mb-md-3">
+        {%for ponente in ponentes_congreso %}
+        {%if forloop.first%}
+        <div class="row" >
+            {%endif%}
             <div class="col-md-3 mb-md-0 mb-3">
                 <div class="ponente">
-                    <img src="./assets/img/ponentes/ponente-1.png" class="img-fluid">
-                    <a href="#" class="name">Dr. Oscar H. Franco</a>
-                    <span class="cat">PONENTE</span>
+                    <img src="{% if ponente.foto%}{% static '/'%}{{ponente.foto}}{%else%}{% static 'MedCongressApp/images/defaulthombre.png' %} {%endif%}" class="img-fluid">
+                    <a href="#" class="name">{{ponente.nombre}} {{ponente.apellido}}</a>
+                    <span class="cat">{{ponente.tipo|upper}}</span>
                 </div>
             </div>
-            <div class="col-md-3 mb-md-0 mb-3">
-                <div class="ponente">
-                    <div class="ponente">
-                        <img src="./assets/img/ponentes/ponente-2.png" class="img-fluid">
-                        <a href="#" class="name">Dra. Virginia Pascual Ramos</a>
-                        <span class="cat">PONENTE</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-md-0 mb-3">
-                <div class="ponente">
-                    <img src="./assets/img/ponentes/ponente-3.png" class="img-fluid">
-                    <a href="#" class="name">Dr. Constantino López Macías</a>
-                    <span class="cat">PONENTE</span>
-                </div>
-            </div>
-            <div class="col-md-3 mb-md-0 mb-3">
-                <div class="ponente">
-                    <img src="./assets/img/ponentes/ponente-4.png" class="img-fluid">
-                    <a href="#" class="name">Dr. Luis Enrique Soto Ramírez</a>
-                    <span class="cat">PONENTE</span>
-                </div>
-            </div>
+            {%if forloop.last%}
+
         </div>
 
-        <div class="row">
-            <div class="col-md-3 mb-md-0 mb-3">
-                <div class="ponente">
-                    <img src="./assets/img/ponentes/ponente-5.png" class="img-fluid">
-                    <a href="#" class="name">Dra. Martha Torres Rojas</a>
-                    <span class="cat">MODERADOR</span>
-                </div>
-            </div>
-            <div class="col-md-3 mb-md-0 mb-3">
-                <div class="ponente">
-                    <div class="ponente">
-                        <img src="./assets/img/ponentes/ponente-6.png" class="img-fluid">
-                        <a href="#" class="name">Dr. Juan Carlos Pérez Alba</a>
-                        <span class="cat">MODERADOR</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-md-0 mb-3">
-                <div class="ponente">
-                    <img src="./assets/img/ponentes/ponente-7.png" class="img-fluid">
-                    <a href="#" class="name">Susana Duque Roquero</a>
-                    <span class="cat">MODERADOR</span>
-                </div>
-            </div>
-            <div class="col-md-3 mb-md-0 mb-3">
-                <div class="ponente">
-                    <img src="./assets/img/ponentes/ponente-8.png" class="img-fluid">
-                    <a href="#" class="name">Dr. Ramiro Banda Elizondo</a>
-                    <span class="cat">MODERADOR</span>
-                </div>
-            </div>
-        </div>
+        {%endif%}
+        {% if forloop.counter|divisibleby:4 %}
+    </div>
+    <div class="row" style="margin-top: 10px;">
+        {%endif%}
+        {% endfor %}
+            
+
+       
     </div>
 </section>
-
+{%endif%}
 <div class="congreso-modal modal fade" id="downloadModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -703,4 +693,366 @@
 
 {%endblock%}
 {% block script%}
+<script>
+function AgregarCarritoTaller(id, fields, msj) {
+    var patt = /^\d+$/;
+    valor=$('#' + fields).val()
+    
+    if (patt.test(valor) == true){
+    if (msj == 'False') {
+        $.ajax({
+            type: "GET",
+            url: "{% url 'Add_cart_taller'%}",
+            data: {
+                'id': id, // from form
+                'cant': $('#' + fields).val()// from form
+            },
+            success: function (data) {
+                if (data['succes']) {
+                    swal({
+                        title: "Ha adicionado un evento a su carrito de compra",
+                        text: "Clic al carrito para efectuar la compra",
+                        icon: "success",
+                        buttons: {
+                            cancel: {
+                                text: "ok!",
+                                value: null,
+                                visible: true,
+                                className: "",
+                                closeModal: false,
+                            },
+
+
+
+                        }
+                    })
+                        .then((isConfirm) => {
+                            if (isConfirm) {
+
+                            }
+                            else {
+                                location.reload();
+                            }
+
+                        });
+                }
+                else
+                    swal("No se puede", "Ya tiene este Taller en el carrito de compra.", "error");
+            }
+        });
+    }
+    else {
+        swal({
+            title: "Ya usted compró este taller",
+            text: ' ¿Desea comprarlo de nuevo?',
+            icon: "warning",
+            buttons: {
+                cancel: {
+                    text: "¡Cancelar!",
+                    value: null,
+                    visible: true,
+                    className: "",
+                    closeModal: false,
+                },
+                confirm: {
+                    text: "¡Aceptar!",
+                    value: true,
+                    visible: true,
+                    className: "",
+                    closeModal: false
+                }
+            }
+        })
+            .then((isConfirm) => {
+                if (isConfirm) {
+
+
+
+                    $.ajax({
+                        type: "GET",
+                        url: "{% url 'Add_cart_taller'%}",
+                        data: {
+                            'id': id, // from form
+                            'cant': $('#' + fields).val()// from form
+                        },
+                        success: function (data) {
+                            if (data['succes']) {
+                                swal({
+                                    title: "Ha adicionado un evento a su carrito de compra",
+                                    text: "Clic al carrito para efectuar la compra",
+                                    icon: "success",
+                                    buttons: {
+                                        cancel: {
+                                            text: "ok",
+                                            value: null,
+                                            visible: true,
+                                            className: "",
+                                            closeModal: false,
+                                        },
+
+
+
+                                    }
+                                })
+                                    .then((isConfirm) => {
+                                        if (isConfirm) {
+
+                                        }
+                                        else {
+                                            location.reload();
+                                        }
+
+                                    });
+                            }
+
+                        }
+                    });
+                }
+                else {
+                    location.reload();
+                }
+            });
+
+
+
+    }
+}
+    else{
+        swal("No se puede", "Debe entrar un Número entero.", "error");
+
+    }
+
+}
+
+function AgregarCarrito(id, fields, msj) {
+   
+    valor=$('#' + fields).val()
+    var patt = /^\d+$/;
+    if (patt.test(valor) == true){
+    if (msj == 'False') {
+        $.ajax({
+            type: "GET",
+            url: "{% url 'Add_cart'%}",
+            data: {
+                'id': id,
+                'cant': $('#' + fields).val()// from form
+
+            },
+            success: function (data) {
+                if (data['succes']) {
+                    swal({
+                        title: "Ha adicionado un evento a su carrito de compra",
+                        text: "Clic al carrito para efectuar la compra",
+                        icon: "success",
+                        buttons: {
+                            cancel: {
+                                text: "ok",
+                                value: null,
+                                visible: true,
+                                className: "",
+                                closeModal: false,
+                            },
+
+
+
+                        }
+                    })
+                        .then((isConfirm) => {
+                            if (isConfirm) {
+
+                            }
+                            else {
+                                location.reload();
+                            }
+
+                        });
+
+
+
+
+                }
+                else
+                    swal("No se puede", "Ya tiene este Evento en el carrito de compra.", "error");
+            }
+        });
+    }
+    else {
+        swal({
+            title: "Ya usted compró este congreso",
+            text: ' ¿Desea comprarlo de nuevo?',
+            icon: "warning",
+            buttons: {
+                cancel: {
+                    text: "No",
+                    value: null,
+                    visible: true,
+                    className: "",
+                    closeModal: false,
+                },
+                confirm: {
+                    text: "Si",
+                    value: true,
+                    visible: true,
+                    className: "",
+                    closeModal: false
+                }
+            }
+        })
+            .then((isConfirm) => {
+                if (isConfirm) {
+                    $.ajax({
+                        type: "GET",
+                        url: "{% url 'Add_cart'%}",
+                        data: {
+                            'id': id,
+                            'cant': $('#' + fields).val()// from form
+
+                        },
+                        success: function (data) {
+                            if (data['succes']) {
+                                swal({
+                                    title: "Ha adicionado un evento a su carrito de compra",
+                                    text: "Clic al carrito para efectuar la compra",
+                                    icon: "success",
+                                    buttons: {
+                                        cancel: {
+                                            text: "ok",
+                                            value: null,
+                                            visible: true,
+                                            className: "",
+                                            closeModal: false,
+                                        },
+
+
+
+                                    }
+                                })
+                                    .then((isConfirm) => {
+                                        if (isConfirm) {
+
+                                        }
+                                        else {
+                                            location.reload();
+                                        }
+                                    });
+                            }
+                            else
+                                swal("No se puede", "Ya tiene este Evento en el carrito de compra.", "error");
+                        }
+                    });
+                }
+                else {
+                    location.reload();
+                }
+            });
+    }
+
+    }
+    else{
+        swal("No se puede", "Debe entrar un Número entero.", "error");
+
+    }
+
+}
+
+function VerPerfil(pk) {
+    url = "{% url 'GetPerfil'%}";
+    $.get(url, { 'pk': pk }, function (data) {
+
+        if (data.foto)
+            $('#foto').html('<img class="img-responsive" src="{% static '/'%}'+ data.foto +'" alt=" foto ' + data.nombre + '" >');
+        else
+            $('#foto').html('<img class="img-responsive" src="{% static 'MedCongressApp/images/defaulthombre.png' %}" alt="{{request.user.username}}" >');
+        
+        if (data.bandera)
+            $('#bandera').html('<img style="width: 100px; display:block;margin:auto;" class="img-responsive" src="{% static '/'%}'+ data.bandera +'" >');
+        else
+            $('#bandera').html('');
+
+        redes = '';
+        if (data.facebook)
+            redes += '<div class="row" style="padding: 20px;" > <div class="like_fb"> <a class="facebook" href="#"><i class="fa fa-facebook"></i></a> </div><div class="like_amount"><p>' + data.facebook + '</p></div>  </div>'
+        if (data.twitter)
+            redes += '  <div class="row" style="padding: 20px;"><div class="like_fb"><a class="facebook" style="background-color: #00adf2 ;"  href="#"><i class="fa fa-twitter"></i></a> </div><div class="like_amount">' + data.twitter + '</p></div>  </div>'
+        if (data.youtube)
+            redes += ' <div class="row" style="padding: 20px;"><div class="like_fb"><a class="facebook" href="#" style="background-color: #d70a0a;"><i class="fa fa-youtube"></i></a> </div><div class="like_amount"><p>' + data.youtube + '</p></div> </div>'
+        if (data.linkedin)
+            redes += '<div class="row" style="padding: 20px;"><div class="like_fb"> <a class="facebook" style="background-color: #2962ff;"    href="#"><i class="fa fa-linkedin"></i></a></div><div class="like_amount"><p>' + data.linkedin + '</p></div> </div>'
+        $('#redes_sociales').html(redes);
+
+        $('#especialidad').html(data.especialidad);
+
+        constancia = '';
+ 
+        if (data.constancias) {
+            constancia = '<div class="row gutters-sm mb-3"><div class="col-sm-12" ><div class="card h-100" ><h6 class="mb-0" style="padding: 20px;"><b>Logros Académicos</b></h6><div class="card-body" >' + data.constancias + '</div> </div> </div></div> ';
+            $('#constancia').html(constancia);
+        }
+        else
+            $('#constancia').html('');
+
+        publicaciones = '';
+
+        if (data.publicaciones) {
+            publicaciones = '<div class="row gutters-sm mb-3"><div class="col-sm-12" ><div class="card h-100" ><h6 class="mb-0" style="padding: 20px;"><b>Publicaciones</b></h6><div class="card-body" >' + data.publicaciones + '</div> </div> </div></div> ';
+            $('#publicaciones').html(publicaciones);
+        }
+        else
+            $('#publicaciones').html('');
+
+
+
+        if (data.ponencias.length == 0) {
+            ponencias = '<li><div class="like_amount"> <b>No es Ponente en ninguna Ponencia </b></div> </li>';
+        }
+        else {
+            ponencias = '';
+            for (let i = 0; i < data.ponencias.length; i++) {
+                ponencias += '<li><div class="like_amount"><p>' + data.ponencias[i].nombre + '</p><span> <b>Congreso: </b> ' + data.ponencias[i].congreso + '</span></div></li>'
+
+            }
+        }
+
+        $('#ponencias').html(ponencias)
+
+        if (data.talleres.length == 0) {
+            talleres = '<li><div class="like_amount"> <b>No es Ponente en ningún Taller </b></div> </li>';
+        }
+        else {
+            talleres = '';
+            for (let i = 0; i < data.talleres.length; i++) {
+                talleres += '<li><div class="like_amount"><p>' + data.talleres[i].nombre + '</p><span> <b>Congreso: </b> ' + data.talleres[i].congreso + '</span></div></li>'
+
+            }
+        }
+
+        $('#talleres').html(talleres)
+        if(data.puesto)
+        $('#puesto').html(data.puesto)
+        else
+        $('#puesto').html('')
+        $('#nombre_completo').html(data.nombre_completo)
+        if(data.votacion==0){
+          $('#not_rating').show()
+        $('#div_rating').hide()  
+        }
+        else{
+          $('#not_rating').hide()
+        $('#div_rating').show() 
+        $('#rating').rating('rate', data.votacion);
+        }
+        
+        // else
+        // $('#div_rating').html('<input type="hidden" id="rating" class="rating" data-readonly value="'+ data.votacion+'" /> ')
+        // $('#rating').rating('rate', data.votacion);
+        //                     $('#rating2').rating({
+        //   filled: 'glyphicon glyphicon-heart-empty',
+        //   filledSelected: 'glyphicon glyphicon-heart',
+        //   empty: 'glyphicon glyphicon-heart-empty'
+        // });
+
+
+    });
+}
+</script>
 {%endblock%}

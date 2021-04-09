@@ -93,7 +93,7 @@ textarea:focus,
 .ticket .cta {
   margin: auto;
   display: block;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: bold;
   border-radius: 8px;
   padding: 20px 30px;
@@ -1954,7 +1954,8 @@ textarea:focus,
   padding-right: 50px;
 }
 .profile .content .section-2 .section-2-title,
-.profile .content .section-2 .nav-link {
+.profile .content .section-2 .nav-link,
+.profile .content .section-5 .nav-link {
   font-size: 20px;
   color: #2A343D;
   font-family: "DINPro-Regular_13937", sans-serif;
@@ -1968,7 +1969,15 @@ textarea:focus,
     margin-bottom: 15px;
   }
 }
-.profile .content .section-2 .nav-link:hover {
+.profile .content .section-5 .factura{
+  color: #40C8F4;
+}
+.profile .content .section-5 .fac-congreso{
+  margin-left: 30px;
+  margin-bottom: 20px;
+}
+.profile .content .section-2 .nav-link:hover,
+.profile .content .section-5 .nav-link:hover {
   text-decoration: underline;
 }
 .profile .content .section-3-title,
