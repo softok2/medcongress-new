@@ -1,0 +1,161 @@
+
+{% extends "MedCongressApp/base.html"%}
+{% load static %}
+{% block titulo %}
+Congresos
+{%endblock%}
+{% block metadatos%}
+{% if metadatos.meta_title%}
+<meta property="title" content="{{metadatos.meta_title}}">
+{%endif%}
+{% if metadatos.meta_description %}
+<meta name="description" content="{{metadatos.meta_description}}">
+{%endif%}
+{% if metadatos.meta_og_description %}
+<meta property="og:description" content="{{metadatos.meta_og_description}}">
+{%endif%}
+{% if metadatos.meta_og_type %}
+<meta property="og:type" content="{{metadatos.meta_og_type}}">
+{%endif%}
+{% if metadatos.meta_og_title %}
+<meta property="og:title" content="{{metadatos.meta_og_title}}">
+{%endif%}
+{% if metadatos.meta_og_url %}
+<meta property="og:url" content="{{metadatos.meta_og_url}}">
+{%endif%}
+{% if metadatos.meta_og_imagen %}
+<meta property="og:image" content="{% static '/'%}{{metadatos.meta_og_imagen}}">
+{%endif%}
+{% if metadatos.meta_twitter_card %}
+<meta name="twitter:card" content="{{metadatos.meta_twitter_card}}" />
+{%endif%}
+{% if metadatos.meta_twitter_site %}
+<meta name="twitter:site" content="{{metadatos.meta_twitter_site}}" />
+{%endif%}
+{% if metadatos.meta_twitter_creator %}
+<meta name="twitter:creator" content="{{metadatos.meta_twitter_creator}}" />
+{%endif%}
+{% if metadatos.meta_keywords %}
+<meta name="keywords"
+	content="{{metadatos.meta_keywords}}" />
+{%endif%}
+
+{%endblock%}
+{% block contenido %}
+
+<div class="sub-header">
+    <!-- SUB HEADER -->
+</div>
+<!-- Kode-Slider End -->
+<!--Kode-our-speaker-heading start-->
+<div class="Kode-page-heading">
+    <div class="container">
+        <!--ROW START-->
+        <div class="row">
+            <div class="col-md-6 col-sm-6">
+                <h2>Congresos</h2>
+            </div>
+            <div class="col-md-6 col-sm-6">
+                <ul>
+                    <li>
+                        <a href="#"><i class="fa fa-home"></i>Home</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-angle-right"></i>Congresos</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--ROW END-->
+    </div>
+</div>
+
+<div class="kode-blog-style-2" style="margin-top: 82px;">
+    <div class="container">
+        <!--FIRST ROW START-->
+        
+            {%if congreso_list %}
+            {% for congreso in congreso_list %}
+            {% if forloop.first %}
+            <div class="row">
+                {%endif%}
+            <div class="col-md-4">
+                <!--KODE_EVENT_BLOG2 START-->
+                <div class="kode-event-blog3">
+                    <a href="{% url 'View_congreso' congreso.path %}" class="">
+                    <figure >
+                        <img src="{% static '/'%}{{congreso.imagencongreso_set.all.0.imagen}}" alt=""/>
+                       
+                       
+                        <div class="kode-fig-capstion" >
+                            <a href="{% url 'View_congreso' congreso.path  %}">{{congreso.titulo }}</a>
+                           {%if congreso.sub_titulo%} <p style="font-style: italic;"> {{congreso.sub_titulo|truncatewords:10 }}</p>{%endif%}
+                        </div>
+                       
+                    </figure>
+                </a>
+                    <div class="kode-thumb-caption">
+                        <a href="{% url 'View_congreso' congreso.path %}"><h4>{{congreso.titulo }}</h4></a>
+                        <ul>
+                            <li><a href="#"><i class="fa fa-calendar"></i>{{congreso.fecha_inicio|date:"M"}} {{congreso.fecha_inicio|date:"d"}} / {{congreso.fecha_inicio|date:"Y"}}</a></li>
+                            <li><a href="#"><i class="fa fa-location-arrow"></i>{{congreso.lugar.direccion}}</a></li>
+                        </ul>
+                        <span><a href="{% url 'View_congreso' congreso.path %}">Leer Más</a></span>
+                    </div>
+               
+                </div>
+                <!--KODE_EVENT_BLOG2 START-->
+            </div>
+            {%if forloop.counter|divisibleby:3 %}
+        </div>
+        <div class='row'>
+            {%endif%}
+            {%if forloop.last%}
+        </div>
+        {% endif %}
+            {% endfor %}
+            {%else%}
+            <span>No encontro ningún Evento</span>
+            {%endif%}
+            <!--COL-MD-4 END-->
+            
+        <!--THIRD ROW END-->
+        <!--PAGINATION ROW START-->
+        <div class="row">
+            <div class="col-md-12">
+                <!---PAGINATIOn START-->
+                <div class="pag">
+                    <ul class="pagination">
+                        {% if page_obj.has_previous %}
+                        <li>
+                          <a  href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">Prev</span>
+                          </a>
+                        </li>
+                        
+                        {%endif%}
+                        {%if paginator.page_range|length > 1 %}
+                        {%for pagina  in  paginator.page_range %}
+                           
+                            <li>
+                            
+                                                       <a href="?page={{forloop.counter}}" >{{forloop.counter}}</a> </li>
+                       {%endfor%}
+                       {%endif%}
+                        {% if page_obj.has_next %}
+                        <li>
+                          <a href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">Next</span>
+                          </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <!--PAGINATION END-->
+            </div>
+        </div>
+        <!--PAGINATION ROW END-->
+    </div>
+</div>
+
+{% endblock%}

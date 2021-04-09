@@ -124,8 +124,9 @@ class Home(TemplateView):
         context['ponentes'] = Ponente.objects.all()
         context['especialidades'] = len(EspecialidadCongreso.objects.all())+datos_in.especialidades
         context['afiliados'] = len(User.objects.all())+datos_in.afiliados
+        context['paises'] = datos_in.paises
         context['congresos']= Congreso.objects.filter(published=True).order_by('fecha_inicio')
-        context['nuevo_congreso'] = Congreso.objects.filter(fecha_inicio__gt=datetime.now(),published=True).first()
+        context['nuevo_congreso'] = Congreso.objects.filter(is_home=True).first()
         quienes_somos=QuienesSomos.objects.filter().first()
         context['quienes_somos'] = quienes_somos
         context['quienes_somos_imagenes']=ImagenQuienesSomos.objects.filter(q_somos=quienes_somos)
@@ -145,7 +146,7 @@ class Home(TemplateView):
                 # El usuario escribe el mensaje.
                 subject,
                 "%s... Mensaje de %s (%s)"%(plain_message,nombre,from_email), 
-                'contacto@medcongress.com.mx', # El destino.
+                '', # El destino.
                 ['contacto@medcongress.com.mx'],
                 fail_silently=False,
                 )
@@ -514,9 +515,9 @@ class Perfil(TemplateView):
 
 class CongresoListView(ListView):
     model=Congreso
-    queryset=Congreso.objects.filter(published=True)
+    queryset=Congreso.objects.filter(published=True).order_by('-fecha_inicio')
     context_object_name='congreso_list'
-    paginate_by = 9
+   
 
     def post(self, request, **kwargs):
         self.object_list = self.get_queryset()
@@ -525,7 +526,7 @@ class CongresoListView(ListView):
         for especialidad in especialidades:
             id.append(especialidad.pk)
         
-        congreso=Congreso.objects.filter(especialidad__in=id,published=True)
+        congreso=Congreso.objects.filter(especialidad__in=id,published=True).order_by('-fecha_inicio')
         return self.render_to_response(self.get_context_data(object_list=congreso))
 
     def get_context_data(self, **kwargs):
@@ -678,7 +679,7 @@ class CongresoDetail(TemplateView):
                 #     ponentes_env.append(Taller.objects.filter(reltallerponente__pk=taller.id).distinct()) 
              
                 #     ponencias_env.append(talleres)
-            
+          
             context['ponencias']=ponencias_env
 
             prueba_ponecia=Ponencia.objects.filter(congreso=congreso.pk,published=True)

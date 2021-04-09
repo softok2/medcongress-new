@@ -2,6 +2,14 @@
 {% block title %}{% if update %}Editar Ofrecemos | Página de Inicio {%else%} Adicionar  Ofrecemos | Página de Inicio{%endif%}{% endblock %}
 {% load static %}
 {% block styles %}
+<link rel="stylesheet" type="text/css"  href="{% static 'MedCongressAdmin/assets/css/cropper.css' %}">
+<style>
+
+	.img-container img {
+      max-width: 100%;
+    }
+
+</style>
 {% endblock %}
 {% block content %}
 <div class=" col-md-6 col-12 " style="margin-top: -26px;">
@@ -74,10 +82,61 @@
 									<div class="col-md-4">
 										<div class="form-group">
 											<label
-												for="{{form.icono.id_for_label }}"><b>Ícono</b></label>
+												for=""><b>Ícono</b></label>
+												<br>
+												
+										
+										
+											{%if icono%}	
+											<label class="label" data-toggle="tooltip" title="Clic para cambiar foto">
+												<div class="row">
+													<div class="col-md-12">
+													<img class="img-fluid" id="avatar" src="{% static '/' %}{{icono}}"  alt="avatar" >
+													</div>
+												
+												
+											</div>
+											<input type="file" class="sr-only" id="input" name="image" accept="image/*">
+												<input type="hidden" id="prueba" name="prueba">
+											  </label>
+											  
+											{% else%}
 
-											{{form.icono }}
+											<label class="label" data-toggle="tooltip" title="Clic para cambiar Ícono">
+												<div id="ver"><span id="avatar"> <i class="icon icon-add_imagen"></i></span>
+												</div>
+												<input type="file" class="sr-only" id="input" name="image" accept="image/*">
+												<input type="hidden" id="prueba" name="prueba">
+											  </label>
+												{%endif%}
+												
+												
+												  <div class="alert" role="alert" id="alert"></div>
+												  <div class="modal fade " id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+													<div class="modal-dialog " role="document">
+													  <div class="modal-content">
+														<div class="modal-header">
+														  <h5 class="modal-title" id="modalLabel">Editar la Imagen</h5>
+														  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+															<span aria-hidden="true">&times;</span>
+														  </button>
+														</div>
+														<div class="modal-body">
+														  <div class="img-container ">
+															<img id="image" src="https://avatars0.githubusercontent.com/u/3456749">
+														  </div>
+														</div>
+														<div class="modal-footer">
+														  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+														  <button type="button" class="btn btn-primary" id="crop">Guardar</button>
+														</div>
+													  </div>
+													</div>
+												  </div>
+												
 										</div>
+											
+									</div>
 									</div>
 								</div>
 								<div class="row">
@@ -115,6 +174,8 @@
 {% block scripts %}
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/editors/ckeditor/ckeditor.js'%}"></script>
 <script src="{% static 'MedCongressAdmin/app-assets/js/scripts/editors/editor-ckeditor.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/tooltip/tooltip.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/assets/js/cropper.js'%}"></script>
 <script type="text/javascript">
 	
 	
@@ -128,5 +189,94 @@
 		});
 	
 	});
+	window.addEventListener('DOMContentLoaded', function () {
+      var avatar = document.getElementById('avatar');
+      var image = document.getElementById('image');
+      var input = document.getElementById('input');
+      var $progress = $('.progress');
+      var $progressBar = $('.progress-bar');
+      var $alert = $('#alert');
+      var $modal = $('#modal');
+      var cropper;
+
+      $('[data-toggle="tooltip"]').tooltip();
+
+      input.addEventListener('change', function (e) {
+        var files = e.target.files;
+        var done = function (url) {
+          input.value = '';
+          image.src = url;
+          $alert.hide();
+          $modal.modal('show');
+        };
+        var reader;
+        var file;
+        var url;
+
+        if (files && files.length > 0) {
+		  file = files[0];
+		 
+			tipo_imagen=files[0].name.split('.');
+			if(tipo_imagen[1]!='jpg' && tipo_imagen[1]!='png')
+			{
+				
+				swal("Cancelado", "Solo admimite archivos .jpg y .png.", "error");
+				return;	
+			}
+          if (URL) {
+            done(URL.createObjectURL(file));
+          } else if (FileReader) {
+            reader = new FileReader();
+            reader.onload = function (e) {
+              done(reader.result);
+            };
+            reader.readAsDataURL(file);
+          }
+        }
+      });
+
+      $modal.on('shown.bs.modal', function () {
+		
+
+		$('#image').width($modal.width());
+		
+		
+        cropper = new Cropper(image, {
+          aspectRatio: 108/78,
+		  viewMode: 1,
+		  
+		  
+		  ready: function () {
+            //Should set crop box data first here
+            cropper.setCropBoxData(cropBoxData).setCanvasData(canvasData);
+          }
+        });
+      }).on('hidden.bs.modal', function () {
+        cropper.destroy();
+        cropper = null;
+      });
+
+      document.getElementById('crop').addEventListener('click', function () {
+        var initialAvatarURL;
+        var canvas;
+
+        $modal.modal('hide');
+
+        if (cropper) {
+          canvas = cropper.getCroppedCanvas({
+            width: 108,
+            height: 78,
+          });
+          initialAvatarURL = avatar.src;
+          avatar.src = canvas.toDataURL();
+          $('#ver').html(`<img class="img-fluid" id="avatar" id="avatar" src="`+ canvas.toDataURL()+`"  alt="avatar">`);
+			$('#prueba').val(canvas.toDataURL());			
+		
+		  $alert.removeClass('alert-success alert-warning');  
+		  $alert.show().addClass('alert-success').text('Nuevo Ícono Cargado');
+      
+        }
+      });
+    });
 </script>
 {% endblock %}

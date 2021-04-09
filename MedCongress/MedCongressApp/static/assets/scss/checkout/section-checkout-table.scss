@@ -1,0 +1,107 @@
+.checkout-table {
+    padding-bottom: 50px;
+    background-color: #e7ecf0;
+
+    @include media-max($large) {
+        padding-top: 25px;
+    }
+
+    table {
+        
+        thead {
+            @include media-max($large) {
+                display: none;
+            }
+        }
+
+        tbody tr {
+            @include media-max($large) {
+                padding: 10px 0;
+                border-top: 1px solid $river-bed;
+                border-bottom: 1px solid $river-bed;
+                display: grid;
+                grid-template-columns: 100%;
+                grid-template-rows: 1fr 40px 40px;
+            }
+
+            td:nth-of-type(2) {
+                @include media-max($large) {
+                    grid-column: 1 / 2;
+                    grid-row: 1 / 2;
+                }
+            }
+
+            td:nth-of-type(4) {
+                @include media-max($large) {
+                    grid-column: 1 / 2;
+                    grid-row: 2 / 3;
+                }
+            }
+
+            td:nth-of-type(5) {
+                @include media-max($large) {
+                    grid-column: 1 / 2;
+                    grid-row: 3 / 4;
+                }
+            }
+        }
+
+        th,
+        td {
+            text-align: center;
+            color: $outer-space;
+            font-family: $font-1;
+        }
+
+        th { 
+            font-weight: bold;
+        }
+
+        td {
+            vertical-align: middle;
+            padding: 30px 0;
+
+            @include media-max($large) {
+                padding: 0;
+                border-bottom: 0;
+            }
+
+            &:nth-of-type(1),
+            &:nth-of-type(3),
+            &:nth-of-type(6) {
+                @include media-max($large) {
+                    display: none;
+                }
+            }
+        }
+
+        .acciones a {
+            color: red;
+        }
+
+        & >:not(:last-child)>:last-child>* {
+            border-bottom-color: $river-bed;
+        }
+    }
+
+    .cart-price {
+        padding: 15px 0;
+        background-color: $river-bed;
+
+        span {
+            color: $white;
+            font-family: $font-1;
+        }
+    }
+
+    hr {
+        height: 2px;
+        background-color: $river-bed;
+    }
+
+    .btn {
+        color: $white;
+        font-family: $font-1;
+        background-color: $picton-blue;
+    }
+}

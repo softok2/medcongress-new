@@ -1,0 +1,113 @@
+.cart-table {
+    margin-top: -41px;
+
+    @include media-max($large) {
+        margin-top: 25px;
+    }
+
+    table {
+        
+        thead {
+            @include media-max($large) {
+                display: none;
+            }
+        }
+
+        tbody tr {
+            @include media-max($large) {
+                padding: 10px 0;
+                border-top: 1px solid $river-bed;
+                border-bottom: 1px solid $river-bed;
+                display: grid;
+                grid-template-columns: 80% 20%;
+                grid-template-rows: 1fr 40px 75px;
+            }
+
+            td:nth-of-type(2) {
+                @include media-max($large) {
+                    grid-column: 1 / 2;
+                    grid-row: 1 / 2;
+                }
+            }
+
+            td:nth-of-type(4) {
+                @include media-max($large) {
+                    grid-column: 1 / 2;
+                    grid-row: 2 / 3;
+                }
+            }
+
+            td:nth-of-type(5) {
+                @include media-max($large) {
+                    grid-column: 1 / 2;
+                    grid-row: 3 / 4;
+                }
+            }
+
+            td:nth-of-type(7) {
+                @include media-max($large) {
+                    grid-column: 2 / 3;
+                    grid-row: 1 / 4;
+                    display: flex;
+                    align-items: center;
+                }
+            }
+        }
+
+        th,
+        td {
+            text-align: center;
+            color: $outer-space;
+            font-family: $font-1;
+        }
+
+        th { 
+            font-weight: bold;
+        }
+
+        td {
+            vertical-align: middle;
+
+            @include media-max($large) {
+                border-bottom: 0;
+            }
+
+            &:nth-of-type(1),
+            &:nth-of-type(3),
+            &:nth-of-type(6) {
+                @include media-max($large) {
+                    display: none;
+                }
+            }
+        }
+
+        .acciones a {
+            color: red;
+        }
+
+        & >:not(:last-child)>:last-child>* {
+            border-bottom-color: $river-bed;
+        }
+    }
+
+    .cart-price {
+        padding: 15px 0;
+        background-color: #e7ecf0;
+
+        span {
+            color: $outer-space;
+            font-family: $font-1;
+        }
+    }
+
+    hr {
+        height: 2px;
+        background-color: $river-bed;
+    }
+
+    .btn {
+        color: $white;
+        font-family: $font-1;
+        background-color: $picton-blue;
+    }
+}

@@ -1,0 +1,46 @@
+.about-us{
+    height: 420px;
+    overflow-y: visible;
+    padding: 60px 0 35px;
+    background-color: $river-bed;
+
+    @include media-min($extra-extra-large){
+        height: 650px;       
+    }
+
+    @include media-max($large){
+        height: auto;
+    }
+
+    .container-fluid{ 
+        @include media-min($large){
+            padding-right: 0;
+            overflow: hidden;
+        }
+     }
+
+     .section-title,
+     p{
+        color: $white;
+        font-size: 35px;
+        font-family: $font-1;
+     }
+
+     p{ 
+        font-size: 18px;
+        padding-right: 15px;
+
+        @include media-min($extra-extra-large){
+            font-size: 23px;
+        }
+     }
+
+     .more-info{ @include more-info($picton-blue) }
+
+     #carouselBanner .carousel-item img{
+        @include media-min($extra-extra-large){
+            display: block;
+            margin-left: auto;
+        }
+     }
+}

@@ -251,13 +251,16 @@ class Congreso(models.Model):
     sub_titulo=models.CharField(max_length=250,null=True, error_messages={
 "max_length": "El Campo <b>SubTítulo</b> debe tener máximo 250 caracteres"})
     imagen_seg=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso',error_messages={
-"blank": 'Debe  entrar una <b> Imagen Segundaria22 </b>'})
+"blank": 'Debe  entrar una <b> Imagen Segundaria </b>'})
+    imagen_home=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso',error_messages={
+"blank": 'Debe  entrar una <b> Imagen Segundaria </b>'},null=True, blank=True)
     path=models.CharField(max_length=250, help_text='campo para identificarlo por la URL',unique=True)
     lugar=models.ForeignKey(Ubicacion,on_delete=models.DO_NOTHING)
     fecha_inicio=models.DateTimeField()
     created=models.DateTimeField(auto_now_add=True)
     updated=models.DateTimeField(null=True, blank=True)
     published=models.BooleanField()
+    is_home=models.BooleanField()
     t_congreso=models.ForeignKey(TipoCongreso,on_delete=models.DO_NOTHING)
     especialidad=models.ForeignKey(EspecialidadCongreso,on_delete=models.DO_NOTHING,null=True)
     user = models.ManyToManyField(PerfilUsuario, through='RelCongresoUser',related_name='congreso_perfilusuario')
@@ -851,8 +854,7 @@ class ImagenQuienesSomos(models.Model):
 class Ofrecemos(models.Model):
     titulo=models.CharField(max_length=250,error_messages={
 "max_length": "El Campo <b>Título </b> debe tener máximo 250 caracteres"} )
-    icono=models.CharField(max_length=250,error_messages={
-"max_length": "El Campo <b>Icono </b> debe tener máximo 250 caracteres"})
+    icono=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='assets/img/iconos' ,verbose_name='icono', null=False)
     texto=models.TextField()
     
     class Meta:

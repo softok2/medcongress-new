@@ -1,0 +1,68 @@
+.home-banner{
+    height: 450px;
+    margin-top: 80px;
+    background: $white url(../img/arte-banner-home.jpg) center center no-repeat;
+    background-size: cover;
+
+    @include media-min($extra-extra-large){
+        height: 608px;
+    }
+
+    @include media-max($large) {
+        margin-top: 56px;
+    }
+
+    .banner-content{
+        height: 100%;
+        background: rgba($color: $shakespeare, $alpha: .8);
+    
+        @include media-min($large){
+            background: linear-gradient(90deg, rgba($color: $shakespeare, $alpha: 1) 0%, transparent 60%);
+        }
+
+        .banner-title,
+        .counter-title{
+            color: $white;
+            font-size: 35px;
+            font-family: $font-1;
+        }
+
+        .counter-title{
+            font-size: 30px;
+        }
+
+        #counter{
+            display: flex;
+            margin: 15px 0 30px;
+
+            .days,
+            .hours,
+            .minutes,
+            .seconds{
+                width: 80px;
+                height: 80px;
+                display: flex;
+                margin-right: 5px;
+                align-items: center;
+                flex-direction: column;
+                justify-content: center;
+                background-color: rgba($color: #fff, $alpha: .2);
+            }
+
+            .seconds{ margin-right: 0; }
+
+            strong,
+            span{
+                color: $white;
+                font-size: 25px;
+                font-family: $font-1;
+            }
+
+            span { font-size: 14px; }
+        }
+
+        .more-info{
+            @include more-info($white);
+        }
+    }
+}

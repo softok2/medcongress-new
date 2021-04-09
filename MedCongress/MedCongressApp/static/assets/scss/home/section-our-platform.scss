@@ -1,0 +1,41 @@
+.our-platform{
+    padding: 135px 0 100px;
+
+    .section-title{
+        font-size: 35px;
+        color: $outer-space;
+        font-family: $font-1;
+
+        @include media-max($large) {
+            text-align: center;
+        }
+    }
+
+    .icon{
+        width: 38%;
+        margin-right: 15px;
+
+        @include media-max($large){
+            width: 25%;
+        }
+    }
+
+    .content{
+        @include media-max($large){
+            width: 120px;
+        }
+
+        .number,
+        .text{
+            font-size: 60px;
+            color: $outer-space;
+            font-family: $font-1;
+        }
+
+        .number { line-height: 50px; }
+
+        .text{
+            font-size: 18px;
+        }
+    }
+}

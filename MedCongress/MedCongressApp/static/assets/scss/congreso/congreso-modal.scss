@@ -1,0 +1,84 @@
+.congreso-modal {
+
+    .modal-dialog {
+        max-width: 70%;
+
+        @include media-max($large) {
+            max-width: 90%;
+            margin: 25px auto;
+        }
+    }
+
+    .modal-content {
+        background: $white url(../img/iconos/mundo.png) bottom right no-repeat; 
+        background-size: 350px 350px;
+
+        @include media-max($large) {
+            background-size: 150px 150px;
+        }
+    }
+
+    .modal-header,
+    .modal-footer {
+        border: 0;
+    }
+
+    .event {
+        padding: 25px 15px;
+        border-radius: 10px;
+        border: 1px solid $regent-gray;
+    }
+
+    .title,
+    .name,
+    .cat,
+    .description,
+    .cta,
+    .view {
+        color: $river-bed;
+        font-family: $font-1;
+    }
+
+    .title { 
+        font-size: 30px;
+        font-weight: bold;
+    }
+
+    .name { font-size: 24px; }
+
+    .cat {
+        font-size: 18px;
+        color: $picton-blue;
+    }
+
+    .description {
+        font-size: 18px;
+        border-top: 1px solid $regent-gray;;
+    }
+
+    .view {
+        font-size: 14px;
+
+        &:hover {
+            color: $picton-blue;
+        }
+    }
+
+    .cta {
+        height: 33px;
+        font-size: 14px;
+        padding: 5px 10px;
+        border-radius: 5px;
+        text-decoration: none;
+        box-sizing: border-box;
+        background-color: $white;
+        border: 1px solid $regent-gray;
+
+        &:hover {
+            border: 0;
+            color: $white;
+            background-color: $picton-blue;
+        }
+    }
+
+}

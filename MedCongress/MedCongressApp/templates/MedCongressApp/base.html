@@ -19,165 +19,12 @@
 	<title> {% block titulo %}
 		{%endblock%}
 	</title>
-	<link rel="shortcut icon" type="image/x-icon"
-        href="{% static 'MedCongressApp/images/favicon.png' %}">
-	<!-- Bootstrap min css -->
-	<link href="{% static 'MedCongressApp/css/my_style.css'%}" rel="stylesheet" />
-	<link rel="stylesheet" href="{% static 'MedCongressApp/css/bootstrap.min.css'%}" type="text/css" media="all">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+          integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+          <link href="{% static '/assets/css/bootstrap.min.css'%}" rel="stylesheet"  crossorigin="anonymous">
 
-	<!-- bxSlider CSS file -->
-	<link href="{% static 'MedCongressApp/css/jquery.bxslider.css'%}" rel="stylesheet" />
-	<!-- Important Owl stylesheet -->
-	<link rel="stylesheet" href="{% static 'MedCongressApp/css/owl.carousel.css'%}">
-	<!-- Full Calender stylesheet -->
-	<link rel="stylesheet" href="{% static 'MedCongressApp/css/fullcalendar.css'%}">
-	<!-- Typo css -->
-	<link rel="stylesheet" href="{% static 'MedCongressApp/css/typo.css'%}" type="text/css" media="all">
-	<!-- Font Awesome css -->
-	<link rel="stylesheet" href="{% static 'MedCongressApp/css/font-awesome.min.css'%}" type="text/css" media="all">
-	<!-- Ihover css -->
-	<link href="{% static 'MedCongressApp/css/ihover.css'%}" rel="stylesheet">
-	<!-- Widget css -->
-	<link href="{% static 'MedCongressApp/css/widget.css'%}" rel="stylesheet">
-	<!-- Style css -->
-	<link rel="stylesheet" href="{% static 'MedCongressApp/style.css'%}" type="text/css" media="all">
-	<!--Side MENU-->
-	<link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery.sidr.dark.css'%}" type="text/css" media="all">
-	<!-- PrettyPhoto css -->
-	<link rel="stylesheet" href="{% static 'MedCongressApp/css/prettyPhoto.css'%}" type="text/css" media="all">
-	<!-- Responsive css -->
-	<link rel="stylesheet" href="{% static 'MedCongressApp/css/responsive.css'%}" type="text/css" media="all">
-	<!-- Color css -->
-	<link rel="stylesheet" href="{% static 'MedCongressApp/css/color.css'%}" type="text/css" media="all">
-	<link href="{% static 'MedCongressApp/css/my_style.css'%}" rel="stylesheet" type="text/css" media="all" />
-<style>
-
-.navbar-icon-top .navbar-nav .nav-link > .fa {
-  position: relative;
-  width: 36px;
-  font-size: 24px;
-}
-
-.navbar-icon-top .navbar-nav .nav-link > .fa > .badge {
-  font-size: 0.75rem;
-  position: absolute;
-  right: 0;
-  font-family: sans-serif;
-}
-
-.navbar-icon-top .navbar-nav .nav-link > .fa {
-  top: 3px;
-  line-height: 12px;
-}
-
-.navbar-icon-top .navbar-nav .nav-link > .fa > .badge {
-  top: -10px;
-}
-
-@media (min-width: 576px) {
-  .navbar-icon-top.navbar-expand-sm .navbar-nav .nav-link {
-    text-align: center;
-    display: table-cell;
-    height: 70px;
-    vertical-align: middle;
-    padding-top: 0;
-	padding-bottom: 0;
-	color: #6a6767;
-  }
-
-  .navbar-icon-top.navbar-expand-sm .navbar-nav .nav-link > .fa {
-    display: block;
-    width: 48px;
-    margin: 2px auto 4px auto;
-    top: 0;
-    line-height: 24px;
-  }
-
-  .navbar-icon-top.navbar-expand-sm .navbar-nav .nav-link > .fa > .badge {
-    top: -7px;
-  }
-}
-
-@media (min-width: 768px) {
-  .navbar-icon-top.navbar-expand-md .navbar-nav .nav-link {
-    text-align: center;
-    display: table-cell;
-    height: 70px;
-    vertical-align: middle;
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-
-  .navbar-icon-top.navbar-expand-md .navbar-nav .nav-link > .fa {
-    display: block;
-    width: 48px;
-    margin: 2px auto 4px auto;
-    top: 0;
-    line-height: 24px;
-  }
-
-  .navbar-icon-top.navbar-expand-md .navbar-nav .nav-link > .fa > .badge {
-    top: -7px;
-  }
-}
-
-@media (min-width: 992px) {
-  .navbar-icon-top.navbar-expand-lg .navbar-nav .nav-link {
-    text-align: center;
-display: table-cell;
-height: 1px;
-vertical-align: middle;
-padding-top: 15px;
-padding-bottom: 0;
-color: #6a6767;
-line-height: 28px;
-
-  }
-
-  .navbar-icon-top.navbar-expand-lg .navbar-nav .nav-link > .fa {
-    display: block;
-    width: 85px;
-    margin: 2px auto 4px auto;
-    top: 0;
-    line-height: 0px;
-  }
-
-  .navbar-icon-top.navbar-expand-lg .navbar-nav .nav-link > .fa > .badge {
-	top: -15px;
-	right: 11px;
-  }
-}
-
-@media (min-width: 1200px) {
-  .navbar-icon-top.navbar-expand-xl .navbar-nav .nav-link {
-    text-align: center;
-    display: table-cell;
-    height: 70px;
-    vertical-align: middle;
-    padding-top: 0;
-	padding-bottom: 0;
-	color: #6a6767;
-  }
-
-  .navbar-icon-top.navbar-expand-xl .navbar-nav .nav-link > .fa {
-    display: block;
-    width: 48px;
-    margin: 2px auto 4px auto;
-    top: 0;
-    line-height: 24px;
-  }
-
-  .navbar-icon-top.navbar-expand-xl .navbar-nav .nav-link > .fa > .badge {
-    top: -7px;
-  }
-}
-.navbar-nav li{
-	list-style: none;
-}
-
-</style>
+          <link rel="stylesheet" href="{% static '/assets/css/app.css'%}">
 	
-
 {% block css%}
 {%endblock%}
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -192,263 +39,123 @@ line-height: 28px;
 </head>
 
 <body>
-	<!-- Wrapper start -->
-
-	<div id="wrapper" >
-		
-		<header id="kode-header" >
-			<strong class="kode-logo">
-				<a href="{% url 'Home'%}"><img src="{% static 'MedCongressApp/images/LOGO_FINAL2.png'%}"
-						alt=""></a>
-			</strong>
-			<div id="mobile-header">
-				<a id="responsive-menu-button" href="#sidr-main"><i class="fa fa-bars"></i></a>
-			</div>
-			
-			
-			<div class="col-right">
-				<nav class="navbar navbar-icon-top navbar-expand-lg navbar-dark bg-dark" id="navigation">
-					<ul class="navbar-nav mr-auto">
-						<li class="nav-item active">
-						
-							<a href="{% url 'Home'%}" class="nav-link">
-								<i class="fa colorazul fa-home"></i>
-								    Inicio
-								
-							</a>
-						
-						</li>
-						<li class="nav-item">
-						  <a class="nav-link" href="{% url 'List_congreso'%}">
-							<i class="fa colorazul fa-graduation-cap"></i>
-							   Congresos
-						  </a>
-						</li>
-						<li class="nav-item" data-toggle="modal" data-target="">
-						  <a class="nav-link disabled" href="{%url 'View_cart'%}">
-							<i class="fa colorazul fa-cart-plus">
-							  <span class="badge badge-warning"  style="background-color: #00a4ef;">{%if  request.session.cart.1 %}{{ request.session.cart.1|length}}
-								{%else%} 0 {%endif%}</span>
-							</i>
-							Compra
-						  </a>
-						</li>
-						{% if user.is_authenticated %}
-						<li class="" ><a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false""> <figure>
-							{%if request.user.perfilusuario.foto%}
-							<img src="{% static '/'%}{{request.user.perfilusuario.foto}}"
-							alt="{{request.user.username}}" class='imagen_menu'>
-							{%else%}
-							<img src="{% static 'MedCongressApp/images/defaulthombre.png' %}"
-							alt="{{request.user.username}}" class='imagen_menu'>
-							{%endif%}
-						
-						</figure></a>
-							
-							<ul class="dropdown-menu my_dropdown-menu" aria-labelledby="navbarDropdown">
-								<li class=" nav-item"> <a class="my_dropdown-menu-a" href="{% url 'perfil' %}"><i class="fa colorazul fa-user"></i>Perfil</a> </li> 
-								<li class=" nav-item"> <a class="my_dropdown-menu-a" href="{% url 'logout' %}"><i class="fa colorazul fa-sign-out"></i>Cerrar Sesión</a> </li> 
-							</ul>
-						</li>
-						
-						
-
-						{% else %}
-						<li class="nav-item">
-							<a class="nav-link" href="{% url 'login' %}">
-							  <i class="fa colorazul fa-sign-in"></i>
-								 Autenticarse
-							</a>
-						  </li>
-						  <li class="nav-item">
-							<a class="nav-link" href="{% url 'Registrarse' %}">
-							  <i class="fa colorazul fa-key"></i>
-								 Registrarse
-							</a>
-						  </li>
-						{% endif %}
-					  </ul>
-
-				</nav>
-
-			</div>
-		</header>
-		<!-- <button type="button" class=" flotante btn btn-info btn-circle btn-xl" data-toggle="modal" data-target=".pp"><i class="fa fa-shopping-cart" style="font-size: 40px;"><span
-			class="badge badge-pill badge-default badge-danger badge-default badge-up badge-glow"
-			style="background-color: red;margin-top: -48px;">
-			{%if  request.session.cart.1 %}{{ request.session.cart.1|length}}
-		{%else%} 0 {%endif%}</span></i>
-		</button> -->
-		<!-- <button class="flotante btn btn-default btn-circle" data-toggle="modal" data-target=".pp" style="padding: 32px;">
-			<i class="fa fa-shopping-cart" style="font-size: 30px;"></i>
-
-		</button> -->
-		<!-- <div class="modal fade bs-example-modal-lg pp" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="margin-top: 72px;">
-			<div class="modal-dialog modal-lg">
-			  <div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-								aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title" id="myModalLabel">Mi Carrito de Compra</h4>
-					</div>
-					<div class="modal-body" style="padding: 0px 15px;">
-						<div class="ticket-section" style="margin-top: 20px;">
-							<h5>Comprar boletos para estos eventos</h5>
-							<table class="table table-hover">
-								<thead>
-									<tr>
-										<th>#</th>
-										<th>Evento</th>
-										<th>Nombre</th>
-										<th>Cat. de Pago</th>
-										<th>Precio</th>
-										<th>Cant.</th>
-										<th>A pagar</th>
-										<th>Acción</th>
-									</tr>
-								</thead>
-								<tbody>
-									{%if  request.session.cart.1 %}
-									{%for car in request.session.cart.1 %}
-									<tr>
-										<th scope="row">{{forloop.counter}}</th>
-										<td>{{car.tipo_evento}}</td>
-										<td>{{car.nombre_congreso}}</td>
-										<td>{{car.nombre_cat_pago}}</td>
-										<td>${{car.precio}}</td>
-										
-										<th style="display: none;" id="edit_{{car.mi_id}}"> <input class="form-control input-sm" type="number" value="{{car.cantidad}}" style="width: 66px;" id="cantidad_{{car.mi_id}}"></th>
-										<th id="edit_no_{{car.mi_id}}"> {{car.cantidad}}</th>
-									
-										<td>${{car.pagar}}</td>
-										<td style="text-align: center;">
-											
-											<a id="btn_edit_{{car.mi_id}}" onclick="EditCart({{car.mi_id}}) " title="Editar"> <i class="fa fa-pencil-square" style="color:blue; font-size: 20px;"></i></a>
-											<a id="btn_conf_{{car.mi_id}}"  onclick="ConfCart({{car.mi_id}})" style="display: none;"  title="Confirmar"> <i class="fa fa-check-circle" style="color:green; font-size: 20px;"></i></a>
-											<a id="btn_cancel_{{car.mi_id}}"  onclick="CancelCart({{car.mi_id}})" style="display: none;"  title="Cancelar"> <i class="fa fa-minus-circle" style="color:red; font-size: 20px;"></i></a>
-											
-											<a onclick="EliminarCart({{car.mi_id}})"> <i class="fa fa-trash" style="color: red;font-size: 20px;margin-left: 10px;"  title="Eliminar"></i></a></td>
-									</tr>
-									{%endfor%}
-									<tr>
-										
-										<th scope="row" colspan="6">Total a pagar</th>
-								
-										<td><b> ${{request.session.cart.0.cant}}</b></td>
-										<td></td>
-											
-									</tr>
-									{%else%}
-									<li>No ha puesto ningún evento en el carrito</li>
-									{%endif%}
-									
-								</tbody>
-							</table>
-
-						</div>
-
-
-					</div>
-					<div class="modal-footer">
-						<a  type="button" class="btn btn-default" data-dismiss="modal">Cerrar</a>
-						{%if request.session.cart.1 %}
-						<a href="{%url 'Pagar' %}" type="button" class="btn btn-primary">Pagar</a>
-						{%else%}
-						<a  type="button" class="btn btn-primary" onclick="Mensaje('No tiene nada en el carrito para comprar')">Pagar</a>
-						{%endif%}
-					</div>
-				</div>
-			</div>
-		</div> -->
-		<!-- Kode-Header End -->
-
-		{% block contenido%}
+    <header class="d-flex align-items-center">
+        <nav id="main-nav" class="navbar navbar-expand-lg w-100 navbar-dark bg-dark fixed-top" >
+            <div class="container-fluid h-100">
+              <a class="navbar-brand" href="{% url 'Home'%}"><img src="{% static 'assets/img/iconos/logo.png'%}" class="img-fluid"></a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">  
+                <ul class="navbar-nav d-flex justify-content-between justify-content-xxl-end">
+                  <li class="nav-item mt-3 mt-md-0 d-md-flex align-items-center">
+                    <form class="d-flex align-items-center search-form" method="POST" action="{% url 'List_congreso'%}">
+                      {% csrf_token %}
+                      <div class="input-group">
+                          <input type="text" name="especialidad" id="especialidad" class="form-control" placeholder="Especialidades" aria-describedby="button-addon2">
+                          <button class="btn btn-outline-secondary border-0" type="submit" id="button-addon2">BUSCAR</button>
+                      </div>
+                    </form>
+                  </li>
+                  <li class="nav-item d-md-flex mt-3 mt-md-0">
+                    <a class="nav-link d-flex align-items-center p-0 me-3" href="{% url 'List_congreso'%}">CONGRESOS <img src="{% static '/assets/img/iconos/birrete.png'%}" class="img-fluid ms-2 icon"></a>
+                    <a class="nav-link d-flex align-items-center p-0 my-3 my-md-0" href="{%url 'View_cart'%}">COMPRAS | <img src="{% static '/assets/img/iconos/carrito.png'%}" class="img-fluid ms-1 icon"></a>
+                  </li>
+                  <!-- <li class="nav-item d-md-flex align-items-center">
+                    <div class="languaje-selector position-relative">
+                      <button class="btn btn-outline-secondary border-0 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"><img id="languageFlag" src="./assets/img/iconos/bandera-mx.png" alt=""></button>
+                      <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" id="languageTooglerSpanish" href="#">Español</a></li>
+                          <li><a class="dropdown-item" id="languageTooglerEnglish" href="#">English</a></li>
+                      </ul>
+                    </div>
+                  </li> -->
+                  {% if user.is_authenticated %}
+                  <li class="nav-item profile-item d-flex flex-md-row flex-column my-3 my-md-0 justify-content-center justify-content-md-start align-items-center">
+                    <img src="{%if request.user.perfilusuario.foto %}{% static '/'%}{{request.user.perfilusuario.foto}}{%else%}{% static '/assets/img/iconos/perfil.png'%} {%endif%}"  class="img-fluid profile-togler" width="40px" style="border-radius: 50px;">
+                    <div class="menu">
+                      <div class="arrow-up"></div>
+                      <div class="header px-2">
+                        <img src="{%if request.user.perfilusuario.foto %}{% static '/'%}{{request.user.perfilusuario.foto}}{%else%}{% static '/assets/img/iconos/perfil.png'%} {%endif%}" class="img-fluid me-2" width="60px" style="border-radius: 50px;">
+                        <div class="name-cat">
+                          <h5 class="name"><strong>{{request.user.first_name}} {{request.user.last_name}}</strong></h5>
+                          <small class="cat">{{request.user.perfilusuario.categoria}}</small>
+                        </div>
+                      </div>
+                      <ul class="nav px-2">
+                        <li class="item"><a href="{% url 'perfil' %}">Perfil</a></li>
+                        <li class="item"><a href="#">Mis Congresos</a></li>
+                        <li class="item"><a href="#">Constancias</a></li>
+                        <li class="item"><a href="#">Constancias</a></li>
+                      </ul>
+                      <a href="{% url 'logout' %}" class="ps-2 close-section">Cerrar sesión</a>
+                    </div>
+                  </li>
+                  {%else%}
+                  <li class="nav-item d-flex my-3 my-md-0 justify-content-center justify-content-md-start align-items-center">
+                    <a class="nav-link auth-cta" href="{% url 'login' %}">LOGIN</a>
+                    <a class="nav-link auth-cta" href="{% url 'Registrarse' %}">REGISTRO</a>
+                  </li>
+                  {%endif%}
+                </ul>
+              </div>
+            </div>
+          </nav>
+    </header>  
+    <main>
+        {% block contenido%}
 
 		{% endblock %}
-		<footer id="footer">
-		
-			
-			<div class="kode-footer-text" style="position: relative;
-			float: right;
-			width: 100%;">
-				<div class="container-fluid">
-					<div class="row" style="background-color: #2a343d;">
-						<div class="col-lg-6 col-md-6 col-sm-9 col-xs-12 " >
-							<div style="padding: 50px;">
-								<strong class="title">Contacto</strong>
-								<h3>Med Congress</h3>
-
-								<ul class="address-nav" id="ul">
-									
-								</ul>
-								<ul class="twitterfeed-nav">
-									<li><i class="la la-shield"></i> <a href="{%url 'aviso_privacidad'%}">Aviso de Privacidad</a></li>
-									
-								</ul>
-							</div>
-							
-						</div>
-						<div class="col-lg-6 col-md-6 col-sm-9 col-xs-12 "style="padding-right: 0px;"><div class="event-map">
-							<div id="googleMap" style="width:100%;height:414px;"></div>
-						</div></div>
-						
-					</div>
-				</div>
-			</div>
-			<div class="footer-copyright">
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-							<p>&copy; <a href="#">Med Congress</a> All Rights Reserved</p>
-							<p style="font-size:10px">Develop by <a target="_blank "href="https://softok2.com">SOFTOK2</a></p>
-						</div>
-					</div>
-				</div>
-
-				<div class="back-to-top">
-					<a href="#"><i class="fa fa-arrow-up"></i></a>
-
-
-				</div>
-			</div>
-			<!--copyright End-->
-		</footer>
-	</div>
-
-	</div>
-	<!--Jquery Lib-->
-	<script src="{% static 'MedCongressApp/js/jquery.js'%}"></script>
+    </main>
+    <footer class="footer">
+      <div class="contact-info d-flex flex-column justify-content-center align-items-center">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-3"><h3 class="heading-contact-info"><strong>MED</strong> CONGRESS</h3></div>
+            <div class="col-md-3" id='direccion'>
+               
+            </div>
+            <div class="col-md-3">
+              <div class="d-flex flex-column" id='contactos'>
+              
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="d-flex flex-column justify-content-between privacy-and-social">
+                <a href="{%url 'aviso_privacidad'%}">Aviso de Privacidad</a>
+                <div class="social-follow">
+                  <a href="#">f</a>
+                  <span>&nbsp;/&nbsp;</span>
+                  <a href="#">in</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="credits d-flex flex-column align-items-center justify-content-center">
+        <a href="#" class="arrow-up"><img src="{% static '/assets/img/iconos/arrow-up.png'%}" class="img-fluid"></a>
+        <span class="text-center">© Med Congress . All Rights Reserved</span>
+        <span>Develop by SOFTOK2 & JCG.Mx</span>
+      </div>
+    </footer>
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="{% static '/assets/js/jquery.js'%}"></script>
 	<!--Bootstrap Javascript File-->
-	<script src="{% static 'MedCongressApp/js/bootstrap.min.js'%}"></script>
-	<!-- bxSlider Javascript file -->
-	<script src="{% static 'MedCongressApp/js/jquery.bxslider.js'%}"></script>
-	<!-- OWL Javascript file -->
-	<script src="{% static 'MedCongressApp/js/owl.carousel.min.js'%}"></script>
-	<!--Image Filterable Gallery-->
-	<script src="{% static 'MedCongressApp/js/jquery-filterable.js'%}"></script>
-	<!--Number Count Script-->
-	<script src="{% static 'MedCongressApp/js/waypoints-min.js'%}"></script>
-	<!--Full Calender Script-->
-	<script src="{% static 'MedCongressApp/js/moment.min.js'%}"></script>
-	<script src="{% static 'MedCongressApp/js/fullcalendar.min.js'%}"></script>
-	<!--Time Counter Script-->
-	<script src="{% static 'MedCongressApp/js/jquery.downCount.js'%}"></script>
-	<!--Internet Explore Script-->
-	<script src="{% static 'MedCongressApp/js/ie.js'%}"></script>
-	<!--Accordian Explore Script-->
-	<script src="{% static 'MedCongressApp/js/jquery.accordion.js'%}"></script>
-	
-	<!--RESPONSIVE MENU-->
-	<script src="{% static 'MedCongressApp/js/jquery.sidr.min.js'%}"></script>
-	<!--PrettyPhoto Js -->
-	<script src="{% static 'MedCongressApp/js/jquery.prettyPhoto.js'%}"></script>
-	<!--Custom Scripts-->
-	<script src="{% static 'MedCongressApp/js/custom.js'%}"></script>
+	<script src="{% static '/assets/js/bootstrap.min.js'%}"></script>
+    <script src="{% static '/assets/js/bootstrap.bundle.min.js'%}" ></script>
+    <script src="{% static '/assets/vendors/cleave/cleave.min.js'%}"></script>
+    <script src="{% static '/assets/js/app.js'%}"></script>
+    <script type="text/javascript"
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCf3QdCwg8QDNOS3A2vSQ3DqW2mpJ_gSY8"></script>
+  <link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
+<script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
+  </body>
+</html>
 
-	<script src="{% static 'MedCongressApp/js/sweetalert.min.js' %}"></script>
-	<script type="text/javascript"
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCf3QdCwg8QDNOS3A2vSQ3DqW2mpJ_gSY8"></script>
-	<script src="{% static 'MedCongressApp/js/my_js.js'%}"></script>
+
+
+	
 	{% block script%}
 
 	{%endblock%}
@@ -456,32 +163,32 @@ line-height: 28px;
 	<script type="text/javascript">
 		jQuery(document).ready(function ($) {
 
-
+		$("#especialidad").autocomplete({
+			source: "{% url 'Especialidades_autocomp'%}",
+			minLength: 3,
+		});
+	
 url = "{% url 'GetContactos'%}";
         $.get(url, function (data) {
 			
-			texto='';
-			if(data.direccion){
-				
-				texto+='<li><i class="fa fa-map-marker"></i>'+data.direccion +'</li>';
-				
-			}
-			
+            texto='';
+            direccion='';
+			if(data.direccion)
+            direccion+='<p >'+data.direccion +'</p>';
 			if(data.email)
-			texto+=`<li><i class="fa fa-envelope-o"></i><a href="mailto:`+data.email+`">`+data.email+`</a></li>`;
+			    texto+=`<a href="mailto:`+data.email+`">`+data.email+`</a>`;
 			if(data.telefono)
-			texto+=`<li><i class="fa fa-phone"></i> `+data.telefono+`</li>`;
+			    texto+=`<a  href="#""> `+data.telefono+`</a>`;
 			if(data.whatsapp)
 			{
 				what=data.whatsapp.replace(/\(/g,"").replace(/\)/g,"").replace(/-/g,'').replace(/\ +/g,'');
-				texto+=`<li><a target="_blank" href="https://wa.me/+`+what+`"><i class="fa fa-whatsapp"></i> `+data.whatsapp+`</li>`;
+				texto+=`<a target="_blank" href="https://wa.me/+`+what+`"> `+data.whatsapp+`</a>`;
 
 			}
+          
 			
-				
-			
-			$('#ul').html(texto)
-            
+			$('#contactos').html(texto)
+            $('#direccion').html(direccion)
         });
 
 	});
@@ -489,97 +196,6 @@ url = "{% url 'GetContactos'%}";
 
 </script>
 
-
-
-	<!-- <script>
-		
-
-		function EliminarCart(id){
-			$.ajax({
-            type: "GET",
-            url: "{% url 'Deleted_cart'%}",
-            data: {
-                'id': id,
-				
-            },
-            success: function (data) {
-                if (data['succes']){
-					swal({
-            title: "Eliminado",
-            text: "Ha sacado un evento de su carrito de compras",
-            icon: "success",
-            buttons: {
-                cancel: {
-                    text: "ok!",
-                    value: null,
-                    visible: true,
-                    className: "",
-                    closeModal: false,
-                },
-               
-                
-                
-            }
-        })
-        .then((isConfirm) => {
-            if (isConfirm) {
-                
-            }
-            else{
-                location.reload();
-            }
-
-        });
-            }
-                else
-                swal("No se pudo eliminar", "Póngase en contacto con el administrador.", "error"); 
-            }
-        });
-
-		}
-		function Mensaje(mensaje){
-			swal("Atención", mensaje, "warning"); 
-		}
-	function EditCart(id){
-$('#edit_'+id).show();
-$('#btn_conf_'+id).show();
-$('#btn_cancel_'+id).show();
-$('#edit_no_'+id).hide();
-$('#btn_edit_'+id).hide();
-		}
-		function CancelCart(id){
-$('#edit_'+id).hide();
-$('#btn_conf_'+id).hide();
-$('#btn_cancel_'+id).hide();
-
-$('#edit_no_'+id).show();
-$('#btn_edit_'+id).show();
-		}
-
-	function ConfCart(id){
-		$.ajax({
-            type: "GET",
-            url: "{% url 'Conf_cart'%}",
-            data: {
-                'id': id,
-				'cant':$('#cantidad_'+id).val(),
-				
-            },
-            success: function (data) {
-                if (data['succes']){
-					location.reload();
-				
-					
-            }
-                else
-                swal("No se pudo actualizar", "Póngase en contacto con el administrador.", "error"); 
-					 
-            }
-        
-
-	});
-	}
-	</script> -->
 </body>
 
 </html>

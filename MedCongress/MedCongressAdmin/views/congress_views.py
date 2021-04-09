@@ -81,18 +81,28 @@ class CongressCreateView(validarUser,FormView):
             image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
             chars = '0123456789'
             nombre = get_random_string(5, chars)
-            image_result = open('MedCongressApp/static/congreso/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+            image_result = open('MedCongressApp/static/congreso/imagen_seg_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
             image_result.write(image_64_decode)
-            congress.imagen_seg='congreso/imagen_%s.png'%(nombre)
+            congress.imagen_seg='congreso/imagen_seg_%s.png'%(nombre)
+
+            image_64_encode=self.request.POST['congreso-imagen_home']
+            campo = image_64_encode.split(",")
+            image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
+            chars = '0123456789'
+            nombre = get_random_string(5, chars)
+            image_result = open('MedCongressApp/static/congreso/imagen_home_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+            image_result.write(image_64_decode)
+            congress.imagen_home='congreso/imagen_home_%s.png'%(nombre)
+
             if self.request.POST['congreso-constancia']:
                 image_64_encode=self.request.POST['congreso-constancia']
                 campo = image_64_encode.split(",")
                 image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
                 chars = '0123456789'
                 nombre = get_random_string(5, chars)
-                image_result = open('MedCongressApp/static/congreso/img_constancia/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+                image_result = open('MedCongressApp/static/congreso/img_constancia/imagen_constancia_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
                 image_result.write(image_64_decode)
-                congress.foto_constancia='congreso/img_constancia/imagen_%s.png'%(nombre)
+                congress.foto_constancia='congreso/img_constancia/imagen_constancia_%s.png'%(nombre)
 
             congress.save()
             
@@ -102,9 +112,9 @@ class CongressCreateView(validarUser,FormView):
                 image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
                 chars = '0123456789'
                 nombre = get_random_string(5, chars)
-                image_result = open('MedCongressApp/static/congreso/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+                image_result = open('MedCongressApp/static/congreso/imagen_programa_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
                 image_result.write(image_64_decode)
-                campo_imagen='congreso/imagen_%s.png'%(nombre)
+                campo_imagen='congreso/imagen_programa_%s.png'%(nombre)
                 imagen=ImagenCongreso(congreso=congress,imagen=campo_imagen)
                 imagen.save()
            
@@ -153,6 +163,8 @@ class CongressUpdateView(validarUser,FormView):
             context['imagen_meta']='/static/%s'%(self.object.meta_og_imagen)
         if self.object.foto_constancia:
             context['foto_constancia']='/static/%s'%(self.object.foto_constancia)
+        if self.object.imagen_home:
+            context['imagen_home']='/static/%s'%(self.object.imagen_home)
         return context
 
     def form_valid(self, form):
@@ -175,11 +187,25 @@ class CongressUpdateView(validarUser,FormView):
             chars = '0123456789'
             nombre = get_random_string(5, chars)
             image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
-            image_result = open('MedCongressApp/static/congreso/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+            image_result = open('MedCongressApp/static/congreso/imagen_seg_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
             image_result.write(image_64_decode)
             if  update_congreso.imagen_seg:
                 remove('MedCongressApp/static/%s'%( update_congreso.imagen_seg))
-            congress.imagen_seg='congreso/imagen_%s.png'%(nombre)
+            congress.imagen_seg='congreso/imagen_seg_%s.png'%(nombre)
+
+        imagen_home=self.request.POST['congreso-imagen_home']
+        if 'congreso/' not in imagen_home:
+           
+            image_64_encode=self.request.POST['congreso-imagen_home']
+            campo = image_64_encode.split(",")
+            chars = '0123456789'
+            nombre = get_random_string(5, chars)
+            image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
+            image_result = open('MedCongressApp/static/congreso/imagen_home_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+            image_result.write(image_64_decode)
+            if  update_congreso.imagen_home:
+                remove('MedCongressApp/static/%s'%( update_congreso.imagen_home))
+            congress.imagen_home='congreso/imagen_home_%s.png'%(nombre)
 
         if self.request.POST['congreso-constancia']:
             constancia=self.request.POST['congreso-constancia']
@@ -190,11 +216,11 @@ class CongressUpdateView(validarUser,FormView):
                 chars = '0123456789'
                 nombre = get_random_string(5, chars)
                 image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
-                image_result = open('MedCongressApp/static/congreso/img_constancia/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+                image_result = open('MedCongressApp/static/congreso/img_constancia/imagen_constancia_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
                 image_result.write(image_64_decode)
                 if  update_congreso.foto_constancia:
                     remove('MedCongressApp/static/%s'%( update_congreso.foto_constancia))
-                congress.foto_constancia='congreso/img_constancia/imagen_%s.png'%(nombre)    
+                congress.foto_constancia='congreso/img_constancia/imagen_constancia_%s.png'%(nombre)    
         update_congreso=congress
         update_congreso.save()
         ImagenCongreso.objects.filter(congreso=update_congreso).delete()
@@ -208,9 +234,9 @@ class CongressUpdateView(validarUser,FormView):
                 image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
                 chars = '0123456789'
                 nombre = get_random_string(5, chars)
-                image_result = open('MedCongressApp/static/congreso/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+                image_result = open('MedCongressApp/static/congreso/imagen_programa_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
                 image_result.write(image_64_decode)
-                campo_imagen='congreso/imagen_%s.png'%(nombre)
+                campo_imagen='congreso/imagen_programa_%s.png'%(nombre)
                 imagen=ImagenCongreso(congreso=update_congreso,imagen=campo_imagen)
                 imagen.save()
         

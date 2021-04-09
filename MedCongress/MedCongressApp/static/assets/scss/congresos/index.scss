@@ -1,0 +1,66 @@
+.congresos-banner {
+    margin-top: 80px;
+
+    @include media-max($large) {
+        margin-top: 56px;
+    }
+}
+
+.congresos-section-1 {
+    padding: 50px 0 100px;
+    background-color: $river-bed;
+
+    .page-title,
+    .description,
+    .back-home {
+        color: $white;
+        font-family: $font-1;
+    }
+
+    .page-title {
+        font-size: 40px;
+    }
+
+    .description { 
+        margin: 40px 0;
+        font-size: 18px;
+    }
+
+    .decorator {
+        width: 12px;
+        height: 2px;
+        background-color: $picton-blue;
+    }
+
+    .back-home {
+        font-size: 18px;
+        color: $picton-blue;
+    }
+}
+
+.congresos-congress-list {
+    margin-top: -50px;
+    padding-bottom: 50px;
+
+    .congress {
+        margin-bottom: 80px;
+
+        .name,
+        .date,
+        .place,
+        a {
+            color: $river-bed;
+            font-family: $font-1;
+        }
+
+        .name { font-size: 30px; }
+
+        .date,
+        .place { font-size: 16px; }
+
+        a { 
+            font-size: 18px; 
+            text-decoration: underline;
+        }
+    }
+}    

@@ -1,7 +1,7 @@
 
 from django import forms
 from django.core.files.images import get_image_dimensions
-from  MedCongressApp.models import (QuienesSomos,Ofrecemos,ImagenQuienesSomos,Footer,ImagenHome)
+from  MedCongressApp.models import (QuienesSomos,Ofrecemos,ImagenQuienesSomos,Footer,ImagenHome,Congreso)
 
 
 class QuienesSomosForm(forms.ModelForm):
@@ -19,16 +19,16 @@ class QuienesSomosForm(forms.ModelForm):
         self.fields['texto'].widget.attrs.update({'class': 'form-control ckeditor'})  
 
 class OfrecemosForm(forms.ModelForm):
-
+    prueba=forms.CharField(required=False)
     class Meta:
         model=Ofrecemos
-        fields=['titulo','icono','texto']
+        fields=['titulo','prueba','texto']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.fields['titulo'].widget.attrs.update({'class': 'form-control'})  
-        self.fields['icono'].widget.attrs.update({'class': 'form-control'})  
+       
         self.fields['texto'].widget.attrs.update({'class': 'form-control ckeditor'})  
 
     def clean(self, *args, **kwargs):
@@ -69,16 +69,16 @@ class FooterForm(forms.ModelForm):
         self.fields['whatsapp'].widget.attrs.update({'class': 'form-control'})  
 
 class ImagenHomeForm(forms.ModelForm):
-    prueba=forms.CharField(required=False)
+    congreso=forms.ModelChoiceField(queryset=Congreso.objects.all())
   
     class Meta:
-        model=ImagenHome
-        fields=['prueba']       
+        model=Congreso
+        fields=['congreso']       
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
+        self.fields['congreso'].widget.attrs.update({'class': 'form-control select2'})  
     def clean(self, *args, **kwargs):
         cleaned_data = super(ImagenHomeForm, self).clean(*args, **kwargs)
-        imagenes = cleaned_data.get('prueba', None)
-        if not imagenes :
-            self.add_error('prueba', 'Debe entrar una <b>Imagen</b>')   
+        congreso = cleaned_data.get('congreso', None)
+        if not congreso :
+            self.add_error('congreso', 'Debe entrar un <b>Congreso para asociarlo a la Página de Inicio</b>')   

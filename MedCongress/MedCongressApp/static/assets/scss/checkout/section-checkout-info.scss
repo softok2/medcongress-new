@@ -1,0 +1,21 @@
+.checkout-info {
+    margin-top: 80px;
+    padding: 30px 0 20px;
+    background-color: #e7ecf0;
+
+    @include media-max($large) {
+        margin-top: 56px;
+    }
+
+    .section-title,
+    .subtitle,
+    .back {
+        color: $outer-space;
+        font-family: $font-1;
+    }
+
+    .section-title { font-size: 40px; }
+
+    .subtitle,
+    .back { font-size: 20px; }
+}

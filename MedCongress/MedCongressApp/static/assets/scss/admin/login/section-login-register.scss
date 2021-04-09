@@ -1,0 +1,134 @@
+.login-register{
+    height: 100vh;
+    overflow-y: hidden;
+    position: relative;
+    background: $white url(../img/login-background-1.jpg) center center no-repeat;
+    background-size: cover;
+
+    .content{
+        top: 0;
+        height: 100%;
+        display: flex;
+        position: absolute;
+        align-items: center;
+        z-index: 1;
+
+        @include media-max($large){
+            position: relative;
+        }
+
+        .row{
+            width: 100%;
+
+            @include media-max($large){
+                width: auto;
+            }
+        }
+    }
+
+    .login-form-wrapper{
+        width: 80%;
+        border-radius: 5px;
+        padding: 15px 5% 10px;
+        background-color: $white;
+
+        @include media-max($large){
+            width: 100%;
+            background-color: rgba($color: #fff, $alpha: .8);
+        }
+    }
+
+    .login-title,
+    span,
+    a,
+    p,
+    label{
+        font-size: 16px;
+        color: $outer-space;
+        font-family: $font-1;
+
+        @include media-max($large){
+            font-size: 14px;
+        }
+    }
+
+    .login-title{
+        font-size: 35px;
+
+        @include media-max($large){
+            font-size: 28px;
+        }
+    }
+
+    p{
+        font-size: 12px;
+        margin-bottom: 0;
+
+        a{
+            font-size: 12px; 
+        }
+    }
+
+    form{
+        margin: 25px 0 15px;
+
+        input,
+        input::placeholder,
+        textarea,
+        textarea::placeholder,
+        button,
+        select{
+            font-size: 16px;
+            color: $river-bed;
+            font-family: $font-1;
+            background-color: $mystic;
+        }
+
+        input{
+            height: 40px;
+            margin-top: 20px;
+
+            &:nth-of-type(1){
+                margin-top: 0;
+            }
+
+            &:focus{
+                background-color: $mystic;
+            }
+
+            &[type="checkbox"]{
+                width: 12px;
+                height: 12px;
+                border-radius: 0;
+                margin-left: 0;
+                clear: both;
+
+                &:checked{ background-color: $outer-space; }
+            }
+        }
+
+        textarea{
+            height: 100%;
+        }
+
+        button{
+            color: $white;
+            margin-top: 20px;
+            width: fit-content;
+            padding: 10px 30px;
+            background-color: $picton-blue;
+        }
+    }
+
+    .logobrand{
+        width: 25%;
+        display: block;
+        margin-left: auto;
+        margin-right: 20%;
+        margin-top: 20px;
+
+        @include media-max($large){
+            margin-right: 0;
+        }
+    }
+}

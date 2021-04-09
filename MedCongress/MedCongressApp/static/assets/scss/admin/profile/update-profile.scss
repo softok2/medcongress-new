@@ -1,0 +1,137 @@
+.update-profile { 
+    background: url(../img/iconos/mundo.png) bottom right no-repeat; 
+    background-size: 650px 650px;
+    margin-top: 130px;
+
+    @include media-max($large) { 
+        background: none;
+        margin-top: 60px; 
+    }
+}
+
+.update-profile .profile-cta {
+    color: $white;
+    display: block;
+    margin: 0 auto;
+    font-size: 20px;
+    padding: 15px 5%;
+    width: fit-content;
+    border-radius: 10px;
+    font-family: $font-1;
+    text-decoration: none;
+    background-color: $picton-blue;
+}
+
+.update-profile .content {
+    @include media-max($large) {
+        margin-top: 25px;
+    }
+
+    .profile-section { 
+        padding: 35px 50px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border: 1px solid $regent-gray;
+        background-color: $white;
+    }
+
+    form{
+
+        input,
+        textarea,
+        button,
+        select,
+        label{
+            font-size: 18px;
+            color: $river-bed;
+            font-family: $font-1;
+            background-color: $mystic;
+        }
+
+        label { background-color: transparent; }
+
+        .fields-wraper {
+            display: grid;
+            grid-template-columns: 50% 50%;
+
+            @include media-max($large) {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .field-group {
+                display: flex;
+                flex-direction: column;
+
+                &.mail-group,
+                &.location-group { grid-column: 1 / 3; }
+            }
+
+            .form-check { grid-column: 1 / 3; }
+        }
+
+        .form-check { margin-bottom: -5px; }
+
+        input{
+            height: 40px;
+            margin-top: 20px;
+
+            &:nth-of-type(1){
+                margin-top: 0;
+            }
+
+            &:focus{
+                background-color: $mystic;
+            }
+
+            &[type="checkbox"]{
+                width: 12px;
+                clear: both;
+                height: 12px;
+                margin-left: 0;
+                border-radius: 0;
+
+                &:checked{ background-color: $outer-space; }
+            }
+        }
+
+        textarea{
+            height: 100%;
+        }
+
+        button{
+            color: $white;
+            margin-top: 20px;
+            width: fit-content;
+            padding: 10px 30px;
+            background-color: $picton-blue;
+        }
+    }
+    
+    .section-1 {
+        .profile-title,
+        .subtitle {
+            color: $outer-space;
+            font-family: $font-1;
+        }
+
+        .profile-title {
+            font-size: 40px;
+            margin-bottom: 0;
+        }
+
+        .subtitle { 
+            font-size: 20px; 
+            margin-bottom: 40px;
+            display: block;
+        }
+
+        .border-right-gray {
+            border-right: 1px solid $regent-gray;
+
+            @include media-max($large) {
+                border-right: 0;
+            }
+        }
+    }
+}
