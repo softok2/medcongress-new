@@ -836,7 +836,7 @@
                     <div class="kode-price-box">
                         <div class="kode-price-header">
                             <strong>{{categoria_pago.categoria.nombre}}</strong>
-                            <h3>${{categoria_pago.precio}}<br> {{categoria_pago.moneda}}</h3>
+                            <h3>${{categoria_pago.precio|format_num}}<br> {{categoria_pago.moneda}}</h3>
 
                             <strong>IVA incluído</strong>
                         </div>
@@ -914,7 +914,7 @@
                                 <div class="kode-price-box">
                                     <div class="kode-price-header">
                                         <strong>{{cat.categoria.nombre}}</strong>
-                                        <h3>$ {{cat.precio}} {{cat.moneda}}</h3>
+                                        <h3>$ {{cat.precio|format_num}} {{cat.moneda}}</h3>
                                         <strong>IVA incluído</strong>
                                     </div>
 

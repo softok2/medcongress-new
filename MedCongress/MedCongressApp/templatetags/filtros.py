@@ -13,3 +13,7 @@ def my_div(num, div):
        
        return True if int(num+1)%int(div)==0 else False
 
+@register.filter(name='format_num')
+def format_num(num): 
+       
+       return format(num, '0,.1f')
