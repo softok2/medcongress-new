@@ -160,17 +160,17 @@ Detalles del Perfil
                         {%endif%}
                         {%if request.user.perfilusuario.twitter%}
                         <li class="nav-item">
-                            <a class="nav-link" href="https://twitter.com/{{request.user.perfilusuario.twitter}}">twitter</a>
+                            <a class="nav-link" target="_black" href="https://twitter.com/{{request.user.perfilusuario.twitter}}">twitter</a>
                         </li>
                         {%endif%}
-                        {%if request.user.perfilusuario.especialidad%}
+                        {%if request.user.perfilusuario.linkedin%}
                         <li class="nav-item">
-                            <a class="nav-link" href="https://www.instagram.com/mislenis.morenos/">instagram</a>
+                            <a class="nav-link" target="_black" href="https://www.linkedin.com/in/{{request.user.perfilusuario.linkedin}}">linkedin</a>
                         </li>
                         {%endif%}
-                        {%if request.user.perfilusuario.especialidad%}
+                        {%if request.user.perfilusuario.youtube%}
                         <li class="nav-item">
-                            <a class="nav-link" href="#">youtube</a>
+                            <a class="nav-link" target="_black" href="https://www.youtube.com/c/{{request.user.perfilusuario.youtube}}">youtube</a>
                         </li> {%endif%}
                        
                     </ul>

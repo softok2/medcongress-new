@@ -1689,6 +1689,15 @@ textarea:focus,
   padding: 5px 20px;
 }
 
+.checkout-formas-de-pago .tab-content a {
+  border: 0;
+  color: #fff;
+  border-radius: 5px;
+  background-color: #40C8F4;
+  padding: 5px 20px;
+  font-size: 18px;
+  text-decoration: none;
+}
 /* - Login - */
 .login-register {
   height: 100vh;
@@ -2231,7 +2240,7 @@ textarea:focus,
   font-size: 14px;
 }
 
-@media screen and (max-width: 1400px and min-width :1900px) {
+@media screen and (max-width: 1400px and min-width: 1900px) {
   .home-banner {
     height: 638px;
     margin-top: 80px;

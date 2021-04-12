@@ -80,5 +80,7 @@ class ImagenHomeForm(forms.ModelForm):
     def clean(self, *args, **kwargs):
         cleaned_data = super(ImagenHomeForm, self).clean(*args, **kwargs)
         congreso = cleaned_data.get('congreso', None)
+        if not congreso.imagen_home:
+            self.add_error('congreso', 'Este <b>Congreso </b> no tiene imagen para mostrar en la Página de Inicio')      
         if not congreso :
             self.add_error('congreso', 'Debe entrar un <b>Congreso para asociarlo a la Página de Inicio</b>')   

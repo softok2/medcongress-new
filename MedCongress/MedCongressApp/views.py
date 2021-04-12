@@ -1923,7 +1923,10 @@ class PerfilUpdateView(FormView):
     def get_context_data(self, **kwargs):
         context=super().get_context_data(**kwargs)
         context['update']=True
+        categoria=CategoriaUsuario.objects.filter(published=True).distinct('nombre')
+        context['categorias']=categoria
         perfil_edit =PerfilUsuario.objects.get(pk=self.kwargs.get('pk'))
+        context['cat']=perfil_edit.categoria.pk
         if perfil_edit.foto:
             context['imagen_seg_url']=perfil_edit.foto
         else:

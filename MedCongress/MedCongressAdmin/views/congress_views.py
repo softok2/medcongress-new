@@ -2,6 +2,7 @@ import json
 import base64 
 from os import remove
 import pandas as pd
+from pathlib import Path
 from django import forms
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -9,7 +10,7 @@ from django.db.models import Sum
 from django.db import connections
 from datetime import datetime
 from django.core.mail import EmailMessage
-
+from django.core.exceptions import RequestDataTooBig
 from django.http import (HttpResponse, HttpResponseBadRequest,
                          HttpResponseRedirect, JsonResponse)
 from django.shortcuts import render
@@ -167,10 +168,9 @@ class CongressUpdateView(validarUser,FormView):
         if self.object.imagen_home:
             context['imagen_home']=self.object.imagen_home
         return context
-
+ 
+        
     def form_valid(self, form):
-
-        print('sadfdsfsdgdhghfd')
         update_congreso=Congreso.objects.get(pk=self.request.POST['update']) 
         try:
             congress=form['congreso'].save(commit=False)
@@ -193,7 +193,9 @@ class CongressUpdateView(validarUser,FormView):
                 image_result = open('MedCongressApp/static/congreso/imagen_seg_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
                 image_result.write(image_64_decode)
                 if  update_congreso.imagen_seg:
-                    remove('MedCongressApp/static/%s'%( update_congreso.imagen_seg))
+                    fileObj = Path('MedCongressApp/static/%s'%( update_congreso.imagen_seg))
+                    if fileObj.is_file():
+                        remove('MedCongressApp/static/%s'%( update_congreso.imagen_seg))
                 congress.imagen_seg='congreso/imagen_seg_%s.png'%(nombre)
 
             imagen_home=self.request.POST['congreso-imagen_home']
@@ -244,7 +246,7 @@ class CongressUpdateView(validarUser,FormView):
                     imagen.save()
         
             return super().form_valid(form)
-        except Exception as e:
+        except RequestDataTooBig as e:
             messages.warning(self.request, e)
             return super().form_invalid(form)
     def get_success_url(self):

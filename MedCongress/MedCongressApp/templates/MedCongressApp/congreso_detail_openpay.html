@@ -448,7 +448,7 @@
         
                 <div class="ticket">
                     <div class="title">{{categoria_pago.categoria.nombre}}</div>
-                    <h5 class="price">${{categoria_pago.precio}}<br> {{categoria_pago.moneda}}</h5>
+                    <h5 class="price">${{categoria_pago.precio|format_num}}<br> {{categoria_pago.moneda}}</h5>
                     <span class="iva">IVA incluído</span>
                     <div class="actions">
                         <div class="row">

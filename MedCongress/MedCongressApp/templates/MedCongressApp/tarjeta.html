@@ -9,29 +9,40 @@ Efectuar Pago
 
 {%endblock%}
 {% block contenido %}
+<section class="checkout-info">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <h1 class="section-title">BOLETOS A COMPRAR</h1>
+                <small class="subtitle">Elige tu Formas de Pago.</small>
+            </div>
+            
+        </div>
+    </div>
+</section>
 
-<div class="kode-event-time">
-    <div class="kode-event-contact">
-        <div class="container">
-            <div class="row well" >
-                <h4>Desglose de los boletos a comprar</h4>
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Evento</th>
-                            <th>Nombre</th>
-                            <th>Cat. de Pago</th>
-                            <th>Precio</th>
-                            <th>Cant.</th>
-                            <th>A pagar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {%if request.session.cart.1 %}
+<section class="checkout-table">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col px-5">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">no.</th>
+                                <th scope="col">Evento</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Cat. de Pago</th>
+                                <th scope="col">Precio</th>
+                                <th scope="col">Cant</th>
+                                <th scope="col">A Pagar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {%if request.session.cart.1 %}
                         {%for car in request.session.cart.1 %}
                         <tr>
-                            <th scope="row">{{forloop.counter}}</th>
+                            <td scope="row">{{forloop.counter}}</td>
                             <td>{{car.tipo_evento}}</td>
                             <td>{{car.nombre_congreso}}</td>
                             <td>{{car.nombre_cat_pago}}</td>
@@ -41,224 +52,213 @@ Efectuar Pago
 
                         </tr>
                         {%endfor%}
-                        <tr style="background-color: slategray;">
-                            <th scope="row" colspan="6">Total a pagar</th>
-                            <td><b> ${{request.session.cart.0.cant|floatformat:2}}</b></td>
-                            <td></td>
-
-                        </tr>
                         {%else%}
                        <tr >
                         <td colspan="7" style="text-align: center;color: red;"> <b>No hay ningún evento a comprar</b> </td>
                        </tr>
                         
                         {%endif%}
-
-                    </tbody>
-                </table>
-
-
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            {%if cantidad%}
-            <div class="row ">
-                <div class="kf_heading_3">
+        </div>
 
-                    <div class=" col-sm-12 ">
+        <div class="row my-3">
+            <div class="col px-5">
+                <div class="cart-price d-flex justify-content-between">
+                    <span class="ms-3">Total a Pagar</span>
+                    <span class="me-5">{%if request.session.cart.1 %}${{request.session.cart.0.cant|floatformat:2}} {%else%}$0 {%endif%}</span>
+                </div>
+            </div>
+        </div>
 
-                        <h2>Tarjeta de crédito o débito</h2>
+        <div class="row">
+            <div class="col px-5">
+                <hr>
+            </div>
+        </div>
+    </div>
+</section>
 
-                        <form action="" method="POST" id="payment-form" class="contactusform">
-                            {% csrf_token %}
-                            <input type="hidden" name="token_id" id="token_id">
-                            <input type="hidden" name="pagar_efectivo" value="0" id="token_id">
-                            <div class="kf_heading_3">
-                                <div class="row">
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                        <span>Tarjetas de crédito</span>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                        <span>Tarjetas de débito</span>
-                                    </div>
+<section class="checkout-formas-de-pago py-5">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <h2 class="section-title">FORMAS DE PAGO</h2>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col px-md-5">
+                <ul class="nav nav-tabs flex-column flex-md-row" id="paymentsTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="debit-credit" data-bs-toggle="tab" data-bs-target="#debit-credit-tab" type="button" role="tab" aria-selected="true">TARJETA DE CRÉDITO o DÉBITO</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="cash" data-bs-toggle="tab" data-bs-target="#cash-tab" type="button" role="tab" aria-selected="false">PAGO EN EFECTIVO</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="spei" data-bs-toggle="tab" data-bs-target="#spei-tab" type="button" role="tab" aria-selected="false">DEPOSITO SPEI</button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="paymentsTab">
+                    <div class="tab-pane fade show active" id="debit-credit-tab" role="tabpanel">
+                        <div class="payment-form">
+                            <div class="row mt-5">
+                                <div class="offset-md-2 col-md-4">
+                                    <h5 class="card-acepted pb-3 mb-3">TARJETA DE CRÉDITO</h5>
+                                    <img src="{% static 'assets/img/tarjetas/debito.jpg'%}" class="img-fluid">
                                 </div>
-                                <div class="row">
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                        <img src="{% static 'MedCongressApp/images/cards1.png'%}">
-                                    </div>
-
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                        <img class="img-responsive"
-                                            src="{% static 'MedCongressApp/images/cards22.png'%}">
-                                    </div>
+                                <div class="col-md-4">
+                                    <h5 class="card-acepted pb-3 mb-3">TARJETA DE DEBITO</h5>
+                                    <img src="{% static 'assets/img/tarjetas/credito.jpg'%}" class="img-fluid">
                                 </div>
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label>Nombre del titular</label>
-                                            <input type="text" placeholder="Como aparece en la tarjeta"
-                                                autocomplete="off" data-openpay-card="holder_name" name="nombre">
-                                        </div>
+                            </div>
 
-                                    </div>
-                                    <div class=" col-sm-6">
-                                        <div class="form-group">
-                                            <label>Número de tarjeta</label>
-                                            <input type="text" id="numero1" autocomplete="off" maxlength="19"
-                                                placeholder="****-****-****-****">
-                                            <input type="hidden" id="numero" autocomplete="off" maxlength="19"
-                                                data-openpay-card="card_number" name="numero">
-
-                                        </div>
-
-                                    </div>
+                            <div class="row mt-1">
+                                <div class="offset-md-2 col-md-8">
+                                    <hr>
                                 </div>
+                            </div>
 
-                                <div class="col-sm-6 ">
-                                    <div class="form-group">
-                                        <label>Fecha de expiración</label>
+                            <form action="" method="POST" id="payment-form" class="contactusform">
+                                {% csrf_token %}
+                                <input type="hidden" name="token_id" id="token_id">
+                                <input type="hidden" name="pagar_efectivo" value="0" id="token_id">
+                                <div class="row mt-2">
+                                    <div class="offset-md-2 col-md-4">
                                         <div class="row">
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                                <select type="text" placeholder="Mes"
-                                                    data-openpay-card="expiration_month">
-                                                    <option value="01"> Ene</option>
-                                                    <option value="02"> Feb</option>
-                                                    <option value="03"> Mar</option>
-                                                    <option value="04"> Abr</option>
-                                                    <option value="05"> May</option>
-                                                    <option value="06"> Jun</option>
-                                                    <option value="07"> Jul</option>
-                                                    <option value="08"> Ago</option>
-                                                    <option value="09"> Sep</option>
-                                                    <option value="10"> Oct</option>
-                                                    <option value="11"> Nov</option>
-                                                    <option value="12"> Dic</option>
+                                            <div class="col">
+                                                <label class="mb-2">Nombre del titular</label>
+                                                <input type="text"  class="form-control" placeholder="Como aparece en la tarjeta"  autocomplete="off" data-openpay-card="holder_name" name="nombre">
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-md-6">
+                                                <label class="mb-2">Fecha de Expedición</label>
+                                                <select  class="form-select" type="text" placeholder="Mes"
+                                                data-openpay-card="expiration_month">
+                                                    <option value="00">Mes</option>
+                                                    <option value="01">Enero</option>
+                                                    <option value="02">Febrero</option>
+                                                    <option value="03">Marzo</option>
+                                                    <option value="04">Abril</option>
+                                                    <option value="05">Mayo</option>
+                                                    <option value="06">Junio</option>
+                                                    <option value="07">Julio</option>
+                                                    <option value="08">Augosto</option>
+                                                    <option value="09">Septiembre</option>
+                                                    <option value="10">Octuber</option>
+                                                    <option value="11">Noviembre</option>
+                                                    <option value="12">Diciembre</option>
                                                 </select>
                                             </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                                <select type="text" placeholder="Año"
-                                                    data-openpay-card="expiration_year">
+                                            <div class="col-md-6 mt-md-0 mt-3 d-flex align-items-end">
+                                                <select  placeholder="Año"
+                                                data-openpay-card="expiration_year" class="form-select">
+                                                <option value='0'>Año</option>
                                                     {% now "Y" as current_year %}
                                                     {% now "y" as current %}
                                                     {%for x in '0123456789'|make_list %}
                                                     <option value='{{current|add:x}}'>{{current_year|add:x}}</option>
                                                     {%endfor%}
-
                                                 </select>
                                             </div>
-
                                         </div>
                                     </div>
-                                </div>
-                                <div class=" col-sm-6">
-                                    <div class="form-group">
-                                        <label>Código de seguridad</label>
+                                    <div class="col-md-4">
                                         <div class="row">
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                                <input type="text" placeholder="CVV" autocomplete="off"
-                                                    data-openpay-card="cvv2" name="cant" maxlength="4">
+                                            <div class="col mt-md-0 mt-3">
+                                                <label class="mb-2">Número de Tarjeta</label>
+                                                <input type="text" id="numero1"  maxlength="19" autocomplete="off"  class="form-control"
+                                                placeholder="****-****-****-****">
+                                            <input type="hidden" id="numero" autocomplete="off" maxlength="19"
+                                                data-openpay-card="card_number" name="numero">
                                             </div>
-
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                                <img src="{% static 'MedCongressApp/images/cvv.png'%}">
-                                            </div>
-
                                         </div>
-
+                                        <div class="row mt-2">
+                                            <div class="col">
+                                                <label class="mb-2">Código de Seguridad</label>
+                                                <div class="ccv-wraper d-flex">
+                                                    <input type="text" autocomplete="off"
+                                                    data-openpay-card="cvv2" name="cant" maxlength="4" class="form-control me-2" placeholder="CCV">
+                                                    <img src="{% static 'assets/img/tarjetas/ccv-legend.jpg'%}" class="img-fluid">
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-
                                 </div>
-
-                            </div>
-                            <div class="row">
-                                <div class=" col-sm-6">
-                                    Transacciones realizadas vía: <img
-                                        src="{% static 'MedCongressApp/images/openpay.png'%}">
+                                <div class="row mt-5">
+                                    <div class="offset-md-2 col d-flex flex-column">
+                                        <span>Transacciones realizadas vía: <img src="{% static '/assets/img/tarjetas/open-pay-logo.jpg'%}"></span>
+                                        <span>Tus pagos se realizan de forma segura con encriptación de 256 bits</span>
+                                    </div>
                                 </div>
-                                <div class=" col-sm-6 " style="margin-bottom: 50px;">
-                                    Tus pagos se realizan de forma segura con encriptación de 256 bits
-                                    <img src="{% static 'MedCongressApp/images/security.png'%}">
+                                <div class="row mt-5">
+                                    <div class="offset-md-2 col">
+                                        <a class="profile-cta" href="#" id="pay-button">PAGAR </a>
+                                    </div>
                                 </div>
-                            </div>
-
-
-                            <div class="col-md-5"></div>
-                            <div class="col-sm-6 ">
-                                <button class="button rght" style="color: black;" type="submit" id="pay-button">Pagar
-                                </button>
-                            </div>
-
-
-                        </form>
+                            </form>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="row" style="margin-top: 20px;">
-                <div class="kf_heading_3">
-                    <div class=" col-sm-6 ">
-                        <h2>Pagar en Efectivo</h2>
-
-                        <p class=""> <b>Pasos: </b> </p>
-                        <ol class="">
-                            <li class="">Seleccionar opción <b> Pagar en Efectivo</b> </li>
-                            <li class="">Guardar el documento con el código de barra generado </li>
-                            <li class="">Presentarse en cualquier tienda donde se pueda efectuar pagos en <b>OpenPay
-                                </b> </li>
-                        </ol>
-                        <form action="" method="POST" target="_black">
+                    <div class="tab-pane fade p-5" id="cash-tab" role="tabpanel">
+                        <h4 class="tabtitle">PASOS</h4>
+                        <ul class="mt-3">
+                            <li>Seleccionar opción Pagar en Efectivo</li>
+                            <li>Guardar el documento con el código de barra generado</li>
+                            <li>Presentarse en cualquier tienda donde se pueda efectuar pagos en OpenPay</li>
+                        </ul>
+                        <form action="" method="POST" target="_black" id="form1">
                             {% csrf_token %}
                             <div class="col-sm-6 " style="margin: 50px;">
                                 <input type="hidden" name="pagar_efectivo" value="1" id="token_id">
-                                <button class="button rght" style="color: black;" type="submit" id="pay-button">Pagar en
-                                    Efectivo</button>
+                                
                             </div>
                         </form>
-
+                        <a class="button rght" href="#" id="pay1">PAGAR EN EFECTIVO</a>
                     </div>
-                    <div class=" col-sm-6 ">
-                        <h2>Pagar por Transferencia interbancaria (SPEI)</h2>
-
-                        <p class=""> <b>Pasos: </b> </p>
-                        <ol class="">
-                            <li class="">Seleccionar opción <b> Pagar por Transferencia</b> </li>
-                            <li class="">Guardar el documento Generado </li>
-                            <li class="">Seguir las indicaciones de dicho documento </li>
-                        </ol>
-                        <form action="" method="POST" target="_black">
+                    <div class="tab-pane fade p-5" id="spei-tab" role="tabpanel">
+                        <h4 class="tabtitle">PASOS</h4>
+                        <ul class="mt-3">
+                            <li>Seleccionar opción Pagar en Efectivo</li>
+                            <li>Guardar el documento con el código de barra generado</li>
+                            <li>Presentarse en cualquier tienda donde se pueda efectuar pagos en OpenPay</li>
+                        </ul>
+                        <form action="" method="POST" target="_black" id="form">
                             {% csrf_token %}
                             <div class="col-sm-6 " style="margin: 50px;">
-                                <input type="hidden" name="pagar_efectivo" value="2" id="token_id">
-                                <button class="button rght" style="color: black;" type="submit" id="pay-button">Pagar
-                                    por Transferencia</button>
+                                <input type="hidden" name="pagar_efectivo" value="21" id="token_id">
+                                
                             </div>
                         </form>
-
+                        <a class="button rght" href="#" id="pay">DEPOSITO SPEI</a>
                     </div>
-
-
-
-
-
+                    </div>
                 </div>
-            </div>
-
-{%endif%}
-
         </div>
     </div>
-    </body>
-
-    </html>
-
-    {%endblock%}
+</section>
+{%endblock%}
 
     {%block script%}
 
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script type="text/javascript" src="https://openpay.s3.amazonaws.com/openpay.v1.min.js"></script>
     <script type='text/javascript' src="https://openpay.s3.amazonaws.com/openpay-data.v1.min.js"></script>
-    <script src="{% static 'MedCongressApp/js/extended/form-card.js'%}"></script>
+
     <script type="text/javascript">
         $(document).ready(function () {
-
+            $('#pay').click(function (){
+        $('#form').submit();
+        location.reload();
+    });
+   
+            $('#pay1').click(function (){
+        $('#form1').submit();
+        location.reload();
+    });
 
 
             $('#numero1').keyup(function () {
