@@ -74,21 +74,25 @@ class CongresForm(forms.ModelForm):
    
     
     def clean(self, *args, **kwargs):
-        cleaned_data = super(CongresForm, self).clean(*args, **kwargs)
-        imagenes = cleaned_data.get('prueba', None)
-        
-        imagen_seg = cleaned_data.get('prueba1', None)
-        constancia = cleaned_data.get('constancia', None)
-        imagen_home = cleaned_data.get('imagen_home', None)
-        
-        if not imagenes :
-            self.add_error('prueba', 'Debe al menos entrar una <b>Imagen Principal</b>')
-        if not imagen_seg :
-            self.add_error('prueba1', 'Debe  entrar una <b>Imagen Segundaria</b>')
-        if not imagen_home :
-            self.add_error('imagen_home', 'Debe  entrar una <b>Imagen Principal</b>')
-            imagen_home
-      
+        try:
+            cleaned_data = super(CongresForm, self).clean(*args, **kwargs)
+            imagenes = cleaned_data.get('prueba', None)
+            
+            imagen_seg = cleaned_data.get('prueba1', None)
+            constancia = cleaned_data.get('constancia', None)
+            imagen_home = cleaned_data.get('imagen_home', None)
+            
+            if not imagenes :
+                self.add_error('prueba', 'Debe al menos entrar una <b>Imagen Principal</b>')
+            if not imagen_seg :
+                self.add_error('prueba1', 'Debe  entrar una <b>Imagen Segundaria</b>')
+            if not imagen_home :
+                self.add_error('imagen_home', 'Debe  entrar una <b>Imagen Principal</b>')
+        except Exception as e:
+            print('dfvdfbhfghjghg')
+            print(e)
+            messages.warning(self.request, e)
+            
 class ImagenCongresoForms(forms.ModelForm):
     imagen=forms.ImageField()
     
