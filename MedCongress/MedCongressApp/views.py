@@ -514,7 +514,7 @@ class Perfil(TemplateView):
 
 class CongresoListView(ListView):
     model=Congreso
-    queryset=Congreso.objects.filter(published=True)
+    queryset=Congreso.objects.filter(published=True).order_by('-fecha_inicio')
     context_object_name='congreso_list'
     paginate_by = 9
 
