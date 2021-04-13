@@ -44,8 +44,6 @@
 
 <link rel="stylesheet" href="{% static 'MedCongressApp/css/bootstrap-rating.css'%}" type="text/css" media="all">
 
-<link rel="stylesheet" href="{% static 'MedCongressApp/css/font-awesome.min.css'%}" type="text/css" media="all">
-<!-- Ihover css -->
 <style>
 	.simply-section {
 		color: #e5e5e7 !important;
@@ -54,8 +52,8 @@
 	}
 
 	.glyphicon {
-		color: #40C8F4;
-		font-size: 26px;
+		color: yellow;
+		font-size: 40px;
 
 	}
 
@@ -65,57 +63,48 @@
 </style>
 {%endblock%}
 {% block contenido %}
-<section class="video-banner">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="offset-md-2 col-md-8 d-flex flex-column">
-                <h1 class="title">{{ponencia.titulo}}</h1>
-                <a href="{% url 'View_congreso' ponencia.congreso.path %}" class="back align-self-end mt-md-5 mt-2">Regresar al Congreso</a>
-            </div>
-        </div>
-    </div>
-</section>
+{%if ponencia.cod_video and is_pagado%}
+<div class="container">
+	<div class="row" style="margin-top: 5%; margin-bottom: 50px;">
 
-<section class="video-container">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="offset-md-2 col-md-8">
-                {%if ponencia.cod_video and is_pagado%}
-                {{ponencia.cod_video|safe }}
-                {%else%}
-                <img src="{% static '/'%}{{ponencia.imagen}}" class="img-fluid me-4" > 
-                {%endif%}
-            </div>
-        </div>
-        <div class="row"> 
-            <div class="offset-md-2 col-md-6">
-            {%for ponente in ponencia.ponente.all%}
-           
-            <div class="row">
-            
-                <div class=" col-md-12">
-                <span class="simple-text py-3">PONENTE</span>
-                <div class="ponente mt-4 d-flex align-items-start p-3">
-                    <img src="{% if ponente.user.foto%}{% static '/'%}{{ponente.user.foto}}{%else%}{% static 'assets/img/iconos/avatar-icon.png'%}{%endif%}" class="img-fluid me-4" width="100px">
-                   
-                    <div class="info">
-                        
-                        <h3 class="name mb-0">{{ponente.user.usuario.first_name}} {{ponente.user.usuario.last_name}}</h3>
-                        <span class="cat d-block mb-3"> {{ponente.user.categoria}}</span>
-                        <p class="bio">{%if ponente.user.puesto %}
-                            {{ponente.user.puesto|safe}}
-                            {%endif%}</p>
-                          
-                    </div>
-                </div>
-            </div>
-       
-        </div>
-            {%endfor%}
-            </div>
-            {%if ponencia.cod_video and is_pagado%}
-            <div class="col-md-2">
-                {%if is_evaluado%}
+		<div class="col-md-12">
+			{{ponencia.cod_video|safe }}
+
+
+
+			<h4
+				style="margin: 0 0 15px;font-size: 14px;line-height: 30px;text-transform: uppercase;font-family: 'Gotham-Bold';color: #565657;">
+				{{ponencia.titulo}}</h4>
+			{%for ponente in ponencia.ponente.all%}
+			<div class="kf_new_conf_orgnizr ">
+				<figure>
+					{% if ponente.user.foto%}
+					<img src="{% static '/'%}{{ponente.user.foto}}" alt="image de {{mod.user.usuario.username}}">
+					{%else%}
+					<img src="{% static 'MedCongressApp/images/defaulthombre.png' %}"
+						alt="image de {{mod.user.usuario.username}}">
+					{%endif%}
+				</figure>
+				<div class="kf_new_conf_orgnizr_name">
+					<span> Ponente</span>
+					<h6>{{ponente.user.usuario.first_name}}
+						{{ponente.user.usuario.last_name}}</h6>
+					<p>
+						{%if ponente.user.puesto %}
+						{{ponente.user.puesto}}
+						{%endif%}
+					</p>
+				</div>
+			</div>
+
+
+
+
+			{%endfor%}
+			<div class="kf_new_conf_orgnizr ">
+
+				<div class="">
+					{%if is_evaluado%}
 					<div id="evaluado">
 						<h6 style="margin: 0 0 15px;
 				font-size: 14px;
@@ -130,7 +119,7 @@
 					</div>
 					<div id='sin_evaluar' style="display: none;">
 						<h6 style="margin: 0 0 15px;
-					font-size: 10px;
+					font-size: 14px;
 					line-height: 30px;
 					text-transform: uppercase;
 					font-family: 'Gotham-Bold';
@@ -163,12 +152,105 @@
 							title="Cambiar Votación"><i class="fa fa-refresh"></i></button>
 					</div>
 					{%endif%}
-            </div>
-            {%endif%}
-        </div>
-    </div>
-</section>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+{%else%}
+<div style="background-color: rgb(99, 97, 97);">
+	<div class="kode-event-time" id="div"
+		style=" background:url({% static '/'%}{{ponencia.imagen}})  no-repeat 100% 0; opacity: 0.5;  height: 100%; ">
+		<div class="container">
 
+		</div>
+	</div>
+	<div class="ponencia " style="margin-top:10%;" id="">
+
+		<!-- Event Counter -->
+		<div class="col-md-12">
+
+			<h4 style="margin: 0 0 15px;
+			font-size: 28px;
+			line-height: 30px;
+			text-transform: uppercase;
+			font-family: 'Gotham-Bold';
+			color: #565657;">{{ponencia.titulo}}</h4>
+			{%for ponente in ponencia.ponente.all%}
+			<div class="kf_new_conf_orgnizr ">
+				<figure>
+					{% if ponente.user.foto%}
+					<img src="{% static '/'%}{{ponente.user.foto}}" alt="image de {{mod.user.usuario.username}}">
+					{%else%}
+					<img src="{% static 'MedCongressApp/images/defaulthombre.png' %}"
+						alt="image de {{mod.user.usuario.username}}">
+					{%endif%}
+				</figure>
+				<div class="kf_new_conf_orgnizr_name">
+					<span> Ponente</span>
+					<h6>{{ponente.user.usuario.first_name}}
+						{{ponente.user.usuario.last_name}}</h6>
+					<p>
+						{%if ponente.user.puesto %}
+						{{ponente.user.puesto}}
+						{%endif%}
+					</p>
+				</div>
+			</div>
+			{%endfor%}
+
+		</div>
+
+		<div class="col-md-12" style="margin-top: 40px;">
+			<h4 style="margin: 0 0 15px;
+			font-size: 14px;
+			line-height: 30px;
+			font-style: italic;
+			font-family: 'Gotham-Bold';
+			color: #565657;">
+				{%if is_pagado%}
+				Por favor esté pendiente al inicio de la Ponencia
+				{%else%}
+				Debe pagar el Congreso para poder acceder a esta Ponencia
+				{%endif%}</h4>
+		</div>
+		{% if ponencia.iniciada%}
+		<div class="col-md-6"></div>
+		<div class=" col-md-6" style="margin-top: -50px;">
+
+			<h2 style="color: #565657;
+							font-size: 30px;
+							margin: 50px 0 30px;
+							text-transform: uppercase;
+							font-family: 'Gotham-Bold';">Comienza en:</h2>
+			<div id="countdown" class="simply-countdown"></div>
+			<!-- <ul class="countdown">
+						<li>
+							<span class="days">00</span>
+							<p class="days_ref">días</p>
+						</li>
+						<li>
+							<span class="hours">00</span>
+							<p class="hours_ref">horas</p>
+						</li>
+						<li>
+							<span class="minutes">00</span>
+							<p class="minutes_ref">minutos</p>
+						</li>
+						<li>
+							<span class="seconds last">00</span>
+							<p class="seconds_ref">segundos</p>
+						</li>
+					</ul> -->
+
+
+		</div>
+		{%endif%}
+	</div>
+</div>
+</div>
+{%endif%}
 {%endblock%}
 
 {% block script%}
@@ -271,7 +353,7 @@
 						});
 					}
 					else {
-						swal('Cancelar', ' No se envio su votación', 'error')
+						swal('Cancelar', ' No se envio su votación', 'alert')
 					}
 
 				});
@@ -357,7 +439,7 @@
 					swal('Aviso', ' Ya puede evaluar de nuevo esta Ponencia', 'success')
 				}
 				else {
-					swal('Cancelar', ' Se mantiene su evaluación', 'error')
+					swal('Cancelar', ' Se mantiene su evaluación', 'alert')
 				}
 
 			});

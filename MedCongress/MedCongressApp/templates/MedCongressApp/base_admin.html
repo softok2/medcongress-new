@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta property="business:contact_data:street_address" content="Halley 135">
+	<meta property="business:contact_data:locality" content="Monterrey">
+	<meta property="business:contact_data:region" content="Nuevo Leon">
+	<meta property="business:contact_data:postal_code" content="64860">
+	<meta property="business:contact_data:country_name" content="México">
+	<meta name="author" content="SOFTok2" />
+	<meta name="lang" content="es-ES" />
+	{% block metadatos %}
+
+		{%endblock%}
+	{% load filtros %}
+    {% load static %}
+    <link rel="shortcut icon" type="image/x-icon"
+        href="{% static 'MedCongressApp/images/favicon.png' %}">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title> {% block titulo %}
+		{%endblock%}
+	</title>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+          integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+          <link href="{% static '/assets/css/bootstrap.min.css'%}" rel="stylesheet"  crossorigin="anonymous">
+
+          <link rel="stylesheet" href="{% static '/assets/css/app.css'%}">
+          <link href="{% static 'MedCongressApp/css/my_style.css'%}" rel="stylesheet" />
+         
+         
+{% block css%}
+{%endblock%}
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5Z8DCMG1HQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5Z8DCMG1HQ');
+</script>
+</head>
+
+<body>
+   
+    <main>
+        {% block contenido%}
+
+		{% endblock %}
+    </main>
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="{% static '/assets/js/jquery.js'%}"></script>
+	<!--Bootstrap Javascript File-->
+	<script src="{% static '/assets/js/bootstrap.min.js'%}"></script>
+    <script src="{% static '/assets/js/bootstrap.bundle.min.js'%}" ></script>
+    <script src="{% static '/assets/vendors/cleave/cleave.min.js'%}"></script>
+    <script src="{% static '/assets/js/app.js'%}"></script>
+    {% block script%}
+
+    {% endblock %}
+  </body>
+</html>
