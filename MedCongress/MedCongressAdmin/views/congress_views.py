@@ -105,7 +105,7 @@ class CongressCreateView(validarUser,FormView):
                 image_result = open('MedCongressApp/static/congreso/img_constancia/imagen_constancia_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
                 image_result.write(image_64_decode)
                 congress.foto_constancia='congreso/img_constancia/imagen_constancia_%s.png'%(nombre)
-
+            congress.is_home=False
             congress.save()
             
             for respuesta in self.request.POST.getlist('congreso-prueba'):
@@ -209,7 +209,9 @@ class CongressUpdateView(validarUser,FormView):
                 image_result = open('MedCongressApp/static/congreso/imagen_home_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
                 image_result.write(image_64_decode)
                 if  update_congreso.imagen_home:
-                    remove('MedCongressApp/static/%s'%( update_congreso.imagen_home))
+                    fileObj = Path('MedCongressApp/static/%s'%( update_congreso.imagen_home))
+                    if fileObj.is_file():
+                        remove('MedCongressApp/static/%s'%( update_congreso.imagen_home))
                 congress.imagen_home='congreso/imagen_home_%s.png'%(nombre)
 
             if self.request.POST['congreso-constancia']:
@@ -224,7 +226,9 @@ class CongressUpdateView(validarUser,FormView):
                     image_result = open('MedCongressApp/static/congreso/img_constancia/imagen_constancia_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
                     image_result.write(image_64_decode)
                     if  update_congreso.foto_constancia:
-                        remove('MedCongressApp/static/%s'%( update_congreso.foto_constancia))
+                        fileObj = Path('MedCongressApp/static/%s'%( update_congreso.foto_constancia))
+                        if fileObj.is_file():
+                            remove('MedCongressApp/static/%s'%( update_congreso.foto_constancia))
                     congress.foto_constancia='congreso/img_constancia/imagen_constancia_%s.png'%(nombre)    
             update_congreso=congress
             update_congreso.save()

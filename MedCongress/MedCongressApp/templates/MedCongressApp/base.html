@@ -88,9 +88,10 @@
                       </div>
                       <ul class="nav px-2">
                         <li class="item"><a href="{% url 'perfil' %}">Perfil</a></li>
-                        <li class="item"><a href="#">Mis Congresos</a></li>
-                        <li class="item"><a href="#">Constancias</a></li>
-                        <li class="item"><a href="#">Constancias</a></li>
+                        <li class="item"><a href="#">Mis Congresos</a></li> 
+                        <li class="item"><a href="#">Mis Talleres</a></li>
+                        <li class="item"><a href="#">Mis Constancias</a></li>
+                       
                       </ul>
                       <a href="{% url 'logout' %}" class="ps-2 close-section">Cerrar sesión</a>
                     </div>
@@ -156,15 +157,6 @@
 <script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
 <script src="{% static 'MedCongressApp/js/sweetalert.min.js' %}"></script>
 
-  </body>
-</html>
-
-
-
-	
-	{% block script%}
-
-	{%endblock%}
 
 	<script type="text/javascript">
 		jQuery(document).ready(function ($) {
@@ -201,6 +193,9 @@ url = "{% url 'GetContactos'%}";
 
 
 </script>
+{% block script%}
+
+{%endblock%}
 
 </body>
 
