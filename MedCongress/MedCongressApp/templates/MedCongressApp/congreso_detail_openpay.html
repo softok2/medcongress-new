@@ -168,9 +168,7 @@
                                                                 <div id="div_rating">
                                                                     <input type="hidden" id="rating" class="rating" data-readonly value="3" />
                                                                 </div>
-                                                                <div id="not_rating">
-                                                                   No Evaluado
-                                                                </div>
+                                                                
                                                                 
                                                             </div>
                                                         </div>
@@ -1527,12 +1525,10 @@
             $('#puesto').html('')
             $('#nombre_completo').html(data.nombre_completo)
             if(data.votacion==0){
-              $('#not_rating').show()
-            $('#div_rating').hide()  
+                $('#rating').rating('rate', 3); 
             }
             else{
-              $('#not_rating').hide()
-            $('#div_rating').show() 
+             
             $('#rating').rating('rate', data.votacion);
             }
             
