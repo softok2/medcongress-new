@@ -126,7 +126,9 @@ class UsuarioUpdateView(validarUser,FormView):
             image_result = open('MedCongressApp/static/usuarios/foto_%s_%s.png'%(nombre,nom), 'wb') # create a writable image and write the decoding result
             image_result.write(image_64_decode)
             if perfiluser.foto:
-                remove('MedCongressApp/static/%s'%( perfiluser.foto))
+                fileObj = Path('MedCongressApp/static/%s'%( perfiluser.foto))
+                if fileObj.is_file():    
+                    remove('MedCongressApp/static/%s'%( perfiluser.foto))
             perfiluser.foto='usuarios/foto_%s_%s.png'%(nombre,nom)
         else:
             if not perfiluser.foto :

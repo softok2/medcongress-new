@@ -1,6 +1,7 @@
 from django import forms
 import base64 
 from os import remove
+from pathlib import Path
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.views.defaults import page_not_found
@@ -76,6 +77,8 @@ class QuienesSomosImagenDeletedView(validarUser,DeleteView):
             
         imagen=ImagenQuienesSomos.objects.get(pk=self.kwargs.get('pk'))
         if imagen.imagen:
-            remove('MedCongressApp/static/%s'%( imagen.imagen))
+            fileObj = Path('MedCongressApp/static/%s'%( imagen.imagen))
+            if fileObj.is_file(): 
+                remove('MedCongressApp/static/%s'%( imagen.imagen))
         imagen.delete()
         return JsonResponse({'success':True}, safe=False)

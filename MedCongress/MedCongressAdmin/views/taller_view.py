@@ -1,6 +1,7 @@
 import json
 import base64 
 from os import remove
+from pathlib import Path
 from django import forms
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -272,7 +273,9 @@ class TallerUpdateView(validarUser,FormView):
             image_result = open('MedCongressApp/static/talleres/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
             image_result.write(image_64_decode)
             if taller.imagen:
-                remove('MedCongressApp/static/%s'%( taller.imagen))
+                fileObj = Path('MedCongressApp/static/%s'%( taller.imagen))
+                if fileObj.is_file():
+                    remove('MedCongressApp/static/%s'%( taller.imagen))
             taller.imagen='talleres/imagen_%s.png'%(nombre)
         if self.request.POST['taller-constancia']:
             constancia=self.request.POST['taller-constancia']
@@ -286,7 +289,9 @@ class TallerUpdateView(validarUser,FormView):
                 image_result = open('MedCongressApp/static/congreso/img_constancia/taller_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
                 image_result.write(image_64_decode)
                 if  taller_update.foto_constancia:
-                    remove('MedCongressApp/static/%s'%( taller_update.foto_constancia))
+                    fileObj = Path('MedCongressApp/static/%s'%( taller_update.foto_constancia))
+                    if fileObj.is_file():    
+                        remove('MedCongressApp/static/%s'%( taller_update.foto_constancia))
                 taller.foto_constancia='congreso/img_constancia/taller_%s.png'%(nombre)   
         taller_update=taller
         taller_update.save()

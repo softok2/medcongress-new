@@ -1,5 +1,6 @@
 import base64 
 from os import remove
+from pathlib import Path
 from django.utils.crypto import get_random_string
 from django import forms
 from django.contrib import messages
@@ -93,7 +94,9 @@ class CountryUpdateView(validarUser,UpdateView):
             image_result = open('MedCongressApp/static/banderas/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
             image_result.write(image_64_decode)
             if pais.banderas:
-                remove('MedCongressApp/static/%s'%( pais.banderas))
+                fileObj = Path('MedCongressApp/static/%s'%( pais.banderas))
+                if fileObj.is_file():    
+                    remove('MedCongressApp/static/%s'%( pais.banderas))
             pais.banderas='banderas/imagen_%s.png'%(nombre)
         pais.save()
         return super().form_valid(form)
@@ -112,6 +115,8 @@ class CountryDeleteView(validarUser,DeleteView):
             
         pais=Pais.objects.get(pk=self.kwargs.get('pk'))
         if pais.banderas:
-            remove('MedCongressApp/static/%s'%( pais.banderas))
+            fileObj = Path('MedCongressApp/static/%s'%( pais.banderas))
+            if fileObj.is_file(): 
+                remove('MedCongressApp/static/%s'%( pais.banderas))
         pais.delete()
         return JsonResponse({'success':True}, safe=False)

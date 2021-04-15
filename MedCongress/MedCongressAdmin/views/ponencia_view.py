@@ -1,6 +1,7 @@
 import json
 import base64 
 from os import remove
+from pathlib import Path
 from django import forms
 from django.contrib import messages
 from django.http import HttpResponseBadRequest, HttpResponseRedirect, HttpResponse
@@ -306,7 +307,9 @@ class PonencicaUpdateView(validarUser,FormView):
             image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
             image_result = open('MedCongressApp/static/ponencias/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
             image_result.write(image_64_decode)
-            remove('MedCongressApp/static/%s'%( ponencia.imagen))
+            fileObj = Path('MedCongressApp/static/%s'%( ponencia.imagen))
+            if fileObj.is_file():
+                remove('MedCongressApp/static/%s'%( ponencia.imagen))
             ponencia.imagen='ponencias/imagen_%s.png'%(nombre)
 
         ponencia.save()

@@ -1,5 +1,6 @@
 import base64 
 from os import remove
+from pathlib import Path
 from django import forms
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
@@ -62,7 +63,9 @@ class OfrecemosDeletedView(validarUser,DeleteView):
             
         imagen=Ofrecemos.objects.get(pk=self.kwargs.get('pk'))
         if imagen.icono:
-            remove('MedCongressApp/static/%s'%( imagen.icono))
+            fileObj = Path('MedCongressApp/static/%s'%( imagen.icono))
+            if fileObj.is_file(): 
+                remove('MedCongressApp/static/%s'%( imagen.icono))
         imagen.delete()
         return JsonResponse({'success':True}, safe=False)
 
@@ -101,7 +104,9 @@ class OfrecemosUpdateView(validarUser,UpdateView):
                 image_result = open('MedCongressApp/static/assets/img/iconos/icono_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
                 image_result.write(image_64_decode)
                 if  ofrecemos.icono:
-                    remove('MedCongressApp/static/%s'%( ofrecemos.icono))
+                    fileObj = Path('MedCongressApp/static/%s'%( imagen.icono))
+                    if fileObj.is_file(): 
+                        remove('MedCongressApp/static/%s'%( ofrecemos.icono))
                 imagen.icono='assets/img/iconos/icono_%s.png'%(nombre)   
         imagen.save()     
             
