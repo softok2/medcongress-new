@@ -3,6 +3,7 @@ import base64
 import os
 from django.views.decorators.csrf import csrf_exempt
 from collections import namedtuple
+from pathlib import Path
 from datetime import date,datetime
 import openpay
 from django.core.mail import send_mail
@@ -1910,7 +1911,9 @@ class PerfilUpdateView(FormView):
             image_result = open('MedCongressApp/static/usuarios/foto_%s_%s.png'%(nombre,nom), 'wb') # create a writable image and write the decoding result
             image_result.write(image_64_decode)
             if perfiluser.foto:
-                os.remove('MedCongressApp/static/%s'%( perfiluser.foto))
+                fileObj = Path('MedCongressApp/static/%s'%( perfiluser.foto))
+                if fileObj.is_file():
+                    os.remove('MedCongressApp/static/%s'%( perfiluser.foto))
             perfiluser.foto='usuarios/foto_%s_%s.png'%(nombre,nom)
         else:
             if not perfiluser.foto :

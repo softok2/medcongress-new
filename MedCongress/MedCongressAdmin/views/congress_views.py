@@ -1,6 +1,7 @@
 import json
 import base64 
 from os import remove
+from pathlib import Path
 import pandas as pd
 from django import forms
 from django.contrib import messages
@@ -178,7 +179,9 @@ class CongressUpdateView(validarUser,FormView):
             image_result = open('MedCongressApp/static/congreso/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
             image_result.write(image_64_decode)
             if  update_congreso.imagen_seg:
-                remove('MedCongressApp/static/%s'%( update_congreso.imagen_seg))
+                fileObj = Path('MedCongressApp/static/%s'%( update_congreso.imagen_seg))
+                if fileObj.is_file():
+                    remove('MedCongressApp/static/%s'%( update_congreso.imagen_seg))
             congress.imagen_seg='congreso/imagen_%s.png'%(nombre)
 
         if self.request.POST['congreso-constancia']:
@@ -193,7 +196,9 @@ class CongressUpdateView(validarUser,FormView):
                 image_result = open('MedCongressApp/static/congreso/img_constancia/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
                 image_result.write(image_64_decode)
                 if  update_congreso.foto_constancia:
-                    remove('MedCongressApp/static/%s'%( update_congreso.foto_constancia))
+                    fileObj = Path('MedCongressApp/static/%s'%( update_congreso.foto_constancia))
+                    if fileObj.is_file():
+                        remove('MedCongressApp/static/%s'%( update_congreso.foto_constancia))
                 congress.foto_constancia='congreso/img_constancia/imagen_%s.png'%(nombre)    
         update_congreso=congress
         update_congreso.save()

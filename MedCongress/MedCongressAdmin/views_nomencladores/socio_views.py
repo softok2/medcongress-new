@@ -2,6 +2,7 @@ import json
 from django import forms
 import base64
 from os import remove
+from pathlib import Path
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.views.defaults import page_not_found
@@ -78,7 +79,9 @@ class SocioDeletedView(validarUser,DeleteView):
             return JsonResponse({'success':False}, safe=False)
         else:
             if socios.logo: 
-                remove('MedCongressApp/static/%s'%( socios.logo))
+                fileObj = Path('MedCongressApp/static/%s'%( socios.logo))
+                if fileObj.is_file():
+                    remove('MedCongressApp/static/%s'%( socios.logo))
             socios.delete()
             return JsonResponse({'success':True}, safe=False)
 
@@ -109,7 +112,9 @@ class SocioUpdateView(validarUser,UpdateView):
             image_result = open('MedCongressApp/static/socios/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
             image_result.write(image_64_decode)
             if socios.logo: 
-                remove('MedCongressApp/static/%s'%( socio.logo))
+                fileObj = Path('MedCongressApp/static/%s'%( socios.logo))
+                if fileObj.is_file():
+                    remove('MedCongressApp/static/%s'%( socio.logo))
             socio.logo='socios/imagen_%s.png'%(nombre)
         socio.save()
         return super().form_valid(form)

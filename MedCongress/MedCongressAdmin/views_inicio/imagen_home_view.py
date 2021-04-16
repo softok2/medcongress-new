@@ -1,6 +1,7 @@
 from django import forms
 import base64 
 from os import remove
+from pathlib import Path
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.views.defaults import page_not_found
@@ -50,7 +51,9 @@ class ImagenDeletedView(validarUser,DeleteView):
             
         imagen=ImagenHome.objects.get(pk=self.kwargs.get('pk'))
         if imagen.imagen:
-            remove('MedCongressApp/static/%s'%( imagen.imagen))
+            fileObj = Path('MedCongressApp/static/%s'%( imagen.imagen))
+            if fileObj.is_file():
+                remove('MedCongressApp/static/%s'%( imagen.imagen))
         imagen.delete()
         return JsonResponse({'success':True}, safe=False)
 
@@ -80,7 +83,9 @@ class ImagenUpdateView(validarUser,UpdateView):
         image_result = open('MedCongressApp/static/congreso/imagen_home_%s.png'%(nom), 'wb') # create a writable image and write the decoding result
         image_result.write(image_64_decode)
         if imagen.imagen:
-            remove('MedCongressApp/static/%s'%( imagen.imagen))
+            fileObj = Path('MedCongressApp/static/%s'%( imagen.imagen))
+            if fileObj.is_file():
+                remove('MedCongressApp/static/%s'%( imagen.imagen))
         imagen.imagen='congreso/imagen_home_%s.png'%(nom)
         imagen.save()     
             

@@ -1,4 +1,5 @@
 from os import remove
+from pathlib import Path
 import base64
 from django import forms
 from django.utils.crypto import get_random_string
@@ -111,7 +112,10 @@ class CongressTrabajoDeletedView(validarUser,DeleteView):
 
         try:    
             documento=TrabajosInvestigacion.objects.get(pk=self.kwargs.get('pk'))
-            remove('MedCongressApp/static/%s'%(documento.documento))
+            if documento.documento:
+                fileObj = Path('MedCongressApp/static/%s'%(documento.documento))
+                if fileObj.is_file():
+                    remove('MedCongressApp/static/%s'%(documento.documento))
             documento.delete()
             
             return JsonResponse({'success':True}, safe=False)

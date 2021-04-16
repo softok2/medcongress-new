@@ -2,6 +2,7 @@ import json
 from django import forms
 import base64
 from os import remove
+from pathlib import Path
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.views.defaults import page_not_found
@@ -79,7 +80,9 @@ class PatrocinadorDeletedView(validarUser,DeleteView):
             return JsonResponse({'success':False}, safe=False)
         else:
             if patrocinadores.logo:
-                remove('MedCongressApp/static/%s'%( patrocinadores.logo))
+                fileObj = Path('MedCongressApp/static/%s'%( patrocinadores.logo))
+                if fileObj.is_file():
+                    remove('MedCongressApp/static/%s'%( patrocinadores.logo))
             patrocinadores.delete()
             return JsonResponse({'success':True}, safe=False)
 
@@ -110,7 +113,9 @@ class PatrocinadorUpdateView(validarUser,UpdateView):
             image_result = open('MedCongressApp/static/patrocinadores/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
             image_result.write(image_64_decode)
             if patrocinador.logo:
-                remove('MedCongressApp/static/%s'%( patrocinador.logo))
+                fileObj = Path('MedCongressApp/static/%s'%( patrocinador.logo))
+                if fileObj.is_file():
+                    remove('MedCongressApp/static/%s'%( patrocinador.logo))
             patrocinador.logo='patrocinadores/imagen_%s.png'%(nombre)
         patrocinador.save()
         return super().form_valid(form)
