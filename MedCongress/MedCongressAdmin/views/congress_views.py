@@ -975,7 +975,7 @@ class CongressSocioListView(validarUser,TemplateView):
         context['socios']=patrocinadores_env
         return context 
 
-class CongresoDetail(validarUser,TemplateView):
+class CongresoDetail(TemplateView):
     # template_name= 'MedCongressApp/congreso_detail.html' 
     
 
