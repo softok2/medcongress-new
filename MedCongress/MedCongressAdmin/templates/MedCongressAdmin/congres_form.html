@@ -1054,12 +1054,13 @@
 			if (files && files.length > 0) {
 				file = files[0];
 
-				tipo_imagen = files[0].name.split('.');
-				if (tipo_imagen[1] != 'jpg' && tipo_imagen[1] != 'png') {
-
-					swal("Cancelado", "Solo admimite archivos .jpg y .png.", "error");
-					return;
-				}
+				tipo_imagen=files[0].name.split('.');
+			if(tipo_imagen[1]!='jpg' && tipo_imagen[1]!='png' && tipo_imagen[1]!='jpeg')
+			{
+				
+				swal("Cancelado", "Solo admimite archivos .jpeg , .jpg y .png.", "error");
+				return;	
+			}
 				if (URL) {
 					done(URL.createObjectURL(file));
 				} else if (FileReader) {
@@ -1088,12 +1089,13 @@
 			if (files && files.length > 0) {
 				file = files[0];
 
-				tipo_imagen = files[0].name.split('.');
-				if (tipo_imagen[1] != 'jpg' && tipo_imagen[1] != 'png') {
-
-					swal("Cancelado", "Solo admimite archivos .jpg y .png.", "error");
-					return;
-				}
+				tipo_imagen=files[0].name.split('.');
+			if(tipo_imagen[1]!='jpg' && tipo_imagen[1]!='png' && tipo_imagen[1]!='jpeg')
+			{
+				
+				swal("Cancelado", "Solo admimite archivos .jpeg , .jpg y .png.", "error");
+				return;	
+			}
 				if (URL) {
 					done(URL.createObjectURL(file));
 				} else if (FileReader) {
@@ -1121,12 +1123,13 @@
 			if (files && files.length > 0) {
 				file = files[0];
 
-				tipo_imagen = files[0].name.split('.');
-				if (tipo_imagen[1] != 'jpg' && tipo_imagen[1] != 'png') {
-
-					swal("Cancelado", "Solo admimite archivos .jpg y .png.", "error");
-					return;
-				}
+				tipo_imagen=files[0].name.split('.');
+			if(tipo_imagen[1]!='jpg' && tipo_imagen[1]!='png' && tipo_imagen[1]!='jpeg')
+			{
+				
+				swal("Cancelado", "Solo admimite archivos .jpeg , .jpg y .png.", "error");
+				return;	
+			}
 				if (URL) {
 					done(URL.createObjectURL(file));
 				} else if (FileReader) {
@@ -1154,12 +1157,13 @@
 			if (files && files.length > 0) {
 				file = files[0];
 
-				tipo_imagen = files[0].name.split('.');
-				if (tipo_imagen[1] != 'jpg' && tipo_imagen[1] != 'png') {
-
-					swal("Cancelado", "Solo admimite archivos .jpg y .png.", "error");
-					return;
-				}
+				tipo_imagen=files[0].name.split('.');
+			if(tipo_imagen[1]!='jpg' && tipo_imagen[1]!='png' && tipo_imagen[1]!='jpeg')
+			{
+				
+				swal("Cancelado", "Solo admimite archivos .jpeg , .jpg y .png.", "error");
+				return;	
+			}
 				if (URL) {
 					done(URL.createObjectURL(file));
 				} else if (FileReader) {

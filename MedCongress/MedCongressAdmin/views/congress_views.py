@@ -827,7 +827,7 @@ class Usuarios_pagaron(validarUser,TemplateView):
     def post(self, request):
         #Obtenemos todas las personas de nuestra base de datos
         congreso=self.request.POST['congreso']
-        query= RelCongresoUser.objects.filter(congreso=congreso,is_pagado=True).values('user__usuario__first_name','user__usuario__last_name','user__usuario__email','congreso__titulo','categoria_pago__nombre').annotate(Sum('cantidad'))
+        query= RelCongresoUser.objects.filter(congreso=congreso,is_pagado=True).values('user__usuario__first_name','user__usuario__last_name','user__usuario__email','congreso__titulo','categoria_pago__nombre','user__ubicacion__direccion').annotate(Sum('cantidad'))
 
 		#Creamos el libro de trabajo
         wb = Workbook()
@@ -848,7 +848,8 @@ class Usuarios_pagaron(validarUser,TemplateView):
             ws['C3'] = 'Email'
             ws['D3'] = 'Congreso'
             ws['E3'] = 'Categoria de Pago'
-            ws['F3'] = 'Cantidad'        
+            ws['F3'] = 'Cantidad'
+            ws['G3'] = 'Dirección'          
             cont=4
             #Recorremos el conjunto de personas y vamos escribiendo cada uno de los datos en las celdas
             for quer in query:
@@ -858,6 +859,7 @@ class Usuarios_pagaron(validarUser,TemplateView):
                 ws.cell(row=cont,column=4).value = quer['congreso__titulo']
                 ws.cell(row=cont,column=5).value = quer['categoria_pago__nombre']
                 ws.cell(row=cont,column=6).value = quer['cantidad__sum']
+                ws.cell(row=cont,column=6).value = quer['user__ubicacion__direccion']
                 cont = cont + 1
         
            
