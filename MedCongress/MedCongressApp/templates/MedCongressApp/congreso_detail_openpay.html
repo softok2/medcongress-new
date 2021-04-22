@@ -192,9 +192,9 @@
                                                                     <img src="{% if mod.user.foto%}{% static '/'%}{{mod.user.foto}}{%else%}{% static 'assets/img/congresos/avatar-ponencia.png'%}{%endif%} " class="img-fluid">
                                                                 </div>
                                                                 <div class="mt-md-0 mt-2 col-md-9 d-flex flex-column justify-content-center">
-                                                                    <h4 class="name"><strong>{{mod.user.usuario.first_name}}{%if mod.user.usuario.first_name|length > 20 or mod.user.usuario.last_name|length > 20 %}
+                                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" class="name" onclick="VerPerfil('{{mod.user.id}}')"><h4 class="name"><strong>{{mod.user.usuario.first_name}}{%if mod.user.usuario.first_name|length > 20 or mod.user.usuario.last_name|length > 20 %}
                                                                         <br>{%endif%}
-                                                                        {{mod.user.usuario.last_name}}</strong></h4>
+                                                                        {{mod.user.usuario.last_name}}</strong></h4> </a>
                                                                     <h5 class="cat">MODERADOR</h5>
                                                                 </div>
                                                                 
@@ -229,14 +229,14 @@
                                                                     <img src=" {% if ponente.user.foto%}{% static '/'%}{{ponente.user.foto}}{%else%}{% static 'assets/img/congresos/avatar-ponencia.png'%}{%endif%}" class="img-fluid" width="100px">
                                                                 </div>
                                                                 <div class="mt-md-0 mt-2 col-md-9 d-flex flex-column justify-content-center">
-                                                                    <h4 class="name"><strong>{{ponente.user.usuario.first_name}}
-                                                                        {{ponente.user.usuario.last_name}}</strong></h4>
+                                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" class="name" onclick="VerPerfil('{{ponente.user.id}}')"><h4 class="name"><strong>{{ponente.user.usuario.first_name}}
+                                                                        {{ponente.user.usuario.last_name}}</strong></h4></a>
                                                                     <h5 class="cat">PONENTE</h5>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <p class="bio mt-3">{%if ponente.user.puesto %}
-                                                            {{ponente.user.puesto|truncatechars:40}}
+                                                            {{ponente.user.puesto}}
                                                             {%endif%}</p>
                                                        
                                                     </div>
@@ -286,7 +286,7 @@
                                                                     <img src=" {% if ponente.user.foto%}{% static '/'%}{{ponente.user.foto}}{%else%}{% static 'assets/img/congresos/avatar-ponencia.png'%}{%endif%}" class="img-fluid" width="100px">
                                                                 </div>
                                                                 <div class="mt-md-0 mt-2 col-md-9 d-flex flex-column justify-content-center">
-                                                                    <h4 class="name"><strong>{{ponente.user.usuario.first_name}}</strong></h4>
+                                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" class="name" onclick="VerPerfil('{{ponente.user.id}}')"><h4 class="name"><strong>{{ponente.user.usuario.first_name}} {{ponente.user.usuario.last_name}}</strong></h4></a>
                                                                     <h5 class="cat">PONENTE</h5>
                                                                 </div>
                                                             </div>
@@ -304,18 +304,7 @@
                                                             {%else%}
                                                             <a href="{% url 'View_ponencia' path=pon.path%}" class="more d-block "><strong>Ver Ponencia</strong></a>
                                                             {%endif%}
-                                                    {%else%}
-                                                    <div class="col-md-6 ponencia mt-md-0 mt-5">
-                                                        <div class="header">
-                                                            <div class="row">
-                                                                
-                                                                <div class="mt-md-0 mt-2 col-md-9 d-flex flex-column justify-content-center">
-                                                                    <h4 class="name"><strong>No Tiene Ponentes</strong></h4>
-                                                                   
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                   
                                                     {%endif%}
                                                     
                                                 </div>
@@ -371,8 +360,8 @@
                                             <h3 class="title my-3">{{ponencia.titulo }}</h3>
                                             <span class="date">{{ponencia.fecha_inicio|date:"M d / Y"}}</span>
                                             <h5 class="ponente my-3">PONENTE</h5>
-                                            <h6 class="name mb-5">{{ponencia.ponente.all.0.user.usuario.first_name}}
-                                                {{ponencia.ponente.all.0.user.usuario.last_name}}</h6>
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" class="name" onclick="VerPerfil('{{ponencia.ponente.all.0.user.id}}')"><h6 class="name mb-5">{{ponencia.ponente.all.0.user.usuario.first_name}}
+                                                {{ponencia.ponente.all.0.user.usuario.last_name}}</h6></a> 
                                             <a href="{% url 'View_ponencia' ponencia.path %}" class="more">Ver Video</a>
                                         </div>
                                     </div>
@@ -402,8 +391,8 @@
                                         <h3 class="title my-3">{{ponencia.titulo }}</h3>
                                         <span class="date">{{ponencia.fecha_inicio|date:"M d / Y"}}</span>
                                         <h5 class="ponente my-3">PONENTE</h5>
-                                        <h6 class="name mb-5">{{ponencia.ponente.all.0.user.usuario.first_name}}
-                                            {{ponencia.ponente.all.0.user.usuario.last_name}}</h6>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" class="name" onclick="VerPerfil('{{ponencia.ponente.all.0.user.id}}')"> <h6 class="name mb-5">{{ponencia.ponente.all.0.user.usuario.first_name}}
+                                            {{ponencia.ponente.all.0.user.usuario.last_name}}</h6></a>
                                         <a href="{% url 'View_taller' ponencia.path %}" class="more">Ver Video</a>
                                     </div>
                                 </div>
@@ -731,7 +720,7 @@
                       <div class="col-md-4">
                           <div class="modal-card p-3 me-2 mb-md-0 mb-4">
                               <div id="foto">
-                              <img src="./assets/img/ponentes/modal-photo.jpg" class="img-fluid">
+                             
                             </div>
                               <div id="ratingSystem" class="mt-2 d-flex flex-row-reverse justify-content-center">
                                   <div id="div_rating">

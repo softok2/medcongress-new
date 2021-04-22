@@ -1370,6 +1370,16 @@ class GetPerfil(TemplateView):
             publicaciones_env=''
             if usuario.publicaciones:
                 publicaciones_env=usuario.publicaciones
+            pais_env=''
+            direccion_env=''
+            bandera=''
+            if usuario.ubicacion:
+                 
+                if Pais.objects.filter(denominacion=(usuario.ubicacion.direccion.split(',')[-1]).strip()).exists():
+                    pais=Pais.objects.filter(denominacion=(usuario.ubicacion.direccion.split(',')[-1]).strip()).first()
+                    bandera=str(pais.banderas)
+                pais_env=usuario.ubicacion.direccion.split(',')[-1]
+                direccion_env=usuario.ubicacion.direccion
             constancia_env = False
             if usuario.detalle:
                 constancia_env=str(usuario.detalle)
@@ -1397,10 +1407,7 @@ class GetPerfil(TemplateView):
                                             'congreso':taller.congreso.titulo})
             
             ###### END Talleres#######
-            bandera=''
-            if Pais.objects.filter(denominacion=(usuario.ubicacion.direccion.split(',')[-1]).strip()).exists():
-                pais=Pais.objects.filter(denominacion=(usuario.ubicacion.direccion.split(',')[-1]).strip()).first()
-                bandera=str(pais.banderas)
+           
 
             ponente=Ponente.objects.filter(user=usuario).first()
             ponencias=RelPonenciaPonente.objects.filter(ponente=ponente)
@@ -1419,8 +1426,8 @@ class GetPerfil(TemplateView):
                             'nombre':usuario.usuario.first_name,
                             'email':usuario.usuario.email,
                             'foto':str(usuario.foto),
-                            'pais':usuario.ubicacion.direccion.split(',')[-1],
-                            'localidad':usuario.ubicacion.direccion,
+                            'pais':pais_env,
+                            'localidad':direccion_env,
                             'bandera':bandera,
                             'constancias':constancia_env,
                             'publicaciones':publicaciones_env,
