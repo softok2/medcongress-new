@@ -1419,6 +1419,12 @@ class GetPerfil(TemplateView):
                     c= RelPonenciaVotacion.objects.filter(ponencia=ponencia.ponencia).count()
                     cont=c+cont
                     votacion=vot['votacion__sum']+votacion 
+            for taller in talleres:
+                if  RelTallerVotacion.objects.filter(taller=taller).exists():
+                    vot= RelTallerVotacion.objects.filter(taller=taller).aggregate(Sum('votacion')) 
+                    c= RelTallerVotacion.objects.filter(taller=taller).count()
+                    cont=c+cont
+                    votacion=vot['votacion__sum']+votacion
             votacion_env=0
             if cont!=0:
                 votacion_env=round(votacion/cont,0)

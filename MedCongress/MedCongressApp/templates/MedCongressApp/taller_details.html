@@ -190,7 +190,7 @@
                             </div>
                               <div id="ratingSystem" class="mt-2 d-flex flex-row-reverse justify-content-center">
                                   <div id="div_rating">
-                                      <input type="hidden" id="rating" class="rating" data-readonly value="3" />
+                                      <input type="hidden" id="rating1" class="rating" data-readonly value="0" />
                                   </div>
                                 
                               </div>
@@ -315,12 +315,7 @@ $('input.nueva').on('change', function () {
                         $('#evaluado').show();
                         
                         $('#rating_evaluado').rating('rate', data.valor);
-                        $('.rating').each(function () {
-                            $('<span class="label label-default"></span>')
-
-                                .text(data.valor || ' ')
-                                .insertAfter(this);
-                        });
+                        
                         swal('Correcto', ' Le ha dado una evaluación de: ' + data.valor + ' puntos', 'success')
 
                         swal('Correcto', ' Ya se envio su votación', 'success')
@@ -337,15 +332,7 @@ $('input.nueva').on('change', function () {
 
 
 {%if is_evaluado %}
-$('.rating').each(function () {
-    $('<span class="label label-default"></span>')
 
-        .text('{{is_evaluado}}' || ' ')
-
-
-
-        .insertAfter(this);
-});
 {% endif %}
 // $('.rating-tooltip').rating({
 // 	extendSymbol: function (rate) {
@@ -510,11 +497,11 @@ $('.rating').each(function () {
         $('#puesto').html('')
         $('#nombre_completo').html(data.nombre_completo)
         if(data.votacion==0){
-            $('#rating').rating('rate', 3);
+            $('#rating1').rating('rate', 3);
         }
         else{
         
-        $('#rating').rating('rate', data.votacion);
+        $('#rating1').rating('rate', data.votacion);
         }
         
         // else
