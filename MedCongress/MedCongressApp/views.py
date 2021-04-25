@@ -1024,6 +1024,7 @@ class PerfilUserCreate(FormView):
         # email = EmailMessage('Asunto', 'esto es una prueba, como mando correos en Phyton?', to = ['dennis.molinetg@gmail.com'])
         # email.send()
         
+       
 
         chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
         secret_key = get_random_string(60, chars)
@@ -1042,6 +1043,12 @@ class PerfilUserCreate(FormView):
         us.save()
         perfil = form['perfiluser'].save(commit=False) 
         categoria = form['categoria'].save(commit=False)
+        ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
+        if ubic.exists():
+            perfil.ubicacion=ubic.first()
+        else:
+            ubicacion=form['ubicacion'].save(commit=True)
+            perfil.ubicacion=ubicacion 
         if categoria.nombre !='':
             categoria.published=False
             categoria.save()

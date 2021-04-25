@@ -69,7 +69,7 @@ class FooterForm(forms.ModelForm):
         self.fields['whatsapp'].widget.attrs.update({'class': 'form-control'})  
 
 class ImagenHomeForm(forms.ModelForm):
-    congreso=forms.ModelChoiceField(queryset=Congreso.objects.all())
+    congreso=forms.ModelChoiceField(queryset=Congreso.objects.filter(published=True))
   
     class Meta:
         model=Congreso
@@ -81,6 +81,8 @@ class ImagenHomeForm(forms.ModelForm):
         cleaned_data = super(ImagenHomeForm, self).clean(*args, **kwargs)
         congreso = cleaned_data.get('congreso', None)
         if not congreso.imagen_home:
-            self.add_error('congreso', 'Este <b>Congreso </b> no tiene imagen para mostrar en la Página de Inicio')      
+            self.add_error('congreso', 'Este <b>Congreso </b> no tiene imagen para mostrar en la Página de Inicio') 
+        if not congreso.published:
+            self.add_error('congreso', 'Este <b>Congreso </b> no se puede poner en la Página de Inicio porque no esta publicado') 
         if not congreso :
             self.add_error('congreso', 'Debe entrar un <b>Congreso para asociarlo a la Página de Inicio</b>')   

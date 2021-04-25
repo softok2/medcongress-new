@@ -127,12 +127,13 @@ class PerfilUserForm(forms.ModelForm):
    
     class Meta:
         model=PerfilUsuario
-        fields=['cel_profecional','categoria','especialidad']
+        fields=['cel_profecional','categoria','especialidad','puesto']
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
          
-        self.fields['cel_profecional'].widget.attrs.update({'class': 'form-control ','placeholder':'Cédula Profecional'})   
+        self.fields['cel_profecional'].widget.attrs.update({'class': 'form-control ','placeholder':'Cédula Profecional'}) 
+        self.fields['puesto'].widget.attrs.update({'class': 'form-control ','placeholder':'Puesto de Trabajo','rows':'2'})     
         self.fields['categoria'].widget.attrs.update({'class': 'form-select','placeholder':'Categoría'})
               
         self.fields['especialidad'].widget.attrs.update({'class': 'form-select ','placeholder':'Especialidad'}) 
@@ -150,7 +151,7 @@ class Ubicacion(forms.ModelForm):
         fields=['direccion','latitud','longitud']
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
+        self.fields['direccion'].widget.attrs.update({'class': 'form-control','placeholder':'Dirección'}) 
         self.fields['longitud'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['latitud'].widget.attrs.update({'class': 'form-control'}) 
     def clean(self, *args, **kwargs):
@@ -184,7 +185,8 @@ class UserPerfilUser(MultiModelForm):
     form_classes = {
         'user': UserForm,
         'perfiluser': PerfilUserForm,
-        'categoria':Categoria
+        'categoria':Categoria,
+        'ubicacion':Ubicacion,
     }
 
 class UserPerfilUserEditar(MultiModelForm):

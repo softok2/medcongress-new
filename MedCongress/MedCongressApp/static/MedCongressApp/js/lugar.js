@@ -6,8 +6,8 @@
     function initialize(PostCodeid,lonid,latid) {
         var initialLat = $(latid).val();
         var initialLong = $(lonid).val();
-        initialLat = initialLat ? initialLat : 0;
-        initialLong = initialLong ? initialLong : 0;
+        initialLat = initialLat ? initialLat : 25.6730992;
+        initialLong = initialLong ? initialLong : -100.3460207;
 
         var latlng = new google.maps.LatLng(initialLat, initialLong);
         var options = {
@@ -70,7 +70,6 @@
 
 
                     $(PostCodeid).val(ui.item.value);
-
                     $(latid).val(ui.item.lat);
                     $(lonid).val(ui.item.lon);
 
