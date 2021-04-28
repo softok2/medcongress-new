@@ -529,7 +529,7 @@ textarea:focus,
 .our-offer .item {
   height: 249px;
   margin-top: 15px;
-  padding: 70px 20px 0;
+  padding: 25px 20px 0;
 }
 @media screen and (max-width: 992px) {
   .our-offer .item {
