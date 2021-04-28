@@ -485,7 +485,7 @@ class UserForm(forms.ModelForm):
             self.add_error('first_name', 'El Campo <b> Apellidos</b> solo admite letras ') 
 class PerfilUserForm(forms.ModelForm):
     cel_profecional=forms.CharField(
-               label = 'Cédula Profecional',
+               label = 'Cédula Profesional',
                 required=False
                )
     is_ponente=forms.BooleanField(

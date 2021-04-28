@@ -1407,6 +1407,7 @@ class GetPerfil(TemplateView):
             ###### END Ponencias#######
              ######### Talleres#######
             talleres_env=[]
+            talleres=[]
             if Ponente.objects.filter(user=usuario).exists():
                 talleres=Taller.objects.filter(ponente=usuario.ponente)
                 for taller in talleres:

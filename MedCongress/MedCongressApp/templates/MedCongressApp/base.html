@@ -80,9 +80,9 @@
                     <div class="menu">
                       <div class="arrow-up"></div>
                       <div class="header px-2">
-                        <img src="{%if request.user.perfilusuario.foto %}{% static '/'%}{{request.user.perfilusuario.foto}}{%else%}{% static '/assets/img/iconos/perfil.png'%} {%endif%}" class="img-fluid me-2" width="60px" style="border-radius: 50px;">
+                        
                         <div class="name-cat">
-                          <h5 class="name"><strong>{{request.user.first_name}} {{request.user.last_name}}</strong></h5>
+                          
                           <small class="cat">{{request.user.perfilusuario.categoria}}</small>
                         </div>
                       </div>
@@ -141,7 +141,7 @@
       <div class="credits d-flex flex-column align-items-center justify-content-center">
         <a href="#" class="arrow-up"><img src="{% static '/assets/img/iconos/arrow-up.png'%}" class="img-fluid"></a>
         <span class="text-center">© Med Congress . All Rights Reserved</span>
-        <span>Develop by SOFTOK2 & JCG.Mx</span>
+        <span>Develop by SOFTOK2 </span>
       </div>
     </footer>
     <!-- Bootstrap Bundle with Popper -->

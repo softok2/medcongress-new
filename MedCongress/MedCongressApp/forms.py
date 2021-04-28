@@ -132,8 +132,8 @@ class PerfilUserForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
          
-        self.fields['cel_profecional'].widget.attrs.update({'class': 'form-control ','placeholder':'Cédula Profecional'}) 
-        self.fields['puesto'].widget.attrs.update({'class': 'form-control ','placeholder':'Puesto de Trabajo','rows':'2'})     
+        self.fields['cel_profecional'].widget.attrs.update({'class': 'form-control ','placeholder':'Cédula Profesional'}) 
+        self.fields['puesto'].widget.attrs.update({'class': 'form-control ','placeholder':'Hospital/Lugar de trabajo','rows':'2'})     
         self.fields['categoria'].widget.attrs.update({'class': 'form-select','placeholder':'Categoría'})
               
         self.fields['especialidad'].widget.attrs.update({'class': 'form-select ','placeholder':'Especialidad'}) 
@@ -151,7 +151,7 @@ class Ubicacion(forms.ModelForm):
         fields=['direccion','latitud','longitud']
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['direccion'].widget.attrs.update({'class': 'form-control','placeholder':'Dirección'}) 
+        self.fields['direccion'].widget.attrs.update({'class': 'form-control','placeholder':'Ciudad de residencia'}) 
         self.fields['longitud'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['latitud'].widget.attrs.update({'class': 'form-control'}) 
     def clean(self, *args, **kwargs):
