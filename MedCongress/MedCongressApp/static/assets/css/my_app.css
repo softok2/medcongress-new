@@ -1700,7 +1700,7 @@ textarea:focus,
 }
 /* - Login - */
 .login-register {
-  height: 100vh;
+  height: 150vh;
   overflow-y: hidden;
   position: relative;
   background: #fff url(../img/login-background-1.jpg) center center no-repeat;

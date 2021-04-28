@@ -77,7 +77,7 @@ Congresos
             {%endif%}
             <div class="col-md-4 congress d-flex flex-column">
                 <a href="{% url 'View_congreso' congreso.path %}"><img src="{% static '/'%}{{congreso.imagen_home}}" class="img-fluid mb-2"></a>
-                <h3 class="name mb-3">{{congreso.titulo }}</h3>
+                <a href="{% url 'View_congreso' congreso.path %}"><h3 class="name mb-3">{{congreso.titulo }}</h3></a>
                 <span class="date mb-1">{{congreso.fecha_inicio|date:"M d / Y"}}</span>
                 <span class="place mb-4">{{congreso.lugar.direccion}}</span>
                 <a href="{% url 'View_congreso' congreso.path %}">Leer Más</a>
