@@ -1304,7 +1304,7 @@ textarea:focus,
   font-size: 35px;
   font-family: "DINPro-Regular_13937", sans-serif;
 }
-.video-banner .back {
+.video-banner .back , .video-container .back {
   font-size: 18px;
   color: #40C8F4;
   font-family: "DINPro-Regular_13937", sans-serif;
@@ -1312,6 +1312,12 @@ textarea:focus,
 
 .video-container {
   margin-top: -250px;
+}
+.video-container .title {
+  color: #fff;
+  font-size: 18px;
+  font-family: "DINPro-Regular_13937", sans-serif;
+  text-align: center;
 }
 @media screen and (max-width: 992px) {
   .video-container {
@@ -1706,7 +1712,14 @@ textarea:focus,
   background: #fff url(../img/login-background-1.jpg) center center no-repeat;
   background-size: cover;
 }
-.login-register .content {
+.login {
+  height: 120vh;
+  overflow-y: hidden;
+  position: relative;
+  background: #fff url(../img/login-background-1.jpg) center center no-repeat;
+  background-size: cover;
+}
+.login-register .content, .login .content{
   top: 0;
   height: 100%;
   display: flex;
