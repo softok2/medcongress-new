@@ -133,6 +133,10 @@
 														del Congreso</a>
 												</li>
 												<li class="nav-item">
+													<a class="nav-link" id="base-tab4" data-toggle="tab"
+														aria-controls="tab4" href="#tab4" aria-expanded="false">Salas</a>
+												</li>
+												<li class="nav-item">
 													<a class="nav-link" id="base-tab2" data-toggle="tab"
 														aria-controls="tab2" href="#tab2" aria-expanded="false">Meta
 														datos</a>
@@ -308,22 +312,6 @@
 																			{{form.congreso.especialidad }}
 																		</div>
 																	</div>
-																	
-																	<!-- <div class="col-ms-1">
-												<div class="form-group">
-
-													<label></label>
-													<a onclick="VerMapa()" type="link"  style="display: block;">  <i class="" style="font-size: 43px;"></i> </a> -->
-																	<!-- <button type="button" class="btn btn-link" data-toggle="modal"
-														data-target="#add_tipo" style="display: block;">
-														<span><i class="ft ft-plus"
-																style="font-size: 30px;display: block;margin-top: -13px;"></i></span>
-
-													</button>
-
-												</div>
-
-											</div> -->
 																	<div class="col-sm-3 " style="display: none;">
 																		<div class="form-group">
 																			<label
@@ -896,8 +884,42 @@
 																</div>
 																</div>
 															</div>
+												</div>
+												<div class="tab-pane" id="tab4" aria-labelledby="base-tab4">
+													<!-- ////////////////////////// -->
+													<!-- META DATOS -->
+
+													<section id="">
+														<div class="row">
+															<div class="col-12">
+																<div class="card">
+																	<div class="card-content collapse show">
+																		<div class="card-body card-dashboard">
+																			<h3 style="margin-bottom: 50px;"> <b>Agregar Salas al Congreso</b> </h3>
+																			<div class=" respuestas"></div>
+																			
+																		<div class="row">
+																			<div class="">
+																				<div class="text-right">
+																					<button type="button" class="btn btn-sm " title="Agregar Respuesta" onclick="AddRespuesta();">+</button>
+																					<button type="button" class="btn btn-sm"  id="del" title="Eliminar Respuesta" onclick="DeletedRespuesta();" disabled>-</button>
+																				</div>
+																			
+																			</div>
+																		</div>
+																			
+																		
+
+																	</div>
+																</div>
+															</div>
 														</div>
-													</div>
+													</section>
+
+													<!-- END META DATOS -->
+													<!-- /////////////////// -->
+												</div>
+											</div>
 													<div class="form-actions">
 														<div class="text-right">
 															<button id="atras" type="button"
@@ -1408,7 +1430,29 @@ if (cropper3) {
 				}
 			});
 	}
+	let cant=0;
+	function AddRespuesta(){
+		cant++;
+		jQuery('.respuestas').append(`<div class="row respuesta">
+											<div class="col-sm-8 ">
+												<div class="form-group">
+																						<label for="">
+																							<b>Título de la Sala `+cant+`</b></label>
 
+													<input type="text" name="salas" maxlength="250" class="form-control" required="">
+												</div>
+											</div>
+
+										</div>`);
+										$('#del').removeAttr('disabled');
+
+	}
+function DeletedRespuesta(){
+	cant--;
+	$('.respuesta').last().remove();
+	if($('.respuesta').length==0)
+	$('#del').attr('disabled','disabled');
+}
 
 </script>
 {% endblock %}

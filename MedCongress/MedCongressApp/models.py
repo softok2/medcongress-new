@@ -477,6 +477,15 @@ class RelBloqueModerador(models.Model):
 
     def __str__(self):
         return 'Relación entre el bloque %s  y el moderador %s ' %(self.bloque.titulo, self.moderador.user.usuario.first_name)
+#### Tabla Sala #######
+
+class Sala(models.Model):
+    titulo=models.CharField(max_length=250,error_messages={
+"max_length": "El Campo <b>Título </b> debe tener máximo 250 caracteres"})
+    detalle=models.TextField(null=True,blank=True)
+    cod_video=models.TextField(null=True,blank=True)
+    congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
+    imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='salas',blank=True, null=True  )
 
 
 #### Tabla Ponencia #######
@@ -498,6 +507,7 @@ class Ponencia(models.Model):
     published=models.BooleanField()
     congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
     bloque=models.ForeignKey(Bloque,on_delete=models.CASCADE,null=True,blank=True)
+    sala=models.ForeignKey(Sala,on_delete=models.CASCADE,null=True,blank=True)
     ponente = models.ManyToManyField(Ponente, through='RelPonenciaPonente',related_name='ponencia_ponente')
     votacion = models.ManyToManyField(User, through='RelPonenciaVotacion')
     meta_og_title=models.CharField(max_length=50,null=True,blank=True,error_messages={
