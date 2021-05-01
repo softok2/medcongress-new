@@ -502,11 +502,11 @@ $('input.nueva').on('change', function () {
         $('#puesto').html('')
         $('#nombre_completo').html(data.nombre_completo)
         if(data.votacion==0){
-            $('#rating1').rating('rate', 3);
+            $('#div_rating').hide()  
         }
         else{
-        
-        $('#rating1').rating('rate', data.votacion);
+            $('#div_rating').show()  
+        $('#rating').rating('rate', data.votacion);
         }
         
         // else

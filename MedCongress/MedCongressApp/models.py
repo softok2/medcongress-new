@@ -487,7 +487,12 @@ class Sala(models.Model):
     congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
     imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='salas',blank=True, null=True  )
 
+    class Meta:
+        verbose_name='Sala'
+        verbose_name_plural='Salas'
 
+    def __str__(self):
+        return self.titulo
 #### Tabla Ponencia #######
 
 class Ponencia(models.Model):

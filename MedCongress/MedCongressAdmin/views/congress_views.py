@@ -25,6 +25,7 @@ from MedCongressAdmin.forms.congres_forms import (AsignarCongresoForms,
                                                   CongresoForms,
                                                   CongresoPatrocinadorForm,
                                                   CongresoSocioForm,
+                                                  CongresoSalaForm,
                                                   ExportarExelForm,
                                                   ImagenCongForms,
                                                   PonenciaForms,CongresoProgramaForm,AsignarConstanciaUserForms)
@@ -34,7 +35,7 @@ from MedCongressApp.models import (AvalCongreso, Bloque, CategoriaPagoCongreso,
                                    PerfilUsuario, Ponencia, Ponente,
                                    PreguntasFrecuentes, RelCongresoAval,
                                    RelCongresoCategoriaPago, RelCongresoSocio,
-                                   RelCongresoUser, SocioCongreso, Taller,
+                                   RelCongresoUser, SocioCongreso, Taller,Sala,
                                    Ubicacion, User,Moderador,RelPonenciaPonente,RelTalleresCategoriaPago,
                                    RelTallerUser,DocumentoPrograma)
 from openpyxl import Workbook
@@ -107,7 +108,11 @@ class CongressCreateView(validarUser,FormView):
                 congress.foto_constancia='congreso/img_constancia/imagen_constancia_%s.png'%(nombre)
             congress.is_home=False
             congress.save()
-            
+            cant=0
+            for sala in self.request.POST.getlist('salas'):
+                resp=Sala(congreso=congress,  titulo=self.request.POST.getlist('salas')[cant])
+                resp.save() 
+                cant=cant+1   
             for respuesta in self.request.POST.getlist('congreso-prueba'):
                 image_64_encode=respuesta
                 campo = image_64_encode.split(",")
@@ -156,6 +161,7 @@ class CongressUpdateView(validarUser,FormView):
         context=super().get_context_data(**kwargs)
         self.object=Congreso.objects.get(pk=self.kwargs.get('pk'))
         imagenes=ImagenCongreso.objects.filter(congreso=self.object)
+        context['salas']=Sala.objects.filter(congreso=self.object)
         context['update']=self.object
         if imagenes:
             context['imagenes']=imagenes
@@ -248,7 +254,12 @@ class CongressUpdateView(validarUser,FormView):
                     campo_imagen='congreso/imagen_programa_%s.png'%(nombre)
                     imagen=ImagenCongreso(congreso=update_congreso,imagen=campo_imagen)
                     imagen.save()
-        
+            cant=0
+            for sala in self.request.POST.getlist('salas'):
+                resp=Sala.objects.get(id=self.request.POST.getlist('salas_id')[cant])
+                resp.titulo=self.request.POST.getlist('salas')[cant]
+                resp.save() 
+                cant=cant+1     
             return super().form_valid(form)
         except RequestDataTooBig as e:
             messages.warning(self.request, e)
@@ -311,39 +322,6 @@ class CongressPonenciasListView(validarUser,TemplateView):
         context['search']=self.request.GET.get('search')
         return context
 
-########## Vista del cuestionario de un Congreso #############
-
-# class CongressCuestionarioListView(validarUser,TemplateView):
-#     template_name= 'MedCongressAdmin/cuestionarios.html' 
-#     def get(self, request, **kwargs):
-#         congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
-#         if congreso is None:
-#             return   HttpResponseRedirect(reverse('Error404'))
-#         return self.render_to_response(self.get_context_data()) 
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
-#         preguntas_env=[]
-#         preguntas=CuestionarioPregunta.objects.filter(congreso=congreso)
-#         for pregunta in preguntas:
-#             respuesta_list=[]
-#             respuestas=CuestionarioRespuestas.objects.filter(pregunta=pregunta)
-#             for respuesta in respuestas:
-#                 respuesta_list.append({'texto':respuesta.respuesta,
-#                                         'is_correcta':respuesta.is_correcto,
-#                                         'publicada':respuesta.published,
-#                                         })
-#             preguntas_env.append({'texto':pregunta.pregunta,
-#                                     'publicada':pregunta.published,
-#                                     'id':pregunta.pk,
-#                                     'respuestas':respuesta_list,})
-#         context['preguntas']=preguntas_env
-#         context['congreso']=congreso
-       
-#         return context
-    
-########## Vista de las Categorias de Pago de un Congreso #############
 
 class CongressCategPagosListView(validarUser,TemplateView):
     template_name= 'MedCongressAdmin/congres_cat_pagos.html' 
@@ -439,6 +417,9 @@ class  CongressPonenteCreateView(validarUser,CreateView):
         ctx = super(CongressCategPagosCreateView, self).get_context_data(**kwargs)
         pon=Congreso.objects.filter(path=self.kwargs.get('path')).first()
         ctx['cong'] = pon
+        ctx['sala']= Sala.objects.filter(congreso=pon)
+        ctx['bloque']= Bloque.objects.filter(congreso=pon)
+        print(ctx)
         return ctx
 
 class CongressBloquesListView(validarUser,TemplateView):
@@ -464,6 +445,18 @@ def GetBloques(request):
     if request.is_ajax():
         query = request.POST['congreso_id']
         bloques=Bloque.objects.filter(congreso=Congreso.objects.get(pk=query))
+        results = []
+        for bloque in bloques:
+            results.append({'titulo':bloque.titulo,'id':bloque.pk})
+        data = json.dumps(results)
+    mimetype = "application/json"
+    return HttpResponse(data, mimetype)
+
+def GetSalas(request):
+    data = json.dumps([])
+    if request.is_ajax():
+        query = request.POST['congreso_id']
+        bloques=Sala.objects.filter(congreso=Congreso.objects.get(pk=query))
         results = []
         for bloque in bloques:
             results.append({'titulo':bloque.titulo,'id':bloque.pk})
@@ -1620,6 +1613,11 @@ class vTableAsJSONCongresos(TemplateView):
                                            href="'''+ reverse('MedCongressAdmin:Congres_programas',kwargs={'path':objet.path})+'''"
                                           title="Documentos de Programa " style="margin-left: 5px;">
                                           <i  class="icon icon-docu" > </i>
+                                      </a>
+                                       <a id=""
+                                           href="'''+ reverse('MedCongressAdmin:Congres_salas',kwargs={'path':objet.path})+'''"
+                                          title="Salas " style="margin-left: 5px;">
+                                          <i  class="icon icon-sala" > </i>
                                       </a>''',
                                       
                             'otros'     : ''' <a id=""
@@ -1688,4 +1686,49 @@ class vTableAsJSONCongresos(TemplateView):
         #Enviar
         return HttpResponse(data, mimetype)    
 
+class CongressSalasListView(validarUser,TemplateView):
+    template_name= 'MedCongressAdmin/congres_sala.html' 
+    
+
+    def get(self, request, **kwargs):
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+        if congreso is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        return self.render_to_response(self.get_context_data())    
+    def get_context_data(self, **kwargs):
+        context = super(CongressSalasListView, self).get_context_data(**kwargs)
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+        context['congres']=congreso
+        context['salas']=Sala.objects.filter(congreso=congreso)
+        return context          
+
+
+class  CongressSalaCreateView(validarUser,CreateView):
+    info_sended =Congreso()
+    form_class = CongresoSalaForm
+   
+    template_name = 'MedCongressAdmin/congreso_sala_form.html'
+    def form_valid(self, form):
+        congreso=form.save(commit=False)
+
+        image_64_encode=self.request.POST['imagen']
+        campo = image_64_encode.split(",")
+        image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
         
+        chars = '0123456789'
+        nombre = get_random_string(5, chars)
+        image_result = open('MedCongressApp/static/sala/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+        image_result.write(image_64_decode)
+        congreso.imagen='sala/imagen_%s.png'%(nombre)
+        congreso.save()
+        return super(CongressSalaCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+           self.success_url =  reverse_lazy('MedCongressAdmin:Congres_salas',kwargs={'path': self.kwargs.get('path')} )
+           return self.success_url
+
+    def get_context_data(self, **kwargs):
+        ctx = super(CongressSalaCreateView, self).get_context_data(**kwargs)
+        pon=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+        ctx['cong'] = pon
+        return ctx

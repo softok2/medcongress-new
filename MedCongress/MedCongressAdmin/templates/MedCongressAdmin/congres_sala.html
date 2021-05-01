@@ -1,5 +1,5 @@
 {% extends 'MedCongressAdmin/base.html' %}
-{% block title %}Doc. del Programa del congreso: {{congres.titulo}}{% endblock %}
+{% block title %}Salas del congreso: {{congres.titulo}}{% endblock %}
 {% load static %}
 {% block styles %}
 <link rel="stylesheet" type="text/css"
@@ -27,7 +27,7 @@
 		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
 		  </li>
 		 
-		  <li class="breadcrumb-item active"> Doc. del Programas
+		  <li class="breadcrumb-item active"> Salas
 		</li>
 		
 		</ol>
@@ -50,12 +50,12 @@
                     <div class="row">
                         <div class="col-10">
                             <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Listado
-                               de los Doc. del Programa del Congreso </h1>
+                               de las Salas del Congreso </h1>
                             <h3 style="font-style: italic;">{{congres.titulo}}</h3>
                         </div>
                         <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
-                                <button id="add-btn" type="button" class="btn btn-success" title="Adicionar Doc. del Programa a este Congreso" onclick="add()"
+                                <button id="add-btn" type="button" class="btn btn-success" title="Adicionar Sala a este Congreso" onclick="add()"
                                     style="float:right; padding: 3px;">
                                     <i class="la la-plus"></i>
                                 </button>
@@ -76,30 +76,26 @@
                                             <tr role="row" style="font-size: 13px;">
                                                
                                                
-                                                <th>Texto</th>
-                                                <th>Idioma</th>
+                                                <th style="width: 90%;">Título</th>
+                                               
                                                 <th >Operaciones</th>
                                                
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for programa in programas %}
+                                            {% for sala in salas %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
                                                 
                                                 
-                                                <td>{{ programa.texto }}</td>
-                                                <td>{{ programa.idioma.nombre }}</td>
+                                                <td>{{ sala.titulo }}</td>
+                                               
                                                 
                                                 <td style="vertical-align: middle;">
-                                                    <a id="" target="_blank"
-                                                    href="{%static '/' %}{{ programa.documento }}"
-                                                        title="Descargar" style="margin-left: 5px;">
-                                                        <i class="icon icon-downloads" > </i>
-                                                    </a> 
-                                                    <a href="{% url 'MedCongressAdmin:congres_programa_editar' path=congres.path pk=programa.pk  %}"
+                                                   
+                                                    <a href="{% url 'MedCongressAdmin:congres_programa_editar' path=congres.path pk=sala.pk  %}"
                                                         title="Editar" style="margin-left: 5px;"><i class="icon-editar" style="padding: 15px;"></i></a>
-                                                    <a id="del_{{ programa.pk }}"
-                                                        href="javascript:deleteItem('{{ programa.pk }}')"
+                                                    <a id="del_{{ sala.pk }}"
+                                                        href="javascript:deleteItem('{{ sala.pk }}')"
                                                         title="Eliminar" style="margin-left: 5px;">
                                                         <i class="icon-eliminar" style="padding: 15px;"></i>
                                                     </a>
@@ -113,8 +109,8 @@
                                             <tr style="font-size: 13px;">
                                                
                                                
-                                                <th>Texto</th>
-                                                <th>Idioma</th>
+                                                <th>Título</th>
+                                                
                                                 <th >Operaciones</th>
                                             </tr>
                                         </tfoot>
@@ -176,7 +172,7 @@
         });
 
         $('#add-btn').click(function () {
-            location.href = "{% url 'MedCongressAdmin:congres_programa_add' congres.path %}";
+            location.href = "{% url 'MedCongressAdmin:congres_sala_add' congres.path %}";
         });
 
         dataTable = $('.zero-configuration').DataTable();

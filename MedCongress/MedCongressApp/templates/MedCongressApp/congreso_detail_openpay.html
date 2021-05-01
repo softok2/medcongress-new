@@ -1166,10 +1166,10 @@ function VerPerfil(pk) {
         $('#puesto').html('')
         $('#nombre_completo').html(data.nombre_completo)
         if(data.votacion==0){
-            $('#rating').rating('rate', 3);
+            $('#div_rating').hide()  
         }
         else{
-        
+            $('#div_rating').show()  
         $('#rating').rating('rate', data.votacion);
         }
         

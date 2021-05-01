@@ -9,7 +9,7 @@ from django.urls import reverse_lazy,reverse
 from django.views.generic import ListView,TemplateView,FormView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from MedCongressApp.models import Ponencia,RelPonenciaPonente,Ubicacion,Congreso,Bloque,Ponente,RelPonenciaPonente
+from MedCongressApp.models import Ponencia,RelPonenciaPonente,Sala,Ubicacion,Congreso,Bloque,Ponente,RelPonenciaPonente
 from MedCongressAdmin.forms.congres_forms import PonenciaForms,PonentePonenciaForm
 from django.utils.crypto import get_random_string
 from MedCongressAdmin.apps import validarUser
@@ -103,15 +103,25 @@ class  PonenciaCreateView(validarUser,FormView):
     def get_context_data(self, **kwargs):
         
         context = super(PonenciaCreateView, self).get_context_data(**kwargs)
+        ponencia=True
         if self.request.GET.get('congreso'):
+            ponencia=False
             context['con']=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
             context['blo']=Bloque.objects.filter(congreso=context['con'])
+            context['sala']=Sala.objects.filter(congreso=context['con'])
+            
         if self.request.GET.get('bloque'):
+            ponencia=False
             context['bloque']=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
             context['congreso']=context['bloque'].congreso
+            context['sala']=Sala.objects.filter(congreso=context['congreso'])
             context['blo']= None
+
         if self.request.GET.get('congreso_bloque'):
             context['congreso_bloque']=True
+            ponencia=False
+        if ponencia:
+            context['ponencia_t']=True
         return context 
     
     def get_success_url(self):
@@ -232,6 +242,7 @@ class PonencicaUpdateView(validarUser,FormView):
         if self.object.meta_og_imagen:
             context['imagen_meta']='/static/%s'%(self.object.meta_og_imagen)
         context['bloque_update']=self.object.bloque
+        context['sala_update']=self.object.sala
         context['update']='update'
         context['ponencia']=self.object
         context['is_info']=self.object.is_info
@@ -250,16 +261,23 @@ class PonencicaUpdateView(validarUser,FormView):
             'activo':activo})
         context['ponentes_alls']=ponentes_env
         context['ponentes']=relaciones
-       
+        pon=False
         if self.request.GET.get('congreso'):
+            pon=True
             context['con']=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
             context['blo']=Bloque.objects.filter(congreso=context['con'])
+            context['sala']=Sala.objects.filter(congreso=context['con'])
         if self.request.GET.get('bloque'):
+            pon=True
             context['bloque']=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
             context['congreso']=context['bloque'].congreso
+            context['sala']=Sala.objects.filter(congreso=context['congreso'])
             context['blo']= None
         if self.request.GET.get('congreso_bloque'):
+            pon=True
             context['congreso_bloque']=True
+        if not pon:
+            context['ponencia_t']=True
         return context 
       
 

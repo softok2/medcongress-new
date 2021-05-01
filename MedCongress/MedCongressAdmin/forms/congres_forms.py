@@ -9,7 +9,7 @@ from  MedCongressApp.models import (Congreso,Ubicacion,ImagenCongreso,TipoCongre
                                     RelTallerPonente,Bloque,DatosIniciales,RelCongresoUser,RelTallerUser,
                                     Moderador,RelBloqueModerador,ImagenCongreso,CuestionarioPregunta,CuestionarioRespuestas,
                                     MetaPagInicio,MetaPagListCongreso,PreguntasFrecuentes,RelCongresoAval, AvalCongreso,RelCongresoSocio,SocioCongreso,
-                                    Idioma,DocumentoPrograma,TrabajosInvestigacion)
+                                    Idioma,DocumentoPrograma,TrabajosInvestigacion,Sala)
                     
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
@@ -89,8 +89,6 @@ class CongresForm(forms.ModelForm):
             if not imagen_home :
                 self.add_error('imagen_home', 'Debe  entrar una <b>Imagen Principal</b>')
         except Exception as e:
-            print('dfvdfbhfghjghg')
-            print(e)
             messages.warning(self.request, e)
             
 class ImagenCongresoForms(forms.ModelForm):
@@ -158,7 +156,7 @@ class PonenciaForm(forms.ModelForm):
         model=Ponencia
         fields=['titulo','duracion','detalle','fecha_inicio','published','cod_video','congreso','bloque','is_info',
         'meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
-        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','error','prueba']
+        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','error','prueba','sala']
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
@@ -167,7 +165,8 @@ class PonenciaForm(forms.ModelForm):
         self.fields['titulo'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['duracion'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['congreso'].widget.attrs.update({'class': 'form-control'})
-        self.fields['bloque'].widget.attrs.update({'class': 'form-control'})  
+        self.fields['bloque'].widget.attrs.update({'class': 'form-control'})
+        self.fields['sala'].widget.attrs.update({'class': 'form-control'})    
         self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control'})   
         self.fields['published'].widget.attrs.update({'class': 'form-control'})  
         # self.fields['ponente'].widget.attrs.update({'class': 'form-control'})   
@@ -1015,3 +1014,27 @@ class CongresoTrabajoForm(forms.ModelForm):
                 not filename.endswith(".pdf") and not filename.endswith(".zip") and
                 not filename.endswith(".rar") ) :
                 self.add_error('documento',"En el Campo <b> Documento </b> no está <b> permitido </b> subir ese <b>tipo de archivo</b>. Los permitidos son <b>  .doc, .docx, .pdf, .rar, .zip </b>."  )
+
+class CongresoSalaForm(forms.ModelForm):
+    titulo=forms.CharField(label='Título',required=True)
+    imagen=forms.CharField(required=False,label='Imagen')
+
+    class Meta:
+        model=Sala
+        fields=['titulo','congreso','detalle','cod_video','imagen']
+       
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+
+        self.fields['detalle'].widget.attrs.update({'class': 'form-control ckeditor'}) 
+        self.fields['congreso'].widget.attrs.update({'class': 'form-control','style':'display:none'}) 
+        self.fields['titulo'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['cod_video'].widget.attrs.update({'class': 'form-control','rows':'7'}) 
+        
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(CongresoSalaForm, self).clean(*args, **kwargs)    
+        imagen = cleaned_data.get('imagen', None) 
+        if not imagen :
+            self.add_error('imagen', 'Debe al menos entrar una <b>Imagen </b>')
+

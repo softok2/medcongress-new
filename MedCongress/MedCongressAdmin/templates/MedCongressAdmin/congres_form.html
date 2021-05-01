@@ -132,10 +132,12 @@
 														aria-controls="tab3" href="#tab3" aria-expanded="false">Imagenes
 														del Congreso</a>
 												</li>
+												{%if not update%}
 												<li class="nav-item">
 													<a class="nav-link" id="base-tab4" data-toggle="tab"
 														aria-controls="tab4" href="#tab4" aria-expanded="false">Salas</a>
 												</li>
+												{%endif%}
 												<li class="nav-item">
 													<a class="nav-link" id="base-tab2" data-toggle="tab"
 														aria-controls="tab2" href="#tab2" aria-expanded="false">Meta
@@ -885,6 +887,7 @@
 																</div>
 															</div>
 												</div>
+												{%if not update%}
 												<div class="tab-pane" id="tab4" aria-labelledby="base-tab4">
 													<!-- ////////////////////////// -->
 													<!-- META DATOS -->
@@ -896,6 +899,25 @@
 																	<div class="card-content collapse show">
 																		<div class="card-body card-dashboard">
 																			<h3 style="margin-bottom: 50px;"> <b>Agregar Salas al Congreso</b> </h3>
+
+																			{%if salas%}
+																			{%for sala in salas%}
+																			<div class="row respuesta">
+																				<input type="hidden" name="salas_id" maxlength="250" class="form-control" value="{{sala.id}}" >
+																				<div class="col-sm-8 ">
+																					<div class="form-group">
+																															<label for="">
+																																<b>Título de la Sala  </b></label>
+									
+																						<input type="text" name="salas" maxlength="250" class="form-control" value="{{sala.titulo}}" required="">
+																					</div>
+																				</div>
+									
+																			</div>
+																			{%endfor%}
+
+																			{%else%}
+																			
 																			<div class=" respuestas"></div>
 																			
 																		<div class="row">
@@ -907,7 +929,7 @@
 																			
 																			</div>
 																		</div>
-																			
+																		{%endif%}	
 																		
 
 																	</div>
@@ -919,6 +941,7 @@
 													<!-- END META DATOS -->
 													<!-- /////////////////// -->
 												</div>
+												{%endif%}
 											</div>
 													<div class="form-actions">
 														<div class="text-right">
