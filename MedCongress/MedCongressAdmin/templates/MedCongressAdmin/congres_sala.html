@@ -92,7 +92,7 @@
                                                 
                                                 <td style="vertical-align: middle;">
                                                    
-                                                    <a href="{% url 'MedCongressAdmin:congres_programa_editar' path=congres.path pk=sala.pk  %}"
+                                                    <a href="{% url 'MedCongressAdmin:congres_sala_editar' path=congres.path pk=sala.pk  %}"
                                                         title="Editar" style="margin-left: 5px;"><i class="icon-editar" style="padding: 15px;"></i></a>
                                                     <a id="del_{{ sala.pk }}"
                                                         href="javascript:deleteItem('{{ sala.pk }}')"
@@ -201,10 +201,18 @@
         })
             .then((isConfirm) => {
                 if (isConfirm) {
-                    url = "{% url 'MedCongressAdmin:congres_programa_eliminar' pk=0 %}";
+                    url = "{% url 'MedCongressAdmin:congres_sala_eliminar' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
-                        dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
-                        swal("¡Eliminado!", "Este elemento ha sido eliminado.", "success");
+
+                        if (data.success){
+                          dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
+
+                        swal("¡Eliminado!", "Este elemento ha sido eliminado.", "success");  
+                        }
+                        else{
+                            swal("¡Esta Sala no se puede eliminar!", "Existen Ponencias en esta Sala.", "error"); 
+                        }
+                        
                     });
                 } else {
                     swal("Cancelado", "No se eliminó este elemento.", "error");

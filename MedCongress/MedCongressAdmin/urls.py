@@ -8,7 +8,7 @@ from django.urls import path,include
 
 from .views.country_views import (CountryCreateView, CountryDeleteView,
                                   CountryListView, CountryUpdateView)
-from .views.congress_views import (CongressSalaCreateView,CongressSalasListView,AsignarConstanciasUsuario,GetSalas,CongressListView,CongressCreateView,CongressUpdateView,
+from .views.congress_views import (CongressSalaCreateView,CongressDeletedSalaView,CongressSalaUpdateView,CongressSalasListView,AsignarConstanciasUsuario,GetSalas,CongressListView,CongressCreateView,CongressUpdateView,
                                    CongressTalleresListView,CongressPonenciasListView,CongressCategPagosListView,
                                    CongressImagenesListView,AddPonenciaCongreso,CongressCategPagosCreateView,
                                    CongressDeletedView,CongressBloquesListView,GetBloques,AsignarCongressListView,AsignarCongressAddViews,GetPagos,
@@ -199,8 +199,8 @@ urlpatterns = [
       #Sala-Congreso
       path('salas/congreso/<str:path>', CongressSalasListView.as_view(), name='Congres_salas'),
       path('sala-congres/adicinar/<str:path>', CongressSalaCreateView.as_view(), name='congres_sala_add'),
-      # path('programa-congres/editar/<str:path>/<int:pk>', CongressProgramaUpdateView.as_view(), name='congres_programa_editar'),
-      # path('programa-congres/eliminar/<int:pk>', CongressProgramaDeletedView.as_view(), name='congres_programa_eliminar'),
+      path('sala-congres/editar/<str:path>/<int:pk>', CongressSalaUpdateView.as_view(), name='congres_sala_editar'),
+      path('sala-congres/eliminar/<int:pk>', CongressDeletedSalaView.as_view(), name='congres_sala_eliminar'),
 
 
       #Categorias de Pagos-Taller

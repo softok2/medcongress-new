@@ -1720,6 +1720,9 @@ class  CongressSalaCreateView(validarUser,CreateView):
         image_result = open('MedCongressApp/static/sala/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
         image_result.write(image_64_decode)
         congreso.imagen='sala/imagen_%s.png'%(nombre)
+        nombre = get_random_string(3, chars)
+        path=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
+        congreso.path=path+nombre
         congreso.save()
         return super(CongressSalaCreateView, self).form_valid(form)
 
@@ -1732,3 +1735,57 @@ class  CongressSalaCreateView(validarUser,CreateView):
         pon=Congreso.objects.filter(path=self.kwargs.get('path')).first()
         ctx['cong'] = pon
         return ctx
+class CongressSalaUpdateView(validarUser,UpdateView):
+
+    form_class = CongresoSalaForm
+    template_name = 'MedCongressAdmin/congreso_sala_form.html'
+
+    def get_queryset(self, **kwargs):
+        return Sala.objects.filter(pk=self.kwargs.get('pk'))
+
+    def form_valid(self, form):
+        congreso=form.save(commit=False)
+        imagen=self.request.POST['imagen']
+        chars = '0123456789'
+        if 'sala/' not in imagen:
+            image_64_encode=self.request.POST['imagen']
+            campo = image_64_encode.split(",")
+            nombre = get_random_string(5, chars)
+            image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
+            image_result = open('MedCongressApp/static/sala/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+            image_result.write(image_64_decode)
+            if  congreso.imagen:
+                fileObj = Path('MedCongressApp/static/%s'%( congreso.imagen))
+                if fileObj.is_file():
+                    remove('MedCongressApp/static/%s'%( congreso.imagen))
+            congreso.imagen='sala/imagen_%s.png'%(nombre)
+        if not congreso.path or congreso.path=='0':
+            nombre = get_random_string(3, chars)
+            path=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
+            congreso.path=path+nombre
+        congreso.save()
+        return super(CongressSalaUpdateView, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context=super().get_context_data(**kwargs)
+        context['update']=True
+        context['sala']= Sala.objects.get(pk=self.kwargs.get('pk'))
+        context['imagen']=context['sala'].imagen
+        pon=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+        context['cong'] = pon
+        return context
+    def get_success_url(self):
+           self.success_url =  reverse_lazy('MedCongressAdmin:Congres_salas',kwargs={'path': self.kwargs.get('path')} )
+           return self.success_url
+
+class CongressDeletedSalaView(validarUser,DeleteView):
+    model = Sala
+
+    def delete(self,request, *args, **kwargs):
+           
+            sala=Sala.objects.get(pk=self.kwargs.get('pk'))
+            if Ponencia.objects.filter(sala= sala).exists():
+                return JsonResponse({'success':False}, safe=False)
+            else:
+                sala.delete()
+                return JsonResponse({'success':True}, safe=False)

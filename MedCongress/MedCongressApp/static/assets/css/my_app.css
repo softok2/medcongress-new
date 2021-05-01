@@ -702,13 +702,14 @@ textarea:focus,
 
 .congreso-program {
   padding: 50px 0 50px;
-  background-color: #4A5966;
+  background-color:#ebf4fb;
 }
 .congreso-program .section-title,
 .congreso-program .section-subtitle,
 .congreso-program .description,
 .congreso-program .back-home {
-  color: #fff;
+ 
+  color: #4A5966;
   font-family: "DINPro-Regular_13937", sans-serif;
 }
 .congreso-program .section-title {
@@ -1086,11 +1087,11 @@ textarea:focus,
 }
 
 .congreso-tickes {
-  background-color: #4A5966;
+  background-color: #ebf4fb;
   padding: 80px 0 250px;
 }
 .talleres-tickes {
-  background-color: #4A5966;
+  background-color:#ebf4fb;
   padding: 80px 0 0;
   margin-bottom: 20px;
 }
@@ -1100,7 +1101,7 @@ textarea:focus,
 .talleres-tickes .section-name,
 .talleres-tickes .description,
 .talleres-tickes .subdescription {
-  color: #fff;
+  color:  #4A5966;
   font-family: "DINPro-Regular_13937", sans-serif;
 }
 .congreso-tickes .content,
@@ -1149,13 +1150,13 @@ textarea:focus,
 }
 
 .congreso-ponentes {
-  background-color: #4A5966;
+  background-color:#ebf4fb;
   padding: 80px 0 250px;
 }
 .congreso-ponentes .section-name,
 .congreso-ponentes .description,
 .congreso-ponentes .subdescription {
-  color: #fff;
+  color:#4A5966;
   font-family: "DINPro-Regular_13937", sans-serif;
 }
 .congreso-ponentes .content {

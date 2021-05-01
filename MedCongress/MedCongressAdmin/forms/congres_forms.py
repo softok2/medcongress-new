@@ -1021,7 +1021,7 @@ class CongresoSalaForm(forms.ModelForm):
 
     class Meta:
         model=Sala
-        fields=['titulo','congreso','detalle','cod_video','imagen']
+        fields=['titulo','congreso','detalle','cod_video','imagen','published',]
        
 
     def __init__(self, *args, **kwargs):
@@ -1030,6 +1030,7 @@ class CongresoSalaForm(forms.ModelForm):
         self.fields['detalle'].widget.attrs.update({'class': 'form-control ckeditor'}) 
         self.fields['congreso'].widget.attrs.update({'class': 'form-control','style':'display:none'}) 
         self.fields['titulo'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['published'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['cod_video'].widget.attrs.update({'class': 'form-control','rows':'7'}) 
         
     def clean(self, *args, **kwargs):

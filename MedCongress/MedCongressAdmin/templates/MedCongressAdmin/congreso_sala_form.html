@@ -25,7 +25,7 @@
 		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
 		  </li>
 		 
-		  <li class="breadcrumb-item active"><a href="{% url 'MedCongressAdmin:Congres_salas' path=cong.path %}">Doc. de Programas</a>
+		  <li class="breadcrumb-item active"><a href="{% url 'MedCongressAdmin:Congres_salas' path=cong.path %}">Salas</a>
 		</li>
 		<li class="breadcrumb-item active">{%if update%} Actualizar Sala{%else%} Adicionar Salas{%endif%}
 		</li>
@@ -109,13 +109,13 @@
 														title="Clic para cambiar foto">
 														<div id="ver3"><img class="img-fluid"
 																id="avatar3"
-																src="{%static '/'%}{{imagen_home}}"
+																src="{%static '/'%}{{imagen}}"
 																alt="avatar"></div>
 														<input type="file" class="sr-only"
 															id="input3" name="image"
 															accept="image/*">
 														<input type="hidden"
-															id="congreso-imagen_home"
+															id="imagen"
 															name="imagen"
 															value="{{imagen}}">
 													</label>
@@ -196,7 +196,18 @@
 												</div>
 											</div>
 										</div>
-										
+										<div class="row">
+											<div class="col-sm-2">
+												<div class="form-group">
+													
+
+												<label for="{{form.published.id_for_label }}"><b>Publicado</b> </label><br>
+													{{form.published}}
+												
+												</div>
+											</div>
+											
+										</div>
 										
 									
 									<div class="row">

@@ -33,7 +33,7 @@ from PIL import Image, ImageDraw, ImageFont
 from .claves import ID_KEY,PRIVATE_KEY,PUBLIC_KEY,URL_API,URL_SITE,URL_PDF,PRUEBA
 from .forms import UserPerfilUser,UserPerfilUserEditar,CambiarPassForm,ExtAuthenticationForm
 from MedCongressAdmin.forms.congres_forms import UsuarioForms
-from .models import (CategoriaPagoCongreso, Congreso, EspecialidadCongreso,
+from .models import (CategoriaPagoCongreso,Sala, Congreso, EspecialidadCongreso,
                      Ponencia, Ponente, RelCongresoCategoriaPago,
                      RelCongresoUser,RelPonenciaPonente,PerfilUsuario,ImagenCongreso,Taller,RelTalleresCategoriaPago,RelTallerUser,DatosIniciales,
                      CategoriaUsuario,Bloque,Moderador,RelTallerPonente,Pais,CuestionarioPregunta,CuestionarioRespuestas,RelPonenciaVotacion,
@@ -566,14 +566,6 @@ class CongresoDetail(TemplateView):
         return template_name
 
     def get_context_data(self, **kwargs):
-
-        # # /////////////////
-        # url = "https://vimeo.com/api/v2/video/494532060.json"        
-        # headers={'Content-type': 'application/json'}
-        # response=requests.post(url=url,headers=headers)
-        # return response.json() 
-        # # /////////////////////
-
         context = super(CongresoDetail, self).get_context_data(**kwargs)
         congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
         context['patrocinadores']=RelCongresoAval.objects.filter(congreso=congreso)
@@ -586,7 +578,7 @@ class CongresoDetail(TemplateView):
                 for constancia in constancias:
                     if constancia.is_constancia:
                         context['constancia']=True
-                
+        context['salas']=Sala.objects.filter(congreso=congreso,published=True,cod_video__isnull=False )        
         if congreso is not None:
            
             context['congreso']=congreso
@@ -2143,3 +2135,23 @@ class ViewTrabajo(TemplateView):
         trabajo=TrabajosInvestigacion.objects.filter(path=self.kwargs.get('path')).first() 
         context['trabajo']=trabajo
         return context
+
+class ViewSala(TemplateView):
+    template_name= 'MedCongressApp/sala.html' 
+
+    def get(self, request, **kwargs):
+        sala=Sala.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        if sala is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        return self.render_to_response(self.get_context_data())    
+
+    def get_context_data(self, **kwargs):
+        context = super(ViewSala, self).get_context_data(**kwargs)
+        sala=Sala.objects.filter(path=self.kwargs.get('path'),published=True).first() 
+        if self.request.user.is_authenticated:
+            context['is_pagado']=RelCongresoUser.objects.filter(congreso=sala.congreso,user=self.request.user.perfilusuario,is_pagado=True).exists()
+        else:
+            context['is_pagado']=False
+        context['sala']=sala
+        return context
+

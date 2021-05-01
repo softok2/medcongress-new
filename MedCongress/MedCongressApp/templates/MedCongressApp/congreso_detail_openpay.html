@@ -76,6 +76,95 @@
     
     
 </section>
+{% if salas%}
+<section class="congreso-ponencias pb-5" style="margin-top: 50px;">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <h3 class="section-name">SALA DE LOS STREAMING DEL CONGRESO</h3>
+            </div>
+        </div>
+       
+        <div class="row mb-3"> 
+            
+            
+            {% for sala in salas %}
+            
+            {%if forloop.first%}
+                <div class="row">
+            {% endif %}
+                    <div class="col-md-4 mb-md-0 mb-5">
+                        <div class="ponencia">
+                            <a href="{% url 'View_sala' sala.path %}"><img src="{%static '/'%}{{sala.imagen }}" class="img-fluid"></a>
+                            <h3 class="title my-3">{{sala.titulo }}</h3>
+                            <a href="{% url 'View_sala' sala.path %}" class="more">Ver Streaming</a>
+                        </div>
+                    </div>
+              
+            {%if forloop.counter|divisibleby:3 %}
+                </div>
+                <div class='row'>
+            {%endif%}
+            {%if forloop.last%}
+            </div>
+            <div class="row separador" class=""></div>
+            {% endif %}
+
+           
+        {% endfor %}
+          
+        </div>
+         
+    </div>
+
+               
+</section> 
+{%else%}
+{%if pagado  and  congreso.streaming%}
+  <section class="congreso-ponencias pb-5" style="margin-top: 50px;">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <h3 class="section-name">STREAMING DEL CONGRESO</h3>
+            </div>
+        </div>
+       
+        <div class="row mb-3">                       
+            <div class="col-md-12 ">
+                <div class="ponencia">
+                    {{congreso.streaming|safe }}
+                   
+                </div>
+            </div>
+          
+        </div>
+         
+    </div>
+
+               
+</section>  
+{%endif%} 
+{%endif%}
+{%if congreso.vid_publicidad%}
+  <section class="congreso-ponencias pb-5" style="margin-top: 50px;">
+    <div class="container-fluid">
+        
+        <div class="row mb-3">                       
+            <div class="col-md-12 ">
+                <div class="ponencia">
+                    {{congreso.vid_publicidad|safe }}
+                   
+                </div>
+            </div>
+          
+        </div>
+         
+    </div>
+
+               
+</section>  
+{%endif%}
+
 {% if fecha_ponencias %}
 <div class="section congreso-program">
     <div class="container-fluid">
@@ -118,6 +207,10 @@
     </div>
 </section>
 {%endif%}
+  
+      
+        
+
 {% if fecha_ponencias %}
 <section class="congreso-calendario">
     <div class="container-fluid">
@@ -546,7 +639,7 @@
                                
                                         <div class="ticket">
                                             <div class="title">{{cat.categoria.nombre}}</div>
-                                            <h5 class="price">$ {{cat.precio}} <br> {{cat.moneda}}</h5>
+                                            <h5 class="price">$ {{cat.precio|format_num}} <br> {{cat.moneda}}</h5>
                                             <span class="iva">IVA incluído</span>
                                             <div class="actions">
                                                 {% if user.is_authenticated %}

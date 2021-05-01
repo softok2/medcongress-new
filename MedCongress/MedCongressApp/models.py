@@ -486,7 +486,8 @@ class Sala(models.Model):
     cod_video=models.TextField(null=True,blank=True)
     congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
     imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='salas',blank=True, null=True  )
-
+    path=models.CharField(max_length=250, help_text='campo para identificarlo por la URL')
+    published=models.BooleanField()
     class Meta:
         verbose_name='Sala'
         verbose_name_plural='Salas'

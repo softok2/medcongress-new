@@ -1,0 +1,526 @@
+{% extends "MedCongressApp/base.html"%}
+{% load static %}
+{% block titulo %}
+{{ponencia.titulo}}
+{%endblock%}
+{% block metadatos%}
+{% if ponencia.meta_title%}
+<meta property="title" content="{{ponencia.meta_title}}">
+{%endif%}
+{% if ponencia.meta_description %}
+<meta name="description" content="{{ponencia.meta_description}}">
+{%endif%}
+{% if ponencia.meta_og_description %}
+<meta property="og:description" content="{{ponencia.meta_og_description}}">
+{%endif%}
+{% if ponencia.meta_og_type %}
+<meta property="og:type" content="{{ponencia.meta_og_type}}">
+{%endif%}
+{% if ponencia.meta_og_title %}
+<meta property="og:title" content="{{ponencia.meta_og_title}}">
+{%endif%}
+{% if ponencia.meta_og_url %}
+<meta property="og:url" content="{{ponencia.meta_og_url}}">
+{%endif%}
+{% if ponencia.meta_og_imagen %}
+<meta property="og:image" content="{% static '/'%}{{ponencia.meta_og_imagen}}">
+{%endif%}
+{% if ponencia.meta_twitter_card %}
+<meta name="twitter:card" content="{{ponencia.meta_twitter_card}}" />
+{%endif%}
+{% if ponencia.meta_twitter_site %}
+<meta name="twitter:site" content="{{ponencia.meta_twitter_site}}" />
+{%endif%}
+{% if ponencia.meta_twitter_creator %}
+<meta name="twitter:creator" content="{{ponencia.meta_twitter_creator}}" />
+{%endif%}
+{% if ponencia.meta_keywords %}
+<meta name="keywords"
+	content="{{ponencia.meta_keywords}}" />
+{%endif%}
+
+{%endblock%}
+{%block css%}
+
+<link rel="stylesheet" href="{% static 'MedCongressApp/css/bootstrap-rating.css'%}" type="text/css" media="all">
+
+<link rel="stylesheet" href="{% static 'MedCongressApp/css/font-awesome.min.css'%}" type="text/css" media="all">
+<!-- Ihover css -->
+<style>
+	.simply-section {
+		color: #e5e5e7 !important;
+		background-color: #39393a60 !important;
+
+	}
+
+	.glyphicon {
+		color: #40C8F4;
+		font-size: 26px;
+
+	}
+
+	.glyphicon-star-empty {
+		color: rgb(85, 84, 84);
+	}
+</style>
+{%endblock%}
+{% block contenido %}
+<section class="video-banner">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="offset-md-2 col-md-8 d-flex flex-column">
+                <h1 class="title">{{ponencia.titulo}}</h1>
+                <a href="{% url 'View_congreso' ponencia.congreso.path %}" class="back align-self-end mt-md-5 mt-2">Regresar al Congreso</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="video-container">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="offset-md-2 col-md-8">
+                {%if ponencia.cod_video and is_pagado%}
+                {{ponencia.cod_video|safe }}
+				{%else%}
+				{% if user.is_authenticated %}
+                <h3 class="title">Debe comprar el congreso para visualizar esta ponencia</h3> 
+                {%else%}
+                <h3 class="title">Debe autentificarse para visualizar esta ponencia    <a href="{% url 'login' %}" class="back align-self-end mt-md-5 mt-2"> Login</a></h3> 
+                {%endif%}
+                <img src="{% static '/'%}{{ponencia.imagen}}" class="img-fluid me-4" > 
+                {%endif%}
+            </div>
+        </div>
+        <div class="row"> 
+            <div class="offset-md-2 col-md-6">
+            {%for ponente in ponencia.ponente.all%}
+           
+            <div class="row">
+            
+                <div class=" col-md-12">
+                <span class="simple-text py-3">PONENTE</span>
+                <div class="ponente mt-4 d-flex align-items-start p-3">
+                    <img src="{% if ponente.user.foto%}{% static '/'%}{{ponente.user.foto}}{%else%}{% static 'assets/img/iconos/avatar-icon.png'%}{%endif%}" class="img-fluid me-4" width="100px">
+                   
+                    <div class="info">
+                        
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" class="name" onclick="VerPerfil('{{ponente.user.id}}')"><h3 class="name mb-0">{{ponente.user.usuario.first_name}} {{ponente.user.usuario.last_name}}</h3></a>
+                        <span class="cat d-block mb-3"> {{ponente.user.categoria}}</span>
+                        <p class="bio">{%if ponente.user.puesto %}
+                            {{ponente.user.puesto|safe}}
+                            {%endif%}</p>
+                          
+                    </div>
+                </div>
+            </div>
+       
+        </div>
+            {%endfor%}
+            </div>
+            {%if ponencia.cod_video and is_pagado%}
+            <div class="col-md-2">
+                {%if is_evaluado%}
+					<div id="evaluado">
+						<h6 style="margin: 0 0 15px;
+				font-size: 14px;
+				line-height: 30px;
+				text-transform: uppercase;
+				font-family: 'Gotham-Bold';
+				color: #565657;">Su evaluación fue</h6>
+
+						<input type="hidden" class="rating" id="rating_evaluado" data-readonly
+							value="{{is_evaluado}}" /> <button class="btn btn-primary" onclick="Update()"
+							title="Cambiar Votación"><i class="fa fa-refresh"></i></button>
+					</div>
+					<div id='sin_evaluar' style="display: none;">
+						<h6 style="margin: 0 0 15px;
+					font-size: 10px;
+					line-height: 30px;
+					text-transform: uppercase;
+					font-family: 'Gotham-Bold';
+					color: #565657;">Vuelva a Evaluar esta Ponencia</h6>
+
+						<input type="hidden" class="rating check rating-tooltip nueva" id="rating" />
+					</div>
+					{%else%}
+					<div id='sin_evaluar'>
+						<h6 style="margin: 0 0 15px;
+				font-size: 14px;
+				line-height: 30px;
+				text-transform: uppercase;
+				font-family: 'Gotham-Bold';
+				color: #565657;">Evalue esta Ponencia</h6>
+
+						<input type="hidden" class="rating check rating-tooltip nueva" id="rating" />
+					</div>
+
+					<div id="evaluado" style="display: none;">
+						<h6 style="margin: 0 0 15px;
+				font-size: 14px;
+				line-height: 30px;
+				text-transform: uppercase;
+				font-family: 'Gotham-Bold';
+				color: #565657;">Su evaluación fue</h6>
+
+						<input type="hidden" class="rating" id="rating_evaluado" data-readonly
+							value="{{is_evaluado}}" /> <button class="btn btn-primary" onclick="Update()"
+							title="Cambiar Votación"><i class="fa fa-refresh"></i></button>
+					</div>
+					{%endif%}
+            </div>
+            {%endif%}
+        </div>
+    </div>
+</section>
+<div class="congreso-modal profile-modal modal fade" id="profileModal" tabindex="-2" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="container-fluid">
+                  <div class="row mb-3">
+                      <div class="col">
+                          <h5 class="title">Perfil del Ponente</h5>
+                      </div>
+                  </div>
+  
+                  <div class="row">
+                      <div class="col-md-4">
+                          <div class="modal-card p-3 me-2 mb-md-0 mb-4">
+                              <div id="foto">
+                             
+                            </div>
+                              <div id="ratingSystem" class="mt-2 d-flex flex-row-reverse justify-content-center">
+                                  <div id="div_rating">
+                                      <input type="hidden" id="rating1" class="rating" data-readonly value="0" />
+                                  </div>
+                                
+                              </div>
+                              <hr class="separator mt-2" />
+                              <div class="bottom d-flex justify-content-between align-items-end" id="pais">
+                                 
+                                   
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-8">
+                          <div class="row event mb-3">
+                              <div class="col" id="datos">
+                                  
+                              </div>
+                          </div>
+                            <div id="logros">
+                            
+                            </div>
+                      </div>
+                  </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col d-flex justify-content-end">
+                      <button type="button" class="cta close-btn" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{%endblock%}
+
+{% block script%}
+<script src="{% static 'MedCongressApp/js/bootstrap-rating.js' %}"></script>
+
+<script src="{% static 'MedCongressApp/js/plugins/simplyCountdown/simplyCountdown.min.js'%}"></script>
+<script>
+	$(document).ready(function () {
+		$('#rating').rating({
+			filled: 'glyphicon glyphicon-heart',
+			empty: 'glyphicon glyphicon-heart-empty'
+		});
+		$('#rating').rating('rate', '{{is_evaluado}}');
+		var height = $(window).height();
+		$('#div').height(height);
+	});
+
+
+	simplyCountdown('#countdown', {
+		year: '{{ponencia.fecha_inicio|date:"Y"}}', // required
+		month: '{{ponencia.fecha_inicio|date:"m"}}', // required
+		day: '{{ponencia.fecha_inicio|date:"d"}}', // required
+		hours: '{{ponencia.fecha_inicio|date:"h"}}', // Default is 0 [0-23] integer
+		minutes: '{{ponencia.fecha_inicio|date:"i"}}', // Default is 0 [0-59] integer
+		seconds: '{{fecha|date:"s"}}', // Default is 0 [0-59] integer
+		words: { //words displayed into the countdown
+			days: 'dia',
+			hours: 'hora',
+			minutes: 'minuto',
+			seconds: 'segundo',
+			pluralLetter: 's'
+		},
+		plural: true, //use plurals
+		inline: false, //set to true to get an inline basic countdown like : 24 days, 4 hours, 2 minutes, 5 seconds
+		inlineClass: 'simply-countdown-inline', //inline css span class in case of inline = true
+		// in case of inline set to false
+		enableUtc: true, //Use UTC as default
+		onEnd: function () { return; }, //Callback on countdown end, put your own function here
+		refresh: 1000, // default refresh every 1s
+		sectionClass: 'simply-section', //section css class
+		amountClass: 'simply-amount', // amount css class
+		wordClass: 'simply-word', // word css class
+		zeroPad: false,
+		countUp: false
+	});
+	$(function () {
+
+		$('input.nueva').on('change', function () {
+
+			swal({
+				title: "Le dará una Evaluación de " + $(this).val() + ' puntos a esta Ponencia',
+				text: "",
+				icon: "warning",
+				buttons: {
+					cancel: {
+						text: "No!",
+						value: null,
+						visible: true,
+						className: "",
+						closeModal: false,
+					},
+					confirm: {
+						text: "Si",
+						value: true,
+						visible: true,
+						className: "",
+						closeModal: false
+					}
+
+
+
+				}
+			})
+				.then((isConfirm) => {
+					if (isConfirm) {
+						$('.label-default').empty();
+						$.ajax({
+							type: "GET",
+							url: "{% url 'EvaluarPonencia'%}",
+							data: {
+								'puntuacion': $(this).val(), // from form
+								'usuario': '{{request.user.pk}}',// from form
+								'ponencia': '{{ponencia.pk}}',// from form
+							},
+							success: function (data) {
+								$('#sin_evaluar').hide();
+								$('#evaluado').show();
+								
+								$('#rating_evaluado').rating('rate', data.valor);
+								
+								swal('Correcto', ' Le ha dado una evaluación de: ' + data.valor + ' puntos', 'success')
+
+								swal('Correcto', ' Ya se envio su votación', 'success')
+							}
+						});
+					}
+					else {
+						swal('Cancelar', ' No se envio su votación', 'error')
+					}
+
+				});
+
+		});
+
+
+		{%if is_evaluado %}
+		
+		{% endif %}
+		// $('.rating-tooltip').rating({
+		// 	extendSymbol: function (rate) {
+		// 		$(this).tooltip({
+		// 			container: 'body',
+		// 			placement: 'bottom',
+		// 			title: 'Rate ' + rate
+		// 		});
+		// 	}
+		// });
+		// 	$('.rating-tooltip').rating({
+		// 		extendSymbol: function () {
+		// 			var title;
+		// 			$(this).tooltip({
+		// 				container: 'body',
+		// 				placement: 'bottom',
+		// 				trigger: 'manual',
+		// 				title: function () {
+		// 					return title;
+		// 				}
+		// 			});
+		// 			$(this).on('mouseenter', function (e, rate) {
+		// 				title = rate;
+		// 				$(this).tooltip('show');
+		// 			})
+		// 			$(this).on('mouseleave', function () {
+		// 				$(this).tooltip('hide');
+		// 			});
+		// 		}
+		// 	});
+
+
+
+	});
+
+	function Update() {
+
+		swal({
+			title: "Cambiará su Evaluación",
+			text: "Desea dar otra puntuación",
+			icon: "warning",
+			buttons: {
+				cancel: {
+					text: "No!",
+					value: null,
+					visible: true,
+					className: "",
+					closeModal: false,
+				},
+				confirm: {
+					text: "Si",
+					value: true,
+					visible: true,
+					className: "",
+					closeModal: false
+				}
+
+
+
+			}
+		})
+			.then((isConfirm) => {
+				if (isConfirm) {
+					$('#sin_evaluar').show();
+					$('#evaluado').hide();
+					swal('Aviso', ' Ya puede evaluar de nuevo esta Ponencia', 'success')
+				}
+				else {
+					swal('Cancelar', ' Se mantiene su evaluación', 'error')
+				}
+
+			});
+
+	}
+
+	function VerPerfil(pk) {
+    url = "{% url 'GetPerfil'%}";
+    $.get(url, { 'pk': pk }, function (data) {
+
+        if (data.foto)
+            $('#foto').html('<img class="img-fluid" src="{% static '/'%}'+ data.foto +'" alt=" foto ' + data.nombre + '" >');
+        else
+            $('#foto').html('<img class="img-fluid" src="{% static 'MedCongressApp/images/defaulthombre.png' %}" alt="{{request.user.username}}" >');
+        
+         let  pais_bandera='';
+        if(data.pais)
+        pais_bandera+='<h5 class="country mb-0">'+data.pais+'</h5>';
+        if(data.bandera)
+        pais_bandera+='<img  class="img-fluid" src="{% static '/'%}'+ data.bandera +'" width=50px >';
+        $('#pais').html(pais_bandera)   
+        
+        let datos=''
+        $('#datos').html(`<h5 class="name">`+data.nombre_completo+`</h5>
+                                  <span class="cat d-block mb-3">`+data.especialidad+`</span>
+                                  <p class="description mb-0 pt-3">`+ data.puesto+`</p>`);
+        if (data.constancias) {
+            
+            $('#logros').html(` <div class="row event mb-3" >
+                                    <div class="col">
+                                        <h5 class="name">LOGROS ACADÉMICOS</h5>
+                                            
+                                        <p class="description mb-0 pt-3">`+ data.constancias+`</p>
+                                            
+                                    </div>
+                                </div>`);
+        }
+ 
+       
+        redes = '';
+        if (data.facebook)
+            redes += '<div class="row" style="padding: 20px;" > <div class="like_fb"> <a class="facebook" href="#"><i class="fa fa-facebook"></i></a> </div><div class="like_amount"><p>' + data.facebook + '</p></div>  </div>'
+        if (data.twitter)
+            redes += '  <div class="row" style="padding: 20px;"><div class="like_fb"><a class="facebook" style="background-color: #00adf2 ;"  href="#"><i class="fa fa-twitter"></i></a> </div><div class="like_amount">' + data.twitter + '</p></div>  </div>'
+        if (data.youtube)
+            redes += ' <div class="row" style="padding: 20px;"><div class="like_fb"><a class="facebook" href="#" style="background-color: #d70a0a;"><i class="fa fa-youtube"></i></a> </div><div class="like_amount"><p>' + data.youtube + '</p></div> </div>'
+        if (data.linkedin)
+            redes += '<div class="row" style="padding: 20px;"><div class="like_fb"> <a class="facebook" style="background-color: #2962ff;"    href="#"><i class="fa fa-linkedin"></i></a></div><div class="like_amount"><p>' + data.linkedin + '</p></div> </div>'
+        $('#redes_sociales').html(redes);
+
+        $('#especialidad').html(data.especialidad);
+
+       
+        
+        publicaciones = '';
+
+        if (data.publicaciones) {
+            publicaciones = '<div class="row gutters-sm mb-3"><div class="col-sm-12" ><div class="card h-100" ><h6 class="mb-0" style="padding: 20px;"><b>Publicaciones</b></h6><div class="card-body" >' + data.publicaciones + '</div> </div> </div></div> ';
+            $('#publicaciones').html(publicaciones);
+        }
+        else
+            $('#publicaciones').html('');
+
+
+
+        if (data.ponencias.length == 0) {
+            ponencias = '<li><div class="like_amount"> <b>No es Ponente en ninguna Ponencia </b></div> </li>';
+        }
+        else {
+            ponencias = '';
+            for (let i = 0; i < data.ponencias.length; i++) {
+                ponencias += '<li><div class="like_amount"><p>' + data.ponencias[i].nombre + '</p><span> <b>Congreso: </b> ' + data.ponencias[i].congreso + '</span></div></li>'
+
+            }
+        }
+
+        $('#ponencias').html(ponencias)
+
+        if (data.talleres.length == 0) {
+            talleres = '<li><div class="like_amount"> <b>No es Ponente en ningún Taller </b></div> </li>';
+        }
+        else {
+            talleres = '';
+            for (let i = 0; i < data.talleres.length; i++) {
+                talleres += '<li><div class="like_amount"><p>' + data.talleres[i].nombre + '</p><span> <b>Congreso: </b> ' + data.talleres[i].congreso + '</span></div></li>'
+
+            }
+        }
+
+        $('#talleres').html(talleres)
+        if(data.puesto)
+        $('#puesto').html(data.puesto)
+        else
+        $('#puesto').html('')
+        $('#nombre_completo').html(data.nombre_completo)
+		if(data.votacion==0){
+            $('#div_rating').hide()  
+        }
+        else{
+            $('#div_rating').show()  
+        $('#rating').rating('rate', data.votacion);
+        }
+        
+        // else
+        // $('#div_rating').html('<input type="hidden" id="rating" class="rating" data-readonly value="'+ data.votacion+'" /> ')
+        // $('#rating').rating('rate', data.votacion);
+        //                     $('#rating2').rating({
+        //   filled: 'glyphicon glyphicon-heart-empty',
+        //   filledSelected: 'glyphicon glyphicon-heart',
+        //   empty: 'glyphicon glyphicon-heart-empty'
+        // });
+
+
+	});
+}
+</script>
+{%endblock%}
