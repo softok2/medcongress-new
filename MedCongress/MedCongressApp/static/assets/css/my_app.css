@@ -731,13 +731,13 @@ textarea:focus,
 
 .congreso-trabajos-investigacion {
   padding: 20px 0 80px;
-  background-color: #2A343D;
+  background-color:  #D6E0E8;
 }
 .congreso-trabajos-investigacion .section-title,
 .congreso-trabajos-investigacion .description,
 .congreso-trabajos-investigacion .description a,
 .congreso-trabajos-investigacion .download-title {
-  color: #fff;
+  color:#4A5966;
   font-family: "DINPro-Regular_13937", sans-serif;
 }
 .congreso-trabajos-investigacion .section-title {

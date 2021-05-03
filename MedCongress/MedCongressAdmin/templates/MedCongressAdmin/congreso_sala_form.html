@@ -242,7 +242,7 @@
 <script src="{% static 'MedCongressAdmin/assets/js/cropper.js'%}"></script>
 <script type="text/javascript">
  $('#atras').click(function () {
-            location.href = "{% url 'MedCongressAdmin:Congres_programas' path=cong.path %}";
+            location.href = "{% url 'MedCongressAdmin:Congres_salas' path=cong.path %}";
         });
 	$(document).ready(function () {
 		$("#id_congreso option[value='{{cong.id}}']").attr("selected",true);
