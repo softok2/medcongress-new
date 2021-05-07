@@ -7,7 +7,7 @@ GetCuestionario,SetConstancia,EvaluarPonencia,Resultado_Cuestionario,Get_Constan
 ViewErrorFact,PerfilUpdateView,CambiarPass,UpdateEvaluarPonencia,UserAutocomplete,ViewErrorRegistrar,RegistroExitoso,
 PonenteAutocomplete,ModeradorAutocomplete,CongresoAutocomplete,PatrocinadorAutocomplete,SocioAutocomplete,ViewTaller,
 EvaluarTaller,UpdateEvaluarTaller,TallerAutocomplete,PonenciaAutocomplete,ViewCart,ContactoExitoso,GetFacturaPrueba,GetContactos,Enviar,
-Webhook,PagoExitoso2,ViewTrabajo,ViewSala)
+Webhook,PagoExitoso2,ViewTrabajo,ViewSala,ViewPonenciasSala)
 
 urlpatterns = [
     # path('login',login,name='auth'),
@@ -19,6 +19,8 @@ urlpatterns = [
     path('ponencia/<str:path>', ViewPonencia.as_view(), name='View_ponencia'),
     path('taller/<str:path>', ViewTaller.as_view(), name='View_taller'),
     path('sala/<str:path>', ViewSala.as_view(), name='View_sala'),
+    path('ponencias_sala/<str:path>', ViewPonenciasSala.as_view(), name='View_ponencias_sala'),
+    
     path('error404', ViewError404.as_view(), name='Error404'),
     path('error_openpay', ViewErrorOpenpay.as_view(), name='Error_openpay'),
     path('error_registrar', ViewErrorRegistrar.as_view(), name='ErrorRegistrar'),

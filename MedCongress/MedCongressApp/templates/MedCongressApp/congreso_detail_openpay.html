@@ -301,23 +301,37 @@
                                                     {%endfor%}
                                                     <div class="row" >
                                                         {%for evento in pon.eventos %}
-                                                        <div class="col-md-12 ponencia mt-md-0" style="padding-top: 50px;" >
-                                                            
-                                                           
-                                                            <h4 class="ponencia-name pt-3"><strong> 
+                                                        <div class="col-md-12  mt-md-0" style="padding-top: 50px;" >
+
+                                                            <h4 class="ponencia-name ponencia pt-3"><strong> 
                                                                 {{evento.tipo|upper}}
                                                                 {{evento.titulo}}</strong></h4>
-                                                                {%if evento.tipo == 'Taller'%}
-                                                            <a href="{% url 'View_taller' path=evento.path%}" class="more d-block "><strong> Ver Taller</strong></a>
-    
-                                                            {%else%}
-                                                            <a href="{% url 'View_ponencia' path=evento.path%}" class="more d-block "><strong>Ver Ponencia</strong></a>
-                                                            {%endif%}
+                                                                <div class="row"> 
+                                                                    {%if evento.sala %}
+                                                                    <div class="col-md-6 ponencia  mt-md-0" > 
+                                                                        <h5 class="cat"> <b>SALA:</b>  </h5>  <a href="{% url 'View_ponencias_sala' path=evento.sala.path%}" class="more d-block "><strong> {{evento.sala}}</strong></a>
+                                                                
+                                                                    </div>
+                                                                    {%endif%} 
+                                                                    <div class="col-md-6 ponencia   mt-md-0" > 
+                                                                        {%if evento.tipo == 'Taller'%}
+                                                                        <a href="{% url 'View_taller' path=evento.path%}" class="more d-block "><strong> Ver Taller</strong></a>
+                
+                                                                        {%else%}
+                                                                        <a href="{% url 'View_ponencia' path=evento.path%}" class="more d-block "><strong>Ver Ponencia</strong></a>
+                                                                        {%endif%}
+                                                                
+                                                                    </div>
+                                                                   </div>
+                                                               
+                                                               
+                                                               
+                                                           
                                                         </div>
                                                         {%for ponente in evento.ponentes %}
-                                                    <div class="col-md-6 ponencia mt-md-0 mt-5" style="padding-top: 50px;" >
+                                                    <div class="col-md-6 ponencia mt-md-0 mt-5"  >
                                                         <div class="header">
-                                                            <div class="row" style="height: 90px;">
+                                                            <div class="row" >
                                                                 <div class="col-md-3 d-flex align-items-center">
                                                                     <img src=" {% if ponente.user.foto%}{% static '/'%}{{ponente.user.foto}}{%else%}{% static 'assets/img/congresos/avatar-ponencia.png'%}{%endif%}" class="img-fluid" width="100px">
                                                                 </div>
@@ -391,13 +405,28 @@
                                                        
                                                     </div>
                                                     {%endfor%}
+                                                    <div class="row"> 
+                                                        {%if pon.sala %}
+                                                        <div class="col-md-6 ponencia  mt-md-0" > 
+                                                            <h5 class="cat"> <b>SALA:</b>  </h5>  <a href="{% url 'View_ponencias_sala' path=pon.sala.path%}" class="more d-block "><strong> {{pon.sala}}</strong></a>
+                                                    
+                                                        </div>
+                                                        {%endif%} 
                                                     {%if pon.tipo == 'Taller'%}
-                                                            <a href="{% url 'View_taller' path=pon.path%}" class="more d-block "><strong> Ver Taller</strong></a>
+                                                    <div class="col-md-6 ponencia  mt-md-0" > 
+                                                        <a href="{% url 'View_taller' path=pon.path%}" class="more d-block "><strong> Ver Taller</strong></a>
+                                                
+                                                    </div>
+                                                          
     
                                                             {%else%}
-                                                            <a href="{% url 'View_ponencia' path=pon.path%}" class="more d-block "><strong>Ver Ponencia</strong></a>
+                                                            <div class="col-md-6 ponencia  mt-md-0" > 
+                                                                <a href="{% url 'View_ponencia' path=pon.path%}" class="more d-block "><strong>Ver Ponencia</strong></a>
+                                                        
+                                                            </div>
+                                                           
                                                             {%endif%}
-                                                   
+                                                        </div>
                                                     {%endif%}
                                                     
                                                 </div>

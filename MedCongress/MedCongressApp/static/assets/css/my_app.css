@@ -232,6 +232,7 @@ textarea:focus,
 #main-nav .navbar-nav .nav-item.profile-item .menu .header .name-cat .cat {
   font-size: 16px;
 }
+
 #main-nav .navbar-nav .nav-item.profile-item .menu .nav {
   display: flex;
   margin: 10px 0;
@@ -265,6 +266,7 @@ textarea:focus,
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
 }
+
 @media screen and (max-width: 992px) {
   #main-nav .navbar-nav .nav-item.profile-item .menu .arrow-up {
     display: none;
@@ -702,18 +704,23 @@ textarea:focus,
 
 .congreso-program {
   padding: 50px 0 50px;
-  background-color:#ebf4fb;
+  background-color:#ffffff;
 }
 .congreso-program .section-title,
 .congreso-program .section-subtitle,
 .congreso-program .description,
-.congreso-program .back-home {
+.congreso-program .back-home
+{
  
   color: #4A5966;
   font-family: "DINPro-Regular_13937", sans-serif;
 }
 .congreso-program .section-title {
   font-size: 40px;
+}
+.dropdown-menu li a{
+
+  white-space : normal;  
 }
 .congreso-program .section-subtitle {
   font-size: 27px;
@@ -724,14 +731,18 @@ textarea:focus,
   margin: 40px 0;
   font-size: 18px;
 }
-.congreso-program .back-home {
+.congreso-program .back-home,
+.dropdown-toggle {
   font-size: 18px;
   color: #40C8F4;
 }
-
+.dropdown-menu li{
+  font-family: "DINPro-Regular_13937", sans-serif;
+  color: #2A343D;
+}
 .congreso-trabajos-investigacion {
   padding: 20px 0 80px;
-  background-color:  #D6E0E8;
+  background-color:  #ffffff;
 }
 .congreso-trabajos-investigacion .section-title,
 .congreso-trabajos-investigacion .description,
@@ -992,7 +1003,7 @@ textarea:focus,
 }
 .congreso-calendario .tab-pane .accordion .ponencias {
   padding: 30px 40px 50px;
-  background-color: #d6e0e8;
+  background-color: #ffffff;
 }
 .congreso-calendario .tab-pane .accordion .ponencias .header {
   padding-bottom: 20px;
@@ -1008,6 +1019,11 @@ textarea:focus,
   text-decoration: underline;
 }
 .congreso-calendario .tab-pane .accordion .ponencias .header .cat {
+  font-size: 18px;
+  margin-bottom: 0;
+  color: #40C8F4;
+}
+.ponencia .cat {
   font-size: 18px;
   margin-bottom: 0;
   color: #40C8F4;
@@ -1087,11 +1103,11 @@ textarea:focus,
 }
 
 .congreso-tickes {
-  background-color: #ebf4fb;
+  background-color: #ffffff;
   padding: 80px 0 250px;
 }
 .talleres-tickes {
-  background-color:#ebf4fb;
+  background-color:#ffffff;
   padding: 80px 0 0;
   margin-bottom: 20px;
 }
@@ -1150,7 +1166,7 @@ textarea:focus,
 }
 
 .congreso-ponentes {
-  background-color:#ebf4fb;
+  background-color:#ffffff;
   padding: 80px 0 250px;
 }
 .congreso-ponentes .section-name,

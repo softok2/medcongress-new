@@ -617,7 +617,8 @@ class CongresoDetail(TemplateView):
                         'fecha_inicio': ponencia.fecha_inicio ,# una relación a otro modelo
                         'detalle':ponencia.detalle ,
                         'ponentes':Ponente.objects.filter(ponencia_ponente__pk=ponencia.id).distinct() ,
-                        'tipo':'Ponencia',# la misma relación, otro campo
+                        'tipo':'Ponencia',
+                        'sala':ponencia.sala,
                         })
                     for taller in bloque_talleres: 
                         eventos.append({
@@ -652,6 +653,7 @@ class CongresoDetail(TemplateView):
                     'detalle':ponencia.detalle ,
                     'ponentes':Ponente.objects.filter(ponencia_ponente__pk=ponencia.id).distinct() ,
                     'tipo':'Ponencia',# la misma relación, otro campo
+                    'sala':ponencia.sala,
                     })
                 for taller in talleres: 
                     result.append({
@@ -2153,5 +2155,18 @@ class ViewSala(TemplateView):
         else:
             context['is_pagado']=False
         context['sala']=sala
+        context['all_salas']=Sala.objects.filter(congreso=sala.congreso,published=True,cod_video__isnull=False)
+        return context
+
+
+class ViewPonenciasSala(TemplateView):
+    template_name= 'MedCongressApp/ponencias_sala.html' 
+
+    def get_context_data(self, **kwargs):
+        context = super(ViewPonenciasSala, self).get_context_data(**kwargs)
+        sala=Sala.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        context['sala']=sala
+        context['all_salas']=Sala.objects.filter(congreso=sala.congreso,ponencia__sala__isnull=False).distinct()
+        context['ponencias']= Ponencia.objects.filter(published=True,sala=sala).order_by('fecha_inicio')
         return context
 

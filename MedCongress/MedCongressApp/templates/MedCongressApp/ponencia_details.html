@@ -70,7 +70,8 @@
         <div class="row">
             <div class="offset-md-2 col-md-8 d-flex flex-column">
                 <h1 class="title">{{ponencia.titulo}}</h1>
-                <a href="{% url 'View_congreso' ponencia.congreso.path %}" class="back align-self-end mt-md-5 mt-2">Regresar al Congreso</a>
+				<a href="{% url 'View_congreso' ponencia.congreso.path %}" class="back align-self-end mt-md-5 mt-2">Regresar al Congreso</a>
+
             </div>
         </div>
     </div>
@@ -84,9 +85,14 @@
                 {{ponencia.cod_video|safe }}
 				{%else%}
 				{% if user.is_authenticated %}
-                <h3 class="title">Debe comprar el congreso para visualizar esta ponencia</h3> 
+					{%if  is_pagado%}
+						<h3 class="title">Debe estar pendiente al inicio de esta Ponencia</h3> 
+					{%endif%}
+					{%if ponencia.cod_video %}
+						<h3 class="title">Debe comprar el congreso para visualizar esta Ponencia</h3> 
+					{%endif%}
                 {%else%}
-                <h3 class="title">Debe autentificarse para visualizar esta ponencia    <a href="{% url 'login' %}" class="back align-self-end mt-md-5 mt-2"> Login</a></h3> 
+                <h3 class="title">Debe autentificarse para visualizar esta Ponencia    <a href="{% url 'login' %}" class="back align-self-end mt-md-5 mt-2"> Login</a></h3> 
                 {%endif%}
                 <img src="{% static '/'%}{{ponencia.imagen}}" class="img-fluid me-4" > 
                 {%endif%}
