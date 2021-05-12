@@ -7,7 +7,7 @@ GetCuestionario,SetConstancia,EvaluarPonencia,Resultado_Cuestionario,Get_Constan
 ViewErrorFact,PerfilUpdateView,CambiarPass,UpdateEvaluarPonencia,UserAutocomplete,ViewErrorRegistrar,RegistroExitoso,
 PonenteAutocomplete,ModeradorAutocomplete,CongresoAutocomplete,PatrocinadorAutocomplete,SocioAutocomplete,ViewTaller,
 EvaluarTaller,UpdateEvaluarTaller,TallerAutocomplete,PonenciaAutocomplete,ViewCart,ContactoExitoso,GetFacturaPrueba,GetContactos,Enviar,
-Webhook,PagoExitoso2,ViewTrabajo,ViewSala,ViewPonenciasSala)
+Webhook,PagoExitoso2,ViewTrabajo,ViewSala,ViewPonenciasSala,DonwloadTrabajo)
 
 urlpatterns = [
     # path('login',login,name='auth'),
@@ -78,6 +78,8 @@ urlpatterns = [
     path('enviar',Enviar.as_view() , name='enviar'),
     path('webhook',Webhook , name='webhook'),
     path('trabajo/<str:path>', ViewTrabajo.as_view(), name='View_trabajo'),
+    path('descargar/trabajo/<str:path>', DonwloadTrabajo.as_view(), name='Donwload_trabajo'),
+    
 
 
     

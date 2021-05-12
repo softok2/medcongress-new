@@ -1,0 +1,117 @@
+{% extends 'MedCongressAdmin/base.html' %}
+{% block title %}Buscar Logs del Usuario{% endblock %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/select2.min.css' %}">
+{% endblock %}
+{% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+
+		<li class="breadcrumb-item active">Buscar Logs del Usuario</a>
+		</li>
+		
+		</ol>
+	  </div>
+	</div>
+  </div>
+<section class="multiple-input-with-labels" id="multiple-input-with-labels">
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-header">
+					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
+						Buscar Logs del Usuario</h1>
+					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
+					<div class="heading-elements">
+						<ul class="list-inline mb-0">
+							<li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+							
+							<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+							
+						</ul>
+					</div>
+				</div>
+				<div class="card-content collapse show">
+					<div class="card-body">
+						{% if form.errors %}
+						{% for field in form %}
+							{% for error in field.errors %}
+							
+								<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+										<span aria-hidden="true">×</span>
+									</button>
+									{{ error|safe|escape }}
+								</div>
+							{% endfor %}
+						{% endfor %}
+						{% for error in form.non_field_errors %}
+						<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">×</span>
+							</button>
+							{{ error|safe|escape }}
+						</div>
+						{% endfor %}
+					{% endif %}
+						<form id="country-form" method="POST" enctype="multipart/form-data"> 
+							{% csrf_token %}
+							<div class="form-body">
+								<div class="row">
+									
+										<div class="form-group col-md-8">
+											<label>Seleccione usuario</label>
+											{{ form.usuario }}
+											
+										</div>
+									</div>
+										<div class="row">
+
+
+											<div class="form-group col-md-4">
+											<label>Fecha Inicio: </label>
+											<!-- {{ form.banderas }} -->
+											
+											<input type="date" name="fecha_inicio" class="form-control" id="id_fecha_inicio">
+												
+											
+											</div>
+											<div class="form-group col-md-4">
+												<label>Fecha Fin: </label>
+												<!-- {{ form.banderas }} -->
+												
+												<input type="date" name="fecha_fin" class="form-control" id="id_fecha_fin">
+													
+												
+												</div>
+										
+									
+								</div>
+								<div class="form-actions">
+									<div class="text-right">
+										<button id="save" type="submit" class="btn btn-primary">Exportar
+											<i class="la la-file-excel-o position-right"></i>
+										</button>
+									
+									
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/forms/select/select2.full.min.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-select2.js'%}"></script>
+<script>
+	
+</script>
+{% endblock %}

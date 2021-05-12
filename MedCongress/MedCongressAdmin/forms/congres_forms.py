@@ -9,7 +9,7 @@ from  MedCongressApp.models import (Congreso,Ubicacion,ImagenCongreso,TipoCongre
                                     RelTallerPonente,Bloque,DatosIniciales,RelCongresoUser,RelTallerUser,
                                     Moderador,RelBloqueModerador,ImagenCongreso,CuestionarioPregunta,CuestionarioRespuestas,
                                     MetaPagInicio,MetaPagListCongreso,PreguntasFrecuentes,RelCongresoAval, AvalCongreso,RelCongresoSocio,SocioCongreso,
-                                    Idioma,DocumentoPrograma,TrabajosInvestigacion,Sala)
+                                    Idioma,DocumentoPrograma,TrabajosInvestigacion,Sala,UserActivityLog)
                     
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
@@ -1039,3 +1039,34 @@ class CongresoSalaForm(forms.ModelForm):
         if not imagen :
             self.add_error('imagen', 'Debe al menos entrar una <b>Imagen </b>')
 
+class ExportarLogsCongresoExelForm(forms.ModelForm):
+    congreso= forms.ModelChoiceField(queryset=Congreso.objects.all(),label='Congreso')
+    fecha_inicio=forms.DateField(required=False,label='Fecha Inicio')
+    fecha_fin=forms.DateField(required=False,label='Fecha Fin')
+
+    class Meta:
+        model=UserActivityLog
+        fields=['congreso','fecha_inicio','fecha_fin']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+
+        self.fields['congreso'].widget.attrs.update({'class': 'form-control select2'}) 
+        self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control','type':'date'}) 
+        self.fields['fecha_fin'].widget.attrs.update({'class': 'form-control','type':'date'}) 
+
+class ExportarLogsUsuarioExelForm(forms.ModelForm):
+    usuario= forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Congreso')
+    fecha_inicio=forms.DateField(required=False,label='Fecha Inicio')
+    fecha_fin=forms.DateField(required=False,label='Fecha Fin')
+
+    class Meta:
+        model=UserActivityLog
+        fields=['usuario','fecha_inicio','fecha_fin']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+
+        self.fields['usuario'].widget.attrs.update({'class': 'form-control select2'}) 
+        self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control','type':'date'}) 
+        self.fields['fecha_fin'].widget.attrs.update({'class': 'form-control','type':'date'}) 

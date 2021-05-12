@@ -8,7 +8,7 @@ from django.urls import path,include
 
 from .views.country_views import (CountryCreateView, CountryDeleteView,
                                   CountryListView, CountryUpdateView)
-from .views.congress_views import (CongressSalaCreateView,CongressDeletedSalaView,CongressSalaUpdateView,CongressSalasListView,AsignarConstanciasUsuario,GetSalas,CongressListView,CongressCreateView,CongressUpdateView,
+from .views.congress_views import (LogsCongreso,LogsUsuarios,CongressSalaCreateView,CongressDeletedSalaView,CongressSalaUpdateView,CongressSalasListView,AsignarConstanciasUsuario,GetSalas,CongressListView,CongressCreateView,CongressUpdateView,
                                    CongressTalleresListView,CongressPonenciasListView,CongressCategPagosListView,
                                    CongressImagenesListView,AddPonenciaCongreso,CongressCategPagosCreateView,
                                    CongressDeletedView,CongressBloquesListView,GetBloques,AsignarCongressListView,AsignarCongressAddViews,GetPagos,
@@ -366,6 +366,12 @@ urlpatterns = [
       path('trabajos-congres/adicinar/<str:path>', CongressTrabajoCreateView.as_view(), name='congres_trabajo_add'),
       path('trabajos-congres/editar/<str:path>/<int:pk>', CongressTrabajoUpdateView.as_view(), name='congres_trabajo_editar'),
       path('trabajos-congres/eliminar/<int:pk>', CongressTrabajoDeletedView.as_view(), name='congres_trabajo_eliminar'),
+
+      #Logs
+      path('logs/congreso', LogsCongreso.as_view(), name='LogsCongreso'),
+      path('logs/usuario', LogsUsuarios.as_view(), name='LogsUsuario'),
+      
+      
 
 ## Tablas en JSON
 

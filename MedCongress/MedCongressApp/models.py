@@ -990,3 +990,17 @@ class TrabajosInvestigacion(models.Model):
 
     def __str__(self):
         return 'TrabajosInvestigacion'
+
+
+class UserActivityLog(models.Model):
+    user = models.ForeignKey(PerfilUsuario, on_delete = models.CASCADE)
+    fecha = models.DateTimeField( editable = False)
+    congreso= models.ForeignKey(Congreso, on_delete = models.CASCADE)
+    mensaje= models.CharField(max_length=250)
+    tipo= models.CharField(max_length=100)
+    tiempo= models.CharField(max_length=100)
+    class Meta:
+        ordering = ['fecha']
+    
+    def __str__(self):
+        return self.user

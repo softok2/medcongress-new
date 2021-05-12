@@ -138,7 +138,12 @@ Login
                         </div>
                         <div class="row mt-3">
                             <div class="col-md-4">
-                                {{form.perfiluser.categoria }}
+                                <select name="perfiluser-categoria" class="form-select" placeholder="Categoría" id="id_perfiluser-categoria">
+                                    <option value="">---------</option>
+                                  {%for categoria in categorias%}
+                                  <option value="{{categoria.id}}">{{categoria.nombre}}</option>
+                                  {%endfor%}
+                                  </select>
                             </div>
                             <div class="col-md-4 mt-md-0 mt-3" id="new_cat">
                               

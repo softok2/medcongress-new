@@ -4,6 +4,9 @@ import os
 from django.views.decorators.csrf import csrf_exempt
 from collections import namedtuple
 from datetime import date,datetime
+from datetime import timedelta
+from django.dispatch import receiver
+from django.contrib.auth import user_logged_in, user_logged_out
 import openpay
 from pathlib import Path
 from django.core.mail import send_mail
@@ -38,7 +41,7 @@ from .models import (CategoriaPagoCongreso,Sala, Congreso, EspecialidadCongreso,
                      RelCongresoUser,RelPonenciaPonente,PerfilUsuario,ImagenCongreso,Taller,RelTalleresCategoriaPago,RelTallerUser,DatosIniciales,
                      CategoriaUsuario,Bloque,Moderador,RelTallerPonente,Pais,CuestionarioPregunta,CuestionarioRespuestas,RelPonenciaVotacion,
                      PreguntasFrecuentes,Ubicacion,AvalCongreso,SocioCongreso,QuienesSomos,Ofrecemos,Footer,ImagenQuienesSomos,RelTallerVotacion,MetaPagInicio,MetaPagListCongreso,
-                     RelCongresoAval,RelCongresoSocio,ImagenHome,DocumentoPrograma,TrabajosInvestigacion)
+                     RelCongresoAval,RelCongresoSocio,ImagenHome,DocumentoPrograma,TrabajosInvestigacion,UserActivityLog)
 from .pager import Pager
 from .cart import Cart
 from django_xhtml2pdf.views import PdfMixin
@@ -568,12 +571,14 @@ class CongresoDetail(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(CongresoDetail, self).get_context_data(**kwargs)
         congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+       
         context['patrocinadores']=RelCongresoAval.objects.filter(congreso=congreso)
         context['socios']=RelCongresoSocio.objects.filter(congreso=congreso)
         if self.request.user.is_authenticated:
             pagado=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario,is_pagado=True)
             if pagado :
                 context['pagado']=True
+                InsertLog(congreso.pk,'Congreso',self.request.user.perfilusuario)
                 constancias=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario)
                 for constancia in constancias:
                     if constancia.is_constancia:
@@ -1010,6 +1015,8 @@ class PerfilUserCreate(FormView):
     def get_context_data(self, **kwargs):
         context = super(PerfilUserCreate, self).get_context_data(**kwargs)
         context['aviso_privacidad']=DatosIniciales.objects.all().first()
+        context['categorias']=CategoriaUsuario.objects.filter(published=True)
+   
         return context
     def form_valid(self, form):
 
@@ -1096,8 +1103,8 @@ class ViewPonencia(TemplateView):
         ponencia=Ponencia.objects.filter(path=self.kwargs.get('path'),published=True).first() 
         if self.request.user.is_authenticated:
             context['is_pagado']=RelCongresoUser.objects.filter(congreso=ponencia.congreso,user=self.request.user.perfilusuario,is_pagado=True).exists()
-       
-       
+            if context['is_pagado']:
+                InsertLog(ponencia.pk,'Ponencia',self.request.user.perfilusuario)
             if RelPonenciaVotacion.objects.filter(ponencia=ponencia,user=self.request.user).exists():
                 votacio=RelPonenciaVotacion.objects.filter(ponencia=ponencia,user=self.request.user).first()
                 context['is_evaluado']=votacio.votacion
@@ -1120,7 +1127,8 @@ class ViewTaller(TemplateView):
         taller=Taller.objects.filter(path=self.kwargs.get('path'),published=True).first() 
         if self.request.user.is_authenticated:
             context['is_pagado']=RelTallerUser.objects.filter(taller=taller,user=self.request.user.perfilusuario,is_pagado=True).exists()
-
+            if context['is_pagado']:
+                InsertLog(taller.pk,'Taller',self.request.user.perfilusuario)
             if RelTallerVotacion.objects.filter(taller=taller,user=self.request.user).exists():
                 votacio=RelTallerVotacion.objects.filter(taller=taller,user=self.request.user).first()
                 context['is_evaluado']=votacio.votacion
@@ -2134,9 +2142,31 @@ class ViewTrabajo(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ViewTrabajo, self).get_context_data(**kwargs)
-        trabajo=TrabajosInvestigacion.objects.filter(path=self.kwargs.get('path')).first() 
+        trabajo=TrabajosInvestigacion.objects.filter(path=self.kwargs.get('path')).first()
+        if self.request.user.is_authenticated:
+            InsertLog(trabajo.pk,'ViewTrabajo',self.request.user.perfilusuario)
         context['trabajo']=trabajo
         return context
+class DonwloadTrabajo(TemplateView):
+    template_name= 'MedCongressApp/video_trabajo.html' 
+    def get(self, request, **kwargs):
+        tranbajo=TrabajosInvestigacion.objects.filter(path=self.kwargs.get('path')).first()
+        if tranbajo is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        if tranbajo.documento is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        else:
+            fileObj = Path('MedCongressApp/static/%s'%( tranbajo.documento))
+            if fileObj.is_file():
+                with open(fileObj, 'rb') as fh:
+                    response = HttpResponse( fh.read(), content_type="application/vnd")
+                    response["Content-Disposition"] = "attachment; filename=documento.pdf"
+                    if self.request.user.is_authenticated:
+                        InsertLog(tranbajo.pk,'DonwloadTrabajo',self.request.user.perfilusuario)
+                    return response
+        return self.render_to_response(self.get_context_data())
+
+    
 
 class ViewSala(TemplateView):
     template_name= 'MedCongressApp/sala.html' 
@@ -2152,6 +2182,8 @@ class ViewSala(TemplateView):
         sala=Sala.objects.filter(path=self.kwargs.get('path'),published=True).first() 
         if self.request.user.is_authenticated:
             context['is_pagado']=RelCongresoUser.objects.filter(congreso=sala.congreso,user=self.request.user.perfilusuario,is_pagado=True).exists()
+            if context['is_pagado']:
+                InsertLog(sala.pk,'StreamingSala',self.request.user.perfilusuario)
         else:
             context['is_pagado']=False
         context['sala']=sala
@@ -2166,7 +2198,135 @@ class ViewPonenciasSala(TemplateView):
         context = super(ViewPonenciasSala, self).get_context_data(**kwargs)
         sala=Sala.objects.filter(path=self.kwargs.get('path'),published=True).first()
         context['sala']=sala
+        
+        InsertLog(sala.pk,'Sala',self.request.user.perfilusuario)
         context['all_salas']=Sala.objects.filter(congreso=sala.congreso,ponencia__sala__isnull=False).distinct()
         context['ponencias']= Ponencia.objects.filter(published=True,sala=sala).order_by('fecha_inicio')
         return context
 
+def InsertLog(id,tipo,usuario):
+    if tipo=='Congreso':
+        congreso=Congreso.objects.get(pk=id)
+        mensaje='Visitó el Congreso " %s "'%(congreso.titulo)
+
+        today = datetime.today()
+        formato2 = "%Y-%m-%d %H:%M:%S"
+        last_log=UserActivityLog.objects.filter(user=usuario).order_by('pk').last()
+        if last_log:
+            cadena2 = last_log.fecha.strftime(formato2)  
+            objeto_datetime = datetime.strptime(cadena2, formato2)
+            tiempo = today - objeto_datetime
+            last_log.tiempo=tiempo
+            last_log.save()
+        log=UserActivityLog(congreso=congreso,mensaje=mensaje,tipo=tipo,user=usuario,fecha=today)
+        log.save()
+    if tipo=='Ponencia':
+        ponencia=Ponencia.objects.get(pk=id)
+        congreso=ponencia.congreso
+        mensaje='Visitó la Ponencia "%s" del Congreso "%s"'%(ponencia.titulo,congreso.titulo)
+        
+        today = datetime.today()
+        formato2 = "%Y-%m-%d %H:%M:%S"
+        last_log=UserActivityLog.objects.filter(user=usuario).order_by('pk').last()
+        if last_log:
+            cadena2 = last_log.fecha.strftime(formato2)  
+            objeto_datetime = datetime.strptime(cadena2, formato2)
+            tiempo = today - objeto_datetime
+            last_log.tiempo=tiempo
+            last_log.save()
+        log=UserActivityLog(congreso=congreso,mensaje=mensaje,tipo=tipo,user=usuario,fecha=today)
+        log.save()
+    if tipo=='Taller':
+        taller=Taller.objects.get(pk=id)
+        congreso=taller.congreso
+        mensaje='Visitó el Taller "%s" del Congreso "%s"'%(taller.titulo,congreso.titulo)
+       
+        today = datetime.today()
+        formato2 = "%Y-%m-%d %H:%M:%S"
+        last_log=UserActivityLog.objects.filter(user=usuario).order_by('pk').last()
+        if last_log:
+            cadena2 = last_log.fecha.strftime(formato2)  
+            objeto_datetime = datetime.strptime(cadena2, formato2)
+            tiempo = today - objeto_datetime
+            last_log.tiempo=tiempo
+            last_log.save()
+        log=UserActivityLog(congreso=congreso,mensaje=mensaje,tipo=tipo,user=usuario,fecha=today)
+        log.save()
+    if tipo=='ViewTrabajo':
+        trabajo=TrabajosInvestigacion.objects.get(pk=id)
+        congreso=trabajo.congreso
+        mensaje='Visualizó el video del Trabajo Investigativo "%s" del Congreso "%s"'%(trabajo.titulo,congreso.titulo)
+       
+        today = datetime.today()
+        formato2 = "%Y-%m-%d %H:%M:%S"
+        last_log=UserActivityLog.objects.filter(user=usuario).order_by('pk').last()
+        if last_log:
+            cadena2 = last_log.fecha.strftime(formato2)  
+            objeto_datetime = datetime.strptime(cadena2, formato2)
+            tiempo = today - objeto_datetime
+            last_log.tiempo=tiempo
+            last_log.save()
+        log=UserActivityLog(congreso=congreso,mensaje=mensaje,tipo=tipo,user=usuario,fecha=today)
+        log.save()
+    if tipo=='DonwloadTrabajo':
+        trabajo=TrabajosInvestigacion.objects.get(pk=id)
+        congreso=trabajo.congreso
+        mensaje='Descargó el Trabajo Investigativo "%s" del Congreso "%s"'%(trabajo.titulo,congreso.titulo)
+       
+        today = datetime.today()
+        formato2 = "%Y-%m-%d %H:%M:%S"
+        last_log=UserActivityLog.objects.filter(user=usuario).order_by('pk').last()
+        if last_log:
+            cadena2 = last_log.fecha.strftime(formato2)  
+            objeto_datetime = datetime.strptime(cadena2, formato2)
+            tiempo = today - objeto_datetime
+            last_log.tiempo=tiempo
+            last_log.save()
+        log=UserActivityLog(congreso=congreso,mensaje=mensaje,tipo=tipo,user=usuario,fecha=today)
+        log.save()
+    
+    if tipo=='StreamingSala':
+        streaming=Sala.objects.get(pk=id)
+        congreso=streaming.congreso
+        mensaje='Visualizó Streaming de la Sala "%s" del Congreso "%s"'%(streaming.titulo,congreso.titulo)
+        
+        today = datetime.today()
+        formato2 = "%Y-%m-%d %H:%M:%S"
+        last_log=UserActivityLog.objects.filter(user=usuario).order_by('pk').last()
+        if last_log:
+            cadena2 = last_log.fecha.strftime(formato2)  
+            objeto_datetime = datetime.strptime(cadena2, formato2)
+            tiempo = today - objeto_datetime
+            last_log.tiempo=tiempo
+            last_log.save()
+        log=UserActivityLog(congreso=congreso,mensaje=mensaje,tipo=tipo,user=usuario,fecha=today)
+        log.save()
+    if tipo=='Sala':
+        streaming=Sala.objects.get(pk=id)
+        congreso=streaming.congreso
+        mensaje='Visitó la Sala "%s" del Congreso "%s"'%(streaming.titulo,congreso.titulo)
+       
+        today = datetime.today()
+        formato2 = "%Y-%m-%d %H:%M:%S"
+        last_log=UserActivityLog.objects.filter(user=usuario).order_by('pk').last()
+        if last_log:
+            cadena2 = last_log.fecha.strftime(formato2)  
+            objeto_datetime = datetime.strptime(cadena2, formato2)
+            tiempo = today - objeto_datetime
+            last_log.tiempo=tiempo
+            last_log.save()
+        log=UserActivityLog(congreso=congreso,mensaje=mensaje,tipo=tipo,user=usuario,fecha=today)
+        log.save()
+
+
+@receiver(user_logged_out)
+def register_user_logout(sender, request, user, **kwargs):
+    today = datetime.today()
+    formato2 = "%Y-%m-%d %H:%M:%S"
+    last_log=UserActivityLog.objects.filter(user=user.perfilusuario).order_by('pk').last()
+    if last_log:
+        cadena2 = last_log.fecha.strftime(formato2)  
+        objeto_datetime = datetime.strptime(cadena2, formato2)
+        tiempo = today - objeto_datetime
+        last_log.tiempo=tiempo
+        last_log.save()

@@ -641,12 +641,12 @@ textarea:focus,
 
 .congresos-section-1 {
   padding: 50px 0 100px;
-  background-color: #4A5966;
+  background-color: #fff;
 }
 .congresos-section-1 .page-title,
 .congresos-section-1 .description,
 .congresos-section-1 .back-home {
-  color: #fff;
+  color: #4A5966;
   font-family: "DINPro-Regular_13937", sans-serif;
 }
 .congresos-section-1 .page-title {
@@ -837,18 +837,18 @@ textarea:focus,
 .congreso-calendario .list-group-item.active,
 .congreso-calendario .list-group-item:hover {
   border: 0;
-  background-color: #4A5966;
+  background-color: #40C8F4;
 }
 .congreso-calendario .list-group-item .day,
 .congreso-calendario .list-group-item .date {
-  color: #4A5966;
+  color:  #4A5966;
   font-family: "DINPro-Regular_13937", sans-serif;
 }
 .congreso-calendario .list-group-item.active .day,
 .congreso-calendario .list-group-item.active .date,
 .congreso-calendario .list-group-item:hover .day,
 .congreso-calendario .list-group-item:hover .date {
-  color: #40C8F4;
+  color: #4A5966;
 }
 .congreso-calendario .list-group-item .day {
   font-size: 30px;
@@ -875,7 +875,7 @@ textarea:focus,
   bottom: -15px;
   position: absolute;
   right: calc(50% - 7.5px);
-  border-top: 15px solid #4A5966;
+  border-top: 15px solid #40C8F4;
   border-left: 15px solid transparent;
   border-right: 15px solid transparent;
 }

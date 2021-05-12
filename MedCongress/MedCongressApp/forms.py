@@ -121,10 +121,6 @@ class PerfilUserForm(forms.ModelForm):
                label = 'Cédula Profesional',
                 required=False
                )
-   
-
-    categoria=forms.ModelChoiceField(queryset=CategoriaUsuario.objects.filter(published=True),label='Categoría',initial={'0':'Categoría'})
-   
     class Meta:
         model=PerfilUsuario
         fields=['cel_profecional','categoria','especialidad','puesto']
