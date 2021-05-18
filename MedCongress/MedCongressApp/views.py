@@ -1579,7 +1579,7 @@ class GetCuestionario(TemplateView):
                 constancia.foto_constancia='congreso/img_constancia/%s.pdf'%(nombre_img[0:50])
                 constancia.save()
         else:
-            constancias=RelCongresoUser.objects.filter(congreso=congreso,user=usuario)
+            constancias=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario)
             for constancia in constancias:
                 constancia.cuestionario=(','.join(cuestionario))
                 constancia.save()

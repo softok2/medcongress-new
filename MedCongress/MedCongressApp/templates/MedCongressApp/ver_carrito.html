@@ -62,11 +62,11 @@ Mi Carrito de Compra
                                 <td>${{car.pagar}}</td>
                                 <td style="text-align: center;">
                                     
-                                    <a id="btn_edit_{{car.mi_id}}" onclick="EditCart({{car.mi_id}}) " title="Editar"> <i class="fa fa-trash" style="color:blue; font-size: 20px;"></i></a>
-                                    <a id="btn_conf_{{car.mi_id}}"  onclick="ConfCart({{car.mi_id}})" style="display: none;"  title="Confirmar"> <i class="fa fa-trash" style="color:green; font-size: 20px;"></i></a>
-                                    <a id="btn_cancel_{{car.mi_id}}"  onclick="CancelCart({{car.mi_id}})" style="display: none;"  title="Cancelar"> <i class="fa fa-trash" style="color:red; font-size: 20px;"></i></a>
+                                    <a id="btn_edit_{{car.mi_id}}" onclick="EditCart({{car.mi_id}}) " title="Editar"> <i class="fas fa-edit" style="color:blue; font-size: 20px;"></i></a>
+                                    <a id="btn_conf_{{car.mi_id}}"  onclick="ConfCart({{car.mi_id}})" style="display: none;"  title="Confirmar"> <i class="fa fa-check-circle" style="color:green; font-size: 20px;"></i></a>
+                                    <a id="btn_cancel_{{car.mi_id}}"  onclick="CancelCart({{car.mi_id}})" style="display: none;"  title="Cancelar"> <i class="fa fa-times-circle" style="color:red; font-size: 20px;"></i></a>
                                     
-                                    <a onclick="EliminarCart({{car.mi_id}})"> <i class="fa fa-trash" style="color: red;font-size: 20px;margin-left: 10px;"  title="Eliminar"></i></a></td>
+                                    <a onclick="EliminarCart({{car.mi_id}})"> <i class="fas fa-trash-alt" style="color: red;font-size: 20px;margin-left: 10px;"  title="Eliminar"></i></a></td>
                             </tr>
                             {%endfor%}
                             {%else%}
