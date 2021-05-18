@@ -205,7 +205,7 @@
     function deleteItem(pk) {
         swal({
             title: "¿Estás seguro?",
-            text: "¡Eliminará todo lo referente a este evento",
+            text: "¡Eliminará todo lo referente a este usuario",
             icon: "warning",
             buttons: {
                 cancel: {
@@ -229,10 +229,10 @@
                     url = "{% url 'MedCongressAdmin:user_delete' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                         dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
-                        swal("¡Eliminado!", "Este elemento ha sido eliminado.", "success");
+                        swal("¡Eliminado!", "Este usuario ha sido eliminado.", "success");
                     });
                 } else {
-                    swal("Cancelado", "No se eliminó este elemento.", "error");
+                    swal("Cancelado", "No se eliminó este usuario.", "error");
                 }
             });
     }

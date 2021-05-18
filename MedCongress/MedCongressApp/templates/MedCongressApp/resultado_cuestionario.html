@@ -1,12 +1,11 @@
 {% extends "MedCongressApp/base.html"%}
 {% load static %}
-{% block titulo %}
-Cuestionario
+{%block css%}
 {%endblock%}
 {% block contenido %}
 
 
-<div class="kode-conference-schedule" id="programas">
+<section class="cuestionario-congreso">
     <div class="container">
         <div class="kf_heading_3">
             <h2>Cuestionario</h2>
@@ -49,7 +48,8 @@ Cuestionario
         <table class="table">
             <tr>
                 <td>
-                    <i style="color: green; font-size: 20px; margin-left: 21px;" class="fa fa-check-circle"></i>
+                    <i class="fa fa-check-circle" style="color: green; font-size: 20px; margin-left: 21px;"></i>
+                    
                 </td>
                 <td>
                    Respuesta Correcta
@@ -76,7 +76,7 @@ Cuestionario
     {%endif%}
    
 </form></div>
-</div>
+</section>
 
 {%endblock%}
 

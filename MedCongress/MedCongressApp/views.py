@@ -554,10 +554,10 @@ class CongresoDetail(TemplateView):
         # response=requests.get(url=url,headers={ 'Authorization': 'Bearer ef977a79f8ddf1902334a4a3a9c64215','Accept': 'application/vnd.vimeo.*+json;version=3.4' })
         # return HttpResponse(response.json() )  
         # # # /////////////////////
-        user = get_object_or_404(Congreso,path=self.kwargs.get('path'))
-        # congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
-        # if congreso is None:
-        #     return   HttpResponseRedirect(reverse('Error404'))
+        # user = get_object_or_404(Congreso,path=self.kwargs.get('path'))
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        if congreso is None:
+            return   HttpResponseRedirect(reverse('Error404'))
         return self.render_to_response(self.get_context_data())
 
     def get_template_names(self):
@@ -808,7 +808,8 @@ class CongresoDetail(TemplateView):
             context['programas']=DocumentoPrograma.objects.filter(congreso=congreso)
             context['trabajos']=TrabajosInvestigacion.objects.filter(congreso=congreso)
             context['preg_frecuentes']=PreguntasFrecuentes.objects.filter(congreso=congreso,published=True)
-
+            context['cuestionario']=CuestionarioPregunta.objects.filter(congreso=congreso,published=True).exists()
+            context['cuestionario_aprobado']=RelCongresoUser.objects.filter(user=user_perfil.pk, congreso=congreso.pk,is_constancia=True).exists()
         return context
     
 
@@ -1031,7 +1032,7 @@ class PerfilUserCreate(FormView):
         secret_key = get_random_string(60, chars)
         subject = 'Bienvenido a MedCongress'
         # html_message = render_to_string('MedCongressApp/email.html', context={'token':secret_key})
-        plain_message = strip_tags('Usted se ha creado un usuario en MedCongress entre a esta dirección https://medcongress.com.mx/habilitar_user/%s  para validar su cuenta en MedCongres'%(secret_key) )
+        plain_message = strip_tags('Usted se ha creado un usuario en MedCongress entre a esta dirección %s/habilitar_user/%s  para validar su cuenta en MedCongres'%(URL_SITE,secret_key) )
         from_email = ''
         to = user.email
         mail.send_mail(subject, plain_message, from_email, [to])
@@ -1550,40 +1551,35 @@ class GetCuestionario(TemplateView):
                 usuario.score=usuario.score+score
             usuario.save()
             ############## hacer Constancia#############
-            nombre='%s %s'%(self.request.user.first_name,self.request.user.last_name)
-            congreso_t= congreso.titulo
+            nombre='%s %s'%(usuario.usuario.first_name,usuario.usuario.last_name)
+                
             cont=len(nombre)
-            comienzo=630-(cont/2*18)
-            cont=len(congreso_t)
-            comienzo_t=630-(cont/2*10)
+            comienzo=1500-(cont/2*19) 
             base=Image.open('MedCongressApp/static/%s'%(congreso.foto_constancia)).convert('RGBA')
             text=Image.new('RGBA',base.size,(255,255,255,0))
-            nombre_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans-Oblique.ttf", 40)
-            congreso_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 25)
-            fecha_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 25)
+            nombre_font=ImageFont.truetype('calibri.ttf',150)
+            # nombre_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 100, encoding="unic")
             # cong.set_variation_by_name('Italic')
             d=ImageDraw.Draw(text)
-            d.text((comienzo,400),nombre,font=nombre_font,fill=(89, 85, 85))
-            d.text((430,470),'Ha concluido satisfactoriamente el Congreso',font=congreso_font,fill=(94,196,234,255))
-            d.text((comienzo_t,500),congreso_t,font=congreso_font,fill=(14,138,184,255))
-            today = date.today()
-            d.text((555,775),'%s/%s/%s'%(today.day,today.month,today.year),font=fecha_font,fill=(89, 85, 85))
+            d.text((comienzo,1200),nombre,font=nombre_font,fill=(89, 85, 85))
             out=Image.alpha_composite(base,text)
-            tit=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
-        
-            nombre_img='constancia_%s_%s'%(self.request.user.first_name,tit)  
-            out.save('MedCongressApp/static/congreso/img_constancia/%s.png'%(nombre_img))
+            tit=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n").replace(",","-").replace(":","-")
+            tit_nombre=nombre.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n").replace(",","-").replace(":","-")
+            nombre_img='constancia_%s_%s'%(tit_nombre,tit)
+            imagen_pdf=out.convert('RGB')  
+            imagen_pdf.save('MedCongressApp/static/congreso/img_constancia/%s.pdf'%(nombre_img[0:50]))
+            
         ##########################
             
-            constancias=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario)
+            constancias=RelCongresoUser.objects.filter(congreso=congreso,user=usuario)
             for constancia in constancias:
                 constancia.is_constancia=True
                 constancia.fecha_constancia=datetime.now()
                 constancia.cuestionario=(','.join(cuestionario))
-                constancia.foto_constancia='congreso/img_constancia/%s.png'%(nombre_img)
+                constancia.foto_constancia='congreso/img_constancia/%s.pdf'%(nombre_img[0:50])
                 constancia.save()
         else:
-            constancias=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario)
+            constancias=RelCongresoUser.objects.filter(congreso=congreso,user=usuario)
             for constancia in constancias:
                 constancia.cuestionario=(','.join(cuestionario))
                 constancia.save()
@@ -1732,9 +1728,15 @@ class Get_Constancia(PdfMixin,TemplateView):
         congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
         if congreso is None:
             return   HttpResponseRedirect(reverse('Error404'))
-        constancia=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario,is_constancia=True).count()
-        if  constancia is None :
+        constancia=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario,is_constancia=True).first()
+        if  not constancia :
             return   HttpResponseRedirect(reverse('Error404'))
+        fileObj = Path('MedCongressApp/static/%s'%( constancia.foto_constancia))
+        if fileObj.is_file():
+            with open(fileObj, 'rb') as fh:
+                response = HttpResponse( fh.read(), content_type="application/vnd")
+                response["Content-Disposition"] = "attachment; filename=documento.pdf"
+                return response
         return self.render_to_response(self.get_context_data())
 @method_decorator(login_required,name='dispatch')
 class EvaluarPonencia(TemplateView):
@@ -2000,14 +2002,13 @@ def Webhook(request):
     if request.method=='POST':
         
         received_json_data=json.loads(request.body)
-         ##### EMAIL #####
+        
         if received_json_data['type']== "charge.succeeded":
             cart=[{'cant':0},[]]
             pagos_congreso=RelCongresoUser.objects.filter(id_transaccion=received_json_data['transaction']['id'])
             for pago_congreso in pagos_congreso:
                 pago_congreso.is_pagado=True
-                pago_congreso.save()
-                ################################
+                pago_congreso.save() 
                 relCongresoCategoriaPago=RelCongresoCategoriaPago.objects.filter(congreso=pago_congreso.congreso.pk,categoria=pago_congreso.categoria_pago.pk).first()
               
                 if len(cart[1])>0:
@@ -2045,9 +2046,6 @@ def Webhook(request):
                             }
                         )  
                 cart[0]['cant']=round(cart[0]['cant']+float(relCongresoCategoriaPago.precio)*float(pago_congreso.cantidad),2)
-          
-                ##################################
-
 
             pagos_taller=RelTallerUser.objects.filter(id_transaccion=received_json_data['transaction']['id'])
             for pago_taller in pagos_taller:
@@ -2091,14 +2089,14 @@ def Webhook(request):
                             }
                         )  
                 cart[0]['cant']=round(cart[0]['cant']+float(relCongresoCategoriaPago.precio)*float(pago_taller.cantidad),2)
-          
-                ####END EMAIL ######    
-                ##################################
 
             card=''
+            return JsonResponse(received_json_data['transaction'])
+            print()
             if 'card' in received_json_data['transaction']:
                 card=received_json_data['transaction']['card']['card_number']
             if cart[0]['cant'] >0:
+                
                 subject = 'Comprobante de Pago de MedCongress'
                 html_message = render_to_string('MedCongressApp/recibo_pago.html', context={'car':cart,'date':received_json_data['event_date'],'numero':received_json_data['transaction']['authorization'],'importe':cart[0]['cant'],'card':card,'orden_id':received_json_data['transaction']['order_id'],'id_transaccion':received_json_data['transaction']['id'],'tipo':received_json_data['transaction']['method'],'site':URL_SITE })
                 plain_message = strip_tags('Usted se a comprado eventos en MedCongres')
@@ -2106,12 +2104,11 @@ def Webhook(request):
                 to = received_json_data['transaction']['customer']['email']
                 mail.send_mail(subject, plain_message, from_email, [to],html_message=html_message)
 
-        ####END EMAIL ######
+
         if received_json_data['type']== "verification":
             plain_message = strip_tags('El código de verificación es:  <%s>'%(received_json_data)) 
             subject = 'Código de verificación del Openpay'
             from_email = ''
-
             mail.send_mail(subject, plain_message, from_email, ['dennis.molinetg@gmail.com','a.morell.cu@icloud.com'])
     return JsonResponse({'success':'true'})
             
@@ -2165,8 +2162,6 @@ class DonwloadTrabajo(TemplateView):
                         InsertLog(tranbajo.pk,'DonwloadTrabajo',self.request.user.perfilusuario)
                     return response
         return self.render_to_response(self.get_context_data())
-
-    
 
 class ViewSala(TemplateView):
     template_name= 'MedCongressApp/sala.html' 

@@ -205,8 +205,8 @@ class CambiarPassForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
        
-        self.fields['password'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['password1'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['password'].widget.attrs.update({'class': 'form-control  border-0','placeholder':'Nueva Contraseña'}) 
+        self.fields['password1'].widget.attrs.update({'class': 'form-control border-0','placeholder':'Confirme la Nueva Contraseña'}) 
        
 
     def clean(self, *args, **kwargs):

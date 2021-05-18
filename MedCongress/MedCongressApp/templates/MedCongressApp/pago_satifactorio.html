@@ -4,9 +4,7 @@
 Transaccion Exitosa
 {%endblock%}
 {% block contenido %}
-<div class="sub-header">
-    <!-- SUB HEADER -->
-</div>
+
 <div class="modal fade" id="my" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -67,91 +65,74 @@ Transaccion Exitosa
         </div>
     </div>
 </div>
-<div class="content">
-    <!--Kode-our-speaker-strip start-->
-    <div class="Kode-page-heading">
-        <div class="container">
-            <!--ROW START-->
-            <div class="row">
-                <div class="col-md-6 col-sm-6">
-                    <h2>Transacción Exitosa</h2>
-                </div>
-                <div class="col-md-6 col-sm-6">
-                    <ul>
-                        <li>
-                            <a href="#"><i class="fa fa-home"></i>Home</a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-angle-right"></i> Transacción Exitosa</a>
-                        </li>
-                    </ul>
-                </div>
+<section ><section class="cuestionario-congreso">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="section-title mb-4">Enhorabuena</h2>
+                <h1 class="section-subtitle">"Ahora puede acceder a sus eventos comprados."</h1>
+                <h6 class="descripcion"> El comprobante de pago han sido enviados al correo electrónico de su cuenta, en caso de cualquier incidente contactar a <a
+                    href="mailto:soporte@medcongress.com.mx">soporte@medcongress.com.mx </a>"</h6>
             </div>
-            <!--ROW END-->
+            
         </div>
     </div>
-    <!--Kode-our-speaker-strip End-->
-    <!--KODE EVENT BLOG 2 START-->
-    <div class="kode-blog-style-2">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="kode-error">
-                        <h3 style="font-size: 100px;">Enhorabuena </h3>
+</section>
+<section class="checkout-table">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col px-5">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">no.</th>
+                                <th scope="col">Evento</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Cat. de Pago</th>
+                                <th scope="col">Precio</th>
+                                <th scope="col">Cant</th>
+                                <th scope="col">A Pagar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                           
+                            {%for ca in car.1 %}
+                        <tr>
+                            <td scope="row">{{forloop.counter}}</td>
+                            <td>{{ca.tipo_evento}}</td>
+                            <td>{{ca.nombre_congreso}}</td>
+                            <td>{{ca.nombre_cat_pago}}</td>
+                            <td>${{ca.precio}}</td>
+                            <td>{{ca.cantidad}}</td>
+                            <td>${{ca.pagar|floatformat:2}}</td>
 
-                        <h4>"Ahora puede acceder a sus eventos comprados."</h4> <br><h6> El comprobante de pago han sido enviados al correo electrónico de su cuenta, en caso de cualquier incidente contactar a <a
-                            href="mailto:soporte@medcongress.com.mx">soporte@medcongress.com.mx </a>"</h6>
-                        <p></p>
-                        <p></p>
-                        <h5 style="margin-top: px;"><b>Detalle de la Orden </b></h5>
-
-
-
-                        <table cellspacing="0" border="1" class="table table-responsive">
+                        </tr>
+                        {%endfor%}
                         
-                                <tr style="background-color:#d4d1d1;"> 
-                                    <th style="padding: 10px;" >#</th>
-                                    <th style="padding: 10px;">Evento</th>
-                                    <th >Nombre</th>
-                                    <th>Cat. de Pago</th>
-                                    <th>Precio</th>
-                                    <th >Cant.</th>
-                                    <th >A pagar</th>
-                                </tr>
-                        
-                            <tbody>
-                                
-                                {%for ca in car.1 %}
-                                <tr>
-                                    <th scope="row">{{forloop.counter}}</th>
-                                    <td style="padding: 10px;">{{ca.tipo_evento}}</td>
-                                    <td style="padding: 10px;">{{ca.nombre_congreso}}</td>
-                                    <td style="padding: 10px;">{{ca.nombre_cat_pago}}</td>
-                                    <td style="padding: 10px;">${{ca.precio}}</td>
-                                    <td style="padding: 10px;">{{ca.cantidad}}</td>
-                                    <td style="padding: 10px;">${{ca.pagar|floatformat:2}}</td>
-                                  
-                                </tr>
-                                {%endfor%}
-                                <tr style="background-color: slategray;">
-                                    <th scope="row" colspan="6">Total a pagar</th>
-                                    <td><b> ${{car.0.cant|floatformat:2}}</b></td>
-                                    
-                                        
-                                </tr>
-                             
-                                
-                            </tbody>
-                        </table>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
-                
+            </div>
+        </div>
+
+        <div class="row my-3">
+            <div class="col px-5">
+                <div class="cart-price d-flex justify-content-between">
+                    <span class="ms-3">Total a Pagar</span>
+                    <span class="me-5">${{car.0.cant|floatformat:2}} </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="float: right;">
+            <div class="col px-5" >
                 <a  class="btn btn-primary" data-toggle="modal" data-target="#my">Obtener Factura </a>
             </div>
-        </div>	
+        </div>
     </div>
-<!--KODE EVENT BLOG 2 START-->
-</div>
+</section>
+
 {%endblock%}
 
 {%block script%}

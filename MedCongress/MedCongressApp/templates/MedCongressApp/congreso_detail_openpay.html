@@ -207,9 +207,6 @@
     </div>
 </section>
 {%endif%}
-  
-      
-        
 
 {% if fecha_ponencias %}
 <section class="congreso-calendario">
@@ -224,7 +221,7 @@
         <div class="row">
             <div class="col"> 
                 <div class="list-group list-group-horizontal"  role="tablist">
-            {%endif%}
+                {%endif%}
         
                     <a class="list-group-item list-group-item-action {%if forloop.first%} active {%endif%}d-flex flex-column justify-content-center align-items-center" data-bs-toggle="list" href="#day-{{forloop.counter}}" role="tab">
                         <h4 class="day">Día {{forloop.counter}}</h4>
@@ -236,16 +233,16 @@
             </div>
             </div>
         </div>
-            <div class='row'>
-                <div class="col">
-                    <div class="list-group list-group-horizontal"  role="tablist">
-                {%endif%}
-                {%if forloop.last%}
-            </div>
-            {% endif %}
-                {% endfor %}
-                    
-         
+        <div class='row'>
+            <div class="col">
+                <div class="list-group list-group-horizontal"  role="tablist">
+            {%endif%}
+            {%if forloop.last%}
+        </div>
+        {% endif %}
+            {% endfor %}
+                
+        
         <div class="row">
             <div class="col tab-pane-wrapper py-5"> 
                 {% for ponencia in ponencias%}
@@ -446,9 +443,37 @@
                 
             </div>
         </div>
+      
     </div>
 </section>
 {%endif%}
+{%if pagado  and  cuestionario%}
+<div class="section congreso-program">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                
+                {%if cuestionario_aprobado %}
+                <h2 class="section-title mb-4">Cuestionario</h2>
+                <h1 class="section-subtitle"><strong>Usted ya aprobó este Cuestionario y se le asignó una onstancia</strong></h1>
+                <div class="cuestionario">
+                    <a href="{% url 'Get_Constancia' congreso.path %}" target="_black"> Ver Constancia</a>
+                 </div>
+                {%else%}
+                <h2 class="section-title mb-4">Cuestionario</h2>
+                <h1 class="section-subtitle"><strong>Deberá responder el un Cuestionario para asignarle la Constancia de este Congreso</strong></h1>
+               <div class="cuestionario">
+                   <a href="{% url 'Cuestionario' path=congreso.path%}"> Llenar Cuestionario</a>
+                </div>
+                {%endif%}
+                
+            </div>
+            
+        </div>
+    </div>
+</div>
+{%endif%}
+
 {% if ponencias_video%}
 <section class="congreso-ponencias pb-5">
     <div class="container-fluid">
@@ -545,11 +570,7 @@
 {%if categorias_pago %}
 <section class="congreso-tickes">
     <div class="container-fluid">
-        <div class="row mb-5">
-            <div class="col">
-                <h3 class="section-name">TIPOS DE BOLETOS PARA EL CONGRESO</h3>
-            </div>
-        </div>
+     
         {%if congreso.detalles_tipo_boleto %}
         <div class="row">
             <div class="col">

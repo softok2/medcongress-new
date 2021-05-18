@@ -1729,6 +1729,7 @@ textarea:focus,
   background: #fff url(../img/login-background-1.jpg) center center no-repeat;
   background-size: cover;
 }
+
 .login {
   height: 120vh;
   overflow-y: hidden;
@@ -3212,3 +3213,38 @@ textarea:focus,
   .glyphicon-menu-up:before {
     content: "\e260"
   }
+
+
+.congreso-program .cuestionario a{
+  font-size: 27px;
+  color: #40C8F4;
+  text-decoration: none;
+}
+.cuestionario-congreso{
+  margin-top: 115px;
+  margin-bottom: 50px;
+}
+
+.cuestionario-congreso .section-title,
+.cuestionario-congreso .section-subtitle,
+.cuestionario-congreso .descripcion,
+.cuestionario-congreso .back-home
+{
+ 
+  color: #4A5966;
+  font-family: "DINPro-Regular_13937", sans-serif;
+}
+.cuestionario-congreso .section-title {
+  font-size: 40px;
+}
+
+.cuestionario-congreso .section-subtitle {
+  font-size: 27px;
+  padding: 0 20px 10px 0;
+  border-bottom: 2px solid #40C8F4;
+}
+.cuestionario-congreso .descripcion {
+  font-size: 14px;
+  padding: 0 20px 10px 0;
+ 
+}

@@ -1,51 +1,17 @@
 {% extends "MedCongressApp/base.html"%}
 {% load static %}
-{% block titulo %}
-Error Facturación
+{%block css%}
 {%endblock%}
 {% block contenido %}
-<div class="sub-header">
-    <!-- SUB HEADER -->
-</div>
-<div class="content">
-    <!--Kode-our-speaker-strip start-->
-    <div class="Kode-page-heading">
-        <div class="container">
-            <!--ROW START-->
-            <div class="row">
-                <div class="col-md-6 col-sm-6">
-                    <h2>Error Facturación</h2>
-                </div>
-                <div class="col-md-6 col-sm-6">
-                    <ul>
-                        <li>
-                            <a href="#"><i class="fa fa-home"></i>Home</a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-angle-right"></i>Error Facturación</a>
-                        </li>
-                    </ul>
-                </div>
+<section class="failure d-flex flex-column align-items-center justify-content-center">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+            <h2 class="section-title text-danger"><strong class="text-center d-block">Error!</strong></h2>
+            <h2 class="section-title text-danger"><strong class="text-center d-block">¡Oops A ocurrido un error relacionado con la Facturación !</strong></h2>
+            <small class="section-subtitle text-center d-block">{{request.session.error_facturacion}}</small>
             </div>
-            <!--ROW END-->
         </div>
     </div>
-    <!--Kode-our-speaker-strip End-->
-    <!--KODE EVENT BLOG 2 START-->
-    <div class="kode-blog-style-2">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="kode-error">
-                        <h3>Error!</h3>
-                        <h4>Oops A ocurrido un error relacionado con la Facturacion !</h4>
-                        <p>{{request.session.error_facturacion}}</p>
-                      
-                    </div>
-                </div>
-            </div>
-        </div>	
-    </div>
-<!--KODE EVENT BLOG 2 START-->
-</div>
+</section>
 {%endblock%}

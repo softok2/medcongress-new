@@ -1,21 +1,23 @@
 {% extends "MedCongressApp/base.html"%}
 {% load static %}
-{% block titulo %}
-Cuestionario
+{%block css%}
 {%endblock%}
 {% block contenido %}
 
 
-<div class="kode-conference-schedule" id="programas">
-    <div class="container">
-        <div class="kf_heading_3">
-            <h2>Cuestionario</h2>
-            <span>Debe llenar este cuestionario para que se le otorgue la Constancia de haber participado en este Congreso</span>
+<section class="cuestionario-congreso">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="section-title mb-4">Cuestionario</h2>
+                <h1 class="section-subtitle">Debe llenar este cuestionario para que se le otorgue la Constancia de haber participado en este Congreso</h1>
+                
+            </div>
+            
         </div>
-
-        
     </div>
-    <div class="container" >
+    
+    <div class="container-fluid" >
         <form  action="" method="POST" id="form" name="miform">
             {% csrf_token %}
         <table class="table table-responsive">
@@ -40,7 +42,7 @@ Cuestionario
     <a class="btn btn-primary" id="button"  role="button" >Enviar</a>
    
 </form></div>
-</div>
+</section>
 
 {%endblock%}
 
