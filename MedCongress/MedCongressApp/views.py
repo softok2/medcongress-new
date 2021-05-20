@@ -770,6 +770,7 @@ class CongresoDetail(TemplateView):
 
             if self.request.user.is_authenticated :
                 user_perfil=PerfilUsuario.objects.filter(usuario=self.request.user.pk).first()
+                context['cuestionario_aprobado']=RelCongresoUser.objects.filter(user=user_perfil.pk, congreso=congreso.pk,is_constancia=True).exists()
                 talleres=Taller.objects.filter(congreso=congreso.pk,published=True).order_by('fecha_inicio')
                 ver=[]
                 for taller in talleres:
@@ -809,7 +810,7 @@ class CongresoDetail(TemplateView):
             context['trabajos']=TrabajosInvestigacion.objects.filter(congreso=congreso)
             context['preg_frecuentes']=PreguntasFrecuentes.objects.filter(congreso=congreso,published=True)
             context['cuestionario']=CuestionarioPregunta.objects.filter(congreso=congreso,published=True).exists()
-            context['cuestionario_aprobado']=RelCongresoUser.objects.filter(user=user_perfil.pk, congreso=congreso.pk,is_constancia=True).exists()
+           
         return context
     
 
