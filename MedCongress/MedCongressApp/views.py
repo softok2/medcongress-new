@@ -515,6 +515,8 @@ class Perfil(TemplateView):
         # context['congresos']= Congreso.objects.filter(published=True).order_by('fecha_inicio')
         # context['nuevo_congreso'] = Congreso.objects.filter(fecha_inicio__gt=datetime.now(),published=True).first()
         return context
+
+
 ##### Listar Congresos #####
 
 class CongresoListView(ListView):
@@ -2326,3 +2328,110 @@ def register_user_logout(sender, request, user, **kwargs):
         tiempo = today - objeto_datetime
         last_log.tiempo=tiempo
         last_log.save()
+
+
+
+@method_decorator(login_required,name='dispatch')   
+class PerfilCongresos(TemplateView):
+    template_name= 'MedCongressApp/perfil_congresos.html' 
+    
+    def get_context_data(self, **kwargs):
+        
+        context = super().get_context_data(**kwargs)
+        congresos=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,is_pagado=True).distinct('congreso')
+        congreso_env=[]
+        for congreso in congresos:
+            facturas=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,congreso=congreso.congreso,is_pagado=True,uuid_factura__isnull=False).distinct('uuid_factura')
+            facturas_env=[]
+            for factura in facturas:
+                facturas_env.append({'factura':factura.uuid_factura})
+            congreso_env.append({'congreso':congreso.congreso,
+                                'facturas':facturas_env})
+        context['congresos']=congreso_env
+
+        congresos_pendientes=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,is_pagado=False).distinct('congreso')
+        context['congresos_pendientes']=congresos_pendientes
+        talleres=RelTallerUser.objects.filter(user=self.request.user.perfilusuario,is_pagado=True).distinct('taller')
+        context['talleres']=talleres
+        talleres_pendientes=RelTallerUser.objects.filter(user=self.request.user.perfilusuario,is_pagado=False).distinct('taller')
+        context['talleres_pendientes']=talleres_pendientes
+       
+        if Ponente.objects.filter(user=self.request.user.perfilusuario).exists():
+            ponencias=RelPonenciaPonente.objects.filter(ponente=self.request.user.perfilusuario.ponente)
+            context['ponencias']=ponencias
+            talleres_pon=RelTallerPonente.objects.filter(ponente=self.request.user.perfilusuario.ponente)
+            context['talleres_pon']=talleres_pon
+        constancias=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,is_constancia=True).values('congreso','foto_constancia').distinct()
+        constancias_env=[]
+        constancias_taller=RelTallerUser.objects.filter(user=self.request.user.perfilusuario,is_constancia=True).values('taller','foto_constancia').distinct()
+        constancias_taller_env=[]
+
+        for constancia in constancias:
+            congreso=Congreso.objects.get(pk=constancia['congreso'])
+            con=False
+            if 'congreso/img_constancia' in constancia['foto_constancia']:
+                con=True
+            constancias_env.append({'congreso':congreso,
+            'foto_constancia':constancia['foto_constancia'],'tipo_constancia':con})
+        context['constancias']=constancias_env
+
+        for constancia in constancias_taller:
+            taller=Taller.objects.get(pk=constancia['taller'])
+            constancias_taller_env.append({'taller':taller,
+            'foto_constancia':constancia['foto_constancia']})
+        context['constancias_taller']=constancias_taller_env
+
+        return context
+
+@method_decorator(login_required,name='dispatch')   
+class PerfilConstancias(TemplateView):
+    template_name= 'MedCongressApp/perfil_constancias.html' 
+    
+    def get_context_data(self, **kwargs):
+        
+        context = super().get_context_data(**kwargs)
+        congresos=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,is_pagado=True).distinct('congreso')
+        congreso_env=[]
+        for congreso in congresos:
+            facturas=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,congreso=congreso.congreso,is_pagado=True,uuid_factura__isnull=False).distinct('uuid_factura')
+            facturas_env=[]
+            for factura in facturas:
+                facturas_env.append({'factura':factura.uuid_factura})
+            congreso_env.append({'congreso':congreso.congreso,
+                                'facturas':facturas_env})
+        context['congresos']=congreso_env
+
+        congresos_pendientes=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,is_pagado=False).distinct('congreso')
+        context['congresos_pendientes']=congresos_pendientes
+        talleres=RelTallerUser.objects.filter(user=self.request.user.perfilusuario,is_pagado=True).distinct('taller')
+        context['talleres']=talleres
+        talleres_pendientes=RelTallerUser.objects.filter(user=self.request.user.perfilusuario,is_pagado=False).distinct('taller')
+        context['talleres_pendientes']=talleres_pendientes
+       
+        if Ponente.objects.filter(user=self.request.user.perfilusuario).exists():
+            ponencias=RelPonenciaPonente.objects.filter(ponente=self.request.user.perfilusuario.ponente)
+            context['ponencias']=ponencias
+            talleres_pon=RelTallerPonente.objects.filter(ponente=self.request.user.perfilusuario.ponente)
+            context['talleres_pon']=talleres_pon
+        constancias=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,is_constancia=True).values('congreso','foto_constancia').distinct()
+        constancias_env=[]
+        constancias_taller=RelTallerUser.objects.filter(user=self.request.user.perfilusuario,is_constancia=True).values('taller','foto_constancia').distinct()
+        constancias_taller_env=[]
+
+        for constancia in constancias:
+            congreso=Congreso.objects.get(pk=constancia['congreso'])
+            con=False
+            if 'congreso/img_constancia' in constancia['foto_constancia']:
+                con=True
+            constancias_env.append({'congreso':congreso,
+            'foto_constancia':constancia['foto_constancia'],'tipo_constancia':con})
+        context['constancias']=constancias_env
+
+        for constancia in constancias_taller:
+            taller=Taller.objects.get(pk=constancia['taller'])
+            constancias_taller_env.append({'taller':taller,
+            'foto_constancia':constancia['foto_constancia']})
+        context['constancias_taller']=constancias_taller_env
+
+        return context
+        

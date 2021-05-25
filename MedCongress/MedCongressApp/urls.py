@@ -7,7 +7,7 @@ GetCuestionario,SetConstancia,EvaluarPonencia,Resultado_Cuestionario,Get_Constan
 ViewErrorFact,PerfilUpdateView,CambiarPass,UpdateEvaluarPonencia,UserAutocomplete,ViewErrorRegistrar,RegistroExitoso,
 PonenteAutocomplete,ModeradorAutocomplete,CongresoAutocomplete,PatrocinadorAutocomplete,SocioAutocomplete,ViewTaller,
 EvaluarTaller,UpdateEvaluarTaller,TallerAutocomplete,PonenciaAutocomplete,ViewCart,ContactoExitoso,GetFacturaPrueba,GetContactos,Enviar,
-Webhook,PagoExitoso2,ViewTrabajo,ViewSala,ViewPonenciasSala,DonwloadTrabajo)
+Webhook,PagoExitoso2,ViewTrabajo,ViewSala,ViewPonenciasSala,DonwloadTrabajo,PerfilCongresos,PerfilConstancias)
 
 urlpatterns = [
     # path('login',login,name='auth'),
@@ -52,6 +52,9 @@ urlpatterns = [
     # path('confic_email',ConfigEmail.as_view() , name='confic_email'),
     path('habilitar_user/<str:token>',HabilitarUser.as_view() , name='habilitar_user'),
     path('perfil',Perfil.as_view() , name='perfil'),
+    path('perfil/congresos',PerfilCongresos.as_view() , name='perfil_congreso'),
+    path('perfil/constancias',PerfilConstancias.as_view() , name='perfil_constancias'),
+    
     path('transaccion_exitosa',PagoExitoso.as_view() , name='transaccion_exitosa'),
     path('get_perfil', GetPerfil.as_view() , name='GetPerfil'),
     path('get_contactos', GetContactos.as_view() , name='GetContactos'),

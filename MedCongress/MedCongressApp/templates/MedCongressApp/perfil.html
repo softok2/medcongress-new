@@ -1,4 +1,4 @@
-{% extends "MedCongressApp/base.html"%}
+{% extends "MedCongressApp/perfil_base.html"%}
 {% load static %}
 {%block css%}
 
@@ -45,34 +45,8 @@ Detalles del Perfil
 {%endblock%}
 
 
-{% block contenido %}
-<section class="profile">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-3">
-                <ul class="profile-nav flex-column">
-                    <li class="nav-item">
-                        <h3 class="nav-title"><strong>ENLACES</strong></h3>
-                    </li>
-                    <li class="nav-item border-top-0">
-                        <a class="nav-link active" href="#">Congresos</a>
-                    </li>
-                    <li class="nav-item border-top-0">
-                        <a class="nav-link" href="#">Mis Constancias</a>
-                    </li>
-                    <li class="nav-item border-top-0">
-                        <a class="nav-link" href="#">Ayuda</a>
-                    </li>
-                    <li class="nav-item border-top-0">
-                        <a class="nav-link" href="{% url 'Home'%}">Inicio</a>
-                    </li>
-                </ul>
-                <div class="points d-flex flex-column justify-content-center align-content-center">
-                    <span class="title"><strong>MIS PUNTOS</strong></span>
-                    <span class="number">{%if request.user.perfilusuario.score%}{{request.user.perfilusuario.score}}{%else%} 0 {%endif%}</span>
-                </div>
-            </div>
-            <div class="col-md-8 content">
+{% block contenido_perfil %}
+
                 <div class="profile-section section-1">
                     <div class="row">
                         <div class="col d-flex justify-content-between align-items-center">
@@ -175,52 +149,25 @@ Detalles del Perfil
                        
                     </ul>
                 </div>
+                {% if request.user.perfilusuario.detalle %}
                 <div class="profile-section section-3">
                     <h3 class="section-3-title">Mis Constancias</h3>
                     <ul>
-                        {% if request.user.perfilusuario.detalle %}
+                        
                             <li>{{request.user.perfilusuario.detalle|safe}}</li>
-                            {%else%}
-                            <li>No tiene ninguna constancia a mostrar</li>
-                            {%endif%}
+                           
                     </ul>
                 </div>
+                {%endif%}
+                {% if request.user.perfilusuario.datos_interes %}
                 <div class="profile-section section-4">
                     <h3 class="section-4-title">Datos de Interes</h3>
                     <ul>
-                        {% if request.user.perfilusuario.datos_interes %}
+                        
                         <li>{{request.user.perfilusuario.datos_interes|safe}}</li>
-                        {%else%}
-                        <li>No tiene ningún Dato de Interes que mostrar</li> 
-                        {%endif%}
+                       
                     </ul>
                 </div>
-                <div class="profile-section section-5">
-                    <h3 class="section-5-title">Mis Congresos</h3>
-                    <ul>
-                        {%if congresos%}
-                        {%for congreso in congresos%}
-                       <li  class="nav-item"><a class="nav-link" href=" {% url 'View_congreso' path=congreso.congreso.path%}">{{congreso.congreso.titulo}}</a></li>
-                       {%if congreso.facturas%}
-                       <div class="fac-congreso">
-                       <div  class="factura">Facturas</div>
-                       <div class="row">
-                       {%for factura in congreso.facturas%}
-                       <div class="col-md-3">
-                       <a style="font-size: 10px; color: black;"  target="_black"  href="{% static '/facturas/pdf/'%}{{factura.factura}}.pdf"><b>{{factura.factura}}.pdf</b> </a>
-                        </div>
-                       {%endfor%}
-                    </div>
-                </div>
-                       {%endif%}
-                        {%endfor%}
-                        {%else%}
-                        <li>No tiene ningún Congreso comprado</li>
-                        {%endif%}
-                    </ul>
-                </div>  
-            </div>
-        </div>
-    </div>
-</section>
+                {%endif%}
+           
 {%endblock%}

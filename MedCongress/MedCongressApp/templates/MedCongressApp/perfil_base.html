@@ -1,0 +1,85 @@
+{% extends "MedCongressApp/base.html"%}
+{% load static %}
+{%block css%}
+
+{%endblock%}
+{% block titulo %}
+Detalles del Perfil
+{%endblock%}
+{% block metadatos%}
+{% if request.user.perfilusuario.meta_title%}
+<meta property="title" content="{{request.user.perfilusuario.meta_title}}">
+{%endif%}
+{% if request.user.perfilusuario.meta_description %}
+<meta name="description" content="{{request.user.perfilusuario.meta_description}}">
+{%endif%}
+{% if request.user.perfilusuario.meta_og_description %}
+<meta property="og:description" content="{{request.user.perfilusuario.meta_og_description}}">
+{%endif%}
+{% if request.user.perfilusuario.meta_og_type %}
+<meta property="og:type" content="{{request.user.perfilusuario.meta_og_type}}">
+{%endif%}
+{% if request.user.perfilusuario.meta_og_title %}
+<meta property="og:title" content="{{request.user.perfilusuario.meta_og_title}}">
+{%endif%}
+{% if request.user.perfilusuario.meta_og_url %}
+<meta property="og:url" content="{{request.user.perfilusuario.meta_og_url}}">
+{%endif%}
+{% if request.user.perfilusuario.meta_og_imagen %}
+<meta property="og:image" content="{% static '/'%}{{request.user.perfilusuario.meta_og_imagen}}">
+{%endif%}
+{% if request.user.perfilusuario.meta_twitter_card %}
+<meta name="twitter:card" content="{{request.user.perfilusuario.meta_twitter_card}}" />
+{%endif%}
+{% if request.user.perfilusuario.meta_twitter_site %}
+<meta name="twitter:site" content="{{request.user.perfilusuario.meta_twitter_site}}" />
+{%endif%}
+{% if request.user.perfilusuario.meta_twitter_creator %}
+<meta name="twitter:creator" content="{{request.user.perfilusuario.meta_twitter_creator}}" />
+{%endif%}
+{% if request.user.perfilusuario.meta_keywords %}
+<meta name="keywords"
+	content="{{request.user.perfilusuario.meta_keywords}}" />
+{%endif%}
+
+{%endblock%}
+
+
+{% block contenido %}
+<section class="profile">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3 col-xm-12">
+                <ul class="profile-nav flex-column">
+                    <li class="nav-item">
+                        <h3 class="nav-title"><strong>ENLACES</strong></h3>
+                    </li>
+                    <li class="nav-item border-top-0">
+                        <a class="nav-link" href="{% url 'perfil' %}">Perfil</a>
+                    </li>
+                    <li class="nav-item border-top-0">
+                        <a class="nav-link active" href="{%url 'perfil_congreso'%}">Congresos</a>
+                    </li>
+                    <li class="nav-item border-top-0">
+                        <a class="nav-link" href="{%url 'perfil_constancias'%}">Constacias</a>
+                    </li>
+                    
+                    <li class="nav-item border-top-0">
+                        <a class="nav-link" href="{% url 'Home'%}">Inicio</a>
+                    </li>
+                </ul>
+                <div class="points d-flex flex-column justify-content-center align-content-center">
+                    <span class="title"><strong>MIS PUNTOS</strong></span>
+                    <span class="number">{%if request.user.perfilusuario.score%}{{request.user.perfilusuario.score}}{%else%} 0 {%endif%}</span>
+                </div>
+            </div>
+            <div class="col-md-8 col-xm-12 content">
+                {% block contenido_perfil%}
+
+                {% endblock %}
+                
+            </div>
+        </div>
+    </div>
+</section>
+{%endblock%}
