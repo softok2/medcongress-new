@@ -1814,7 +1814,8 @@ class LogsCongreso(validarUser,FormView):
             ws = wb.active
             ws.column_dimensions['A'].width=5
             ws.column_dimensions['B'].width=25
-            ws.column_dimensions['C'].width=150
+            ws.column_dimensions['C'].width=20
+            ws.column_dimensions['D'].width=150
             
 
             titulo = NamedStyle(name="titulo")
@@ -1919,14 +1920,16 @@ class LogsCongreso(validarUser,FormView):
                     ws['A%s'%(cont)] = 'Categoría:'
                     ws['C%s'%(cont)] = '%s'%(quer.user.categoria)
                     cont = cont + 1
+                    
                     ws.cell(row=cont,column=1).style=titulo
                     ws.cell(row=cont,column=2).style=titulo
                     ws.cell(row=cont,column=3).style=titulo
-                    
+                    ws.cell(row=cont,column=4).style=titulo
                     
                     ws.cell(row=cont,column=1).value='No.'
                     ws.cell(row=cont,column=2).value='Fecha' 
-                    ws.cell(row=cont,column=3).value='Acción'
+                    ws.cell(row=cont,column=3).value='Tiempo (H:M:S)'
+                    ws.cell(row=cont,column=4).value='Acción'
                     id_user= quer.user.pk   
                 
                     cont = cont + 1
@@ -1937,8 +1940,11 @@ class LogsCongreso(validarUser,FormView):
                 ws.cell(row=cont,column=1).value = num
                 ws.cell(row=cont,column=2).style=celdas_fecha
                 ws.cell(row=cont,column=2).value = quer.fecha
-                ws.cell(row=cont,column=3).style=celdas
-                ws.cell(row=cont,column=3).value = '  %s'%(quer.mensaje) 
+                ws.cell(row=cont,column=3).style=celdas_fecha
+                tiempo=quer.tiempo.split('.')
+                ws.cell(row=cont,column=3).value =tiempo[0]
+                ws.cell(row=cont,column=4).style=celdas
+                ws.cell(row=cont,column=4).value = '  %s'%(quer.mensaje) 
                 
                 cont = cont + 1
                 num = num + 1
@@ -1951,26 +1957,7 @@ class LogsCongreso(validarUser,FormView):
             messages.warning(self.request, 'Este congreso no tiene Logs')
             return HttpResponseRedirect(reverse_lazy('MedCongressAdmin:LogsCongreso'))
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['search']=self.request.GET.get('search')
-    #     if self.request.GET.get('exportar'):
-    #         congreso_evn=[]
-    #         congresos= Congreso.objects.all()
-    #         activo=False
-    #         for congreso in congresos:
-    #             if congreso.path == self.request.GET.get('exportar'):
-    #                 activo=True
-    #             else:
-    #                 activo=False
-    #             congreso_evn.append({ 'id':congreso.pk,
-    #                                 'titulo':congreso.titulo,
-    #                                     'activo':activo,
-
-    #             })
-    #         context['exportar']= congreso_evn
-            
-    #     return context  
+     
   
 class LogsUsuarios(validarUser,FormView):
     form_class=ExportarLogsUsuarioExelForm

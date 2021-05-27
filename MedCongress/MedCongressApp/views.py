@@ -548,15 +548,7 @@ class CongresoDetail(TemplateView):
     
 
     def get(self, request, **kwargs):
-        #   # # /////////////////
-        # url = "https://vimeo.com/api/v2/video/463582604.json"        
-        
-
-        
-        # response=requests.get(url=url,headers={ 'Authorization': 'Bearer ef977a79f8ddf1902334a4a3a9c64215','Accept': 'application/vnd.vimeo.*+json;version=3.4' })
-        # return HttpResponse(response.json() )  
-        # # # /////////////////////
-        # user = get_object_or_404(Congreso,path=self.kwargs.get('path'))
+       
         congreso=Congreso.objects.filter(path=self.kwargs.get('path'),published=True).first()
         if congreso is None:
             return   HttpResponseRedirect(reverse('Error404'))
@@ -1992,7 +1984,48 @@ class Enviar(TemplateView):
     def get(self, request, **kwargs):
         url='%s/webhook'%(URL_SITE)
         
-        params= {'type': 'charge.succeeded', 'event_date': '2021-02-24T16:18:55-06:00', 'transaction': {'id': 'tro1hwzc7j6dqa5p4qpp', 'authorization': '722213', 'operation_type': 'in', 'transaction_type': 'charge', 'status': 'completed', 'conciliated': False, 'creation_date': '2021-02-22T07:19:49-06:00', 'operation_date': '2021-02-24T16:18:55-06:00', 'description': 'Pago del Congreso 6 Congreso  Internacional AMEXPCTND .', 'error_message': None, 'order_id': None, 'payment_method': {'type': 'store', 'reference': '1010103609290467', 'barcode_url': 'https://api.openpay.mx/barcode/1010103609290467?width=1&height=45&text=false'}, 'amount': 1740.0, 'customer': {'name': 'Gloria Yvette', 'last_name': 'Herrera González', 'email': 'dennis.molinetg@gmail.com', 'phone_number': None, 'address': None, 'creation_date': '2021-02-22T07:19:49-06:00', 'external_id': None, 'clabe': None}, 'currency': 'MXN', 'fee': {'amount': 52.96, 'tax': 8.4736, 'currency': 'MXN'}, 'method': 'store'}}
+        params= {
+    "type" : "charge.succeeded",
+    "event_date" : "2013-11-22T15:09:38-06:00",
+    "transaction" : {
+        "amount" : 2000.0,
+        "authorization" : "801585",
+        "method" : "card",
+        "operation_type" : "in",
+        "transaction_type" : "charge",
+        "card" : {
+            "type" : "debit",
+            "brand" : "mastercard",
+            "address" : {
+               "line1" : "Calle #1 Interior #2",
+               "line2" : 'Null',
+               "line3" : 'Null',
+               "state" : "Queretaro",
+               "city" : "Queretaro",
+               "postal_code" : "76040",
+               "country_code" : "MX"
+            },
+            "card_number" : "1881",
+            "holder_name" : "Card Holder",
+            "expiration_month" : "10",
+            "expiration_year" : "14",
+            "allows_charges" : True,
+            "allows_payouts" : True,
+            "creation_date" : "2013-11-22T15:09:32-06:00",
+            "bank_name" : "BBVA BANCOMER",
+            "bank_code" : "012"
+        }, 
+        'customer':{
+            'email':'dennis.molinetg@gmail.com',
+        },
+        "status" : "completed",
+        "id" : "treqtltdiu6m49x6sbdh",
+        "creation_date" : "2013-11-22T15:09:33-06:00",
+        "description" : "Description",
+        "error_message" : 'Null',
+        "order_id" : "oid_14235"
+    }
+}
                 
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         response=requests.post(url=url,data=json.dumps(params),headers=headers)
@@ -2001,41 +2034,23 @@ class Enviar(TemplateView):
 
 @csrf_exempt
 def Webhook(request):
-    
-    if request.method=='POST':
-        
-        received_json_data=json.loads(request.body)
-        
-        if received_json_data['type']== "charge.succeeded":
-            cart=[{'cant':0},[]]
-            pagos_congreso=RelCongresoUser.objects.filter(id_transaccion=received_json_data['transaction']['id'])
-            for pago_congreso in pagos_congreso:
-                pago_congreso.is_pagado=True
-                pago_congreso.save() 
-                relCongresoCategoriaPago=RelCongresoCategoriaPago.objects.filter(congreso=pago_congreso.congreso.pk,categoria=pago_congreso.categoria_pago.pk).first()
-              
-                if len(cart[1])>0:
-                    cart[1].append(
-                        {
-                            'mi_id':int(cart[1][-1]['mi_id'])+1,
-                            'id':0,
-                            'tipo_evento':'Congreso',
-                            'id_congreso':pago_congreso.congreso.pk,
-                            'nombre_congreso':pago_congreso.congreso.titulo,
-                            'id_cat_pago':pago_congreso.categoria_pago.pk,
-                            'nombre_cat_pago':pago_congreso.categoria_pago.nombre,
-                            'precio':relCongresoCategoriaPago.precio,
-                            'pagar':round(float(relCongresoCategoriaPago.precio)*float(pago_congreso.cantidad),2),
-                            'moneda':relCongresoCategoriaPago.moneda,
-                            'cantidad': pago_congreso.cantidad
-                        }
-                    )
-               
-               
-                else:
-                    cart[1].append(
+    try: 
+        if request.method=='POST':
+            
+            received_json_data=json.loads(request.body)
+            
+            if received_json_data['type']== "charge.succeeded":
+                cart=[{'cant':0},[]]
+                pagos_congreso=RelCongresoUser.objects.filter(id_transaccion=received_json_data['transaction']['id'])
+                for pago_congreso in pagos_congreso:
+                    pago_congreso.is_pagado=True
+                    pago_congreso.save() 
+                    relCongresoCategoriaPago=RelCongresoCategoriaPago.objects.filter(congreso=pago_congreso.congreso.pk,categoria=pago_congreso.categoria_pago.pk).first()
+                
+                    if len(cart[1])>0:
+                        cart[1].append(
                             {
-                                'mi_id':1,
+                                'mi_id':int(cart[1][-1]['mi_id'])+1,
                                 'id':0,
                                 'tipo_evento':'Congreso',
                                 'id_congreso':pago_congreso.congreso.pk,
@@ -2047,38 +2062,38 @@ def Webhook(request):
                                 'moneda':relCongresoCategoriaPago.moneda,
                                 'cantidad': pago_congreso.cantidad
                             }
-                        )  
-                cart[0]['cant']=round(cart[0]['cant']+float(relCongresoCategoriaPago.precio)*float(pago_congreso.cantidad),2)
+                        )
+                
+                
+                    else:
+                        cart[1].append(
+                                {
+                                    'mi_id':1,
+                                    'id':0,
+                                    'tipo_evento':'Congreso',
+                                    'id_congreso':pago_congreso.congreso.pk,
+                                    'nombre_congreso':pago_congreso.congreso.titulo,
+                                    'id_cat_pago':pago_congreso.categoria_pago.pk,
+                                    'nombre_cat_pago':pago_congreso.categoria_pago.nombre,
+                                    'precio':relCongresoCategoriaPago.precio,
+                                    'pagar':round(float(relCongresoCategoriaPago.precio)*float(pago_congreso.cantidad),2),
+                                    'moneda':relCongresoCategoriaPago.moneda,
+                                    'cantidad': pago_congreso.cantidad
+                                }
+                            )  
+                    cart[0]['cant']=round(cart[0]['cant']+float(relCongresoCategoriaPago.precio)*float(pago_congreso.cantidad),2)
 
-            pagos_taller=RelTallerUser.objects.filter(id_transaccion=received_json_data['transaction']['id'])
-            for pago_taller in pagos_taller:
-                pago_taller.is_pagado=True 
-                pago_taller.save()
-                 ################################
-                relCongresoCategoriaPago=RelTalleresCategoriaPago.objects.filter(taller=pago_taller.taller.pk,categoria=pago_taller.categoria_pago.pk).first()
-              
-                if len(cart[1])>0:
-                    cart[1].append(
-                        {
-                            'mi_id':int(cart[1][-1]['mi_id'])+1,
-                            'id':0,
-                            'tipo_evento':'Taller',
-                            'id_congreso':pago_taller.taller.pk,
-                            'nombre_congreso':pago_taller.taller.titulo,
-                            'id_cat_pago':pago_taller.categoria_pago.pk,
-                            'nombre_cat_pago':pago_taller.categoria_pago.nombre,
-                            'precio':relCongresoCategoriaPago.precio,
-                            'pagar':round(float(relCongresoCategoriaPago.precio)*float(pago_taller.cantidad),2),
-                            'moneda':relCongresoCategoriaPago.moneda,
-                            'cantidad': pago_taller.cantidad
-                        }
-                    )
-               
-               
-                else:
-                    cart[1].append(
+                pagos_taller=RelTallerUser.objects.filter(id_transaccion=received_json_data['transaction']['id'])
+                for pago_taller in pagos_taller:
+                    pago_taller.is_pagado=True 
+                    pago_taller.save()
+                    ################################
+                    relCongresoCategoriaPago=RelTalleresCategoriaPago.objects.filter(taller=pago_taller.taller.pk,categoria=pago_taller.categoria_pago.pk).first()
+                
+                    if len(cart[1])>0:
+                        cart[1].append(
                             {
-                                'mi_id':1,
+                                'mi_id':int(cart[1][-1]['mi_id'])+1,
                                 'id':0,
                                 'tipo_evento':'Taller',
                                 'id_congreso':pago_taller.taller.pk,
@@ -2090,44 +2105,50 @@ def Webhook(request):
                                 'moneda':relCongresoCategoriaPago.moneda,
                                 'cantidad': pago_taller.cantidad
                             }
-                        )  
-                cart[0]['cant']=round(cart[0]['cant']+float(relCongresoCategoriaPago.precio)*float(pago_taller.cantidad),2)
-
-            card=''
-            return JsonResponse(received_json_data['transaction'])
-            print()
-            if 'card' in received_json_data['transaction']:
-                card=received_json_data['transaction']['card']['card_number']
-            if cart[0]['cant'] >0:
+                        )
                 
-                subject = 'Comprobante de Pago de MedCongress'
-                html_message = render_to_string('MedCongressApp/recibo_pago.html', context={'car':cart,'date':received_json_data['event_date'],'numero':received_json_data['transaction']['authorization'],'importe':cart[0]['cant'],'card':card,'orden_id':received_json_data['transaction']['order_id'],'id_transaccion':received_json_data['transaction']['id'],'tipo':received_json_data['transaction']['method'],'site':URL_SITE })
-                plain_message = strip_tags('Usted se a comprado eventos en MedCongres')
+                
+                    else:
+                        cart[1].append(
+                                {
+                                    'mi_id':1,
+                                    'id':0,
+                                    'tipo_evento':'Taller',
+                                    'id_congreso':pago_taller.taller.pk,
+                                    'nombre_congreso':pago_taller.taller.titulo,
+                                    'id_cat_pago':pago_taller.categoria_pago.pk,
+                                    'nombre_cat_pago':pago_taller.categoria_pago.nombre,
+                                    'precio':relCongresoCategoriaPago.precio,
+                                    'pagar':round(float(relCongresoCategoriaPago.precio)*float(pago_taller.cantidad),2),
+                                    'moneda':relCongresoCategoriaPago.moneda,
+                                    'cantidad': pago_taller.cantidad
+                                }
+                            )  
+                    cart[0]['cant']=round(cart[0]['cant']+float(relCongresoCategoriaPago.precio)*float(pago_taller.cantidad),2)
+
+                card=''
+                
+                if 'card' in received_json_data['transaction']:
+                    
+                    card=received_json_data['transaction']['card']['card_number']
+                if cart[0]['cant'] >0:
+                    
+                    subject = 'Comprobante de Pago de MedCongress'
+                    html_message = render_to_string('MedCongressApp/recibo_pago.html', context={'car':cart,'date':received_json_data['event_date'],'numero':received_json_data['transaction']['authorization'],'importe':cart[0]['cant'],'card':card,'orden_id':received_json_data['transaction']['order_id'],'id_transaccion':received_json_data['transaction']['id'],'tipo':received_json_data['transaction']['method'],'site':URL_SITE })
+                    plain_message = strip_tags('Usted se a comprado eventos en MedCongres')
+                    from_email = ''
+                    to = received_json_data['transaction']['customer']['email']
+                    mail.send_mail(subject, plain_message, from_email, [to],html_message=html_message)
+
+
+            if received_json_data['type']== "verification":
+                plain_message = strip_tags('El código de verificación es:  <%s>'%(received_json_data)) 
+                subject = 'Código de verificación del Openpay'
                 from_email = ''
-                to = received_json_data['transaction']['customer']['email']
-                mail.send_mail(subject, plain_message, from_email, [to],html_message=html_message)
-
-
-        if received_json_data['type']== "verification":
-            plain_message = strip_tags('El código de verificación es:  <%s>'%(received_json_data)) 
-            subject = 'Código de verificación del Openpay'
-            from_email = ''
-            mail.send_mail(subject, plain_message, from_email, ['dennis.molinetg@gmail.com','a.morell.cu@icloud.com'])
-    return JsonResponse({'success':'true'})
-            
-# def login(request):
-#     # Creamos el formulario de autenticación vacío
-#     form = ExtAuthenticationForm()
-#     if request.method == "POST":
-#         form = ExtAuthenticationForm(data=request.POST,request=request)
-#         if form.is_valid():
-#             if request.GET['next']:
-#                 print(request.GET['next'])
-#                 return redirect('/%s'%(request.GET['next']))
-#             return redirect('/')
-#     # Si llegamos al final renderizamos el formulario
-#     return render(request, "registration/login.html", {'form': form})       
-
+                mail.send_mail(subject, plain_message, from_email, ['dennis.molinetg@gmail.com','a.morell.cu@icloud.com'])
+        return JsonResponse({'success':'true'})
+    except ( TypeError,FileNotFoundError):
+            return JsonResponse({'success':'false'})    
 
 class ViewTrabajo(TemplateView):
     template_name= 'MedCongressApp/video_trabajo.html' 

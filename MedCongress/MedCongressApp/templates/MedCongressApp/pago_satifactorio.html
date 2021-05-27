@@ -4,8 +4,60 @@
 Transaccion Exitosa
 {%endblock%}
 {% block contenido %}
+<div class="congreso-modal modal fade" id="my" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="" method="POST">
+                {% csrf_token %}
 
-<div class="modal fade" id="my" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row mb-3">
+                            <div class="col">
+                                <h5 class="title">Entre su RFC</h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <input type="text"  id="rfc" name="rfc"  class="form-control" placeholder="RFC" required="" > 
+                                
+                            </div>
+                            <div class="col">
+                                <select name="cfdi" id="" class="form-select" placeholder="FCDI"">
+                                    <option value="G03">G03 	Gastos en general.</option>
+                                    <option value="D10">D10 	Pagos por servicios educativos (colegiaturas).</option>
+                                
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col">
+                                <input type="text"   name="dir"  class="form-control" placeholder="Dirección a Facturar" required="" > 
+                                
+                            </div>
+                        </div>          
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col d-flex justify-content-end">
+                                <button type="submit" class="cta close-btn" id="enviar" style="margin-right: 10px;" >Descargar Factura</button>
+                                <button type="button" class="cta close-btn" data-dismiss="modal">Cerrar</button>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="mydgfd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -127,7 +179,8 @@ Transaccion Exitosa
 
         <div class="row" style="float: right;">
             <div class="col px-5" >
-                <a  class="btn btn-primary" data-toggle="modal" data-target="#my">Obtener Factura </a>
+               
+                <a  class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#my">Obtener Factura </a>
             </div>
         </div>
     </div>

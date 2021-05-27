@@ -455,13 +455,13 @@
                 
                 {%if cuestionario_aprobado %}
                 <h2 class="section-title mb-4">Cuestionario</h2>
-                <h1 class="section-subtitle"><strong>Usted ya aprobó este Cuestionario y se le asignó una onstancia</strong></h1>
+                <h1 class="section-subtitle"><strong>Usted ya aprobó este cuestionario y se le asignó una constancia</strong></h1>
                 <div class="cuestionario">
                     <a href="{% url 'Get_Constancia' congreso.path %}" target="_black"> Ver Constancia</a>
                  </div>
                 {%else%}
                 <h2 class="section-title mb-4">Cuestionario</h2>
-                <h1 class="section-subtitle"><strong>Deberá responder el un Cuestionario para asignarle la Constancia de este Congreso</strong></h1>
+                <h1 class="section-subtitle"><strong>Deberá responder el un cuestionario para asignarle la constancia de este Congreso</strong></h1>
                <div class="cuestionario">
                    <a href="{% url 'Cuestionario' path=congreso.path%}"> Llenar Cuestionario</a>
                 </div>
@@ -841,6 +841,166 @@
 
        
     </div>
+</section>
+{%endif%}
+{% if socios %}
+<section class="congreso-ponentes">
+    <div class="container-fluid">
+        <div class="row mb-5">
+            <div class="col">
+                <h3 class="section-name">SOCIOS</h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="content py-5">
+                    <h4 class="description">CONOCE A LOS SOCIOS DE ESTE CONGRESOS</h4>
+                    <div class="art"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="congreso-ponentes-secundary">
+    <div id="carouselExampleControls" class="carousel slide carousel-dark" data-bs-ride="carousel">
+       
+        <div class="carousel-inner"> 
+            {%for socio in socios%}
+            {%if forloop.first%}
+            <div class="carousel-item active">
+                <div class="container px-4">
+                    <div class="row gx-5">
+                        {%endif%}
+                        <div class="col-md-4">
+                            <a href="{{socio.socio.url}}" target="_blank">
+                                <img class="img-fluid" src="{% static '/'%}{{socio.socio.logo}}" alt="{{socio.socio.nombre}}">
+                            </a>
+                           
+                        </div>
+                        
+                        {%if forloop.last%}
+
+                    </div>
+                </div>
+            </div>
+            {%endif%}
+            {% if forloop.counter|divisibleby:3 %}
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item ">
+                <div class="container px-4">
+                    <div class="row gx-5">
+            {%endif%}
+                   
+         {%endfor%}
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+</section>
+{%endif%}
+{%if preg_frecuentes%}
+<section class="congreso-ponencias pb-5">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <h3 class="section-name">PREGUNTAS FRECUENTES</h3>
+            </div>
+        </div>
+        {% for preg_frecuente in preg_frecuentes %}
+        <div class="row mb-3">
+            <div class="col">
+                <div class="accordion acordion-medc" id="accordion-{{forloop.counter}}">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading-{{forloop.counter}}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{forloop.counter}}" aria-expanded="true" aria-controls="collapse-{{forloop.counter}}">
+                            {{preg_frecuente.pregunta}}
+                        </button>
+                        </h2>
+                        <div id="collapse-{{forloop.counter}}" class="accordion-collapse collapse" aria-labelledby="heading-{{forloop.counter}}" data-bs-parent="#accordion-{{forloop.counter}}">
+                            <div class="accordion-body">
+                                
+                                <h3  class="name mb-5 pon-titulo"> {{preg_frecuente.respuesta|safe}} </h3>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+{%endfor%}
+       
+
+    </div>
+</section>
+{%endif%}
+{% if patrocinadores %}
+<section class="congreso-ponentes">
+    <div class="container-fluid">
+        <div class="row mb-5">
+            <div class="col">
+                <h3 class="section-name">PATROCINADORES</h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="content py-5">
+                    <h4 class="description">CONOCE A LOS PATROCINADORES DE ESTE CONGRESOS</h4>
+                    <div class="art"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="congreso-ponentes-secundary">
+    <div id="carousel" class="carousel slide carousel-dark" data-bs-ride="carousel">
+       
+        <div class="carousel-inner"> 
+            {%for patrocindador in patrocinadores%}
+            {%if forloop.first%}
+            <div class="carousel-item active">
+                <div class="container px-4">
+                    <div class="row gx-5">
+                        {%endif%}
+                        <div class="col-md-4">
+                            <a href="{{patrocindador.aval.url}}" target="_blank">
+                                <img class="img-fluid" src="{% static '/'%}{{patrocindador.aval.logo}}" alt="{{patrocindador.aval.nombre}}">
+                            </a>
+                           
+                        </div>
+                        
+                        {%if forloop.last%}
+
+                    </div>
+                </div>
+            </div>
+            {%endif%}
+            {% if forloop.counter|divisibleby:3 %}
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item ">
+                <div class="container px-4">
+                    <div class="row gx-5">
+            {%endif%}
+                   
+         {%endfor%}
+        <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
 </section>
 {%endif%}
 <div class="congreso-modal profile-modal modal fade" id="profileModal" tabindex="-2" aria-hidden="true">
