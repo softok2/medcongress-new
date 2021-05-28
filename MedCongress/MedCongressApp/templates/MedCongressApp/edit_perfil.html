@@ -157,6 +157,8 @@ z-index: 0;
                                 </div>
                                 <div class="field-group date-group mb-3 ms-md-2">
                                     <label>Fecha de Nacimiento</label>
+                                    
+                                   
                                     <input type="date" name="perfiluser-fecha_nacimiento" class="form-control" id="id_perfiluser-fecha_nacimiento">
                                 </div>   
                                 <div class="field-group gender-group mb-3 me-md-2">
@@ -282,7 +284,10 @@ z-index: 0;
        
     }
         );
-
+        
+        {% if fecha_nac%}
+            $("#id_perfiluser-fecha_nacimiento").val('{{ fecha_nac|date:"Y-m-d" }}');
+        {%endif%}
         FiltrarLugar('#id_ubicacion-direccion', '#id_ubicacion-longitud', '#id_ubicacion-latitud');
         $('#id_ubicacion-direccion').keypress(function () {
             $('#id_ubicacion-latitud').val('');

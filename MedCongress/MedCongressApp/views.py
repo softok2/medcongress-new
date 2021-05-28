@@ -1950,6 +1950,7 @@ class PerfilUpdateView(FormView):
         context['categorias']=categoria
         perfil_edit =PerfilUsuario.objects.get(pk=self.kwargs.get('pk'))
         context['cat']=perfil_edit.categoria.pk
+        context['fecha_nac']= perfil_edit.fecha_nacimiento
         if perfil_edit.foto:
             context['imagen_seg_url']=perfil_edit.foto
         else:

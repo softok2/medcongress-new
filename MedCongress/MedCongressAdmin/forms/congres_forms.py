@@ -481,7 +481,12 @@ class UserForm(forms.ModelForm):
         if not re.match(r"^[A-Za-zñÑáéíóúÁÉÍÓÚ. ]+$",nombre):
             self.add_error('first_name', 'El Campo <b> Nombre</b> solo admite letras ')
         if not re.match(r"^[A-Za-zñÑáéíóúÁÉÍÓÚ. ]+$",apellido):
-            self.add_error('first_name', 'El Campo <b> Apellidos</b> solo admite letras ') 
+            self.add_error('first_name', 'El Campo <b> Apellidos</b> solo admite letras ')
+
+
+class MyDateInput(forms.DateInput):
+    input_type = 'date'
+
 class PerfilUserForm(forms.ModelForm):
     cel_profecional=forms.CharField(
                label = 'Cédula Profesional',
@@ -497,8 +502,7 @@ class PerfilUserForm(forms.ModelForm):
     youtube=forms.CharField(required=False)
     linkedin=forms.CharField(required=False)
     
-    num_telefono=forms.CharField(required=False,label='Número de Teléfono')
-    fecha_nacimiento=forms.DateField(required=False,label='Fecha de Nacimiento')
+
     genero=forms.ModelChoiceField(queryset=Genero.objects.all(), label='Género')
     
     categoria=forms.ModelChoiceField(queryset=CategoriaUsuario.objects.all(),label='Categoría')
@@ -508,7 +512,7 @@ class PerfilUserForm(forms.ModelForm):
         fields=['cel_profecional','categoria','especialidad','is_ponente','foto','detalle','datos_interes','genero','linkedin','youtube','facebook','twitter','publicaciones','puesto','num_telefono','fecha_nacimiento',
         'meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
         'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title']
-        
+        widgets = {'fecha_nacimiento': MyDateInput(attrs={'class': 'form-control'}), }
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
          
