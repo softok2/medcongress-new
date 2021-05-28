@@ -132,8 +132,9 @@
         <div class="row mb-3">                       
             <div class="col-md-12 ">
                 <div class="ponencia">
+                    <div class="embed-responsive embed-responsive-16by9">
                     {{congreso.streaming|safe }}
-                   
+                   </div>
                 </div>
             </div>
           
@@ -150,10 +151,11 @@
     <div class="container-fluid">
         
         <div class="row mb-3">                       
-            <div class="col-md-12 ">
+            <div class="col-md-8 offset-md-2 ">
                 <div class="ponencia">
+                    <div class="embed-responsive embed-responsive-16by9">
                     {{congreso.vid_publicidad|safe }}
-                   
+                   </div>
                 </div>
             </div>
           
@@ -790,11 +792,12 @@
                          
                           <p class="description mb-0 pt-3">{{trabajo.titulo}}</p>
                       </div>
-                      <div class="col-md-2 d-flex align-items-end">
+                      <div class="col-md-2 d-flex flex-column justify-content-between align-items-end"> 
+                          <a href="{% url 'Donwload_trabajo' path=trabajo.path%}" class="cta">DESCARGAR</a>
                         {%if trabajo.cod_video%}
                         <a href="{% url 'View_trabajo' path=trabajo.path%}" class="view">Ver Video</a>
                         {%endif%}
-                          <a href="{% url 'Donwload_trabajo' path=trabajo.path%}" class="cta">DESCARGAR</a>
+                         
                       </div>
                       
                   </div>
@@ -1090,6 +1093,8 @@
                         {%else%}
                         <a href="#" class="view"></a>
                         {%endif%}
+                        <a href="#" class="view">Ver Video</a>
+						<a href="#" class="cta">DESCARGAR</a>
                         <a href="{% static '/'%}{{trabajo.documento}}" target="_blank" class="cta">DESCARGAR</a>
                     </div>
                 </div>
