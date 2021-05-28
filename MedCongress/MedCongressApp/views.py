@@ -2185,8 +2185,8 @@ class DonwloadTrabajo(TemplateView):
                     if self.request.user.is_authenticated:
                         InsertLog(tranbajo.pk,'DonwloadTrabajo',self.request.user.perfilusuario)
                     return response
-        return self.render_to_response(self.get_context_data())
-
+        return  HttpResponseRedirect(reverse('View_congreso',kwargs={'path': tranbajo.congreso.path}))
+    
 class ViewSala(TemplateView):
     template_name= 'MedCongressApp/sala.html' 
 
