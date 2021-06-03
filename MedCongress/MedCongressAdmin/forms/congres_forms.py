@@ -1025,7 +1025,7 @@ class CongresoSalaForm(forms.ModelForm):
 
     class Meta:
         model=Sala
-        fields=['titulo','congreso','detalle','cod_video','imagen','published',]
+        fields=['titulo','congreso','detalle','cod_video','imagen','published','color']
        
 
     def __init__(self, *args, **kwargs):

@@ -484,6 +484,7 @@ class Sala(models.Model):
 "max_length": "El Campo <b>Título </b> debe tener máximo 250 caracteres"})
     detalle=models.TextField(null=True,blank=True)
     cod_video=models.TextField(null=True,blank=True)
+    color=models.CharField(max_length=10,default='#4A5966')
     congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
     imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='salas',blank=True, null=True  )
     path=models.CharField(max_length=250, help_text='campo para identificarlo por la URL')

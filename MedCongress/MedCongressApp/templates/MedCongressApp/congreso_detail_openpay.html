@@ -93,11 +93,11 @@
             {%if forloop.first%}
                 <div class="row">
             {% endif %}
-                    <div class="col-md-4 mb-md-0 mb-5">
-                        <div class="ponencia">
+                    <div class="col-md-4 mb-md-0 mb-5"  >
+                        <div class="ponencia" >
                             <a href="{% url 'View_sala' sala.path %}"><img src="{%static '/'%}{{sala.imagen }}" class="img-fluid"></a>
-                            <h3 class="title my-3">{{sala.titulo }}</h3>
-                            <a href="{% url 'View_sala' sala.path %}" class="more">Ver Streaming</a>
+                            <h3 class="title my-3" style="color: {{sala.color}};">{{sala.titulo }}</h3>
+                            <a href="{% url 'View_sala' sala.path %}" style="color: {{sala.color}};" class="more">Ver Streaming</a>
                         </div>
                     </div>
               
