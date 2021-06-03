@@ -147,11 +147,11 @@ textarea:focus,
     margin-left: 30px;
   }
 }
-@media screen and (min-width: 1400px) {
+/* @media screen and (min-width: 1400px) {
   #main-nav .navbar-nav {
     margin-left: 125px;
   }
-}
+} */
 #main-nav .navbar-nav .nav-item {
   height: 100%;
 }
@@ -311,7 +311,7 @@ textarea:focus,
 }
 @media screen and (min-width: 1400px) {
   #main-nav .navbar-nav .nav-link {
-    font-size: 20px;
+    font-size: 14px;
   }
 }
 #main-nav .navbar-nav .nav-link.auth-cta {
@@ -429,7 +429,7 @@ textarea:focus,
 }
 @media screen and (min-width: 1400px) {
   .about-us {
-    height: 650px;
+    height: 435px;
   }
 }
 @media screen and (max-width: 992px) {
@@ -455,7 +455,7 @@ textarea:focus,
 }
 @media screen and (min-width: 1400px) {
   .about-us p {
-    font-size: 23px;
+    font-size: 20px;
   }
 }
 .about-us .more-info {
