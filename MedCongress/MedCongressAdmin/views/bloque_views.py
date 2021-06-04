@@ -249,7 +249,6 @@ class  PonenciaSeleccionarView(validarUser,FormView):
         ponencia_pk=self.request.POST['ponencia']
         
         bloque=Bloque.objects.filter(path=self.kwargs.get('path')).first()
-        print(bloque)
         ponencia=Ponencia.objects.filter(pk=ponencia_pk).update(bloque=bloque)
         return super().form_valid(form)
 

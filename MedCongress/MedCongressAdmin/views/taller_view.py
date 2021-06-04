@@ -155,6 +155,15 @@ class TallerCategPagosListView(TemplateView):
         taller=Taller.objects.filter(path=self.kwargs.get('path')).first()
         context['congres']=taller
         context['cat_pagos']=RelTalleresCategoriaPago.objects.filter(taller=taller)
+        if self.request.GET.get('congreso'):
+            context['con']=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
+            context['blo']=Bloque.objects.filter(congreso=context['con'])
+        if self.request.GET.get('bloque'):
+            context['bloque']=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
+            context['congreso']=context['bloque'].congreso
+            context['blo']= None
+        if self.request.GET.get('congreso_bloque'):
+            context['congreso_bloque']=True
         return context        
         
 class  TallerCategPagosCreateView(validarUser,CreateView):
