@@ -9,7 +9,7 @@ from  MedCongressApp.models import (Congreso,Ubicacion,ImagenCongreso,TipoCongre
                                     RelTallerPonente,Bloque,DatosIniciales,RelCongresoUser,RelTallerUser,
                                     Moderador,RelBloqueModerador,ImagenCongreso,CuestionarioPregunta,CuestionarioRespuestas,
                                     MetaPagInicio,MetaPagListCongreso,PreguntasFrecuentes,RelCongresoAval, AvalCongreso,RelCongresoSocio,SocioCongreso,
-                                    Idioma,DocumentoPrograma,TrabajosInvestigacion,Sala,UserActivityLog)
+                                    Idioma,DocumentoPrograma,TrabajosInvestigacion,Sala,UserActivityLog,Especialidades)
                     
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
@@ -866,6 +866,29 @@ class ExportarExelForm(forms.ModelForm):
     #         self.add_error('congreso','Entre un congreso ')
     #     if not RelCongresoUser.objects.filter(congreso=congreso).values('user__usuario__first_name','user__usuario__last_name','user__usuario__email','congreso__titulo','categoria_pago__nombre').annotate(Sum('cantidad')).exists():
     #         self.add_error('congreso','Entre un congreso ')
+
+class ExportarExelUsuariosForm(forms.ModelForm):
+    
+    categoria=forms.ModelChoiceField(queryset=CategoriaUsuario.objects.all(),required=False)
+    especialidad=forms.ModelChoiceField(queryset=Especialidades.objects.all(),required=False)
+    class Meta:
+        model=PerfilUsuario
+        fields=['categoria','especialidad']
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+
+        self.fields['categoria'].widget.attrs.update({'class': 'form-control select2'})
+        self.fields['especialidad'].widget.attrs.update({'class': 'form-control select2'})  
+       
+    # def clean(self, *args, **kwargs):
+    #     cleaned_data = super(ExportarExelForm, self).clean(*args, **kwargs)
+    #     congreso = cleaned_data.get('congreso', None)
+      
+    #     if not congreso:
+    #         self.add_error('congreso','Entre un congreso ')
+    #     if not RelCongresoUser.objects.filter(congreso=congreso).values('user__usuario__first_name','user__usuario__last_name','user__usuario__email','congreso__titulo','categoria_pago__nombre').annotate(Sum('cantidad')).exists():
+    #         self.add_error('congreso','Entre un congreso ')
+
 
 class ExportarTallerExelForm(forms.ModelForm):
     
