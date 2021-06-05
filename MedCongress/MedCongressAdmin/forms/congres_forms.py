@@ -1016,10 +1016,10 @@ class CongresoProgramaForm(forms.ModelForm):
 
 class CongresoTrabajoForm(forms.ModelForm):
     titulo=forms.CharField(label='Título',required=True)
-    
+    prueba=forms.CharField(required=False)
     class Meta:
         model=TrabajosInvestigacion
-        fields=['titulo','congreso','documento','descripcion','autor','cod_video','foto']
+        fields=['titulo','congreso','documento','descripcion','autor','cod_video','prueba']
        
 
     def __init__(self, *args, **kwargs):
