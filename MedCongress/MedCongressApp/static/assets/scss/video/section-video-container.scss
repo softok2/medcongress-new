@@ -1,0 +1,96 @@
+.video-banner {
+    margin-top: 80px;
+    padding: 50px 0 300px;
+    background: $river-bed url(../img/iconos/mundo-dark.png) bottom right no-repeat;
+    background-size: 1300px 600px;
+
+    @include media-max($large) {
+        margin-top: 56px;
+        padding: 30px 0 100px;
+    }
+
+    .title {
+        color: $white;
+        font-size: 35px;
+        font-family: $font-1;
+    }
+
+    .back {
+        font-size: 18px;
+        color: $picton-blue;
+        font-family: $font-1;
+    }
+}
+
+.video-container {
+    margin-top: -250px;
+
+    @include media-max($large) {
+        margin-top: -80px;
+    }
+
+    .simple-text {
+        display: block;
+        font-size: 20px;
+        color: $river-bed;
+        font-family: $font-1;
+        border-bottom: 1px solid $regent-gray;
+    }
+
+    .ponente {
+        .name,
+        .cat,
+        .bio {
+            font-size: 20px;
+            color: $river-bed;
+            font-family: $font-1;
+        }
+
+        .name { font-size: 30px; }
+
+        .cat { color: $picton-blue; }
+    }
+
+    #ratingSystem {
+        input {
+            border: 0;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            position: absolute !important;
+            clip: rect(1px 1px 1px 1px);
+            clip: rect(1px, 1px, 1px, 1px);
+            opacity: 0;
+          }
+          
+          label {
+            position: relative;
+            float: right;
+            color: $regent-gray;
+          }
+          
+          label:before {
+            margin: 5px;
+            content: "\f005";
+            font-family: "Font Awesome 5 Free";
+            display: inline-block;
+            font-size: 1.5em;
+            color: $regent-gray;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+          }
+          
+          input:checked ~ label:before {
+            color: $picton-blue;
+          }
+          
+          label:hover ~ label:before {
+            color: $picton-blue;
+          }
+          
+          label:hover:before {
+            color: $picton-blue;
+          }
+    }
+}

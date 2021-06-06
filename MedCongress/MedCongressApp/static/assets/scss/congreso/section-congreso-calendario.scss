@@ -1,0 +1,244 @@
+.congreso-calendario {
+    margin-top: -50px;
+
+    .list-group {
+        @include media-max($large) {
+            overflow-x: scroll;
+        }
+    }
+
+    .list-group-item {
+        border: 0;
+        border-radius: 0;
+        box-sizing: border-box;
+        border-top-left-radius: 0!important;
+        border-top-right-radius: 0!important;
+        border-bottom-left-radius: 0!important;
+        border-bottom-right-radius: 0!important;
+        border: 1px solid $regent-gray;
+    }
+
+    .list-group-item.active,
+    .list-group-item:hover { 
+        border: 0;
+        background-color: $river-bed; 
+    }
+
+    .list-group-item .day,
+    .list-group-item .date {
+        color: $river-bed;
+        font-family: $font-1;
+    }
+
+    .list-group-item.active .day,
+    .list-group-item.active .date,
+    .list-group-item:hover .day,
+    .list-group-item:hover .date {
+        color: $picton-blue;
+    }
+
+    .list-group-item .day {
+        font-size: 30px;
+
+        @include media-max($large) {
+            font-size: 14px;
+            text-align: center;
+        }
+    }
+
+    .list-group-item .date {
+        font-size: 20px;
+
+        @include media-max($large) {
+            font-size: 10px;
+            text-align: center;
+        }
+    }
+
+    .list-group-item .arrow-down {
+        width: 0;
+        height: 0;
+        display: none;
+        bottom: -15px;
+        position: absolute;
+        right: calc(50% - 7.5px);
+        border-top: 15px solid $river-bed;
+        border-left: 15px solid transparent;
+        border-right: 15px solid transparent;
+
+        @include media-max($large) {
+            display: none!important;
+        }
+    }
+
+    .list-group-item.active .arrow-down { display: block; }
+
+    .tab-pane-wrapper {
+        min-height: 50px;
+    }
+
+    .tab-pane {
+
+        &.fade:not(.show) {
+            display: none;
+        }
+
+        &.fade.show {
+            display: block;
+        }
+
+        .time {
+            font-size: 30px;
+            color: $river-bed;
+            line-height: 30px;
+            font-family: $font-1;
+        }
+
+        .time-line {
+            height: 100%;
+            position: relative;
+        }
+
+        .line {
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            position: absolute;
+            left: calc(50% - .5px);
+            background-color: lighten($river-bed, 20%);
+        }
+
+        & > .row:nth-child(1) .line {
+            top: 12px;
+        }
+
+        & > .row:nth-last-child(1) .line {
+            bottom: calc(100% - 12px);
+        }
+
+        .circle {
+            width: 18px;
+            height: 18px;
+            margin-top: 12px;
+            border-radius: 18px;
+            border: 1.5px solid lighten($river-bed, 20%);
+            background-color: lighten($regent-gray, 30%);
+            position: relative;
+            z-index: 1;
+        }
+
+        .accordion {
+            .accordion-header button,
+            .accordion-body p,
+            .accordion-body ul > li,
+            .hour {
+                color: $river-bed;
+                font-family: $font-1;
+            }
+
+            .accordion-body ul { padding: 0; }
+
+            .accordion-body ul > li { 
+                font-size: 18px;
+                list-style: none;
+                margin-top: 10px;
+            }
+
+            .hour { 
+                margin-left: 1.25rem;
+                color: $white;
+                background-color: $river-bed;
+                padding: 8px 15px;
+                font-size: 15px;
+            }
+
+            .accordion-header button {
+                border: none;
+                font-size: 30px;
+                background-color: transparent;
+
+                @include media-max($large) {
+                    margin-top: 20px;
+                }
+
+                &::after {
+                    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%234A5966'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+                }
+
+                &:not(.collapsed)::after {
+                    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%234A5966'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+                }
+
+                &:focus {
+                    box-shadow: none;
+                }
+            }
+
+            &.main-event .accordion-header button{
+                color: $picton-blue;
+
+                &::after {
+                    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%2340C8F4'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+                }
+
+                &:not(.collapsed)::after {
+                    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%2340C8F4'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+                }
+            }
+
+            .accordion-collapse {
+                border: none;
+
+                p { font-size: 18px; }
+            }
+
+            .ponencias {
+                padding: 30px 40px 50px;
+                background-color: #d6e0e8;
+
+                .header {
+                    padding-bottom: 20px;
+                    border-bottom: 1px solid darken(#d6e0e8, 20%);
+                }
+
+                .header .name,
+                .header .cat {
+                    font-size: 25px;
+                    color: $river-bed;
+                    font-family: $font-1;
+                }
+
+                .header .name { text-decoration: underline; }
+
+                .header .cat {
+                    font-size: 18px;
+                    margin-bottom: 0;
+                    color: $picton-blue;
+                }
+
+                .bio {
+                    font-size: 18px;
+                    color: $river-bed;
+                    font-family: $font-1;
+                }
+
+                .ponencia-name {
+                    font-size: 24px;
+                    color: $picton-blue;
+                    font-family: $font-1;
+                    border-top: 1px solid darken(#d6e0e8, 20%);
+                }
+
+                .more {
+                    font-size: 20px;
+                    color: $river-bed;
+                    font-family: $font-1;
+                    text-decoration: none;
+
+                    &:hover { text-decoration: underline; }
+                }
+
+            }
+        }
+    }
+}

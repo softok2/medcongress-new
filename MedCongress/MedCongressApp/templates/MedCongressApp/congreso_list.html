@@ -1,4 +1,3 @@
-
 {% extends "MedCongressApp/base.html"%}
 {% load static %}
 {% block titulo %}
@@ -43,68 +42,45 @@ Congresos
 {%endblock%}
 {% block contenido %}
 
-<div class="sub-header">
-    <!-- SUB HEADER -->
-</div>
-<!-- Kode-Slider End -->
-<!--Kode-our-speaker-heading start-->
-<div class="Kode-page-heading">
-    <div class="container">
-        <!--ROW START-->
-        <div class="row">
-            <div class="col-md-6 col-sm-6">
-                <h2>Congresos</h2>
+<section class="congresos-banner">
+    <div id="carouselBannerCongresos" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="{% static 'assets/img/carusel-congresos/banner-01.png'%}" class="img-fluid w-100">
             </div>
-            <div class="col-md-6 col-sm-6">
-                <ul>
-                    <li>
-                        <a href="#"><i class="fa fa-home"></i>Home</a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-angle-right"></i>Congresos</a>
-                    </li>
-                </ul>
+            <div class="carousel-item">
+                <img src="{% static 'assets/img/carusel-congresos/banner-02.png'%}" class="img-fluid w-100">
             </div>
         </div>
-        <!--ROW END-->
     </div>
-</div>
-
-<div class="kode-blog-style-2" style="margin-top: 82px;">
-    <div class="container">
-        <!--FIRST ROW START-->
-        
-            {%if congreso_list %}
-            {% for congreso in congreso_list %}
-            {% if forloop.first %}
-            <div class="row">
-                {%endif%}
-            <div class="col-md-4">
-                <!--KODE_EVENT_BLOG2 START-->
-                <div class="kode-event-blog3">
-                    <a href="{% url 'View_congreso' congreso.path %}" class="">
-                    <figure >
-                        <img src="{% static '/'%}{{congreso.imagencongreso_set.all.0.imagen}}" alt=""/>
-                       
-                       
-                        <div class="kode-fig-capstion" >
-                            <a href="{% url 'View_congreso' congreso.path  %}">{{congreso.titulo }}</a>
-                           {%if congreso.sub_titulo%} <p style="font-style: italic;"> {{congreso.sub_titulo|truncatewords:10 }}</p>{%endif%}
-                        </div>
-                       
-                    </figure>
-                </a>
-                    <div class="kode-thumb-caption">
-                        <a href="{% url 'View_congreso' congreso.path %}"><h4>{{congreso.titulo }}</h4></a>
-                        <ul>
-                            <li><a href="#"><i class="fa fa-calendar"></i>{{congreso.fecha_inicio|date:"M"}} {{congreso.fecha_inicio|date:"d"}} / {{congreso.fecha_inicio|date:"Y"}}</a></li>
-                            <li><a href="#"><i class="fa fa-location-arrow"></i>{{congreso.lugar.direccion}}</a></li>
-                        </ul>
-                        <span><a href="{% url 'View_congreso' congreso.path %}">Leer Más</a></span>
-                    </div>
-               
-                </div>
-                <!--KODE_EVENT_BLOG2 START-->
+</section>
+<section class="congresos-section-1">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-5">
+                <h1 class="page-title">CONGRESOS</h1>
+                <p class="description">Somos la primer plataforma diseñada para la realización y asistencia a congresos de manera digital.</p>
+                <div class="decorator"></div>
+            </div>
+            <div class="offset-md-5 col-md-2 d-flex d-md-block justify-content-end">
+                <a href="{% url 'Home'%}" class="back-home mt-3 mt-md-0">Volver al inicio</a>
+            </div>
+        </div>
+    </div>
+</section>
+{%if congreso_list %}
+<section class="congresos-congress-list">
+    <div class="container-fluid">
+        {% for congreso in congreso_list %}
+        {% if forloop.first %}
+        <div class="row">
+            {%endif%}
+            <div class="col-md-4 congress d-flex flex-column">
+                <a href="{% url 'View_congreso' congreso.path %}"><img src="{% static '/'%}{{congreso.imagen_home}}" class="img-fluid mb-2"></a>
+                <a href="{% url 'View_congreso' congreso.path %}"><h3 class="name mb-3">{{congreso.titulo }}</h3></a>
+                <span class="date mb-1">{{congreso.fecha_inicio|date:"M d / Y"}}</span>
+                <span class="place mb-4">{{congreso.lugar.direccion}}</span>
+                <a href="{% url 'View_congreso' congreso.path %}">Leer Más</a>
             </div>
             {%if forloop.counter|divisibleby:3 %}
         </div>
@@ -114,48 +90,8 @@ Congresos
         </div>
         {% endif %}
             {% endfor %}
-            {%else%}
-            <span>No encontro ningún Evento</span>
-            {%endif%}
-            <!--COL-MD-4 END-->
-            
-        <!--THIRD ROW END-->
-        <!--PAGINATION ROW START-->
-        <div class="row">
-            <div class="col-md-12">
-                <!---PAGINATIOn START-->
-                <div class="pag">
-                    <ul class="pagination">
-                        {% if page_obj.has_previous %}
-                        <li>
-                          <a  href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
-                            <span aria-hidden="true">Prev</span>
-                          </a>
-                        </li>
-                        
-                        {%endif%}
-                        {%if paginator.page_range|length > 1 %}
-                        {%for pagina  in  paginator.page_range %}
-                           
-                            <li>
-                            
-                                                       <a href="?page={{forloop.counter}}" >{{forloop.counter}}</a> </li>
-                       {%endfor%}
-                       {%endif%}
-                        {% if page_obj.has_next %}
-                        <li>
-                          <a href="?page={{ page_obj.next_page_number }}" aria-label="Next">
-                            <span aria-hidden="true">Next</span>
-                          </a>
-                        </li>
-                        {% endif %}
-                    </ul>
-                </div>
-                <!--PAGINATION END-->
-            </div>
-        </div>
-        <!--PAGINATION ROW END-->
     </div>
-</div>
+</section>
+{%endif%}
 
 {% endblock%}

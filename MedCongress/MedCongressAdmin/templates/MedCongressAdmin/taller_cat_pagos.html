@@ -19,6 +19,35 @@
 </style>
 {% endblock %}
 {% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+{%if con or congreso_bloque%}
+    <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+    </li>
+    <li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:talleres_list' %}?congreso={{con.path}}">Taller</a>
+    </li>
+    {%else%}
+    <li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:talleres_list' %}">Taller</a>
+    </li>
+{%endif%}
+{%if congreso_bloque%}
+
+{%endif%}
+{%if bloque%}
+            <li class="breadcrumb-item active"> <a {%if congreso_bloque%}href="{% url 'MedCongressAdmin:Congres_bloques' path=bloque.congreso.path %}"{%else%}href="{% url 'MedCongressAdmin:bloques_list' %}"{%endif%}>Bloques</a>
+            </li>
+{%endif%}   
+
+<li class="breadcrumb-item active">Categorias de Pago
+</li>
+
+</ol>
+</div>
+</div>
+</div>
 <section id="configuration">
     <div class="row">
         <div class="col-12">

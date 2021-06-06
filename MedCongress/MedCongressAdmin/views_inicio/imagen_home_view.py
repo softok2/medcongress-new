@@ -12,36 +12,32 @@ from django.utils.crypto import get_random_string
 from django.views.generic import CreateView, ListView, TemplateView
 from django.views.generic.edit import DeleteView, FormView, UpdateView
 from MedCongressAdmin.forms.inicio_forms import ImagenHomeForm
-from MedCongressApp.models import ImagenHome
+from MedCongressApp.models import ImagenHome,Congreso
 from MedCongressAdmin.apps import validarUser
     
 
-class ImagenListView(validarUser,ListView):
-    model = ImagenHome
-    context_object_name = 'imagenes'
+class ImagenListView(validarUser,TemplateView):
     template_name = 'inicio/imagen/index.html'
+    def get_context_data(self, **kwargs):
+        context=super().get_context_data(**kwargs)
+        context['congresos']=Congreso.objects.filter(is_home=True).first()
+        
+        return context 
 
-class ImagenCreateView(validarUser,CreateView):
+class ImagenCreateView(validarUser,FormView):
    
     form_class = ImagenHomeForm
     success_url = reverse_lazy('MedCongressAdmin:imagen_list')
     template_name = 'inicio/imagen/form.html'
-
+   
     def form_valid(self, form):
        
-        imagen = form.save(commit=False)
-       
-        if self.request.POST['prueba']:
-            image_64_encode=self.request.POST['prueba']
-            campo = image_64_encode.split(",")
-            image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
-            image_result = open('MedCongressApp/static/congreso/imagen_home.png', 'wb') # create a writable image and write the decoding result
-            image_result.write(image_64_decode)
-            imagen.imagen='congreso/imagen_home.png'
-        else:
-            imagen.imagen='congreso/imagen1920X1080.png'
+        congreso_pk = self.request.POST['congreso']
+        congreso=Congreso.objects.get(pk=congreso_pk)
+        congresos=Congreso.objects.filter(is_home=True).update(is_home=False)
 
-        imagen.save() 
+        congreso.is_home=True
+        congreso.save() 
         return super(ImagenCreateView, self).form_valid(form)
 
 class ImagenDeletedView(validarUser,DeleteView):

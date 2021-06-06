@@ -78,7 +78,7 @@ class QuienesSomosImagenDeletedView(validarUser,DeleteView):
         imagen=ImagenQuienesSomos.objects.get(pk=self.kwargs.get('pk'))
         if imagen.imagen:
             fileObj = Path('MedCongressApp/static/%s'%( imagen.imagen))
-            if fileObj.is_file():
+            if fileObj.is_file(): 
                 remove('MedCongressApp/static/%s'%( imagen.imagen))
         imagen.delete()
         return JsonResponse({'success':True}, safe=False)

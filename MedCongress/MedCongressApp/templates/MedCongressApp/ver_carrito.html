@@ -10,89 +10,103 @@ Mi Carrito de Compra
 {%endblock%}
 {% block contenido %}
 
-<div class="kode-event-time">
-    <div class="kode-event-contact">
-        <div class="container">
-            <div class="row well" style="margin-top: 70px;">
-                <h4>Desglose de los boletos a comprar</h4>
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Evento</th>
-                            <th>Nombre</th>
-                            <th>Cat. de Pago</th>
-                            <th>Precio</th>
-                            <th>Cant.</th>
-                            <th>A pagar</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {%if  request.session.cart.1 %}
-                        {%for car in request.session.cart.1 %}
-                        <tr>
-                            <th scope="row">{{forloop.counter}}</th>
-                            <td>{{car.tipo_evento}}</td>
-                            <td>{{car.nombre_congreso}}</td>
-                            <td>{{car.nombre_cat_pago}}</td>
-                            <td>${{car.precio}}</td>
+<section class="cart-banner">
+    <img src="{% static 'assets/img/banner-checkout.jpg'%}" class="img-fluid w-100">
+</section>
+
+<section class="cart-info">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <h1 class="section-title">BOLETOS A COMPRAR</h1>
+                <small class="subtitle">Desgloce de tu compra.</small>
+            </div>
+            <div class="col-md-6 d-flex align-items-center justify-content-end mt-5 mt-md-0">
+                <a href="congreso.php" class="back">Volver al Congreso</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cart-table">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col px-5">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">No.</th>
+                                <th scope="col">Evento</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Cat. de Pago</th>
+                                <th scope="col">Precio</th>
+                                <th scope="col">Cant</th>
+                                <th scope="col">A Pagar</th>
+                                <th scope="col">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {%if  request.session.cart.1 %}
+                            {%for car in request.session.cart.1 %}
+                            <tr>
+                                <th scope="row">{{forloop.counter}}</th>
+                                <td>{{car.tipo_evento}}</td>
+                                <td>{{car.nombre_congreso}}</td>
+                                <td>{{car.nombre_cat_pago}}</td>
+                                <td>${{car.precio}}</td>
+                                
+                                <td style="display: none;" id="edit_{{car.mi_id}}"> <input class="form-control input-sm" type="number" value="{{car.cantidad}}" style="width: 66px;" id="cantidad_{{car.mi_id}}"  value="1" min='1' step="any"></td>
+                                <td id="edit_no_{{car.mi_id}}"> {{car.cantidad}}</td>
                             
-                            <th style="display: none;" id="edit_{{car.mi_id}}"> <input class="form-control input-sm" type="number" value="{{car.cantidad}}" style="width: 66px;" id="cantidad_{{car.mi_id}}"></th>
-                            <th id="edit_no_{{car.mi_id}}"> {{car.cantidad}}</th>
-                        
-                            <td>${{car.pagar}}</td>
-                            <td style="text-align: center;">
-                                
-                                <a id="btn_edit_{{car.mi_id}}" onclick="EditCart({{car.mi_id}}) " title="Editar"> <i class="fa fa-pencil-square" style="color:blue; font-size: 20px;"></i></a>
-                                <a id="btn_conf_{{car.mi_id}}"  onclick="ConfCart({{car.mi_id}})" style="display: none;"  title="Confirmar"> <i class="fa fa-check-circle" style="color:green; font-size: 20px;"></i></a>
-                                <a id="btn_cancel_{{car.mi_id}}"  onclick="CancelCart({{car.mi_id}})" style="display: none;"  title="Cancelar"> <i class="fa fa-minus-circle" style="color:red; font-size: 20px;"></i></a>
-                                
-                                <a onclick="EliminarCart({{car.mi_id}})"> <i class="fa fa-trash" style="color: red;font-size: 20px;margin-left: 10px;"  title="Eliminar"></i></a></td>
-                        </tr>
-                        {%endfor%}
-                        <tr>
-                            
-                            <th scope="row" colspan="6">Total a pagar</th>
-                    
-                            <td><b> ${{request.session.cart.0.cant}}</b></td>
-                            <td></td>
-                                
-                        </tr>
-                        {%else%}
+                                <td>${{car.pagar}}</td>
+                                <td style="text-align: center;">
+                                    
+                                    <a id="btn_edit_{{car.mi_id}}" onclick="EditCart({{car.mi_id}}) " title="Editar"> <i class="fas fa-edit" style="color:blue; font-size: 20px;"></i></a>
+                                    <a id="btn_conf_{{car.mi_id}}"  onclick="ConfCart({{car.mi_id}})" style="display: none;"  title="Confirmar"> <i class="fa fa-check-circle" style="color:green; font-size: 20px;"></i></a>
+                                    <a id="btn_cancel_{{car.mi_id}}"  onclick="CancelCart({{car.mi_id}})" style="display: none;"  title="Cancelar"> <i class="fa fa-times-circle" style="color:red; font-size: 20px;"></i></a>
+                                    
+                                    <a onclick="EliminarCart({{car.mi_id}})"> <i class="fas fa-trash-alt" style="color: red;font-size: 20px;margin-left: 10px;"  title="Eliminar"></i></a></td>
+                            </tr>
+                            {%endfor%}
+                            {%else%}
                         <tr >
                             <td colspan="7" style="text-align: center;color: red;"> <b>No hay ningún evento a comprar</b> </td>
                            </tr>
                         {%endif%}
-                        
-                    </tbody>
-                </table>
-
-
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            
-            <div class="modal-footer">
-                
-                {%if request.session.cart.1 %}
-                <a href="{%url 'Pagar' %}" type="button" class="btn btn-primary">Pagar</a>
-                {%else%}
-                <a  type="button" class="btn btn-primary" onclick="Mensaje('No tiene nada en el carrito para comprar')">Pagar</a>
-                {%endif%}
+        </div>
+
+        <div class="row my-3">
+            <div class="col px-5">
+                <div class="cart-price d-flex justify-content-between">
+                    <span class="ms-3">Total a Pagar</span>
+                    <span class="me-5"> <b> {%if  request.session.cart.1 %}${{request.session.cart.0.cant}} {%else%} $0 {%endif%}</b></span>
+                </div>
             </div>
+        </div>
 
+        <div class="row">
+            <div class="col px-5">
+                <hr>
+            </div>
+        </div>
 
+        <div class="row my-3">
+            <div class="col px-5 d-flex justify-content-end">
+               
+                <a href=" {%if request.session.cart.1 %}{%url 'Pagar' %} {%else%} javascript:Mensaje('No tiene nada en el carrito para comprar') {%endif%}" class="btn">PAGAR</a>
+            </div>
         </div>
     </div>
-    </body>
-
-    </html>
-
-    {%endblock%}
-
-    {%block script%}
+</section>
+{%endblock%}
+{%block script%}
 
 
-    <script src="{% static 'MedCongressApp/js/sweetalert.min.js' %}"></script>
     <script type="text/javascript">
  
 		
@@ -190,7 +204,13 @@ $('#btn_edit_'+id).show();
 	function ConfCart(id){
         var patt = /^\d+$/;
         valor=$('#cantidad_'+id).val()
+        
         if (patt.test(valor) == true){
+            if(valor<1)
+        {
+            swal("No se pudo actualizar", "La Cantidad debe ser mayor que 0 .", "error");
+            return;   
+        }
 		$.ajax({
             type: "GET",
             url: "{% url 'Conf_cart'%}",
@@ -215,7 +235,7 @@ $('#btn_edit_'+id).show();
     
 }
         else{
-            swal("No se puede", "Debe entrar un Número entero.", "error");
+            swal("No se puede", "Debe entrar un Número entero positivo.", "error");
 
         }
 	}

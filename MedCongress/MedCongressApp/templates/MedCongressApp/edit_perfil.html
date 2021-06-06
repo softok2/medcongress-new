@@ -24,405 +24,244 @@ z-index: 0;
 
 {%endblock%}
 {% block contenido %}
-<div class="kode-event-time">
-
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Localidad</h4>
-                </div>
-                <div class="modal-body">
-                    <div id="geomap"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-
+<section class="update-profile">
+    <div class="container-fluid">
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Localidad</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div id="geomap"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="kode-event-contact"
-        style=" background:url({% static 'MedCongressApp/images/slide11.png'%}) no-repeat 50%  0;background-attachment: fixed; ">
-        <div class="container">
-
-
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="kf_heading_3" style="margin-top: 70px;">
-                        <h2>Actualizar Perfil en MedCongress</h2>
-                        <span></span>
-                    </div>
-                </div>
+        <div class="row">
+            <div class="col-md-3">
+                <a href="{% url 'perfil' %}"  class="profile-cta">VOLVER AL PERFIL</a>
+              
             </div>
 
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    {% if form.errors %}
-                    {% for field in form %}
-                        {% for error in field.errors %}
-                        
-                            <div class="alert alert-danger alert-dismissible mb-2" role="alert">
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                                {{ error|safe|escape }}
-                            </div>
-                        {% endfor %}
-                    {% endfor %}
-                    {% for error in form.non_field_errors %}
-                    <div class="alert alert-danger alert-dismissible mb-2" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                        {{ error|safe|escape }}
-                    </div>
-                    {% endfor %}
-                {% endif %}
-                    <form class="contactusform" action="" method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane active" id="home">
-                                <div class="row">
-                                    <div class="col-sm-3 ">
-                                        
-                                            <div class="form-group">
-                                                {%if imagen_seg_url%}	
-                                                <label class="label" data-toggle="tooltip" title="Clic para cambiar foto">
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                        <img class="img-responsive" id="avatar" src="{% static '/' %}{{imagen_seg_url}}"  alt="avatar" >
-                                                        </div>
-                                                    
-                                                    
-                                                </div>
-                                                <input type="file" class="sr-only" id="input" name="image" accept="image/*">
-                                                    <input type="hidden" id="prueba" name="prueba">
-                                                  </label>
-                                                  
-                                                {% else%}
-
-                                                <label class="label" data-toggle="tooltip" title="Clic para cambiar foto">
-                                                    <img class="img-responsive" id="avatar" id="avatar" src="{% static 'MedCongressApp/images/defaulthombre.png' %}"  alt="avatar">
-                                                    <input type="file" class="sr-only" id="input" name="image" accept="image/*">
-                                                    <input type="hidden" id="prueba" name="prueba">
-                                                  </label>
-                                                    {%endif%}
-                                                    
-                                                    
-                                                      <div class="alert" role="alert"></div>
-                                                      <div class="modal fade " id="modal1" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-                                                        <div class="modal-dialog " role="document">
-                                                          <div class="modal-content">
-                                                            <div class="modal-header">
-                                                              <h5 class="modal-title" id="modalLabel">Editar la Imagen</h5>
-                                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                              </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                              <div class="img-container ">
-                                                                <img id="image" src="https://avatars0.githubusercontent.com/u/3456749">
-                                                              </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                              <button type="button" class="btn btn-primary" id="crop">Guardar</button>
-                                                            </div>
-                                                          </div>
-                                                        </div>
-                                                      </div>
-                                                    
-                                           
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-9 ">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label
-                                                        for="{{form.user.first_name.id_for_label }}"><b>{{form.user.first_name.label }}</b> </label>
-
-                                                    {{form.user.first_name }} {{form.user.first_name.help_text }}
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label
-                                                        for="{{form.user.last_name.id_for_label }}"><b>{{form.user.last_name.label }}</b> </label>
-
-                                                    {{form.user.last_name }}
-                                                </div>
-
-
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label
-                                                        for="{{form.user.email.id_for_label }}"><b>{{form.user.email.label }}</b> </label>
-
-                                                    {{form.user.email }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-3 " style="display: none;">
-                                                <div class="form-group">
-                                                    <label for="{{form.user.username.id_for_label }}"><b>{{form.user.username.label }}
-                                                        </b> </label>
-
-                                                    {{form.user.username }}
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-8 ">
-                                                <div class="form-group">
-                                                    <label
-                                                        for="{{form.ubicacion.direccion.id_for_label }}"><b>{{form.ubicacion.direccion.label }}</b>
-                                                        </label>
-
-                                                    {{form.ubicacion.direccion }}
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="col-sm-3">
-                                                <div class="form-group">
-
-                                                    <label class="mapa">Ver Mapa</label>
-                                                    <!-- <a onclick="VerMapa()" type="link"  style="display: block;">  <i class="" style="font-size: 43px;"></i> </a> -->
-                                                    <button type="button" class="btn btn-link" data-toggle="modal"
-                                                        data-target="#myModal" style="display: block;">
-                                                        <span><i class="glyphicon glyphicon-map-marker"
-                                                                style="font-size: 30px;display: block;"></i></span>
-
-                                                    </button>
-
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-3 ">
-                                                <div class="form-group">
-                                                    <label
-                                                        for="{{form.perfiluser.genero.id_for_label }}"><b>{{form.perfiluser.genero.label }}</b></label>
-                                                    {{form.perfiluser.genero }}
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3 ">
-                                                <div class="form-group">
-                                                    <label
-                                                        for="{{form.perfiluser.num_telefono.id_for_label }}"><b>{{form.perfiluser.num_telefono.label }}</b></label>
-
-                                                    {{form.perfiluser.num_telefono }}
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3 ">
-                                                <div class="form-group">
-                                                    <label
-                                                        for="{{form.perfiluser.fecha_nacimiento.id_for_label }}"><b>{{form.perfiluser.fecha_nacimiento.label }}</b></label>
-
-                                                        <input type="date" name="perfiluser-fecha_nacimiento" class="form-control" id="id_perfiluser-fecha_nacimiento">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-
-                                            <div class="col-sm-3 ">
-                                                <div class="form-group">
-                                                    <label
-                                                        for="{{form.perfiluser.categoria.id_for_label }}"><b>{{form.perfiluser.categoria.label }}</b></label>
-
-                                                    {{form.perfiluser.categoria }}
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3 " id="new_cat">
-                                                <div class="form-group">
-                                                    <label
-                                                        for="{{form.categoria.nombre.id_for_label }}"><b>{{form.categoria.nombre.label }}</b></label>
-                                                    {{form.categoria.nombre}}
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-3 " id="esp_div">
-                                                <div class="form-group">
-                                                    <label
-                                                        for="{{form.perfiluser.especialidad.id_for_label }}"><b>{{form.perfiluser.especialidad.label }}</b></label>
-                                                    {{form.perfiluser.especialidad }}
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3 " id="cel_prof">
-                                                <div class="form-group">
-                                                    <label
-                                                        for="{{form.perfiluser.cel_profecional.id_for_label }}"><b>{{form.perfiluser.cel_profecional.label }}</b></label>
-
-                                                    {{form.perfiluser.cel_profecional }}
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        
-                                        <div class="row">
-                                            <div class="col-sm-6 ">
-                                                <div class="form-group">
-                                                    {{form.perfiluser.is_ponente }}
-                                                    <label for="{{form.perfiluser.is_ponente.id_for_label }}"><b>{{form.perfiluser.is_ponente.label }}
-                                                    </label>
-
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-3 ">
-                                                <div class="form-group" style="display: none;">
-                                                    <label
-                                                        for="{{form.ubicacion.longitud.id_for_label }}"><b>{{form.ubicacion.longitud.label }}</b></label>
-
-                                                    {{form.ubicacion.longitud }}
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3 " style="display: none;">
-                                                <div class="form-group">
-                                                    <label
-                                                        for="{{form.ubicacion.latitud.id_for_label }}"><b>{{form.ubicacion.latitud.label }}</b> </label>
-
-                                                    {{form.ubicacion.latitud }}
-                                                </div>
-                                            </div>
-
-
-
-                                        </div>
-                                        
-                                    </div>
-
-
-                                </div>
-                            </div>
-                            <div role="tabpanel" class="tab-pane" id="profile">
-                                <div class="row">
-                                    <div class="col-sm-8">
-                                        <div class="form-group">
-                                            <label for="{{form.perfiluser.puesto.id_for_label }}"><b>Puesto
-                                                    Actual</b></label>
-
-                                            {{form.perfiluser.puesto }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <label for="{{form.perfiluser.detalle.id_for_label }}"><b>Logros
-                                                    Académicos</b></label>
-
-                                            {{form.perfiluser.detalle }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <label
-                                                for="{{form.perfiluser.publicaciones.id_for_label }}"><b>Publicaciones</b></label>
-
-                                            {{form.perfiluser.publicaciones }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <label for="{{form.perfiluser.datos_interes.id_for_label }}"><b>Otros Datos
-                                                    de
-                                                    Interes</b></label>
-
-                                            {{form.perfiluser.datos_interes }}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <h4 style="margin-left: 15px;"> <b>Redes Sociales </b> </h4>
-                                </div>
-                                <div class="row">
-
-                                    <div class="col-sm-3 ">
-                                        <div class="input-group form-group">
-                                            <div class="input-group-prepend">
-                                                <button class="btn btn-primary" type="button" style="height: 41px;
-                                        width: 48px;"><i class="fa fa-linkedin" style="font-size: 23px;"></i></button>
-                                            </div>
-
-                                            {{form.perfiluser.linkedin }}
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3 ">
-                                        <div class="input-group form-group">
-                                            <div class="input-group-prepend">
-                                                <button class="btn btn-danger" type="button" style="height: 41px;
-                                        width: 48px;"><i class="fa fa-youtube" style="font-size: 23px;"></i></button>
-                                            </div>
-
-                                            {{form.perfiluser.youtube }}
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3 ">
-                                        <div class="input-group form-group">
-                                            <div class="input-group-prepend">
-                                                <button class="btn btn-primary" type="button" style="height: 41px;
-                                        width: 48px;"><i class="fa fa-facebook" style="font-size: 23px;"></i></button>
-                                            </div>
-
-                                            {{form.perfiluser.facebook }}
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3 ">
-                                        <div class="input-group form-group">
-                                            <div class="input-group-prepend">
-                                                <button class="btn btn-info" type="button" style="height: 41px;
-                                        width: 48px;"><i class="fa fa-twitter"
-                                                        style="font-size: 34px;margin-top: -8px;margin-left: -8px;"></i></button>
-                                            </div>
-
-                                            {{form.perfiluser.twitter }}
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        
-                            <div class="row">
-
-                                <div class="col-sm-offset-2 col-sm-5">
-                                    
-    
-                                        <button type="submit" class="btn btn-lg btn-primary" id="submit">Actualizar
-                                            Perfil </button>
-                                        </label>
-    
-    
-                                </div>
-    
-                            </div>
-                        
+            <div class="col-md-8 content">
+                {% if form.errors %}
+                {% for field in form %}
+                    {% for error in field.errors %}
+                    
+                        <div class="alert alert-danger alert-dismissible mb-2" role="alert">
+                           
+                            {{ error|safe|escape }}
                         </div>
-                        
-
-
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                <div class="alert alert-danger alert-dismissible mb-2" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    {{ error|safe|escape }}
                 </div>
-                </form>
+                {% endfor %}
+            {% endif %}
+            <form class="contactusform" action="{% url 'Edit_perfil' pk=request.user.perfilusuario.pk %}" method="post" enctype="multipart/form-data" id="form">
+                    {% csrf_token %}
+                    
+                    <div class="profile-section section-1">
+                        <div class="row">
+                            <div class="col d-flex justify-content-between align-items-center">
+                                <h2 class="profile-title"><strong>Actualizar Perfil de MED Congress</strong></h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <span class="subtitle">Manten actualizado tu perfil</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5 border-right-gray pe-md-4 d-flex flex-column justify-content-between">
+                                {%if imagen_seg_url%}	
+                                <label class="label" data-toggle="tooltip" title="Clic para cambiar foto">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                        <img class="img-fluid profile-img w-100" id="avatar" src="{% static '/' %}{{imagen_seg_url}}"  alt="avatar" >
+                                        </div>
+                                    
+                                    
+                                </div>
+                                <input type="file" class="sr-only" id="input" name="image" accept="image/*">
+                                    <input type="hidden" id="prueba" name="prueba">
+                                  </label>
+                                  
+                                {% else%}
 
+                                <label class="label" data-toggle="tooltip" title="Clic para cambiar foto">
+                                    <img class="img-fluid profile-img w-100" id="avatar" src="{% static 'MedCongressApp/images/defaulthombre.png' %}"  alt="avatar">
+                                    <input type="file" class="sr-only" id="input" name="image" accept="image/*">
+                                    <input type="hidden" id="prueba" name="prueba">
+                                  </label>
+                                    {%endif%}
+                                    
+                                    
+                                      <div class="alert" role="alert"></div>
+                                      <div class="modal fade " id="modal1" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+                                        <div class="modal-dialog " role="document">
+                                          <div class="modal-content">
+                                            <div class="modal-header">
+                                              <h5 class="modal-title" id="modalLabel">Editar la Imagen</h5>
+                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                              </button>
+                                            </div>
+                                            <div class="modal-body">
+                                              <div class="img-container ">
+                                                <img id="image" src="https://avatars0.githubusercontent.com/u/3456749">
+                                              </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                              <button type="button" class="btn btn-primary" id="crop">Guardar</button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                            </div>
+                           
+                            <div class="col-md-7 ps-md-4 fields-wraper">
+                                <div class="field-group name-group mb-3 me-md-2 mt-5 mt-md-0">
+                                    <label>Nombre</label>
+                                    {{form.user.first_name }} {{form.user.first_name.help_text }}
+                                </div>
+                                <div class="field-group last-name-group mb-3 ms-md-2">
+                                    <label>Apellidos</label>
+                                    {{form.user.last_name }}
+                                </div>
+                                <div class="field-group mail-group mb-3">
+                                    <label>Correo</label>
+                                    {{form.user.email }} 
+                                </div>
+                                <div class="field-group location-group mb-3 ">
+                                    <label>Lugar</label>
+                                    {{form.ubicacion.direccion }}
+                                </div>
+                               
+                                <div class="field-group phone-group mb-3 me-md-2">
+                                    <label>Teléfono</label>
+                                    {{form.perfiluser.num_telefono }}
+                                </div>
+                                <div class="field-group date-group mb-3 ms-md-2">
+                                    <label>Fecha de Nacimiento</label>
+                                    
+                                   
+                                    <input type="date" name="perfiluser-fecha_nacimiento" class="form-control" id="id_perfiluser-fecha_nacimiento">
+                                </div>   
+                                <div class="field-group gender-group mb-3 me-md-2">
+                                    <label>Género</label>
+                                    {{form.perfiluser.genero }}
+                                </div>
+                                <div class="field-group cat mb-3 ms-md-2">
+                                    <label>Categoría</label>
+                                    <select name="perfiluser-categoria" class="form-control" required="" id="id_perfiluser-categoria">
+                                        <option value="">---------</option>
+                                      {%for categoria in categorias%}
+                                        <option value="{{categoria.pk}}">{{categoria.nombre}}</option>
+                                      {%endfor%}
+                                      </select>
+                                </div>
+                               
+                                <div class="form-check d-flex align-items-center ps-0">
+                                    {{form.perfiluser.is_ponente }}
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        Desearía ser ponente en un evento 
+                                    </label>
+                                </div>
+                                <div class="col-sm-3 ">
+                                    <div class="form-group" style="display: none;">
+                                        <label
+                                            for="{{form.ubicacion.longitud.id_for_label }}"><b>{{form.ubicacion.longitud.label }}</b></label>
+
+                                        {{form.ubicacion.longitud }}
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 " style="display: none;">
+                                    <div class="form-group">
+                                        <label
+                                            for="{{form.ubicacion.latitud.id_for_label }}"><b>{{form.ubicacion.latitud.label }}</b> </label>
+
+                                        {{form.ubicacion.latitud }}
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 " style="display: none;">
+                                    <div class="form-group">
+                                        <label for="{{form.user.username.id_for_label }}"><b>{{form.user.username.label }}
+                                            </b> </label>
+
+                                        {{form.user.username }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3 class="update-profile-section-heading">PROFESIONAL</h3>
+                    <div class="profile-section section-2">
+                        <div class="row flex-md-row flex-column mb-3 me-md-2">
+                            <div class="field-group gender-group mb-3 me-md-2">
+                                <label>Puesto Actual</label>
+                                {{form.perfiluser.puesto }}
+                            </div>
+                            <div class="field-group  gender-group mb-3 me-md-2">
+                                <label>Especialidad</label>
+                                {{form.perfiluser.especialidad }}
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <h3 class="update-profile-section-heading">REDES SOCIALES</h3>
+                    <div class="profile-section section-2">
+                        <div class="row flex-md-row flex-column">
+                            <div class="col">
+                                <label>Facebook</label>
+                                {{form.perfiluser.facebook }}
+                            </div>
+                            <div class="col mt-2 mt-md-0">
+                                <label>Linkedin</label>
+                                {{form.perfiluser.linkedin }}
+                            </div>
+                            <div class="col mt-2 mt-md-0">
+                                <label>Youtube</label>
+                                {{form.perfiluser.youtube }}
+                            </div>
+                            <div class="col mt-2 mt-md-0">
+                                <label>Twitter</label>
+                                {{form.perfiluser.twitter }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3 class="update-profile-section-heading">LOGROS ACADÉMICOS</h3>
+                    {{form.perfiluser.detalle }}
+                    <div style="margin-bottom: 20px;"></div>
+                    <h3 class="update-profile-section-heading">PUBLICACIONES</h3>
+                    {{form.perfiluser.publicaciones }}
+                    <div style="margin-bottom: 20px;"></div>
+                    <h3 class="update-profile-section-heading">DATOS DE INTERES</h3>
+                    {{form.perfiluser.datos_interes }}
+                   <div style="margin-bottom: 20px;"></div>
+                   <a href="#" id="submit"  class="profile-cta">ACTUALIZAR PERFIL</a>
+                   <div style="margin-bottom: 20px;"></div>
+                </form>  
             </div>
         </div>
     </div>
-</div>
-
-</div>
-
-
+</section>
 {% endblock%}
 
 {%block script%}
@@ -435,15 +274,20 @@ z-index: 0;
 <script src="{% static 'MedCongressAdmin/assets/js/cropper.js'%}"></script>
 <script>
 
-    $('#myTabs a').click(function (e) {
-
-        e.preventDefault()
-        $(this).tab('show')
-    })
 
     $(document).ready(function () {
-
-
+        {%if cat %}
+        $("#id_perfiluser-categoria option[value='{{cat}}']").attr("selected", true);
+        {%endif%}
+        $('#submit').click(function (){
+        $('#form').submit();
+       
+    }
+        );
+        
+        {% if fecha_nac%}
+            $("#id_perfiluser-fecha_nacimiento").val('{{ fecha_nac|date:"Y-m-d" }}');
+        {%endif%}
         FiltrarLugar('#id_ubicacion-direccion', '#id_ubicacion-longitud', '#id_ubicacion-latitud');
         $('#id_ubicacion-direccion').keypress(function () {
             $('#id_ubicacion-latitud').val('');
@@ -527,60 +371,6 @@ z-index: 0;
         });
 
 
-        /*
-         * Point location on google map
-         */
-        // $('#get_map').click(function (e) {
-
-        //     var address = $(PostCodeid).val();
-        //     geocoder.geocode({'address': address}, function (results, status) {
-        //         if (status == google.maps.GeocoderStatus.OK) {
-        //             map.setCenter(results[0].geometry.location);
-        //             marker.setPosition(results[0].geometry.location);
-        //             $('#id_ubicacion-direccion').val(results[0].formatted_address);
-        //             $('#id_ubicacion-latitud').val(marker.getPosition().lat());
-        //             $('#id_ubicacion-longitud').val(marker.getPosition().lng());
-        //         } else {
-        //             alert("Geocode was not successful for the following reason: " + status);
-        //         }
-        //     });
-        //     e.preventDefault();
-        // });
-
-        //Add listener to marker for reverse geocoding
-
-        //     google.maps.event.addListener( map, "click", function(ele) {
-        //     // codigo que crea el marcador
-        //     new google.maps.Marker({
-        //         map: map
-        //     })
-        // });
-
-
-        // google.maps.event.addListener(map, 'click', function (event) {
-
-        //     marker = new google.maps.Marker({
-        //     map: map,
-        //     draggable: true,
-        //     position: event.latLng
-        // });
-
-        //     geocoder.geocode({'latLng': marker.getPosition()}, function (results, status) {
-        //         if (status == google.maps.GeocoderStatus.OK) {
-        //             if (results[0]) {
-        //                 $('#id_ubicacion-direccion').val(results[0].formatted_address);
-        //                 $('#id_ubicacion-latitud').val(marker.getPosition().lat());
-        //                 $('#id_ubicacion-longitud').val(marker.getPosition().lng());
-        //             }
-        //         }
-        //     });
-        // });
-
-
-
-
-
-
     });
 
     function VerMapa() {
@@ -616,11 +406,11 @@ z-index: 0;
         if (files && files.length > 0) {
 		  file = files[0];
 		 
-			tipo_imagen=files[0].name.split('.');
-			if(tipo_imagen[1]!='jpg' && tipo_imagen[1]!='png')
+            tipo_imagen=files[0].name.split('.');
+			if(tipo_imagen[1]!='jpg' && tipo_imagen[1]!='png' && tipo_imagen[1]!='jpeg')
 			{
 				
-				swal("Cancelado", "Solo admimite archivos .jpg y .png.", "error");
+				swal("Cancelado", "Solo admimite archivos .jpeg , .jpg y .png.", "error");
 				return;	
 			}
           if (URL) {

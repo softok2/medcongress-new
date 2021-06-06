@@ -54,12 +54,13 @@ class UserForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
        
-        self.fields['password'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['password1'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['password'].widget.attrs.update({'class': 'form-control','placeholder':'Contraseña'}) 
+        self.fields['password1'].widget.attrs.update({'class': 'form-control','placeholder':'Confirmar Contraseña'}) 
           
         self.fields['first_name'].widget.attrs.update({'class': 'form-control','placeholder':'Nombre'})   
-        self.fields['last_name'].widget.attrs.update({'class': 'form-control'})   
-        self.fields['email'].widget.attrs.update({'class': 'form-control'})     
+        self.fields['last_name'].widget.attrs.update({'class': 'form-control','placeholder':'Apellidos'})   
+        self.fields['email'].widget.attrs.update({'class': 'form-control','placeholder':'Correo'}) 
+        
 
     def clean(self, *args, **kwargs):
         cleaned_data = super(UserForm, self).clean(*args, **kwargs)    
@@ -120,20 +121,18 @@ class PerfilUserForm(forms.ModelForm):
                label = 'Cédula Profesional',
                 required=False
                )
-   
-
-    categoria=forms.ModelChoiceField(queryset=CategoriaUsuario.objects.filter(published=True),label='Categoría')
-   
     class Meta:
         model=PerfilUsuario
-        fields=['cel_profecional','categoria','especialidad']
+        fields=['cel_profecional','categoria','especialidad','puesto']
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
          
-        self.fields['cel_profecional'].widget.attrs.update({'class': 'form-control'})   
-        self.fields['categoria'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['especialidad'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['cel_profecional'].widget.attrs.update({'class': 'form-control ','placeholder':'Cédula Profesional'}) 
+        self.fields['puesto'].widget.attrs.update({'class': 'form-control ','placeholder':'Hospital/Lugar de trabajo','rows':'2'})     
+        self.fields['categoria'].widget.attrs.update({'class': 'form-select','placeholder':'Categoría'})
+              
+        self.fields['especialidad'].widget.attrs.update({'class': 'form-select ','placeholder':'Especialidad'}) 
         
        
         
@@ -148,7 +147,7 @@ class Ubicacion(forms.ModelForm):
         fields=['direccion','latitud','longitud']
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
+        self.fields['direccion'].widget.attrs.update({'class': 'form-control','placeholder':'Ciudad de residencia'}) 
         self.fields['longitud'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['latitud'].widget.attrs.update({'class': 'form-control'}) 
     def clean(self, *args, **kwargs):
@@ -173,7 +172,7 @@ class Categoria(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-        self.fields['nombre'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['nombre'].widget.attrs.update({'class': 'form-control','placeholder':'Nueva Categoría'}) 
        
 
 
@@ -182,7 +181,8 @@ class UserPerfilUser(MultiModelForm):
     form_classes = {
         'user': UserForm,
         'perfiluser': PerfilUserForm,
-        'categoria':Categoria
+        'categoria':Categoria,
+        'ubicacion':Ubicacion,
     }
 
 class UserPerfilUserEditar(MultiModelForm):
@@ -205,8 +205,8 @@ class CambiarPassForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
        
-        self.fields['password'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['password1'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['password'].widget.attrs.update({'class': 'form-control  border-0','placeholder':'Nueva Contraseña'}) 
+        self.fields['password1'].widget.attrs.update({'class': 'form-control border-0','placeholder':'Confirme la Nueva Contraseña'}) 
        
 
     def clean(self, *args, **kwargs):

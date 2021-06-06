@@ -1,0 +1,78 @@
+.checkout-formas-de-pago {
+    .section-title{
+        color: $outer-space;
+        font-family: $font-1;
+    }
+
+    .nav {
+        @include media-max($large) {
+            border-bottom: 0;
+        }
+
+        .nav-link {
+            font-size: 22px;
+            font-weight: bold;
+            color: $outer-space;
+            font-family: $font-1;
+
+            @include media-max($large) {
+                border: 0;
+                font-size: 18px;
+                padding-bottom: 15px;
+            }
+        }
+    }
+
+    .tabtitle,
+    ul > li,
+    .cta-payment {
+        font-size: 20px;
+        color: $outer-space;
+        font-family: $font-1;
+    }
+
+    .cta-payment {
+        font-size: 18px;
+        border-radius: 5px;
+        padding: 10px 15px;
+        text-decoration: none;
+        border: 1px solid $outer-space;
+    }
+
+    .tab-content {
+        hr {
+            opacity: 1;
+            height: 2px;
+            background-color: $regent-gray;
+        }
+
+        .card-acepted,
+        label,
+        input,
+        input::placeholder,
+        span,
+        select {
+            font-size: 18px;
+            color: $outer-space;
+            font-family: $font-1;
+        }
+
+        .card-acepted,
+        label {
+            font-weight: bold;
+        }
+
+        .card-acepted {
+            border-bottom: 2px solid $regent-gray;
+        }
+
+        input[type="submit"] {
+            border: 0;
+            color: $white;
+            border-radius: 5px;
+            background-color: $picton-blue;
+            padding: 5px 20px;
+        }
+    }
+
+}

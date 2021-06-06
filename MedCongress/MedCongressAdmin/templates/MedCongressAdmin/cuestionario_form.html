@@ -91,15 +91,9 @@
 															style="font-size: 15px; color: red;">{{ form.published.errors }}
 														</span>{% endif %} </label>
 														{%if pregunta%}
-													<select name="published" class="form-control" id="">
-														{%if pregunta.published %}
-														<option value="True" selected>Si</option>
-														<option value="False" >No</option>
-														{%else%}
-														<option value="True" >Si</option>
-														<option value="False" selected>No</option>
-														{%endif%}
-													</select>
+														
+														<input name="published" class="form-control" type="checkbox" value="True"{%if pregunta.published %} checked=""{%endif%}> 
+												
 													{%else%}
 													{{ form.published}}
 													{%endif%}

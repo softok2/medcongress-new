@@ -8,7 +8,7 @@ from django.urls import path,include
 
 from .views.country_views import (CountryCreateView, CountryDeleteView,
                                   CountryListView, CountryUpdateView)
-from .views.congress_views import (AsignarConstanciasUsuario,CongressListView,CongressCreateView,CongressUpdateView,
+from .views.congress_views import (LogsCongreso,LogsUsuarios,CongressSalaCreateView,CongressDeletedSalaView,CongressSalaUpdateView,CongressSalasListView,AsignarConstanciasUsuario,GetSalas,CongressListView,CongressCreateView,CongressUpdateView,
                                    CongressTalleresListView,CongressPonenciasListView,CongressCategPagosListView,
                                    CongressImagenesListView,AddPonenciaCongreso,CongressCategPagosCreateView,
                                    CongressDeletedView,CongressBloquesListView,GetBloques,AsignarCongressListView,AsignarCongressAddViews,GetPagos,
@@ -177,6 +177,7 @@ urlpatterns = [
 
       # funciones Ajax
       path('get_bloques', GetBloques, name='Get_Bloque'),
+      path('get_sala', GetSalas, name='Get_Sala'),
       path('get_pago', GetPagos, name='Get_Pago'),
       path('get_pago_taller', GetPagosT, name='Get_Pago_taller'),
       path('taller/bloque/eliminar', TallerBloqueDeleted, name='taller_block_delete'),
@@ -194,6 +195,12 @@ urlpatterns = [
       path('programa-congres/adicinar/<str:path>', CongressProgramaCreateView.as_view(), name='congres_programa_add'),
       path('programa-congres/editar/<str:path>/<int:pk>', CongressProgramaUpdateView.as_view(), name='congres_programa_editar'),
       path('programa-congres/eliminar/<int:pk>', CongressProgramaDeletedView.as_view(), name='congres_programa_eliminar'),
+
+      #Sala-Congreso
+      path('salas/congreso/<str:path>', CongressSalasListView.as_view(), name='Congres_salas'),
+      path('sala-congres/adicinar/<str:path>', CongressSalaCreateView.as_view(), name='congres_sala_add'),
+      path('sala-congres/editar/<str:path>/<int:pk>', CongressSalaUpdateView.as_view(), name='congres_sala_editar'),
+      path('sala-congres/eliminar/<int:pk>', CongressDeletedSalaView.as_view(), name='congres_sala_eliminar'),
 
 
       #Categorias de Pagos-Taller
@@ -359,6 +366,12 @@ urlpatterns = [
       path('trabajos-congres/adicinar/<str:path>', CongressTrabajoCreateView.as_view(), name='congres_trabajo_add'),
       path('trabajos-congres/editar/<str:path>/<int:pk>', CongressTrabajoUpdateView.as_view(), name='congres_trabajo_editar'),
       path('trabajos-congres/eliminar/<int:pk>', CongressTrabajoDeletedView.as_view(), name='congres_trabajo_eliminar'),
+
+      #Logs
+      path('logs/congreso', LogsCongreso.as_view(), name='LogsCongreso'),
+      path('logs/usuario', LogsUsuarios.as_view(), name='LogsUsuario'),
+      
+      
 
 ## Tablas en JSON
 

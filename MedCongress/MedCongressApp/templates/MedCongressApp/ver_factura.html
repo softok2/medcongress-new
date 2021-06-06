@@ -4,27 +4,16 @@
 Información
 {%endblock%}
 {% block contenido %}
-
-<div class="kode-event-time" >
-    <div class="kode-event-contact" style=" background:url({% static 'MedCongressApp/images/slide11.png'%}) no-repeat 50%  0;background-attachment: fixed; ">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="kf_heading_3" style="margin-top: 70px;">
-                        <h2>Se ha generado su factura</h2>
-                      
-                        <span>Se ha enviado a su correo la factura por la compra de boletos en MedCongress</span>
-                        
-                      
-                    </div>
-                </div>
+<section class="success d-flex flex-column align-items-center justify-content-center">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+            <h2 class="section-title text-success"><strong>Se ha generado su factura</strong></h2>
+            <small class="section-subtitle text-center">Se ha enviado a su correo la factura por la compra de boletos en MedCongress</small>
             </div>
-            
         </div>
     </div>
-
-</div>
-
+</section>
 
 {% endblock%}
 

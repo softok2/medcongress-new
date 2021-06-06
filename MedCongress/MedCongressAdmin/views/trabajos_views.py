@@ -2,6 +2,7 @@ from os import remove
 from pathlib import Path
 import base64
 from django import forms
+from pathlib import Path
 from django.utils.crypto import get_random_string
 from django.contrib import messages
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
@@ -76,15 +77,24 @@ class CongressTrabajoUpdateView(validarUser,UpdateView):
 
     def form_valid(self, form):
         congreso=form.save(commit=False)
-        if self.request.POST['prueba']:
-            image_64_encode=self.request.POST['prueba']
-            campo = image_64_encode.split(",")
-            image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
-            chars = '0123456789'
-            nom= get_random_string(5, chars)
-            image_result = open('MedCongressApp/static/usuarios/foto_%s.png'%(nom), 'wb') # create a writable image and write the decoding result
-            image_result.write(image_64_decode)
-            congreso.foto='usuarios/foto_%s.png'%(nom)
+        trabajo_update=TrabajosInvestigacion.objects.get(pk=self.kwargs.get('pk'))
+        path=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
+        congreso.path=path 
+        foto=self.request.POST['prueba']
+        if foto:
+            if 'usuarios/' not in foto:
+                image_64_encode=self.request.POST['prueba']
+                campo = image_64_encode.split(",")
+                image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
+                chars = '0123456789'
+                nom= get_random_string(5, chars)
+                image_result = open('MedCongressApp/static/usuarios/foto_%s.png'%(nom), 'wb') # create a writable image and write the decoding result
+                image_result.write(image_64_decode)
+                if  trabajo_update.foto:
+                        fileObj = Path('MedCongressApp/static/usuarios/foto_%s.png'%( trabajo_update.foto))
+                        if fileObj.is_file():
+                            remove('MedCongressApp/static/static/usuarios/foto_%s.png'%( trabajo_update.foto))
+                congreso.foto='usuarios/foto_%s.png'%(nom)
         else:
             congreso.foto='usuarios/defaulthombre.png'
         congreso.save()

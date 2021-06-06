@@ -95,7 +95,7 @@ class CountryUpdateView(validarUser,UpdateView):
             image_result.write(image_64_decode)
             if pais.banderas:
                 fileObj = Path('MedCongressApp/static/%s'%( pais.banderas))
-                if fileObj.is_file():
+                if fileObj.is_file():    
                     remove('MedCongressApp/static/%s'%( pais.banderas))
             pais.banderas='banderas/imagen_%s.png'%(nombre)
         pais.save()
@@ -116,7 +116,7 @@ class CountryDeleteView(validarUser,DeleteView):
         pais=Pais.objects.get(pk=self.kwargs.get('pk'))
         if pais.banderas:
             fileObj = Path('MedCongressApp/static/%s'%( pais.banderas))
-            if fileObj.is_file():
+            if fileObj.is_file(): 
                 remove('MedCongressApp/static/%s'%( pais.banderas))
         pais.delete()
         return JsonResponse({'success':True}, safe=False)

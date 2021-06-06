@@ -7,7 +7,7 @@ GetCuestionario,SetConstancia,EvaluarPonencia,Resultado_Cuestionario,Get_Constan
 ViewErrorFact,PerfilUpdateView,CambiarPass,UpdateEvaluarPonencia,UserAutocomplete,ViewErrorRegistrar,RegistroExitoso,
 PonenteAutocomplete,ModeradorAutocomplete,CongresoAutocomplete,PatrocinadorAutocomplete,SocioAutocomplete,ViewTaller,
 EvaluarTaller,UpdateEvaluarTaller,TallerAutocomplete,PonenciaAutocomplete,ViewCart,ContactoExitoso,GetFacturaPrueba,GetContactos,Enviar,
-Webhook,PagoExitoso2,ViewTrabajo)
+Webhook,PagoExitoso2,ViewTrabajo,ViewSala,ViewPonenciasSala,DonwloadTrabajo,PerfilCongresos,PerfilConstancias)
 
 urlpatterns = [
     # path('login',login,name='auth'),
@@ -18,6 +18,9 @@ urlpatterns = [
     path('registrarse', PerfilUserCreate.as_view(), name='Registrarse'),
     path('ponencia/<str:path>', ViewPonencia.as_view(), name='View_ponencia'),
     path('taller/<str:path>', ViewTaller.as_view(), name='View_taller'),
+    path('sala/<str:path>', ViewSala.as_view(), name='View_sala'),
+    path('ponencias_sala/<str:path>', ViewPonenciasSala.as_view(), name='View_ponencias_sala'),
+    
     path('error404', ViewError404.as_view(), name='Error404'),
     path('error_openpay', ViewErrorOpenpay.as_view(), name='Error_openpay'),
     path('error_registrar', ViewErrorRegistrar.as_view(), name='ErrorRegistrar'),
@@ -49,6 +52,9 @@ urlpatterns = [
     # path('confic_email',ConfigEmail.as_view() , name='confic_email'),
     path('habilitar_user/<str:token>',HabilitarUser.as_view() , name='habilitar_user'),
     path('perfil',Perfil.as_view() , name='perfil'),
+    path('perfil/congresos',PerfilCongresos.as_view() , name='perfil_congreso'),
+    path('perfil/constancias',PerfilConstancias.as_view() , name='perfil_constancias'),
+    
     path('transaccion_exitosa',PagoExitoso.as_view() , name='transaccion_exitosa'),
     path('get_perfil', GetPerfil.as_view() , name='GetPerfil'),
     path('get_contactos', GetContactos.as_view() , name='GetContactos'),
@@ -75,6 +81,8 @@ urlpatterns = [
     path('enviar',Enviar.as_view() , name='enviar'),
     path('webhook',Webhook , name='webhook'),
     path('trabajo/<str:path>', ViewTrabajo.as_view(), name='View_trabajo'),
+    path('descargar/trabajo/<str:path>', DonwloadTrabajo.as_view(), name='Donwload_trabajo'),
+    
 
 
     

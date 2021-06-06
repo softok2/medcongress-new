@@ -1,29 +1,7 @@
-{% extends "MedCongressApp/base.html"%}
+{% extends "MedCongressApp/perfil_base.html"%}
 {% load static %}
 {%block css%}
-<style>
-    .table td {
-        border-top: #979494 solid 1px !important;
-    }
-    .kf_aside_folwer {
-    border: 1px solid #979494;
-    margin-bottom: 40px;
-}
-.kf_heading_1{
-   
-    margin: 0px;
-}
-.kf_experience_my, .kf_who_am {
 
-    border-bottom: 1px solid #979494;
-   
-}
-.kf_experience_list a {
-   
-    margin-bottom: 0px;
-    margin-top: 10px;
-}
-</style>
 {%endblock%}
 {% block titulo %}
 Detalles del Perfil
@@ -67,337 +45,129 @@ Detalles del Perfil
 {%endblock%}
 
 
-{% block contenido %}
+{% block contenido_perfil %}
 
-<!--Top Heading And Breadcrumb Wrap End-->
-
-
-<!--Our Speaker Wrap Start-->
-<div class="kode-event-time">
-    <div class="kode-event-contact"
-        style=" background:url({% static 'MedCongressApp/images/slide11.png'%}) no-repeat 50%  0;background-attachment: fixed; ">
-        <div class="container">
-
-            <div class="col-md-8">
-                <!--Who Am I Wrap Start-->
-                <div class="kf_who_am">
-                    <figure>
-                        {%if request.user.perfilusuario.foto%}
-                        <img src="{% static '/'%}{{request.user.perfilusuario.foto}}" alt="{{request.user.username}}">
-
-                        {%else%}
-                        <img src="{% static 'MedCongressApp/images/defaulthombre.png' %}"
-                            alt="{{request.user.username}}">
-                        {%endif%}
-                        <div style="text-align: center;margin-top: 10px;">
-                            <h6 ><b>Puntos MedCongress</b> </h6>
-
-                            <h3>{%if request.user.perfilusuario.score%}{{request.user.perfilusuario.score}}{%else%} 0 {%endif%} </h3>
-                        </div>
-                        
-                    </figure>
-
-                    <div class="kf_who_am_des">
-                        <div class="kf_heading_1">
-                            <h5>Mi perfil <i class="fa fa-calendar"></i></h5>
-
-                        </div>
-
-                        <h4> {{request.user.first_name}} {{request.user.last_name}}</h4>
-                        <a href="{% url 'Edit_perfil' pk=request.user.perfilusuario.pk %}"
-                            style=" float: left; padding: 10px;"><i class="fa fa-edit"></i> Editar</a>
-                        <a href="{% url 'Cambiar_Pass'  %}" style=" float: left;padding: 10px;"> <i
-                                class="fa fa-edit"></i>Cambiar Password</a>
-
-                        <table class=" table" >
-                            
-                            {%if request.user.perfilusuario.ubicacion%}
-                            <tr style="border-top: black solid 1px;">
-                                <td align="center" > <b>Localidad</b> </td>
-                                <td>{{request.user.perfilusuario.ubicacion}}</td>
-
-                            </tr>
-                            {%endif%}
-                            <tr style="border-top: black solid 1px;">
-                                <td align="center"> <b>Email</b> </td>
-                                <td>{{request.user.email}}</td>
-
-                            </tr>
-                           
-                            {%if request.user.perfilusuario.num_telefono%}
-                            <tr >
-                                <td align="center" style="border-top: black solid 1px;"> <b>Teléfono</b> </td>
-                                <td >{{request.user.perfilusuario.num_telefono}}</td>
-
-                            </tr>
-                            {%endif%}
-                            {%if request.user.perfilusuario.fecha_nacimiento%}
-                            <tr >
-                                <td align="center" style="border-top: black solid 1px;"> <b>Fecha de Nacimiento</b> </td>
-                                <td >{{request.user.perfilusuario.fecha_nacimiento}}</td>
-
-                            </tr>
-                            {%endif%}
-                            {%if request.user.perfilusuario.categoria%}
-                            <tr style="border-top: black solid 1px;">
-                                <td align="center"> <b>Categoría</b> </td>
-                                <td>{{request.user.perfilusuario.categoria}}</td>
-
-                            </tr>
-                            {%endif%}
-                            {%if request.user.perfilusuario.especialidad%}
-                            <tr style="border-top: black solid 1px;">
-                                <td align="center"> <b>Especialidad</b> </td>
-                                <td>{{request.user.perfilusuario.especialidad}}</td>
-
-                            </tr>
-                            {%endif%}
-                            {%if request.user.perfilusuario.cel_profecional%}
-                            <tr >
-                                <td align="center" style="border-top: black solid 1px;"> <b>Cédula Profesional</b> </td>
-                                <td >{{request.user.perfilusuario.cel_profecional}}</td>
-
-                            </tr>
-                            {%endif%}
-                           
-                           
-                        </table>
-
-                    </div>
-
-                </div>
-                <!--Who Am I Wrap End-->
-                <div class="row">
-                    <div class="kf_experience_my">
-                        <div class="kf_heading_1_my">
-                            <h5>Mis Constancias</h5>
-                            {% if request.user.perfilusuario.detalle %}
-                            <p>{{request.user.perfilusuario.detalle|safe}}</p>
-                            {%else%}
-                            <p>No tiene ninguna constancia a mostrar</p>
-                            {%endif%}
+                <div class="profile-section section-1">
+                    <div class="row">
+                        <div class="col d-flex justify-content-between align-items-center">
+                            <h2 class="profile-title"><strong>Mi Perfil de MED Congress</strong></h2>
+                            <img src="{%static 'assets/img/iconos/mundito.png' %}" class="img-fluid icon align-self-md-end">
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="kf_experience_my">
-                        <div class="kf_heading_1_my">
-                            <h5>Datos de Interes</h5>
-                            {% if request.user.perfilusuario.datos_interes %}
-                            <p>{{request.user.perfilusuario.datos_interes|safe}}</p>
-                            {%else%}
-                            <p>No tiene ningún Dato de Interes que mostrar</p>
-                            {%endif%}
-                        </div>
-                    </div>
-                </div>
-
-                <!--Yearly Expercience Wrap Start-->
-                <div class='row'>
-                    <div class='col-md-12'>
-                        <div class="kf_experience">
-
-                            <div class="kf_heading_1">
-                                <h5>Mis Congresos</h5>
-
-                            </div>
-
-                            <div class="kf_experience_logo">
-                                <i class="fa fa-briefcase"></i>
-                            </div>
-
-                            <ul>
-                                {%if congresos%}
-                                {%for congreso in congresos%}
-                                <li>
-                                    <div class="kf_experience_list">
-                                        <h6><a href=" {% url 'View_congreso' path=congreso.congreso.path%}">{{congreso.congreso.titulo}}</a></h6>
-                                        
-                                        <a href="#"><i class="fa fa-calendar"></i>
-                                            {{congreso.congreso.fecha_inicio|date:"M"}}
-                                            {{congreso.congreso.fecha_inicio|date:"d"}} /
-                                            {{congreso.congreso.fecha_inicio|date:"Y"}}</a>
-                                        <p>{{congreso.congreso.sub_titulo}}</p>
-                                        <div class="row">
-                                        {%for factura in congreso.facturas%}
-                                        <div class="col-md-3">
-                                        <a style="color: black;" target="_black"  href="{% static '/facturas/pdf/'%}{{factura.factura}}.pdf"><i class='fa fa-eye'></i><b>Ver Factura</b> </a>
-                                        <div style="font-size: 10px;">{{factura.factura}}.pdf</div>
-                                    </div>
-                                        {%endfor%}
-                                    </div>
-                                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <ul class="nav">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'Edit_perfil' pk=request.user.perfilusuario.pk %}">Editar </a>
                                 </li>
-                                {%endfor%}
-                                {%else%}
-                                <li>
-                                    <div class="kf_experience_list">
-                                        <h6>No tiene ningún Congreso comprado</h6>
-
-                                    </div>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'Cambiar_Pass'  %}">Cambiar contraseña</a>
                                 </li>
-                                {%endif%}
-
-
                             </ul>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img src="{%if request.user.perfilusuario.foto%}{% static '/'%}{{request.user.perfilusuario.foto}}{%else%}{%static 'assets/img/iconos/profile-img.png'%}{%endif%}" class="img-fluid profile-img">
+                        </div>
+                        <div class="col-md-8">
+                            <h3 class="profile-name">{{request.user.first_name}} {{request.user.last_name}}</h3>
+                            <h4 class="profile-cat"> {{request.user.perfilusuario.categoria|upper}}</h4>
+                            <table class="table-content">
+                                <tbody>
+                                    {%if request.user.perfilusuario.ubicacion%}
+                                        <tr>
+                                            <td><strong>Localidad</strong></td>
+                                            <td>{{request.user.perfilusuario.ubicacion}}</td>
+                                        </tr>
+                                    {%endif%}
+                                        <tr>
+                                            <td><strong>Email</strong></td>
+                                            <td>{{request.user.email}}</td>
+                                        </tr>
+                                    {%if request.user.perfilusuario.num_telefono%}
+                                        <tr>
+                                            <td><strong>Teléfono</strong></td>
+                                            <td>{{request.user.perfilusuario.num_telefono}}</td>
+                                        </tr>
+                                    {%endif%}
+                                    {%if request.user.perfilusuario.fecha_nacimiento%}
+                                        <tr>
+                                            <td><strong>Fecha de Nacimiento</strong></td>
+                                            <td >{{request.user.perfilusuario.fecha_nacimiento}}</td>
+                                        </tr>
+                                    
+                                    {%endif%}
+                                    {%if request.user.perfilusuario.categoria%}
+                                        <tr>
+                                            <td > <strong>Categoría</strong> </td>
+                                            <td>{{request.user.perfilusuario.categoria}}</td>
+            
+                                        </tr>
+                                    {%endif%}
+                                    {%if request.user.perfilusuario.especialidad%}
+                                        <tr>
+                                            <td > <strong>Especialidad</strong> </td>
+                                            <td>{{request.user.perfilusuario.especialidad}}</td>
+            
+                                        </tr>
+                                    {%endif%}
+                                    {%if request.user.perfilusuario.cel_profecional%}
+                                        <tr >
+                                            <td > <strong>Cédula Profesional</strong> </td>
+                                            <td >{{request.user.perfilusuario.cel_profecional}}</td>
 
-
+                                        </tr>
+                                    {%endif%}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-
-
-
-            </div>
-
-            <div class="col-md-4">
-                {% if constancias or  constancias_taller%}
-                <div class="kf_aside_folwer">
-                    <h6 style="text-align:center; padding:20px;border-bottom: 1px solid #979494;
-background-color: #979494;"> <b> MedCongress Constacias</b></h6>
+                <div class="profile-section section-2 d-flex flex-md-row flex-column align-items-center justify-content-between">
+                    <h3 class="section-2-title"><strong>REDES SOCIALES</strong></h3>
+                    <ul class="nav">
+                        {%if request.user.perfilusuario.facebook%}
+                        <li class="nav-item">
+                            <a class="nav-link active" target="_black" href="http://www.facebook.com/{{request.user.perfilusuario.facebook}}">facebook</a>
+                        </li>
+                        {%endif%}
+                        {%if request.user.perfilusuario.twitter%}
+                        <li class="nav-item">
+                            <a class="nav-link" target="_black" href="https://twitter.com/{{request.user.perfilusuario.twitter}}">twitter</a>
+                        </li>
+                        {%endif%}
+                        {%if request.user.perfilusuario.linkedin%}
+                        <li class="nav-item">
+                            <a class="nav-link" target="_black" href="https://www.linkedin.com/in/{{request.user.perfilusuario.linkedin}}">linkedin</a>
+                        </li>
+                        {%endif%}
+                        {%if request.user.perfilusuario.youtube%}
+                        <li class="nav-item">
+                            <a class="nav-link" target="_black" href="https://www.youtube.com/c/{{request.user.perfilusuario.youtube}}">youtube</a>
+                        </li> {%endif%}
+                       
+                    </ul>
+                </div>
+                {% if request.user.perfilusuario.detalle %}
+                <div class="profile-section section-3">
+                    <h3 class="section-3-title">Mis Constancias</h3>
                     <ul>
                         
-
-                        {%for constancia in constancias%}
-                        <li>
-                            <a href="{% if constancia.tipo_constancia%} {%static '/'%}{{constancia.foto_constancia}}{%else%}{%static '/congreso/img_constancia/'%}{{constancia.foto_constancia}}{%endif%}" target="_black">
-                                <div class="row">
-                                    <div class="col-md-3">
-
-
-                                    </div>
-                                    <div class="col-md-9">
-                                        <h6><b>Congreso</b> </h6>
-                                    </div>
-                                </div>
-
-
-
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        
-                                           <i class="fa fa-file-pdf-o" style="font-size: 44px;
-                                           color: red;"></i>
-
-                                        
-                                    </div>
-                                    <div class="col-md-9">
-
-
-                                        <p>{{constancia.congreso.titulo}}</p>
-
-                                    </div>
-
-                                </div>
-
-
-
-                            </a>
-
-                        </li>
-                        {%endfor%}
-                       
-                        {%for constancia in constancias_taller%}
-                        <li>
-                            <a href="{%static '/congreso/img_constancia/'%}{{constancia.foto_constancia}}" target="_black">
-                                <div class="row">
-                                    <div class="col-md-3">
-
-
-                                    </div>
-                                    <div class="col-md-9">
-                                        <h6><b>Taller</b> </h6>
-                                    </div>
-                                </div>
-
-
-
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        
-                                           <i class="fa fa-file-pdf-o" style="font-size: 44px;
-                                           color: red;"></i>
-
-                                        
-                                    </div>
-                                    <div class="col-md-9">
-
-
-                                        <p>{{constancia.taller.titulo}}</p>
-
-                                    </div>
-
-                                </div>
-
-
-
-                            </a>
-
-                        </li>
-                        {%endfor%}
-                       
-
-
-
+                            <li>{{request.user.perfilusuario.detalle|safe}}</li>
+                           
                     </ul>
                 </div>
                 {%endif%}
-                {%if ponencias%}
-                <div class="kf_aside_folwer">
-                    <h6 style="text-align:center; padding:20px;border-bottom: 1px solid #e6e6e6;
-background-color: #e6e6e6;"> <b> Mis Ponencias</b></h6>
+                {% if request.user.perfilusuario.datos_interes %}
+                <div class="profile-section section-4">
+                    <h3 class="section-4-title">Datos de Interes</h3>
                     <ul>
-
-                        {%for ponencia in ponencias%}
-                        <li>
-
-                            <div class="like_amount">
-                                <p>{{ponencia.ponencia.titulo}}</p>
-                                <span> <b>Congreso: </b> {{ponencia.ponencia.congreso.titulo}}</span>
-                            </div>
-
-
-                        </li>
-                        {%endfor%}
-
-
-                        {%endif%}
-
-                    </ul>
-                </div>
-                {%if talleres_pon%}
-                <div class="kf_aside_folwer">
-                    <h6 style="text-align:center; padding:20px;border-bottom: 1px solid #e6e6e6;
-background-color: #e6e6e6;"> <b> Mis Talleres</b></h6>
-                    <ul>
-
-
-
-                        {%for taller in talleres_pon%}
-                        <li>
-
-                            <div class="like_amount">
-                                <p>{{taller.taller.titulo}}</p>
-                                <span> <b>Congreso: </b> {{taller.taller.congreso.titulo}}</span>
-                            </div>
-
-
-                        </li>
-                        {%endfor%}
-
-
-
-
+                        
+                        <li>{{request.user.perfilusuario.datos_interes|safe}}</li>
+                       
                     </ul>
                 </div>
                 {%endif%}
-
-
-
-            </div>
-
-        </div>
-    </div>
-
-</div>
+           
 {%endblock%}

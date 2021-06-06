@@ -89,7 +89,10 @@ class CustionarioUpdateView(validarUser,FormView):
         
         pregunta =CuestionarioPregunta.objects.get(pk=self.request.POST['update'])   
         pregunta.pregunta=self.request.POST['pregunta']
-        pregunta.published=self.request.POST['published']
+        if 'published' in self.request.POST:
+            pregunta.published=self.request.POST['published']
+        else:
+            pregunta.published= False
         pregunta.save()
         CuestionarioRespuestas.objects.filter(pregunta=pregunta).delete()
         cant=0

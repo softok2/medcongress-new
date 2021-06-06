@@ -1,0 +1,87 @@
+{% extends "MedCongressApp/perfil_base.html"%}
+{% load static %}
+{%block css%}
+
+{%endblock%}
+{% block titulo %}
+Detalles del Perfil
+{%endblock%}
+{% block metadatos%}
+{% if request.user.perfilusuario.meta_title%}
+<meta property="title" content="{{request.user.perfilusuario.meta_title}}">
+{%endif%}
+{% if request.user.perfilusuario.meta_description %}
+<meta name="description" content="{{request.user.perfilusuario.meta_description}}">
+{%endif%}
+{% if request.user.perfilusuario.meta_og_description %}
+<meta property="og:description" content="{{request.user.perfilusuario.meta_og_description}}">
+{%endif%}
+{% if request.user.perfilusuario.meta_og_type %}
+<meta property="og:type" content="{{request.user.perfilusuario.meta_og_type}}">
+{%endif%}
+{% if request.user.perfilusuario.meta_og_title %}
+<meta property="og:title" content="{{request.user.perfilusuario.meta_og_title}}">
+{%endif%}
+{% if request.user.perfilusuario.meta_og_url %}
+<meta property="og:url" content="{{request.user.perfilusuario.meta_og_url}}">
+{%endif%}
+{% if request.user.perfilusuario.meta_og_imagen %}
+<meta property="og:image" content="{% static '/'%}{{request.user.perfilusuario.meta_og_imagen}}">
+{%endif%}
+{% if request.user.perfilusuario.meta_twitter_card %}
+<meta name="twitter:card" content="{{request.user.perfilusuario.meta_twitter_card}}" />
+{%endif%}
+{% if request.user.perfilusuario.meta_twitter_site %}
+<meta name="twitter:site" content="{{request.user.perfilusuario.meta_twitter_site}}" />
+{%endif%}
+{% if request.user.perfilusuario.meta_twitter_creator %}
+<meta name="twitter:creator" content="{{request.user.perfilusuario.meta_twitter_creator}}" />
+{%endif%}
+{% if request.user.perfilusuario.meta_keywords %}
+<meta name="keywords"
+	content="{{request.user.perfilusuario.meta_keywords}}" />
+{%endif%}
+
+{%endblock%}
+
+
+{% block contenido_perfil %}
+
+
+
+                <div class="profile-section section-5">
+                    <h3 class="section-5-title">Mis Congresos</h3>
+                    
+                            {%if congresos%}
+                        <div class="col-md-12">
+                            {%for congreso in congresos%}
+                                <span  class="nav-item"> <a class="nav-link" target="_black" href=" {% url 'View_congreso' path=congreso.congreso.path%}"> {{congreso.congreso.titulo}}</a></span>
+                                {%if congreso.facturas%}
+                                <div class="accordion accordion-flush" id="accordionFlushExample">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="flush-headingOne_{{congreso.congreso.id}}">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne_{{congreso.congreso.id}}" aria-expanded="false" aria-controls="flush-collapseOne">
+                                            <span class="fas fa-file-pdf" style="color: red; font-size: 24px; margin-right: 24px;" > </span>  <div  class="factura"> <b>      Facturas</b> </div>
+                                            </button>
+                                        </h2>
+                                        <div id="flush-collapseOne_{{congreso.congreso.id}}" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                            <div class="accordion-body">
+                                                {%for factura in congreso.facturas%}
+                                                <div class="col-md-3">
+                                                    <a style="font-size: 10px; color: black;"  target="_black"  href="{% static '/facturas/pdf/'%}{{factura.factura}}.pdf"><b>{{factura.factura}}.pdf</b> </a>
+                                                </div>
+                                                {%endfor%}
+                                            </div>
+                                        </div>
+                                    </div>    
+                                </div>
+                       {%else%}
+                       <div style="margin-top: 15px;"></div>
+                       {%endif%}
+                        {%endfor%}
+                        
+                        {%endif%}
+                    </div>
+                </div>  
+           
+{%endblock%}

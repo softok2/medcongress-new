@@ -10,43 +10,75 @@
 
 <link rel="stylesheet" href="{% static 'MedCongressApp/css/bootstrap-rating.css'%}" type="text/css" media="all">
 
+<link rel="stylesheet" href="{% static 'MedCongressApp/css/font-awesome.min.css'%}" type="text/css" media="all">
+<!-- Ihover css -->
+<style>
+	.simply-section {
+		color: #e5e5e7 !important;
+		background-color: #39393a60 !important;
 
+	}
+
+	.glyphicon {
+		color: #40C8F4;
+		font-size: 26px;
+
+	}
+
+	.glyphicon-star-empty {
+		color: rgb(85, 84, 84);
+	}
+</style>
 {%endblock%}
 {% block contenido %}
+<section class="video-banner">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="offset-md-2 col-md-8 d-flex flex-column">
+                <h1 class="title">{{trabajo.titulo}}</h1>
+				<a href="{% url 'View_congreso' trabajo.congreso.path %}" class="back align-self-end mt-md-5 mt-2">Regresar al Congreso</a>
 
-<div class="container">
-	<div class="row" style="margin-top: 5%; margin-bottom: 50px;">
+            </div>
+        </div>
+    </div>
+</section>
 
-		<div class="col-md-12">
-			{{trabajo.cod_video|safe }}
-
-
-
-			<h4
-				style="margin: 0 0 15px;font-size: 14px;line-height: 30px;text-transform: uppercase;font-family: 'Gotham-Bold';color: #565657;">
-				{{trabajo.titulo}}</h4>
-			<div class="kf_new_conf_orgnizr ">
-				<figure>
-					{% if trabajo.foto%}
-					<img src="{% static '/'%}{{trabajo.foto}}" alt="image de {{trabajo.autor}}">
-					{%else%}
-					<img src="{% static 'MedCongressApp/images/defaulthombre.png' %}"
-						alt="image de {{trabajo.autor}}">
-					{%endif%}
-				</figure>
-				<div class="kf_new_conf_orgnizr_name">
-					<span> Autor</span>
-					<h6>{{trabajo.autor}}
-					</h6>
-					
-				</div>
-			</div>
-
-			
-		</div>
-	</div>
-</div>
-
+<section class="video-container">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="offset-md-2 col-md-8">
+                <div class="embed-responsive embed-responsive-16by9">
+                {{trabajo.cod_video|safe }}
+                </div>
+            </div>
+        </div>
+        <div class="row"> 
+            <div class="offset-md-2 col-md-6">
+            
+           
+            <div class="row">
+            
+                <div class=" col-md-12">
+                <span class="simple-text py-3">AUTOR</span>
+                <div class="ponente mt-4 d-flex align-items-start p-3">
+                    <img src="{% if trabajo.foto%}{% static '/'%}{{trabajo.foto}}{%else%}{% static 'assets/img/iconos/avatar-icon.png'%}{%endif%}" class="img-fluid me-4" width="100px">
+                   
+                    <div class="info">
+                        
+                       <h3 class="name mb-0">{{trabajo.autor}}</h3>
+                        
+                          
+                    </div>
+                </div>
+            </div>
+       
+        </div>
+           
+            </div>
+           
+        </div>
+    </div>
+</section>
 
 {%endblock%}
 

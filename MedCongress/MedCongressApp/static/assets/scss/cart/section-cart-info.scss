@@ -1,0 +1,24 @@
+.cart-banner {
+    margin-top: 80px;
+
+    @include media-max($large) {
+        margin-top: 56px;
+    }
+}
+
+.cart-info {
+    padding: 40px 0 90px;
+    background-color: #e7ecf0;
+
+    .section-title,
+    .subtitle,
+    .back {
+        color: $outer-space;
+        font-family: $font-1;
+    }
+
+    .section-title { font-size: 40px; }
+
+    .subtitle,
+    .back { font-size: 20px; }
+}

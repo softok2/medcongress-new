@@ -110,7 +110,7 @@
                                 </li>
                                 <li><a class="menu-item" href="{% url 'MedCongressAdmin:quienes_somos_list' %}">Quienes somos</a>
                                 </li>
-                                <li><a class="menu-item" href="{% url 'MedCongressAdmin:imagen_list' %}">Imagen del Home</a>
+                                <li><a class="menu-item" href="{% url 'MedCongressAdmin:imagen_list' %}">Evento en Pag. Inicio</a>
                                 </li>
                             </ul>
                         </li>
@@ -176,7 +176,16 @@
 <a class="menu-item" href="{% url 'MedCongressAdmin:documentos_list' %}"><i class="icon icon-repository" ></i>Documentos</a></li>
     
 </li>
+<li class=" nav-item"><a href="#"><i class="icon icon-trazas"></i><span class="menu-title"
+    data-i18n="nav.templates.main">Logs del Sistema</span></a>
+<ul class="menu-content">
 
+<li><a class="menu-item" href="{% url 'MedCongressAdmin:LogsCongreso' %} "><i class="icon icon-congreso" ></i> Logs por Congreso</a>
+    
+</li>
+<li><a class="menu-item" href="{% url 'MedCongressAdmin:LogsUsuario' %}"><i class="icon icon-usuario" ></i>Logs por Usuarios</a></li>
+</ul>
+</li>
 
             </ul>
         </div>

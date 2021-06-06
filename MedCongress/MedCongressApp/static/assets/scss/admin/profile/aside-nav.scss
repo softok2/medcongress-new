@@ -1,0 +1,57 @@
+.profile-nav {
+    padding: 0;
+
+    .nav-item {
+        list-style: none;
+        padding: 10px 0 10px 20px;
+        border: 1px solid $regent-gray;
+
+        &:hover { background-color: lighten($picton-blue, 30%); }
+
+        &:nth-of-type(1) {
+            border: 0;
+            margin-bottom: 0;
+            padding: 20px 0 20px 20px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            background-color: $picton-blue;
+        }
+
+        &:nth-last-of-type(1){
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        a {
+            padding: 0;
+            font-size: 20px;
+            color: $river-bed;
+            font-family: $font-1;
+        }
+
+        .nav-title { 
+            color: $white;
+            font-size: 20px;
+            font-family: $font-1;
+         }
+    }
+}
+
+.profile .points {
+    height: 200px;
+    margin-top: 20px;
+    border-radius: 10px;
+    border: 1px solid $regent-gray;
+
+    span {
+        font-size: 20px;
+        color: $river-bed;
+        text-align: center;
+        font-family: $font-1;
+
+        &.number {
+            font-size: 80px;
+            color: $picton-blue;
+        }
+    }
+}

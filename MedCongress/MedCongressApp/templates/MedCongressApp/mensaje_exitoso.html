@@ -4,26 +4,16 @@
 Información
 {%endblock%}
 {% block contenido %}
-
-<div class="kode-event-time" >
-    <div class="kode-event-contact" style=" background:url({% static 'MedCongressApp/images/slide11.png'%}) no-repeat 50%  0;background-attachment: fixed; ">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="kf_heading_3" style="margin-top: 70px;">
-                        <h2>Muchas Gracias por contactarnos</h2>
-                      
-                        <span>Pronto tendrá noticias nuestras</span>
-                       {{factura}}
-                    </div>
-                </div>
+<section class="success d-flex flex-column align-items-center justify-content-center">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+            <h2 class="section-title text-success"><strong>Muchas gracias por contactarnos</strong></h2>
+            <small class="section-subtitle text-center">Pronto tendrá noticias nuestras</small>
             </div>
-            
         </div>
     </div>
-
-</div>
-
+</section>
 
 {% endblock%}
 

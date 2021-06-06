@@ -251,13 +251,16 @@ class Congreso(models.Model):
     sub_titulo=models.CharField(max_length=250,null=True, error_messages={
 "max_length": "El Campo <b>SubTítulo</b> debe tener máximo 250 caracteres"})
     imagen_seg=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso',error_messages={
-"blank": 'Debe  entrar una <b> Imagen Segundaria22 </b>'})
+"blank": 'Debe  entrar una <b> Imagen Segundaria </b>'})
+    imagen_home=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso',error_messages={
+"blank": 'Debe  entrar una <b> Imagen Segundaria </b>'},null=True, blank=True)
     path=models.CharField(max_length=250, help_text='campo para identificarlo por la URL',unique=True)
     lugar=models.ForeignKey(Ubicacion,on_delete=models.DO_NOTHING)
     fecha_inicio=models.DateTimeField()
     created=models.DateTimeField(auto_now_add=True)
     updated=models.DateTimeField(null=True, blank=True)
     published=models.BooleanField()
+    is_home=models.BooleanField()
     t_congreso=models.ForeignKey(TipoCongreso,on_delete=models.DO_NOTHING)
     especialidad=models.ForeignKey(EspecialidadCongreso,on_delete=models.DO_NOTHING,null=True)
     user = models.ManyToManyField(PerfilUsuario, through='RelCongresoUser',related_name='congreso_perfilusuario')
@@ -474,8 +477,24 @@ class RelBloqueModerador(models.Model):
 
     def __str__(self):
         return 'Relación entre el bloque %s  y el moderador %s ' %(self.bloque.titulo, self.moderador.user.usuario.first_name)
+#### Tabla Sala #######
 
+class Sala(models.Model):
+    titulo=models.CharField(max_length=250,error_messages={
+"max_length": "El Campo <b>Título </b> debe tener máximo 250 caracteres"})
+    detalle=models.TextField(null=True,blank=True)
+    cod_video=models.TextField(null=True,blank=True)
+    color=models.CharField(max_length=10,default='#4A5966')
+    congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
+    imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='salas',blank=True, null=True  )
+    path=models.CharField(max_length=250, help_text='campo para identificarlo por la URL')
+    published=models.BooleanField()
+    class Meta:
+        verbose_name='Sala'
+        verbose_name_plural='Salas'
 
+    def __str__(self):
+        return self.titulo
 #### Tabla Ponencia #######
 
 class Ponencia(models.Model):
@@ -495,6 +514,7 @@ class Ponencia(models.Model):
     published=models.BooleanField()
     congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
     bloque=models.ForeignKey(Bloque,on_delete=models.CASCADE,null=True,blank=True)
+    sala=models.ForeignKey(Sala,on_delete=models.CASCADE,null=True,blank=True)
     ponente = models.ManyToManyField(Ponente, through='RelPonenciaPonente',related_name='ponencia_ponente')
     votacion = models.ManyToManyField(User, through='RelPonenciaVotacion')
     meta_og_title=models.CharField(max_length=50,null=True,blank=True,error_messages={
@@ -851,8 +871,7 @@ class ImagenQuienesSomos(models.Model):
 class Ofrecemos(models.Model):
     titulo=models.CharField(max_length=250,error_messages={
 "max_length": "El Campo <b>Título </b> debe tener máximo 250 caracteres"} )
-    icono=models.CharField(max_length=250,error_messages={
-"max_length": "El Campo <b>Icono </b> debe tener máximo 250 caracteres"})
+    icono=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='assets/img/iconos' ,verbose_name='icono', null=False)
     texto=models.TextField()
     
     class Meta:
@@ -972,3 +991,17 @@ class TrabajosInvestigacion(models.Model):
 
     def __str__(self):
         return 'TrabajosInvestigacion'
+
+
+class UserActivityLog(models.Model):
+    user = models.ForeignKey(PerfilUsuario, on_delete = models.CASCADE)
+    fecha = models.DateTimeField( editable = False)
+    congreso= models.ForeignKey(Congreso, on_delete = models.CASCADE)
+    mensaje= models.CharField(max_length=250)
+    tipo= models.CharField(max_length=100)
+    tiempo= models.CharField(max_length=100)
+    class Meta:
+        ordering = ['fecha']
+    
+    def __str__(self):
+        return self.user

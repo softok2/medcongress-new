@@ -1,0 +1,99 @@
+{% extends "MedCongressApp/base.html"%}
+{% load static %}
+{% block titulo %}
+Login
+{%endblock%}
+{% block css %}
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{%endblock%}
+{% block contenido %}
+
+<div class="kode-event-time" >
+    <div class="kode-event-contact" style=" background:url({% static 'MedCongressApp/images/slide11.png'%}) no-repeat 50%  0;background-attachment: fixed; ">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="kf_heading_3" style="margin-top: 70px;">
+                        <h2>Únete a MedCongress</h2>
+                        <span>¿Tienes una Cuenta? <b>Inicia Sesión</b></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+               
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                    <form class="contactusform" action="" method="post">
+                        {% csrf_token %}
+                       
+                        <div class="row">
+                            
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <!-- {% if form.errors %}
+                                {% for field in form %}
+                                {% for error in field.errors %}
+                                
+                                    <div class="alert alert-danger alert-dismissible mb-2" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                        {{ error|safe|escape }}
+                                    </div>
+                                {% endfor %}
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                            <div class="alert alert-danger alert-dismissible mb-2" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                                {{ error|safe|escape }}
+                            </div>
+                            {% endfor %}
+                                
+                                {% endif %} -->
+                                {% if form.errors %}
+                                <div class="kf_heading_3" >
+                                   
+                                    <span style="color: red;"><p>Tu nombre de usuario y contraseña no coinciden. Inténtalo de nuevo.</p></span>
+                                </div>
+                                
+                                {% endif %}
+                                {% if next %}
+                                {% if user.is_authenticated %}
+                                <div class="kf_heading_3" >
+                                   
+                                    <span style="color: red;"><p> Tu cuenta no tiene acceso a esta página. Para proceder,
+                                        inicie sesión con una cuenta que tenga acceso.</p></span>
+                                </div>
+
+                                   
+                                {% else %}
+                                <div class="kf_heading_3" >
+                                   
+                                    <span style="color: red;"><p>Por favor debe autenticarse para ver esta página.</p></span>
+                                </div>
+                                
+                                {% endif %}
+                                {% endif %}
+                                <input type="email" placeholder="Email" name="username" required > 
+                                <input type="password" placeholder="password" name="password" required>
+                                <div class="g-recaptcha" data-sitekey="6Ld6FyEaAAAAAGJSjBawQi9_K9-dAZrxG7ci4R-I"></div>
+                                <input type="submit" value="autenticarse">
+                                <input type="hidden" name="next" value="{{ next }}">
+                            </div>
+
+                        </div>
+                    </form>
+                    {# Assumes you setup the password_reset view in your URLconf #}
+                    <p><a href="{% url 'password_reset' %}">¿Olvidó su Contraseña?</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock%}
+
+

@@ -1,0 +1,111 @@
+.form-control:focus,
+.form-select:focus,
+textarea:focus,
+.form-check-input:focus {
+    border: 0;
+    box-shadow: none;
+}
+
+.container-fluid{
+    @include media-min($large){
+        padding: 0 50px;
+    }
+
+    @include media-min($extra-extra-large){
+        padding: 0 120px;
+    }
+}
+
+.acordion-medc {
+    .accordion-button {
+        padding: 0;
+        padding: 20px;
+        font-size: 30px;
+        color: $outer-space;
+        font-family: $font-1;
+        background-color: transparent;
+        border: 1px solid rgba(0,0,0,.125);
+
+        &.collapsed {
+            background-color: lighten($regent-gray, 30%);
+            border: 0;
+        }
+
+        &:after {
+            width: 30px;
+            content: "+";
+            height: 30px;
+            display: flex;
+            color: $white;
+            line-height: 25px;
+            background-image: none;
+            justify-content: center;
+            background-color: $picton-blue;
+        }
+
+        &:not(.collapsed)::after {
+            content: "-";
+            transform: none;
+        }
+
+        &:focus { box-shadow: none; }
+    }
+}
+
+.ticket {
+    padding: 60px 30px 20px;
+    background-color: $mystic-2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .title,
+    .price,
+    .iva,
+    .cta {
+        color: $river-bed;
+        font-family: $font-1;
+    }
+
+    .title,
+    .iva { font-size: 24px; }
+
+    .price {
+        font-size: 60px;
+        margin-top: 30px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .actions { 
+        width: 100%;
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid $river-bed;
+    }
+
+    .cta { 
+        margin: auto;
+        display: block;
+        font-size: 18px; 
+        font-weight: bold;
+        border-radius: 8px;
+        padding: 20px 30px;
+        width: fit-content;
+        text-decoration: none;
+        border: 1px solid $river-bed;
+    }
+
+    &.destacado {
+        .price {
+            color: $picton-blue;
+        }
+
+        .cta {
+            border: 0;
+            color: $white;
+            background-color: $picton-blue;
+        }
+    }
+}

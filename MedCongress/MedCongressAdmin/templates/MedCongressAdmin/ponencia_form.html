@@ -265,8 +265,10 @@
 																					{{form.ubicacion.latitud }}
 																				</div>
 																			</div>
-																			<div class="col-sm-3 ">
-																				<div class="form-group" {%if con or congreso %} style="display: none;" {%endif%}>
+																		</div>
+																		<div class="row">
+																			<div class="col-sm-3 " id='congreso' >
+																				<div class="form-group" >
 
 
 																					<label
@@ -275,8 +277,8 @@
 																					{{form.ponencia.congreso }}
 																				</div>
 																			</div>
-																			<div class="col-sm-3 ">
-																				<div class="form-group" {%if bloque %} style="display: none;" {%endif%}>
+																			<div class="col-sm-3 " id='bloque' >
+																				<div class="form-group" >
 
 
 																					<label
@@ -296,23 +298,32 @@
 
 																				</div>
 																			</div>
+																			<div class="col-sm-3 " id='sala' >
+																					<div class="form-group" >
+
+																								
+																								<label for="{{form.ponencia.sala.id_for_label }}"><b>{{form.ponencia.sala.label }}</b></label>
+																								<select name="ponencia-sala" class="form-control" id="id_ponencia-sala">
+																									<option value="" selected="">---------</option>
+																								</select>
+																							
+
+
+																					</div>
+																			</div>
+																		
 																			<div class="col-sm-3 ">
 																				<div class="form-group">
 
-
 																					<label for="id_ponencia-is_info"><b>Tipo de evento en el Programa</b> </label>
-
 																					<select name="ponencia-is_info" class="form-control" required="" id="id_ponencia-is_info">
-								<option value="False" >Información</option>
-								<option value="True" >Ponencia</option>
-
-								
-
-								</select>
+																						<option value="False" >Información</option>
+																						<option value="True" >Ponencia</option>
+																					</select>
 																				</div>
 																			</div>
 																		
-																			<div class="col-md-1"></div>
+																			
 																			
 																		</div>
 
@@ -543,7 +554,7 @@
 									</section>
 					</div>
 					</form>
-				
+			
 				</div>
 			</div>
 		</div>
@@ -582,37 +593,27 @@
 		$("#id_ponencia-is_info option[value='False']").attr("selected", true);
 
 		{%endif%}
-// 		{%if ponentes%}
-// 		var checkboxes2 = document.getElementsByName("borrar_contacto");
-// 		{%for ponente in ponentes %}
-//    alert({{ponente.ponente.id}});
-//    $("#id_ponencia_ponente-ponente option[value='{{ponente.ponente.id}}']").attr("selected", true);
-// 		{%endfor%}
-// 		{%endif%}
-// 		$("#id_ponencia_ponente-ponente").addClass('single-select-box selectivity-input')  
-		// $("#id_ponencia_ponente-ponente option[value='{{ponente.id}}']").attr("selected", true);
-		// $("#id_my_ponente").autocomplete({
-		// 	source: "{% url 'Ponente_autocomp'%}",
-		// 	minLength: 3,
-		// });
-		// $('#id_my_ponente').change(function () {
-		// 	email = $('#id_my_ponente').val()
-		// 	$("#id_ponencia_ponente-ponente option:contains('" + email + "')").attr("selected", true);
-		// 	if ($("#id_ponencia_ponente-ponente option:selected").text()!= email) 
-        //     $("#id_ponencia_ponente-ponente").val('')
-		// });
-		
-		// $('#id_my_ponente').ready(function () {
-		// 	email = $('#id_my_ponente').val()
-		// 	$("#id_ponencia_ponente-ponente option:contains('" + email + "')").attr("selected", true);
-		// 	if ($("#id_ponencia_ponente-ponente option:selected").text()!= email) 
-        //     $("#id_ponencia_ponente-ponente").val('')
-		// });
-
 		
 		$('#id_ponencia-congreso').ready(function () {
+
+			{%if not ponencia_t%}
+				{%if con or congreso %} 
+				 $('#congreso').hide();
+				{%endif%}
+				{%if not bloque and not blo %} 
+				 $('#bloque').hide();
+				{%endif%}
+				{%if not sala %} 
+				 $('#sala').hide();
+				{%endif%}
+
+			{%endif%}
+
+
 				$('#id_ponencia-bloque').empty();
 				$('#id_ponencia-bloque').append($("<option></option").attr('value', '').text('----------'));
+					$('#id_ponencia-sala').empty();
+				$('#id_ponencia-sala').append($("<option></option").attr('value', '').text('----------'));
 			if ($('#id_ponencia-congreso').val()) {
 			
 				$.ajax({
@@ -643,6 +644,28 @@
 						}
 				});
 
+				$.ajax({
+					type: "POST",
+					url: "{% url 'MedCongressAdmin:Get_Sala' %}",
+					data: {
+						'congreso_id': $('#id_ponencia-congreso').val(), // from form
+					},
+					success: function (data) {
+
+						for (var i = 0; i < data.length; i++) {
+
+							$('#id_ponencia-sala').append($("<option></option").attr('value', data[i].id).text(data[i].titulo))
+							{%if sala %}
+							$("#id_ponencia-sala option[value='{{sala.id}}']").attr("selected", true);
+							{% endif %}
+						}
+						{%if sala_update %}
+						
+						$("#id_ponencia-sala option[value='{{sala_update.id}}']").attr("selected", true);
+
+						{% endif %}			
+						}
+				});
 
 			}
 
@@ -655,6 +678,8 @@
 		$('#id_ponencia-congreso').change(function () {
 				$('#id_ponencia-bloque').empty();
 				$('#id_ponencia-bloque').append($("<option></option").attr('value', '').text('----------'));
+					$('#id_ponencia-sala').empty();
+				$('#id_ponencia-sala').append($("<option></option").attr('value', '').text('----------'));
 			if ($('#id_ponencia-congreso').val()) {
 			
 				$.ajax({
@@ -681,6 +706,28 @@
 					}
 				});
 
+				$.ajax({
+					type: "POST",
+					url: "{% url 'MedCongressAdmin:Get_Sala' %}",
+					data: {
+						'congreso_id': $('#id_ponencia-congreso').val(), // from form
+					},
+					success: function (data) {
+
+						for (var i = 0; i < data.length; i++) {
+
+							$('#id_ponencia-sala').append($("<option></option").attr('value', data[i].id).text(data[i].titulo))
+							{%if sala %}
+							$("#id_ponencia-sala option[value='{{sala.id}}']").attr("selected", true);
+							{% endif %}
+						}
+						{%if sala_update %}
+						
+						$("#id_ponencia-sala option[value='{{sala_update.id}}']").attr("selected", true);
+
+						{% endif %}				
+						}
+				});
 
 			}
 
@@ -708,7 +755,11 @@
 		$("#id_ponencia-congreso option[value='{{congreso.id}}']").attr("selected", true);
 		
 		{% endif %}
+		{%if sala_update %}
+		
+		$("#id_ponencia-sala option[value='{{sala_update.id}}']").attr("selected", true);
 
+		{% endif %}
 		
 
 		$('#id_ponencia-fecha_inicio').datetimepicker({
@@ -770,11 +821,11 @@
         if (files && files.length > 0) {
 		  file = files[0];
 		 
-			tipo_imagen=files[0].name.split('.');
-			if(tipo_imagen[1]!='jpg' && tipo_imagen[1]!='png')
+		  	tipo_imagen=files[0].name.split('.');
+			if(tipo_imagen[1]!='jpg' && tipo_imagen[1]!='png' && tipo_imagen[1]!='jpeg')
 			{
 				
-				swal("Cancelado", "Solo admimite archivos .jpg y .png.", "error");
+				swal("Cancelado", "Solo admimite archivos .jpeg , .jpg y .png.", "error");
 				return;	
 			}
           if (URL) {

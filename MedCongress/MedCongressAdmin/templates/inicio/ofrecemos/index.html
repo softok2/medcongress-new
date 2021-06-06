@@ -61,6 +61,7 @@
                                         id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
                                         <thead>
                                             <th style="width:50%">Título</th>
+                                            <th style="width:50%">Texto</th>
                                             <th style="width:50%">Icono</th>
                                                 <th style="width:5%">Operaciones</th>
                                         </thead>
@@ -69,7 +70,8 @@
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
                                                
                                                 <td>{{ofrecemos.titulo}}</td>
-                                                <td>{{ofrecemos.icono}}</td>
+                                                <td>{{ofrecemos.texto|safe}}</td>
+                                                <td><img src="{% static '/'%}{{ofrecemos.icono}}" alt=""></td>
                                                   <td> <a href="javascript:editItem('{{ ofrecemos.pk }}')"
                                                     title="Editar"><i class="icon icon-editar"></i></a> <a id="del_{{ ofrecemos.pk }}"
                                                         href="javascript:deleteItem('{{ ofrecemos.pk }}')"
@@ -87,6 +89,7 @@
                                         <tfoot>
                                             
                                             <th style="width:50%">Título</th>
+                                            <th style="width:50%">Texto</th>
                                             <th style="width:50%">Icono</th>
                                                 <th style="width:5%">Operaciones</th>
                                         </thead>

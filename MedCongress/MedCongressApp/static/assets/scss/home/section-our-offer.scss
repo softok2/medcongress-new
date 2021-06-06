@@ -1,0 +1,52 @@
+.our-offer{
+    padding: 80px 0 60px;
+    background-color: $river-bed;
+
+    .section-title{
+        color: $white;
+        font-size: 40px;
+        font-family: $font-1;
+    }
+
+    .item{
+        height: 249px;
+        margin-top: 15px;
+        padding: 70px 20px 0;
+
+        @include media-max($large){
+            height: auto;
+            padding: 30px 10px;
+        }
+
+        &:hover{
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba($color: #000, $alpha: .5);
+
+            @include media-max($large){
+                box-shadow: none;
+            }
+        }
+    }
+
+    .item .icon{
+        height: 60px;
+        padding-top: 10px;
+        margin-right: 40px;
+
+        img{
+            height: 100%;
+            width: auto;
+        }
+    }
+
+    .item .content{
+        .content-title,
+        p{
+            color: $white;
+            font-size: 30px;
+            font-family: $font-1;
+        }
+
+        p { font-size: 18px; }
+    }
+}

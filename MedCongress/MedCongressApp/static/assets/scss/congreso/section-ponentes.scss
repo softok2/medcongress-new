@@ -1,0 +1,72 @@
+.congreso-ponentes {
+    background-color: $river-bed;
+    padding: 80px 0  250px;
+
+    .section-name,
+    .description,
+    .subdescription {
+        color: $white;
+        font-family: $font-1;
+    }
+
+    .content {
+        border-top: 1px solid darken($river-bed, 10%);
+        border-bottom: 1px solid darken($river-bed, 10%);
+    }
+
+    .art { 
+        width: 12px;
+        height: 2px;
+        background-color: $picton-blue;
+        margin: 25px auto 0;
+     }
+
+    .section-name { font-size: 40px; }
+
+    .description { 
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+     }
+
+     .subdescription {
+        font-size: 18px;
+        margin-bottom: 0;
+        text-align: center;
+     }
+}
+
+.congreso-ponentes-secundary {
+    margin-top: -200px;
+    padding-bottom: 80px;
+
+    .ponente {
+        display: flex;
+        min-height: 455px;
+        flex-direction: column;
+        background-color: $mystic;
+        justify-content: space-between;
+        border: 1px solid $mystic-2;
+        box-sizing: border-box;
+
+        .name,
+        .cat {
+            padding: 0 15%;
+            font-size: 24px;
+            color: $river-bed;
+            text-align: center;
+            font-family: $font-1;
+        }
+
+        .name { 
+            margin-top: 30px;
+            text-decoration: none; 
+        }
+
+        .cat {
+            font-size: 18px;
+            color: $picton-blue;
+            margin-bottom: 20px;
+        }
+    }
+}

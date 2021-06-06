@@ -4,6 +4,7 @@
 {% block styles %}
 <link rel="stylesheet" type="text/css"
     href="{% static 'MedCongressAdmin/app-assets/vendors/css/tables/datatable/datatables.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/select2.min.css' %}">
 <style type="text/css">
     .custom-select-sm {
         font-size: 110%;
@@ -57,12 +58,120 @@
                         </div>
                         <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
+                                <button class="btn btn-info" title="Descargar Exel" onclick="Mostrar()" style="float:right; padding: 3px;margin-left: 10px;">
+                                    <i class="la la-file-excel-o"></i>
+                                </button>
                                 <button id="add-btn" type="button" class="btn btn-success" title="Nuevo" 
                                     style="float:right; padding: 3px;">
                                     <i class="la la-plus"></i>
                                 </button>
                                 <div class="clearfix"></div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="row card-content collapse show" {%if not exportar%} style="display: none;" {%endif%} id='mostrar'>
+                         
+                                
+                      
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6" style="float: right;">
+                            {% if messages %}
+
+{% for message in messages %}
+<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">×</span>
+    </button>
+    {{ message|safe|escape }}
+</div>
+{% endfor %}
+
+{% endif %}
+                            {% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+        
+			<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+				{{ error|safe|escape }}
+			</div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+	<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">×</span>
+		</button>
+		{{ error|safe|escape }}
+	</div>
+    {% endfor %}
+{% endif %} 
+                            <form id="form" method="POST" action="">
+                                {% csrf_token %}
+                                <div class="form-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+
+                                            <div class="col-sm-12 ">
+                                                <div class="form-group">
+                                                    <label for="{{form.congreso.id_for_label }}"><b>Filtre
+                                                            Categoría</b></label>
+                                                            
+                                                    <div >{%if categorias%}
+                                                       
+                                                        <select name="categoria" class="form-control select2 select2-hidden-accessibl" multiple=""  id="categoria" tabindex="-1" aria-hidden="true">
+                                                          
+                                                          {%for categoria in categorias%}
+                                                            <option value="{{categoria.id}}" {%if categoria.activo%} selected {%endif%}>{{categoria.nombre}}</option>
+                                                          
+                                                           {%endfor%}
+                                                          </select>
+                                                        
+                                                        {%endif%}
+                                                    </div>
+                                                    <!-- <input type="text" name="my_user" class="form-control" required=""
+                                                        id="id_my_user"> -->
+
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12 " id="div_especialidades" style="display: none;">
+                                                <div class="form-group">
+                                                    <label for="{{form.congreso.id_for_label }}"><b>Filtre
+                                                            Especialidad</b></label>
+                                                            
+                                                   
+                                                       
+                                                        <select name="especialidad" class="form-control select2 select2-hidden-accessibl" multiple=""  id="especialidad" tabindex="-1" aria-hidden="true">
+                                                          
+                                                          {%for especialidad in especialidades%}
+                                                            <option value="{{especialidad.id}}" >{{especialidad.nombre}}</option>
+                                                          
+                                                           {%endfor%}
+                                                          </select>
+                                                      
+                                                    <!-- <input type="text" name="my_user" class="form-control" required=""
+                                                        id="id_my_user"> -->
+
+                                                </div>
+                                            </div>
+
+
+                                            </fieldset>
+                                            <div class="form-actions">
+                                                <div class="text-right">
+
+                                                    <button id="save" type="submit" class="btn btn-primary">Exportar
+                                                        <i class="la la-file-excel-o position-right"></i>
+                                                    </button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -144,10 +253,31 @@
 {% block scripts %}
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/extensions/sweetalert.min.js' %}"></script>
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/tables/datatable/datatables.min.js' %}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/forms/select/select2.full.min.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-select2.js'%}"></script>
 
 <script type="text/javascript">
+
     $(document).ready(function () {
+        $("#categoria").on('change', function() {
+  var val = $(this).val();
+  if(val.includes('2') || val.includes('4')){
+    $('#div_especialidades').toggle();
+    $('#especialidad').select2({
+    placeholder: "Todas Las Especialidades",
+    allowClear: true
+});
+  }
+
+  // te muestra un array de todos los seleccionados
+  console.log(val);
+});
+
+
+
+
         $('.table').DataTable({
+            
     language: {
         "decimal": "",
         "emptyTable": "No hay información",
@@ -205,7 +335,7 @@
     function deleteItem(pk) {
         swal({
             title: "¿Estás seguro?",
-            text: "¡Eliminará todo lo referente a este evento",
+            text: "¡Eliminará todo lo referente a este usuario",
             icon: "warning",
             buttons: {
                 cancel: {
@@ -229,12 +359,21 @@
                     url = "{% url 'MedCongressAdmin:user_delete' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                         dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
-                        swal("¡Eliminado!", "Este elemento ha sido eliminado.", "success");
+                        swal("¡Eliminado!", "Este usuario ha sido eliminado.", "success");
                     });
                 } else {
-                    swal("Cancelado", "No se eliminó este elemento.", "error");
+                    swal("Cancelado", "No se eliminó este usuario.", "error");
                 }
             });
     }
+    function Mostrar(){
+
+$('#mostrar').toggle();
+$('#categoria').select2({
+    placeholder: "Todas Las Categorías",
+    allowClear: true
+});
+
+ }
 </script>
 {% endblock %}

@@ -1,0 +1,54 @@
+@import './common/fonts-import.scss';
+@import './common/variables';
+@import './common/mixins';
+@import './common/general.scss';
+@import './common/header.scss';
+
+/* - Home - */
+@import './home/section-home-banner.scss';
+@import './home/section-about-us.scss';
+@import './home/section-our-platform.scss';
+@import './home/section-our-offer.scss';
+@import './home/section-contact.scss';
+
+/* Congresos */
+
+@import './congresos';
+
+/* Congreso */
+
+@import './congreso/section-program.scss';
+@import './congreso/section-trabajos-investigacion.scss';
+@import './congreso/section-congreso-calendario.scss';
+@import './congreso/section-ponencias.scss';
+@import './congreso/section-tickes.scss';
+@import './congreso/section-talleres.scss';
+@import './congreso/section-ponentes.scss';
+@import './congreso/congreso-modal.scss';
+
+/* Video */
+
+@import './video/section-video-container.scss';
+
+/* Cart */
+
+@import './cart/section-cart-info.scss';
+@import './cart/section-cart-table.scss';
+
+/* Checkout */
+
+@import './checkout/section-checkout-info.scss';
+@import './checkout/section-checkout-table.scss';
+@import './checkout/section-checkout-formas-de-pago.scss';
+
+/* - Login - */
+@import './admin/login/section-login-register.scss';
+
+/* - Profile - */
+
+@import './admin/profile';
+@import './admin/profile/update-profile.scss';
+@import './admin/profile/aside-nav.scss';
+
+/* - Footer - */
+@import './common/footer.scss';

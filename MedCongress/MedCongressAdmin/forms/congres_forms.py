@@ -9,7 +9,7 @@ from  MedCongressApp.models import (Congreso,Ubicacion,ImagenCongreso,TipoCongre
                                     RelTallerPonente,Bloque,DatosIniciales,RelCongresoUser,RelTallerUser,
                                     Moderador,RelBloqueModerador,ImagenCongreso,CuestionarioPregunta,CuestionarioRespuestas,
                                     MetaPagInicio,MetaPagListCongreso,PreguntasFrecuentes,RelCongresoAval, AvalCongreso,RelCongresoSocio,SocioCongreso,
-                                    Idioma,DocumentoPrograma,TrabajosInvestigacion)
+                                    Idioma,DocumentoPrograma,TrabajosInvestigacion,Sala,UserActivityLog,Especialidades)
                     
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
@@ -22,6 +22,7 @@ class CongresForm(forms.ModelForm):
     titulo=forms.CharField(label='Título')
     prueba=forms.CharField(required=False)
     prueba1=forms.CharField(required=False)
+    imagen_home=forms.CharField(required=False,label='Imagen Principal')
     constancia=forms.CharField(required=False)
     template=forms.CharField(label='Template del Congreso',required=False)
     published=forms.BooleanField(label='Publicado',required=False)
@@ -35,7 +36,7 @@ class CongresForm(forms.ModelForm):
     class Meta:
         model=Congreso
         fields=['titulo','sub_titulo','fecha_inicio','published','t_congreso','especialidad','is_openpay','template','constancia','aprobado','cant_preguntas','score','streaming','meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
-        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','detalles_tipo_boleto','detalles_tipo_boleto_taller','ver_titulo','vid_publicidad','prueba','prueba1']
+        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','detalles_tipo_boleto','detalles_tipo_boleto_taller','ver_titulo','vid_publicidad','prueba','prueba1','imagen_home']
        
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
@@ -73,16 +74,23 @@ class CongresForm(forms.ModelForm):
    
     
     def clean(self, *args, **kwargs):
-        cleaned_data = super(CongresForm, self).clean(*args, **kwargs)
-        imagenes = cleaned_data.get('prueba', None)
-        
-        imagen_seg = cleaned_data.get('prueba1', None)
-        constancia = cleaned_data.get('constancia', None)
-        if not imagenes :
-            self.add_error('prueba', 'Debe al menos entrar una <b>Imagen Principal</b>')
-        if not imagen_seg :
-            self.add_error('prueba1', 'Debe  entrar una <b>Imagen Segundaria</b>')
-      
+        try:
+            cleaned_data = super(CongresForm, self).clean(*args, **kwargs)
+            imagenes = cleaned_data.get('prueba', None)
+            
+            imagen_seg = cleaned_data.get('prueba1', None)
+            constancia = cleaned_data.get('constancia', None)
+            imagen_home = cleaned_data.get('imagen_home', None)
+            
+            if not imagenes :
+                self.add_error('prueba', 'Debe al menos entrar una <b>Imagen Principal</b>')
+            if not imagen_seg :
+                self.add_error('prueba1', 'Debe  entrar una <b>Imagen Segundaria</b>')
+            if not imagen_home :
+                self.add_error('imagen_home', 'Debe  entrar una <b>Imagen Principal</b>')
+        except Exception as e:
+            messages.warning(self.request, e)
+            
 class ImagenCongresoForms(forms.ModelForm):
     imagen=forms.ImageField()
     
@@ -148,7 +156,7 @@ class PonenciaForm(forms.ModelForm):
         model=Ponencia
         fields=['titulo','duracion','detalle','fecha_inicio','published','cod_video','congreso','bloque','is_info',
         'meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
-        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','error','prueba']
+        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','error','prueba','sala']
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
@@ -157,7 +165,8 @@ class PonenciaForm(forms.ModelForm):
         self.fields['titulo'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['duracion'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['congreso'].widget.attrs.update({'class': 'form-control'})
-        self.fields['bloque'].widget.attrs.update({'class': 'form-control'})  
+        self.fields['bloque'].widget.attrs.update({'class': 'form-control'})
+        self.fields['sala'].widget.attrs.update({'class': 'form-control'})    
         self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control'})   
         self.fields['published'].widget.attrs.update({'class': 'form-control'})  
         # self.fields['ponente'].widget.attrs.update({'class': 'form-control'})   
@@ -472,10 +481,15 @@ class UserForm(forms.ModelForm):
         if not re.match(r"^[A-Za-zñÑáéíóúÁÉÍÓÚ. ]+$",nombre):
             self.add_error('first_name', 'El Campo <b> Nombre</b> solo admite letras ')
         if not re.match(r"^[A-Za-zñÑáéíóúÁÉÍÓÚ. ]+$",apellido):
-            self.add_error('first_name', 'El Campo <b> Apellidos</b> solo admite letras ') 
+            self.add_error('first_name', 'El Campo <b> Apellidos</b> solo admite letras ')
+
+
+class MyDateInput(forms.DateInput):
+    input_type = 'date'
+
 class PerfilUserForm(forms.ModelForm):
     cel_profecional=forms.CharField(
-               label = 'Cédula Profecional',
+               label = 'Cédula Profesional',
                 required=False
                )
     is_ponente=forms.BooleanField(
@@ -487,8 +501,8 @@ class PerfilUserForm(forms.ModelForm):
     twitter=forms.CharField(required=False)
     youtube=forms.CharField(required=False)
     linkedin=forms.CharField(required=False)
-    num_telefono=forms.CharField(required=False,label='Número de Teléfono')
-    fecha_nacimiento=forms.DateField(required=False,label='Fecha de Nacimiento')
+    
+
     genero=forms.ModelChoiceField(queryset=Genero.objects.all(), label='Género')
     
     categoria=forms.ModelChoiceField(queryset=CategoriaUsuario.objects.all(),label='Categoría')
@@ -498,7 +512,7 @@ class PerfilUserForm(forms.ModelForm):
         fields=['cel_profecional','categoria','especialidad','is_ponente','foto','detalle','datos_interes','genero','linkedin','youtube','facebook','twitter','publicaciones','puesto','num_telefono','fecha_nacimiento',
         'meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
         'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title']
-        
+        widgets = {'fecha_nacimiento': MyDateInput(attrs={'class': 'form-control'}), }
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
          
@@ -507,13 +521,14 @@ class PerfilUserForm(forms.ModelForm):
         self.fields['genero'].widget.attrs.update({'class': 'form-control'})
         self.fields['especialidad'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['detalle'].widget.attrs.update({'class': 'form-control ckeditor'}) 
-        self.fields['datos_interes'].widget.attrs.update({'class': 'form-control ckeditor'}) 
+        self.fields['datos_interes'].widget.attrs.update({'class': 'form-control ckeditor '}) 
         self.fields['publicaciones'].widget.attrs.update({'class': 'form-control ckeditor'})    
         self.fields['linkedin'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['youtube'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['facebook'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['is_ponente'].widget.attrs.update({'class': ' form-check-input me-2','id':'flexCheckDefault'}) 
+        self.fields['facebook'].widget.attrs.update({'class': 'form-control '}) 
         self.fields['twitter'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['puesto'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['puesto'].widget.attrs.update({'class': 'form-control','rows':'2','style':'height: 10%;'}) 
         self.fields['fecha_nacimiento'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['num_telefono'].widget.attrs.update({'class': 'form-control'}),
         self.fields['meta_og_title'].widget.attrs.update({'class': 'form-control'}) 
@@ -852,6 +867,29 @@ class ExportarExelForm(forms.ModelForm):
     #     if not RelCongresoUser.objects.filter(congreso=congreso).values('user__usuario__first_name','user__usuario__last_name','user__usuario__email','congreso__titulo','categoria_pago__nombre').annotate(Sum('cantidad')).exists():
     #         self.add_error('congreso','Entre un congreso ')
 
+class ExportarExelUsuariosForm(forms.ModelForm):
+    
+    categoria=forms.ModelChoiceField(queryset=CategoriaUsuario.objects.all(),required=False)
+    especialidad=forms.ModelChoiceField(queryset=Especialidades.objects.all(),required=False)
+    class Meta:
+        model=PerfilUsuario
+        fields=['categoria','especialidad']
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+
+        self.fields['categoria'].widget.attrs.update({'class': 'form-control select2'})
+        self.fields['especialidad'].widget.attrs.update({'class': 'form-control select2'})  
+       
+    # def clean(self, *args, **kwargs):
+    #     cleaned_data = super(ExportarExelForm, self).clean(*args, **kwargs)
+    #     congreso = cleaned_data.get('congreso', None)
+      
+    #     if not congreso:
+    #         self.add_error('congreso','Entre un congreso ')
+    #     if not RelCongresoUser.objects.filter(congreso=congreso).values('user__usuario__first_name','user__usuario__last_name','user__usuario__email','congreso__titulo','categoria_pago__nombre').annotate(Sum('cantidad')).exists():
+    #         self.add_error('congreso','Entre un congreso ')
+
+
 class ExportarTallerExelForm(forms.ModelForm):
     
     taller=forms.ModelChoiceField(queryset=Taller.objects.all(),label='Filtrar Congreso',required=True)
@@ -978,10 +1016,10 @@ class CongresoProgramaForm(forms.ModelForm):
 
 class CongresoTrabajoForm(forms.ModelForm):
     titulo=forms.CharField(label='Título',required=True)
-    
+    prueba=forms.CharField(required=False)
     class Meta:
         model=TrabajosInvestigacion
-        fields=['titulo','congreso','documento','descripcion','autor','cod_video','foto']
+        fields=['titulo','congreso','documento','descripcion','autor','cod_video','prueba']
        
 
     def __init__(self, *args, **kwargs):
@@ -1003,3 +1041,59 @@ class CongresoTrabajoForm(forms.ModelForm):
                 not filename.endswith(".pdf") and not filename.endswith(".zip") and
                 not filename.endswith(".rar") ) :
                 self.add_error('documento',"En el Campo <b> Documento </b> no está <b> permitido </b> subir ese <b>tipo de archivo</b>. Los permitidos son <b>  .doc, .docx, .pdf, .rar, .zip </b>."  )
+
+class CongresoSalaForm(forms.ModelForm):
+    titulo=forms.CharField(label='Título',required=True)
+    imagen=forms.CharField(required=False,label='Imagen')
+
+    class Meta:
+        model=Sala
+        fields=['titulo','congreso','detalle','cod_video','imagen','published','color']
+       
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+
+        self.fields['detalle'].widget.attrs.update({'class': 'form-control ckeditor'}) 
+        self.fields['congreso'].widget.attrs.update({'class': 'form-control','style':'display:none'}) 
+        self.fields['titulo'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['published'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['cod_video'].widget.attrs.update({'class': 'form-control','rows':'7'}) 
+        
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(CongresoSalaForm, self).clean(*args, **kwargs)    
+        imagen = cleaned_data.get('imagen', None) 
+        if not imagen :
+            self.add_error('imagen', 'Debe al menos entrar una <b>Imagen </b>')
+
+class ExportarLogsCongresoExelForm(forms.ModelForm):
+    congreso= forms.ModelChoiceField(queryset=Congreso.objects.all(),label='Congreso')
+    fecha_inicio=forms.DateField(required=False,label='Fecha Inicio')
+    fecha_fin=forms.DateField(required=False,label='Fecha Fin')
+
+    class Meta:
+        model=UserActivityLog
+        fields=['congreso','fecha_inicio','fecha_fin']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+
+        self.fields['congreso'].widget.attrs.update({'class': 'form-control select2'}) 
+        self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control','type':'date'}) 
+        self.fields['fecha_fin'].widget.attrs.update({'class': 'form-control','type':'date'}) 
+
+class ExportarLogsUsuarioExelForm(forms.ModelForm):
+    usuario= forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Congreso')
+    fecha_inicio=forms.DateField(required=False,label='Fecha Inicio')
+    fecha_fin=forms.DateField(required=False,label='Fecha Fin')
+
+    class Meta:
+        model=UserActivityLog
+        fields=['usuario','fecha_inicio','fecha_fin']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+
+        self.fields['usuario'].widget.attrs.update({'class': 'form-control select2'}) 
+        self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control','type':'date'}) 
+        self.fields['fecha_fin'].widget.attrs.update({'class': 'form-control','type':'date'}) 

@@ -1,0 +1,156 @@
+.profile { 
+    background: url(../img/iconos/mundo.png) bottom right no-repeat; 
+    background-size: 650px 650px;
+    margin-top: 130px;
+
+    @include media-max($large) {
+        margin-top: 60px;
+    }
+}
+
+.profile .content {
+    @include media-max($large) {
+        margin-top: 25px;
+    }
+
+    .profile-section { 
+        padding: 35px 50px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border: 1px solid $regent-gray;
+        background-color: $white;
+
+        ul { 
+            padding: 0;
+
+            @include media-max($large) {
+                display: flex;
+                justify-content: center;
+            }
+        }
+
+        ul li { 
+            font-size: 20px;
+            list-style: none; 
+            color: $outer-space;
+            font-family: $font-1;
+        }
+    }
+
+    .section-1 {
+        .profile-title,
+        .profile-name,
+        .profile-cat,
+        .table-content td{
+            color: $outer-space;
+            font-family: $font-1;
+        }
+
+        .profile-title {
+            font-size: 48px;
+            margin-bottom: 0;
+        }
+
+         .nav { 
+             margin-bottom: 50px; 
+            
+             @include media-max($large) {
+                margin-top: 25px;
+             }
+         }
+
+         .nav-item { line-height: 20px; }
+
+         .nav-item:nth-of-type(1) {
+            margin-right: 10px; 
+            padding-right: 10px;
+            border-right: 1px solid $picton-blue;
+         }
+
+         .nav-link {
+            padding: 0;
+            font-size: 20px;
+            color: $picton-blue;
+            font-family: $font-1;
+            text-decoration: underline;
+         }
+
+         .profile-img { 
+            padding-right: 24px; 
+            border-right: 1px solid $regent-gray;
+            
+            @include media-max($large) {
+                display: block;
+                margin: 0 auto;
+                border-right: 0;
+                padding-right: 0;
+                margin-bottom: 15px;
+            }
+         }
+
+         .profile-name {
+            font-size: 40px;
+         }
+
+         .profile-cat,
+         .table-content td {
+             font-size: 20px;
+         }
+
+         .profile-cat { color: $picton-blue; }
+
+         .table-content tbody, td, tfoot, th, thead, tr { 
+                border-top: 1px solid $regent-gray;
+
+                @include media-max($large) {
+                    border: 0;
+                    margin-top: 10px;
+                }
+            }
+
+         .table-content tr { 
+             height: 40px; 
+             
+             @include media-max($large) {
+                 height: auto;
+                 display: flex;
+                 flex-direction: column;
+             }
+          }
+
+         .table-content tr td:nth-of-type(1) {
+             padding-left: 0;
+             padding-right: 50px;
+         }
+    }
+
+    .section-2 {
+        .section-2-title,
+        .nav-link{
+            font-size: 20px;
+            color: $outer-space;
+            font-family: $font-1;
+        }
+
+        .section-2-title {
+            margin-bottom: 0;
+            line-height: 20px;
+
+            @include media-max($large) {
+                margin-bottom: 15px;
+            }
+         }
+
+         .nav-link:hover {
+            text-decoration: underline;
+         }
+    }
+
+    .section-3-title,
+    .section-4-title,
+    .section-5-title {
+        font-size: 30px;
+        color: $outer-space;
+        font-family: $font-1;
+    }
+}

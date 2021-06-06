@@ -1,0 +1,52 @@
+.congreso-ponencias {
+    .section-name,
+    .section-subtile {
+        font-size: 40px;
+        color: $river-bed;
+        margin-bottom: 40px;
+        font-family: $font-1;
+    }
+
+    .section-subtile {
+        display: block; 
+        font-size: 24px;
+        margin-bottom: 25px;
+        padding-bottom: 25px;
+        border-bottom: 1px solid rgba(0,0,0,.125);
+    }
+
+    .ponencia {
+        .title,
+        .date,
+        .ponente,
+        .name,
+        .more{
+            color: $river-bed;
+            font-family: $font-1;
+        }
+
+        .title { font-size: 30px; }
+
+        .date,
+        .ponente { font-size: 16px; }
+
+        .ponente { color: $picton-blue; }
+
+        .name,
+        .more {
+            font-size: 20px;
+        }
+
+        .name { 
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        .more {
+            font-weight: bold;
+            text-decoration: none;
+
+            &:hover { text-decoration: underline; }
+        }
+    }
+}

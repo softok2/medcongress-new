@@ -3,6 +3,7 @@ import base64
 from os import remove
 from pathlib import Path
 import pandas as pd
+from pathlib import Path
 from django import forms
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -10,7 +11,7 @@ from django.db.models import Sum
 from django.db import connections
 from datetime import datetime
 from django.core.mail import EmailMessage
-
+from django.core.exceptions import RequestDataTooBig
 from django.http import (HttpResponse, HttpResponseBadRequest,
                          HttpResponseRedirect, JsonResponse)
 from django.shortcuts import render
@@ -25,8 +26,11 @@ from MedCongressAdmin.forms.congres_forms import (AsignarCongresoForms,
                                                   CongresoForms,
                                                   CongresoPatrocinadorForm,
                                                   CongresoSocioForm,
+                                                  CongresoSalaForm,
                                                   ExportarExelForm,
                                                   ImagenCongForms,
+                                                  ExportarLogsCongresoExelForm,
+                                                  ExportarLogsUsuarioExelForm,
                                                   PonenciaForms,CongresoProgramaForm,AsignarConstanciaUserForms)
 from MedCongressApp.models import (AvalCongreso, Bloque, CategoriaPagoCongreso,
                                    Congreso, CuestionarioPregunta,
@@ -34,9 +38,9 @@ from MedCongressApp.models import (AvalCongreso, Bloque, CategoriaPagoCongreso,
                                    PerfilUsuario, Ponencia, Ponente,
                                    PreguntasFrecuentes, RelCongresoAval,
                                    RelCongresoCategoriaPago, RelCongresoSocio,
-                                   RelCongresoUser, SocioCongreso, Taller,
+                                   RelCongresoUser, SocioCongreso, Taller,Sala,
                                    Ubicacion, User,Moderador,RelPonenciaPonente,RelTalleresCategoriaPago,
-                                   RelTallerUser,DocumentoPrograma)
+                                   RelTallerUser,DocumentoPrograma,UserActivityLog)
 from openpyxl import Workbook
 from openpyxl.styles import (Alignment, Border, Font, PatternFill, Protection,
                              Side, NamedStyle)
@@ -82,30 +86,45 @@ class CongressCreateView(validarUser,FormView):
             image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
             chars = '0123456789'
             nombre = get_random_string(5, chars)
-            image_result = open('MedCongressApp/static/congreso/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+            image_result = open('MedCongressApp/static/congreso/imagen_seg_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
             image_result.write(image_64_decode)
-            congress.imagen_seg='congreso/imagen_%s.png'%(nombre)
+            congress.imagen_seg='congreso/imagen_seg_%s.png'%(nombre)
+
+            image_64_encode=self.request.POST['congreso-imagen_home']
+            campo = image_64_encode.split(",")
+            image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
+           
+            chars = '0123456789'
+            nombre = get_random_string(5, chars)
+            image_result = open('MedCongressApp/static/congreso/imagen_home_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+            image_result.write(image_64_decode)
+            congress.imagen_home='congreso/imagen_home_%s.png'%(nombre)
+
             if self.request.POST['congreso-constancia']:
                 image_64_encode=self.request.POST['congreso-constancia']
                 campo = image_64_encode.split(",")
                 image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
                 chars = '0123456789'
                 nombre = get_random_string(5, chars)
-                image_result = open('MedCongressApp/static/congreso/img_constancia/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+                image_result = open('MedCongressApp/static/congreso/img_constancia/imagen_constancia_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
                 image_result.write(image_64_decode)
-                congress.foto_constancia='congreso/img_constancia/imagen_%s.png'%(nombre)
-
+                congress.foto_constancia='congreso/img_constancia/imagen_constancia_%s.png'%(nombre)
+            congress.is_home=False
             congress.save()
-            
+            cant=0
+            for sala in self.request.POST.getlist('salas'):
+                resp=Sala(congreso=congress,  titulo=self.request.POST.getlist('salas')[cant])
+                resp.save() 
+                cant=cant+1   
             for respuesta in self.request.POST.getlist('congreso-prueba'):
                 image_64_encode=respuesta
                 campo = image_64_encode.split(",")
                 image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
                 chars = '0123456789'
                 nombre = get_random_string(5, chars)
-                image_result = open('MedCongressApp/static/congreso/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+                image_result = open('MedCongressApp/static/congreso/imagen_programa_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
                 image_result.write(image_64_decode)
-                campo_imagen='congreso/imagen_%s.png'%(nombre)
+                campo_imagen='congreso/imagen_programa_%s.png'%(nombre)
                 imagen=ImagenCongreso(congreso=congress,imagen=campo_imagen)
                 imagen.save()
            
@@ -145,6 +164,7 @@ class CongressUpdateView(validarUser,FormView):
         context=super().get_context_data(**kwargs)
         self.object=Congreso.objects.get(pk=self.kwargs.get('pk'))
         imagenes=ImagenCongreso.objects.filter(congreso=self.object)
+        context['salas']=Sala.objects.filter(congreso=self.object)
         context['update']=self.object
         if imagenes:
             context['imagenes']=imagenes
@@ -154,75 +174,99 @@ class CongressUpdateView(validarUser,FormView):
             context['imagen_meta']='/static/%s'%(self.object.meta_og_imagen)
         if self.object.foto_constancia:
             context['foto_constancia']='/static/%s'%(self.object.foto_constancia)
+        if self.object.imagen_home:
+            context['imagen_home']=self.object.imagen_home
         return context
-
+ 
+        
     def form_valid(self, form):
         update_congreso=Congreso.objects.get(pk=self.request.POST['update']) 
-        # try:
-        congress=form['congreso'].save(commit=False)
-        # imagen=form['imagen_congreso'].save(commit=False)
-        ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
-        if ubic.exists():
-            congress.lugar=ubic.first()
-        else:
-            ubicacion=form['ubicacion'].save(commit=True)
-            congress.lugar=ubicacion
-        
-        imagen_seg=self.request.POST['congreso-prueba1']
-        if 'congreso/' not in imagen_seg:
-           
-            image_64_encode=self.request.POST['congreso-prueba1']
-            campo = image_64_encode.split(",")
-            chars = '0123456789'
-            nombre = get_random_string(5, chars)
-            image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
-            image_result = open('MedCongressApp/static/congreso/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
-            image_result.write(image_64_decode)
-            if  update_congreso.imagen_seg:
-                fileObj = Path('MedCongressApp/static/%s'%( update_congreso.imagen_seg))
-                if fileObj.is_file():
-                    remove('MedCongressApp/static/%s'%( update_congreso.imagen_seg))
-            congress.imagen_seg='congreso/imagen_%s.png'%(nombre)
+        try:
+            congress=form['congreso'].save(commit=False)
+            # imagen=form['imagen_congreso'].save(commit=False)
+            ubic=Ubicacion.objects.filter(direccion=form['ubicacion'].instance.direccion)
+            if ubic.exists():
+                congress.lugar=ubic.first()
+            else:
+                ubicacion=form['ubicacion'].save(commit=True)
+                congress.lugar=ubicacion
 
-        if self.request.POST['congreso-constancia']:
-            constancia=self.request.POST['congreso-constancia']
-            if 'congreso/' not in constancia:
+            imagen_seg=self.request.POST['congreso-prueba1']
+            if 'congreso/' not in imagen_seg:
             
-                image_64_encode=self.request.POST['congreso-constancia']
+                image_64_encode=self.request.POST['congreso-prueba1']
                 campo = image_64_encode.split(",")
                 chars = '0123456789'
                 nombre = get_random_string(5, chars)
                 image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
-                image_result = open('MedCongressApp/static/congreso/img_constancia/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+                image_result = open('MedCongressApp/static/congreso/imagen_seg_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
                 image_result.write(image_64_decode)
-                if  update_congreso.foto_constancia:
-                    fileObj = Path('MedCongressApp/static/%s'%( update_congreso.foto_constancia))
+                if  update_congreso.imagen_seg:
+                    fileObj = Path('MedCongressApp/static/%s'%( update_congreso.imagen_seg))
                     if fileObj.is_file():
-                        remove('MedCongressApp/static/%s'%( update_congreso.foto_constancia))
-                congress.foto_constancia='congreso/img_constancia/imagen_%s.png'%(nombre)    
-        update_congreso=congress
-        update_congreso.save()
-        ImagenCongreso.objects.filter(congreso=update_congreso).delete()
-        for respuesta in self.request.POST.getlist('congreso-prueba'):
-            if 'congreso/' in respuesta:
-                imagen=ImagenCongreso(congreso=update_congreso,imagen=respuesta)
-                imagen.save()
-            else:
-                image_64_encode=respuesta
+                        remove('MedCongressApp/static/%s'%( update_congreso.imagen_seg))
+                congress.imagen_seg='congreso/imagen_seg_%s.png'%(nombre)
+
+            imagen_home=self.request.POST['congreso-imagen_home']
+            if 'congreso/' not in imagen_home:
+                
+                image_64_encode=self.request.POST['congreso-imagen_home']
                 campo = image_64_encode.split(",")
-                image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
                 chars = '0123456789'
                 nombre = get_random_string(5, chars)
-                image_result = open('MedCongressApp/static/congreso/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+                image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
+                image_result = open('MedCongressApp/static/congreso/imagen_home_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
                 image_result.write(image_64_decode)
-                campo_imagen='congreso/imagen_%s.png'%(nombre)
-                imagen=ImagenCongreso(congreso=update_congreso,imagen=campo_imagen)
-                imagen.save()
-        
-        return super().form_valid(form)
-        # except Exception as e:
-        #     messages.warning(self.request, e)
-        #     return super().form_invalid(form)
+                if  update_congreso.imagen_home:
+                    fileObj = Path('MedCongressApp/static/%s'%( update_congreso.imagen_home))
+                    if fileObj.is_file():
+                        remove('MedCongressApp/static/%s'%( update_congreso.imagen_home))
+                congress.imagen_home='congreso/imagen_home_%s.png'%(nombre)
+
+            if self.request.POST['congreso-constancia']:
+                constancia=self.request.POST['congreso-constancia']
+                if 'congreso/' not in constancia:
+                
+                    image_64_encode=self.request.POST['congreso-constancia']
+                    campo = image_64_encode.split(",")
+                    chars = '0123456789'
+                    nombre = get_random_string(5, chars)
+                    image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
+                    image_result = open('MedCongressApp/static/congreso/img_constancia/imagen_constancia_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+                    image_result.write(image_64_decode)
+                    if  update_congreso.foto_constancia:
+                        fileObj = Path('MedCongressApp/static/%s'%( update_congreso.foto_constancia))
+                        if fileObj.is_file():
+                            remove('MedCongressApp/static/%s'%( update_congreso.foto_constancia))
+                    congress.foto_constancia='congreso/img_constancia/imagen_constancia_%s.png'%(nombre)    
+            update_congreso=congress
+            update_congreso.save()
+            ImagenCongreso.objects.filter(congreso=update_congreso).delete()
+            for respuesta in self.request.POST.getlist('congreso-prueba'):
+                if 'congreso/' in respuesta:
+                    imagen=ImagenCongreso(congreso=update_congreso,imagen=respuesta)
+                    imagen.save()
+                else:
+                    image_64_encode=respuesta
+                    campo = image_64_encode.split(",")
+                    image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
+                    chars = '0123456789'
+                    nombre = get_random_string(5, chars)
+                    image_result = open('MedCongressApp/static/congreso/imagen_programa_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+                    image_result.write(image_64_decode)
+                    campo_imagen='congreso/imagen_programa_%s.png'%(nombre)
+                    imagen=ImagenCongreso(congreso=update_congreso,imagen=campo_imagen)
+                    imagen.save()
+            cant=0
+            for sala in self.request.POST.getlist('salas'):
+                resp=Sala.objects.get(id=self.request.POST.getlist('salas_id')[cant])
+                resp.titulo=self.request.POST.getlist('salas')[cant]
+                resp.save() 
+                cant=cant+1     
+            return super().form_valid(form)
+        except RequestDataTooBig as e:
+            messages.warning(self.request, e)
+            return super().form_invalid(form)
     def get_success_url(self):
         url =  reverse_lazy('MedCongressAdmin:congress_list')
         if self.request.GET.get('search'):
@@ -281,39 +325,6 @@ class CongressPonenciasListView(validarUser,TemplateView):
         context['search']=self.request.GET.get('search')
         return context
 
-########## Vista del cuestionario de un Congreso #############
-
-# class CongressCuestionarioListView(validarUser,TemplateView):
-#     template_name= 'MedCongressAdmin/cuestionarios.html' 
-#     def get(self, request, **kwargs):
-#         congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
-#         if congreso is None:
-#             return   HttpResponseRedirect(reverse('Error404'))
-#         return self.render_to_response(self.get_context_data()) 
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
-#         preguntas_env=[]
-#         preguntas=CuestionarioPregunta.objects.filter(congreso=congreso)
-#         for pregunta in preguntas:
-#             respuesta_list=[]
-#             respuestas=CuestionarioRespuestas.objects.filter(pregunta=pregunta)
-#             for respuesta in respuestas:
-#                 respuesta_list.append({'texto':respuesta.respuesta,
-#                                         'is_correcta':respuesta.is_correcto,
-#                                         'publicada':respuesta.published,
-#                                         })
-#             preguntas_env.append({'texto':pregunta.pregunta,
-#                                     'publicada':pregunta.published,
-#                                     'id':pregunta.pk,
-#                                     'respuestas':respuesta_list,})
-#         context['preguntas']=preguntas_env
-#         context['congreso']=congreso
-       
-#         return context
-    
-########## Vista de las Categorias de Pago de un Congreso #############
 
 class CongressCategPagosListView(validarUser,TemplateView):
     template_name= 'MedCongressAdmin/congres_cat_pagos.html' 
@@ -409,6 +420,9 @@ class  CongressPonenteCreateView(validarUser,CreateView):
         ctx = super(CongressCategPagosCreateView, self).get_context_data(**kwargs)
         pon=Congreso.objects.filter(path=self.kwargs.get('path')).first()
         ctx['cong'] = pon
+        ctx['sala']= Sala.objects.filter(congreso=pon)
+        ctx['bloque']= Bloque.objects.filter(congreso=pon)
+        print(ctx)
         return ctx
 
 class CongressBloquesListView(validarUser,TemplateView):
@@ -434,6 +448,18 @@ def GetBloques(request):
     if request.is_ajax():
         query = request.POST['congreso_id']
         bloques=Bloque.objects.filter(congreso=Congreso.objects.get(pk=query))
+        results = []
+        for bloque in bloques:
+            results.append({'titulo':bloque.titulo,'id':bloque.pk})
+        data = json.dumps(results)
+    mimetype = "application/json"
+    return HttpResponse(data, mimetype)
+
+def GetSalas(request):
+    data = json.dumps([])
+    if request.is_ajax():
+        query = request.POST['congreso_id']
+        bloques=Sala.objects.filter(congreso=Congreso.objects.get(pk=query))
         results = []
         for bloque in bloques:
             results.append({'titulo':bloque.titulo,'id':bloque.pk})
@@ -797,7 +823,7 @@ class Usuarios_pagaron(validarUser,TemplateView):
     def post(self, request):
         #Obtenemos todas las personas de nuestra base de datos
         congreso=self.request.POST['congreso']
-        query= RelCongresoUser.objects.filter(congreso=congreso,is_pagado=True).values('user__usuario__first_name','user__usuario__last_name','user__usuario__email','congreso__titulo','categoria_pago__nombre').annotate(Sum('cantidad'))
+        query= RelCongresoUser.objects.filter(congreso=congreso,is_pagado=True).values('user__usuario__first_name','user__usuario__last_name','user__usuario__email','congreso__titulo','categoria_pago__nombre','user__ubicacion__direccion').annotate(Sum('cantidad'))
 
 		#Creamos el libro de trabajo
         wb = Workbook()
@@ -818,7 +844,8 @@ class Usuarios_pagaron(validarUser,TemplateView):
             ws['C3'] = 'Email'
             ws['D3'] = 'Congreso'
             ws['E3'] = 'Categoria de Pago'
-            ws['F3'] = 'Cantidad'        
+            ws['F3'] = 'Cantidad'
+            ws['G3'] = 'Dirección'          
             cont=4
             #Recorremos el conjunto de personas y vamos escribiendo cada uno de los datos en las celdas
             for quer in query:
@@ -828,6 +855,7 @@ class Usuarios_pagaron(validarUser,TemplateView):
                 ws.cell(row=cont,column=4).value = quer['congreso__titulo']
                 ws.cell(row=cont,column=5).value = quer['categoria_pago__nombre']
                 ws.cell(row=cont,column=6).value = quer['cantidad__sum']
+                ws.cell(row=cont,column=6).value = quer['user__ubicacion__direccion']
                 cont = cont + 1
         
            
@@ -1588,6 +1616,11 @@ class vTableAsJSONCongresos(TemplateView):
                                            href="'''+ reverse('MedCongressAdmin:Congres_programas',kwargs={'path':objet.path})+'''"
                                           title="Documentos de Programa " style="margin-left: 5px;">
                                           <i  class="icon icon-docu" > </i>
+                                      </a>
+                                       <a id=""
+                                           href="'''+ reverse('MedCongressAdmin:Congres_salas',kwargs={'path':objet.path})+'''"
+                                          title="Salas " style="margin-left: 5px;">
+                                          <i  class="icon icon-sala" > </i>
                                       </a>''',
                                       
                             'otros'     : ''' <a id=""
@@ -1656,4 +1689,452 @@ class vTableAsJSONCongresos(TemplateView):
         #Enviar
         return HttpResponse(data, mimetype)    
 
+class CongressSalasListView(validarUser,TemplateView):
+    template_name= 'MedCongressAdmin/congres_sala.html' 
+    
+
+    def get(self, request, **kwargs):
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+        if congreso is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        return self.render_to_response(self.get_context_data())    
+    def get_context_data(self, **kwargs):
+        context = super(CongressSalasListView, self).get_context_data(**kwargs)
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+        context['congres']=congreso
+        context['salas']=Sala.objects.filter(congreso=congreso)
+        return context          
+
+
+class  CongressSalaCreateView(validarUser,CreateView):
+    info_sended =Congreso()
+    form_class = CongresoSalaForm
+   
+    template_name = 'MedCongressAdmin/congreso_sala_form.html'
+    def form_valid(self, form):
+        congreso=form.save(commit=False)
+
+        image_64_encode=self.request.POST['imagen']
+        campo = image_64_encode.split(",")
+        image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
         
+        chars = '0123456789'
+        nombre = get_random_string(5, chars)
+        image_result = open('MedCongressApp/static/sala/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+        image_result.write(image_64_decode)
+        congreso.imagen='sala/imagen_%s.png'%(nombre)
+        nombre = get_random_string(3, chars)
+        path=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
+        congreso.path=path+nombre
+        congreso.save()
+        return super(CongressSalaCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+           self.success_url =  reverse_lazy('MedCongressAdmin:Congres_salas',kwargs={'path': self.kwargs.get('path')} )
+           return self.success_url
+
+    def get_context_data(self, **kwargs):
+        ctx = super(CongressSalaCreateView, self).get_context_data(**kwargs)
+        pon=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+        ctx['cong'] = pon
+        return ctx
+class CongressSalaUpdateView(validarUser,UpdateView):
+
+    form_class = CongresoSalaForm
+    template_name = 'MedCongressAdmin/congreso_sala_form.html'
+
+    def get_queryset(self, **kwargs):
+        return Sala.objects.filter(pk=self.kwargs.get('pk'))
+
+    def form_valid(self, form):
+        congreso=form.save(commit=False)
+        imagen=self.request.POST['imagen']
+        chars = '0123456789'
+        if 'sala/' not in imagen:
+            image_64_encode=self.request.POST['imagen']
+            campo = image_64_encode.split(",")
+            nombre = get_random_string(5, chars)
+            image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
+            image_result = open('MedCongressApp/static/sala/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+            image_result.write(image_64_decode)
+            if  congreso.imagen:
+                fileObj = Path('MedCongressApp/static/%s'%( congreso.imagen))
+                if fileObj.is_file():
+                    remove('MedCongressApp/static/%s'%( congreso.imagen))
+            congreso.imagen='sala/imagen_%s.png'%(nombre)
+        if not congreso.path or congreso.path=='0':
+            nombre = get_random_string(3, chars)
+            path=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
+            congreso.path=path+nombre
+        congreso.save()
+        return super(CongressSalaUpdateView, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context=super().get_context_data(**kwargs)
+        context['update']=True
+        context['sala']= Sala.objects.get(pk=self.kwargs.get('pk'))
+        context['imagen']=context['sala'].imagen
+        pon=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+        context['cong'] = pon
+        return context
+    def get_success_url(self):
+           self.success_url =  reverse_lazy('MedCongressAdmin:Congres_salas',kwargs={'path': self.kwargs.get('path')} )
+           return self.success_url
+
+class CongressDeletedSalaView(validarUser,DeleteView):
+    model = Sala
+
+    def delete(self,request, *args, **kwargs):
+           
+            sala=Sala.objects.get(pk=self.kwargs.get('pk'))
+            if Ponencia.objects.filter(sala= sala).exists():
+                return JsonResponse({'success':False}, safe=False)
+            else:
+                sala.delete()
+                return JsonResponse({'success':True}, safe=False)
+
+class LogsCongreso(validarUser,FormView):
+    form_class=ExportarLogsCongresoExelForm
+    template_name = 'MedCongressAdmin/log_congreso_form.html'
+    def form_valid(self, form):
+        id_congreso=self.request.POST['congreso']
+        if self.request.POST['fecha_fin']:
+            fecha_fin=self.request.POST['fecha_fin']
+        else:
+            fecha_fin=datetime.now()   
+        fecha_inicio=self.request.POST['fecha_inicio']
+        if fecha_inicio:
+            query=UserActivityLog.objects.filter(congreso=id_congreso,fecha__lt=fecha_fin,fecha__gte=fecha_inicio).order_by('user','fecha')
+        else:
+            query=UserActivityLog.objects.filter(congreso=id_congreso,fecha__lt=fecha_fin).order_by('user','fecha')
+        
+        if query:
+            #Creamos el libro de trabajo
+            wb = Workbook()
+            #Definimos como nuestra hoja de trabajo, la hoja activa, por defecto la primera del libro
+            ws = wb.active
+            ws.column_dimensions['A'].width=5
+            ws.column_dimensions['B'].width=25
+            ws.column_dimensions['C'].width=20
+            ws.column_dimensions['D'].width=150
+            
+
+            titulo = NamedStyle(name="titulo")
+            titulo.font=Font(size=12,bold=True)
+            titulo.fill=PatternFill(fill_type='solid',start_color='00CCCCFF')
+            titulo.alignment=Alignment(horizontal='center',mergeCell=True)
+            titulo.border = Border(left=Side(border_style='thin',
+                           color='FF000000'),
+                 right=Side(border_style='thin',
+                            color='FF000000'),
+                 top=Side(border_style='thin',
+                          color='FF000000'),
+                 bottom=Side(border_style='thin',
+                             color='FF000000'),
+                 diagonal=Side(border_style='thin',
+                               color='FF000000'),
+                 diagonal_direction=0,
+                 outline=Side(border_style='thin',
+                              color='FF000000'),
+                 vertical=Side(border_style='thin',
+                               color='FF000000'),
+                 horizontal=Side(border_style='thin',
+                                color='FF000000')
+                )
+
+            celdas = NamedStyle(name="celdas")
+            celdas.font=Font(size=12)
+            
+            celdas.alignment=Alignment(horizontal='general',mergeCell=True)
+            celdas.border = Border(left=Side(border_style='thin',
+                           color='FF000000'),
+                 right=Side(border_style='thin',
+                            color='FF000000'),
+                 top=Side(border_style='thin',
+                          color='FF000000'),
+                 bottom=Side(border_style='thin',
+                             color='FF000000'),
+                 diagonal=Side(border_style='thin',
+                               color='FF000000'),
+                 diagonal_direction=0,
+                 outline=Side(border_style='thin',
+                              color='FF000000'),
+                 vertical=Side(border_style='thin',
+                               color='FF000000'),
+                 horizontal=Side(border_style='thin',
+                                color='FF000000')
+                )
+            celdas_fecha = NamedStyle(name="celdas_fecha")
+            celdas_fecha.font=Font(size=12)
+            
+            celdas_fecha.alignment=Alignment(horizontal='center',mergeCell=True)
+            celdas_fecha.border = Border(left=Side(border_style='thin',
+                           color='FF000000'),
+                 right=Side(border_style='thin',
+                            color='FF000000'),
+                 top=Side(border_style='thin',
+                          color='FF000000'),
+                 bottom=Side(border_style='thin',
+                             color='FF000000'),
+                 diagonal=Side(border_style='thin',
+                               color='FF000000'),
+                 diagonal_direction=0,
+                 outline=Side(border_style='thin',
+                              color='FF000000'),
+                 vertical=Side(border_style='thin',
+                               color='FF000000'),
+                 horizontal=Side(border_style='thin',
+                                color='FF000000')
+                )
+            label = NamedStyle(name="label")
+            label.font=Font(size=12,bold=True)
+            label.alignment=Alignment(horizontal='right',mergeCell=True)
+            #En la celda B1 ponemos el texto 'REPORTE DE PERSONAS'
+            ws['A1'] = 'Logs del Congresos :'
+            ws['A1'].font = Font(size=12,bold=True)
+            ws['A1'].alignment = Alignment(mergeCell='center',horizontal='center') 
+            
+            ws['A2'] ='" %s "'%(query.first().congreso.titulo) 
+            ws['A2'].font = Font(size=12,bold=True)
+            ws['A2'].alignment = Alignment(mergeCell='center',horizontal='center') 
+           
+            #Juntamos las celdas desde la B1 hasta la E1, formando una sola celda
+            ws.merge_cells('A1:F1')
+            ws.merge_cells('A2:F2')
+            #Creamos los encabezados desde la celda B3 hasta la E3
+            cont=3
+            num=1
+            id_user=0
+            for quer in query:
+                if id_user!=quer.user.pk:
+                    cont = cont + 1
+                    num=1
+                    ws.merge_cells('A%s:B%s'%(cont,cont))
+                    ws.merge_cells('C%s:D%s'%(cont,cont))
+                    ws.cell(row=cont,column=1).style=label
+                    ws['A%s'%(cont)] = 'Usuario:'
+                    ws['C%s'%(cont)] = '%s %s <<%s>>'%(quer.user.usuario.first_name,quer.user.usuario.last_name,quer.user.usuario.email)
+                    cont = cont + 1
+                    ws.merge_cells('A%s:B%s'%(cont,cont))
+                    ws.merge_cells('C%s:D%s'%(cont,cont))
+                    ws.cell(row=cont,column=1).style=label
+                    ws['A%s'%(cont)] = 'Categoría:'
+                    ws['C%s'%(cont)] = '%s'%(quer.user.categoria)
+                    cont = cont + 1
+                    
+                    ws.cell(row=cont,column=1).style=titulo
+                    ws.cell(row=cont,column=2).style=titulo
+                    ws.cell(row=cont,column=3).style=titulo
+                    ws.cell(row=cont,column=4).style=titulo
+                    
+                    ws.cell(row=cont,column=1).value='No.'
+                    ws.cell(row=cont,column=2).value='Fecha' 
+                    ws.cell(row=cont,column=3).value='Tiempo (H:M:S)'
+                    ws.cell(row=cont,column=4).value='Acción'
+                    id_user= quer.user.pk   
+                
+                    cont = cont + 1
+            #Recorremos el conjunto de personas y vamos escribiendo cada uno de los datos en las celdas
+            
+                
+                ws.cell(row=cont,column=1).style=celdas_fecha
+                ws.cell(row=cont,column=1).value = num
+                ws.cell(row=cont,column=2).style=celdas_fecha
+                ws.cell(row=cont,column=2).value = quer.fecha
+                ws.cell(row=cont,column=3).style=celdas_fecha
+                tiempo=quer.tiempo.split('.')
+                ws.cell(row=cont,column=3).value =tiempo[0]
+                ws.cell(row=cont,column=4).style=celdas
+                ws.cell(row=cont,column=4).value = '  %s'%(quer.mensaje) 
+                
+                cont = cont + 1
+                num = num + 1
+            response = HttpResponse(content_type="application/ms-excel") 
+            response["Content-Disposition"] = "attachment; filename=LogsCongreso.xlsx"
+            wb.save(response)
+            return response
+        else:
+            congreso=Congreso.objects.get(pk=id_congreso)
+            messages.warning(self.request, 'Este congreso no tiene Logs')
+            return HttpResponseRedirect(reverse_lazy('MedCongressAdmin:LogsCongreso'))
+
+     
+  
+class LogsUsuarios(validarUser,FormView):
+    form_class=ExportarLogsUsuarioExelForm
+    template_name = 'MedCongressAdmin/log_usuario_form.html'
+    def form_valid(self, form):
+        id_usuario=self.request.POST['usuario']
+        if self.request.POST['fecha_fin']:
+            fecha_fin=self.request.POST['fecha_fin']
+        else:
+            fecha_fin=datetime.now()   
+        fecha_inicio=self.request.POST['fecha_inicio']
+        if fecha_inicio:
+            query=UserActivityLog.objects.filter(user=id_usuario,fecha__lt=fecha_fin,fecha__gte=fecha_inicio).order_by('congreso','fecha')
+        else:
+            query=UserActivityLog.objects.filter(user=id_usuario,fecha__lt=fecha_fin).order_by('congreso','fecha')
+        
+        if query:
+            #Creamos el libro de trabajo
+            wb = Workbook()
+            #Definimos como nuestra hoja de trabajo, la hoja activa, por defecto la primera del libro
+            ws = wb.active
+            ws.column_dimensions['A'].width=5
+            ws.column_dimensions['B'].width=25
+            ws.column_dimensions['C'].width=20
+            ws.column_dimensions['D'].width=150
+
+            titulo = NamedStyle(name="titulo")
+            titulo.font=Font(size=12,bold=True)
+            titulo.fill=PatternFill(fill_type='solid',start_color='00CCCCFF')
+            titulo.alignment=Alignment(horizontal='center',mergeCell=True)
+            titulo.border = Border(left=Side(border_style='thin',
+                           color='FF000000'),
+                 right=Side(border_style='thin',
+                            color='FF000000'),
+                 top=Side(border_style='thin',
+                          color='FF000000'),
+                 bottom=Side(border_style='thin',
+                             color='FF000000'),
+                 diagonal=Side(border_style='thin',
+                               color='FF000000'),
+                 diagonal_direction=0,
+                 outline=Side(border_style='thin',
+                              color='FF000000'),
+                 vertical=Side(border_style='thin',
+                               color='FF000000'),
+                 horizontal=Side(border_style='thin',
+                                color='FF000000')
+                )
+
+            celdas = NamedStyle(name="celdas")
+            celdas.font=Font(size=12)
+            
+            celdas.alignment=Alignment(horizontal='general',mergeCell=True)
+            celdas.border = Border(left=Side(border_style='thin',
+                           color='FF000000'),
+                 right=Side(border_style='thin',
+                            color='FF000000'),
+                 top=Side(border_style='thin',
+                          color='FF000000'),
+                 bottom=Side(border_style='thin',
+                             color='FF000000'),
+                 diagonal=Side(border_style='thin',
+                               color='FF000000'),
+                 diagonal_direction=0,
+                 outline=Side(border_style='thin',
+                              color='FF000000'),
+                 vertical=Side(border_style='thin',
+                               color='FF000000'),
+                 horizontal=Side(border_style='thin',
+                                color='FF000000')
+                )
+            celdas_fecha = NamedStyle(name="celdas_fecha")
+            celdas_fecha.font=Font(size=12)
+            
+            celdas_fecha.alignment=Alignment(horizontal='center',mergeCell=True)
+            celdas_fecha.border = Border(left=Side(border_style='thin',
+                           color='FF000000'),
+                 right=Side(border_style='thin',
+                            color='FF000000'),
+                 top=Side(border_style='thin',
+                          color='FF000000'),
+                 bottom=Side(border_style='thin',
+                             color='FF000000'),
+                 diagonal=Side(border_style='thin',
+                               color='FF000000'),
+                 diagonal_direction=0,
+                 outline=Side(border_style='thin',
+                              color='FF000000'),
+                 vertical=Side(border_style='thin',
+                               color='FF000000'),
+                 horizontal=Side(border_style='thin',
+                                color='FF000000')
+                )
+            label = NamedStyle(name="label")
+            label.font=Font(size=12,bold=True)
+            label.alignment=Alignment(horizontal='right',mergeCell=True)
+            #En la celda B1 ponemos el texto 'REPORTE DE PERSONAS'
+            ws['A1'] = 'Logs del Usuario :'
+            ws['A1'].font = Font(size=12,bold=True)
+            ws['A1'].alignment = Alignment(mergeCell='center',horizontal='center') 
+            
+            ws['A2'] ='%s %s <<%s>>'%(query.first().user.usuario.first_name,query.first().user.usuario.last_name,query.first().user.usuario.email)
+            ws['A2'].font = Font(size=12,bold=True)
+            ws['A2'].alignment = Alignment(mergeCell='center',horizontal='center') 
+           
+            #Juntamos las celdas desde la B1 hasta la E1, formando una sola celda
+            ws.merge_cells('A1:F1')
+            ws.merge_cells('A2:F2')
+            #Creamos los encabezados desde la celda B3 hasta la E3
+            cont=3
+            num=1
+            id_congreso=0
+            for quer in query:
+                if id_congreso!=quer.congreso.pk:
+                    cont = cont + 1
+                    num=1
+                    ws.merge_cells('A%s:B%s'%(cont,cont))
+                    ws.merge_cells('C%s:D%s'%(cont,cont))
+                    ws.cell(row=cont,column=1).style=label
+                    ws['A%s'%(cont)] = 'Congreso:'
+                    ws['C%s'%(cont)] = '%s'%(quer.congreso.titulo)
+                    cont = cont + 1
+                    ws.cell(row=cont,column=1).style=titulo
+                    ws.cell(row=cont,column=2).style=titulo
+                    ws.cell(row=cont,column=3).style=titulo
+                    ws.cell(row=cont,column=4).style=titulo
+                    
+                    ws.cell(row=cont,column=1).value='No.'
+                    ws.cell(row=cont,column=2).value='Fecha' 
+                    ws.cell(row=cont,column=3).value='Tiempo (H:M:S)'
+                    ws.cell(row=cont,column=4).value='Acción'
+                    id_congreso= quer.congreso.pk   
+                
+                    cont = cont + 1
+            #Recorremos el conjunto de personas y vamos escribiendo cada uno de los datos en las celdas
+            
+                
+                ws.cell(row=cont,column=1).style=celdas_fecha
+                ws.cell(row=cont,column=1).value = num
+                ws.cell(row=cont,column=2).style=celdas_fecha
+                ws.cell(row=cont,column=2).value = quer.fecha
+                ws.cell(row=cont,column=3).style=celdas_fecha
+                tiempo=quer.tiempo.split('.')
+                ws.cell(row=cont,column=3).value =tiempo[0]
+                ws.cell(row=cont,column=4).style=celdas
+                ws.cell(row=cont,column=4).value = '  %s'%(quer.mensaje) 
+                
+                cont = cont + 1
+                num = num + 1
+            response = HttpResponse(content_type="application/ms-excel") 
+            response["Content-Disposition"] = "attachment; filename=LogsUsuario.xlsx"
+            wb.save(response)
+            return response
+        else:
+            congreso=Congreso.objects.get(pk=id_congreso)
+            messages.warning(self.request, 'Este congreso no tiene Logs')
+            return HttpResponseRedirect(reverse_lazy('MedCongressAdmin:LogsCongreso'))
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['search']=self.request.GET.get('search')
+    #     if self.request.GET.get('exportar'):
+    #         congreso_evn=[]
+    #         congresos= Congreso.objects.all()
+    #         activo=False
+    #         for congreso in congresos:
+    #             if congreso.path == self.request.GET.get('exportar'):
+    #                 activo=True
+    #             else:
+    #                 activo=False
+    #             congreso_evn.append({ 'id':congreso.pk,
+    #                                 'titulo':congreso.titulo,
+    #                                     'activo':activo,
+
+    #             })
+    #         context['exportar']= congreso_evn
+            
+    #     return context  
+  

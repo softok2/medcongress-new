@@ -101,25 +101,26 @@ class PatrocinadorUpdateView(validarUser,UpdateView):
         return context
 
     def form_valid(self, form):
-        
-        patrocinador=form.save(commit=False)
-        logo=self.request.POST['prueba']
-        if 'patrocinadores/' not in logo:
-            image_64_encode=self.request.POST['prueba']
-            campo = image_64_encode.split(",")
-            chars = '0123456789'
-            nombre = get_random_string(5, chars)
-            image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
-            image_result = open('MedCongressApp/static/patrocinadores/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
-            image_result.write(image_64_decode)
-            if patrocinador.logo:
-                fileObj = Path('MedCongressApp/static/%s'%( patrocinador.logo))
-                if fileObj.is_file():
-                    remove('MedCongressApp/static/%s'%( patrocinador.logo))
-            patrocinador.logo='patrocinadores/imagen_%s.png'%(nombre)
-        patrocinador.save()
-        return super().form_valid(form)
-
+        try:
+            patrocinador=form.save(commit=False)
+            logo=self.request.POST['prueba']
+            if 'patrocinadores/' not in logo:
+                image_64_encode=self.request.POST['prueba']
+                campo = image_64_encode.split(",")
+                chars = '0123456789'
+                nombre = get_random_string(5, chars)
+                image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
+                image_result = open('MedCongressApp/static/patrocinadores/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+                image_result.write(image_64_decode)
+                if patrocinador.logo:
+                    fileObj = Path('MedCongressApp/static/%s'%(  patrocinador.logo))
+                    if fileObj.is_file():
+                        remove('MedCongressApp/static/%s'%( patrocinador.logo))
+                patrocinador.logo='patrocinadores/imagen_%s.png'%(nombre)
+            patrocinador.save()
+            return super().form_valid(form)
+        except ( TypeError,FileNotFoundError):
+                return super().form_invalid(form)
 class vTableAsJSONPatrocinador(TemplateView):
     template_name = 'MedCongressAdmin/asig_congress_form.html'
     

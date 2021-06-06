@@ -1,6 +1,7 @@
 {% extends 'MedCongressAdmin/base.html' %}
 {% block title %}Categoria de Pagos del congreso: {{congres.titulo}}{% endblock %}
 {% load static %}
+{% load filtros %}
 {% block styles %}
 <link rel="stylesheet" type="text/css"
     href="{% static 'MedCongressAdmin/app-assets/vendors/css/tables/datatable/datatables.min.css' %}">
@@ -89,7 +90,7 @@
                                                 
                                                 
                                                 <td>{{ cat_pago.categoria.nombre }}</td>
-                                                <td>${{ cat_pago.precio }}</td>
+                                                <td>${{ cat_pago.precio|format_num }}</td>
                                                 <td>{{cat_pago.moneda}}</td>
                                                 <td style="vertical-align: middle;">
                                                     <a href="{% url 'MedCongressAdmin:congres_cat_pago_editar' path=congres.path pk=cat_pago.pk  %}"

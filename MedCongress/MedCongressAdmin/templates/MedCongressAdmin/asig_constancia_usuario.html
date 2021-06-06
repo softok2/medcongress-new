@@ -80,7 +80,9 @@
 							<div class="form-actions">
 								<div class="text-right">
 									
-							
+									<button id="atras" type="button" class="btn btn-danger ">Cancelar
+										<i class="ft-x position-right"></i>
+									</button>
 									<button id="save" type="submit" class="btn btn-primary">Asignar
 										<i class="ft-save position-right"></i>
 									</button>
@@ -97,5 +99,14 @@
 {% block scripts %}
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/forms/select/select2.full.min.js'%}"></script>
 <script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-select2.js'%}"></script>
+<script>
 
+$(function() {
+	$('#atras').click(function () {
+		
+		location.href = "{% url 'MedCongressAdmin:asig_congress_list' %}";
+		
+	});
+});
+</script>
 {% endblock %}
