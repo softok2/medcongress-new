@@ -28,7 +28,12 @@
           <link rel="stylesheet" href="{% static '/assets/css/my_app.css'%}">
           <link href="{% static 'MedCongressApp/css/my_style.css'%}" rel="stylesheet" />
          
-         
+         <style>
+           .navbar-toggler:focus {
+   
+    box-shadow: none;
+}
+         </style>
 {% block css%}
 {%endblock%}
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -127,11 +132,11 @@
             <div class="col-md-3">
               <div class="d-flex flex-column justify-content-between privacy-and-social">
                 <a href="{%url 'aviso_privacidad'%}">Aviso de Privacidad</a>
-                <div class="social-follow">
+                <!-- <div class="social-follow">
                   <a href="#">f</a>
                   <span>&nbsp;/&nbsp;</span>
                   <a href="#">in</a>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
@@ -174,7 +179,7 @@ url = "{% url 'GetContactos'%}";
 			if(data.email)
 			    texto+=`<a href="mailto:`+data.email+`">`+data.email+`</a>`;
 			if(data.telefono)
-			    texto+=`<a  href="#""> `+data.telefono+`</a>`;
+			    texto+=`<span> `+data.telefono+`</span>`;
 			if(data.whatsapp)
 			{
 				what=data.whatsapp.replace(/\(/g,"").replace(/\)/g,"").replace(/-/g,'').replace(/\ +/g,'');
