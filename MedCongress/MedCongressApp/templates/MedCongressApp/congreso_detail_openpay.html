@@ -168,7 +168,7 @@
 </section>  
 {%endif%}
 
-{% if fecha_ponencias %}
+{%if programas%}
 <div class="section congreso-program">
     <div class="container-fluid">
         <div class="row">
@@ -182,9 +182,9 @@
             <div class="offset-md-1 col-md-5 d-flex flex-column justify-content-between align-items-end">
                 <span class="download-title mt-3 mt-md-0"></span>
                 <div class="ctas-wrapper d-flex flex-md-row flex-column justify-content-md-end mx-md-0 mx-auto">
-                    {%if programas%}
-                    <a href="#" class="cta programa mt-3 mt-md-0">PROGRAMA</a>
-                    {%endif%}
+                  
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#programaModal" class="cta programa me-md-3 me-0 mt-md-0 mt-3">PROGRAMA</a>
+                  
                 </div>
             </div>
         </div>
@@ -807,6 +807,49 @@
                         {%endif%}
                          
                       </div>
+                      
+                  </div>
+  {%endfor%}
+                  
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col d-flex justify-content-end">
+                      <button type="button" class="cta close-btn" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="congreso-modal inv-works modal fade" id="programaModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="container-fluid">
+                  <div class="row mb-3">
+                      <div class="col">
+                          <h5 class="title">Programa del Evento</h5>
+                      </div>
+                  </div>
+                  {%for programa in programas%}
+                  <div class="row event mb-3">
+                    
+                     
+                      <div class="col-md-8">
+                          
+                          <a href="{% static '/'%}{{programa.documento}}" target="_blank" style="font-size: 18px;"><i class="fa fa-download"></i><h5 class="name">{{programa.texto}} ({{programa.idioma.abreviatura}})</h5> </a><br />
+                         
+                      </div>
+                     
                       
                   </div>
   {%endfor%}
