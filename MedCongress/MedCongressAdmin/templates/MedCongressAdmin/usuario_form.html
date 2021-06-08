@@ -163,7 +163,9 @@
 																				<input type="hidden" id="prueba" name="prueba">
 																			  </label>
 																				{%endif%}
-																				
+																				{% if form.perfiluser.foto %}
+                                            <span style="font-size: 13px; color: red; padding: 0">{{ form.perfiluser.foto.errors }}</span>
+                                        {% endif %}
 																				
 																				  <div class="alert" role="alert"></div>
 																				  <div class="modal fade " id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
@@ -196,7 +198,9 @@
 																				<div class="form-group">
 																					<label
 																						for="{{form.user.first_name.id_for_label }}"><b>{{form.user.first_name.label }}</b> </label>
-									
+																						{% if formuser.first_name.errors %}
+																						<span style="font-size: 13px; color: red; padding: 0">{{ form.user.first_name.errors }}</span>
+																					{% endif %}
 																					{{form.user.first_name }}
 																				</div>
 																			</div>
@@ -204,7 +208,9 @@
 																				<div class="form-group">
 																					<label
 																						for="{{form.user.last_name.id_for_label }}"><b>{{form.user.last_name.label }}</b></label>
-									
+																						{% if formuser.last_name.errors %}
+																						<span style="font-size: 13px; color: red; padding: 0">{{ form.user.last_name.errors }}</span>
+																					{% endif %}
 																					{{form.user.last_name }}
 																				</div>
 																			</div>

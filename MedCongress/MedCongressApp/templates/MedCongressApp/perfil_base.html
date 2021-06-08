@@ -68,7 +68,7 @@ Detalles del Perfil
                         <a class="nav-link" href="{% url 'Home'%}">Inicio</a>
                     </li>
                 </ul>
-                <div class="points d-flex flex-column justify-content-center align-content-center">
+                <div class="points d-flex flex-column justify-content-center align-content-center" style=" margin-bottom: 50px; ">
                     <span class="title"><strong>MIS PUNTOS</strong></span>
                     <span class="number">{%if request.user.perfilusuario.score%}{{request.user.perfilusuario.score}}{%else%} 0 {%endif%}</span>
                 </div>

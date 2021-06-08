@@ -55,7 +55,7 @@ Detalles del Perfil
                             {%if congresos%}
                         <div class="col-md-12">
                             {%for congreso in congresos%}
-                                <span  class="nav-item"> <a class="nav-link" target="_black" href=" {% url 'View_congreso' path=congreso.congreso.path%}"> {{congreso.congreso.titulo}}</a></span>
+                                <span  class="nav-item"> <a class="nav-link" target="_black" href=" {% url 'View_congreso' path=congreso.congreso.path%}">{{forloop.counter}}. {{congreso.congreso.titulo}}</a></span>
                                 {%if congreso.facturas%}
                                 <div class="accordion accordion-flush" id="accordionFlushExample">
                                     <div class="accordion-item">
