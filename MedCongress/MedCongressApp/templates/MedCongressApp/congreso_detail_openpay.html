@@ -269,7 +269,7 @@
                                         <small class="hour d-md-none">{{pon.fecha_inicio|date:"H:i"}}</small>
                                         <h2 class="accordion-header" id="heading-{{forloop.counter}}">
                                         <button class="accordion-button collapsed pt-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{forloop.counter}}" aria-expanded="true" aria-controls="collapse-{{forloop.counter}}">
-                                            Bloque: {{pon.titulo}}
+                                             {{pon.titulo}}
                                         </button>
                                         </h2>
                                         <div id="collapse-{{forloop.counter}}" class="accordion-collapse collapse" aria-labelledby="heading-{{forloop.counter}}" data-bs-parent="#accordion-{{forloop.counter}}">
@@ -305,7 +305,7 @@
                                                         <div class="col-md-12  mt-md-0" style="padding-top: 50px;" >
 
                                                             <h4 class="ponencia-name ponencia pt-3"><strong> 
-                                                                {{evento.tipo|upper}}
+                                                                
                                                                 {{evento.titulo}}</strong></h4>
                                                                 <div class="row"> 
                                                                     {%if evento.sala %}
