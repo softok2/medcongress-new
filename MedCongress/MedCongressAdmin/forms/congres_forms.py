@@ -501,7 +501,8 @@ class PerfilUserForm(forms.ModelForm):
     twitter=forms.CharField(required=False)
     youtube=forms.CharField(required=False)
     linkedin=forms.CharField(required=False)
-    
+    num_telefono=forms.CharField(required=False)
+    fecha_nacimiento=forms.DateField(required=False)
 
     genero=forms.ModelChoiceField(queryset=Genero.objects.all(), label='Género')
     
