@@ -113,7 +113,7 @@ class CongressCreateView(validarUser,FormView):
             congress.save()
             cant=0
             for sala in self.request.POST.getlist('salas'):
-                resp=Sala(congreso=congress,  titulo=self.request.POST.getlist('salas')[cant])
+                resp=Sala(congreso=congress,  titulo=self.request.POST.getlist('salas')[cant],published=True)
                 resp.save() 
                 cant=cant+1   
             for respuesta in self.request.POST.getlist('congreso-prueba'):

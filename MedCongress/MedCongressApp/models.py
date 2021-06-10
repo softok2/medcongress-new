@@ -259,7 +259,7 @@ class Congreso(models.Model):
     fecha_inicio=models.DateTimeField()
     created=models.DateTimeField(auto_now_add=True)
     updated=models.DateTimeField(null=True, blank=True)
-    published=models.BooleanField()
+    published=models.BooleanField(null=True, blank=True)
     is_home=models.BooleanField()
     t_congreso=models.ForeignKey(TipoCongreso,on_delete=models.DO_NOTHING)
     especialidad=models.ForeignKey(EspecialidadCongreso,on_delete=models.DO_NOTHING,null=True)
@@ -488,7 +488,7 @@ class Sala(models.Model):
     congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
     imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='salas',blank=True, null=True  )
     path=models.CharField(max_length=250, help_text='campo para identificarlo por la URL')
-    published=models.BooleanField()
+    published=models.BooleanField(null=True,blank=True)
     class Meta:
         verbose_name='Sala'
         verbose_name_plural='Salas'

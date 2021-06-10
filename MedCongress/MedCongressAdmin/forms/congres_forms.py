@@ -1046,7 +1046,7 @@ class CongresoTrabajoForm(forms.ModelForm):
 class CongresoSalaForm(forms.ModelForm):
     titulo=forms.CharField(label='Título',required=True)
     imagen=forms.CharField(required=False,label='Imagen')
-
+    published=forms.BooleanField(label='Publicado',required=False)
     class Meta:
         model=Sala
         fields=['titulo','congreso','detalle','cod_video','imagen','published','color']
