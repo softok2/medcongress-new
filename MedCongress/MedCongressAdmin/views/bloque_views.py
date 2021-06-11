@@ -1,5 +1,8 @@
 from django import forms
+import base64
 from django.contrib import messages
+from os import remove
+from pathlib import Path
 from django.shortcuts import get_object_or_404
 from django.views.defaults import page_not_found
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -55,6 +58,14 @@ class BloqueCreateView(validarUser,FormView):
         chars = '0123456789'
         secret_key = get_random_string(5, chars)
         bloque.path=path+secret_key  
+        image_64_encode=self.request.POST['prueba']
+        campo = image_64_encode.split(",")
+        image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
+        chars = '0123456789'
+        nombre = get_random_string(5, chars)
+        image_result = open('MedCongressApp/static/bloque/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+        image_result.write(image_64_decode)
+        bloque.imagen='bloque/imagen_%s.png'%(nombre)
         bloque.save()
         return super(BloqueCreateView, self).form_valid(form)
 
@@ -120,6 +131,8 @@ class BloqueUpdateView(validarUser,UpdateView):
     def get_context_data(self, **kwargs):
         self.objects=Bloque.objects.get(pk=self.kwargs.get('pk'))
         context = super(BloqueUpdateView, self).get_context_data(**kwargs)
+        if self.object.imagen:
+            context['imagen']=self.object.imagen
         if self.request.GET.get('congreso'):
             context['con']=self.objects.congreso
         context['update']=self.objects.congreso.titulo
@@ -136,6 +149,27 @@ class BloqueUpdateView(validarUser,UpdateView):
             url=reverse_lazy('MedCongressAdmin:bloques_list')
         self.success_url =  '%s?search=%s'%(url,self.request.GET.get('search'))
         return self.success_url 
+    
+    def form_valid(self, form):
+        bloque = form.save(commit=False)
+        imagen=self.request.POST['prueba']
+        bloque_edit=Bloque.objects.get(pk=self.kwargs.get('pk'))
+        if 'bloque/' not in imagen:
+            image_64_encode=self.request.POST['prueba']
+            campo = image_64_encode.split(",")
+            chars = '0123456789'
+            nombre = get_random_string(5, chars)
+            image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
+            image_result = open('MedCongressApp/static/bloque/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+            image_result.write(image_64_decode)
+            if bloque_edit.imagen:
+                fileObj = Path('MedCongressApp/static/%s'%( bloque_edit.imagen))
+                if fileObj.is_file():
+                    remove('MedCongressApp/static/%s'%( bloque_edit.imagen))
+
+            bloque.imagen='bloque/imagen_%s.png'%(nombre)
+            bloque.save()
+        return super(BloqueUpdateView, self).form_valid(form)    
 class BloqueModeradoresListView(validarUser,TemplateView):
     template_name= 'MedCongressAdmin/bloque_moderadores.html' 
     def get(self, request, **kwargs):

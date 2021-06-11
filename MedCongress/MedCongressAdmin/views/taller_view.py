@@ -265,7 +265,8 @@ class TallerUpdateView(validarUser,FormView):
         if ubic.exists():
             taller.lugar=ubic.first()
         else:
-            ubicacion=form['ubicacion'].save(commit=True)
+            ubicacion=Ubicacion(direccion=form['ubicacion'].instance.direccion,latitud=form['ubicacion'].instance.latitud,longitud=form['ubicacion'].instance.longitud)
+            ubicacion.save()
             taller.lugar=ubicacion
         id_video=['']
         if taller.cod_video:

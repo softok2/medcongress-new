@@ -269,7 +269,8 @@ class UsuarioUpdateView(validarUser,FormView):
         if ubic.exists():
             perfiluser_update.ubicacion=ubic.first()
         else:
-            ubicacion=form['ubicacion'].save(commit=True)
+            ubicacion=Ubicacion(direccion=form['ubicacion'].instance.direccion,latitud=form['ubicacion'].instance.latitud,longitud=form['ubicacion'].instance.longitud)
+            ubicacion.save()
             perfiluser_update.ubicacion=ubicacion
 
         perfiluser_update.usuario = user_update

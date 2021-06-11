@@ -188,7 +188,8 @@ class CongressUpdateView(validarUser,FormView):
             if ubic.exists():
                 congress.lugar=ubic.first()
             else:
-                ubicacion=form['ubicacion'].save(commit=True)
+                ubicacion=Ubicacion(direccion=form['ubicacion'].instance.direccion,latitud=form['ubicacion'].instance.latitud,longitud=form['ubicacion'].instance.longitud)
+                ubicacion.save()
                 congress.lugar=ubicacion
 
             imagen_seg=self.request.POST['congreso-prueba1']

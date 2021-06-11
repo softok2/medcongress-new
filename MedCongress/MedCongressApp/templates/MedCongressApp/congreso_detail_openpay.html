@@ -291,7 +291,7 @@
                                                                         {{mod.user.usuario.last_name}}</strong></h4> </a>
                                                                     <h5 class="cat">MODERADOR</h5>
                                                                 </div>
-                                                                
+                                                               
                                                             </div>
                                                         </div>
                                                         <p class="bio mt-3"> {%if mod.user.puesto %}
@@ -300,59 +300,60 @@
                                                        
                                                     </div>
                                                     {%endfor%}
+                                                    {%if pon.cod_video%}
+                                                    <a href="{% url 'BloqueVideo' path=pon.path%}" class="more d-block "><strong>Ver Preguntas y respuestas</strong></a>
+                                                    {%endif%}
                                                     <div class="row" >
                                                         {%for evento in pon.eventos %}
-                                                        <div class="col-md-12  mt-md-0" style="padding-top: 50px;" >
+                                                        <div class="col-md-6  mt-md-0" style="padding-top: 50px;" >
 
-                                                            <h4 class="ponencia-name ponencia pt-3"><strong> 
-                                                                
-                                                                {{evento.titulo}}</strong></h4>
-                                                                <div class="row"> 
-                                                                    {%if evento.sala %}
-                                                                    <div class="col-md-6 ponencia  mt-md-0" > 
-                                                                        <h5 class="cat"> <b>SALA:</b>  </h5>  <a href="{% url 'View_ponencias_sala' path=evento.sala.path%}" class="more d-block "><strong> {{evento.sala}}</strong></a>
-                                                                
-                                                                    </div>
-                                                                    {%endif%} 
-                                                                    <div class="col-md-6 ponencia   mt-md-0" > 
-                                                                        {%if evento.tipo == 'Taller'%}
-                                                                        <a href="{% url 'View_taller' path=evento.path%}" class="more d-block "><strong> Ver Taller</strong></a>
-                
-                                                                        {%else%}
-                                                                        <a href="{% url 'View_ponencia' path=evento.path%}" class="more d-block "><strong>Ver Ponencia</strong></a>
-                                                                        {%endif%}
-                                                                
-                                                                    </div>
-                                                                   </div>
-                                                               
-                                                               
-                                                               
-                                                           
-                                                        </div>
-                                                        {%for ponente in evento.ponentes %}
-                                                    <div class="col-md-6 ponencia mt-md-0 mt-5"  >
-                                                        <div class="header">
-                                                            <div class="row" >
-                                                                <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" class="name" onclick="VerPerfil('{{mod.user.id}}')">
-                                                                <div class="col-md-3 d-flex align-items-center">
-                                                                    <img src=" {% if ponente.user.foto%}{% static '/'%}{{ponente.user.foto}}{%else%}{% static 'assets/img/congresos/avatar-ponencia.png'%}{%endif%}" class="img-fluid" width="100px">
+                                                            <h4 class="ponencia-name ponencia pt-3"><strong> {{evento.titulo}}</strong></h4>
+                                                            <span class="detalle d-block "><small>  {{evento.detalle}}</small></span>
+                                                            <div class="row"> 
+                                                                {%if evento.sala %}
+                                                                <div class="col-md-6 ponencia  mt-md-0" > 
+                                                                    <h5 class="cat"> <b>SALA:</b>  </h5>  <a href="{% url 'View_ponencias_sala' path=evento.sala.path%}" class="more d-block "><strong> {{evento.sala}}</strong></a>
+                                                            
                                                                 </div>
-                                                                </a>
-                                                                <div class="mt-md-0 mt-2 col-md-9 d-flex flex-column justify-content-center">
-                                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" class="name" onclick="VerPerfil('{{ponente.user.id}}')"><h4 class="name"><strong>{{ponente.user.usuario.first_name}}
-                                                                        {{ponente.user.usuario.last_name}}</strong></h4></a>
-                                                                    <h5 class="cat">PONENTE</h5>
+                                                                {%endif%} 
+                                                                <div class="col-md-6 ponencia   mt-md-0" > 
+                                                                    {%if evento.tipo == 'Taller'%}
+                                                                    <a href="{% url 'View_taller' path=evento.path%}" class="more d-block "><strong> Ver Taller</strong></a>
+            
+                                                                    {%else%}
+                                                                    <a href="{% url 'View_ponencia' path=evento.path%}" class="more d-block "><strong>Ver Ponencia</strong></a>
+                                                                    {%endif%}
+                                                            
                                                                 </div>
                                                             </div>
+                                                            <div class="row">
+                                                                {%for ponente in evento.ponentes %}
+                                                                <div class="col-12 ponencia mt-md-0 mt-5"  >
+                                                                    <div class="header">
+                                                                        <div class="row" >
+                                                                            <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" class="name" onclick="VerPerfil('{{mod.user.id}}')">
+                                                                            <div class="col-md-3 d-flex align-items-center">
+                                                                                <img src=" {% if ponente.user.foto%}{% static '/'%}{{ponente.user.foto}}{%else%}{% static 'assets/img/congresos/avatar-ponencia.png'%}{%endif%}" class="img-fluid" width="100px">
+                                                                            </div>
+                                                                            </a>
+                                                                            <div class="mt-md-0 mt-2 col-md-9 d-flex flex-column justify-content-center">
+                                                                                <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" class="name" onclick="VerPerfil('{{ponente.user.id}}')"><h4 class="name"><strong>{{ponente.user.usuario.first_name}}
+                                                                                    {{ponente.user.usuario.last_name}}</strong></h4></a>
+                                                                                <h5 class="cat">PONENTE</h5>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <p class="bio mt-3">{%if ponente.user.puesto %}
+                                                                    {{ponente.user.puesto}}
+                                                                    {%endif%}</p>
+                                                            
+                                                                </div>
+                                                                {%endfor%}
+                                                            </div>
                                                         </div>
-                                                        <p class="bio mt-3">{%if ponente.user.puesto %}
-                                                            {{ponente.user.puesto}}
-                                                            {%endif%}</p>
-                                                       
+                                                   
+                                                        {%endfor%}
                                                     </div>
-                                                    {%endfor%}
-                                                    {%endfor%}
-                                                </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -380,12 +381,14 @@
                                         <small class="hour d-md-none">{{pon.fecha_inicio|date:"H:i"}}</small>
                                         <h2 class="accordion-header" id="heading-{{forloop.counter}}-{{forloop.parentloop.counter}}">
                                         <button class="accordion-button collapsed pt-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{forloop.counter}}-{{forloop.parentloop.counter}}" aria-expanded="true" aria-controls="collapse-{{forloop.counter}}-{{forloop.parentloop.counter}}">
-                                            {{pon.tipo|upper}}: {{pon.titulo}}
+                                            {{pon.titulo}}
                                         </button>
                                         </h2>
                                         <div id="collapse-{{forloop.counter}}-{{forloop.parentloop.counter}}" class="accordion-collapse collapse" aria-labelledby="heading-{{forloop.counter}}-{{forloop.parentloop.counter}}" data-bs-parent="#accordion-{{forloop.counter}}-{{forloop.parentloop.counter}}">
                                         <div class="accordion-body">
+                                            <span class="detalle d-block "><small> {{pon.detalle}}</small></span>
                                             <div class="ponencias">
+                                               
                                                 <div class="row gx-5">
                                                     {%if pon.ponentes%}
                                                     {%for ponente in pon.ponentes %}

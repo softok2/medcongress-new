@@ -43,7 +43,6 @@
     }
 
     function FiltrarLugar(PostCodeid,lonid,latid){
-       
         initialize(PostCodeid,lonid,latid);
 
         /*

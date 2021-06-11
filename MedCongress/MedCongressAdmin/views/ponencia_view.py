@@ -308,7 +308,8 @@ class PonencicaUpdateView(validarUser,FormView):
         if ubic.exists():
             pon.lugar=ubic.first()
         else:
-            ubicacion=form['ubicacion'].save(commit=True)
+            ubicacion=Ubicacion(direccion=form['ubicacion'].instance.direccion,latitud=form['ubicacion'].instance.latitud,longitud=form['ubicacion'].instance.longitud)
+            ubicacion.save()
             pon.lugar=ubicacion
         id_video=['']
         if pon.cod_video:

@@ -557,11 +557,12 @@ class BloqueForms(forms.ModelForm):
     duracion=forms.CharField(label='Duración')
     published=forms.BooleanField(label='Publicado',required=False)
     congreso=forms.ModelChoiceField(queryset=Congreso.objects.all(),label='Congreso',required=True)
+    prueba=forms.CharField(required=False)
     # fecha_inicio=forms.DateTimeField(required=True)
     
     class Meta:
         model=Bloque
-        fields=['titulo','duracion','detalle','fecha_inicio','published','congreso']
+        fields=['titulo','duracion','detalle','fecha_inicio','published','congreso','cod_video','prueba']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
@@ -571,13 +572,17 @@ class BloqueForms(forms.ModelForm):
         self.fields['detalle'].widget.attrs.update({'class': 'form-control','rows':'3'})   
         self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control'})   
         self.fields['published'].widget.attrs.update({'class': 'form-control'})   
-        self.fields['congreso'].widget.attrs.update({'class': 'form-control select2'})  
+        self.fields['congreso'].widget.attrs.update({'class': 'form-control select2'}) 
+        self.fields['cod_video'].widget.attrs.update({'class': 'form-control','rows':'6'})  
 
     def clean(self, *args, **kwargs):
         cleaned_data = super(BloqueForms, self).clean(*args, **kwargs)
         congreso = cleaned_data.get('congreso', None)
         titulo = cleaned_data.get('titulo', None)
         fecha = cleaned_data.get('fecha_inicio')
+        imagenes = cleaned_data.get('prueba', None)
+        if not imagenes :
+            self.add_error('prueba', 'Debe entrar una <b>Imagen </b> a la ponencia')
         if not congreso:
             self.add_error('congreso', 'Debe entrar un  <b>Congreso</b>')
             return

@@ -455,7 +455,8 @@ class Bloque(models.Model):
     published=models.BooleanField()
     moderador = models.ManyToManyField(Moderador, through='RelBloqueModerador',related_name='bloque_moderador')
     congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
-    
+    cod_video=models.TextField(null=True,blank=True)
+    imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='bloque',null=True,blank=True)
     class Meta:
         verbose_name='bloque'
         verbose_name_plural='bloques'

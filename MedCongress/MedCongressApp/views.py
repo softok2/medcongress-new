@@ -75,39 +75,6 @@ def mi_error_403(request, template_name="MedCongressApp/403.html"):
     response = render_to_response("MedCongressApp/403.html")
     response.status_code=403
     return response
-###################
-####  OpenPay  ####
-###################
-
-###### Produccion ##########
-# ID_KEY='mrkdgemoa3sig3imqehg'
-# PRIVATE_KEY='sk_77e831c6a9db4dae8eb25a5ed9c1bbdf'
-# PUBLIC_KEY='pk_644303cc7033454298d199d1464b740f'
-# URL_API='api.openpay.mx'
-# URL_SITE='https://medcongress.com.mx'
-# # URL_SITE='http://localhost:8000'
-# URL_PDF='dashboard.openpay.mx'
-
-
-###### Prueba ########## Cambiar tambien en el Template tarjeta.html
-
-# ID_KEY='m6ftsapwjvmo7j7y8mop'
-# PRIVATE_KEY='sk_34664e85b5504ca39cc19d8f9b8df8a2'
-# PUBLIC_KEY='pk_0d4449445a4948899811cea14a469793'
-# URL_API='sandbox-api.openpay.mx'
-# URL_SITE='http://medcongress.softok2.mx'
-# # URL_SITE='http://localhost:8000'
-# #URL_PDF='dashboard.openpay.mx'
-
-
-
-# ID_KEY='muq0plqu35rnjyo7sf2v'
-# PUBLIC_KEY='pk_0c7aea61d0ef4a4f8fdfbd674841981a'
-# PRIVATE_KEY='sk_d07c7b6ffeeb4acaaa15babdaac4101e'
-# URL_API='https://sandbox-dashboard.openpay.mx'
-
-
-# Create your views here.
 
 ##### Inicio #####
 
@@ -635,6 +602,7 @@ class CongresoDetail(TemplateView):
                     result.append({
                     'id':bloque.id,
                     'path':bloque.path,
+                    'cod_video':bloque.cod_video,
                     'moderador':Moderador.objects.filter(bloque_moderador__pk=bloque.id).distinct() ,
                     'titulo': bloque.titulo,
                     'fecha_inicio': bloque.fecha_inicio ,# una relación a otro modelo
@@ -676,7 +644,7 @@ class CongresoDetail(TemplateView):
                 #     ponencias_env.append(talleres)
           
             context['ponencias']=ponencias_env
-
+    
             prueba_ponecia=Ponencia.objects.filter(congreso=congreso.pk,published=True)
             id_p=[]
             for pp in prueba_ponecia:
@@ -2457,4 +2425,27 @@ class PerfilConstancias(TemplateView):
         context['constancias_taller']=constancias_taller_env
 
         return context
+        
+
+class VideoBloque(TemplateView):
+    template_name= 'MedCongressApp/bloque_video.html' 
+
+    def get(self, request, **kwargs):
+        bloque=Bloque.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        if bloque is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        return self.render_to_response(self.get_context_data())    
+
+    def get_context_data(self, **kwargs):
+        context = super(VideoBloque, self).get_context_data(**kwargs)
+        bloque=Bloque.objects.filter(path=self.kwargs.get('path'),published=True).first() 
+        if self.request.user.is_authenticated:
+            context['is_pagado']=RelCongresoUser.objects.filter(congreso=bloque.congreso,user=self.request.user.perfilusuario,is_pagado=True).exists()
+            if context['is_pagado']:
+                InsertLog(bloque.pk,'VideoBloque',self.request.user.perfilusuario)
+        else:
+            context['is_pagado']=False
+        context['bloque']=bloque
+        return context
+
         

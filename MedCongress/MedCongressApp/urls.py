@@ -7,7 +7,7 @@ GetCuestionario,SetConstancia,EvaluarPonencia,Resultado_Cuestionario,Get_Constan
 ViewErrorFact,PerfilUpdateView,CambiarPass,UpdateEvaluarPonencia,UserAutocomplete,ViewErrorRegistrar,RegistroExitoso,
 PonenteAutocomplete,ModeradorAutocomplete,CongresoAutocomplete,PatrocinadorAutocomplete,SocioAutocomplete,ViewTaller,
 EvaluarTaller,UpdateEvaluarTaller,TallerAutocomplete,PonenciaAutocomplete,ViewCart,ContactoExitoso,GetFacturaPrueba,GetContactos,Enviar,
-Webhook,PagoExitoso2,ViewTrabajo,ViewSala,ViewPonenciasSala,DonwloadTrabajo,PerfilCongresos,PerfilConstancias)
+Webhook,PagoExitoso2,ViewTrabajo,ViewSala,ViewPonenciasSala,DonwloadTrabajo,PerfilCongresos,PerfilConstancias,VideoBloque)
 
 urlpatterns = [
     # path('login',login,name='auth'),
@@ -62,6 +62,7 @@ urlpatterns = [
     path('get_factura', GetFactura.as_view() , name='Factura'),
     path('get_factura_prueba/<str:invoice>', GetFacturaPrueba.as_view() , name='FacturaPrueba'),
     path('cuestionario/congreso/<str:path>',GetCuestionario.as_view() , name='Cuestionario'),
+    path('bloque/preguntas_respuestas/<str:path>',VideoBloque.as_view() , name='BloqueVideo'),
     path('constancia/congreso/<str:path>',SetConstancia.as_view() , name='Constancia'),
     path('evaluar/taller',EvaluarTaller.as_view() , name='EvaluarTaller'),
     path('reevaluar/taller',UpdateEvaluarTaller.as_view() , name='UpdateEvaluarTaller'),
