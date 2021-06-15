@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from django.core.validators import RegexValidator
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.core.exceptions import NON_FIELD_ERRORS
 
@@ -463,7 +464,7 @@ class Bloque(models.Model):
 
     def __str__(self):
         return self.titulo
-
+    
 ##### Tabla pivote Bloque - moderador  #####
 
 class RelBloqueModerador(models.Model):

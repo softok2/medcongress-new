@@ -311,13 +311,16 @@
                                                             <span class="detalle d-block "><small>  {{evento.detalle}}</small></span>
                                                             <div class="row"> 
                                                                 {%if evento.sala %}
-                                                                <div class="col-md-6 ponencia  mt-md-0" > 
+                                                                <div class="col-md-12 ponencia  mt-md-0" > 
                                                                     <h5 class="cat"> <b>SALA:</b>  </h5>  <a href="{% url 'View_ponencias_sala' path=evento.sala.path%}" class="more d-block "><strong> {{evento.sala}}</strong></a>
                                                             
                                                                 </div>
                                                                 {%endif%} 
+                                                                {% if evento.ver_ponencia %}
                                                                 <div class="col-md-6 ponencia   mt-md-0" > 
+                                                                    
                                                                     {%if evento.tipo == 'Taller'%}
+                                                                   
                                                                     <a href="{% url 'View_taller' path=evento.path%}" class="more d-block "><strong> Ver Taller</strong></a>
             
                                                                     {%else%}
@@ -325,6 +328,7 @@
                                                                     {%endif%}
                                                             
                                                                 </div>
+                                                                {%endif%}
                                                             </div>
                                                             <div class="row">
                                                                 {%for ponente in evento.ponentes %}
@@ -420,11 +424,12 @@
                                                     
                                                         </div>
                                                         {%endif%} 
+                                                        {%if pon.ver_ponencia %}
                                                     {%if pon.tipo == 'Taller'%}
-                                                    <div class="col-md-6 ponencia  mt-md-0" > 
-                                                        <a href="{% url 'View_taller' path=pon.path%}" class="more d-block "><strong> Ver Taller</strong></a>
-                                                
-                                                    </div>
+                                                        <div class="col-md-6 ponencia  mt-md-0" > 
+                                                            <a href="{% url 'View_taller' path=pon.path%}" class="more d-block "><strong> Ver Taller</strong></a>
+                                                    
+                                                        </div>
                                                           
     
                                                             {%else%}
@@ -433,6 +438,7 @@
                                                         
                                                             </div>
                                                            
+                                                            {%endif%}
                                                             {%endif%}
                                                         </div>
                                                     {%endif%}

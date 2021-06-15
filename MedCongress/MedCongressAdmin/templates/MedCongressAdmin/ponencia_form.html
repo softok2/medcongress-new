@@ -488,7 +488,7 @@
 															<div class="row">
 																<div class="col-sm-6 ">
 																	<div class="form-group">
-																		<label for="" style="margin-bottom: 40px;"> <b>Imagen <span style="font-size: 80%; color: darkgrey;"> (1920 X 1080)</span></b> </label>
+																		<label for="" style="margin-bottom: 40px;"> <b>Imagen <span style="font-size: 80%; color: darkgrey;"> (1920 X 1080)(>5Mb)</span></b> </label>
 																		{%if imagen_seg_url%}	
 																		<label class="label" data-toggle="tooltip" title="Clic para cambiar foto">
 																			<div id="ver"><img class="img-fluid" id="avatar" src="{%static '/'%}{{imagen_seg_url}}"  alt="avatar"></div>	
@@ -806,7 +806,13 @@
       $('[data-toggle="tooltip"]').tooltip();
 
       input.addEventListener('change', function (e) {
-		
+		var imgsize = input.files[0].size;
+			if(imgsize > 5000000){
+				
+				$alert.show().addClass('alert-success alert-warning').text('Esta imagen supera los 5Mb.');
+			
+			return;
+			}
         var files = e.target.files;
         var done = function (url) {
           input.value = '';

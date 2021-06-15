@@ -592,7 +592,7 @@ class CongresoDetail(TemplateView):
                         'id':taller.id,
                         'path':taller.path,
                         'titulo': taller.titulo,
-                        'ver_taller':taller.cod_video,
+                        'ver_ponencia':taller.cod_video,
                         'fecha_inicio': taller.fecha_inicio ,# una relación a otro modelo
                         'detalle':taller.detalle ,
                         'ponentes':Ponente.objects.filter(taller_ponente__pk=taller.id).distinct() ,
@@ -628,7 +628,7 @@ class CongresoDetail(TemplateView):
                     'id':taller.id,
                     'path':taller.path,
                     'titulo': taller.titulo,
-                    'ver_taller':taller.cod_video,
+                    'ver_ponencia':taller.cod_video,
                     'fecha_inicio': taller.fecha_inicio ,# una relación a otro modelo
                     'detalle':taller.detalle ,
                     'ponentes':Ponente.objects.filter(taller_ponente__pk=taller.id).distinct() ,
@@ -2411,11 +2411,13 @@ class PerfilConstancias(TemplateView):
 
         for constancia in constancias:
             congreso=Congreso.objects.get(pk=constancia['congreso'])
-            con=False
+            url_constancia=''
             if 'congreso/img_constancia' in constancia['foto_constancia']:
-                con=True
+                url_constancia=constancia['foto_constancia']
+            else:
+                url_constancia='congreso/img_constancia/%s'%(constancia['foto_constancia'])
             constancias_env.append({'congreso':congreso,
-            'foto_constancia':constancia['foto_constancia'],'tipo_constancia':con})
+            'foto_constancia':url_constancia,})
         context['constancias']=constancias_env
 
         for constancia in constancias_taller:

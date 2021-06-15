@@ -56,7 +56,7 @@ Detalles del Perfil
                     <h4 style="margin-top: 20px;"><b>Congreso</b> </h4>
                         <div class="col-md-12">
                             {%for constancia in constancias%}
-                                <span  class="nav-item"> <a class="nav-link" target="_black" href="{% if constancia.tipo_constancia%} {%static '/'%}{{constancia.foto_constancia}}{%else%}{%static '/congreso/img_constancia/'%} {{constancia.foto_constancia}}{%endif%}">{{forloop.counter}}. {{constancia.congreso.titulo}}</a></span>
+                                <span  class="nav-item"> <a class="nav-link" target="_black" href="{%static '/'%}{{constancia.foto_constancia}}">{{forloop.counter}}. {{constancia.congreso.titulo}}</a></span>
                       
    
                         {%endfor%}
@@ -66,7 +66,7 @@ Detalles del Perfil
                     <h4  style="margin-top: 20px;"><b>Taller</b> </h4>
                         <div class="col-md-12">
                             {%for constancia in constancias_taller%}
-                                <span  class="nav-item"> <a class="nav-link" target="_black" href="{% if constancia.tipo_constancia%} {%static '/'%}{{constancia.foto_constancia}}{%else%}{%static '/congreso/img_constancia/'%}{{constancia.foto_constancia}}{%endif%}">{{forloop.counter}} {{constancia.taller.titulo}}</a></span>
+                                <span  class="nav-item"> <a class="nav-link" target="_black" href="{%static '/congreso/img_constancia/'%}{{constancia.foto_constancia}}">{{forloop.counter}} {{constancia.taller.titulo}}</a></span>
                       
    
                         {%endfor%}
