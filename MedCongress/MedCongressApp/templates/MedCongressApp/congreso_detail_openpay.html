@@ -384,9 +384,9 @@
                                     <div class="accordion-item mb-5">
                                         <small class="hour d-md-none">{{pon.fecha_inicio|date:"H:i"}}</small>
                                         <h2 class="accordion-header" id="heading-{{forloop.counter}}-{{forloop.parentloop.counter}}">
-                                        <button class="accordion-button collapsed pt-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{forloop.counter}}-{{forloop.parentloop.counter}}" aria-expanded="true" aria-controls="collapse-{{forloop.counter}}-{{forloop.parentloop.counter}}">
+                                        <h2 class="accordion-button accordion-button-h2 collapsed pt-0"  data-bs-toggle="collapse" data-bs-target="#collapse-{{forloop.counter}}-{{forloop.parentloop.counter}}" aria-expanded="true" aria-controls="collapse-{{forloop.counter}}-{{forloop.parentloop.counter}}">
                                             {{pon.titulo}}
-                                        </button>
+                                        </h2>
                                         </h2>
                                         <div id="collapse-{{forloop.counter}}-{{forloop.parentloop.counter}}" class="accordion-collapse collapse" aria-labelledby="heading-{{forloop.counter}}-{{forloop.parentloop.counter}}" data-bs-parent="#accordion-{{forloop.counter}}-{{forloop.parentloop.counter}}">
                                         <div class="accordion-body">

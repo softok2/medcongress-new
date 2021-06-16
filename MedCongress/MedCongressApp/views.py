@@ -1865,7 +1865,7 @@ class PerfilUpdateView(FormView):
     
     def get_form_kwargs(self):
         kwargs = super(PerfilUpdateView, self).get_form_kwargs()
-        user= PerfilUsuario.objects.filter(pk=self.kwargs.get('pk')).first()
+        user= PerfilUsuario.objects.get(pk=self.request.user.perfilusuario.id)
         kwargs.update(instance={
             'perfiluser': user,
             'user': user.usuario,
@@ -1875,7 +1875,7 @@ class PerfilUpdateView(FormView):
 
 
     def form_valid(self, form):
-        perfiluser_update=PerfilUsuario.objects.get(pk=self.kwargs.get('pk'))
+        perfiluser_update=PerfilUsuario.objects.get(pk=self.request.user.perfilusuario.id)
         user_update=perfiluser_update.usuario
         user = form['user'].save(commit=False)
         perfiluser = form['perfiluser'].save(commit=False)
@@ -1887,7 +1887,8 @@ class PerfilUpdateView(FormView):
         if ubic.exists():
             perfiluser_update.ubicacion=ubic.first()
         else:
-            ubicacion=form['ubicacion'].save(commit=True)
+            ubicacion=Ubicacion(direccion=form['ubicacion'].instance.direccion,latitud=form['ubicacion'].instance.latitud,longitud=form['ubicacion'].instance.longitud)
+            ubicacion.save()
             perfiluser_update.ubicacion=ubicacion
 
         perfiluser_update.usuario = user_update
@@ -1917,7 +1918,7 @@ class PerfilUpdateView(FormView):
         context['update']=True
         categoria=CategoriaUsuario.objects.filter(published=True).distinct('nombre')
         context['categorias']=categoria
-        perfil_edit =PerfilUsuario.objects.get(pk=self.kwargs.get('pk'))
+        perfil_edit =PerfilUsuario.objects.get(pk=self.request.user.perfilusuario.id)
         context['cat']=perfil_edit.categoria.pk
         context['fecha_nac']= perfil_edit.fecha_nacimiento
         if perfil_edit.foto:
@@ -2417,7 +2418,7 @@ class PerfilConstancias(TemplateView):
             else:
                 url_constancia='congreso/img_constancia/%s'%(constancia['foto_constancia'])
             constancias_env.append({'congreso':congreso,
-            'foto_constancia':url_constancia,})
+            'foto_constancia':url_constancia})
         context['constancias']=constancias_env
 
         for constancia in constancias_taller:

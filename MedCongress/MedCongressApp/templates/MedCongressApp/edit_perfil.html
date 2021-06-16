@@ -1,7 +1,7 @@
 {% extends "MedCongressApp/base.html"%}
 {% load static %}
 {% block titulo %}
-Registrarse
+Editar Perfil
 {%endblock%}
 
 {%block css%}
@@ -70,7 +70,7 @@ z-index: 0;
                 </div>
                 {% endfor %}
             {% endif %}
-            <form class="contactusform" action="{% url 'Edit_perfil' pk=request.user.perfilusuario.pk %}" method="post" enctype="multipart/form-data" id="form">
+            <form class="contactusform" action="{% url 'Edit_perfil' %}" method="post" enctype="multipart/form-data" id="form">
                     {% csrf_token %}
                     
                     <div class="profile-section section-1">

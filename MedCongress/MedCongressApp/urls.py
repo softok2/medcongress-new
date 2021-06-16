@@ -28,7 +28,7 @@ urlpatterns = [
     
     path('error_facturacion', ViewErrorFact.as_view(), name='Error_facturacion'),
     path('pagar_efectivo', PagarEfectivo.as_view(), name='Pagar_efectivo'),
-    path('editar_perfil/<int:pk>', PerfilUpdateView.as_view(), name='Edit_perfil'),
+    path('editar_perfil', PerfilUpdateView.as_view(), name='Edit_perfil'),
     
 
 

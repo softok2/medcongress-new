@@ -942,6 +942,10 @@ textarea:focus,
   color: #4A5966;
   font-family: "DINPro-Regular_13937", sans-serif;
 }
+.accordion-button-h2 {
+  color: #4A5966;
+  font-family: "DINPro-Regular_13937", sans-serif;
+}
 .accordion-body .pon-titulo  
 {
   color: #4A5966;
@@ -968,6 +972,11 @@ textarea:focus,
   font-size: 30px;
   background-color: transparent;
 }
+.accordion-button-h2 {
+  border: none;
+  font-size: 30px;
+  background-color: transparent;
+}
 @media screen and (max-width: 992px) {
   .congreso-calendario .tab-pane .accordion .accordion-header button {
     margin-top: 20px;
@@ -982,7 +991,10 @@ textarea:focus,
 .congreso-calendario .tab-pane .accordion .accordion-header button:focus {
   box-shadow: none;
 }
-.congreso-calendario .tab-pane .accordion.main-event .accordion-header button {
+.congreso-calendario .tab-pane .accordion.main-event .accordion-header button  {
+  color: #40C8F4;
+}
+ .accordion-button-h2  {
   color: #40C8F4;
 }
 .congreso-calendario .tab-pane .accordion.main-event .accordion-header button::after {
