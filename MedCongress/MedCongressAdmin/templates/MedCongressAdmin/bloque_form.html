@@ -246,10 +246,6 @@
 
 
 <script type="text/javascript">
-
-
-   
-});
 $('#id_fecha_inicio').datetimepicker({
 		format: 'dd/mm/yyyy hh:ii:ss',
 		
@@ -303,9 +299,7 @@ $("#id_my_user").autocomplete({
 				xhr.setRequestHeader("X-CSRFToken", csrftoken);
 			}
 		});
-		
 
-		
 	});
 	var id=0;
 	window.addEventListener('DOMContentLoaded', function () {
@@ -326,12 +320,12 @@ $("#id_my_user").autocomplete({
 
       input.addEventListener('change', function (e) {
 		var imgsize = input.files[0].size;
-	if(imgsize > 5000000){
-		 
-		  $alert.show().addClass('alert-success alert-warning').text('Esta imagen supera los 5Mb.');
-	
-	return;
-	}
+		if(imgsize > 5000000){
+			
+			$alert.show().addClass('alert-success alert-warning').text('Esta imagen supera los 5Mb.');
+		
+		return;
+		}
         var files = e.target.files;
         var done = function (url) {
           input.value = '';
@@ -416,5 +410,6 @@ $("#id_my_user").autocomplete({
 
 
     });
+	
 </script>
 {% endblock %}
