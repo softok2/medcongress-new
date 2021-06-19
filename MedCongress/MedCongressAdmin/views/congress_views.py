@@ -40,7 +40,7 @@ from MedCongressApp.models import (AvalCongreso, Bloque, CategoriaPagoCongreso,
                                    RelCongresoCategoriaPago, RelCongresoSocio,
                                    RelCongresoUser, SocioCongreso, Taller,Sala,
                                    Ubicacion, User,Moderador,RelPonenciaPonente,RelTalleresCategoriaPago,
-                                   RelTallerUser,DocumentoPrograma,UserActivityLog)
+                                   RelTallerUser,DocumentoPrograma,UserActivityLog,TrabajosInvestigacion)
 from openpyxl import Workbook
 from openpyxl.styles import (Alignment, Border, Font, PatternFill, Protection,
                              Side, NamedStyle)
@@ -1009,7 +1009,7 @@ class CongresoDetail(TemplateView):
     
 
     def get(self, request, **kwargs):
-     
+       
         congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
         if congreso is None:
             return   HttpResponseRedirect(reverse('Error404'))
@@ -1024,27 +1024,21 @@ class CongresoDetail(TemplateView):
         return template_name
 
     def get_context_data(self, **kwargs):
-
-        # # /////////////////
-        # url = "https://vimeo.com/api/v2/video/494532060.json"        
-        # headers={'Content-type': 'application/json'}
-        # response=requests.post(url=url,headers=headers)
-        # return response.json() 
-        # # /////////////////////
-
         context = super(CongresoDetail, self).get_context_data(**kwargs)
         congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+       
         context['patrocinadores']=RelCongresoAval.objects.filter(congreso=congreso)
         context['socios']=RelCongresoSocio.objects.filter(congreso=congreso)
         if self.request.user.is_authenticated:
             pagado=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario,is_pagado=True)
             if pagado :
                 context['pagado']=True
+                InsertLog(congreso.pk,'Congreso',self.request.user.perfilusuario)
                 constancias=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario)
                 for constancia in constancias:
                     if constancia.is_constancia:
                         context['constancia']=True
-                
+        context['salas']=Sala.objects.filter(congreso=congreso,published=True,cod_video__isnull=False )        
         if congreso is not None:
            
             context['congreso']=congreso
@@ -1083,14 +1077,15 @@ class CongresoDetail(TemplateView):
                         'fecha_inicio': ponencia.fecha_inicio ,# una relación a otro modelo
                         'detalle':ponencia.detalle ,
                         'ponentes':Ponente.objects.filter(ponencia_ponente__pk=ponencia.id).distinct() ,
-                        'tipo':'Ponencia',# la misma relación, otro campo
+                        'tipo':'Ponencia',
+                        'sala':ponencia.sala,
                         })
                     for taller in bloque_talleres: 
                         eventos.append({
                         'id':taller.id,
                         'path':taller.path,
                         'titulo': taller.titulo,
-                        'ver_taller':taller.cod_video,
+                        'ver_ponencia':taller.cod_video,
                         'fecha_inicio': taller.fecha_inicio ,# una relación a otro modelo
                         'detalle':taller.detalle ,
                         'ponentes':Ponente.objects.filter(taller_ponente__pk=taller.id).distinct() ,
@@ -1100,6 +1095,7 @@ class CongresoDetail(TemplateView):
                     result.append({
                     'id':bloque.id,
                     'path':bloque.path,
+                    'cod_video':bloque.cod_video,
                     'moderador':Moderador.objects.filter(bloque_moderador__pk=bloque.id).distinct() ,
                     'titulo': bloque.titulo,
                     'fecha_inicio': bloque.fecha_inicio ,# una relación a otro modelo
@@ -1118,13 +1114,14 @@ class CongresoDetail(TemplateView):
                     'detalle':ponencia.detalle ,
                     'ponentes':Ponente.objects.filter(ponencia_ponente__pk=ponencia.id).distinct() ,
                     'tipo':'Ponencia',# la misma relación, otro campo
+                    'sala':ponencia.sala,
                     })
                 for taller in talleres: 
                     result.append({
                     'id':taller.id,
                     'path':taller.path,
                     'titulo': taller.titulo,
-                    'ver_taller':taller.cod_video,
+                    'ver_ponencia':taller.cod_video,
                     'fecha_inicio': taller.fecha_inicio ,# una relación a otro modelo
                     'detalle':taller.detalle ,
                     'ponentes':Ponente.objects.filter(taller_ponente__pk=taller.id).distinct() ,
@@ -1138,9 +1135,9 @@ class CongresoDetail(TemplateView):
                 #     ponentes_env.append(Taller.objects.filter(reltallerponente__pk=taller.id).distinct()) 
              
                 #     ponencias_env.append(talleres)
-            
+          
             context['ponencias']=ponencias_env
-
+    
             prueba_ponecia=Ponencia.objects.filter(congreso=congreso.pk,published=True)
             id_p=[]
             for pp in prueba_ponecia:
@@ -1229,6 +1226,7 @@ class CongresoDetail(TemplateView):
 
             if self.request.user.is_authenticated :
                 user_perfil=PerfilUsuario.objects.filter(usuario=self.request.user.pk).first()
+                context['cuestionario_aprobado']=RelCongresoUser.objects.filter(user=user_perfil.pk, congreso=congreso.pk,is_constancia=True).exists()
                 talleres=Taller.objects.filter(congreso=congreso.pk,published=True).order_by('fecha_inicio')
                 ver=[]
                 for taller in talleres:
@@ -1265,10 +1263,13 @@ class CongresoDetail(TemplateView):
                 context['permiso'] = False  
             context['categorias_pago']=cat_pago
             context['programas']=DocumentoPrograma.objects.filter(congreso=congreso)
+            context['trabajos']=TrabajosInvestigacion.objects.filter(congreso=congreso)
             context['preg_frecuentes']=PreguntasFrecuentes.objects.filter(congreso=congreso,published=True)
-
+            context['cuestionario']=CuestionarioPregunta.objects.filter(congreso=congreso,published=True).exists()
+           
         return context
     
+
 class CongressCategPagosUpdateView(validarUser,UpdateView):
 
     form_class = CongresoCategPagoForm
