@@ -1750,6 +1750,7 @@ class CongressSalaUpdateView(validarUser,UpdateView):
     def form_valid(self, form):
         congreso=form.save(commit=False)
         imagen=self.request.POST['imagen']
+        sala_update=Sala.objects.get(pk=self.kwargs.get('pk'))
         chars = '0123456789'
         if 'sala/' not in imagen:
             image_64_encode=self.request.POST['imagen']
@@ -1758,7 +1759,7 @@ class CongressSalaUpdateView(validarUser,UpdateView):
             image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
             image_result = open('MedCongressApp/static/sala/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
             image_result.write(image_64_decode)
-            if  congreso.imagen:
+            if  sala_update.imagen:
                 fileObj = Path('MedCongressApp/static/%s'%( congreso.imagen))
                 if fileObj.is_file():
                     remove('MedCongressApp/static/%s'%( congreso.imagen))
