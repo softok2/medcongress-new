@@ -1760,9 +1760,9 @@ class CongressSalaUpdateView(validarUser,UpdateView):
             image_result = open('MedCongressApp/static/sala/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
             image_result.write(image_64_decode)
             if  sala_update.imagen:
-                fileObj = Path('MedCongressApp/static/%s'%( congreso.imagen))
+                fileObj = Path('MedCongressApp/static/%s'%( sala_update.imagen))
                 if fileObj.is_file():
-                    remove('MedCongressApp/static/%s'%( congreso.imagen))
+                    remove('MedCongressApp/static/%s'%( sala_update.imagen))
             congreso.imagen='sala/imagen_%s.png'%(nombre)
         if not congreso.path or congreso.path=='0':
             nombre = get_random_string(3, chars)
