@@ -97,7 +97,7 @@
 				{% if user.is_authenticated %}
                 <h3 class="title">Debe comprar el congreso para visualizar esta ponencia</h3> 
                 {%else%}
-                <h3 class="title">Debe autentificarse para visualizar esta ponencia    <a href="{% url 'login' %}" class="back align-self-end mt-md-5 mt-2"> Login</a></h3> 
+                <h3 class="title">Debe autenticarse para visualizar esta ponencia    <a href="{% url 'login' %}" class="back align-self-end mt-md-5 mt-2"> Login</a></h3> 
                 {%endif%}
                 <img src="{% static '/'%}{{sala.imagen}}" class="img-fluid me-4" > 
                 {%endif%}
