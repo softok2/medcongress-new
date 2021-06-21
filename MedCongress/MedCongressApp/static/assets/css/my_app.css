@@ -776,7 +776,8 @@ textarea:focus,
 .congreso-trabajos-investigacion .ctas-wrapper {
   margin-bottom: 40px;
 }
-.congreso-trabajos-investigacion .ctas-wrapper .cta {
+.congreso-trabajos-investigacion .ctas-wrapper .cta,
+.salas-streamig .btn-sala .cta {
   width: 200px;
   height: 50px;
   display: flex;
@@ -791,7 +792,18 @@ textarea:focus,
   color: #40C8F4;
   border: 1px solid #4A5966;
 }
-.congreso-trabajos-investigacion .ctas-wrapper .cta.programa {
+.salas-streamig{
+  border-top: solid 1px #959595;
+  padding: 28px 0px;
+}
+.salas-streamig .btn-sala .cta:hover {
+  border: 0;
+  color: #40C8F4;
+  background-color: #fff;
+  border: 1px solid #8998A6;
+}
+.congreso-trabajos-investigacion .ctas-wrapper .cta.programa,
+.salas-streamig .btn-sala .cta {
   color: #fff;
   background-color: #40C8F4;
 }
