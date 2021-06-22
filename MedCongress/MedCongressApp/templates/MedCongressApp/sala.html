@@ -1,295 +1,930 @@
 {% extends "MedCongressApp/base.html"%}
 {% load static %}
+{% load filtros %}
 {% block titulo %}
-{{ponencia.titulo}}
+{{sala.titulo}}
 {%endblock%}
 {% block metadatos%}
-<!-- {% if ponencia.meta_title%}
-<meta property="title" content="{{ponencia.meta_title}}">
+{% if sala.meta_title%}
+<meta property="title" content="{{sala.meta_title}}">
 {%endif%}
-{% if ponencia.meta_description %}
-<meta name="description" content="{{ponencia.meta_description}}">
+{% if sala.meta_description %}
+<meta name="description" content="{{sala.meta_description}}">
 {%endif%}
-{% if ponencia.meta_og_description %}
-<meta property="og:description" content="{{ponencia.meta_og_description}}">
+{% if sala.meta_og_description %}
+<meta property="og:description" content="{{sala.meta_og_description}}">
 {%endif%}
-{% if ponencia.meta_og_type %}
-<meta property="og:type" content="{{ponencia.meta_og_type}}">
+{% if sala.meta_og_type %}
+<meta property="og:type" content="{{sala.meta_og_type}}">
 {%endif%}
-{% if ponencia.meta_og_title %}
-<meta property="og:title" content="{{ponencia.meta_og_title}}">
+{% if sala.meta_og_title %}
+<meta property="og:title" content="{{sala.meta_og_title}}">
 {%endif%}
-{% if ponencia.meta_og_url %}
-<meta property="og:url" content="{{ponencia.meta_og_url}}">
+{% if sala.meta_og_url %}
+<meta property="og:url" content="{{sala.meta_og_url}}">
 {%endif%}
-{% if ponencia.meta_og_imagen %}
-<meta property="og:image" content="{% static '/'%}{{ponencia.meta_og_imagen}}">
+{% if sala.meta_og_imagen %}
+<meta property="og:image" content="{% static '/'%}{{sala.meta_og_imagen}}">
 {%endif%}
-{% if ponencia.meta_twitter_card %}
-<meta name="twitter:card" content="{{ponencia.meta_twitter_card}}" />
+{% if sala.meta_twitter_card %}
+<meta name="twitter:card" content="{{sala.meta_twitter_card}}" />
 {%endif%}
-{% if ponencia.meta_twitter_site %}
-<meta name="twitter:site" content="{{ponencia.meta_twitter_site}}" />
+{% if sala.meta_twitter_site %}
+<meta name="twitter:site" content="{{sala.meta_twitter_site}}" />
 {%endif%}
-{% if ponencia.meta_twitter_creator %}
-<meta name="twitter:creator" content="{{ponencia.meta_twitter_creator}}" />
+{% if sala.meta_twitter_creator %}
+<meta name="twitter:creator" content="{{sala.meta_twitter_creator}}" />
 {%endif%}
-{% if ponencia.meta_keywords %}
+{% if sala.meta_keywords %}
 <meta name="keywords"
-	content="{{ponencia.meta_keywords}}" />
-{%endif%} -->
+	content="{{sala.meta_keywords}}" />
+{%endif%}
 
 {%endblock%}
 {%block css%}
+<link rel="stylesheet" href="{% static 'MedCongressApp/css/bootstrap-rating.css'%}" type="text/css" media="all">
+<style>
+	.simply-section {
+		color: #e5e5e7 !important;
+		background-color: #39393a60 !important;
 
+	}
+
+	.glyphicon {
+		color: #40C8F4;
+		font-size: 26px;
+
+    }
+    .date,
+    .day{
+        text-shadow: 2px 0px #bdc3c7
+    }
+
+	.glyphicon-star-empty {
+		color: rgb(85, 84, 84);
+    }
+    .congreso-calendario .list-group-item.active, .congreso-calendario .list-group-item:hover {
+    border: 0;
+    background-color: {{sala.color}};
+    }
+    .congreso-calendario .list-group-item .arrow-down {
+        border-top: 15px solid{{sala.color}};
+    }
+</style>
 {%endblock%}
 {% block contenido %}
-<section class="video-banner" style="background-color: {{sala.color}};">
-    <div class="container-fluid">
-        <div class="row">
-            <div class=" col-md-8 d-flex flex-column">
-				<h1 class="title" style="text-shadow: 2px 2px #558abb;">{{sala.titulo}}</h1>
-			</div>
-				<div class="col-md-4">
-					<nav class="navbar navbar-expand-lg ">
-						<div class="container-fluid">
-							<ul class="navbar-nav me-auto mb-2 mb-lg-0" style="    padding-left: 8px;">
-					<li class="nav-item ">
-						<a href="{% url 'View_congreso' sala.congreso.path %}" class="back align-self-end mt-md-5 mt-2">Regresar al Congreso</a><br>
-					  </li></ul></div></nav>
-
-				<nav class="navbar navbar-expand-lg ">
-					<div class="container-fluid">
-						
-					  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-						
-						<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-						 
-						  <li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle"  href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-							  Salas streaming del Congreso
-							</a>
-							<ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="width: 400px;">
-								{%for sal in all_salas%}
-							  <li><a class="dropdown-item " href="{% url 'View_sala' sal.path %}">{{sal.titulo}}</a></li>
-							  {%endfor%}
-							  
-							</ul>
-						  </li>
-						 
-						</ul>
-						
-					  </div>
-					</div>
-				  </nav>
+<section class="congreso-banner-congreso">
+    <div id="carouselCongreso" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+           
+            <div class="carousel-item  active">
+                <img src="{% static '/'%}{{sala.imagen_home}}"  class="img-fluid w-100" > 
             </div>
+
+          
+            
         </div>
     </div>
+    
+    
 </section>
 
-<section class="video-container" style="margin-bottom: 50px;">
+{%if sala.cod_video%}
+  <section class="congreso-ponencias pb-5" style="margin-top: -50px; z-index: 99">
+    <div class="container-fluid">
+      
+        <div class="row mb-3">                       
+            <div class="col-md-8 ">
+                <div class="ponencia">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        {{sala.cod_video|safe }}
+                   
+                   </div>
+                </div>
+            </div>
+            <div class="col-md-3 salas-streamig salas-streamig-2">
+                <div class="ponencia" style="background-color: #e7ecf0;">
+                    <div class="col" style="
+                    text-align: center;
+                    font-family: 'DINPro-Regular_13937';
+                   
+                "> <h3> <strong>Salas Streaming</strong> </h3></div>
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <div class="accordion accordion-flush" id="accordionFlushExample">
+                            {% for sala in all_sala %}
+                            
+                           
+                            <div class="accordion-item">
+                              <h2 class="accordion-header" id="{{sala.sala.pk}}">
+                                <h2 class="accordion-button collapsed title-accordion-sala " style="color: {{sala.sala.color}};"  data-bs-toggle="collapse" data-bs-target="#flush-{{sala.sala.pk}}" aria-expanded="false" aria-controls="flush-{{sala.sala.pk}}">
+                                  <strong>{{sala.sala.titulo}}</strong>
+                                </h2>
+                              </h2>
+                              <div id="flush-{{sala.sala.pk}}" class="accordion-collapse collapse " aria-labelledby="{{sala.sala.pk}}" data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body" style="font-family: 'DINPro-Regular_13937';color: #4a5966;"> <strong>{{sala.ponencia.titulo}}</strong></div>
+                                <div class="accordion-body">
+                                    <div class="row salas-stremaing">
+                                        <div class="col btn-sala " style="padding: 17px;" >
+                                            <a href="{% url 'View_sala' sala.sala.path %}"   class="cta-new programa ">  VER SALA  <i class="fa fa-eye" style="margin-left: 10px;"></i> </a>
+                                        </div>  
+                                        <div class="col-auto">
+                                           
+                                          </div>  
+                                        <div class=" col col-lg-2">
+                                            <img class="icon" src="{% static '/assets/img/iconos/ponente-black.png'%}">
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            {%endfor%}
+                          </div>
+                   </div>
+                </div>
+            </div>
+          
+        </div>
+         
+    </div>
+
+               
+</section>  
+{%endif%}
+
+
+
+<div class="section sala">
     <div class="container-fluid">
         <div class="row">
-            <div class="offset-md-2 col-md-8">
-                {%if sala.cod_video and is_pagado%}
-                {{sala.cod_video|safe }}
-				{%else%}
-				{% if user.is_authenticated %}
-                <h3 class="title">Debe comprar el congreso para visualizar esta ponencia</h3> 
-                {%else%}
-                <h3 class="title">Debe autenticarse para visualizar esta ponencia    <a href="{% url 'login' %}" class="back align-self-end mt-md-5 mt-2"> Login</a></h3> 
+            <div class="col-md-6">
+                <h2 class="section-title mb-4" style="color: {{sala.color}};"> <strong>{{sala.titulo|upper}}</strong></h2>
+                
+            </div>
+            <div class="col-md-3">
+                <div class="icon" style="text-align: center;"><img src="{% static '/assets/img/iconos/sala.png'%}"></div>  
+            </div>
+            <div class=" col-md-3 d-flex flex-column justify-content-between align-items-end">
+                <div class="ctas-wrapper d-flex flex-md-row flex-column justify-content-md-end mx-md-0 mx-auto">
+                  
+                    <a href="{% url 'View_congreso' sala.congreso.path %}"  class="cta programa me-md-3 me-0 mt-md-0 mt-3">REGRESAR</a>
+                   
+                </div>
+            </div>
+        </div>
+        
+        <div class="row" >
+            <h1 class="section-subtitle"><strong>{{ponencia_sala.titulo|upper}}</strong></h1>
+        </div>
+    </div>
+    <section class="ponentes-sala">
+        <div class="container-fluid">
+            <div class="row ponentes" >
+                <h2 class="section-title mb-4" > PONENTES</h2>
+                <div class="col-md-9"> 
+                    <h6 style="color: #40C8F4;">PERFIL</h6>
+                    {% for ponente in ponentes_sala %}
+                    <div class="row perfil">
+                        <div class="col-md-2 d-flex align-items-center ponencias">
+                            <img src="{% if ponente.user.foto%}{% static '/'%}{{ponente.user.foto}}{%else%}{% static 'assets/img/congresos/avatar-ponencia.png'%}{%endif%} " class="img-fluid">
+                        </div>
+                        <div class="col-md-9">
+                            <div class="header">
+                                <div class="row" >
+                                    
+                                    <div class="mt-md-0 mt-2 col-md-9 d-flex flex-column justify-content-center">
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" class="name" onclick="VerPerfil('{{ponente.user.id}}')"><h4 class="name"><strong>{{ponente.user.usuario.first_name}}
+                                            {{ponente.user.usuario.last_name}}</strong></h4></a>
+                                        <h5 class="cat"> <strong>{{ponente.user.categoria}}</strong> </h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="bio mt-3">{%if ponente.user.puesto %}
+                            {{ponente.user.puesto}}
+                            {%endif%}</p>
+                        </div>
+                        <div class="col-md-1">
+                            <img class="icon" src="{% static '/assets/img/iconos/ponente-black.png'%}">   
+                        </div>
+                    </div>
+                    {%endfor%}
+
+                </div>
+                <div class="col-md-3"> 
+                    <h6 style="color: #40C8F4;">EVALUAR PONENCIA</h6>
+                </div>
+            
+            </div>
+        </div>
+    </section>
+
+    <section class="programa-sala">
+        <div class="container-fluid">
+            <div class="row ponentes" >
+                <h2 class="section-title mb-4" > PROGRAMA: <span style="color:{{sala.color}}">{{sala.titulo|upper}}</span></h2>
+                
+            </div>
+        </div>
+
+    </section>
+    
+</div>
+
+
+
+{% if fecha_ponencias %}
+<section class="congreso-calendario">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col" style="margin-top: 70px;">
+                <img src="{% static '/'%}{{sala.imagen_seg}}" class="img-fluid">
+            </div>
+        </div>
+        {%   for fecha_ponencia in fecha_ponencias %}
+        {% if forloop.first %}
+        <div class="row">
+            <div class="col"> 
+                <div class="list-group list-group-horizontal"  role="tablist">
                 {%endif%}
-                <img src="{% static '/'%}{{sala.imagen}}" class="img-fluid me-4" > 
-                {%endif%}
+        
+                    <a class="list-group-item list-group-item-action {%if forloop.first%} active {%endif%}d-flex flex-column justify-content-center align-items-center" data-bs-toggle="list" href="#day-{{forloop.counter}}" role="tab">
+                        <h4 class="day">Día {{forloop.counter}}</h4>
+                        <span class="date"> {{fecha_ponencia|date:"M d / Y"}}</span>
+                        <div class="arrow-down"></div>
+                    </a>
+                
+                {%if forloop.counter|divisibleby:8 %}
+            </div>
+            </div>
+        </div>
+        <div class='row'>
+            <div class="col">
+                <div class="list-group list-group-horizontal"  role="tablist">
+            {%endif%}
+            {%if forloop.last%}
+        </div>
+        {% endif %}
+            {% endfor %}
+                
+        
+        <div class="row">
+            <div class="col tab-pane-wrapper py-5"> 
+                {% for ponencia in ponencias%}
+                <div class="tab-pane fade  {%if forloop.first%} show active {%endif%}" id="day-{{forloop.counter}}" role="tabpanel">
+                    {% for pon in ponencia%}
+                    {%if pon.tipo == 'Bloque'%}
+                    <div class="row">
+                        <div class="col-md-2 d-none d-md-flex justify-content-center">
+                            <span class="time">{{pon.fecha_inicio|date:"H:i"}}</span>
+                        </div>
+                        <div class="col-md-1 d-none d-md-flex justify-content-center">
+                            <div class="time-line">
+                                <div class="circle"></div>
+                                <div class="line mx-auto"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="event">
+                                <div class="accordion main-event" id="accordion-{{forloop.counter}}">
+                                    <div class="accordion-item mb-5">
+                                        <small class="hour d-md-none">{{pon.fecha_inicio|date:"H:i"}}</small>
+                                        <h2 class="accordion-header" id="heading-{{forloop.counter}}">
+                                        <h3 class="accordion-button accordion-button-h2 collapsed pt-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{forloop.counter}}" aria-expanded="true" aria-controls="collapse-{{forloop.counter}}">
+                                             {{pon.titulo}}
+                                        </h3>
+                                        </h2>
+                                        <div id="collapse-{{forloop.counter}}" class="accordion-collapse collapse" aria-labelledby="heading-{{forloop.counter}}" data-bs-parent="#accordion-{{forloop.counter}}">
+                                        <div class="accordion-body">
+                                            <div class="ponencias">
+                                                <div class="row gx-5">
+                                                    {%for mod in pon.moderador %}
+                                                    <div class="col-md-6 ponencia mt-md-0 mt-5">
+                                                        <div class="header">
+                                                            <div class="row">
+                                                                <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" class="name" onclick="VerPerfil('{{mod.user.id}}')">
+                                                                <div class="col-md-3 d-flex align-items-center">
+                                                                    <img src="{% if mod.user.foto%}{% static '/'%}{{mod.user.foto}}{%else%}{% static 'assets/img/congresos/avatar-ponencia.png'%}{%endif%} " class="img-fluid">
+                                                                </div>
+                                                                </a>
+                                                                <div class="mt-md-0 mt-2 col-md-9 d-flex flex-column justify-content-center">
+                                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" class="name" onclick="VerPerfil('{{mod.user.id}}')"><h4 class="name"><strong>{{mod.user.usuario.first_name}}{%if mod.user.usuario.first_name|length > 20 or mod.user.usuario.last_name|length > 20 %}
+                                                                        <br>{%endif%}
+                                                                        {{mod.user.usuario.last_name}}</strong></h4> </a>
+                                                                    <h5 class="cat">MODERADOR</h5>
+                                                                </div>
+                                                               
+                                                            </div>
+                                                        </div>
+                                                        <p class="bio mt-3"> {%if mod.user.puesto %}
+                                                            {{mod.user.puesto}}
+                                                            {%endif%}</p>
+                                                       
+                                                    </div>
+                                                    {%endfor%}
+                                                    {%if pon.cod_video%}
+                                                    <a href="{% url 'BloqueVideo' path=pon.path%}" class="more d-block "><strong>Ver Preguntas y respuestas</strong></a>
+                                                    {%endif%}
+                                                    <div class="row" >
+                                                        {%for evento in pon.eventos %}
+                                                        <div class="col-md-6  mt-md-0" style="padding-top: 50px;" >
+                                                            <h4 class="ponencia-name ponencia pt-3"><strong> {{evento.titulo}}</strong></h4>
+                                                            <span class="detalle d-block "><small>  {{evento.detalle}}</small></span>
+                                                            <div class="row"> 
+                                                               
+                                                                {% if evento.ver_ponencia %}
+                                                                <div class="col-md-6 ponencia   mt-md-0" > 
+                                                                    
+                                                                    {%if evento.tipo == 'Taller'%}
+                                                                   
+                                                                    <a href="{% url 'View_taller' path=evento.path%}" class="more d-block "><strong> Ver Taller</strong></a>
+            
+                                                                    {%else%}
+                                                                    <a href="{% url 'View_ponencia' path=evento.path%}" class="more d-block "><strong>Ver Ponencia</strong></a>
+                                                                    {%endif%}
+                                                            
+                                                                </div>
+                                                                {%endif%}
+                                                            </div>
+                                                            <div class="row">
+                                                                {%for ponente in evento.ponentes %}
+                                                                <div class="col-12 ponencia mt-md-0 mt-5"  >
+                                                                    <div class="header">
+                                                                        <div class="row" >
+                                                                            <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" class="name" onclick="VerPerfil('{{mod.user.id}}')">
+                                                                            <div class="col-md-3 d-flex align-items-center">
+                                                                                <img src=" {% if ponente.user.foto%}{% static '/'%}{{ponente.user.foto}}{%else%}{% static 'assets/img/congresos/avatar-ponencia.png'%}{%endif%}" class="img-fluid" width="100px">
+                                                                            </div>
+                                                                            </a>
+                                                                            <div class="mt-md-0 mt-2 col-md-9 d-flex flex-column justify-content-center">
+                                                                                <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" class="name" onclick="VerPerfil('{{ponente.user.id}}')"><h4 class="name"><strong>{{ponente.user.usuario.first_name}}
+                                                                                    {{ponente.user.usuario.last_name}}</strong></h4></a>
+                                                                                <h5 class="cat">PONENTE</h5>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <p class="bio mt-3">{%if ponente.user.puesto %}
+                                                                    {{ponente.user.puesto}}
+                                                                    {%endif%}</p>
+                                                            
+                                                                </div>
+                                                                {%endfor%}
+                                                            </div>
+                                                        </div>
+                                                   
+                                                        {%endfor%}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {%else%}
+                    <div class="row">
+                        <div class="col-md-2 d-none d-md-flex justify-content-center">
+                            <span class="time">{{pon.fecha_inicio|date:"H:i"}}</span>
+                        </div>
+                        <div class="col-md-1 d-none d-md-flex justify-content-center">
+                            <div class="time-line">
+                                <div class="circle"></div>
+                                <div class="line mx-auto"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="event">
+                                <div class="accordion main-event" id="accordion-{{forloop.counter}}-{{forloop.parentloop.counter}}">
+                                    <div class="accordion-item mb-5">
+                                        <small class="hour d-md-none">{{pon.fecha_inicio|date:"H:i"}}</small>
+                                        <h2 class="accordion-header" id="heading-{{forloop.counter}}-{{forloop.parentloop.counter}}">
+                                            <h3 class="accordion-button accordion-button-h2 collapsed pt-0"  data-bs-toggle="collapse" data-bs-target="#collapse-{{forloop.counter}}-{{forloop.parentloop.counter}}" aria-expanded="true" aria-controls="collapse-{{forloop.counter}}-{{forloop.parentloop.counter}}">
+                                             
+                                                <div>{{pon.titulo}}</div> 
+                                            </h3>
+                                        </h2>
+                                        <div id="collapse-{{forloop.counter}}-{{forloop.parentloop.counter}}" class="accordion-collapse collapse" aria-labelledby="heading-{{forloop.counter}}-{{forloop.parentloop.counter}}" data-bs-parent="#accordion-{{forloop.counter}}-{{forloop.parentloop.counter}}">
+                                        <div class="accordion-body">
+                                            <span class="detalle d-block "><small> {{pon.detalle}}</small></span>
+                                            <div class="ponencias">
+                                               
+                                                <div class="row gx-5">
+                                                    {%if pon.ponentes%}
+                                                    {%for ponente in pon.ponentes %}
+                                                    <div class="col-md-6 ponencia mt-md-0 mt-5">
+                                                        <div class="header">
+                                                            <div class="row">
+                                                                <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" class="name" onclick="VerPerfil('{{mod.user.id}}')">
+                                                                <div class="col-md-3 d-flex align-items-center">
+                                                                    <img src=" {% if ponente.user.foto%}{% static '/'%}{{ponente.user.foto}}{%else%}{% static 'assets/img/congresos/avatar-ponencia.png'%}{%endif%}" class="img-fluid" width="100px">
+                                                                </div>
+                                                                </a>
+                                                                <div class="mt-md-0 mt-2 col-md-9 d-flex flex-column justify-content-center">
+                                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" class="name" onclick="VerPerfil('{{ponente.user.id}}')"><h4 class="name"><strong>{{ponente.user.usuario.first_name}} {{ponente.user.usuario.last_name}}</strong></h4></a>
+                                                                    <h5 class="cat">PONENTE</h5>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <p class="bio mt-3">{%if ponente.user.puesto %}
+                                                            {{ponente.user.puesto}}
+                                                            {%endif%}</p>
+                                                       
+                                                       
+                                                    </div>
+                                                    {%endfor%}
+                                                    <div class="row"> 
+                                                        
+                                                        {%if pon.ver_ponencia %}
+                                                    {%if pon.tipo == 'Taller'%}
+                                                        <div class="col-md-6 ponencia  mt-md-0" > 
+                                                            <a href="{% url 'View_taller' path=pon.path%}" class="more d-block "><strong> Ver Taller</strong></a>
+                                                    
+                                                        </div>
+                                                          
+    
+                                                            {%else%}
+                                                            <div class="col-md-6 ponencia  mt-md-0" > 
+                                                                <a href="{% url 'View_ponencia' path=pon.path%}" class="more d-block "><strong>Ver Ponencia</strong></a>
+                                                        
+                                                            </div>
+                                                           
+                                                            {%endif%}
+                                                            {%endif%}
+                                                        </div>
+                                                    {%endif%}
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {%endif%}
+                    {%endfor%}
+                    
+                </div>
+                {%endfor%}
+                
             </div>
         </div>
       
     </div>
 </section>
+{%endif%}
+
+
+{% if patrocinadores %}
+<section class="congreso-ponentes">
+    <div class="container-fluid">
+        <div class="row mb-5">
+            <div class="col">
+                <h3 class="section-name">PATROCINADORES</h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="content py-5">
+                    <h4 class="description">CONOCE A LOS PATROCINADORES DE ESTE CONGRESOS</h4>
+                    <div class="art"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="congreso-ponentes-secundary">
+    <div id="carousel" class="carousel slide carousel-dark" data-bs-ride="carousel">
+       
+        <div class="carousel-inner"> 
+            {%for patrocindador in patrocinadores%}
+            {%if forloop.first%}
+            <div class="carousel-item active">
+                <div class="container px-4">
+                    <div class="row gx-5">
+                        {%endif%}
+                        <div class="col-md-4">
+                            <a href="{{patrocindador.aval.url}}" target="_blank">
+                                <img class="img-fluid" src="{% static '/'%}{{patrocindador.aval.logo}}" alt="{{patrocindador.aval.nombre}}">
+                            </a>
+                           
+                        </div>
+                        
+                        {%if forloop.last%}
+
+                    </div>
+                </div>
+            </div>
+            {%endif%}
+            {% if forloop.counter|divisibleby:3 %}
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item ">
+                <div class="container px-4">
+                    <div class="row gx-5">
+            {%endif%}
+                   
+         {%endfor%}
+        <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+</section>
+{%endif%}
+<div class="congreso-modal profile-modal modal fade" id="profileModal" tabindex="-2" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="container-fluid">
+                  <div class="row mb-3">
+                      <div class="col">
+                          <h5 class="title">Perfil del Ponente</h5>
+                      </div>
+                  </div>
+  
+                  <div class="row">
+                      <div class="col-md-4">
+                          <div class="modal-card p-3 me-2 mb-md-0 mb-4">
+                              <div id="foto">
+                             
+                            </div>
+                              <div id="ratingSystem" class="mt-2 d-flex flex-row-reverse justify-content-center">
+                                  <div id="div_rating">
+                                      <input type="hidden" id="rating" class="rating" data-readonly value="3" />
+                                  </div>
+                                
+                              </div>
+                              <hr class="separator mt-2" />
+                              <div class="bottom d-flex justify-content-between align-items-end" id="pais">
+                                 
+                                   
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-8">
+                          <div class="row event mb-3">
+                              <div class="col" id="datos">
+                                  
+                              </div>
+                          </div>
+                            <div id="logros">
+                            
+                            </div>
+                      </div>
+                  </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col d-flex justify-content-end">
+                      <button type="button" class="cta close-btn" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="congreso-modal modal fade" id="downloadModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div class="container-fluid">
+                <div class="row mb-3">
+                    <div class="col">
+                        <h5 class="title">Trabajos de Investigación</h5>
+                    </div>
+                </div>
+                {%for trabajo in trabajos%}
+                <div class="row event mb-3">
+                    <div class="col-md-2 d-flex justify-content-center align-items-start">
+                        <img src="{% if trabajo.foto%}{% static '/'%}{{trabajo.foto}}{%else%}{% static 'assets/img/iconos/avatar-icon.png'%}{%endif%}" class="img-fluid" width="60px">
+                    </div>
+                    <div class="col-md-8">
+                        <h5 class="name">{{trabajo.autor}}</h5>
+                        <span class="cat d-block mb-3">Lorem ipsum dolor sit amet</span>
+                        <p class="description mb-0 pt-3">{{trabajo.titulo}}</p>
+                    </div>
+                    <div class="col-md-2 d-flex flex-column justify-content-between align-items-end">
+                        {%if trabajo.cod_video%}
+                        <a href="{% url 'View_trabajo' path=trabajo.path%}" target="_blank" class="view">Ver Video</a>
+                        {%else%}
+                        <a href="#" class="view"></a>
+                        {%endif%}
+                        <a href="#" class="view">Ver Video</a>
+						<a href="#" class="cta">DESCARGAR</a>
+                        <a href="{% static '/'%}{{trabajo.documento}}" target="_blank" class="cta">DESCARGAR</a>
+                    </div>
+                </div>
+                {%endfor%}
+                
+          </div>
+      </div>
+      <div class="modal-footer">
+          <div class="container-fluid">
+              <div class="row">
+                  <div class="col d-flex justify-content-end">
+                    <button type="button" class="cta close-btn" data-bs-dismiss="modal">Cerrar</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 {%endblock%}
-
 {% block script%}
 <script src="{% static 'MedCongressApp/js/bootstrap-rating.js' %}"></script>
-
-<script src="{% static 'MedCongressApp/js/plugins/simplyCountdown/simplyCountdown.min.js'%}"></script>
 <script>
-	$(document).ready(function () {
-		$('#rating').rating({
-			filled: 'glyphicon glyphicon-heart',
-			empty: 'glyphicon glyphicon-heart-empty'
-		});
-		$('#rating').rating('rate', '{{is_evaluado}}');
-		var height = $(window).height();
-		$('#div').height(height);
-	});
-
-
-	simplyCountdown('#countdown', {
-		year: '{{ponencia.fecha_inicio|date:"Y"}}', // required
-		month: '{{ponencia.fecha_inicio|date:"m"}}', // required
-		day: '{{ponencia.fecha_inicio|date:"d"}}', // required
-		hours: '{{ponencia.fecha_inicio|date:"h"}}', // Default is 0 [0-23] integer
-		minutes: '{{ponencia.fecha_inicio|date:"i"}}', // Default is 0 [0-59] integer
-		seconds: '{{fecha|date:"s"}}', // Default is 0 [0-59] integer
-		words: { //words displayed into the countdown
-			days: 'dia',
-			hours: 'hora',
-			minutes: 'minuto',
-			seconds: 'segundo',
-			pluralLetter: 's'
-		},
-		plural: true, //use plurals
-		inline: false, //set to true to get an inline basic countdown like : 24 days, 4 hours, 2 minutes, 5 seconds
-		inlineClass: 'simply-countdown-inline', //inline css span class in case of inline = true
-		// in case of inline set to false
-		enableUtc: true, //Use UTC as default
-		onEnd: function () { return; }, //Callback on countdown end, put your own function here
-		refresh: 1000, // default refresh every 1s
-		sectionClass: 'simply-section', //section css class
-		amountClass: 'simply-amount', // amount css class
-		wordClass: 'simply-word', // word css class
-		zeroPad: false,
-		countUp: false
-	});
-	$(function () {
-
-		$('input.nueva').on('change', function () {
-
-			swal({
-				title: "Le dará una Evaluación de " + $(this).val() + ' puntos a esta Ponencia',
-				text: "",
-				icon: "warning",
-				buttons: {
-					cancel: {
-						text: "No!",
-						value: null,
-						visible: true,
-						className: "",
-						closeModal: false,
-					},
-					confirm: {
-						text: "Si",
-						value: true,
-						visible: true,
-						className: "",
-						closeModal: false
-					}
+$(document).ready(function(){
+	$('.collapse').on('shown.bs.collapse', function(){
+		$(this).parent().find(".glyphicon-plus").removeClass("glyphicon-plus").addClass("glyphicon-minus");
+	}).on('hidden.bs.collapse', function(){
+		$(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClass("glyphicon-plus");
+	});       
+});
+function AgregarCarritoTaller(id, fields, msj) {
+    var patt = /^\d+$/;
+    valor=$('#' + fields).val()
+    
+    if (patt.test(valor) == true){
+    if (msj == 'False') {
+        $.ajax({
+            type: "GET",
+            url: "{% url 'Add_cart_taller'%}",
+            data: {
+                'id': id, // from form
+                'cant': $('#' + fields).val()// from form
+            },
+            success: function (data) {
+                if (data['succes']) {
+                    swal({
+                        title: "Ha adicionado un evento a su carrito de compra",
+                        text: "Clic al carrito para efectuar la compra",
+                        icon: "success",
+                        buttons: {
+                            cancel: {
+                                text: "ok!",
+                                value: null,
+                                visible: true,
+                                className: "",
+                                closeModal: false,
+                            },
 
 
 
-				}
-			})
-				.then((isConfirm) => {
-					if (isConfirm) {
-						$('.label-default').empty();
-						$.ajax({
-							type: "GET",
-							url: "{% url 'EvaluarPonencia'%}",
-							data: {
-								'puntuacion': $(this).val(), // from form
-								'usuario': '{{request.user.pk}}',// from form
-								'ponencia': '{{ponencia.pk}}',// from form
-							},
-							success: function (data) {
-								$('#sin_evaluar').hide();
-								$('#evaluado').show();
-								
-								$('#rating_evaluado').rating('rate', data.valor);
-								
-								swal('Correcto', ' Le ha dado una evaluación de: ' + data.valor + ' puntos', 'success')
+                        }
+                    })
+                        .then((isConfirm) => {
+                            if (isConfirm) {
 
-								swal('Correcto', ' Ya se envio su votación', 'success')
-							}
-						});
-					}
-					else {
-						swal('Cancelar', ' No se envio su votación', 'error')
-					}
+                            }
+                            else {
+                                location.reload();
+                            }
 
-				});
-
-		});
-
-
-		{%if is_evaluado %}
-		
-		{% endif %}
-		// $('.rating-tooltip').rating({
-		// 	extendSymbol: function (rate) {
-		// 		$(this).tooltip({
-		// 			container: 'body',
-		// 			placement: 'bottom',
-		// 			title: 'Rate ' + rate
-		// 		});
-		// 	}
-		// });
-		// 	$('.rating-tooltip').rating({
-		// 		extendSymbol: function () {
-		// 			var title;
-		// 			$(this).tooltip({
-		// 				container: 'body',
-		// 				placement: 'bottom',
-		// 				trigger: 'manual',
-		// 				title: function () {
-		// 					return title;
-		// 				}
-		// 			});
-		// 			$(this).on('mouseenter', function (e, rate) {
-		// 				title = rate;
-		// 				$(this).tooltip('show');
-		// 			})
-		// 			$(this).on('mouseleave', function () {
-		// 				$(this).tooltip('hide');
-		// 			});
-		// 		}
-		// 	});
+                        });
+                }
+                else
+                    swal("No se puede", "Ya tiene este Taller en el carrito de compra.", "error");
+            }
+        });
+    }
+    else {
+        swal({
+            title: "Ya usted compró este taller",
+            text: ' ¿Desea comprarlo de nuevo?',
+            icon: "warning",
+            buttons: {
+                cancel: {
+                    text: "¡Cancelar!",
+                    value: null,
+                    visible: true,
+                    className: "",
+                    closeModal: false,
+                },
+                confirm: {
+                    text: "¡Aceptar!",
+                    value: true,
+                    visible: true,
+                    className: "",
+                    closeModal: false
+                }
+            }
+        })
+            .then((isConfirm) => {
+                if (isConfirm) {
 
 
 
-	});
-
-	function Update() {
-
-		swal({
-			title: "Cambiará su Evaluación",
-			text: "Desea dar otra puntuación",
-			icon: "warning",
-			buttons: {
-				cancel: {
-					text: "No!",
-					value: null,
-					visible: true,
-					className: "",
-					closeModal: false,
-				},
-				confirm: {
-					text: "Si",
-					value: true,
-					visible: true,
-					className: "",
-					closeModal: false
-				}
+                    $.ajax({
+                        type: "GET",
+                        url: "{% url 'Add_cart_taller'%}",
+                        data: {
+                            'id': id, // from form
+                            'cant': $('#' + fields).val()// from form
+                        },
+                        success: function (data) {
+                            if (data['succes']) {
+                                swal({
+                                    title: "Ha adicionado un evento a su carrito de compra",
+                                    text: "Clic al carrito para efectuar la compra",
+                                    icon: "success",
+                                    buttons: {
+                                        cancel: {
+                                            text: "ok",
+                                            value: null,
+                                            visible: true,
+                                            className: "",
+                                            closeModal: false,
+                                        },
 
 
 
-			}
-		})
-			.then((isConfirm) => {
-				if (isConfirm) {
-					$('#sin_evaluar').show();
-					$('#evaluado').hide();
-					swal('Aviso', ' Ya puede evaluar de nuevo esta Ponencia', 'success')
-				}
-				else {
-					swal('Cancelar', ' Se mantiene su evaluación', 'error')
-				}
+                                    }
+                                })
+                                    .then((isConfirm) => {
+                                        if (isConfirm) {
 
-			});
+                                        }
+                                        else {
+                                            location.reload();
+                                        }
 
-	}
+                                    });
+                            }
 
-	function VerPerfil(pk) {
+                        }
+                    });
+                }
+                else {
+                    location.reload();
+                }
+            });
+
+
+
+    }
+}
+    else{
+        swal("No se puede", "Debe entrar un Número entero.", "error");
+
+    }
+
+}
+
+function AgregarCarrito(id, fields, msj) {
+   
+    valor=$('#' + fields).val()
+    var patt = /^\d+$/;
+    if (patt.test(valor) == true){
+    if (msj == 'False') {
+        $.ajax({
+            type: "GET",
+            url: "{% url 'Add_cart'%}",
+            data: {
+                'id': id,
+                'cant': $('#' + fields).val()// from form
+
+            },
+            success: function (data) {
+                if (data['succes']) {
+                    swal({
+                        title: "Ha adicionado un evento a su carrito de compra",
+                        text: "Clic al carrito para efectuar la compra",
+                        icon: "success",
+                        buttons: {
+                            cancel: {
+                                text: "ok",
+                                value: null,
+                                visible: true,
+                                className: "",
+                                closeModal: false,
+                            },
+
+
+
+                        }
+                    })
+                        .then((isConfirm) => {
+                            if (isConfirm) {
+
+                            }
+                            else {
+                                location.reload();
+                            }
+
+                        });
+
+
+
+
+                }
+                else
+                    swal("No se puede", "Ya tiene este Evento en el carrito de compra.", "error");
+            }
+        });
+    }
+    else {
+        swal({
+            title: "Ya usted compró este congreso",
+            text: ' ¿Desea comprarlo de nuevo?',
+            icon: "warning",
+            buttons: {
+                cancel: {
+                    text: "No",
+                    value: null,
+                    visible: true,
+                    className: "",
+                    closeModal: false,
+                },
+                confirm: {
+                    text: "Si",
+                    value: true,
+                    visible: true,
+                    className: "",
+                    closeModal: false
+                }
+            }
+        })
+            .then((isConfirm) => {
+                if (isConfirm) {
+                    $.ajax({
+                        type: "GET",
+                        url: "{% url 'Add_cart'%}",
+                        data: {
+                            'id': id,
+                            'cant': $('#' + fields).val()// from form
+
+                        },
+                        success: function (data) {
+                            if (data['succes']) {
+                                swal({
+                                    title: "Ha adicionado un evento a su carrito de compra",
+                                    text: "Clic al carrito para efectuar la compra",
+                                    icon: "success",
+                                    buttons: {
+                                        cancel: {
+                                            text: "ok",
+                                            value: null,
+                                            visible: true,
+                                            className: "",
+                                            closeModal: false,
+                                        },
+
+
+
+                                    }
+                                })
+                                    .then((isConfirm) => {
+                                        if (isConfirm) {
+
+                                        }
+                                        else {
+                                            location.reload();
+                                        }
+                                    });
+                            }
+                            else
+                                swal("No se puede", "Ya tiene este Evento en el carrito de compra.", "error");
+                        }
+                    });
+                }
+                else {
+                    location.reload();
+                }
+            });
+    }
+
+    }
+    else{
+        swal("No se puede", "Debe entrar un Número entero.", "error");
+
+    }
+
+}
+
+function VerPerfil(pk) {
     url = "{% url 'GetPerfil'%}";
     $.get(url, { 'pk': pk }, function (data) {
 
@@ -372,13 +1007,14 @@
             }
         }
 
+
         $('#talleres').html(talleres)
         if(data.puesto)
         $('#puesto').html(data.puesto)
         else
         $('#puesto').html('')
         $('#nombre_completo').html(data.nombre_completo)
-		if(data.votacion==0){
+        if(data.votacion==0){
             $('#div_rating').hide()  
         }
         else{
@@ -396,7 +1032,8 @@
         // });
 
 
-	});
+
+    });
 }
 </script>
 {%endblock%}

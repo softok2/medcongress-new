@@ -1713,6 +1713,10 @@ class  CongressSalaCreateView(validarUser,CreateView):
     form_class = CongresoSalaForm
    
     template_name = 'MedCongressAdmin/congreso_sala_form.html'
+    def get_form_kwargs(self, *args, **kwargs):
+        kwargs = super().get_form_kwargs(*args, **kwargs)
+        kwargs['sala'] = False
+        return kwargs
     def form_valid(self, form):
         congreso=form.save(commit=False)
 
@@ -1748,13 +1752,49 @@ class CongressSalaUpdateView(validarUser,UpdateView):
     def get_queryset(self, **kwargs):
         return Sala.objects.filter(pk=self.kwargs.get('pk'))
 
+    def get_form_kwargs(self, *args, **kwargs):
+        kwargs = super().get_form_kwargs(*args, **kwargs)
+        kwargs['sala'] = Sala.objects.get(pk=self.kwargs.get('pk'))
+        return kwargs
+
     def form_valid(self, form):
         congreso=form.save(commit=False)
-        imagen=self.request.POST['imagen']
+        if not self.request.POST.get('ponencia_streamming'):
+            congreso.ponencia_streamming=None
         sala_update=Sala.objects.get(pk=self.kwargs.get('pk'))
         chars = '0123456789'
+        imagen=self.request.POST['prueba']
         if 'sala/' not in imagen:
-            image_64_encode=self.request.POST['imagen']
+            image_64_encode=self.request.POST['prueba']
+            campo = image_64_encode.split(",")
+            nombre = get_random_string(5, chars)
+            image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
+            image_result = open('MedCongressApp/static/sala/imagen_home_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+            image_result.write(image_64_decode)
+            if  sala_update.imagen_home:
+                fileObj = Path('MedCongressApp/static/%s'%( sala_update.imagen_home))
+                if fileObj.is_file():
+                    remove('MedCongressApp/static/%s'%( sala_update.imagen_home))
+            congreso.imagen_home='sala/imagen_home_%s.png'%(nombre)
+
+        imagen_seg=self.request.POST['prueba1']
+        if 'sala/' not in imagen_seg:
+            image_64_encode=self.request.POST['prueba1']
+            campo = image_64_encode.split(",")
+            nombre = get_random_string(5, chars)
+            image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
+            image_result = open('MedCongressApp/static/sala/imagen_seg_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+            image_result.write(image_64_decode)
+            if  sala_update.imagen_seg:
+                fileObj = Path('MedCongressApp/static/%s'%( sala_update.imagen_seg))
+                if fileObj.is_file():
+                    remove('MedCongressApp/static/%s'%( sala_update.imagen_seg))
+            congreso.imagen_seg='sala/imagen_seg_%s.png'%(nombre)
+        
+        
+        imagen_prim=self.request.POST['prueba_home']
+        if 'sala/' not in imagen_prim:
+            image_64_encode=self.request.POST['prueba_home']
             campo = image_64_encode.split(",")
             nombre = get_random_string(5, chars)
             image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
@@ -1765,6 +1805,7 @@ class CongressSalaUpdateView(validarUser,UpdateView):
                 if fileObj.is_file():
                     remove('MedCongressApp/static/%s'%( sala_update.imagen))
             congreso.imagen='sala/imagen_%s.png'%(nombre)
+
         if not congreso.path or congreso.path=='0':
             nombre = get_random_string(3, chars)
             path=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
@@ -1776,6 +1817,13 @@ class CongressSalaUpdateView(validarUser,UpdateView):
         context=super().get_context_data(**kwargs)
         context['update']=True
         context['sala']= Sala.objects.get(pk=self.kwargs.get('pk'))
+        self.object = context['sala']
+        if self.object.imagen_seg:
+            context['imagen_seg_url']=self.object.imagen_seg
+        if self.object.meta_og_imagen:
+            context['imagen_meta']='/static/%s'%(self.object.meta_og_imagen)
+        if self.object.imagen_home:
+            context['imagen_home']=self.object.imagen_home
         context['imagen']=context['sala'].imagen
         pon=Congreso.objects.filter(path=self.kwargs.get('path')).first()
         context['cong'] = pon

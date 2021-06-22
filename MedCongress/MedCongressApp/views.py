@@ -327,7 +327,7 @@ class PagoExitoso(TemplateView):
         return context
 
     def post(self, request, **kwargs):
-        print(self.request.session["car1"][1])
+        
         url='https://%s/v1/%s/invoices/v33'%(URL_API,ID_KEY)
         chars = '0123456789'
         secret_key = get_random_string(8, chars)
@@ -545,7 +545,20 @@ class CongresoDetail(TemplateView):
                 for constancia in constancias:
                     if constancia.is_constancia:
                         context['constancia']=True
-        context['salas']=Sala.objects.filter(congreso=congreso,published=True,cod_video__isnull=False )        
+        salas=Sala.objects.filter(congreso=congreso,published=True).exclude( cod_video__isnull=True).exclude(cod_video__exact='') 
+       
+        salas_env=[]
+        for sala in salas:
+            if sala.ponencia_streamming:
+                ponencia_sala=Ponencia.objects.get(pk=sala.ponencia_streamming)
+            else:
+                ponencia_sala=Ponencia.objects.filter(sala=sala).first()
+            salas_env.append({
+                'sala':sala,
+                'ponencia':ponencia_sala,
+                'ponentes':Ponente.objects.filter(ponencia_ponente__pk=ponencia_sala.id).distinct() ,
+                    })
+        context['salas']=salas_env      
         if congreso is not None:
            
             context['congreso']=congreso
@@ -2179,6 +2192,304 @@ class ViewSala(TemplateView):
         context['sala']=sala
         context['all_salas']=Sala.objects.filter(congreso=sala.congreso,published=True,cod_video__isnull=False)
         return context
+
+
+
+class SalaDetail(TemplateView):
+    template_name= 'MedCongressApp/sala.html' 
+    
+
+    def get(self, request, **kwargs):
+       
+        sala=Sala.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        if sala is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        return self.render_to_response(self.get_context_data())
+
+    def get_context_data(self, **kwargs):
+        context = super(SalaDetail, self).get_context_data(**kwargs)
+        sala=Sala.objects.filter(path=self.kwargs.get('path'),published=True).first()
+        # context['patrocinadores']=RelCongresoAval.objects.filter(congreso=congreso)
+        # context['socios']=RelCongresoSocio.objects.filter(congreso=congreso)
+        context['pagado']=False
+        if self.request.user.is_authenticated:
+            pagado=RelCongresoUser.objects.filter(congreso=sala.congreso,user=self.request.user.perfilusuario,is_pagado=True)
+            if pagado :
+                context['pagado']=True
+                # InsertLog(congreso.pk,'Congreso',self.request.user.perfilusuario)
+                # constancias=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario)
+                # for constancia in constancias:
+                #     if constancia.is_constancia:
+                #         context['constancia']=True
+        # salas=Sala.objects.filter(congreso=congreso,published=True).exclude( cod_video__isnull=True).exclude(cod_video__exact='') 
+       
+        # salas_env=[]
+        # for sala in salas:
+        #     if sala.ponencia_streamming:
+        #         ponencia_sala=Ponencia.objects.get(pk=sala.ponencia_streamming)
+        #     else:
+        #         ponencia_sala=Ponencia.objects.filter(sala=sala).first()
+        #     salas_env.append({
+        #         'sala':sala,
+        #         'ponencia':ponencia_sala,
+        #         'ponentes':Ponente.objects.filter(ponencia_ponente__pk=ponencia_sala.id).distinct() ,
+        #             })
+        # context['salas']=salas_env      
+        
+           
+        context['sala']=sala
+        context['ponencia_sala']=Ponencia.objects.get(pk=sala.ponencia_streamming)
+        context['ponentes_sala']=Ponente.objects.filter(ponencia_ponente__pk=context['ponencia_sala'].id).distinct()
+        salas=Sala.objects.filter(congreso=sala.congreso,published=True).exclude( cod_video__isnull=True).exclude(cod_video__exact='')
+        salas_env=[]
+        for sal in salas:
+            if sal.ponencia_streamming:
+                ponencia_sala=Ponencia.objects.get(pk=sal.ponencia_streamming)
+            else:
+                ponencia_sala=Ponencia.objects.filter(sala=sal).first()
+            salas_env.append({
+                'sala':sal,
+                'ponencia':ponencia_sala,
+                'ponentes':Ponente.objects.filter(ponencia_ponente__pk=ponencia_sala.id).distinct() ,
+                })
+        context['all_sala']=salas_env
+        #context['dias_faltan']=date.today()-self.model.fecha_inicio
+        with connections['default'].cursor() as cursor:
+                sql_query = '''SELECT DISTINCT fecha_inicio::date FROM public."MedCongressApp_ponencia" where published is TRUE  and sala_id= '''+ str(sala.id) +''' ORDER by fecha_inicio'''
+                cursor.execute(sql_query)
+                data2 = [row[0] for row in cursor.fetchall()]
+        # with connections['default'].cursor() as cursor:
+        #         sql_query = '''SELECT DISTINCT fecha_inicio::date FROM public."MedCongressApp_taller" where published is TRUE  and sala_id= '''+ str(sala.id) +''' ORDER by fecha_inicio'''
+        #         cursor.execute(sql_query)
+        #         data1 = [row[0] for row in cursor.fetchall()]
+                
+        
+        # data=data2+[i for i in data1 if i not in data2]
+        
+        context['fecha_ponencias']= data2
+        ponencias_env=[] 
+       
+        print(context['fecha_ponencias'])
+        for dat in context['fecha_ponencias']:
+            bloque_env=[]
+            ponencias=Ponencia.objects.filter(fecha_inicio__date=dat,sala=sala,published=True,bloque=None).order_by('fecha_inicio')
+            ponencias_bloque=Ponencia.objects.filter(fecha_inicio__date=dat,sala=sala,published=True).exclude(bloque=None).order_by('fecha_inicio')
+            print(ponencias_bloque)
+            for ponencia in ponencias_bloque:
+                if ponencia.bloque not in bloque_env:
+                    bloque_env.append(ponencia.bloque)
+            bloques=bloque_env
+            print(bloques)
+            # talleres=Taller.objects.filter(fecha_inicio__date=dat,congreso=sala.congreso,published=True,bloque=None).order_by('fecha_inicio')
+            result=[]
+            for bloque in bloques:
+               
+                bloque_ponencias=Ponencia.objects.filter(bloque=bloque,published=True,sala=sala).order_by('fecha_inicio')
+                
+                # bloque_talleres=Taller.objects.filter(bloque=bloque,published=True).order_by('fecha_inicio')
+                eventos=[]
+                
+                for ponencia in bloque_ponencias: 
+                    eventos.append({
+                    'id':ponencia.id,
+                    'path':ponencia.path,
+                    'titulo': ponencia.titulo,
+                    'ver_ponencia':ponencia.cod_video,
+                    'fecha_inicio': ponencia.fecha_inicio ,# una relación a otro modelo
+                    'detalle':ponencia.detalle ,
+                    'ponentes':Ponente.objects.filter(ponencia_ponente__pk=ponencia.id).distinct() ,
+                    'tipo':'Ponencia',
+                    'sala':ponencia.sala,
+                    })
+            # for taller in bloque_talleres: 
+            #     eventos.append({
+            #     'id':taller.id,
+            #     'path':taller.path,
+            #     'titulo': taller.titulo,
+            #     'ver_ponencia':taller.cod_video,
+            #     'fecha_inicio': taller.fecha_inicio ,# una relación a otro modelo
+            #     'detalle':taller.detalle ,
+            #     'ponentes':Ponente.objects.filter(taller_ponente__pk=taller.id).distinct() ,
+            #     'tipo':'Taller',# la misma relación, otro campo
+            #     })
+                eventos = sorted(eventos, key=lambda k: k['fecha_inicio'])
+                result.append({
+                'id':bloque.id,
+                'path':bloque.path,
+                'cod_video':bloque.cod_video,
+                'moderador':Moderador.objects.filter(bloque_moderador__pk=bloque.id).distinct() ,
+                'titulo': bloque.titulo,
+                'fecha_inicio': bloque.fecha_inicio ,# una relación a otro modelo
+                'detalle':bloque.detalle ,
+                'eventos':eventos,
+                'tipo':'Bloque',# la misma relación, otro campo
+                })
+                
+            for ponencia in ponencias: 
+                result.append({
+                'id':ponencia.id,
+                'path':ponencia.path,
+                'ver_ponencia':ponencia.cod_video,
+                'titulo': ponencia.titulo,
+                'fecha_inicio': ponencia.fecha_inicio ,# una relación a otro modelo
+                'detalle':ponencia.detalle ,
+                'ponentes':Ponente.objects.filter(ponencia_ponente__pk=ponencia.id).distinct() ,
+                'tipo':'Ponencia',# la misma relación, otro campo
+                'sala':ponencia.sala,
+                })
+            # for taller in talleres: 
+            #     result.append({
+            #     'id':taller.id,
+            #     'path':taller.path,
+            #     'titulo': taller.titulo,
+            #     'ver_ponencia':taller.cod_video,
+            #     'fecha_inicio': taller.fecha_inicio ,# una relación a otro modelo
+            #     'detalle':taller.detalle ,
+            #     'ponentes':Ponente.objects.filter(taller_ponente__pk=taller.id).distinct() ,
+            #     'tipo':'Taller',# la misma relación, otro campo
+            #     })
+            result = sorted(result, key=lambda k: k['fecha_inicio'])
+            
+            # ponentes_env.append(Ponente.objects.filter(ponencia_ponente__pk=ponencia.id).distinct()) 
+            ponencias_env.append(result)
+            # for taller in talleres:
+            #     ponentes_env.append(Taller.objects.filter(reltallerponente__pk=taller.id).distinct()) 
+            
+            #     ponencias_env.append(talleres)
+        print()
+        context['ponencias']=ponencias_env
+
+        # prueba_ponecia=Ponencia.objects.filter(sala=sala,published=True)
+        # id_p=[]
+        # for pp in prueba_ponecia:
+        #     id_p.append(pp.pk)
+
+        # ponentes=Ponente.objects.filter(ponencia_ponente__in=id_p).distinct()
+        # ponentes_env=[]
+        # for ponente in ponentes: 
+        #     ponentes_env.append({
+        #     'id':ponente.id,
+        #     'id_user':ponente.user.pk,
+        #     'nombre': ponente.user.usuario.first_name,
+        #     'apellido': ponente.user.usuario.last_name ,
+        #     'foto':ponente.user.foto,
+        #     'tipo':'Ponente',
+        #     })
+        # ponencias_video_env=[]
+
+        # fechas_ponencias_video=Ponencia.objects.filter(sala=sala,published=True).exclude(cod_video='').distinct('fecha_inicio__date').values('fecha_inicio__date')
+        # # fechas_talleres_video=Taller.objects.filter(congreso=congreso.pk,published=True).exclude(cod_video='').distinct('fecha_inicio__date').values('fecha_inicio__date')
+        
+        # fechas=[]
+        # for fecha_ponencia in fechas_ponencias_video:
+        #     fechas.append(fecha_ponencia['fecha_inicio__date'])
+        # # for fechas_tallere in fechas_talleres_video:
+        # #     fechas.append(fechas_tallere['fecha_inicio__date'])
+        
+        # fechas=set(fechas)
+        # fechas_final=sorted(fechas)
+        
+        # for j in range(0, len(fechas_final)):
+        #     ponencias_video= Ponencia.objects.filter(sala=sala,published=True,fecha_inicio__date=fechas_final[j]).exclude(cod_video='')
+        #     # talleres_video= Taller.objects.filter(congreso=congreso.pk,published=True,fecha_inicio__date=fechas_final[j]).exclude(cod_video='')
+        #     ponencias_video_env.append({'fecha':fechas_final[j],
+        #                                 'ponencias':ponencias_video,
+        #                                 })
+        # context['ponencias_video']=ponencias_video_env
+        # prueba_taller=Taller.objects.filter(congreso=congreso.pk,published=True)
+        # id_t=[]
+        # for pp in prueba_taller:
+        #     id_t.append(pp.pk)
+
+        # # ponentes=Ponente.objects.filter(taller_ponente__in=id_t).distinct()
+
+        # # for ponente in ponentes: 
+        # #     var=False
+        # #     for pon in ponentes_env:
+        # #         if pon['id_user']==ponente.user.pk:
+        # #             var=True
+        # #     if not var:
+        # #         ponentes_env.append({
+        # #         'id':ponente.id,
+        # #         'id_user':ponente.user.pk,
+        # #         'nombre': ponente.user.usuario.first_name,
+        # #         'apellido': ponente.user.usuario.last_name ,
+        # #         'foto':ponente.user.foto,
+        # #         'tipo':'Ponente',
+        # #         })
+        
+        # bloques=Bloque.objects.filter(congreso=sala.congreso,published=True)
+        # id_b=[]
+        # for pp in bloques:
+            
+        #     id_b.append(pp.pk)
+        # moderadores=Moderador.objects.filter(bloque_moderador__in=id_b).distinct()
+
+        # for moderador in moderadores: 
+        #     var=False
+        #     for pon in ponentes_env:
+        #         if pon['id_user']==moderador.user.pk:
+        #             var=True
+        #     if not var:
+        #         ponentes_env.append({
+        #         'id':moderador.id,
+        #         'id_user':moderador.user.pk,
+        #         'nombre': moderador.user.usuario.first_name,
+        #         'apellido': moderador.user.usuario.last_name ,
+        #         'foto':moderador.user.foto,
+        #         'tipo':'Moderador',
+        #         })
+
+
+        # context['ponentes_congreso']=ponentes_env
+        # cat_pago=RelCongresoCategoriaPago.objects.filter(congreso=congreso.pk)
+        # context['cat_ponente']=RelPonenciaPonente.objects.all()
+
+        # if self.request.user.is_authenticated :
+        #     user_perfil=PerfilUsuario.objects.filter(usuario=self.request.user.pk).first()
+        #     context['cuestionario_aprobado']=RelCongresoUser.objects.filter(user=user_perfil.pk, congreso=congreso.pk,is_constancia=True).exists()
+        #     talleres=Taller.objects.filter(congreso=congreso.pk,published=True).order_by('fecha_inicio')
+        #     ver=[]
+        #     for taller in talleres:
+        #         if RelTalleresCategoriaPago.objects.filter(taller=taller).exists():
+        #             cat_pa=RelTalleresCategoriaPago.objects.filter(taller=taller)
+        #         else:
+        #             cat_pa=True
+                
+        #         if RelTallerUser.objects.filter(user=user_perfil.pk, taller=taller.pk).exists():
+        #             ver.append([taller,cat_pa,True])
+        #         else:
+        #             ver.append([taller,cat_pa,False])  
+        #     context['talleres']=ver
+        #     pagos = RelCongresoUser.objects.filter(user=user_perfil.pk, congreso=congreso.pk).order_by('precio')
+            
+        #     if pagos.exists():
+        #         pagos_p = RelCongresoUser.objects.filter(user=user_perfil.pk, congreso=congreso.pk,is_pagado=True).order_by('precio') 
+        #         if pagos_p.exists():
+        #             context['permiso'] = True
+        #         else:
+        #             context['permiso'] = True
+        #     else: 
+        #         context['permiso'] = False                                                                  
+        # else:
+        #     talleres=Taller.objects.filter(congreso=congreso.pk,published=True).order_by('fecha_inicio')
+        #     ver=[]
+        #     for taller in talleres:
+        #         if RelTalleresCategoriaPago.objects.filter(taller=taller).exists():
+        #             cat_pa=RelTalleresCategoriaPago.objects.filter(taller=taller)
+        #         else:
+        #             cat_pa=True
+        #         ver.append([taller,cat_pa,False])      
+        #     context['talleres']=ver
+        #     context['permiso'] = False  
+        # context['categorias_pago']=cat_pago
+        # context['programas']=DocumentoPrograma.objects.filter(congreso=congreso)
+        # context['trabajos']=TrabajosInvestigacion.objects.filter(congreso=congreso)
+        # context['preg_frecuentes']=PreguntasFrecuentes.objects.filter(congreso=congreso,published=True)
+        # context['cuestionario']=CuestionarioPregunta.objects.filter(congreso=congreso,published=True).exists()
+           
+        return context
+    
 
 
 class ViewPonenciasSala(TemplateView):

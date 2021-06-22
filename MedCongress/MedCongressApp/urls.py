@@ -7,7 +7,7 @@ GetCuestionario,SetConstancia,EvaluarPonencia,Resultado_Cuestionario,Get_Constan
 ViewErrorFact,PerfilUpdateView,CambiarPass,UpdateEvaluarPonencia,UserAutocomplete,ViewErrorRegistrar,RegistroExitoso,
 PonenteAutocomplete,ModeradorAutocomplete,CongresoAutocomplete,PatrocinadorAutocomplete,SocioAutocomplete,ViewTaller,
 EvaluarTaller,UpdateEvaluarTaller,TallerAutocomplete,PonenciaAutocomplete,ViewCart,ContactoExitoso,GetFacturaPrueba,GetContactos,Enviar,
-Webhook,PagoExitoso2,ViewTrabajo,ViewSala,ViewPonenciasSala,DonwloadTrabajo,PerfilCongresos,PerfilConstancias,VideoBloque)
+Webhook,PagoExitoso2,ViewTrabajo,ViewSala,ViewPonenciasSala,DonwloadTrabajo,SalaDetail,PerfilCongresos,PerfilConstancias,VideoBloque)
 
 urlpatterns = [
     # path('login',login,name='auth'),
@@ -18,7 +18,7 @@ urlpatterns = [
     path('registrarse', PerfilUserCreate.as_view(), name='Registrarse'),
     path('ponencia/<str:path>', ViewPonencia.as_view(), name='View_ponencia'),
     path('taller/<str:path>', ViewTaller.as_view(), name='View_taller'),
-    path('sala/<str:path>', ViewSala.as_view(), name='View_sala'),
+    path('sala/<str:path>', SalaDetail.as_view(), name='View_sala'),
     path('ponencias_sala/<str:path>', ViewPonenciasSala.as_view(), name='View_ponencias_sala'),
     
     path('error404', ViewError404.as_view(), name='Error404'),
@@ -67,7 +67,7 @@ urlpatterns = [
     path('evaluar/taller',EvaluarTaller.as_view() , name='EvaluarTaller'),
     path('reevaluar/taller',UpdateEvaluarTaller.as_view() , name='UpdateEvaluarTaller'),
 
-      path('evaluar/ponencia',EvaluarPonencia.as_view() , name='EvaluarPonencia'),
+    path('evaluar/ponencia',EvaluarPonencia.as_view() , name='EvaluarPonencia'),
     path('reevaluar/ponencia',UpdateEvaluarPonencia.as_view() , name='UpdateEvaluarPonencia'),
 
     

@@ -489,8 +489,34 @@ class Sala(models.Model):
     color=models.CharField(max_length=10,default='#4A5966')
     congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
     imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='salas',blank=True, null=True  )
+    imagen_seg=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='salas',error_messages={
+"blank": 'Debe  entrar una <b> Imagen Segundaria </b>'},null=True,blank=True)
+    imagen_home=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='salas',error_messages={
+"blank": 'Debe  entrar una <b> Imagen Segundaria </b>'},null=True, blank=True)
     path=models.CharField(max_length=250, help_text='campo para identificarlo por la URL')
     published=models.BooleanField(null=True,blank=True)
+    ponencia_streamming=models.IntegerField(null=True,blank=True)
+    meta_og_title=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook Título</b> debe tener máximo 50 caracteres"})
+    meta_description=models.TextField(max_length=160,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas Principales Descripción</b> debe tener máximo 160 caracteres"})
+    meta_og_description=models.TextField(max_length=160,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook Descripción</b> debe tener máximo 160 caracteres"})
+    meta_og_type=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook Tipo</b> debe tener máximo 50 caracteres"})
+    meta_og_url=models.CharField(max_length=250,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para FaceBook URL</b> debe tener máximo 250 caracteres"})
+    meta_twitter_card=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para Redes Sociales Card</b> debe tener máximo 50 caracteres"})
+    meta_twitter_site=models.CharField(max_length=250,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para Redes Sociales Sitio</b> debe tener máximo 250 caracteres"})
+    meta_twitter_creator=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas para Redes Sociales Creador</b> debe tener máximo 50 caracteres"})
+    meta_keywords=models.TextField(max_length=250,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas Principales Palabras Claves </b> debe tener máximo 250 caracteres"})
+    meta_og_imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='metas',blank=True, null=True )
+    meta_title=models.CharField(max_length=50,null=True,blank=True,error_messages={
+"max_length": "El Campo <b>Metas Principales Título </b> debe tener máximo 50 caracteres"})
     class Meta:
         verbose_name='Sala'
         verbose_name_plural='Salas'

@@ -43,8 +43,6 @@ class CongresForm(forms.ModelForm):
 
         self.fields['titulo'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['sub_titulo'].widget.attrs.update({'class': 'form-control'}) 
-        # self.fields['imagen_seg'].widget.attrs.update({ 'data-toggle':"tooltip",'data-popup':"tooltip-custom", 'data-original-title':"La Imagen debe ser de 1140 X 240 pixel "})  
-        # self.fields['imagen_seg'].widget.attrs.update({'class': ' form-control '}) 
         self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control'})   
         self.fields['published'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['ver_titulo'].widget.attrs.update({'class': 'form-control'})    
@@ -1050,27 +1048,50 @@ class CongresoTrabajoForm(forms.ModelForm):
 
 class CongresoSalaForm(forms.ModelForm):
     titulo=forms.CharField(label='Título',required=True)
-    imagen=forms.CharField(required=False,label='Imagen')
+    prueba=forms.CharField(required=False)
+    prueba1=forms.CharField(required=False)
+    prueba_home=forms.CharField(required=False,label='Imagen Principal')
     published=forms.BooleanField(label='Publicado',required=False)
+    ponencia_streamming = forms.ChoiceField(choices=[],required=False)
     class Meta:
         model=Sala
-        fields=['titulo','congreso','detalle','cod_video','imagen','published','color']
+        fields=['titulo','congreso','detalle','cod_video','prueba_home','prueba','prueba1','published','color','ponencia_streamming','meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
+        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title']
        
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self,sala, *args, **kwargs):
         super().__init__(*args, **kwargs) 
-
+        if sala :
+            self.fields['ponencia_streamming'].choices=[(None, "-----------")]+[(c.pk, c.titulo) for c in Ponencia.objects.filter(sala=sala)]
         self.fields['detalle'].widget.attrs.update({'class': 'form-control ckeditor'}) 
         self.fields['congreso'].widget.attrs.update({'class': 'form-control','style':'display:none'}) 
         self.fields['titulo'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['published'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['ponencia_streamming'].widget.attrs.update({'class': 'form-control select2'}) 
         self.fields['cod_video'].widget.attrs.update({'class': 'form-control','rows':'7'}) 
-        
+        self.fields['meta_og_title'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['meta_description'].widget.attrs.update({'class': 'form-control','rows':'3'}) 
+        self.fields['meta_og_description'].widget.attrs.update({'class': 'form-control','rows':'3'})   
+        self.fields['meta_og_type'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['meta_og_url'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['meta_twitter_card'].widget.attrs.update({'class': 'form-control'})  
+        self.fields['meta_twitter_site'].widget.attrs.update({'class': 'form-control'})   
+        self.fields['meta_twitter_creator'].widget.attrs.update({'class': 'form-control '})  
+        self.fields['meta_keywords'].widget.attrs.update({'class': 'form-control','rows':'3'})   
+        self.fields['meta_og_imagen'].widget.attrs.update({'class': 'form-control '}) 
+        self.fields['meta_title'].widget.attrs.update({'class': 'form-control'})  
     def clean(self, *args, **kwargs):
         cleaned_data = super(CongresoSalaForm, self).clean(*args, **kwargs)    
-        imagen = cleaned_data.get('imagen', None) 
-        if not imagen :
-            self.add_error('imagen', 'Debe al menos entrar una <b>Imagen </b>')
+        imagenes = cleaned_data.get('prueba', None)    
+        imagen_seg = cleaned_data.get('prueba1', None)
+        imagen_home = cleaned_data.get('prueba_home', None)
+        
+        if not imagenes :
+            self.add_error('prueba', 'Debe entrar una <b>Imagen Principal</b>')
+        if not imagen_seg :
+            self.add_error('prueba1', 'Debe entrar una <b>Imagen del Programa 2</b>')
+        if not imagen_home :
+            self.add_error('imagen_home', 'Debe  entrar una <b>Imagen del Programa 1</b>')
 
 class ExportarLogsCongresoExelForm(forms.ModelForm):
     congreso= forms.ModelChoiceField(queryset=Congreso.objects.all(),label='Congreso')

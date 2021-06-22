@@ -86,32 +86,41 @@
             </div>
         </div>
        
-        <div class="row mb-3"> 
+      
             
-            <div class="row">
+            <div class="row cod_video">
             {% for sala in salas %}
             
                 <div class="col-md-12 salas-streamig"   >
                     <div class="row mb-3"> 
-                        <div class="col-md-4" >
-                            <a href="{% url 'View_sala' sala.path %}"><img src="{%static '/'%}{{sala.imagen }}" class="img-fluid"></a>
+                        <div class="col-md-4 " >
+                            <a href="{% url 'View_sala' sala.sala.path %}"><img src="{%static '/'%}{{sala.sala.imagen }}" class="img-fluid"></a>
                           
                         </div>
-                        <div class="col-md-4" >
+                        <div class="col-md-6 sala-title d-flex flex-column justify-content-between " >
                            
-                            <h3 class="title my-3"  style="color: {{sala.color}};">{{sala.titulo }}</h3>
+                            <h3 class="title my-3"  style="color: {{sala.sala.color}};"> <strong>{{sala.sala.titulo }}</strong></h3>
+                            <h4 class="title my-3"> {{ sala.ponencia.titulo}}</h4>
                            
+                          <span class=" title my-3"> <br>  <h6 class="sala-ponente"><strong>PONENTE</strong></h6> 
+                            {%for ponente in sala.ponentes%}
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" class="name" onclick="VerPerfil('{{ponente.user.id}}')">
+                            <h6 class="name my-3"><strong>{{ponente.user.usuario.first_name}}  {{ponente.user.usuario.last_name}}</strong>
+                                </h6>
+                            </a>
+                            {%endfor%}
+                           </span> 
                         </div>
-                        <div class="col-md-4 btn-sala d-flex flex-column justify-content-between align-items-end" >
+                        <div class="col-md-2 btn-sala d-flex flex-column justify-content-between align-items-end" >
                             <div class="icon" style="float: right;"><img src="{% static '/assets/img/iconos/sala.png'%}"></div>
-                            <a href="{% url 'View_sala' sala.path %}" style="float: right;"  class="cta programa me-md-3 me-0 mt-md-0 mt-3">  VER SALA  <i class="fa fa-eye" style="margin-left: 10px;"></i> </a>
+                            <a href="{% url 'View_sala' sala.sala.path %}" style="float: right;"  class="cta programa me-md-3 me-0 mt-md-0 mt-3">  VER SALA  <i class="fa fa-eye" style="margin-left: 10px;"></i> </a>
                            
                         </div>
                     </div>
                 </div>  
             {% endfor %}
             </div>
-        </div>
+        
          
     </div>
 
@@ -305,7 +314,7 @@
                                                         <div class="col-md-6  mt-md-0" style="padding-top: 50px;" >
                                                                 {%if evento.sala %}
                                                                 <div class="col-md-12 ponencia  mt-md-0" > 
-                                                                 <a href="{% url 'View_ponencias_sala' path=evento.sala.path%}" style="color: {{evento.sala.color}};" class="more d-block "><strong> {{evento.sala}}</strong></a>
+                                                                 <a href="{% url 'View_sala' path=evento.sala.path%}" style="color: {{evento.sala.color}};" class="more d-block "><strong> {{evento.sala}}</strong></a>
                                                                 </div>
                                                                 {%endif%} 
                                                             <h4 class="ponencia-name ponencia pt-3"><strong> {{evento.titulo}}</strong></h4>
@@ -381,7 +390,7 @@
                                         <small class="hour d-md-none">{{pon.fecha_inicio|date:"H:i"}}</small>
                                         <h2 class="accordion-header" id="heading-{{forloop.counter}}-{{forloop.parentloop.counter}}">
                                             <h3 class="accordion-button accordion-button-h2 collapsed pt-0"  data-bs-toggle="collapse" data-bs-target="#collapse-{{forloop.counter}}-{{forloop.parentloop.counter}}" aria-expanded="true" aria-controls="collapse-{{forloop.counter}}-{{forloop.parentloop.counter}}">
-                                              <span>{%if pon.sala %}<span style="color: {{pon.sala.color}};"><strong> {{pon.sala|upper}}</strong>   </span> {%endif%} <br>
+                                              <span>{%if pon.sala %}<span style="color: {{pon.sala.color}};"><strong> {{pon.sala|upper}}</strong>   </span>  <br>{%endif%}
                                                 <div>{{pon.titulo}}</div> </span>  
                                             </h3>
                                         </h2>
@@ -417,7 +426,7 @@
                                                     <div class="row"> 
                                                         {%if pon.sala %}
                                                         <div class="col-md-6 ponencia  mt-md-0" > 
-                                                         <a href="{% url 'View_ponencias_sala' path=pon.sala.path%}" class="more d-block "  style="color: {{pon.sala.color}};"><strong> Ver Sala</strong></a>
+                                                         <a href="{% url 'View_sala' pon.sala.path %}" class="more d-block "  style="color: {{pon.sala.color}};"><strong> Ver Sala</strong></a>
                                                     
                                                         </div>
                                                         {%endif%} 
