@@ -341,7 +341,7 @@
                                                     <div class="row" >
                                                         {%for evento in pon.eventos %}
                                                         <div class="col-md-6  mt-md-0" style="padding-top: 50px;" >
-                                                            <h4 class="ponencia-name ponencia pt-3"><strong> {{evento.titulo}}</strong></h4>
+                                                            <h4 class="ponencia-name ponencia pt-3"><strong><span style="color: #909094;">{{evento.fecha_inicio|date:"H:i"}}</span> {{evento.titulo}}</strong></h4>
                                                             <span class="detalle d-block "><small>  {{evento.detalle}}</small></span>
                                                             <div class="row"> 
                                                                

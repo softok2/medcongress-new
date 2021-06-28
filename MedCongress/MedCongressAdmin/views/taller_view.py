@@ -373,11 +373,7 @@ class  TallerPonenteCreateView(validarUser,CreateView):
 
         return self.success_url 
 
-    # def form_invalid(self, form):
-    #     for error in form.errors:
-    #         print(error)
-    #         form[error].field.widget.attrs['class'] += ' is-invalid'
-    #     return super(PonenciaPonenteCreateView, self).form_invalid(form)
+   
 
     def get_context_data(self, **kwargs):
         ctx = super(TallerPonenteCreateView, self).get_context_data(**kwargs)

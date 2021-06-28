@@ -89,39 +89,31 @@
       
             
             <div class="row cod_video">
+           
             {% for sala in salas %}
             
-                <div class="col-md-12 salas-streamig"   >
-                    <div class="row mb-3"> 
-                        <div class="col-md-4 " >
+            {%if forloop.first%}
+                <div class="row">
+            {% endif %}
+                    <div class="col-md-4 mb-md-0 mb-5"  >
+                        <div class="ponencia" >
                             <a href="{% url 'View_sala' sala.sala.path %}"><img src="{%static '/'%}{{sala.sala.imagen }}" class="img-fluid"></a>
-                          
-                        </div>
-                        <div class="col-md-6 sala-title d-flex flex-column justify-content-between " >
-                           
-                            <h3 class="title my-3"  style="color: {{sala.sala.color}};"> <strong>{{sala.sala.titulo }}</strong></h3>
-                            <h4 class="title my-3"> {{ sala.ponencia.titulo}}</h4>
-                           
-                          <span class=" title my-3"> <br>  <h6 class="sala-ponente"><strong>PONENTE</strong></h6> 
-                            <div class="row">
-                            {%for ponente in sala.ponentes%}
-                            <div class="col">  <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" class="name" onclick="VerPerfil('{{ponente.user.id}}')">
-                            <h6 class="name my-3"><strong>{{ponente.user.usuario.first_name}}  {{ponente.user.usuario.last_name}}</strong>
-                                </h6>
-                            </a></div>
-                          
-                            {%endfor%}
-                        </div>
-                           </span> 
-                        </div>
-                        <div class="col-md-2 btn-sala d-flex flex-column justify-content-between align-items-end" >
-                            <div class="icon" style="float: right;"><img src="{% static '/assets/img/iconos/sala.png'%}"></div>
-                            <a href="{% url 'View_sala' sala.sala.path %}" style="float: right;"  class="cta programa me-md-3 me-0 mt-md-0 mt-3">  VER SALA  <i class="fa fa-eye" style="margin-left: 10px;"></i> </a>
-                           
+                            <h3 class="title my-3" style="color: {{sala.sala.color}};">{{sala.sala.titulo }}</h3>
+                            <a href="{% url 'View_sala' sala.sala.path %}" style="color: {{sala.sala.color}};" class="more">Ver Streaming</a>
                         </div>
                     </div>
-                </div>  
-            {% endfor %}
+              
+            {%if forloop.counter|divisibleby:3 %}
+                </div>
+                <div class='row'>
+            {%endif%}
+            {%if forloop.last%}
+            </div>
+            <div class="row separador" class=""></div>
+            {% endif %}
+
+           
+        {% endfor %}
             </div>
         
          
@@ -320,7 +312,7 @@
                                                                  <a href="{% url 'View_sala' path=evento.sala.path%}" style="color: {{evento.sala.color}};" class="more d-block "><strong> {{evento.sala}}</strong></a>
                                                                 </div>
                                                                 {%endif%} 
-                                                            <h4 class="ponencia-name ponencia pt-3"><strong> {{evento.titulo}}</strong></h4>
+                                                            <h4 class="ponencia-name ponencia pt-3"><strong><span style="color: #909094;">{{evento.fecha_inicio|date:"H:i"}}</span>  {{evento.titulo}}</strong></h4>
                                                             <span class="detalle d-block "><small>  {{evento.detalle}}</small></span>
                                                             <div class="row"> 
                                                                

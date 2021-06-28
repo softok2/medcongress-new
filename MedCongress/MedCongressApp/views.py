@@ -2245,9 +2245,9 @@ class SalaDetail(TemplateView):
         else:
             context['ponencia_sala']=Ponencia.objects.filter(sala=sala).first()
 
-        print(context['ponencia_sala'])
+        
         context['ponentes_sala']=Ponente.objects.filter(ponencia_ponente__pk=context['ponencia_sala'].id).distinct()
-        salas=Sala.objects.filter(congreso=sala.congreso,published=True).exclude( cod_video__isnull=True).exclude(cod_video__exact='')
+        salas=Sala.objects.filter(congreso=sala.congreso,published=True).exclude( cod_video__isnull=True).exclude(cod_video__exact='').exclude(pk=sala.pk)
         salas_env=[]
         for sal in salas:
             if sal.ponencia_streamming:
@@ -2277,17 +2277,16 @@ class SalaDetail(TemplateView):
         context['fecha_ponencias']= data2
         ponencias_env=[] 
        
-        print(context['fecha_ponencias'])
         for dat in context['fecha_ponencias']:
             bloque_env=[]
             ponencias=Ponencia.objects.filter(fecha_inicio__date=dat,sala=sala,published=True,bloque=None).order_by('fecha_inicio')
             ponencias_bloque=Ponencia.objects.filter(fecha_inicio__date=dat,sala=sala,published=True).exclude(bloque=None).order_by('fecha_inicio')
-            print(ponencias_bloque)
+            
             for ponencia in ponencias_bloque:
                 if ponencia.bloque not in bloque_env:
                     bloque_env.append(ponencia.bloque)
             bloques=bloque_env
-            print(bloques)
+            
             # talleres=Taller.objects.filter(fecha_inicio__date=dat,congreso=sala.congreso,published=True,bloque=None).order_by('fecha_inicio')
             result=[]
             for bloque in bloques:
@@ -2364,7 +2363,7 @@ class SalaDetail(TemplateView):
             #     ponentes_env.append(Taller.objects.filter(reltallerponente__pk=taller.id).distinct()) 
             
             #     ponencias_env.append(talleres)
-        print()
+        
         context['ponencias']=ponencias_env
 
         # prueba_ponecia=Ponencia.objects.filter(sala=sala,published=True)

@@ -423,7 +423,7 @@ class  CongressPonenteCreateView(validarUser,CreateView):
         ctx['cong'] = pon
         ctx['sala']= Sala.objects.filter(congreso=pon)
         ctx['bloque']= Bloque.objects.filter(congreso=pon)
-        print(ctx)
+        
         return ctx
 
 class CongressBloquesListView(validarUser,TemplateView):

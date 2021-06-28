@@ -19,7 +19,7 @@ class ImagenCreateView(validarUser,CreateView):
     def post(self, request, **kwargs):
         if request.is_ajax:
             query =request.FILES
-            print(query)
+            
             imagen=ImagenCongreso(imagen=query)
             imagen.save()
-            print(imagen.pk)
+            
