@@ -549,15 +549,17 @@ class CongresoDetail(TemplateView):
        
         salas_env=[]
         for sala in salas:
+            
             if sala.ponencia_streamming:
                 ponencia_sala=Ponencia.objects.get(pk=sala.ponencia_streamming)
             else:
                 ponencia_sala=Ponencia.objects.filter(sala=sala).first()
-            salas_env.append({
-                'sala':sala,
-                'ponencia':ponencia_sala,
-                'ponentes':Ponente.objects.filter(ponencia_ponente__pk=ponencia_sala.id).distinct() ,
-                    })
+            if ponencia_sala:
+                salas_env.append({
+                    'sala':sala,
+                    'ponencia':ponencia_sala,
+                    'ponentes':Ponente.objects.filter(ponencia_ponente__pk=ponencia_sala.id).distinct() ,
+                        })
         context['salas']=salas_env      
         if congreso is not None:
            
@@ -2209,7 +2211,7 @@ class SalaDetail(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(SalaDetail, self).get_context_data(**kwargs)
         sala=Sala.objects.filter(path=self.kwargs.get('path'),published=True).first()
-        # context['patrocinadores']=RelCongresoAval.objects.filter(congreso=congreso)
+        context['patrocinadores']=RelCongresoAval.objects.filter(congreso=sala.congreso)
         # context['socios']=RelCongresoSocio.objects.filter(congreso=congreso)
         context['pagado']=False
         if self.request.user.is_authenticated:
@@ -2238,7 +2240,12 @@ class SalaDetail(TemplateView):
         
            
         context['sala']=sala
-        context['ponencia_sala']=Ponencia.objects.get(pk=sala.ponencia_streamming)
+        if sala.ponencia_streamming:
+            context['ponencia_sala']=Ponencia.objects.get(pk=sala.ponencia_streamming)
+        else:
+            context['ponencia_sala']=Ponencia.objects.filter(sala=sala).first()
+
+        print(context['ponencia_sala'])
         context['ponentes_sala']=Ponente.objects.filter(ponencia_ponente__pk=context['ponencia_sala'].id).distinct()
         salas=Sala.objects.filter(congreso=sala.congreso,published=True).exclude( cod_video__isnull=True).exclude(cod_video__exact='')
         salas_env=[]
@@ -2247,11 +2254,12 @@ class SalaDetail(TemplateView):
                 ponencia_sala=Ponencia.objects.get(pk=sal.ponencia_streamming)
             else:
                 ponencia_sala=Ponencia.objects.filter(sala=sal).first()
-            salas_env.append({
-                'sala':sal,
-                'ponencia':ponencia_sala,
-                'ponentes':Ponente.objects.filter(ponencia_ponente__pk=ponencia_sala.id).distinct() ,
-                })
+            if ponencia_sala:
+                salas_env.append({
+                    'sala':sal,
+                    'ponencia':ponencia_sala,
+                    'ponentes':Ponente.objects.filter(ponencia_ponente__pk=ponencia_sala.id).distinct() ,
+                    })
         context['all_sala']=salas_env
         #context['dias_faltan']=date.today()-self.model.fecha_inicio
         with connections['default'].cursor() as cursor:

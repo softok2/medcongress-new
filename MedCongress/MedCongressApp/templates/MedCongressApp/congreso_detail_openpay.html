@@ -103,12 +103,15 @@
                             <h4 class="title my-3"> {{ sala.ponencia.titulo}}</h4>
                            
                           <span class=" title my-3"> <br>  <h6 class="sala-ponente"><strong>PONENTE</strong></h6> 
+                            <div class="row">
                             {%for ponente in sala.ponentes%}
-                            <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" class="name" onclick="VerPerfil('{{ponente.user.id}}')">
+                            <div class="col">  <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" class="name" onclick="VerPerfil('{{ponente.user.id}}')">
                             <h6 class="name my-3"><strong>{{ponente.user.usuario.first_name}}  {{ponente.user.usuario.last_name}}</strong>
                                 </h6>
-                            </a>
+                            </a></div>
+                          
                             {%endfor%}
+                        </div>
                            </span> 
                         </div>
                         <div class="col-md-2 btn-sala d-flex flex-column justify-content-between align-items-end" >

@@ -89,17 +89,30 @@
     
 </section>
 
-{%if sala.cod_video%}
+{%if sala.cod_video %}
   <section class="congreso-ponencias pb-5" style="margin-top: -50px; z-index: 99">
     <div class="container-fluid">
       
         <div class="row mb-3">                       
-            <div class="col-md-8 ">
+            <div class="col-md-8 " style="z-index: 99; text-align: center;">
                 <div class="ponencia">
+                    {%if pagado %}
                     <div class="embed-responsive embed-responsive-16by9">
                         {{sala.cod_video|safe }}
                    
                    </div>
+                   {%else%}
+                   
+                   <div class="embed-responsive embed-responsive-16by9">
+                        <img src="{% static '/'%}{{sala.imagen}}"  class="img-fluid w-100" > 
+               
+                    </div>
+                    {% if user.is_authenticated %}
+                   <h6 class="title" style="color:{{sala.color}}">Debe comprar el congreso para visualizar este streaming </h6> 
+                   {%else%}
+                   <h6 class="title" style="color:{{sala.color}}">Debe autenticarse para visualizar este streaming    <a href="{% url 'login' %}" class="back align-self-end mt-md-5 mt-2"> Login</a></h6> 
+                   {%endif%}
+                    {%endif%}
                 </div>
             </div>
             <div class="col-md-3 salas-streamig salas-streamig-2">
@@ -490,7 +503,7 @@
         <div class="row">
             <div class="col">
                 <div class="content py-5">
-                    <h4 class="description">CONOCE A LOS PATROCINADORES DE ESTE CONGRESOS</h4>
+                    <h4 class="description">CONOCE A LOS PATROCINADORES DE ESTE EVENTO</h4>
                     <div class="art"></div>
                 </div>
             </div>

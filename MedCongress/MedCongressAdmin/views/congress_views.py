@@ -1033,12 +1033,27 @@ class CongresoDetail(TemplateView):
             pagado=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario,is_pagado=True)
             if pagado :
                 context['pagado']=True
-                InsertLog(congreso.pk,'Congreso',self.request.user.perfilusuario)
+                # InsertLog(congreso.pk,'Congreso',self.request.user.perfilusuario)
                 constancias=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario)
                 for constancia in constancias:
                     if constancia.is_constancia:
                         context['constancia']=True
-        context['salas']=Sala.objects.filter(congreso=congreso,published=True,cod_video__isnull=False )        
+        salas=Sala.objects.filter(congreso=congreso,published=True).exclude( cod_video__isnull=True).exclude(cod_video__exact='') 
+       
+        salas_env=[]
+        for sala in salas:
+            
+            if sala.ponencia_streamming:
+                ponencia_sala=Ponencia.objects.get(pk=sala.ponencia_streamming)
+            else:
+                ponencia_sala=Ponencia.objects.filter(sala=sala).first()
+            if ponencia_sala:
+                salas_env.append({
+                    'sala':sala,
+                    'ponencia':ponencia_sala,
+                    'ponentes':Ponente.objects.filter(ponencia_ponente__pk=ponencia_sala.id).distinct() ,
+                        })
+        context['salas']=salas_env      
         if congreso is not None:
            
             context['congreso']=congreso
@@ -1849,6 +1864,7 @@ class LogsCongreso(validarUser,FormView):
     template_name = 'MedCongressAdmin/log_congreso_form.html'
     def form_valid(self, form):
         id_congreso=self.request.POST['congreso']
+        congreso= Congreso.objects.get(pk=id_congreso)
         if self.request.POST['fecha_fin']:
             fecha_fin=self.request.POST['fecha_fin']
         else:
@@ -1859,103 +1875,104 @@ class LogsCongreso(validarUser,FormView):
         else:
             query=UserActivityLog.objects.filter(congreso=id_congreso,fecha__lt=fecha_fin).order_by('user','fecha')
         
+       
+        #Creamos el libro de trabajo
+        wb = Workbook()
+        #Definimos como nuestra hoja de trabajo, la hoja activa, por defecto la primera del libro
+        ws = wb.active
+        ws.column_dimensions['A'].width=5
+        ws.column_dimensions['B'].width=25
+        ws.column_dimensions['C'].width=20
+        ws.column_dimensions['D'].width=150
+        
+
+        titulo = NamedStyle(name="titulo")
+        titulo.font=Font(size=12,bold=True)
+        titulo.fill=PatternFill(fill_type='solid',start_color='00CCCCFF')
+        titulo.alignment=Alignment(horizontal='center',mergeCell=True)
+        titulo.border = Border(left=Side(border_style='thin',
+                        color='FF000000'),
+                right=Side(border_style='thin',
+                        color='FF000000'),
+                top=Side(border_style='thin',
+                        color='FF000000'),
+                bottom=Side(border_style='thin',
+                            color='FF000000'),
+                diagonal=Side(border_style='thin',
+                            color='FF000000'),
+                diagonal_direction=0,
+                outline=Side(border_style='thin',
+                            color='FF000000'),
+                vertical=Side(border_style='thin',
+                            color='FF000000'),
+                horizontal=Side(border_style='thin',
+                            color='FF000000')
+            )
+
+        celdas = NamedStyle(name="celdas")
+        celdas.font=Font(size=12)
+        
+        celdas.alignment=Alignment(horizontal='general',mergeCell=True)
+        celdas.border = Border(left=Side(border_style='thin',
+                        color='FF000000'),
+                right=Side(border_style='thin',
+                        color='FF000000'),
+                top=Side(border_style='thin',
+                        color='FF000000'),
+                bottom=Side(border_style='thin',
+                            color='FF000000'),
+                diagonal=Side(border_style='thin',
+                            color='FF000000'),
+                diagonal_direction=0,
+                outline=Side(border_style='thin',
+                            color='FF000000'),
+                vertical=Side(border_style='thin',
+                            color='FF000000'),
+                horizontal=Side(border_style='thin',
+                            color='FF000000')
+            )
+        celdas_fecha = NamedStyle(name="celdas_fecha")
+        celdas_fecha.font=Font(size=12)
+        
+        celdas_fecha.alignment=Alignment(horizontal='center',mergeCell=True)
+        celdas_fecha.border = Border(left=Side(border_style='thin',
+                        color='FF000000'),
+                right=Side(border_style='thin',
+                        color='FF000000'),
+                top=Side(border_style='thin',
+                        color='FF000000'),
+                bottom=Side(border_style='thin',
+                            color='FF000000'),
+                diagonal=Side(border_style='thin',
+                            color='FF000000'),
+                diagonal_direction=0,
+                outline=Side(border_style='thin',
+                            color='FF000000'),
+                vertical=Side(border_style='thin',
+                            color='FF000000'),
+                horizontal=Side(border_style='thin',
+                            color='FF000000')
+            )
+        label = NamedStyle(name="label")
+        label.font=Font(size=12,bold=True)
+        label.alignment=Alignment(horizontal='right',mergeCell=True)
+        #En la celda B1 ponemos el texto 'REPORTE DE PERSONAS'
+        ws['A1'] = 'Logs del Congresos :'
+        ws['A1'].font = Font(size=12,bold=True)
+        ws['A1'].alignment = Alignment(mergeCell='center',horizontal='center') 
+        
+        ws['A2'] ='" %s "'%(congreso.titulo) 
+        ws['A2'].font = Font(size=12,bold=True)
+        ws['A2'].alignment = Alignment(mergeCell='center',horizontal='center') 
+        
+        #Juntamos las celdas desde la B1 hasta la E1, formando una sola celda
+        ws.merge_cells('A1:F1')
+        ws.merge_cells('A2:F2')
+        #Creamos los encabezados desde la celda B3 hasta la E3
+        cont=3
+        num=1
+        id_user=0
         if query:
-            #Creamos el libro de trabajo
-            wb = Workbook()
-            #Definimos como nuestra hoja de trabajo, la hoja activa, por defecto la primera del libro
-            ws = wb.active
-            ws.column_dimensions['A'].width=5
-            ws.column_dimensions['B'].width=25
-            ws.column_dimensions['C'].width=20
-            ws.column_dimensions['D'].width=150
-            
-
-            titulo = NamedStyle(name="titulo")
-            titulo.font=Font(size=12,bold=True)
-            titulo.fill=PatternFill(fill_type='solid',start_color='00CCCCFF')
-            titulo.alignment=Alignment(horizontal='center',mergeCell=True)
-            titulo.border = Border(left=Side(border_style='thin',
-                           color='FF000000'),
-                 right=Side(border_style='thin',
-                            color='FF000000'),
-                 top=Side(border_style='thin',
-                          color='FF000000'),
-                 bottom=Side(border_style='thin',
-                             color='FF000000'),
-                 diagonal=Side(border_style='thin',
-                               color='FF000000'),
-                 diagonal_direction=0,
-                 outline=Side(border_style='thin',
-                              color='FF000000'),
-                 vertical=Side(border_style='thin',
-                               color='FF000000'),
-                 horizontal=Side(border_style='thin',
-                                color='FF000000')
-                )
-
-            celdas = NamedStyle(name="celdas")
-            celdas.font=Font(size=12)
-            
-            celdas.alignment=Alignment(horizontal='general',mergeCell=True)
-            celdas.border = Border(left=Side(border_style='thin',
-                           color='FF000000'),
-                 right=Side(border_style='thin',
-                            color='FF000000'),
-                 top=Side(border_style='thin',
-                          color='FF000000'),
-                 bottom=Side(border_style='thin',
-                             color='FF000000'),
-                 diagonal=Side(border_style='thin',
-                               color='FF000000'),
-                 diagonal_direction=0,
-                 outline=Side(border_style='thin',
-                              color='FF000000'),
-                 vertical=Side(border_style='thin',
-                               color='FF000000'),
-                 horizontal=Side(border_style='thin',
-                                color='FF000000')
-                )
-            celdas_fecha = NamedStyle(name="celdas_fecha")
-            celdas_fecha.font=Font(size=12)
-            
-            celdas_fecha.alignment=Alignment(horizontal='center',mergeCell=True)
-            celdas_fecha.border = Border(left=Side(border_style='thin',
-                           color='FF000000'),
-                 right=Side(border_style='thin',
-                            color='FF000000'),
-                 top=Side(border_style='thin',
-                          color='FF000000'),
-                 bottom=Side(border_style='thin',
-                             color='FF000000'),
-                 diagonal=Side(border_style='thin',
-                               color='FF000000'),
-                 diagonal_direction=0,
-                 outline=Side(border_style='thin',
-                              color='FF000000'),
-                 vertical=Side(border_style='thin',
-                               color='FF000000'),
-                 horizontal=Side(border_style='thin',
-                                color='FF000000')
-                )
-            label = NamedStyle(name="label")
-            label.font=Font(size=12,bold=True)
-            label.alignment=Alignment(horizontal='right',mergeCell=True)
-            #En la celda B1 ponemos el texto 'REPORTE DE PERSONAS'
-            ws['A1'] = 'Logs del Congresos :'
-            ws['A1'].font = Font(size=12,bold=True)
-            ws['A1'].alignment = Alignment(mergeCell='center',horizontal='center') 
-            
-            ws['A2'] ='" %s "'%(query.first().congreso.titulo) 
-            ws['A2'].font = Font(size=12,bold=True)
-            ws['A2'].alignment = Alignment(mergeCell='center',horizontal='center') 
-           
-            #Juntamos las celdas desde la B1 hasta la E1, formando una sola celda
-            ws.merge_cells('A1:F1')
-            ws.merge_cells('A2:F2')
-            #Creamos los encabezados desde la celda B3 hasta la E3
-            cont=3
-            num=1
-            id_user=0
             for quer in query:
                 if id_user!=quer.user.pk:
                     cont = cont + 1
@@ -2000,22 +2017,22 @@ class LogsCongreso(validarUser,FormView):
                 
                 cont = cont + 1
                 num = num + 1
-            response = HttpResponse(content_type="application/ms-excel") 
-            response["Content-Disposition"] = "attachment; filename=LogsCongreso.xlsx"
-            wb.save(response)
-            return response
         else:
-            congreso=Congreso.objects.get(pk=id_congreso)
-            messages.warning(self.request, 'Este congreso no tiene Logs')
-            return HttpResponseRedirect(reverse_lazy('MedCongressAdmin:LogsCongreso'))
-
-     
+            ws.merge_cells('A%s:F%s'%(cont,cont))
+            ws.cell(row=cont,column=1).value = 'Este congreso no tiene Logs'
+        response = HttpResponse(content_type="application/ms-excel") 
+        response["Content-Disposition"] = "attachment; filename=LogsCongreso.xlsx"
+        wb.save(response)
+        return response
+        
+            
   
 class LogsUsuarios(validarUser,FormView):
     form_class=ExportarLogsUsuarioExelForm
     template_name = 'MedCongressAdmin/log_usuario_form.html'
     def form_valid(self, form):
         id_usuario=self.request.POST['usuario']
+        usuario=PerfilUsuario.objects.get(pk=id_usuario)
         if self.request.POST['fecha_fin']:
             fecha_fin=self.request.POST['fecha_fin']
         else:
@@ -2026,102 +2043,103 @@ class LogsUsuarios(validarUser,FormView):
         else:
             query=UserActivityLog.objects.filter(user=id_usuario,fecha__lt=fecha_fin).order_by('congreso','fecha')
         
+      
+        #Creamos el libro de trabajo
+        wb = Workbook()
+        #Definimos como nuestra hoja de trabajo, la hoja activa, por defecto la primera del libro
+        ws = wb.active
+        ws.column_dimensions['A'].width=5
+        ws.column_dimensions['B'].width=25
+        ws.column_dimensions['C'].width=20
+        ws.column_dimensions['D'].width=150
+
+        titulo = NamedStyle(name="titulo")
+        titulo.font=Font(size=12,bold=True)
+        titulo.fill=PatternFill(fill_type='solid',start_color='00CCCCFF')
+        titulo.alignment=Alignment(horizontal='center',mergeCell=True)
+        titulo.border = Border(left=Side(border_style='thin',
+                        color='FF000000'),
+                right=Side(border_style='thin',
+                        color='FF000000'),
+                top=Side(border_style='thin',
+                        color='FF000000'),
+                bottom=Side(border_style='thin',
+                            color='FF000000'),
+                diagonal=Side(border_style='thin',
+                            color='FF000000'),
+                diagonal_direction=0,
+                outline=Side(border_style='thin',
+                            color='FF000000'),
+                vertical=Side(border_style='thin',
+                            color='FF000000'),
+                horizontal=Side(border_style='thin',
+                            color='FF000000')
+            )
+
+        celdas = NamedStyle(name="celdas")
+        celdas.font=Font(size=12)
+        
+        celdas.alignment=Alignment(horizontal='general',mergeCell=True)
+        celdas.border = Border(left=Side(border_style='thin',
+                        color='FF000000'),
+                right=Side(border_style='thin',
+                        color='FF000000'),
+                top=Side(border_style='thin',
+                        color='FF000000'),
+                bottom=Side(border_style='thin',
+                            color='FF000000'),
+                diagonal=Side(border_style='thin',
+                            color='FF000000'),
+                diagonal_direction=0,
+                outline=Side(border_style='thin',
+                            color='FF000000'),
+                vertical=Side(border_style='thin',
+                            color='FF000000'),
+                horizontal=Side(border_style='thin',
+                            color='FF000000')
+            )
+        celdas_fecha = NamedStyle(name="celdas_fecha")
+        celdas_fecha.font=Font(size=12)
+        
+        celdas_fecha.alignment=Alignment(horizontal='center',mergeCell=True)
+        celdas_fecha.border = Border(left=Side(border_style='thin',
+                        color='FF000000'),
+                right=Side(border_style='thin',
+                        color='FF000000'),
+                top=Side(border_style='thin',
+                        color='FF000000'),
+                bottom=Side(border_style='thin',
+                            color='FF000000'),
+                diagonal=Side(border_style='thin',
+                            color='FF000000'),
+                diagonal_direction=0,
+                outline=Side(border_style='thin',
+                            color='FF000000'),
+                vertical=Side(border_style='thin',
+                            color='FF000000'),
+                horizontal=Side(border_style='thin',
+                            color='FF000000')
+            )
+        label = NamedStyle(name="label")
+        label.font=Font(size=12,bold=True)
+        label.alignment=Alignment(horizontal='right',mergeCell=True)
+        #En la celda B1 ponemos el texto 'REPORTE DE PERSONAS'
+        ws['A1'] = 'Logs del Usuario :'
+        ws['A1'].font = Font(size=12,bold=True)
+        ws['A1'].alignment = Alignment(mergeCell='center',horizontal='center') 
+        
+        ws['A2'] ='%s %s <<%s>>'%(usuario.usuario.first_name,usuario.usuario.last_name,usuario.usuario.email)
+        ws['A2'].font = Font(size=12,bold=True)
+        ws['A2'].alignment = Alignment(mergeCell='center',horizontal='center') 
+        
+        #Juntamos las celdas desde la B1 hasta la E1, formando una sola celda
+        ws.merge_cells('A1:F1')
+        ws.merge_cells('A2:F2')
+        #Creamos los encabezados desde la celda B3 hasta la E3
+        cont=3
+        num=1
+        id_congreso=0
         if query:
-            #Creamos el libro de trabajo
-            wb = Workbook()
-            #Definimos como nuestra hoja de trabajo, la hoja activa, por defecto la primera del libro
-            ws = wb.active
-            ws.column_dimensions['A'].width=5
-            ws.column_dimensions['B'].width=25
-            ws.column_dimensions['C'].width=20
-            ws.column_dimensions['D'].width=150
-
-            titulo = NamedStyle(name="titulo")
-            titulo.font=Font(size=12,bold=True)
-            titulo.fill=PatternFill(fill_type='solid',start_color='00CCCCFF')
-            titulo.alignment=Alignment(horizontal='center',mergeCell=True)
-            titulo.border = Border(left=Side(border_style='thin',
-                           color='FF000000'),
-                 right=Side(border_style='thin',
-                            color='FF000000'),
-                 top=Side(border_style='thin',
-                          color='FF000000'),
-                 bottom=Side(border_style='thin',
-                             color='FF000000'),
-                 diagonal=Side(border_style='thin',
-                               color='FF000000'),
-                 diagonal_direction=0,
-                 outline=Side(border_style='thin',
-                              color='FF000000'),
-                 vertical=Side(border_style='thin',
-                               color='FF000000'),
-                 horizontal=Side(border_style='thin',
-                                color='FF000000')
-                )
-
-            celdas = NamedStyle(name="celdas")
-            celdas.font=Font(size=12)
-            
-            celdas.alignment=Alignment(horizontal='general',mergeCell=True)
-            celdas.border = Border(left=Side(border_style='thin',
-                           color='FF000000'),
-                 right=Side(border_style='thin',
-                            color='FF000000'),
-                 top=Side(border_style='thin',
-                          color='FF000000'),
-                 bottom=Side(border_style='thin',
-                             color='FF000000'),
-                 diagonal=Side(border_style='thin',
-                               color='FF000000'),
-                 diagonal_direction=0,
-                 outline=Side(border_style='thin',
-                              color='FF000000'),
-                 vertical=Side(border_style='thin',
-                               color='FF000000'),
-                 horizontal=Side(border_style='thin',
-                                color='FF000000')
-                )
-            celdas_fecha = NamedStyle(name="celdas_fecha")
-            celdas_fecha.font=Font(size=12)
-            
-            celdas_fecha.alignment=Alignment(horizontal='center',mergeCell=True)
-            celdas_fecha.border = Border(left=Side(border_style='thin',
-                           color='FF000000'),
-                 right=Side(border_style='thin',
-                            color='FF000000'),
-                 top=Side(border_style='thin',
-                          color='FF000000'),
-                 bottom=Side(border_style='thin',
-                             color='FF000000'),
-                 diagonal=Side(border_style='thin',
-                               color='FF000000'),
-                 diagonal_direction=0,
-                 outline=Side(border_style='thin',
-                              color='FF000000'),
-                 vertical=Side(border_style='thin',
-                               color='FF000000'),
-                 horizontal=Side(border_style='thin',
-                                color='FF000000')
-                )
-            label = NamedStyle(name="label")
-            label.font=Font(size=12,bold=True)
-            label.alignment=Alignment(horizontal='right',mergeCell=True)
-            #En la celda B1 ponemos el texto 'REPORTE DE PERSONAS'
-            ws['A1'] = 'Logs del Usuario :'
-            ws['A1'].font = Font(size=12,bold=True)
-            ws['A1'].alignment = Alignment(mergeCell='center',horizontal='center') 
-            
-            ws['A2'] ='%s %s <<%s>>'%(query.first().user.usuario.first_name,query.first().user.usuario.last_name,query.first().user.usuario.email)
-            ws['A2'].font = Font(size=12,bold=True)
-            ws['A2'].alignment = Alignment(mergeCell='center',horizontal='center') 
-           
-            #Juntamos las celdas desde la B1 hasta la E1, formando una sola celda
-            ws.merge_cells('A1:F1')
-            ws.merge_cells('A2:F2')
-            #Creamos los encabezados desde la celda B3 hasta la E3
-            cont=3
-            num=1
-            id_congreso=0
             for quer in query:
                 if id_congreso!=quer.congreso.pk:
                     cont = cont + 1
@@ -2159,14 +2177,14 @@ class LogsUsuarios(validarUser,FormView):
                 
                 cont = cont + 1
                 num = num + 1
-            response = HttpResponse(content_type="application/ms-excel") 
-            response["Content-Disposition"] = "attachment; filename=LogsUsuario.xlsx"
-            wb.save(response)
-            return response
         else:
-            congreso=Congreso.objects.get(pk=id_congreso)
-            messages.warning(self.request, 'Este congreso no tiene Logs')
-            return HttpResponseRedirect(reverse_lazy('MedCongressAdmin:LogsCongreso'))
+            ws.merge_cells('A%s:F%s'%(cont,cont))
+            ws.cell(row=cont,column=1).value = 'Este usuario no tiene Logs'
+        response = HttpResponse(content_type="application/ms-excel") 
+        response["Content-Disposition"] = "attachment; filename=LogsUsuario.xlsx"
+        wb.save(response)
+        return response
+        
 
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
