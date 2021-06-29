@@ -4,8 +4,7 @@ import os
 from django.views.decorators.csrf import csrf_exempt
 from collections import namedtuple
 from pathlib import Path
-from datetime import date,datetime
-from datetime import timedelta
+from datetime import date,datetime,timedelta,timezone
 from django.dispatch import receiver
 from django.contrib.auth import user_logged_in, user_logged_out
 import openpay
@@ -2218,7 +2217,7 @@ class SalaDetail(TemplateView):
             pagado=RelCongresoUser.objects.filter(congreso=sala.congreso,user=self.request.user.perfilusuario,is_pagado=True)
             if pagado :
                 context['pagado']=True
-                # InsertLog(congreso.pk,'Congreso',self.request.user.perfilusuario)
+                InsertLog(sala.pk,'StreamingSala',self.request.user.perfilusuario)
                 # constancias=RelCongresoUser.objects.filter(congreso=congreso,user=self.request.user.perfilusuario)
                 # for constancia in constancias:
                 #     if constancia.is_constancia:
@@ -2517,7 +2516,7 @@ def InsertLog(id,tipo,usuario):
         congreso=Congreso.objects.get(pk=id)
         mensaje='Visitó el Congreso " %s "'%(congreso.titulo)
 
-        today = datetime.today()
+        today = datetime.now()
         formato2 = "%Y-%m-%d %H:%M:%S"
         last_log=UserActivityLog.objects.filter(user=usuario).order_by('pk').last()
         if last_log:

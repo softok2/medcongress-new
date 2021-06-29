@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db.models import Sum
 from django.db import connections
-from datetime import datetime
+from datetime import datetime,timedelta
 from django.core.mail import EmailMessage
 from django.core.exceptions import RequestDataTooBig
 from django.http import (HttpResponse, HttpResponseBadRequest,
@@ -1884,13 +1884,17 @@ class LogsCongreso(validarUser,FormView):
         congreso= Congreso.objects.get(pk=id_congreso)
         if self.request.POST['fecha_fin']:
             fecha_fin=self.request.POST['fecha_fin']
+            d_fecha_final = datetime.strptime(fecha_fin,'%Y-%m-%d') + timedelta(days=1)
         else:
-            fecha_fin=datetime.now()   
+             d_fecha_final = datetime.now() + timedelta(days=1)   
         fecha_inicio=self.request.POST['fecha_inicio']
         if fecha_inicio:
-            query=UserActivityLog.objects.filter(congreso=id_congreso,fecha__lt=fecha_fin,fecha__gte=fecha_inicio).order_by('user','fecha')
+            d_fecha_inicio = datetime.strptime(fecha_inicio,'%Y-%m-%d')
+          
+            query=UserActivityLog.objects.filter(congreso=id_congreso,fecha__range=[d_fecha_inicio,d_fecha_final]).order_by('user','fecha')
         else:
-            query=UserActivityLog.objects.filter(congreso=id_congreso,fecha__lt=fecha_fin).order_by('user','fecha')
+            
+            query=UserActivityLog.objects.filter(congreso=id_congreso,fecha__lt=d_fecha_final).order_by('user','fecha')
         
        
         #Creamos el libro de trabajo
@@ -2052,13 +2056,15 @@ class LogsUsuarios(validarUser,FormView):
         usuario=PerfilUsuario.objects.get(pk=id_usuario)
         if self.request.POST['fecha_fin']:
             fecha_fin=self.request.POST['fecha_fin']
+            d_fecha_final = datetime.strptime(fecha_fin,'%Y-%m-%d') + timedelta(days=1)
         else:
-            fecha_fin=datetime.now()   
+             d_fecha_final = datetime.now() + timedelta(days=1)   
         fecha_inicio=self.request.POST['fecha_inicio']
         if fecha_inicio:
-            query=UserActivityLog.objects.filter(user=id_usuario,fecha__lt=fecha_fin,fecha__gte=fecha_inicio).order_by('congreso','fecha')
+            d_fecha_inicio = datetime.strptime(fecha_inicio,'%Y-%m-%d')
+            query=UserActivityLog.objects.filter(user=id_usuario,fecha__range=[d_fecha_inicio,d_fecha_final]).order_by('congreso','fecha')
         else:
-            query=UserActivityLog.objects.filter(user=id_usuario,fecha__lt=fecha_fin).order_by('congreso','fecha')
+            query=UserActivityLog.objects.filter(user=id_usuario,fecha__lt=d_fecha_final).order_by('congreso','fecha')
         
       
         #Creamos el libro de trabajo
