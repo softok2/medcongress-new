@@ -1089,9 +1089,9 @@ class CongresoSalaForm(forms.ModelForm):
         if not imagenes :
             self.add_error('prueba', 'Debe entrar una <b>Imagen Principal</b>')
         if not imagen_seg :
-            self.add_error('prueba1', 'Debe entrar una <b>Imagen del Programa 2</b>')
+            self.add_error('prueba1', 'Debe entrar una <b>Imagen 2 del Programa </b>')
         if not imagen_home :
-            self.add_error('imagen_home', 'Debe  entrar una <b>Imagen del Programa 1</b>')
+            self.add_error('prueba_home', 'Debe  entrar una <b>Imagen 1 del Programa</b>')
 
 class ExportarLogsCongresoExelForm(forms.ModelForm):
     congreso= forms.ModelChoiceField(queryset=Congreso.objects.all(),label='Congreso')

@@ -1735,18 +1735,35 @@ class  CongressSalaCreateView(validarUser,CreateView):
     def form_valid(self, form):
         congreso=form.save(commit=False)
 
-        image_64_encode=self.request.POST['imagen']
-        campo = image_64_encode.split(",")
-        image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
-        
         chars = '0123456789'
+        image_64_encode=self.request.POST['prueba']
+        campo = image_64_encode.split(",")
         nombre = get_random_string(5, chars)
-        image_result = open('MedCongressApp/static/sala/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+        image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
+        image_result = open('MedCongressApp/static/sala/imagen_home_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
         image_result.write(image_64_decode)
+        congreso.imagen_home='sala/imagen_home_%s.png'%(nombre)
+
+        image_64_encode=self.request.POST['prueba1']
+        campo = image_64_encode.split(",")
+        nombre = get_random_string(5, chars)
+        image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
+        image_result = open('MedCongressApp/static/sala/imagen_seg_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+        image_result.write(image_64_decode)
+        congreso.imagen_seg='sala/imagen_seg_%s.png'%(nombre)
+        
+        image_64_encode=self.request.POST['prueba_home']
+        campo = image_64_encode.split(",")
+        nombre = get_random_string(5, chars)
+        image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
+        image_result = open('MedCongressApp/static/sala/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+        image_result.write(image_64_decode) 
         congreso.imagen='sala/imagen_%s.png'%(nombre)
         nombre = get_random_string(3, chars)
         path=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
         congreso.path=path+nombre
+       
+        congreso.ponencia_streamming=None
         congreso.save()
         return super(CongressSalaCreateView, self).form_valid(form)
 
