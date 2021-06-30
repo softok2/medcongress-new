@@ -14,7 +14,9 @@ textarea:focus,
   border: 0;
   box-shadow: none;
 }
-
+.mb-5 {
+  margin-bottom: 0rem!important;
+}
 @media screen and (min-width: 992px) {
   .container-fluid {
     padding: 0 50px;
@@ -1120,10 +1122,10 @@ margin-left: 70px;
 }
 .ponencia{
 
-  margin-bottom: 40px;
+  margin-bottom: 0px;
 }
 .congreso-calendario .tab-pane .accordion .ponencias {
-  padding: 30px 40px 50px;
+  padding: 0px;
   background-color: #ffffff;
 }
 .congreso-calendario .tab-pane .accordion .ponencias .header {
@@ -1134,7 +1136,7 @@ margin-left: 70px;
 .perfil .header .name,
 .congreso-calendario .tab-pane .accordion .ponencias .header .cat,
 .perfil .header .cat {
-  font-size: 25px;
+  font-size: 18px;
   color: #4A5966;
   font-family: "DINPro-Regular_13937", sans-serif;
 }
@@ -1153,9 +1155,11 @@ margin-left: 70px;
   margin-bottom: 0;
   color: #40C8F4;
 }
-.ponencias .img-fluid{
+.ponencias .img-fluida{
 
   border-radius: 50%;
+  margin-right: 20px;
+  width: 100px;
 
 }
 .congreso-calendario .tab-pane .accordion .ponencias .bio,
@@ -1175,6 +1179,7 @@ margin-left: 70px;
   color: #4A5966;
   font-family: "DINPro-Regular_13937", sans-serif;
   text-decoration: none;
+  padding-bottom: 20px;
 }
 
 .congreso-calendario .tab-pane .accordion  .detalle {
@@ -1182,7 +1187,7 @@ margin-left: 70px;
   color: #4A5966;
   font-family: "DINPro-Regular_13937", sans-serif;
   text-decoration: none;
-  margin-top: -25px;
+  margin-top: 0px;
   margin-bottom: 25px;
 }
 .congreso-calendario .tab-pane .accordion .ponencias .more:hover {
@@ -1373,6 +1378,7 @@ margin-left: 70px;
     max-width: 90%;
     margin: 25px auto;
   }
+
 }
 .congreso-modal .modal-content {
   background: #fff url(../img/iconos/mundo.png) bottom right no-repeat;
