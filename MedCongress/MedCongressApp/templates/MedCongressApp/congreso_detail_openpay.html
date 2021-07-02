@@ -270,7 +270,7 @@
                                         <small class="hour d-md-none">{{pon.fecha_inicio|date:"H:i"}}</small>
                                         <h2 class="accordion-header" id="heading-{{forloop.counter}}">
                                         <h3 class="accordion-button accordion-button-h2 collapsed pt-0 " type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{forloop.counter}}" aria-expanded="true" aria-controls="collapse-{{forloop.counter}}">
-                                             {{pon.titulo}}
+                                            <span>{%if pon.eventos.0.sala %}<span style="color: {{pon.eventos.0.sala.color}};"><strong> {{pon.eventos.0.sala|upper}}</strong>   </span>  <br>{%endif%}  {{pon.titulo}}
                                         </h3>
                                         </h2>
                                         <div id="collapse-{{forloop.counter}}" class="accordion-collapse collapse show" aria-labelledby="heading-{{forloop.counter}}" data-bs-parent="#accordion-{{forloop.counter}}">
@@ -310,11 +310,6 @@
                                                     <div class="row" >
                                                         {%for evento in pon.eventos %}
                                                         <div class="col-md-6  mt-md-0" style="padding-top: 10px;" >
-                                                                {%if evento.sala %}
-                                                                <div class="col-md-12 ponencia  mt-md-0" > 
-                                                                 <a href="{% url 'View_sala' path=evento.sala.path%}" style="color: {{evento.sala.color}};" class="more d-block "><strong> {{evento.sala}}</strong></a>
-                                                                </div>
-                                                                {%endif%} 
                                                             <h4 class="ponencia-name ponencia pt-3"><strong><span style="color: #909094;">{{evento.fecha_inicio|date:"H:i"}}</span>  {{evento.titulo}}</strong></h4>
                                                             <span class="detalle d-block "><small>  {{evento.detalle}}</small></span>
                                                           
@@ -410,7 +405,7 @@
                                                             <div class="row">
                                                                 <div class="col-3">
                                                                     <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" class="name" onclick="VerPerfil('{{ponente.user.id}}')">
-                                                                    <div class="col-md-3 d-flex align-items-center">
+                                                                    <div class=" d-flex align-items-center">
                                                                         <img src=" {% if ponente.user.foto%}{% static '/'%}{{ponente.user.foto}}{%else%}{% static 'assets/img/congresos/avatar-ponencia.png'%}{%endif%}" class="img-fluida img-fluid" width="100px">
                                                                     </div>
                                                                     </a>

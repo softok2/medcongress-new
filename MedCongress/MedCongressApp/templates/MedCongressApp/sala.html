@@ -73,24 +73,9 @@
 </style>
 {%endblock%}
 {% block contenido %}
-<section class="congreso-banner-congreso">
-    <div id="carouselCongreso" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-           
-            <div class="carousel-item  active">
-                <img src="{% static '/'%}{{sala.imagen_home}}"  class="img-fluid w-100" > 
-            </div>
-
-          
-            
-        </div>
-    </div>
-    
-    
-</section>
 
 {%if sala.cod_video %}
-  <section class="congreso-ponencias pb-5" style="margin-top: -50px; z-index: 99">
+  <section class="congreso-ponencias pb-5" style="margin-top: 111px; z-index: 99">
     <div class="container-fluid">
       
         <div class="row mb-3">                       
@@ -191,46 +176,7 @@
             <h1 class="section-subtitle"><strong>{{ponencia_sala.titulo|upper}}</strong></h1>
         </div>
     </div>
-    <section class="ponentes-sala">
-        <div class="container-fluid">
-            <div class="row ponentes" >
-                <h2 class="section-title mb-4" > PONENTES</h2>
-                <div class="col-md-9"> 
-                    <h6 style="color: #40C8F4;">PERFIL</h6>
-                    {% for ponente in ponentes_sala %}
-                    <div class="row perfil">
-                        <div class="col-md-2 d-flex align-items-center ponencias">
-                            <img src="{% if ponente.user.foto%}{% static '/'%}{{ponente.user.foto}}{%else%}{% static 'assets/img/congresos/avatar-ponencia.png'%}{%endif%} " class="img-fluid img-fluida">
-                        </div>
-                        <div class="col-md-9">
-                            <div class="header">
-                                <div class="row" >
-                                    
-                                    <div class="mt-md-0 mt-2 col-md-9 d-flex flex-column justify-content-center">
-                                        <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" class="name" onclick="VerPerfil('{{ponente.user.id}}')"><h4 class="name"><strong>{{ponente.user.usuario.first_name}}
-                                            {{ponente.user.usuario.last_name}}</strong></h4></a>
-                                        <h5 class="cat"> <strong>{{ponente.user.categoria}}</strong> </h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="bio mt-3">{%if ponente.user.puesto %}
-                            {{ponente.user.puesto}}
-                            {%endif%}</p>
-                        </div>
-                        <div class="col-md-1">
-                            <img class="icon" src="{% static '/assets/img/iconos/ponente-black.png'%}">   
-                        </div>
-                    </div>
-                    {%endfor%}
 
-                </div>
-                <div class="col-md-3"> 
-                    <h6 style="color: #40C8F4;">EVALUAR PONENCIA</h6>
-                </div>
-            
-            </div>
-        </div>
-    </section>
 
     <section class="programa-sala">
         <div class="container-fluid">
@@ -251,7 +197,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col" style="margin-top: 70px;">
-                <img src="{% static '/'%}{{congreso.imagen_seg}}" class="img-fluid">
+                <!-- <img src="{% static '/'%}{{sala.imagen_seg}}" class="img-fluid"> -->
             </div>
         </div>
         {%   for fecha_ponencia in fecha_ponencias %}
@@ -440,7 +386,7 @@
                                                             <div class="row">
                                                                 <div class="col-3">
                                                                     <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" class="name" onclick="VerPerfil('{{ponente.user.id}}')">
-                                                                    <div class="col-md-3 d-flex align-items-center">
+                                                                    <div class="d-flex align-items-center">
                                                                         <img src=" {% if ponente.user.foto%}{% static '/'%}{{ponente.user.foto}}{%else%}{% static 'assets/img/congresos/avatar-ponencia.png'%}{%endif%}" class="img-fluida img-fluid" width="100px">
                                                                     </div>
                                                                     </a>
