@@ -489,10 +489,7 @@ class Sala(models.Model):
     color=models.CharField(max_length=10,default='#4A5966')
     congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
     imagen=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='salas',blank=True, null=True  )
-    imagen_seg=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='salas',error_messages={
-"blank": 'Debe  entrar una <b> Imagen Segundaria </b>'},null=True,blank=True)
-    imagen_home=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='salas',error_messages={
-"blank": 'Debe  entrar una <b> Imagen Segundaria </b>'},null=True, blank=True)
+  
     path=models.CharField(max_length=250, help_text='campo para identificarlo por la URL')
     published=models.BooleanField(null=True,blank=True)
     ponencia_streamming=models.IntegerField(null=True,blank=True)

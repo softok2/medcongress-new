@@ -1048,14 +1048,13 @@ class CongresoTrabajoForm(forms.ModelForm):
 
 class CongresoSalaForm(forms.ModelForm):
     titulo=forms.CharField(label='Título',required=True)
-    prueba=forms.CharField(required=False)
-    prueba1=forms.CharField(required=False)
-    prueba_home=forms.CharField(required=False,label='Imagen Principal')
+    prueba_home=forms.CharField(required=False)
+   
     published=forms.BooleanField(label='Publicado',required=False)
     ponencia_streamming = forms.ChoiceField(choices=[],required=False)
     class Meta:
         model=Sala
-        fields=['titulo','congreso','detalle','cod_video','prueba_home','prueba','prueba1','published','color','ponencia_streamming','meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
+        fields=['titulo','congreso','detalle','cod_video','prueba_home','published','color','ponencia_streamming','meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
         'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title']
        
 
@@ -1082,16 +1081,12 @@ class CongresoSalaForm(forms.ModelForm):
         self.fields['meta_title'].widget.attrs.update({'class': 'form-control'})  
     def clean(self, *args, **kwargs):
         cleaned_data = super(CongresoSalaForm, self).clean(*args, **kwargs)    
-        imagenes = cleaned_data.get('prueba', None)    
-        imagen_seg = cleaned_data.get('prueba1', None)
+       
         imagen_home = cleaned_data.get('prueba_home', None)
         
-        if not imagenes :
-            self.add_error('prueba', 'Debe entrar una <b>Imagen Principal</b>')
-        if not imagen_seg :
-            self.add_error('prueba1', 'Debe entrar una <b>Imagen 2 del Programa </b>')
         if not imagen_home :
-            self.add_error('prueba_home', 'Debe  entrar una <b>Imagen 1 del Programa</b>')
+            self.add_error('prueba_home', 'Debe entrar una <b>Imagen Principal</b>')
+       
 
 class ExportarLogsCongresoExelForm(forms.ModelForm):
     congreso= forms.ModelChoiceField(queryset=Congreso.objects.all(),label='Congreso')
