@@ -3,6 +3,22 @@
 {% load static %}
 {% block styles %}
 <style>
+	div#loading {
+    
+    display: none;
+   
+    
+	}
+	.git{
+	
+		background:    url({% static 'MedCongressApp/images/loading.gif' %}) no-repeat;
+		  width: 55px;
+		  height: 55px;             
+		margin-top:-19px;
+		background-size: 55px 55px
+
+  
+	}
 	#geomap {
 		width: 100%;
 		height: 400px;
@@ -52,7 +68,19 @@
 					</div>
 				</div>
 				<div class="card-content collapse show">
+					
+				 </div>
 					<div class="card-body">
+						<div id="loading"> 
+
+							<div class="alert round bg-primary alert-icon-left alert-arrow-left alert-dismissible mb-2" role="alert">
+								<span class="alert-icon"><i class="la git"></i></span>
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									<span aria-hidden="true">×</span>
+								</button>
+								<strong>Guardando......</strong> 
+							</div>
+						</div>
 						{% if form.errors %}
 						{% for field in form %}
 							{% for error in field.errors %}
@@ -429,7 +457,7 @@
 																<i class="ft-x position-right"></i>
 															</button>
 
-															<button id="save" type="submit" class="btn btn-primary">Guardar
+															<button id="save" type="submit" class="btn btn-primary" >Guardar
 																<i class="ft-save position-right"></i>
 															</button>
 
@@ -452,6 +480,7 @@
 <script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-select2.js'%}"></script>
 <script src="{% static 'MedCongressAdmin/assets/js/cropper.js'%}"></script>
 <script type="text/javascript">
+$("#country-form").submit(function(e) { $("#loading").show(); });
  $('#atras').click(function () {
             location.href = "{% url 'MedCongressAdmin:Congres_salas' path=cong.path %}";
         });
@@ -579,8 +608,8 @@ if (cropper3) {
 	$('#ver3').html(`<img class="img-fluid" id="avatar3" src="` + canvas3.toDataURL() + `"  alt="avatar">`);
 
 
-	$alert.removeClass('alert-success alert-warning');
-	$alert.show().addClass('alert-success').text('Nueva Imagen Cargada');
+	$alert3.removeClass('alert-success alert-warning');
+	$alert3.show().addClass('alert-success').text('Nueva Imagen Cargada');
 
 }
 });
@@ -589,6 +618,10 @@ if (cropper3) {
 
 
 	});
-
+	
+	// function loading(){
+    //         $("#loading").show();
+    //         // $("#content").hide();       
+    //     }
 </script>
 {% endblock %}
