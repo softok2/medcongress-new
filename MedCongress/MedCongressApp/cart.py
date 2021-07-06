@@ -68,8 +68,8 @@ class Cart:
         # for car in self.cart[1]:
         #     if relTallerCategoriaPago.taller.pk == car['id_congreso'] and car['tipo_evento']=='Taller':
         #         exist=True
-        if self.request.user.groups.filter(name='Laboratorio').exists():
-            exist=False
+        # if self.request.user.groups.filter(name='Laboratorio').exists():
+        #     exist=False
         if exist is False:
             esta=False
             cont=0
@@ -85,7 +85,7 @@ class Cart:
                 cont=cont+1   
                 
             if not esta: 
-                carrito=Carrito(id_congreso_cat_pago=relTallerCategoriaPago.pk,tipo_evento='Congreso'
+                carrito=Carrito(id_congreso_cat_pago=relTallerCategoriaPago.pk,tipo_evento='Taller'
                 ,id_evento=relTallerCategoriaPago.taller.pk,nombre_congreso=relTallerCategoriaPago.taller.titulo,id_cat_pago=relTallerCategoriaPago.categoria.pk,
                 nombre_cat_pago=relTallerCategoriaPago.categoria.nombre,precio=relTallerCategoriaPago.precio,pagar=round(float(relTallerCategoriaPago.precio)*float(cant),2),
                 moneda=relTallerCategoriaPago.moneda,cantidad=cant,usuario=self.request.user)

@@ -63,17 +63,22 @@ Inicio
 <section class="home-banner" style="
 background: #fff url({% static '/'%}{{nuevo_congreso.imagen_home}}) center center no-repeat;
 background-size: cover;">
-    <div class="container-fluid banner-content  flex-column justify-content-around">
+
+    <div class="container-fluid banner-content  flex-column justify-content-around"> 
+        <a class="more-info" href="{%url 'View_congreso' nuevo_congreso.path %}">
         <div class="col-md-6">
+           
             <h1 class="banner-title"><strong>{{nuevo_congreso.titulo}}</strong></h1>
             <span class="counter-title">
                 <strong>inicia en:</strong>
             </span>
             
             <div id="counter" countDate="{% if nuevo_congreso.fecha_inicio%} {{nuevo_congreso.fecha_inicio|date:'m/d/Y h:i'}}{%else%} 01/01/1900 {%endif%}"></div>
-            <a class="more-info" href="{%url 'View_congreso' nuevo_congreso.path %}">Más Información</a>
+            <span class="more-info" >Más Información </span>
         </div>
-    </div>
+   </a>
+    </div > 
+
 </section>
 {%if quienes_somos%}
 <section class="about-us">

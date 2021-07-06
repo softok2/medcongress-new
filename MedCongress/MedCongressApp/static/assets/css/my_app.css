@@ -423,6 +423,7 @@ textarea:focus,
   color: #fff;
   font-size: 18px;
   font-family: "DINPro-Regular_13937", sans-serif;
+  text-decoration: none;
 }
 
 .about-us {
@@ -1881,6 +1882,10 @@ margin-left: 70px;
   background: #fff url(../img/login-background-1.jpg) center center no-repeat;
   background-size: cover;
 }
+.login-register2 {
+  height: 90vh;
+ 
+}
 
 .login {
   height: 120vh;
@@ -1918,6 +1923,18 @@ margin-left: 70px;
 }
 @media screen and (max-width: 992px) {
   .login-register .login-form-wrapper {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+}
+.login-register2 .login-form-wrapper2 {
+  width: 100%;
+  border-radius: 5px;
+  padding: 15px 5% 10px;
+  background-color: #fff;
+}
+@media screen and (max-width: 992px) {
+  .login-register2 .login-form-wrapper2 {
     width: 100%;
     background-color: rgba(255, 255, 255, 0.8);
   }
