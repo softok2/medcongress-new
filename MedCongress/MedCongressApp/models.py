@@ -14,7 +14,7 @@ from django.core.exceptions import NON_FIELD_ERRORS
 class CategoriaUsuario(models.Model):
     nombre=models.CharField(max_length=50,error_messages={
 "max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"},validators=[
-            RegexValidator(regex=r"^[A-Za-zñÑáéíóúÁÉÍÓÚ. ]+$", message="El Campo <b> Nombre </b> solo admite letras " )
+            RegexValidator(regex=r"^[A-Za-zñÑáéíóúÁÉÍÓÚ.,+-*= ]+$", message="El Campo <b> Nombre </b> solo admite letras " )
         ],)
     published=models.BooleanField(null=True)
     detalle=models.TextField(null=True,blank=True)
@@ -32,7 +32,7 @@ class CategoriaUsuario(models.Model):
 class Especialidades(models.Model):
     nombre=models.CharField(max_length=50,unique=True,error_messages={
 "max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"},validators=[
-            RegexValidator(regex=r"^[A-Za-zñÑáéíóúÁÉÍÓÚ. ]+$", message="El Campo <b> Nombre </b> solo admite letras " )
+            RegexValidator(regex=r"^[A-Za-zñÑáéíóúÁÉÍÓÚ.,+-*= ]+$", message="El Campo <b> Nombre </b> solo admite letras " )
         ],)
     detalle=models.TextField(null=True,blank=True)
 
@@ -48,7 +48,7 @@ class Especialidades(models.Model):
 class Pais(models.Model):
     denominacion = models.CharField(unique=True, max_length=50,error_messages={
 "max_length": "El Campo <b>Denominación</b> debe tener máximo 50 caracteres"},validators=[
-            RegexValidator(regex=r"^[A-Za-zñÑáéíóúÁÉÍÓÚ. ]+$", message="El Campo <b> País </b> solo admite letras " )
+            RegexValidator(regex=r"^[A-Za-zñÑáéíóúÁÉÍÓÚ.,+-*= ]+$", message="El Campo <b> País </b> solo admite letras " )
         ],)
     banderas=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='banderas',blank=True, null=True )
 
@@ -64,7 +64,7 @@ class Pais(models.Model):
 class Genero(models.Model):
     denominacion= models.CharField(max_length=20,unique=True,error_messages={
 "max_length": "El Campo <b>Denominación</b> debe tener máximo 20 caracteres"},validators=[
-            RegexValidator(regex=r"^[A-Za-zñÑáéíóúÁÉÍÓÚ. ]+$", message="El Campo <b> Género </b> solo admite letras " )
+            RegexValidator(regex=r"^[A-Za-zñÑáéíóúÁÉÍÓÚ.,+-*= ]+$", message="El Campo <b> Género </b> solo admite letras " )
         ],)
 
     class Meta:
@@ -180,7 +180,7 @@ class TipoCongreso(models.Model):
 class EspecialidadCongreso(models.Model):
     nombre=models.CharField(max_length=50,unique=True,error_messages={
 "max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"},validators=[
-            RegexValidator(regex=r"^[A-Za-zñÑáéíóúÁÉÍÓÚ. ]+$", message="El Campo <b> Nombre </b> solo admite letras " )
+            RegexValidator(regex=r"^[A-Za-zñÑáéíóúÁÉÍÓÚ.,+-*= ]+$", message="El Campo <b> Nombre </b> solo admite letras " )
         ],)
     detalle=models.TextField(null=True,blank=True)
 
@@ -232,7 +232,7 @@ class SocioCongreso(models.Model):
 class CategoriaPagoCongreso(models.Model):
     nombre=models.CharField(max_length=50,unique=True,error_messages={
 "max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"},validators=[
-            RegexValidator(regex=r"^[A-Za-zñÑáéíóúÁÉÍÓÚ. ]+$", message="El Campo <b> Nombre </b> solo admite letras " )
+            RegexValidator(regex=r"^[A-Za-zñÑáéíóúÁÉÍÓÚ.,+-*= ]+$", message="El Campo <b> Nombre </b> solo admite letras " )
         ],)
     path=models.CharField(max_length=250, help_text='campo para identificarlo por la URL')
     detalle=models.TextField(null=True,blank=True)
@@ -1006,7 +1006,7 @@ class TrabajosInvestigacion(models.Model):
     congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
     autor= models.CharField( max_length=50,error_messages={
                             "max_length": "El Campo <b>Autor</b> debe tener máximo 50 caracteres"},validators=[
-                            RegexValidator(regex=r"^[A-Za-zñÑáéíóúÁÉÍÓÚ., ]+$", message="El Campo <b> Autor </b> solo admite letras " )
+                            RegexValidator(regex=r"^[A-Za-zñÑáéíóúÁÉÍÓÚ.,+-*= ]+$", message="El Campo <b> Autor </b> solo admite letras " )
                             ],)
     cod_video=models.TextField(null=True,blank=True)
     foto=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='usuarios',blank=True, null=True )
