@@ -1163,6 +1163,7 @@
                                     <h2 class="login-title"><strong>  Iniciar Sesión</strong></h2>
                                     <span>Debe iniciar sesión para comprar el evento</span>
                                     <form class="contactusform" action="{%url 'login' %}?next=/view_cart" method="post">
+                                        <span>¿Eres un nuevo usuario? <a id="registrarse">Crear una cuenta</a></span>
                                         {% csrf_token %}
                                         {% if form.errors %}
                                                 <div class="invalid-feedback" style="display: block;">
@@ -1183,7 +1184,7 @@
                                                 {% else %}
                                                 <div class="invalid-feedback" style="display: block;" >
                                                    
-                                                    <span style="color: red;">Por favor debe autenticarse para ver esta página.</span>
+                                                    
                                                 </div>
                                                 
                                                 {% endif %}
@@ -1658,8 +1659,10 @@ function Login(cat_pago,fields){
     if (patt.test(valor) == true && valor>0){
         $('#tipo').val('congreso');
         $('#cat_pago').val(cat_pago);
-        $('#cantidad').val(valor); 
+        $('#cantidad').val(valor);
+        $('#registrarse').attr('href',"{% url 'Registrarse' %}?next=view_cart&tipo=congreso&cat_pago="+cat_pago+"&cantidad="+valor)
          $('#login').modal('toggle')
+
     }
     else
     {
@@ -1675,7 +1678,8 @@ function LoginTaller(cat_pago,fields){
     if (patt.test(valor) == true && valor>0){
         $('#tipo').val('taller');
         $('#cat_pago').val(cat_pago);
-        $('#cantidad').val(valor); 
+        $('#cantidad').val(valor);
+        $('#registrarse').attr('href',"{% url 'Registrarse' %}?next=view_cart&tipo=taller&cat_pago="+cat_pago+"&cantidad="+valor) 
          $('#login').modal('toggle')
     }
     else

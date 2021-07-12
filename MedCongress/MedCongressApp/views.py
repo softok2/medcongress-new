@@ -51,6 +51,7 @@ from django.utils.html import strip_tags
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as do_login
+from django.contrib.auth import logout 
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 #...
@@ -995,22 +996,22 @@ class PerfilUserCreate(FormView):
         context = super(PerfilUserCreate, self).get_context_data(**kwargs)
         context['aviso_privacidad']=DatosIniciales.objects.all().first()
         context['categorias']=CategoriaUsuario.objects.filter(published=True)
-   
+        
+
         return context
     def form_valid(self, form):
 
         
         user = form['user'].save(commit=False)
-        # email = EmailMessage('Asunto', 'esto es una prueba, como mando correos en Phyton?', to = ['dennis.molinetg@gmail.com'])
-        # email.send()
-        
-       
 
         chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
         secret_key = get_random_string(60, chars)
         subject = 'Bienvenido a MedCongress'
         # html_message = render_to_string('MedCongressApp/email.html', context={'token':secret_key})
-        plain_message = strip_tags('Usted se ha creado un usuario en MedCongress entre a esta dirección %s/habilitar_user/%s  para validar su cuenta en MedCongres'%(URL_SITE,secret_key) )
+        get=''
+        if(self.request.GET.get('next')):
+            get='?next=/view_cart'
+        plain_message = strip_tags('Usted se ha creado un usuario en MedCongress entre a esta dirección %s/habilitar_user/%s%s  para validar su cuenta en MedCongres'%(URL_SITE,secret_key,get) )
         from_email = ''
         to = user.email
         mail.send_mail(subject, plain_message, from_email, [to])
@@ -1039,9 +1040,18 @@ class PerfilUserCreate(FormView):
         perfil.path=path
         perfil.foto='usuarios/defaulthombre.png'
         perfil.save()
+          #### ver si estaba comprando
         
-
-        
+        if(self.request.GET.get('next')):
+            do_login(self.request, us)
+            cart=Cart(self.request)
+            if(self.request.GET.get('tipo')=='congreso'):
+                cat_pago=RelCongresoCategoriaPago.objects.get(pk=self.request.GET.get('cat_pago'))
+                cart.add_evento(cat_pago,int(self.request.GET.get('cantidad')))
+            if(self.request.GET.get('tipo')=='taller'):
+                cat_pago=RelTalleresCategoriaPago.objects.get(pk=self.request.GET.get('cat_pago'))
+                cart.add_taller(cat_pago,int(self.request.GET.get('cantidad')))
+            logout(self.request)
         # datas={}
         # datas['activation_key']=secret_key
         # datas['email']=user.email
@@ -1343,6 +1353,12 @@ class HabilitarUser(TemplateView):
             usuario.usuario.save()
             usuario.save()
             return self.render_to_response(self.get_context_data()) 
+    
+    def get_context_data(self, **kwargs):
+        context = super(HabilitarUser, self).get_context_data(**kwargs)
+        context['next']=self.request.GET.get("next")
+       
+        return context
 
 class GetPerfil(TemplateView):
     def get(self, request):

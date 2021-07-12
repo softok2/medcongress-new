@@ -9,7 +9,7 @@
             <div class="col">
             <h2 class="section-title text-success"><strong>Bienvenido a MedCongress</strong></h2>
             <small class="section-subtitle text-center">Ya puede acceder con su cuenta a todos nuestros eventos.</small>
-            <small class="section-subtitle">Ir a <a href="{% url 'login' %}">Autentificarse</a></small>
+            <small class="section-subtitle">Ir a <a href="{% url 'login' %}{%if next%}?next=/view_cart{%endif%}">Autentificarse</a></small>
             </div>
         </div>
     </div>
