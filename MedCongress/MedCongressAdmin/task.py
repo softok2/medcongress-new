@@ -1,5 +1,5 @@
 from celery import shared_task
-from MedCongressApp.models import Congreso,RelCongresoUser,Taller,RelTallerUser
+from MedCongressApp.models import Congreso,RelCongresoUser,Taller,RelTallerUser,User
 from PIL import Image, ImageDraw, ImageFont
 from datetime import datetime
 from django.core.mail import EmailMessage
@@ -12,7 +12,7 @@ def Constancia(titulo):
         rel_usuario_congreso=RelCongresoUser.objects.filter(congreso=congreso,is_pagado=True ).exclude(is_constancia=True).distinct('user')
         
         for usuario in rel_usuario_congreso:
-            if not RelCongresoUser.objects.filter(user=usuario.user,is_constancia=True,congreso=congreso).exists():    # //////////////
+            if not RelCongresoUser.objects.filter(user= .user,is_constancia=True,congreso=congreso).exists():    # //////////////
                 nombre='%s %s'%(usuario.user.usuario.first_name,usuario.user.usuario.last_name)
                 
                 cont=len(nombre)
@@ -125,4 +125,10 @@ def Constanciataller(titulo):
 
             # ////  
 #         return HttpResponse(Constancia.delay())
-    return taller.titulo   
+    return taller.titulo  
+
+@shared_task
+def AsignarBeca(exel):
+    for row in exel:
+        user=Use
+    return exel
