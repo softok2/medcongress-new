@@ -102,7 +102,7 @@
                   </li>
                   {%else%}
                   <li class="nav-item d-flex my-3 my-md-0 justify-content-center justify-content-md-start align-items-center">
-                    <a class="nav-link auth-cta" href="{% url 'login' %}">AUTENTICARSE</a>
+                    <a class="nav-link auth-cta" href="{% url 'login' %}?next={{request.path}}">AUTENTICARSE</a>
                     <a class="nav-link auth-cta" href="{% url 'Registrarse' %}">REGISTRO</a>
                   </li>
                   {%endif%}
