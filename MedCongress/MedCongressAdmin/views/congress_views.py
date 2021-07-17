@@ -11,7 +11,7 @@ from django.db.models import Sum
 from django.db import connections
 from datetime import datetime,timedelta
 from django.core.mail import EmailMessage
-from django.core.exceptions import RequestDataTooBig
+from django.core.exceptions import RequestDataTooBig,ValidationError
 from django.http import (HttpResponse, HttpResponseBadRequest,
                          HttpResponseRedirect, JsonResponse)
 from django.shortcuts import render
@@ -1534,12 +1534,14 @@ class vTableAsJSONAsigCongreso(TemplateView):
                                                     title="Asignar Constancia">
                                                     <i class="icon icon-constancia"></i>
                                                 </a>'''   
-           
+            cat_pago='Beca'
+            if objet.categoria_pago:
+                cat_pago=objet.categoria_pago.nombre
             enviar.append({ 'usuario':'%s %s'%(objet.user.usuario.first_name,objet.user.usuario.last_name),
                             'email':'<p class="text"  >'+ objet.user.usuario.email+'</p>',
                             'congreso' : objet.congreso.titulo,
                             'cantidad' : objet.cantidad,
-                            'cat_pago':objet.categoria_pago.nombre,
+                            'cat_pago':cat_pago,
                             'constancia':constancia,
                             'operaciones' : 
                                                     '''<a id="del_'''+ str(objet.pk)+'''"
@@ -1616,7 +1618,7 @@ class vTableAsJSONBecaCongreso(TemplateView):
                             'email':'<p class="text"  >'+ objet.user.usuario.email+'</p>',
                             'congreso' : objet.congreso.titulo,
                             'cantidad' : objet.cantidad,
-                            'cat_pago':objet.categoria_pago.nombre,
+                            'cat_pago':'Beca',
                             'constancia':constancia,
                             'operaciones' : 
                                                     '''<a id="del_'''+ str(objet.pk)+'''"
@@ -2270,23 +2272,42 @@ class BecasCongressListView(validarUser,ListView):
    
     
     def post(self, request, **kwargs):
-       
-        df = pd.read_excel(self.request.FILES['exel'])
-        rows=df.to_dict('records')
-        resultado=AsignarBeca.apply_async(args=[rows])
+        try:
+            prueba =True
+            archivo=self.request.FILES['exel']
+            if archivo:
+                filename = archivo.name
+            else:
+                 raise ValidationError('Debe subir un Exel')   
+            if(not filename.endswith(".xls") and not filename.endswith(".xlsx")):
+                raise ValidationError('Debe subir un Exel')
+               
+            else:
+                df = pd.read_excel(archivo, engine='openpyxl')
+                rows=df.to_dict('records')
+                if not rows.key('Correo') or not rows.key('Congreso'):
+                    raise ValidationError('Debe subir un Exel')
+                resultado=AsignarBeca.apply_async(args=[rows])
 
-        # df = pd.DataFrame(archivo_excel)
+            # df = pd.DataFrame(archivo_excel)
 
-        # d1 = df.to_dict()
-        # print(d1)
-        # for fila in  d1.values():
-        #     print(fila[0])
-        # for fila in archivo_excel:
-        #     user=User.objects.filter(email=fila['']).first()
-        #     if PerfilUsuario.objects.filter(usuario=user).exists():   
+            # d1 = df.to_dict()
+            # print(d1)
+            # for fila in  d1.values():
+            #     print(fila[0])
+            # for fila in archivo_excel:
+            #     user=User.objects.filter(email=fila['']).first()
+            #     if PerfilUsuario.objects.filter(usuario=user).exists():   
 
 
-        return HttpResponseRedirect(reverse('MedCongressAdmin:asig_becas_list')) 
+            return HttpResponseRedirect(reverse('MedCongressAdmin:asig_becas_list'))
+        except ValidationError as e:
+            messages.warning(self.request, 'Debe entrar un archivo <b> EXEL (*.xls o *.xlsx)</b>')
+            return HttpResponseRedirect(reverse('MedCongressAdmin:asig_becas_list'))
+        except OSError :
+            messages.warning(self.request, 'No está entrando los datos bien en el Exel')
+            return HttpResponseRedirect(reverse('MedCongressAdmin:asig_becas_list'))
+        
     def get_queryset(self):
         queryset=RelCongresoUser.objects.filter(is_beca=True)
         return queryset

@@ -59,9 +59,9 @@
 
                         <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
-                                <button class="btn btn-info" title="Descargar Exel" onclick="javascript:$('#mostrar').toggle();" style="float:right; padding: 3px;margin-left: 10px;">
+                                <!-- <button class="btn btn-info" title="Descargar Exel" onclick="javascript:$('#mostrar').toggle();" style="float:right; padding: 3px;margin-left: 10px;">
                                     <i class="la la-file-excel-o"></i>
-                                </button>
+                                </button> -->
 
                                 <button  onclick="javascript:$('#mostrar-subir').toggle();" type="button" class="btn btn-success"
                                     title="Asignar pago de un Congreso a un Usuario" style="float:right; padding: 3px;">
@@ -73,13 +73,45 @@
                         </div>
 
                     </div>
-                    <div class="row card-content collapse show" style="display: none;" id='mostrar-subir'>
+                    <div class="row card-content collapse show"  {% if not messages %} style="display: none;"  {% endif %} id='mostrar-subir'>
                          
                                 
                       
                         <div class="col-md-6"></div>
                         <div class="col-md-6" style="float: right;">
-                         
+                            {% if messages %}
+
+                            {% for message in messages %}
+                            <div class="alert alert-danger alert-dismissible mb-2" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                                {{ message|safe|escape }}
+                            </div>
+                            {% endfor %}
+                            
+                            {% endif %}
+                                                        {% if form.errors %}
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                    
+                                        <div class="alert alert-danger alert-dismissible mb-2" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                            {{ error|safe|escape }}
+                                        </div>
+                                    {% endfor %}
+                                {% endfor %}
+                                {% for error in form.non_field_errors %}
+                                <div class="alert alert-danger alert-dismissible mb-2" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                    {{ error|safe|escape }}
+                                </div>
+                                {% endfor %}
+                            {% endif %} 
                             <form  method="POST" action="" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <div class="form-body">

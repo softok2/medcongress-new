@@ -1,9 +1,9 @@
 from celery import shared_task
-from MedCongressApp.models import Congreso,RelCongresoUser,Taller,RelTallerUser,User
+from MedCongressApp.models import Congreso,RelCongresoUser,Taller,RelTallerUser,User,BecasPendientes
 from PIL import Image, ImageDraw, ImageFont
 from datetime import datetime
 from django.core.mail import EmailMessage
-
+from MedCongressApp.claves import URL_SITE
 @shared_task
 def Constancia(titulo):
     congreso=Congreso.objects.get(pk=titulo)
@@ -12,7 +12,7 @@ def Constancia(titulo):
         rel_usuario_congreso=RelCongresoUser.objects.filter(congreso=congreso,is_pagado=True ).exclude(is_constancia=True).distinct('user')
         
         for usuario in rel_usuario_congreso:
-            if not RelCongresoUser.objects.filter(user= .user,is_constancia=True,congreso=congreso).exists():    # //////////////
+            if not RelCongresoUser.objects.filter(user=usuario.user,is_constancia=True,congreso=congreso).exists():    # //////////////
                 nombre='%s %s'%(usuario.user.usuario.first_name,usuario.user.usuario.last_name)
                 
                 cont=len(nombre)
@@ -125,10 +125,24 @@ def Constanciataller(titulo):
 
             # ////  
 #         return HttpResponse(Constancia.delay())
-    return taller.titulo  
-
+    return taller.titulo 
 @shared_task
 def AsignarBeca(exel):
+
     for row in exel:
-        user=Use
-    return exel
+        congreso=Congreso.objects.filter(titulo=row['Congreso']).first()
+       
+        if not congreso:
+            pass
+        user=User.objects.filter(email=row['Correo']).first()
+        if user:
+            rel_congreso_user=RelCongresoUser(user=user.perfilusuario,congreso=congreso,is_beca=True,is_pagado=True,cantidad=1)
+            rel_congreso_user.save()
+            email = EmailMessage('Beca en MedCongress', 'Se le informa que se le ha asignado una beca en en Congreso  %s. Autentifíquese aqui %s/accounts/login/?next=/congreso/%s '%(congreso.titulo,URL_SITE,congreso.path), to = [row['Correo']])
+            email.send()
+        else:
+            beca_pendiente=BecasPendientes(email=row['Correo'],congreso=congreso)  
+            beca_pendiente.save()
+            email = EmailMessage('Beca en MedCongress', 'Se le informa que se le ha asignado una beca en en Congreso  %s. Por favor Regístrese en MedCongress aqui %s/registrarse. Registrarse con este mismo correo '%(congreso.titulo,URL_SITE), to = [row['Correo']])
+            email.send()
+    return 'No'   
