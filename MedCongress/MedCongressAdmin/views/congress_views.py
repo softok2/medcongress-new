@@ -2282,10 +2282,16 @@ class BecasCongressListView(validarUser,ListView):
             if(not filename.endswith(".xls") and not filename.endswith(".xlsx")):
                 raise ValidationError('Debe subir un Exel')
                
-            else:
+            elif filename.endswith(".xls"):
+                df = pd.read_excel(archivo)
+                rows=df.to_dict('records')
+                if not rows[0]['Correo'] or not rows[0]['Congreso']:
+                    raise ValidationError('Debe subir un Exel')
+                resultado=AsignarBeca.apply_async(args=[rows])
+            else: 
                 df = pd.read_excel(archivo, engine='openpyxl')
                 rows=df.to_dict('records')
-                if not rows.key('Correo') or not rows.key('Congreso'):
+                if not rows[0]['Correo'] or not rows[0]['Congreso']:
                     raise ValidationError('Debe subir un Exel')
                 resultado=AsignarBeca.apply_async(args=[rows])
 
@@ -2305,6 +2311,9 @@ class BecasCongressListView(validarUser,ListView):
             messages.warning(self.request, 'Debe entrar un archivo <b> EXEL (*.xls o *.xlsx)</b>')
             return HttpResponseRedirect(reverse('MedCongressAdmin:asig_becas_list'))
         except OSError :
+            messages.warning(self.request, 'No está entrando los datos bien en el Exel')
+            return HttpResponseRedirect(reverse('MedCongressAdmin:asig_becas_list'))
+        except KeyError :
             messages.warning(self.request, 'No está entrando los datos bien en el Exel')
             return HttpResponseRedirect(reverse('MedCongressAdmin:asig_becas_list'))
         

@@ -128,18 +128,19 @@ def Constanciataller(titulo):
     return taller.titulo 
 @shared_task
 def AsignarBeca(exel):
-
+    
     for row in exel:
+
         congreso=Congreso.objects.filter(titulo=row['Congreso']).first()
-       
         if not congreso:
-            pass
+            continue    
         user=User.objects.filter(email=row['Correo']).first()
         if user:
-            rel_congreso_user=RelCongresoUser(user=user.perfilusuario,congreso=congreso,is_beca=True,is_pagado=True,cantidad=1)
-            rel_congreso_user.save()
-            email = EmailMessage('Beca en MedCongress', 'Se le informa que se le ha asignado una beca en en Congreso  %s. Autentifíquese aqui %s/accounts/login/?next=/congreso/%s '%(congreso.titulo,URL_SITE,congreso.path), to = [row['Correo']])
-            email.send()
+            if not RelCongresoUser.objects.filter(user=user.perfilusuario,congreso=congreso,is_beca=True).exists():
+                rel_congreso_user=RelCongresoUser(user=user.perfilusuario,congreso=congreso,is_beca=True,is_pagado=True,cantidad=1)
+                rel_congreso_user.save()
+                email = EmailMessage('Beca en MedCongress', 'Se le informa que se le ha asignado una beca en en Congreso  %s. Autentifíquese aqui %s/accounts/login/?next=/congreso/%s '%(congreso.titulo,URL_SITE,congreso.path), to = [row['Correo']])
+                email.send()
         else:
             beca_pendiente=BecasPendientes(email=row['Correo'],congreso=congreso)  
             beca_pendiente.save()
