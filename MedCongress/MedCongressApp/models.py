@@ -232,7 +232,7 @@ class SocioCongreso(models.Model):
 class CategoriaPagoCongreso(models.Model):
     nombre=models.CharField(max_length=50,unique=True,error_messages={
 "max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"},validators=[
-            RegexValidator(regex=r"^[A-Za-zñÑáéíóúÁÉÍÓÚ.,+-*= ]+$", message="El Campo <b> Nombre </b> solo admite letras " )
+            RegexValidator(regex=r"^[\w.,+\- ]+$", message="El Campo <b> Nombre </b> solo admite números, letras y (.,+-)" )
         ],)
     path=models.CharField(max_length=250, help_text='campo para identificarlo por la URL')
     detalle=models.TextField(null=True,blank=True)
