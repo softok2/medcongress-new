@@ -92,7 +92,7 @@ Login
                         </div>
                         <div class="row mt-3">
                             <div class="col">
-                                {{form.user.email }}
+                                <input type="email" name="user-email" maxlength="254" class="form-control" placeholder="Correo" id="id_user-email" {%if email%} value="{{email}}"{%endif%}>
                             </div>
                         </div>
                         <div class="row mt-3">
