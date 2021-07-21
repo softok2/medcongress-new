@@ -149,7 +149,7 @@ def AsignarBeca(exel):
             1.- Para poder acceder primero tendrá que hacer el registro en el siguiente enlace %s/registrarse?email=%s. 
             
             2.- una vez registrado, de clic al siguiente enlace para acceder al congreso.
-                https://medcongress.com.mx/congreso/%s'''%(congreso.titulo,URL_SITE,row['Correo'],congreso.path), to = [row['Correo']])
+                %s/congreso/%s'''%(congreso.titulo,URL_SITE,row['Correo'],URL_SITE,congreso.path), to = [row['Correo']])
            
             email.send()
     return 'No'   
