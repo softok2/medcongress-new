@@ -139,11 +139,17 @@ def AsignarBeca(exel):
             if not RelCongresoUser.objects.filter(user=user.perfilusuario,congreso=congreso,is_beca=True).exists():
                 rel_congreso_user=RelCongresoUser(user=user.perfilusuario,congreso=congreso,is_beca=True,is_pagado=True,cantidad=1)
                 rel_congreso_user.save()
-                email = EmailMessage('Beca en MedCongress', 'Estimado Doctor(a) se le informa que ha sido becado para el Congreso "  %s ". Autentifíquese aqui %s/accounts/login/?next=/congreso/%s '%(congreso.titulo,URL_SITE,congreso.path), to = [row['Correo']])
+                email = EmailMessage('Beca en MedCongress', 'Estimado(a) colega, se le informa que se le ha asignado una beca para acceder al  %s . Para poder acceder al solo tendrá que autenticarse en el siguiente enlace %s/accounts/login/?next=/congreso/%s '%(congreso.titulo,URL_SITE,congreso.path), to = [row['Correo']])
                 email.send()
         else:
             beca_pendiente=BecasPendientes(email=row['Correo'],congreso=congreso)  
             beca_pendiente.save()
-            email = EmailMessage('Beca en MedCongress', 'Se le informa que se le ha asignado una beca en en Congreso  %s. Por favor Regístrese en MedCongress aqui %s/registrarse?email=%s. Registrarse con este mismo correo '%(congreso.titulo,URL_SITE,row['Correo']), to = [row['Correo']])
+            email = EmailMessage('Beca en MedCongress', '''Estimado(a) colega, se le informa que se le ha asignado una beca para acceder al  %s.
+
+            1.- Para poder acceder primero tendrá que hacer el registro en el siguiente enlace %s/registrarse?email=%s. 
+            
+            2.- una vez registrado, de clic al siguiente enlace para acceder al congreso.
+                https://medcongress.com.mx/congreso/%s'''%(congreso.titulo,URL_SITE,row['Correo'],congreso.path), to = [row['Correo']])
+           
             email.send()
     return 'No'   
