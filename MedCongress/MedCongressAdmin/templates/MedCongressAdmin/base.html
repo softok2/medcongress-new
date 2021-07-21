@@ -125,11 +125,26 @@
                         <li><a class="menu-item" href="{% url 'MedCongressAdmin:bloques_list' %}"><i class=" icon icon-block"></i> Bloques</a></li>
                         <li><a class="menu-item" href="{% url 'MedCongressAdmin:ponencias_list' %}"><i class="icon icon-ponencia"></i> Ponencias</a></li>
                         <li><a class="menu-item" href="{% url 'MedCongressAdmin:talleres_list' %}"><i class=" icon icon-taller" ></i>Talleres</a></li>
+                        <li class=" nav-item"><a href="#"><i class="icon icon-asignar_congreso"></i><span class="menu-title"
+                            data-i18n="nav.templates.main">Congreso-Usuario</span></a>
+                        <ul class="menu-content">
+                         <li><a class="menu-item" href="{% url 'MedCongressAdmin:asig_congress_list' %}"><i class=" icon icon-user_pagaron" ></i> Pagados</a></li>
+                         <li><a class="menu-item" href="{% url 'MedCongressAdmin:asig_becas_list' %}"><i class=" icon icon-constancia-taller" ></i>Becas</a></li>
+                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:asig_constancia_list' %}"><i class=" icon icon-constancia" ></i>Constancias</a></li>
 
-                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:asig_congress_list' %}"><i class=" icon icon-asignar_congreso" ></i> Asignar Congreso</a></li>
-                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:asig_talleres_list' %}"><i class=" icon icon-asignar_taller" ></i>Asignar Taller</a></li>
-                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:asig_constancia_list' %}"><i class=" icon icon-constancia" ></i>Asignar Constancia Congreso</a></li>
-                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:asig_constancia_taller' %}"><i class=" icon icon-constancia-taller" ></i>Asignar Constancia Taller</a></li>
+                            
+                        </ul>
+                    </li>
+                    <li class=" nav-item"><a href="#"><i class="icon icon-asignar_taller"></i><span class="menu-title"
+                        data-i18n="nav.templates.main">Taller-Usuario</span></a>
+                    <ul class="menu-content">
+                    
+                    <li><a class="menu-item" href="{% url 'MedCongressAdmin:asig_talleres_list' %}"><i class=" icon icon-user_pagaron" ></i>Pagados</a></li>
+
+                    <li><a class="menu-item" href="{% url 'MedCongressAdmin:asig_constancia_taller' %}"><i class=" icon icon-constancia" ></i>Constancia</a></li>
+                        
+                    </ul>
+                </li>
                     </ul>
                 </li>
                 <li class=" nav-item"><a href="#"><i class="icon icon-gest_usuario"></i><span class="menu-title"

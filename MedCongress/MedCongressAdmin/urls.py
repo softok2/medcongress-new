@@ -16,7 +16,7 @@ from .views.congress_views import (LogsCongreso,LogsUsuarios,CongressSalaCreateV
                                    Ver_usuarios,Ver_Exel,Exportar_usuarios,Usuarios_pagaron,CongressPatrocinadorListView,
                                    PatrocinadorSeleccionarView,PatrocinadorSeleccionarDeleted, SocioSeleccionarView,SocioSeleccionarDeleted,CongressSocioListView,
                                    CongresoDetail,CongressImagenDeletedView,CongressCategPagosUpdateView,CongressCategPagosDeletedView,AsignarConstancias
-                                   ,CongressProgramaUpdateView,CongressProgramaDeletedView,CongressProgramaCreateView,CongressProgramaListView,vTableAsJSONAsigCongreso,vTableAsJSONCongresos)
+                                   ,CongressProgramaUpdateView,CongressProgramaDeletedView,CongressProgramaCreateView,CongressProgramaListView,vTableAsJSONAsigCongreso,vTableAsJSONCongresos,vTableAsJSONBecaCongreso,BecasCongressListView)
 from .views.imagen_views import (ImagenCreateView)
 from .views.ponencia_view import (PonenciaListView, PonenciaCreateView,PonenciaPonenteListView,
                                    PonencicaUpdateView,PonenciaPonenteCreateView,PonenciaDeletedView,
@@ -81,6 +81,12 @@ urlpatterns = [
       path('asignar/congreso/add', AsignarCongressAddViews.as_view(), name='asignar_congress_add'),
       path('asignar/congreso/eliminar/<int:pk>', AsignarCongressDeletedViews.as_view(), name='asig_congres_delete'),
 
+      #Becas Congreso
+      
+      path('becas/congreso', BecasCongressListView.as_view(), name='asig_becas_list'),
+      # path('asignar/congreso/add', AsignarCongressAddViews.as_view(), name='asignar_congress_add'),
+      # path('asignar/congreso/eliminar/<int:pk>', AsignarCongressDeletedViews.as_view(), name='asig_congres_delete'),
+      
       # Congreso-Ponencias
       path('ponencias/congreso/<str:path>', CongressPonenciasListView.as_view(), name='Congres_ponencias'),
       path('ponencia/congreso/add/<str:path>', PonenciaCreateView.as_view(), name='ponente_ponencia_add'),
@@ -380,6 +386,7 @@ urlpatterns = [
       path('pruebaTablaJsonPonencia', vTableAsJSONPonencia.as_view(), name='table_json_ponencia'),
       path('pruebaTablaJsonTaller', vTableAsJSONTaller.as_view(), name='table_json_taller'),
        path('pruebaTablaJsonAsigCongreso', vTableAsJSONAsigCongreso.as_view(), name='table_json_asig_congreso'),
+       path('pruebaTablaJsonBecaCongreso', vTableAsJSONBecaCongreso.as_view(), name='table_json_beca_congreso'),
        path('pruebaTablaJsonAsigTaller', vTableAsJSONAsigTaller.as_view(), name='table_json_asig_taller'),
       path('pruebaTablaJsonPonentes', vTableAsJSONPonentes.as_view(), name='table_json_ponentes'),
        path('pruebaTablaJsonModeradores', vTableAsJSONModeradores.as_view(), name='table_json_moderadores'),

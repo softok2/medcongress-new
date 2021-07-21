@@ -41,7 +41,7 @@ from .models import (CategoriaPagoCongreso,Sala, Congreso, EspecialidadCongreso,
                      RelCongresoUser,RelPonenciaPonente,PerfilUsuario,ImagenCongreso,Taller,RelTalleresCategoriaPago,RelTallerUser,DatosIniciales,
                      CategoriaUsuario,Bloque,Moderador,RelTallerPonente,Pais,CuestionarioPregunta,CuestionarioRespuestas,RelPonenciaVotacion,
                      PreguntasFrecuentes,Ubicacion,AvalCongreso,SocioCongreso,QuienesSomos,Ofrecemos,Footer,ImagenQuienesSomos,RelTallerVotacion,MetaPagInicio,MetaPagListCongreso,
-                     RelCongresoAval,RelCongresoSocio,ImagenHome,DocumentoPrograma,TrabajosInvestigacion,UserActivityLog)
+                     RelCongresoAval,RelCongresoSocio,ImagenHome,DocumentoPrograma,TrabajosInvestigacion,UserActivityLog,BecasPendientes)
 from .pager import Pager
 from .cart import Cart
 from django_xhtml2pdf.views import PdfMixin
@@ -996,6 +996,7 @@ class PerfilUserCreate(FormView):
         context = super(PerfilUserCreate, self).get_context_data(**kwargs)
         context['aviso_privacidad']=DatosIniciales.objects.all().first()
         context['categorias']=CategoriaUsuario.objects.filter(published=True)
+        context['email']=self.request.GET.get('email')
         
 
         return context
@@ -1040,6 +1041,12 @@ class PerfilUserCreate(FormView):
         perfil.path=path
         perfil.foto='usuarios/defaulthombre.png'
         perfil.save()
+        if BecasPendientes.objects.filter(email=user.email).exists():
+            becas_pendientes=BecasPendientes.objects.filter(email=user.email)
+            for beca in becas_pendientes:
+                rel_congreso_user=RelCongresoUser(user=perfil,congreso=beca.congreso,is_beca=True,is_pagado=True,cantidad=1)
+                rel_congreso_user.save()
+                beca.delete()
           #### ver si estaba comprando
         
         if(self.request.GET.get('next')):

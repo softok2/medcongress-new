@@ -329,7 +329,7 @@ class ImagenCongreso(models.Model):
 class RelCongresoUser(models.Model):
     user = models.ForeignKey(PerfilUsuario, on_delete=models.CASCADE)
     congreso = models.ForeignKey(Congreso, on_delete=models.CASCADE)
-    categoria_pago = models.ForeignKey(CategoriaPagoCongreso, on_delete=models.CASCADE)
+    categoria_pago = models.ForeignKey(CategoriaPagoCongreso, on_delete=models.CASCADE,null=True)
     is_pagado=models.BooleanField(default=False)
     id_transaccion=models.CharField(max_length=20)
     num_autorizacion_transaccion=models.CharField(max_length=20)
@@ -341,6 +341,7 @@ class RelCongresoUser(models.Model):
     cuestionario=models.CharField(null=True,max_length=250)
     foto_constancia=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso/img_constancia',null=True)
     uuid_factura=models.CharField(max_length=36,null=True)
+    is_beca=models.BooleanField(default=False)
 
     def __str__(self):
         return '%s->%s->%s'%(self.user.usuario.first_name, self.congreso.titulo, self.categoria_pago.nombre)
@@ -1030,3 +1031,13 @@ class UserActivityLog(models.Model):
     
     def __str__(self):
         return self.user
+
+class BecasPendientes(models.Model):
+    congreso= models.ForeignKey(Congreso, on_delete = models.CASCADE)
+    email=models.EmailField()
+
+    class Meta:
+        verbose_name='BecasPendientes'
+
+    def __str__(self):
+        return 'Beca Pendiente del correo %s en el congreso %s'%s(self.email,self.congreso)

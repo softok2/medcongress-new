@@ -1,9 +1,9 @@
 from celery import shared_task
-from MedCongressApp.models import Congreso,RelCongresoUser,Taller,RelTallerUser
+from MedCongressApp.models import Congreso,RelCongresoUser,Taller,RelTallerUser,User,BecasPendientes
 from PIL import Image, ImageDraw, ImageFont
 from datetime import datetime
 from django.core.mail import EmailMessage
-
+from MedCongressApp.claves import URL_SITE
 @shared_task
 def Constancia(titulo):
     congreso=Congreso.objects.get(pk=titulo)
@@ -125,4 +125,31 @@ def Constanciataller(titulo):
 
             # ////  
 #         return HttpResponse(Constancia.delay())
-    return taller.titulo   
+    return taller.titulo 
+@shared_task
+def AsignarBeca(exel):
+    
+    for row in exel:
+
+        congreso=Congreso.objects.filter(titulo=row['Congreso']).first()
+        if not congreso:
+            continue    
+        user=User.objects.filter(email=row['Correo']).first()
+        if user:
+            if not RelCongresoUser.objects.filter(user=user.perfilusuario,congreso=congreso,is_beca=True).exists():
+                rel_congreso_user=RelCongresoUser(user=user.perfilusuario,congreso=congreso,is_beca=True,is_pagado=True,cantidad=1)
+                rel_congreso_user.save()
+                email = EmailMessage('Beca en MedCongress', 'Estimado(a) colega, se le informa que se le ha asignado una beca para acceder al  %s . Para poder acceder al solo tendrá que autenticarse en el siguiente enlace %s/accounts/login/?next=/congreso/%s '%(congreso.titulo,URL_SITE,congreso.path), to = [row['Correo']])
+                email.send()
+        else:
+            beca_pendiente=BecasPendientes(email=row['Correo'],congreso=congreso)  
+            beca_pendiente.save()
+            email = EmailMessage('Beca en MedCongress', '''Estimado(a) colega, se le informa que se le ha asignado una beca para acceder al  %s.
+
+            1.- Para poder acceder primero tendrá que hacer el registro en el siguiente enlace %s/registrarse?email=%s. 
+            
+            2.- una vez registrado, de clic al siguiente enlace para acceder al congreso.
+                https://medcongress.com.mx/congreso/%s'''%(congreso.titulo,URL_SITE,row['Correo'],congreso.path), to = [row['Correo']])
+           
+            email.send()
+    return 'No'   

@@ -11,7 +11,7 @@ from django.db.models import Sum
 from django.db import connections
 from datetime import datetime,timedelta
 from django.core.mail import EmailMessage
-from django.core.exceptions import RequestDataTooBig
+from django.core.exceptions import RequestDataTooBig,ValidationError
 from django.http import (HttpResponse, HttpResponseBadRequest,
                          HttpResponseRedirect, JsonResponse)
 from django.shortcuts import render
@@ -41,11 +41,12 @@ from MedCongressApp.models import (AvalCongreso, Bloque, CategoriaPagoCongreso,
                                    RelCongresoUser, SocioCongreso, Taller,Sala,
                                    Ubicacion, User,Moderador,RelPonenciaPonente,RelTalleresCategoriaPago,
                                    RelTallerUser,DocumentoPrograma,UserActivityLog,TrabajosInvestigacion)
+import openpyxl
 from openpyxl import Workbook
 from openpyxl.styles import (Alignment, Border, Font, PatternFill, Protection,
                              Side, NamedStyle)
 from MedCongressAdmin.apps import validarUser
-from MedCongressAdmin.task import Constancia
+from MedCongressAdmin.task import Constancia,AsignarBeca
 from django.db.models import Q
 
 
@@ -1533,12 +1534,91 @@ class vTableAsJSONAsigCongreso(TemplateView):
                                                     title="Asignar Constancia">
                                                     <i class="icon icon-constancia"></i>
                                                 </a>'''   
+            cat_pago='Beca'
+            if objet.categoria_pago:
+                cat_pago=objet.categoria_pago.nombre
+            enviar.append({ 'usuario':'%s %s'%(objet.user.usuario.first_name,objet.user.usuario.last_name),
+                            'email':'<p class="text"  >'+ objet.user.usuario.email+'</p>',
+                            'congreso' : objet.congreso.titulo,
+                            'cantidad' : objet.cantidad,
+                            'cat_pago':cat_pago,
+                            'constancia':constancia,
+                            'operaciones' : 
+                                                    '''<a id="del_'''+ str(objet.pk)+'''"
+                                                        href="javascript:deleteItem('''+ str(objet.pk)+''')"
+                                                        title="Eliminar">
+                                                        <i class="icon icon-eliminar"></i>
+                                                    </a>''',
+                            
+            })
+        #parametros para la respuesta
+        jsoner = {
+            
+            "iTotalRecords": filtered_object_list.count(),
+            "iTotalDisplayRecords": filtered_object_list.count(),
+            "sEcho": request.GET.get('sEcho', 1),
+            "data": enviar
+        }
+        data = json.dumps(jsoner)
+        mimetype = "application/json"
+        #Enviar
+        return HttpResponse(data, mimetype)    
+
+
+class vTableAsJSONBecaCongreso(TemplateView):
+    template_name = 'MedCongressAdmin/asig_congress_form.html'
+    
+    def get(self, request, *args, **kwargs):
+        #arreglo con las columnas de la BD a filtrar
+        col_name_map = ['user__usuario__first_name','user__usuario__email','congreso__titulo','cantidad','categoria_pago__nombre','is_pagado','is_constancia']
+           
+        #listado que muestra en dependencia de donde estes parado
+        object_list = RelCongresoUser.objects.filter(is_beca=True)
+        
+        #parametros 
+        search_text = request.GET.get('sSearch', '').lower()# texto a buscar
+        start = int(request.GET.get('iDisplayStart', 0))#por donde empezar a mostrar
+        delta = int(request.GET.get('iDisplayLength', 10))#cantidad a mostrar
+        sort_dir = request.GET.get('sSortDir_0', 'asc')# direccion a ordenar
+        sort_col = int(request.GET.get('iSortCol_0', 0)) # numero de la columna a ordenar
+        sort_col_name = request.GET.get('mDataProp_%s' % sort_col, '1')
+        sort_dir_prefix = (sort_dir == 'desc' and '-' or '') #sufijo para poner en la consulta para ordenar
+
+        #para ordenar el listado
+        
+        sort_colr = col_name_map[sort_col]
+        object_list = object_list.order_by('%s%s' % (sort_dir_prefix,sort_colr))
+
+        #para filtrar el listado
+        filtered_object_list = object_list
+        if len(search_text) > 0:
+            filtered_object_list = object_list.filter(Q(user__usuario__last_name__icontains=search_text) | Q(user__usuario__email__icontains=search_text)|Q(user__usuario__first_name__icontains=search_text)|Q(congreso__titulo__icontains=search_text)|Q(cantidad__icontains=search_text)|Q(categoria_pago__nombre__icontains=search_text))
+
+        #Guardar datos en un 
+        enviar =[]
+       
+            # if objet.ponente:
+            #     user= '%s %s'%(objet.ponente.first().user.usuario.first_name,objet.ponente.first().user.usuario.last_name)
+           
+           #Guardar datos en un dic 
+        for objet in filtered_object_list[start:(start+delta)]:
+           
+           
+            constancia='Si'
+            
+            if objet.foto_constancia or RelCongresoUser.objects.filter(congreso=objet.congreso,user=objet.user,is_constancia=True).exists():
+                        constancia='''Si'''                                         
+            else:
+                constancia= '''<a href="'''+ reverse('MedCongressAdmin:constancia_usuario_add',kwargs={'pk':objet.pk})+'''?search='''+request.GET.get('search')+'''"
+                                                    title="Asignar Constancia">
+                                                    <i class="icon icon-constancia"></i>
+                                                </a>'''   
            
             enviar.append({ 'usuario':'%s %s'%(objet.user.usuario.first_name,objet.user.usuario.last_name),
                             'email':'<p class="text"  >'+ objet.user.usuario.email+'</p>',
                             'congreso' : objet.congreso.titulo,
                             'cantidad' : objet.cantidad,
-                            'cat_pago':objet.categoria_pago.nombre,
+                            'cat_pago':'Beca',
                             'constancia':constancia,
                             'operaciones' : 
                                                     '''<a id="del_'''+ str(objet.pk)+'''"
@@ -2186,3 +2266,57 @@ class LogsUsuarios(validarUser,FormView):
             
     #     return context  
   
+class BecasCongressListView(validarUser,ListView):
+    
+    template_name = 'MedCongressAdmin/becas_congreso.html'
+   
+    
+    def post(self, request, **kwargs):
+        try:
+            prueba =True
+            archivo=self.request.FILES['exel']
+            if archivo:
+                filename = archivo.name
+            else:
+                 raise ValidationError('Debe subir un Exel')   
+            if(not filename.endswith(".xls") and not filename.endswith(".xlsx")):
+                raise ValidationError('Debe subir un Exel')
+               
+            elif filename.endswith(".xls"):
+                df = pd.read_excel(archivo)
+                rows=df.to_dict('records')
+                if not rows[0]['Correo'] or not rows[0]['Congreso']:
+                    raise ValidationError('Debe subir un Exel')
+                resultado=AsignarBeca.apply_async(args=[rows])
+            else: 
+                df = pd.read_excel(archivo, engine='openpyxl')
+                rows=df.to_dict('records')
+                if not rows[0]['Correo'] or not rows[0]['Congreso']:
+                    raise ValidationError('Debe subir un Exel')
+                resultado=AsignarBeca.apply_async(args=[rows])
+
+            # df = pd.DataFrame(archivo_excel)
+
+            # d1 = df.to_dict()
+            # print(d1)
+            # for fila in  d1.values():
+            #     print(fila[0])
+            # for fila in archivo_excel:
+            #     user=User.objects.filter(email=fila['']).first()
+            #     if PerfilUsuario.objects.filter(usuario=user).exists():   
+
+
+            return HttpResponseRedirect(reverse('MedCongressAdmin:asig_becas_list'))
+        except ValidationError as e:
+            messages.warning(self.request, 'Debe entrar un archivo <b> EXEL (*.xls o *.xlsx)</b>')
+            return HttpResponseRedirect(reverse('MedCongressAdmin:asig_becas_list'))
+        except OSError :
+            messages.warning(self.request, 'No está entrando los datos bien en el Exel')
+            return HttpResponseRedirect(reverse('MedCongressAdmin:asig_becas_list'))
+        except KeyError :
+            messages.warning(self.request, 'No está entrando los datos bien en el Exel')
+            return HttpResponseRedirect(reverse('MedCongressAdmin:asig_becas_list'))
+        
+    def get_queryset(self):
+        queryset=RelCongresoUser.objects.filter(is_beca=True)
+        return queryset
