@@ -1876,7 +1876,7 @@ margin-left: 70px;
 }
 /* - Login - */
 .login-register {
-  height: 150vh;
+  height: 100%;
   overflow-y: hidden;
   position: relative;
   background: #fff url(../img/login-background-1.jpg) center center no-repeat;
