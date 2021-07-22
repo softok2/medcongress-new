@@ -995,7 +995,9 @@ class PerfilUserCreate(FormView):
     def get_context_data(self, **kwargs):
         context = super(PerfilUserCreate, self).get_context_data(**kwargs)
         context['aviso_privacidad']=DatosIniciales.objects.all().first()
-        context['categorias']=CategoriaUsuario.objects.filter(published=True)
+
+        context['categorias']=CategoriaUsuario.objects.filter(published=True).order_by('nombre')
+
         context['email']=self.request.GET.get('email')
         
 
