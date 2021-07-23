@@ -1279,6 +1279,129 @@
 {% block script%}
 <script src="{% static 'MedCongressApp/js/bootstrap-rating.js' %}"></script>
 <script>
+    function VerPerfil(pk) {
+        $('#datos').html(` `);
+        $('#logros').html(` `);
+        $('#pais').html(` `);
+        $('#foto').html('<img class="img-fluid" src="{% static 'MedCongressApp/images/loading.gif' %}" alt="{{request.user.username}}" >');
+    url = "{% url 'GetPerfil'%}";
+    $.get(url, { 'pk': pk }, function (data) {
+
+        if (data.foto)
+            $('#foto').html('<img class="img-fluid" src="{% static '/'%}'+ data.foto +'" alt=" foto ' + data.nombre + '" >');
+        else
+            $('#foto').html('<img class="img-fluid" src="{% static 'MedCongressApp/images/defaulthombre.png' %}" alt="{{request.user.username}}" >');
+        
+        let  pais_bandera='';
+        if(data.pais)
+        pais_bandera+='<h5 class="country mb-0">'+data.pais+'</h5>';
+        else
+        pais_bandera+='<h5 class="country mb-0">País sin Identificar</h5>';
+        if(data.bandera)
+        pais_bandera+='<img  class="img-fluid" src="{% static '/'%}'+ data.bandera +'" width=50px >';
+        $('#pais').html(pais_bandera)   
+        
+        let datos=''
+        $('#datos').html(`<h5 class="name">`+data.nombre_completo+`</h5>
+                                  <span class="cat d-block mb-3">`+data.especialidad+`</span>
+                                  <p class="description mb-0 pt-3">`+ data.puesto+`</p>`);
+        if (data.constancias) {
+            
+            $('#logros').html(` <div class="row event mb-3" >
+                                    <div class="col">
+                                        <h5 class="name">LOGROS ACADÉMICOS</h5>
+                                            
+                                        <p class="description mb-0 pt-3">`+ data.constancias+`</p>
+                                            
+                                    </div>
+                                </div>`);
+        }
+        else{
+            $('#logros').html(` `);
+        }
+ 
+       
+        redes = '';
+        if (data.facebook)
+            redes += '<div class="row" style="padding: 20px;" > <div class="like_fb"> <a class="facebook" href="#"><i class="fa fa-facebook"></i></a> </div><div class="like_amount"><p>' + data.facebook + '</p></div>  </div>'
+        if (data.twitter)
+            redes += '  <div class="row" style="padding: 20px;"><div class="like_fb"><a class="facebook" style="background-color: #00adf2 ;"  href="#"><i class="fa fa-twitter"></i></a> </div><div class="like_amount">' + data.twitter + '</p></div>  </div>'
+        if (data.youtube)
+            redes += ' <div class="row" style="padding: 20px;"><div class="like_fb"><a class="facebook" href="#" style="background-color: #d70a0a;"><i class="fa fa-youtube"></i></a> </div><div class="like_amount"><p>' + data.youtube + '</p></div> </div>'
+        if (data.linkedin)
+            redes += '<div class="row" style="padding: 20px;"><div class="like_fb"> <a class="facebook" style="background-color: #2962ff;"    href="#"><i class="fa fa-linkedin"></i></a></div><div class="like_amount"><p>' + data.linkedin + '</p></div> </div>'
+        $('#redes_sociales').html(redes);
+        if(data.especialidad)
+        $('#especialidad').html(data.especialidad);
+        else
+        $('#especialidad').html('');
+
+       
+        
+        publicaciones = '';
+
+        if (data.publicaciones) {
+            publicaciones = '<div class="row gutters-sm mb-3"><div class="col-sm-12" ><div class="card h-100" ><h6 class="mb-0" style="padding: 20px;"><b>Publicaciones</b></h6><div class="card-body" >' + data.publicaciones + '</div> </div> </div></div> ';
+            $('#publicaciones').html(publicaciones);
+        }
+        else
+            $('#publicaciones').html('');
+
+
+
+        if (data.ponencias.length == 0) {
+            ponencias = '<li><div class="like_amount"> <b>No es Ponente en ninguna Ponencia </b></div> </li>';
+        }
+        else {
+            ponencias = '';
+            for (let i = 0; i < data.ponencias.length; i++) {
+                ponencias += '<li><div class="like_amount"><p>' + data.ponencias[i].nombre + '</p><span> <b>Congreso: </b> ' + data.ponencias[i].congreso + '</span></div></li>'
+
+            }
+        }
+
+        $('#ponencias').html(ponencias)
+
+        if (data.talleres.length == 0) {
+            talleres = '<li><div class="like_amount"> <b>No es Ponente en ningún Taller </b></div> </li>';
+        }
+        else {
+            talleres = '';
+            for (let i = 0; i < data.talleres.length; i++) {
+                talleres += '<li><div class="like_amount"><p>' + data.talleres[i].nombre + '</p><span> <b>Congreso: </b> ' + data.talleres[i].congreso + '</span></div></li>'
+
+            }
+        }
+
+
+        $('#talleres').html(talleres)
+        if(data.puesto)
+        $('#puesto').html(data.puesto)
+        else
+        $('#puesto').html('')
+        $('#nombre_completo').html(data.nombre_completo)
+        if(data.votacion==0){
+            $('#div_rating').hide()  
+        }
+        else{
+            $('#div_rating').show()  
+        $('#rating').rating('rate', data.votacion);
+        }
+        
+        // else
+        // $('#div_rating').html('<input type="hidden" id="rating" class="rating" data-readonly value="'+ data.votacion+'" /> ')
+        // $('#rating').rating('rate', data.votacion);
+        //                     $('#rating2').rating({
+        //   filled: 'glyphicon glyphicon-heart-empty',
+        //   filledSelected: 'glyphicon glyphicon-heart',
+        //   empty: 'glyphicon glyphicon-heart-empty'
+        // });
+
+
+
+    });
+    }
+
 function AgregarCarritoTaller(id, fields, msj) {
     var patt = /^[0-9.]+$/;
     valor=$('#' + fields).val()
@@ -1539,118 +1662,6 @@ function AgregarCarrito(id, fields, msj) {
     }
 
 }
-
-function VerPerfil(pk) {
-    url = "{% url 'GetPerfil'%}";
-    $.get(url, { 'pk': pk }, function (data) {
-
-        if (data.foto)
-            $('#foto').html('<img class="img-fluid" src="{% static '/'%}'+ data.foto +'" alt=" foto ' + data.nombre + '" >');
-        else
-            $('#foto').html('<img class="img-fluid" src="{% static 'MedCongressApp/images/defaulthombre.png' %}" alt="{{request.user.username}}" >');
-        
-         let  pais_bandera='';
-        if(data.pais)
-        pais_bandera+='<h5 class="country mb-0">'+data.pais+'</h5>';
-        if(data.bandera)
-        pais_bandera+='<img  class="img-fluid" src="{% static '/'%}'+ data.bandera +'" width=50px >';
-        $('#pais').html(pais_bandera)   
-        
-        let datos=''
-        $('#datos').html(`<h5 class="name">`+data.nombre_completo+`</h5>
-                                  <span class="cat d-block mb-3">`+data.especialidad+`</span>
-                                  <p class="description mb-0 pt-3">`+ data.puesto+`</p>`);
-        if (data.constancias) {
-            
-            $('#logros').html(` <div class="row event mb-3" >
-                                    <div class="col">
-                                        <h5 class="name">LOGROS ACADÉMICOS</h5>
-                                            
-                                        <p class="description mb-0 pt-3">`+ data.constancias+`</p>
-                                            
-                                    </div>
-                                </div>`);
-        }
- 
-       
-        redes = '';
-        if (data.facebook)
-            redes += '<div class="row" style="padding: 20px;" > <div class="like_fb"> <a class="facebook" href="#"><i class="fa fa-facebook"></i></a> </div><div class="like_amount"><p>' + data.facebook + '</p></div>  </div>'
-        if (data.twitter)
-            redes += '  <div class="row" style="padding: 20px;"><div class="like_fb"><a class="facebook" style="background-color: #00adf2 ;"  href="#"><i class="fa fa-twitter"></i></a> </div><div class="like_amount">' + data.twitter + '</p></div>  </div>'
-        if (data.youtube)
-            redes += ' <div class="row" style="padding: 20px;"><div class="like_fb"><a class="facebook" href="#" style="background-color: #d70a0a;"><i class="fa fa-youtube"></i></a> </div><div class="like_amount"><p>' + data.youtube + '</p></div> </div>'
-        if (data.linkedin)
-            redes += '<div class="row" style="padding: 20px;"><div class="like_fb"> <a class="facebook" style="background-color: #2962ff;"    href="#"><i class="fa fa-linkedin"></i></a></div><div class="like_amount"><p>' + data.linkedin + '</p></div> </div>'
-        $('#redes_sociales').html(redes);
-
-        $('#especialidad').html(data.especialidad);
-
-       
-        
-        publicaciones = '';
-
-        if (data.publicaciones) {
-            publicaciones = '<div class="row gutters-sm mb-3"><div class="col-sm-12" ><div class="card h-100" ><h6 class="mb-0" style="padding: 20px;"><b>Publicaciones</b></h6><div class="card-body" >' + data.publicaciones + '</div> </div> </div></div> ';
-            $('#publicaciones').html(publicaciones);
-        }
-        else
-            $('#publicaciones').html('');
-
-
-
-        if (data.ponencias.length == 0) {
-            ponencias = '<li><div class="like_amount"> <b>No es Ponente en ninguna Ponencia </b></div> </li>';
-        }
-        else {
-            ponencias = '';
-            for (let i = 0; i < data.ponencias.length; i++) {
-                ponencias += '<li><div class="like_amount"><p>' + data.ponencias[i].nombre + '</p><span> <b>Congreso: </b> ' + data.ponencias[i].congreso + '</span></div></li>'
-
-            }
-        }
-
-        $('#ponencias').html(ponencias)
-
-        if (data.talleres.length == 0) {
-            talleres = '<li><div class="like_amount"> <b>No es Ponente en ningún Taller </b></div> </li>';
-        }
-        else {
-            talleres = '';
-            for (let i = 0; i < data.talleres.length; i++) {
-                talleres += '<li><div class="like_amount"><p>' + data.talleres[i].nombre + '</p><span> <b>Congreso: </b> ' + data.talleres[i].congreso + '</span></div></li>'
-
-            }
-        }
-
-
-        $('#talleres').html(talleres)
-        if(data.puesto)
-        $('#puesto').html(data.puesto)
-        else
-        $('#puesto').html('')
-        $('#nombre_completo').html(data.nombre_completo)
-        if(data.votacion==0){
-            $('#div_rating').hide()  
-        }
-        else{
-            $('#div_rating').show()  
-        $('#rating').rating('rate', data.votacion);
-        }
-        
-        // else
-        // $('#div_rating').html('<input type="hidden" id="rating" class="rating" data-readonly value="'+ data.votacion+'" /> ')
-        // $('#rating').rating('rate', data.votacion);
-        //                     $('#rating2').rating({
-        //   filled: 'glyphicon glyphicon-heart-empty',
-        //   filledSelected: 'glyphicon glyphicon-heart',
-        //   empty: 'glyphicon glyphicon-heart-empty'
-        // });
-
-
-
-    });
-    }
 
 function Login(cat_pago,fields){
     var patt = /^[0-9.]+$/;

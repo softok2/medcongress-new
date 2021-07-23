@@ -139,17 +139,23 @@ def AsignarBeca(exel):
             if not RelCongresoUser.objects.filter(user=user.perfilusuario,congreso=congreso,is_beca=True).exists():
                 rel_congreso_user=RelCongresoUser(user=user.perfilusuario,congreso=congreso,is_beca=True,is_pagado=True,cantidad=1)
                 rel_congreso_user.save()
-                email = EmailMessage('Beca en MedCongress', 'Estimado(a) colega, se le informa que se le ha asignado una beca para acceder al  %s . Para poder acceder al solo tendrá que autenticarse en el siguiente enlace %s/accounts/login/?next=/congreso/%s '%(congreso.titulo,URL_SITE,congreso.path), to = [row['Correo']])
+                email = EmailMessage('Beca en MedCongress', '''Estimado(a) profesional de la salud, le informamos que se le ha asignado una beca para el %s1 .
+
+        1.- Para acceder tendrá que autenticarse en el siguiente enlace %s/accounts/login/?next=%s
+
+        2.- Vaya a su perfil y elija la opción “Mis Congresos” donde visualizara el congreso asignado'''%(congreso.titulo,URL_SITE,congreso.path), to = [row['Correo']])
                 email.send()
         else:
             beca_pendiente=BecasPendientes(email=row['Correo'],congreso=congreso)  
             beca_pendiente.save()
-            email = EmailMessage('Beca en MedCongress', '''Estimado(a) colega, se le informa que se le ha asignado una beca para acceder al  %s.
+            email = EmailMessage('Beca en MedCongress', '''Estimado(a) profesional de la salud, le informamos que se le ha asignado una beca para el %s.
 
-            1.- Para poder acceder primero tendrá que hacer el registro en el siguiente enlace %s/registrarse?email=%s. 
-            
-            2.- una vez registrado, de clic al siguiente enlace para acceder al congreso.
-                %s/congreso/%s'''%(congreso.titulo,URL_SITE,row['Correo'],URL_SITE,congreso.path), to = [row['Correo']])
+        1.- Para acceder tendrá que registrarse en el siguiente enlace %s/registrarse?email=%s
+
+        2.- En su perfil elija la opción “Mis Congresos” donde podrá confirmar el evento asignado
+        
+        3.- una vez registrado, de clic en el siguiente enlace para acceder al congreso.
+            %s/congreso/%s'''%(congreso.titulo,URL_SITE,row['Correo'],URL_SITE,congreso.path), to = [row['Correo']])
            
             email.send()
     return 'No'   

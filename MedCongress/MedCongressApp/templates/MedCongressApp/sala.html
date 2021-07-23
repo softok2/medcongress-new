@@ -899,6 +899,10 @@ function AgregarCarrito(id, fields, msj) {
 }
 
 function VerPerfil(pk) {
+        $('#datos').html(` `);
+        $('#logros').html(` `);
+        $('#pais').html(` `);
+        $('#foto').html('<img class="img-fluid" src="{% static 'MedCongressApp/images/loading.gif' %}" alt="{{request.user.username}}" >');
     url = "{% url 'GetPerfil'%}";
     $.get(url, { 'pk': pk }, function (data) {
 
