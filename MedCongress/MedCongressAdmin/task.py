@@ -141,7 +141,7 @@ def AsignarBeca(exel):
                 rel_congreso_user.save()
                 email = EmailMessage('Beca en MedCongress', '''Estimado(a) profesional de la salud, le informamos que se le ha asignado una beca para el %s1 .
 
-        1.- Para acceder tendrá que autenticarse en el siguiente enlace %s/accounts/login/?next=%s
+        1.- Para acceder tendrá que autenticarse en el siguiente enlace %s/accounts/login/?next=/congreso/%s
 
         2.- Vaya a su perfil y elija la opción “Mis Congresos” donde visualizara el congreso asignado'''%(congreso.titulo,URL_SITE,congreso.path), to = [row['Correo']])
                 email.send()
@@ -153,7 +153,7 @@ def AsignarBeca(exel):
         1.- Para acceder tendrá que registrarse en el siguiente enlace %s/registrarse?email=%s
 
         2.- En su perfil elija la opción “Mis Congresos” donde podrá confirmar el evento asignado
-        
+
         3.- una vez registrado, de clic en el siguiente enlace para acceder al congreso.
             %s/congreso/%s'''%(congreso.titulo,URL_SITE,row['Correo'],URL_SITE,congreso.path), to = [row['Correo']])
            
