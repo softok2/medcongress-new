@@ -3,6 +3,7 @@ import base64
 from os import remove
 from pathlib import Path
 import pandas as pd
+from pandas import isnull
 from pathlib import Path
 from django import forms
 from django.contrib import messages
@@ -2284,12 +2285,14 @@ class BecasCongressListView(validarUser,ListView):
                
             elif filename.endswith(".xls"):
                 df = pd.read_excel(archivo)
+                df=df.applymap(lambda x: {} if isnull(x) else x)
                 rows=df.to_dict('records')
                 if not rows[0]['Correo'] or not rows[0]['Congreso']:
                     raise ValidationError('Debe subir un Exel')
                 resultado=AsignarBeca.apply_async(args=[rows])
             else: 
                 df = pd.read_excel(archivo, engine='openpyxl')
+                df=df.applymap(lambda x: {} if isnull(x) else x)
                 rows=df.to_dict('records')
                 if not rows[0]['Correo'] or not rows[0]['Congreso']:
                     raise ValidationError('Debe subir un Exel')
@@ -2304,8 +2307,11 @@ class BecasCongressListView(validarUser,ListView):
             # for fila in archivo_excel:
             #     user=User.objects.filter(email=fila['']).first()
             #     if PerfilUsuario.objects.filter(usuario=user).exists():   
-
-
+            print(resultado)
+            if resultado=='congreso':
+                messages.warning(self.request, 'En este exel hay nombres de congreso que no existen en el sistema')
+            if resultado=='usuario':
+                messages.warning(self.request, 'En este exel hay correos que no son validos y no se guardaron en el sistema')
             return HttpResponseRedirect(reverse('MedCongressAdmin:asig_becas_list'))
         except ValidationError as e:
             messages.warning(self.request, 'Debe entrar un archivo <b> EXEL (*.xls o *.xlsx)</b>')
@@ -2316,7 +2322,9 @@ class BecasCongressListView(validarUser,ListView):
         except KeyError :
             messages.warning(self.request, 'No está entrando los datos bien en el Exel')
             return HttpResponseRedirect(reverse('MedCongressAdmin:asig_becas_list'))
-        
+        except ValueError:
+            messages.warning(self.request, 'El tamaño de letra del exel debe ser menor de 14')
+            return HttpResponseRedirect(reverse('MedCongressAdmin:asig_becas_list'))
     def get_queryset(self):
         queryset=RelCongresoUser.objects.filter(is_beca=True)
         return queryset
