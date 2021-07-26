@@ -1874,6 +1874,15 @@ margin-left: 70px;
   font-size: 18px;
   text-decoration: none;
 }
+
+.my_button{
+  border: 0;
+  color: #fff;
+  border-radius: 5px;
+  background-color: #40C8F4;
+  padding: 5px 20px;
+  font-size: 18px;
+  text-decoration: none;
 /* - Login - */
 
 /* - Profile - */

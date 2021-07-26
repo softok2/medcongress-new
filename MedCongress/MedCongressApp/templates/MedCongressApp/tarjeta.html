@@ -210,14 +210,14 @@ Efectuar Pago
                             <li>Guardar el documento con el código de barra generado</li>
                             <li>Presentarse en cualquier tienda donde se pueda efectuar pagos en OpenPay</li>
                         </ul>
-                        <form action="" method="POST" target="_black" id="form1">
+                        <form action="{% url 'Pagar'%}" method="POST" target="_black" id="form1">
                             {% csrf_token %}
                             <div class="col-sm-6 " style="margin: 50px;">
-                                <input type="hidden" name="pagar_efectivo" value="1" id="token_id">
-                                
-                            </div>
+                                <input type="hidden" name="pagar_efectivo" value="1" id="token_id">    
+                            </div> 
+                            <button class=" my_button rght" type="submit" title="PAGAR" id="pay1">PAGAR </button>
                         </form>
-                        <a class="button rght" href="#" id="pay1">PAGAR </a>
+                       
                     </div>
                     <div class="tab-pane fade p-5" id="spei-tab" role="tabpanel">
                         <h4 class="tabtitle">PASOS</h4>
@@ -226,14 +226,15 @@ Efectuar Pago
                             <li class="">Guardar el documento Generado </li>
                             <li class="">Seguir las indicaciones de dicho documento </li>
                         </ul>
-                        <form action="" method="POST" target="_black" id="form">
+                        
+                        <form action="{% url 'Pagar'%}" method="POST" target="_black" id="form">
                             {% csrf_token %}
                             <div class="col-sm-6 " style="margin: 50px;">
-                                <input type="hidden" name="pagar_efectivo" value="21" id="token_id">
-                                
+                                <input type="hidden" name="pagar_efectivo" value="21" id="token_id">    
                             </div>
+                            <button class="my_button rght" type="submit" title="PAGAR" id="pay1">PAGAR </button>
                         </form>
-                        <a class="button rght" href="#" id="pay">PAGAR </a>
+                       
                     </div>
                     </div>
                 </div>
@@ -250,15 +251,15 @@ Efectuar Pago
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#pay').click(function (){
-        $('#form').submit();
-        location.reload();
-    });
+    //         $('#pay').click(function (){
+    //     $('#form').submit();
+    //     location.reload();
+    // });
    
-            $('#pay1').click(function (){
-        $('#form1').submit();
-        location.reload();
-    });
+    //         $('#pay1').click(function (){
+    //     $('#form1').submit();
+    //     location.reload();
+    // });
 
 
             $('#numero1').keyup(function () {
