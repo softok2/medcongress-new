@@ -95,7 +95,7 @@
                     {% if user.is_authenticated %}
                    <h6 class="title" style="color:{{sala.color}}">Debe comprar el congreso para visualizar este streaming </h6> 
                    {%else%}
-                   <h6 class="title" style="color:{{sala.color}}">Debe autenticarse para visualizar este streaming    <a href="{% url 'login' %}" class="back align-self-end mt-md-5 mt-2"> Login</a></h6> 
+                   <h6 class="title" style="color:{{sala.color}}">Debe autenticarse para visualizar este streaming    <a href="{% url 'login' %}?next={{request.path}}" class="back align-self-end mt-md-5 mt-2"> Login</a></h6> 
                    {%endif%}
                     {%endif%}
                 </div>
