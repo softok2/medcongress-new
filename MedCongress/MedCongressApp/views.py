@@ -2302,8 +2302,13 @@ class SalaDetail(TemplateView):
         
         context['fecha_ponencias']= data2
         ponencias_env=[] 
-       
+
+        act_fecha=1
+        cont=0
         for dat in context['fecha_ponencias']:
+            cont=cont+1 
+            if str(dat) == str(datetime.today().strftime('%Y-%m-%d')):  
+                act_fecha=cont
             bloque_env=[]
             ponencias=Ponencia.objects.filter(fecha_inicio__date=dat,sala=sala,published=True,bloque=None).order_by('fecha_inicio')
             ponencias_bloque=Ponencia.objects.filter(fecha_inicio__date=dat,sala=sala,published=True).exclude(bloque=None).order_by('fecha_inicio')
@@ -2389,7 +2394,7 @@ class SalaDetail(TemplateView):
             #     ponentes_env.append(Taller.objects.filter(reltallerponente__pk=taller.id).distinct()) 
             
             #     ponencias_env.append(talleres)
-        
+        context['act_fecha']=act_fecha
         context['ponencias']=ponencias_env
 
         # prueba_ponecia=Ponencia.objects.filter(sala=sala,published=True)
