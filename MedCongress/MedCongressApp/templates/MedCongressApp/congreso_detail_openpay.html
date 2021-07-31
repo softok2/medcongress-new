@@ -230,7 +230,7 @@
         
                     <a class="list-group-item list-group-item-action {% if forloop.counter == act_fecha %} active {%endif%}d-flex flex-column justify-content-center align-items-center" data-bs-toggle="list" href="#day-{{forloop.counter}}" role="tab">
                         <h4 class="day">Día {{forloop.counter}}</h4>
-                        <span class="date">{% if forloop.counter == act_fecha %}HOY {%else%} {{fecha_ponencia|date:"M d / Y"}} {%endif%}</span>
+                        <span class="date"> {{fecha_ponencia|date:"M d / Y"}}</span>
                         <div class="arrow-down"></div>
                     </a>
                 
