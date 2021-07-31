@@ -129,7 +129,6 @@ def Constanciataller(titulo):
     return taller.titulo 
 @shared_task
 def AsignarBeca(exel):
-    print(exel)
     respuesta='ok'
     for row in exel:
         
@@ -141,10 +140,8 @@ def AsignarBeca(exel):
             respuesta='congreso'   
             continue
         if not re.match('^[(a-z0-9\_\-\.)]+@[(a-z0-9\_\-\.)]+\.[(a-z)]{2,15}$',correo.lower()):
-            print(correo)
             respuesta='usuario'
             continue
-        print(correo)    
         user=User.objects.filter(email=correo).first()
         if user:
             if not RelCongresoUser.objects.filter(user=user.perfilusuario,congreso=congreso,is_beca=True).exists():
@@ -158,7 +155,6 @@ def AsignarBeca(exel):
                 email.send()
         else:
             if not BecasPendientes.objects.filter(email=correo,congreso=congreso).exists():
-                print(correo)
                 beca_pendiente=BecasPendientes(email=correo,congreso=congreso)  
                 beca_pendiente.save()
                 email = EmailMessage('Beca en MedCongress', '''Estimado(a) profesional de la salud, le informamos que se le ha asignado una beca para el %s.
