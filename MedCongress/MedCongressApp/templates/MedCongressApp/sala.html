@@ -204,7 +204,7 @@
                 <!-- <img src="{% static '/'%}{{sala.imagen_seg}}" class="img-fluid"> -->
             </div>
         </div>
-        {%   for fecha_ponencia in fecha_ponencias %}
+        <!-- {%   for fecha_ponencia in fecha_ponencias %}
         {% if forloop.first %}
         <div class="row">
             <div class="col"> 
@@ -228,14 +228,15 @@
             {%if forloop.last%}
         </div>
         {% endif %}
-            {% endfor %}
+            {% endfor %} -->
                 
         
         <div class="row">
             <div class="col tab-pane-wrapper py-5"> 
-                {% for ponencia in ponencias%}
-                <div class="tab-pane fade  {% if forloop.counter == act_fecha %} show active {%endif%}" id="day-{{forloop.counter}}" role="tabpanel">
-                    {% for pon in ponencia%}
+               
+                <div class="tab-pane fade   show active " id="" role="tabpanel">
+                    
+                    {% for pon in ponencias%}
                     {%if pon.tipo == 'Bloque'%}
                     <div class="row">
                         <div class="col-md-2 d-none d-md-flex justify-content-center">
@@ -442,7 +443,7 @@
                     {%endfor%}
                     
                 </div>
-                {%endfor%}
+            
                 
             </div>
         </div>

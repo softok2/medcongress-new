@@ -2305,8 +2305,8 @@ class SalaDetail(TemplateView):
         context['fecha_ponencias']= data2
         ponencias_env=[] 
 
-        act_fecha=1
-        cont=0
+        act_fecha=0
+        cont=-1
         for dat in context['fecha_ponencias']:
             cont=cont+1 
             if str(dat) == str(datetime.now().strftime('%Y-%m-%d')):  
@@ -2397,7 +2397,7 @@ class SalaDetail(TemplateView):
             
             #     ponencias_env.append(talleres)
         context['act_fecha']=act_fecha
-        context['ponencias']=ponencias_env
+        context['ponencias']=ponencias_env[act_fecha]
 
         # prueba_ponecia=Ponencia.objects.filter(sala=sala,published=True)
         # id_p=[]
