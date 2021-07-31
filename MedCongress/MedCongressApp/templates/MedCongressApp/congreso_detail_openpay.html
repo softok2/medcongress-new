@@ -228,7 +228,7 @@
                 <div class="list-group list-group-horizontal"  role="tablist">
                 {%endif%}
         
-                    <a class="list-group-item list-group-item-action {%if forloop.first%} active {%endif%}d-flex flex-column justify-content-center align-items-center" data-bs-toggle="list" href="#day-{{forloop.counter}}" role="tab">
+                    <a class="list-group-item list-group-item-action {% if forloop.counter == act_fecha %} active {%endif%}d-flex flex-column justify-content-center align-items-center" data-bs-toggle="list" href="#day-{{forloop.counter}}" role="tab">
                         <h4 class="day">Día {{forloop.counter}}</h4>
                         <span class="date"> {{fecha_ponencia|date:"M d / Y"}}</span>
                         <div class="arrow-down"></div>
@@ -251,7 +251,7 @@
         <div class="row">
             <div class="col tab-pane-wrapper py-5"> 
                 {% for ponencia in ponencias%}
-                <div class="tab-pane fade  {%if forloop.first%} show active {%endif%}" id="day-{{forloop.counter}}" role="tabpanel">
+                <div class="tab-pane fade  {% if forloop.counter == act_fecha %} show active {%endif%}" id="day-{{forloop.counter}}" role="tabpanel">
                     {% for pon in ponencia%}
                     {%if pon.tipo == 'Bloque'%}
                     <div class="row">
