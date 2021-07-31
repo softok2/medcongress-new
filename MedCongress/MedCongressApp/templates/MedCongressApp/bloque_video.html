@@ -92,7 +92,7 @@
 						<h3 class="title">Debe comprar el congreso para visualizar este Video</h3> 
 					{%endif%}
                 {%else%}
-                <h3 class="title">Debe autenticarse para visualizar este Video   <a href="{% url 'login' %}" class="back align-self-end mt-md-5 mt-2"> Login</a></h3> 
+                <h3 class="title">Debe autenticarse para visualizar este Video   <a href="{% url 'login' %}?next={{request.path}}" class="back align-self-end mt-md-5 mt-2"> Login</a></h3> 
                 {%endif%}
                 <img src="{% static '/'%}{{bloque.imagen}}" class="img-fluid me-4" > 
                 {%endif%}

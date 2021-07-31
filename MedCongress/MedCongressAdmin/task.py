@@ -4,6 +4,7 @@ from PIL import Image, ImageDraw, ImageFont
 from datetime import datetime
 from django.core.mail import EmailMessage
 from MedCongressApp.claves import URL_SITE
+import re
 @shared_task
 def Constancia(titulo):
     congreso=Congreso.objects.get(pk=titulo)
@@ -128,28 +129,45 @@ def Constanciataller(titulo):
     return taller.titulo 
 @shared_task
 def AsignarBeca(exel):
-    
+    print(exel)
+    respuesta='ok'
     for row in exel:
-
+        
+        if  not row['Congreso'] or not row['Correo']:
+            continue
+        correo=str(row['Correo']).strip()
         congreso=Congreso.objects.filter(titulo=row['Congreso']).first()
         if not congreso:
-            continue    
-        user=User.objects.filter(email=row['Correo']).first()
+            respuesta='congreso'   
+            continue
+        if not re.match('^[(a-z0-9\_\-\.)]+@[(a-z0-9\_\-\.)]+\.[(a-z)]{2,15}$',correo.lower()):
+            print(correo)
+            respuesta='usuario'
+            continue
+        print(correo)    
+        user=User.objects.filter(email=correo).first()
         if user:
             if not RelCongresoUser.objects.filter(user=user.perfilusuario,congreso=congreso,is_beca=True).exists():
                 rel_congreso_user=RelCongresoUser(user=user.perfilusuario,congreso=congreso,is_beca=True,is_pagado=True,cantidad=1)
                 rel_congreso_user.save()
-                email = EmailMessage('Beca en MedCongress', 'Estimado(a) colega, se le informa que se le ha asignado una beca para acceder al  %s . Para poder acceder al solo tendrá que autenticarse en el siguiente enlace %s/accounts/login/?next=/congreso/%s '%(congreso.titulo,URL_SITE,congreso.path), to = [row['Correo']])
+                email = EmailMessage('Beca en MedCongress', '''Estimado(a) profesional de la salud, le informamos que se le ha asignado una beca para el %s1 .
+
+        1.- Para acceder tendrá que autenticarse en el siguiente enlace %s/accounts/login/?next=/congreso/%s
+
+        2.- Vaya a su perfil y elija la opción “Mis Congresos” donde visualizara el congreso asignado'''%(congreso.titulo,URL_SITE,congreso.path), to = [correo])
                 email.send()
         else:
-            beca_pendiente=BecasPendientes(email=row['Correo'],congreso=congreso)  
-            beca_pendiente.save()
-            email = EmailMessage('Beca en MedCongress', '''Estimado(a) colega, se le informa que se le ha asignado una beca para acceder al  %s.
+            if not BecasPendientes.objects.filter(email=correo,congreso=congreso).exists():
+                print(correo)
+                beca_pendiente=BecasPendientes(email=correo,congreso=congreso)  
+                beca_pendiente.save()
+                email = EmailMessage('Beca en MedCongress', '''Estimado(a) profesional de la salud, le informamos que se le ha asignado una beca para el %s.
+        1.- Para acceder tendrá que registrarse en el siguiente enlace %s/registrarse?email=%s
 
-            1.- Para poder acceder primero tendrá que hacer el registro en el siguiente enlace %s/registrarse?email=%s. 
-            
-            2.- una vez registrado, de clic al siguiente enlace para acceder al congreso.
-                %s/congreso/%s'''%(congreso.titulo,URL_SITE,row['Correo'],URL_SITE,congreso.path), to = [row['Correo']])
+        2.- En su perfil elija la opción “Mis Congresos” donde podrá confirmar el evento asignado
+
+        3.- una vez registrado, de clic en el siguiente enlace para acceder al congreso.
+            %s/congreso/%s'''%(congreso.titulo,URL_SITE,correo,URL_SITE,congreso.path), to = [correo])
 
             email.send()
-    return 'No'   
+    return respuesta   

@@ -95,7 +95,7 @@
                     {% if user.is_authenticated %}
                    <h6 class="title" style="color:{{sala.color}}">Debe comprar el congreso para visualizar este streaming </h6> 
                    {%else%}
-                   <h6 class="title" style="color:{{sala.color}}">Debe autenticarse para visualizar este streaming    <a href="{% url 'login' %}" class="back align-self-end mt-md-5 mt-2"> Login</a></h6> 
+                   <h6 class="title" style="color:{{sala.color}}">Debe autenticarse para visualizar este streaming    <a href="{% url 'login' %}?next={{request.path}}" class="back align-self-end mt-md-5 mt-2"> Login</a></h6> 
                    {%endif%}
                     {%endif%}
                 </div>
@@ -204,14 +204,14 @@
                 <!-- <img src="{% static '/'%}{{sala.imagen_seg}}" class="img-fluid"> -->
             </div>
         </div>
-        <!-- {%   for fecha_ponencia in fecha_ponencias %}
+        {%   for fecha_ponencia in fecha_ponencias %}
         {% if forloop.first %}
         <div class="row">
             <div class="col"> 
                 <div class="list-group list-group-horizontal"  role="tablist">
                 {%endif%}
         
-                    <a class="list-group-item list-group-item-action {%if forloop.first%} active {%endif%}d-flex flex-column justify-content-center align-items-center" data-bs-toggle="list" href="#day-{{forloop.counter}}" role="tab">
+                    <a class="list-group-item list-group-item-action {% if forloop.counter == act_fecha %} active {%endif%}d-flex flex-column justify-content-center align-items-center" data-bs-toggle="list" href="#day-{{forloop.counter}}" role="tab">
                         <h4 class="day">Día {{forloop.counter}}</h4>
                         <span class="date"> {{fecha_ponencia|date:"M d / Y"}}</span>
                         <div class="arrow-down"></div>
@@ -229,12 +229,12 @@
         </div>
         {% endif %}
             {% endfor %}
-                 -->
+                
         
         <div class="row">
             <div class="col tab-pane-wrapper py-5"> 
                 {% for ponencia in ponencias%}
-                <div class="tab-pane fade  {%if forloop.first%} show active {%endif%}" id="day-{{forloop.counter}}" role="tabpanel">
+                <div class="tab-pane fade  {% if forloop.counter == act_fecha %} show active {%endif%}" id="day-{{forloop.counter}}" role="tabpanel">
                     {% for pon in ponencia%}
                     {%if pon.tipo == 'Bloque'%}
                     <div class="row">
@@ -899,6 +899,10 @@ function AgregarCarrito(id, fields, msj) {
 }
 
 function VerPerfil(pk) {
+        $('#datos').html(` `);
+        $('#logros').html(` `);
+        $('#pais').html(` `);
+        $('#foto').html('<img class="img-fluid" src="{% static 'MedCongressApp/images/loading.gif' %}" alt="{{request.user.username}}" >');
     url = "{% url 'GetPerfil'%}";
     $.get(url, { 'pk': pk }, function (data) {
 
