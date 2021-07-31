@@ -583,7 +583,7 @@ class CongresoDetail(TemplateView):
             cont=0
             for dat in context['fecha_ponencias']:
                 cont=cont+1 
-                if str(dat) == str(datetime.today().strftime('%Y-%m-%d')):  
+                if str(dat) == str(datetime.now().strftime('%Y-%m-%d')):  
                     act_fecha=cont
                 bloques=Bloque.objects.filter(fecha_inicio__date=dat,congreso=congreso,published=True).order_by('fecha_inicio')
                 ponencias=Ponencia.objects.filter(fecha_inicio__date=dat,congreso=congreso,published=True,bloque=None).order_by('fecha_inicio')
@@ -2307,7 +2307,7 @@ class SalaDetail(TemplateView):
         cont=0
         for dat in context['fecha_ponencias']:
             cont=cont+1 
-            if str(dat) == str(datetime.today().strftime('%Y-%m-%d')):  
+            if str(dat) == str(datetime.now().strftime('%Y-%m-%d')):  
                 act_fecha=cont
             bloque_env=[]
             ponencias=Ponencia.objects.filter(fecha_inicio__date=dat,sala=sala,published=True,bloque=None).order_by('fecha_inicio')
