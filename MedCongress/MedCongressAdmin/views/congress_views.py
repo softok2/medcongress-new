@@ -1920,7 +1920,7 @@ class  CongressSalaCreateView(validarUser,CreateView):
                 sala.orden=sala.orden+1
                 sala.save()
         else:
-            congreso.orden=Sala.objects.filter(congreso=congreso.congreso).count()
+            congreso.orden=Sala.objects.filter(congreso=congreso.congreso).count()+1
         chars = '0123456789'
         
         image_64_encode=self.request.POST['prueba_home']
@@ -1967,16 +1967,17 @@ class CongressSalaUpdateView(validarUser,UpdateView):
         sala_update=Sala.objects.get(pk=self.kwargs.get('pk'))
         chars = '0123456789'
         if congreso.orden:
-            if congreso.orden <= sala_update.orden:
-                salas=Sala.objects.filter(orden__lt=sala_update.orden,orden__gte=congreso.orden,congreso=congreso.congreso)
-                for sala in salas:
-                    sala.orden=sala.orden+1
-                    sala.save()
-            else:
-                salas=Sala.objects.filter(orden__lte=congreso.orden,orden__gt=sala_update.orden,congreso=congreso.congreso)
-                for sala in salas:
-                    sala.orden=sala.orden-1
-                    sala.save()
+            if  not Sala.objects.filter(orden=sala_update.orden,congreso=congreso.congreso).exclude(pk=self.kwargs.get('pk')).exists():
+                if congreso.orden <= sala_update.orden:
+                    salas=Sala.objects.filter(orden__lt=sala_update.orden,orden__gte=congreso.orden,congreso=congreso.congreso)
+                    for sala in salas:
+                        sala.orden=sala.orden+1
+                        sala.save()
+                else:
+                    salas=Sala.objects.filter(orden__lte=congreso.orden,orden__gt=sala_update.orden,congreso=congreso.congreso)
+                    for sala in salas:
+                        sala.orden=sala.orden-1
+                        sala.save()
 
         else:
             congreso.orden=sala_update.orden
@@ -2028,6 +2029,10 @@ class CongressDeletedSalaView(validarUser,DeleteView):
             if Ponencia.objects.filter(sala= sala).exists():
                 return JsonResponse({'success':False}, safe=False)
             else:
+                salas=Sala.objects.filter(orden__gt=sala.orden,congreso=sala.congreso)
+                for sal in salas:
+                    sal.orden=sal.orden-1
+                    sal.save()
                 sala.delete()
                 return JsonResponse({'success':True}, safe=False)
 class CongressOrdenarSalaView(validarUser,TemplateView):
@@ -2044,17 +2049,19 @@ class CongressOrdenarSalaView(validarUser,TemplateView):
                 return JsonResponse({'success':False,'msj':'Entre bien el orden'}, safe=False)
             cant=Sala.objects.filter(congreso=sala.congreso).count()
             if int(orden_new) > cant: 
-                return JsonResponse({'success':False,'msj':'El orden debe ser menor que: %s'%(cant)}, safe=False)   
-            if int(orden_new) <= sala.orden:
-                salas=Sala.objects.filter(orden__gte=int(orden_new),orden__lt=sala.orden,congreso=sala.congreso)
-                for sal in salas:
-                    sal.orden=sal.orden+1
-                    sal.save()
-            else:
-                salas=Sala.objects.filter(orden__lte=int(orden_new),orden__gt=sala.orden,congreso=sala.congreso)
-                for sal in salas:
-                    sal.orden=sal.orden-1
-                    sal.save()
+                return JsonResponse({'success':False,'msj':'El orden debe ser menor que: %s'%(cant)}, safe=False)  
+            if  not Sala.objects.filter(orden=sala.orden,congreso=sala.congreso).exclude(pk=sala.pk).exists():
+                if int(orden_new) <= sala.orden:
+                    salas=Sala.objects.filter(orden__gte=int(orden_new),orden__lt=sala.orden,congreso=sala.congreso)
+                    for sal in salas:
+                        sal.orden=sal.orden+1
+                        sal.save()
+                else:
+                    salas=Sala.objects.filter(orden__lte=int(orden_new),orden__gt=sala.orden,congreso=sala.congreso)
+                    for sal in salas:
+                        sal.orden=sal.orden-1
+                        sal.save()   
+
             sala.orden=orden_new
             sala.save()
             return JsonResponse({'success':True}, safe=False)
