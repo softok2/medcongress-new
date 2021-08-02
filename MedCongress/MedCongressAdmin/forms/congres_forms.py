@@ -1051,11 +1051,12 @@ class CongresoSalaForm(forms.ModelForm):
     prueba_home=forms.CharField(required=False)
    
     published=forms.BooleanField(label='Publicado',required=False)
+    orden=forms.IntegerField(label='Orden',required=False)
     ponencia_streamming = forms.ChoiceField(choices=[],required=False)
     class Meta:
         model=Sala
         fields=['titulo','congreso','detalle','cod_video','prueba_home','published','color','ponencia_streamming','meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
-        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title']
+        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','orden']
        
 
     def __init__(self,sala, *args, **kwargs):
@@ -1065,7 +1066,8 @@ class CongresoSalaForm(forms.ModelForm):
         self.fields['detalle'].widget.attrs.update({'class': 'form-control ckeditor'}) 
         self.fields['congreso'].widget.attrs.update({'class': 'form-control','style':'display:none'}) 
         self.fields['titulo'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['published'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['orden'].widget.attrs.update({'class': 'form-control','min':'0'})
+        self.fields['published'].widget.attrs.update({'class': 'form-control'})  
         self.fields['ponencia_streamming'].widget.attrs.update({'class': 'form-control select2'}) 
         self.fields['cod_video'].widget.attrs.update({'class': 'form-control','rows':'7'}) 
         self.fields['meta_og_title'].widget.attrs.update({'class': 'form-control'}) 
@@ -1083,10 +1085,12 @@ class CongresoSalaForm(forms.ModelForm):
         cleaned_data = super(CongresoSalaForm, self).clean(*args, **kwargs)    
        
         imagen_home = cleaned_data.get('prueba_home', None)
+        orden = cleaned_data.get('orden', None)
         
         if not imagen_home :
             self.add_error('prueba_home', 'Debe entrar una <b>Imagen Principal</b>')
-       
+        if orden and orden <=0 :
+            self.add_error('orden', 'El campo <b>Orden</b> debe ser un entero positivo')
 
 class ExportarLogsCongresoExelForm(forms.ModelForm):
     congreso= forms.ModelChoiceField(queryset=Congreso.objects.all(),label='Congreso')

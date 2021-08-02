@@ -8,7 +8,7 @@ from django.urls import path,include
 
 from .views.country_views import (CountryCreateView, CountryDeleteView,
                                   CountryListView, CountryUpdateView)
-from .views.congress_views import (LogsCongreso,LogsUsuarios,CongressSalaCreateView,CongressDeletedSalaView,CongressSalaUpdateView,CongressSalasListView,AsignarConstanciasUsuario,GetSalas,CongressListView,CongressCreateView,CongressUpdateView,
+from .views.congress_views import (LogsCongreso,LogsUsuarios,CongressSalaCreateView,CongressDeletedSalaView,CongressSalaUpdateView,CongressSalasListView,AsignarConstanciasUsuario,GetSalas,CongressOrdenarSalaView,CongressListView,CongressCreateView,CongressUpdateView,
                                    CongressTalleresListView,CongressPonenciasListView,CongressCategPagosListView,
                                    CongressImagenesListView,AddPonenciaCongreso,CongressCategPagosCreateView,
                                    CongressDeletedView,CongressBloquesListView,GetBloques,AsignarCongressListView,AsignarCongressAddViews,GetPagos,
@@ -16,7 +16,7 @@ from .views.congress_views import (LogsCongreso,LogsUsuarios,CongressSalaCreateV
                                    Ver_usuarios,Ver_Exel,Exportar_usuarios,Usuarios_pagaron,CongressPatrocinadorListView,
                                    PatrocinadorSeleccionarView,PatrocinadorSeleccionarDeleted, SocioSeleccionarView,SocioSeleccionarDeleted,CongressSocioListView,
                                    CongresoDetail,CongressImagenDeletedView,CongressCategPagosUpdateView,CongressCategPagosDeletedView,AsignarConstancias
-                                   ,CongressProgramaUpdateView,CongressProgramaDeletedView,CongressProgramaCreateView,CongressProgramaListView,vTableAsJSONAsigCongreso,vTableAsJSONCongresos,vTableAsJSONBecaCongreso,BecasCongressListView)
+                                   ,CongressProgramaUpdateView,CongressProgramaDeletedView,CongressProgramaCreateView,CongressProgramaListView,vTableAsJSONAsigCongreso,vTableAsJSONCongresos,vTableAsJSONBecaCongreso,BecasCongressListView,vTableAsJSONCongresoSalas)
 from .views.imagen_views import (ImagenCreateView)
 from .views.ponencia_view import (PonenciaListView, PonenciaCreateView,PonenciaPonenteListView,
                                    PonencicaUpdateView,PonenciaPonenteCreateView,PonenciaDeletedView,
@@ -201,12 +201,17 @@ urlpatterns = [
       path('programa-congres/adicinar/<str:path>', CongressProgramaCreateView.as_view(), name='congres_programa_add'),
       path('programa-congres/editar/<str:path>/<int:pk>', CongressProgramaUpdateView.as_view(), name='congres_programa_editar'),
       path('programa-congres/eliminar/<int:pk>', CongressProgramaDeletedView.as_view(), name='congres_programa_eliminar'),
+      
+  
 
       #Sala-Congreso
       path('salas/congreso/<str:path>', CongressSalasListView.as_view(), name='Congres_salas'),
       path('sala-congres/adicinar/<str:path>', CongressSalaCreateView.as_view(), name='congres_sala_add'),
       path('sala-congres/editar/<str:path>/<int:pk>', CongressSalaUpdateView.as_view(), name='congres_sala_editar'),
       path('sala-congres/eliminar/<int:pk>', CongressDeletedSalaView.as_view(), name='congres_sala_eliminar'),
+      path('sala-congres/ordenar/<int:pk>', CongressOrdenarSalaView.as_view(), name='congres_sala_ordenar'),
+
+      
 
 
       #Categorias de Pagos-Taller
@@ -401,6 +406,8 @@ urlpatterns = [
     path('pruebaTablaJsonSocio', vTableAsJSONSocio.as_view(), name='table_json_socios'),
      path('pruebaTablaJsonTipoEvento', vTableAsJSONTipoEvento.as_view(), name='table_json_tipo_eventos'),
      path('pruebaTablaJsonRepositorio', vTableAsJSONRepositorio.as_view(), name='table_json_documentos'),
+    path('pruebaTablaJsonCongresosSalas', vTableAsJSONCongresoSalas.as_view(), name='table_json_salas'),
+     
 
 #Constancia Usuario
 path('constancia-usuario/add/<int:pk>', AsignarConstanciasUsuario.as_view(), name='constancia_usuario_add'),

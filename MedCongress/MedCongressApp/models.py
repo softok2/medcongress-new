@@ -494,6 +494,7 @@ class Sala(models.Model):
     path=models.CharField(max_length=250, help_text='campo para identificarlo por la URL')
     published=models.BooleanField(null=True,blank=True)
     ponencia_streamming=models.IntegerField(null=True,blank=True)
+    orden=models.IntegerField(default=1)
     meta_og_title=models.CharField(max_length=50,null=True,blank=True,error_messages={
 "max_length": "El Campo <b>Metas para FaceBook Título</b> debe tener máximo 50 caracteres"})
     meta_description=models.TextField(max_length=160,null=True,blank=True,error_messages={

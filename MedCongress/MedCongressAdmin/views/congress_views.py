@@ -1787,6 +1787,105 @@ class vTableAsJSONCongresos(TemplateView):
         #Enviar
         return HttpResponse(data, mimetype)    
 
+class vTableAsJSONCongresoSalas(TemplateView):
+    template_name = 'MedCongressAdmin/asig_congress_form.html'
+    
+    def get(self, request, *args, **kwargs):
+        #arreglo con las columnas de la BD a filtrar
+        col_name_map = ['orden','titulo']
+        congreso=Congreso.objects.filter(path=request.GET.get('path')).first() 
+        #listado que muestra en dependencia de donde estes parado
+        object_list = Sala.objects.filter(congreso=congreso).order_by('orden')
+        
+        #parametros 
+        search_text = request.GET.get('sSearch', '').lower()# texto a buscar
+        start = int(request.GET.get('iDisplayStart', 0))#por donde empezar a mostrar
+        delta = int(request.GET.get('iDisplayLength', 10))#cantidad a mostrar
+        sort_dir = request.GET.get('sSortDir_0', 'asc')# direccion a ordenar
+        sort_col = int(request.GET.get('iSortCol_0', 0)) # numero de la columna a ordenar
+        sort_col_name = request.GET.get('mDataProp_%s' % sort_col, '1')
+        sort_dir_prefix = (sort_dir == 'desc' and '-' or '') #sufijo para poner en la consulta para ordenar
+
+        #para ordenar el listado
+        
+        sort_colr = col_name_map[sort_col]
+        object_list = object_list.order_by('%s%s' % (sort_dir_prefix,sort_colr))
+
+        #para filtrar el listado
+        filtered_object_list = object_list
+        if len(search_text) > 0:
+            filtered_object_list = object_list.filter(Q(titulo__icontains=search_text))
+
+        #Guardar datos en un 
+        enviar =[]
+       
+            # if objet.ponente:
+            #     user= '%s %s'%(objet.ponente.first().user.usuario.first_name,objet.ponente.first().user.usuario.last_name)
+           
+           #Guardar datos en un dic 
+        for objet in filtered_object_list[start:(start+delta)]:
+
+            enviar.append({ 
+                            
+                            'orden' : ''' <div class="row" id="edit-'''+str(objet.pk)+'''" style="display: none;">
+                                                        <div class="col-md-8" style="
+                                                        padding-left: 0px;
+                                                        padding-right: 0px;
+                                                        margin: 0px;
+                                                        text-align: center
+                                                    ">
+                                                        <input name="orden" type="number"  min='1' id="orden_'''+str(objet.pk)+'''" value="'''+str(objet.orden)+'''" class="form-control"></input>
+                                                        </div>
+                                                        <div class="col-md-4" style="padding-top: 10px;padding-left: 0px;">
+                                                             <a
+                                                                href="javascript:UpdatPosItem('''+str(objet.pk)+''')"
+                                                                title="Actualizar Posición" >
+                                                                <i class="icon icon-update" ></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" id="show-'''+str(objet.pk)+'''">
+                                                        <div class="col-md-8" style="
+                                                        padding-left: 0px;
+                                                        padding-right: 0px;
+                                                        margin: 0px;
+                                                         text-align: center
+                                                    ">
+                                                      <b>'''+str(objet.orden)+'''</b> 
+                                                       
+                                                             <a id="del_'''+str(objet.pk)+'''"
+                                                                href="javascript:ShowEditar('''+str(objet.pk)+''')"
+                                                                title="Cambiar Orden" style="margin-left: 10px;" >
+                                                                <i class="icon icon-ordenar" ></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                   ''',
+                            'titulo':objet.titulo,         
+                            'color' : str(objet.color),
+                           
+                            'operaciones' :'''  <a href="'''+ reverse('MedCongressAdmin:congres_sala_editar',kwargs={'path':request.GET.get('path'),'pk':objet.pk})+'''"
+                                                        title="Editar" style="margin-left: 5px;"><i class="icon-editar" style="padding: 15px;"></i></a>
+                                                    <a id="del_'''+str(objet.pk)+'''"
+                                                        href="javascript:deleteItem('''+str(objet.pk)+''')"
+                                                        title="Eliminar" style="margin-left: 5px;">
+                                                        <i class="icon-eliminar" style="padding: 15px;"></i>
+                                                    </a>''',
+                            
+            })
+        #parametros para la respuesta
+        jsoner = {
+            
+            "iTotalRecords": filtered_object_list.count(),
+            "iTotalDisplayRecords": filtered_object_list.count(),
+            "sEcho": request.GET.get('sEcho', 1),
+            "data": enviar
+        }
+        data = json.dumps(jsoner)
+        mimetype = "application/json"
+        #Enviar
+        return HttpResponse(data, mimetype)    
+
 class CongressSalasListView(validarUser,TemplateView):
     template_name= 'MedCongressAdmin/congres_sala.html' 
     
@@ -1800,7 +1899,7 @@ class CongressSalasListView(validarUser,TemplateView):
         context = super(CongressSalasListView, self).get_context_data(**kwargs)
         congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
         context['congres']=congreso
-        context['salas']=Sala.objects.filter(congreso=congreso)
+        context['salas']=Sala.objects.filter(congreso=congreso).order_by('orden')
         return context          
 
 
@@ -1815,8 +1914,13 @@ class  CongressSalaCreateView(validarUser,CreateView):
         return kwargs
     def form_valid(self, form):
         congreso=form.save(commit=False)
-
-      
+        if congreso.orden:
+            salas=Sala.objects.filter(orden__gte=congreso.orden,congreso=congreso.congreso)
+            for sala in salas:
+                sala.orden=sala.orden+1
+                sala.save()
+        else:
+            congreso.orden=Sala.objects.filter(congreso=congreso.congreso).count()
         chars = '0123456789'
         
         image_64_encode=self.request.POST['prueba_home']
@@ -1862,7 +1966,20 @@ class CongressSalaUpdateView(validarUser,UpdateView):
             congreso.ponencia_streamming=None
         sala_update=Sala.objects.get(pk=self.kwargs.get('pk'))
         chars = '0123456789'
- 
+        if congreso.orden:
+            if congreso.orden <= sala_update.orden:
+                salas=Sala.objects.filter(orden__lt=sala_update.orden,orden__gte=congreso.orden,congreso=congreso.congreso)
+                for sala in salas:
+                    sala.orden=sala.orden+1
+                    sala.save()
+            else:
+                salas=Sala.objects.filter(orden__lte=congreso.orden,orden__gt=sala_update.orden,congreso=congreso.congreso)
+                for sala in salas:
+                    sala.orden=sala.orden-1
+                    sala.save()
+
+        else:
+            congreso.orden=Sala.objects.filter(congreso=congreso.congreso).count()
         imagen_prim=self.request.POST['prueba_home']
         if 'sala/' not in imagen_prim:
             image_64_encode=self.request.POST['prueba_home']
@@ -1912,6 +2029,37 @@ class CongressDeletedSalaView(validarUser,DeleteView):
             else:
                 sala.delete()
                 return JsonResponse({'success':True}, safe=False)
+class CongressOrdenarSalaView(validarUser,TemplateView):
+
+    def post(self, request, **kwargs):
+        sala=Sala.objects.get(pk=self.kwargs.get('pk'))
+        try:
+    
+            if not sala or not self.request.POST.get('orden'):
+                return JsonResponse({'success':False}, safe=False)
+            
+            orden_new=self.request.POST.get('orden')
+            if not int(orden_new):
+                return JsonResponse({'success':False,'msj':'Entre bien el orden'}, safe=False)
+            cant=Sala.objects.filter(congreso=sala.congreso).count()
+            if int(orden_new) > cant: 
+                return JsonResponse({'success':False,'msj':'El orden debe ser menor que: %s'%(cant)}, safe=False)   
+            if int(orden_new) <= sala.orden:
+                salas=Sala.objects.filter(orden__gte=int(orden_new),orden__lt=sala.orden,congreso=sala.congreso)
+                for sal in salas:
+                    sal.orden=sal.orden+1
+                    sal.save()
+            else:
+                salas=Sala.objects.filter(orden__lte=int(orden_new),orden__gt=sala.orden,congreso=sala.congreso)
+                for sal in salas:
+                    sal.orden=sal.orden-1
+                    sal.save()
+            sala.orden=orden_new
+            sala.save()
+            return JsonResponse({'success':True}, safe=False)
+      
+        except ValueError:
+            return JsonResponse({'success':False,'msj':'Entre bien el orden'}, safe=False)
 
 class LogsCongreso(validarUser,FormView):
     form_class=ExportarLogsCongresoExelForm
