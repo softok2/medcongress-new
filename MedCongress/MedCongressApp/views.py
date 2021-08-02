@@ -545,7 +545,7 @@ class CongresoDetail(TemplateView):
                 for constancia in constancias:
                     if constancia.is_constancia:
                         context['constancia']=True
-        salas=Sala.objects.filter(congreso=congreso,published=True).exclude( cod_video__isnull=True).exclude(cod_video__exact='') 
+        salas=Sala.objects.filter(congreso=congreso,published=True).exclude( cod_video__isnull=True).exclude(cod_video__exact='').order_by('orden') 
        
         salas_env=[]
         for sala in salas:
