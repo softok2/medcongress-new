@@ -1066,7 +1066,7 @@ class CongresoSalaForm(forms.ModelForm):
         self.fields['detalle'].widget.attrs.update({'class': 'form-control ckeditor'}) 
         self.fields['congreso'].widget.attrs.update({'class': 'form-control','style':'display:none'}) 
         self.fields['titulo'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['orden'].widget.attrs.update({'class': 'form-control','min':'0'})
+        self.fields['orden'].widget.attrs.update({'class': 'form-control','min':'1'})
         self.fields['published'].widget.attrs.update({'class': 'form-control'})  
         self.fields['ponencia_streamming'].widget.attrs.update({'class': 'form-control select2'}) 
         self.fields['cod_video'].widget.attrs.update({'class': 'form-control','rows':'7'}) 
@@ -1089,7 +1089,7 @@ class CongresoSalaForm(forms.ModelForm):
         
         if not imagen_home :
             self.add_error('prueba_home', 'Debe entrar una <b>Imagen Principal</b>')
-        if orden and orden <=0 :
+        if orden and orden < 1 :
             self.add_error('orden', 'El campo <b>Orden</b> debe ser un entero positivo')
 
 class ExportarLogsCongresoExelForm(forms.ModelForm):

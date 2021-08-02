@@ -1979,7 +1979,8 @@ class CongressSalaUpdateView(validarUser,UpdateView):
                     sala.save()
 
         else:
-            congreso.orden=Sala.objects.filter(congreso=congreso.congreso).count()
+            congreso.orden=sala_update.orden
+            
         imagen_prim=self.request.POST['prueba_home']
         if 'sala/' not in imagen_prim:
             image_64_encode=self.request.POST['prueba_home']
