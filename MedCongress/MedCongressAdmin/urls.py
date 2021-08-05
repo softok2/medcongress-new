@@ -16,7 +16,7 @@ from .views.congress_views import (LogsCongreso,LogsUsuarios,CongressSalaCreateV
                                    Ver_usuarios,Ver_Exel,Exportar_usuarios,Usuarios_pagaron,CongressPatrocinadorListView,
                                    PatrocinadorSeleccionarView,PatrocinadorSeleccionarDeleted, SocioSeleccionarView,SocioSeleccionarDeleted,CongressSocioListView,
                                    CongresoDetail,CongressImagenDeletedView,CongressCategPagosUpdateView,CongressCategPagosDeletedView,AsignarConstancias
-                                   ,CongressProgramaUpdateView,CongressProgramaDeletedView,CongressProgramaCreateView,CongressProgramaListView,vTableAsJSONAsigCongreso,vTableAsJSONCongresos,vTableAsJSONBecaCongreso,BecasCongressListView,vTableAsJSONCongresoSalas)
+                                   ,CongressProgramaUpdateView,CongressProgramaDeletedView,CongressProgramaCreateView,CongressProgramaListView,vTableAsJSONAsigCongreso,vTableAsJSONCongresos,vTableAsJSONBecaCongreso,BecasCongressListView,vTableAsJSONCongresoSalas,ExportarBecas)
 from .views.imagen_views import (ImagenCreateView)
 from .views.ponencia_view import (PonenciaListView, PonenciaCreateView,PonenciaPonenteListView,
                                    PonencicaUpdateView,PonenciaPonenteCreateView,PonenciaDeletedView,
@@ -84,7 +84,7 @@ urlpatterns = [
       #Becas Congreso
       
       path('becas/congreso', BecasCongressListView.as_view(), name='asig_becas_list'),
-      # path('asignar/congreso/add', AsignarCongressAddViews.as_view(), name='asignar_congress_add'),
+      path('exportar/becas', ExportarBecas.as_view(), name='exportar_becas'),
       # path('asignar/congreso/eliminar/<int:pk>', AsignarCongressDeletedViews.as_view(), name='asig_congres_delete'),
       
       # Congreso-Ponencias

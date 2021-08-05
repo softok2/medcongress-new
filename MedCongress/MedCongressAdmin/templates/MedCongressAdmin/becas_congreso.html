@@ -59,9 +59,9 @@
 
                         <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
-                                <!-- <button class="btn btn-info" title="Descargar Exel" onclick="javascript:$('#mostrar').toggle();" style="float:right; padding: 3px;margin-left: 10px;">
+                                <button class="btn btn-info" title="Descargar Exel" onclick="javascript:$('#mostrar').toggle();" style="float:right; padding: 3px;margin-left: 10px;">
                                     <i class="la la-file-excel-o"></i>
-                                </button> -->
+                                </button>
 
                                 <button  onclick="javascript:$('#mostrar-subir').toggle();" type="button" class="btn btn-success"
                                     title="Asignar pago de un Congreso a un Usuario" style="float:right; padding: 3px;">
@@ -73,9 +73,11 @@
                         </div>
 
                     </div>
-                    <div class="row card-content collapse show"  {% if not messages %} style="display: none;"  {% endif %} id='mostrar-subir'>
-                         
-                                
+                    <div class="row card-content collapse show"  {% if not messages or exportar %} style="display: none;"  {% endif %} id='mostrar-subir'>
+                        <div class="col-md-6"></div>
+                              <div class="col-md-6" style="float: right;">
+                                  <h3> <b>Asignar Becas</b> </h3>
+                              </div>  
                       
                         <div class="col-md-6"></div>
                         <div class="col-md-6" style="float: right;">
@@ -151,7 +153,10 @@
                     </div>
                     <div class="row card-content collapse show" {%if not exportar%} style="display: none;" {%endif%} id='mostrar'>
                          
-                                
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6" style="float: right;">
+                            <h3> <b>Exportar Becas</b> </h3>
+                        </div> 
                       
                         <div class="col-md-6"></div>
                         <div class="col-md-6" style="float: right;">
@@ -188,7 +193,7 @@
 	</div>
     {% endfor %}
 {% endif %} 
-                            <form id="form" method="POST" action="">
+                            <form id="form" method="POST" action="{% url 'MedCongressAdmin:exportar_becas'%}">
                                 {% csrf_token %}
                                 <div class="form-body">
                                     <div class="row">
@@ -199,16 +204,21 @@
                                                     <label for="{{form.congreso.id_for_label }}"><b>Filtre
                                                             Congreso</b></label>
                                                             
-                                                    <div >{%if exportar%}
+                                                    <div >{%if exp%}
                                                         <select name="congreso" class="form-control select2 select2-hidden-accessible" required="" id="id_congreso" tabindex="-1" aria-hidden="true">
                                                             <option value="" selected="">---------</option>
-                                                          {%for export in exportar%}
+                                                          {%for export in exp%}
                                                             <option value="{{export.id}}" {%if export.activo%} selected {%endif%}>{{export.titulo}}</option>
                                                           
                                                            {%endfor%}
                                                           </select>
                                                         {%else%}
-                                                        {{form.congreso}}
+                                                        <select name="congreso" class="form-control select2 select2-hidden-accessible" required="" id="id_congreso" tabindex="-1" aria-hidden="true">
+                                                            <option value="" selected="">---------</option>
+                                                          {%for congreso in congresos %}
+                                                          <option value="{{congreso.pk}}">{{congreso.titulo}}</option>
+                                                          {%endfor%}
+                                                          </select>
                                                         {%endif%}
                                                     </div>
                                                     <!-- <input type="text" name="my_user" class="form-control" required=""

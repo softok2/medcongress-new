@@ -490,7 +490,7 @@ class AsignarCongressListView(validarUser,ListView,FormView):
     def form_valid(self, form):
         self.object_list = self.get_queryset()
         id_congreso=self.request.POST['congreso']
-        query= RelCongresoUser.objects.filter(congreso=id_congreso,is_pagado=True).values('user__usuario__first_name','user__usuario__last_name','user__usuario__email','user__genero__denominacion','categoria_pago__nombre','user__cel_profecional','user__categoria__nombre','user__ubicacion__direccion','user__especialidad__nombre','user__fecha_nacimiento','user__num_telefono','congreso__titulo').annotate(Sum('cantidad'))
+        query= RelCongresoUser.objects.filter(congreso=id_congreso,is_pagado=True).values('user__usuario__first_name','user__usuario__last_name','user__usuario__email','user__genero__denominacion','categoria_pago__nombre','user__cel_profecional','user__categoria__nombre','user__ubicacion__direccion','user__especialidad__nombre','user__fecha_nacimiento','user__num_telefono','congreso__titulo','is_beca','user__puesto').annotate(Sum('cantidad'))
         
         if query:
             #Creamos el libro de trabajo
@@ -510,6 +510,7 @@ class AsignarCongressListView(validarUser,ListView,FormView):
             ws.column_dimensions['J'].width=25
             ws.column_dimensions['K'].width=25
             ws.column_dimensions['L'].width=22
+            ws.column_dimensions['N'].width=50
 
             titulo = NamedStyle(name="titulo")
             titulo.font=Font(size=12,bold=True)
@@ -556,6 +557,28 @@ class AsignarCongressListView(validarUser,ListView,FormView):
                  horizontal=Side(border_style='thin',
                                 color='FF000000')
                 )
+            celdas_beca = NamedStyle(name="celdas_beca")
+            celdas_beca.font=Font(size=12,color='00CCCC')
+            
+            celdas_beca.alignment=Alignment(horizontal='general',mergeCell=True)
+            celdas_beca.border = Border(left=Side(border_style='thin',
+                           color='FF000000'),
+                 right=Side(border_style='thin',
+                            color='FF000000'),
+                 top=Side(border_style='thin',
+                          color='FF000000'),
+                 bottom=Side(border_style='thin',
+                             color='FF000000'),
+                 diagonal=Side(border_style='thin',
+                               color='FF000000'),
+                 diagonal_direction=0,
+                 outline=Side(border_style='thin',
+                              color='FF000000'),
+                 vertical=Side(border_style='thin',
+                               color='FF000000'),
+                 horizontal=Side(border_style='thin',
+                                color='FF000000')
+                )
             #En la celda B1 ponemos el texto 'REPORTE DE PERSONAS'
             ws['A1'] = 'Usuarios que han comprado el  Congresos :'
             ws['A1'].font = Font(size=12,bold=True)
@@ -581,6 +604,8 @@ class AsignarCongressListView(validarUser,ListView,FormView):
             ws['J3'].style =titulo  
             ws['K3'].style =titulo 
             ws['L3'].style =titulo
+            ws['M3'].style =titulo
+            ws['N3'].style =titulo
 
             ws['A3'] = 'No.'
             ws['B3'] = 'Nombre'
@@ -593,7 +618,9 @@ class AsignarCongressListView(validarUser,ListView,FormView):
             ws['I3'] = 'Cédula Profecional' 
             ws['J3'] = 'Fecha de Nacimiento' 
             ws['K3'] = 'Categoría de Pago'  
-            ws['L3'] = 'Cantidad Comprados'           
+            ws['L3'] = 'Cantidad Comprados' 
+            ws['M3'] = 'Beca' 
+            ws['N3'] = 'Lugar de Trabajo'             
             cont=4
             
             #Recorremos el conjunto de personas y vamos escribiendo cada uno de los datos en las celdas
@@ -623,7 +650,16 @@ class AsignarCongressListView(validarUser,ListView,FormView):
                 ws.cell(row=cont,column=11).value = quer['categoria_pago__nombre']
                 ws.cell(row=cont,column=12).style=celdas
                 ws.cell(row=cont,column=12).value = quer['cantidad__sum']
+                beca='No'
+                ws.cell(row=cont,column=13).style=celdas
+                if quer['is_beca']:
+                    beca='Si'
+                    ws.cell(row=cont,column=13).style=celdas_beca
+                ws.cell(row=cont,column=13).value = beca
+                ws.cell(row=cont,column=14).style=celdas
+                ws.cell(row=cont,column=14).value = quer['user__puesto']
                 cont = cont + 1
+                
             
             response = HttpResponse(content_type="application/ms-excel") 
             response["Content-Disposition"] = "attachment; filename=RelCongresoUser.xlsx"
@@ -826,7 +862,7 @@ class Usuarios_pagaron(validarUser,TemplateView):
     def post(self, request):
         #Obtenemos todas las personas de nuestra base de datos
         congreso=self.request.POST['congreso']
-        query= RelCongresoUser.objects.filter(congreso=congreso,is_pagado=True).values('user__usuario__first_name','user__usuario__last_name','user__usuario__email','congreso__titulo','categoria_pago__nombre','user__ubicacion__direccion').annotate(Sum('cantidad'))
+        query= RelCongresoUser.objects.filter(congreso=congreso,is_pagado=True).values('user__usuario__first_name','user__usuario__last_name','user__usuario__email','congreso__titulo','categoria_pago__nombre','user__ubicacion__direccion','beca').annotate(Sum('cantidad'))
 
 		#Creamos el libro de trabajo
         wb = Workbook()
@@ -848,7 +884,8 @@ class Usuarios_pagaron(validarUser,TemplateView):
             ws['D3'] = 'Congreso'
             ws['E3'] = 'Categoria de Pago'
             ws['F3'] = 'Cantidad'
-            ws['G3'] = 'Dirección'          
+            ws['G3'] = 'Dirección'
+            ws['H3'] = 'Beca'           
             cont=4
             #Recorremos el conjunto de personas y vamos escribiendo cada uno de los datos en las celdas
             for quer in query:
@@ -859,6 +896,10 @@ class Usuarios_pagaron(validarUser,TemplateView):
                 ws.cell(row=cont,column=5).value = quer['categoria_pago__nombre']
                 ws.cell(row=cont,column=6).value = quer['cantidad__sum']
                 ws.cell(row=cont,column=6).value = quer['user__ubicacion__direccion']
+                beca='No'
+                if quer['beca']:
+                    beca='Si'
+                ws.cell(row=cont,column=7).value = beca
                 cont = cont + 1
         
            
@@ -2453,17 +2494,6 @@ class BecasCongressListView(validarUser,ListView):
                 if not rows[0]['Correo'] or not rows[0]['Congreso']:
                     raise ValidationError('Debe subir un Exel')
                 resultado=AsignarBeca.apply_async(args=[rows])
-
-            # df = pd.DataFrame(archivo_excel)
-
-            # d1 = df.to_dict()
-            # print(d1)
-            # for fila in  d1.values():
-            #     print(fila[0])
-            # for fila in archivo_excel:
-            #     user=User.objects.filter(email=fila['']).first()
-            #     if PerfilUsuario.objects.filter(usuario=user).exists():   
-            print(resultado)
             if resultado=='congreso':
                 messages.warning(self.request, 'En este exel hay nombres de congreso que no existen en el sistema')
             if resultado=='usuario':
@@ -2484,3 +2514,212 @@ class BecasCongressListView(validarUser,ListView):
     def get_queryset(self):
         queryset=RelCongresoUser.objects.filter(is_beca=True)
         return queryset
+    def get_context_data(self, **kwargs):
+        context = super(BecasCongressListView, self).get_context_data(**kwargs)
+        congresos= Congreso.objects.all()
+        if self.request.GET.get('exportar'):
+            congreso_evn=[]
+           
+            activo=False
+            for congreso in congresos:
+                if congreso.path == self.request.GET.get('exportar'):
+                    activo=True
+                else:
+                    activo=False
+                congreso_evn.append({ 'id':congreso.pk,
+                                    'titulo':congreso.titulo,
+                                        'activo':activo,
+
+                })
+            context['exportar']= congreso_evn
+        context['congresos']= congresos
+            
+        return context  
+    
+
+class ExportarBecas(validarUser,FormView):
+    model = RelCongresoUser
+    context_object_name = 'congress'
+    template_name = 'MedCongressAdmin/becas_congreso.html'
+    form_class=ExportarExelForm
+    
+    def form_valid(self, form):
+        self.object_list = self.get_queryset()
+        id_congreso=self.request.POST['congreso']
+        query= RelCongresoUser.objects.filter(congreso=id_congreso,is_pagado=True,is_beca=True).values('user__usuario__first_name','user__usuario__last_name','user__usuario__email','user__genero__denominacion','categoria_pago__nombre','user__cel_profecional','user__categoria__nombre','user__ubicacion__direccion','user__especialidad__nombre','user__fecha_nacimiento','user__num_telefono','congreso__titulo','user__puesto').annotate(Sum('cantidad'))
+        
+        if query:
+            #Creamos el libro de trabajo
+            wb = Workbook()
+            #Definimos como nuestra hoja de trabajo, la hoja activa, por defecto la primera del libro
+            ws = wb.active
+            ws.column_dimensions['A'].width=5
+            ws.column_dimensions['B'].width=40
+            ws.column_dimensions['C'].width=40
+            ws.column_dimensions['D'].width=47
+
+            ws.column_dimensions['E'].width=20
+            ws.column_dimensions['F'].width=20
+            ws.column_dimensions['G'].width=27
+            ws.column_dimensions['H'].width=56
+            ws.column_dimensions['I'].width=20
+            ws.column_dimensions['J'].width=25
+            ws.column_dimensions['K'].width=25
+            ws.column_dimensions['L'].width=22
+            ws.column_dimensions['M'].width=50
+
+            titulo = NamedStyle(name="titulo")
+            titulo.font=Font(size=12,bold=True)
+            titulo.fill=PatternFill(fill_type='solid',start_color='00CCCCFF')
+            titulo.alignment=Alignment(horizontal='center',mergeCell=True)
+            titulo.border = Border(left=Side(border_style='thin',
+                           color='FF000000'),
+                 right=Side(border_style='thin',
+                            color='FF000000'),
+                 top=Side(border_style='thin',
+                          color='FF000000'),
+                 bottom=Side(border_style='thin',
+                             color='FF000000'),
+                 diagonal=Side(border_style='thin',
+                               color='FF000000'),
+                 diagonal_direction=0,
+                 outline=Side(border_style='thin',
+                              color='FF000000'),
+                 vertical=Side(border_style='thin',
+                               color='FF000000'),
+                 horizontal=Side(border_style='thin',
+                                color='FF000000')
+                )
+
+            celdas = NamedStyle(name="celdas")
+            celdas.font=Font(size=12)
+            
+            celdas.alignment=Alignment(horizontal='general',mergeCell=True)
+            celdas.border = Border(left=Side(border_style='thin',
+                           color='FF000000'),
+                 right=Side(border_style='thin',
+                            color='FF000000'),
+                 top=Side(border_style='thin',
+                          color='FF000000'),
+                 bottom=Side(border_style='thin',
+                             color='FF000000'),
+                 diagonal=Side(border_style='thin',
+                               color='FF000000'),
+                 diagonal_direction=0,
+                 outline=Side(border_style='thin',
+                              color='FF000000'),
+                 vertical=Side(border_style='thin',
+                               color='FF000000'),
+                 horizontal=Side(border_style='thin',
+                                color='FF000000')
+                )
+            celdas_beca = NamedStyle(name="celdas_beca")
+            celdas_beca.font=Font(size=12,color='00CCCC')
+            
+            celdas_beca.alignment=Alignment(horizontal='general',mergeCell=True)
+            celdas_beca.border = Border(left=Side(border_style='thin',
+                           color='FF000000'),
+                 right=Side(border_style='thin',
+                            color='FF000000'),
+                 top=Side(border_style='thin',
+                          color='FF000000'),
+                 bottom=Side(border_style='thin',
+                             color='FF000000'),
+                 diagonal=Side(border_style='thin',
+                               color='FF000000'),
+                 diagonal_direction=0,
+                 outline=Side(border_style='thin',
+                              color='FF000000'),
+                 vertical=Side(border_style='thin',
+                               color='FF000000'),
+                 horizontal=Side(border_style='thin',
+                                color='FF000000')
+                )
+            #En la celda B1 ponemos el texto 'REPORTE DE PERSONAS'
+            ws['A1'] = 'Usuarios que se el asignaron Becas en el Congresos :'
+            ws['A1'].font = Font(size=12,bold=True)
+            ws['A1'].alignment = Alignment(mergeCell='center',horizontal='center') 
+            
+            ws['A2'] ='" %s "'%(query[0]['congreso__titulo']) 
+            ws['A2'].font = Font(size=12,bold=True)
+            ws['A2'].alignment = Alignment(mergeCell='center',horizontal='center') 
+           
+            #Juntamos las celdas desde la B1 hasta la E1, formando una sola celda
+            ws.merge_cells('A1:F1')
+            ws.merge_cells('A2:F2')
+            #Creamos los encabezados desde la celda B3 hasta la E3
+            ws['A3'].style =titulo
+            ws['B3'].style =titulo 
+            ws['C3'].style =titulo 
+            ws['D3'].style =titulo                   
+            ws['E3'].style =titulo 
+            ws['F3'].style =titulo 
+            ws['G3'].style =titulo 
+            ws['H3'].style =titulo
+            ws['I3'].style =titulo 
+            ws['J3'].style =titulo  
+            ws['K3'].style =titulo 
+            ws['L3'].style =titulo
+            ws['M3'].style =titulo
+
+
+            ws['A3'] = 'No.'
+            ws['B3'] = 'Nombre'
+            ws['C3'] = 'Email'
+            ws['D3'] = 'Dirección'
+            ws['E3'] = 'Teléfono'
+            ws['F3'] = 'Género'
+            ws['G3'] = 'Categoría'
+            ws['H3'] = 'Especialidad'
+            ws['I3'] = 'Cédula Profecional' 
+            ws['J3'] = 'Fecha de Nacimiento' 
+            ws['K3'] = 'Categoría de Pago'  
+            ws['L3'] = 'Cantidad Comprados' 
+            ws['M3'] = 'Lugar de Trabajo'            
+            cont=4
+            
+            #Recorremos el conjunto de personas y vamos escribiendo cada uno de los datos en las celdas
+            for quer in query:
+                
+                ws.cell(row=cont,column=1).style=celdas
+                ws.cell(row=cont,column=1).value = cont-3
+                ws.cell(row=cont,column=2).style=celdas
+                ws.cell(row=cont,column=2).value ='%s %s'%(quer['user__usuario__first_name'],quer['user__usuario__last_name']) 
+                ws.cell(row=cont,column=3).style=celdas
+                ws.cell(row=cont,column=3).value = quer['user__usuario__email']
+                ws.cell(row=cont,column=4).style=celdas
+                ws.cell(row=cont,column=4).value = quer['user__ubicacion__direccion']
+                ws.cell(row=cont,column=5).style=celdas
+                ws.cell(row=cont,column=5).value = quer['user__num_telefono']
+                ws.cell(row=cont,column=6).style=celdas
+                ws.cell(row=cont,column=6).value = quer['user__genero__denominacion']
+                ws.cell(row=cont,column=7).style=celdas
+                ws.cell(row=cont,column=7).value = quer['user__categoria__nombre']
+                ws.cell(row=cont,column=8).style=celdas
+                ws.cell(row=cont,column=8).value = quer['user__especialidad__nombre']
+                ws.cell(row=cont,column=9).style=celdas
+                ws.cell(row=cont,column=9).value = quer['user__cel_profecional']
+                ws.cell(row=cont,column=10).style=celdas
+                ws.cell(row=cont,column=10).value = quer['user__fecha_nacimiento']
+                ws.cell(row=cont,column=11).style=celdas
+                ws.cell(row=cont,column=11).value = quer['categoria_pago__nombre']
+                ws.cell(row=cont,column=12).style=celdas
+                ws.cell(row=cont,column=12).value = quer['cantidad__sum']
+                ws.cell(row=cont,column=13).style=celdas
+                ws.cell(row=cont,column=13).value = quer['user__puesto']
+                cont = cont + 1
+                
+            
+            response = HttpResponse(content_type="application/ms-excel") 
+            response["Content-Disposition"] = "attachment; filename=BecasCongreso.xlsx"
+            wb.save(response)
+            return response
+        else:
+            congreso=Congreso.objects.get(pk=id_congreso)
+            messages.warning(self.request, 'Todavía ningún usuario ha comprado este congreso')
+            return HttpResponseRedirect(reverse_lazy('MedCongressAdmin:asig_becas_list')+'?exportar=%s'%(congreso.path))
+    def get_queryset(self):
+        queryset=RelCongresoUser.objects.filter(is_beca=True)
+        return queryset
+   
+    
