@@ -1840,8 +1840,8 @@ class vTableAsJSONCongresoSalas(TemplateView):
         
         #parametros 
         search_text = request.GET.get('sSearch', '').lower()# texto a buscar
-        start = int(request.GET.get('iDisplayStart', 0))#por donde empezar a mostrar
-        delta = int(request.GET.get('iDisplayLength', 10))#cantidad a mostrar
+        # start = int(request.GET.get('iDisplayStart', 0))#por donde empezar a mostrar
+        # delta = int(request.GET.get('iDisplayLength', 10))#cantidad a mostrar
         sort_dir = request.GET.get('sSortDir_0', 'asc')# direccion a ordenar
         sort_col = int(request.GET.get('iSortCol_0', 0)) # numero de la columna a ordenar
         sort_col_name = request.GET.get('mDataProp_%s' % sort_col, '1')
@@ -1864,44 +1864,11 @@ class vTableAsJSONCongresoSalas(TemplateView):
             #     user= '%s %s'%(objet.ponente.first().user.usuario.first_name,objet.ponente.first().user.usuario.last_name)
            
            #Guardar datos en un dic 
-        for objet in filtered_object_list[start:(start+delta)]:
+        for objet in filtered_object_list:
 
             enviar.append({ 
-                            
-                            'orden' : ''' <div class="row" id="edit-'''+str(objet.pk)+'''" style="display: none;">
-                                                        <div class="col-md-8" style="
-                                                        padding-left: 0px;
-                                                        padding-right: 0px;
-                                                        margin: 0px;
-                                                        text-align: center
-                                                    ">
-                                                        <input name="orden" type="number"  min='1' id="orden_'''+str(objet.pk)+'''" value="'''+str(objet.orden)+'''" class="form-control"></input>
-                                                        </div>
-                                                        <div class="col-md-4" style="padding-top: 10px;padding-left: 0px;">
-                                                             <a
-                                                                href="javascript:UpdatPosItem('''+str(objet.pk)+''')"
-                                                                title="Actualizar Posición" >
-                                                                <i class="icon icon-update" ></i>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row" id="show-'''+str(objet.pk)+'''">
-                                                        <div class="col-md-8" style="
-                                                        padding-left: 0px;
-                                                        padding-right: 0px;
-                                                        margin: 0px;
-                                                         text-align: center
-                                                    ">
-                                                      <b>'''+str(objet.orden)+'''</b> 
-                                                       
-                                                             <a id="del_'''+str(objet.pk)+'''"
-                                                                href="javascript:ShowEditar('''+str(objet.pk)+''')"
-                                                                title="Cambiar Orden" style="margin-left: 10px;" >
-                                                                <i class="icon icon-ordenar" ></i>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                   ''',
+                            'id' : str(objet.pk),
+                            'orden' : str(objet.orden),
                             'titulo':objet.titulo,         
                             'color' : str(objet.color),
                            
@@ -2079,37 +2046,12 @@ class CongressDeletedSalaView(validarUser,DeleteView):
 class CongressOrdenarSalaView(validarUser,TemplateView):
 
     def post(self, request, **kwargs):
-        sala=Sala.objects.get(pk=self.kwargs.get('pk'))
-        try:
-    
-            if not sala or not self.request.POST.get('orden'):
-                return JsonResponse({'success':False}, safe=False)
-            
-            orden_new=self.request.POST.get('orden')
-            if not int(orden_new):
-                return JsonResponse({'success':False,'msj':'Entre bien el orden'}, safe=False)
-            cant=Sala.objects.filter(congreso=sala.congreso).count()
-            if int(orden_new) > cant: 
-                return JsonResponse({'success':False,'msj':'El orden debe ser menor que: %s'%(cant)}, safe=False)  
-            if  not Sala.objects.filter(orden=sala.orden,congreso=sala.congreso).exclude(pk=sala.pk).exists():
-                if int(orden_new) <= sala.orden:
-                    salas=Sala.objects.filter(orden__gte=int(orden_new),orden__lt=sala.orden,congreso=sala.congreso)
-                    for sal in salas:
-                        sal.orden=sal.orden+1
-                        sal.save()
-                else:
-                    salas=Sala.objects.filter(orden__lte=int(orden_new),orden__gt=sala.orden,congreso=sala.congreso)
-                    for sal in salas:
-                        sal.orden=sal.orden-1
-                        sal.save()   
-
-            sala.orden=orden_new
-            sala.save()
-            return JsonResponse({'success':True}, safe=False)
+        sala=Sala.objects.get(pk=self.request.POST.get('id'))
+        sala.orden=self.request.POST.get('pos')
+        sala.save()
+        return JsonResponse({'success':True}, safe=False)
       
-        except ValueError:
-            return JsonResponse({'success':False,'msj':'Entre bien el orden'}, safe=False)
-
+       
 class LogsCongreso(validarUser,FormView):
     form_class=ExportarLogsCongresoExelForm
     template_name = 'MedCongressAdmin/log_congreso_form.html'

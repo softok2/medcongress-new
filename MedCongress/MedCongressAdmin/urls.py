@@ -209,7 +209,7 @@ urlpatterns = [
       path('sala-congres/adicinar/<str:path>', CongressSalaCreateView.as_view(), name='congres_sala_add'),
       path('sala-congres/editar/<str:path>/<int:pk>', CongressSalaUpdateView.as_view(), name='congres_sala_editar'),
       path('sala-congres/eliminar/<int:pk>', CongressDeletedSalaView.as_view(), name='congres_sala_eliminar'),
-      path('sala-congres/ordenar/<int:pk>', CongressOrdenarSalaView.as_view(), name='congres_sala_ordenar'),
+      path('sala-congres/ordenar', CongressOrdenarSalaView.as_view(), name='congres_sala_ordenar'),
 
       
 

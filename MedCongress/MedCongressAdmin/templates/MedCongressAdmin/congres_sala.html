@@ -75,7 +75,7 @@
                                         id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
                                         <thead>
                                             <tr role="row" style="font-size: 13px;">
-                                               
+                                                <th  ></th>
                                                 <th id="th"  >  Orden  </th>
                                                 <th style="width: 90%;">Título</th>
                                                 <th >Color</th>
@@ -142,7 +142,7 @@
                                         </tbody>
                                         <tfoot>
                                             <tr style="font-size: 13px;">
-                                               
+                                                <th  ></th>
                                                 <th >  Orden </th>
                                                 <th>Título</th>
                                                 <th >Color</th>
@@ -170,51 +170,107 @@
 {% block scripts %}
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/extensions/sweetalert.min.js' %}"></script>
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/tables/datatable/datatables.min.js' %}"></script>
-
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/tables/datatable/rowReording.min.js' %}"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-        $('.table').DataTable({
-    language: {
-        "decimal": "",
-        "emptyTable": "No hay información",
-        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
-        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
-        "infoPostFix": "",
-        "thousands": ",",
-        "lengthMenu": "Mostrar _MENU_ Entradas",
-        "loadingRecords": "Cargando...",
-        "processing": "Procesando...",
-        "search": "Buscar:",
-        "zeroRecords": "Sin resultados encontrados",
-        "paginate": {
-            "first": "Primero",
-            "last": "Ultimo",
-            "next": "Siguiente",
-            "previous": "Anterior"
-        }
-    },
-    "fnRowCallback": function( nRow, data)
-{
+        let tabla=$('.table').DataTable({
+            language: {
+                "decimal": "",
+                "emptyTable": "No hay información",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Mostrar _MENU_ Entradas",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "Sin resultados encontrados",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            },
+            retrieve: true,
+            rowReorder: {
+                rowOrder: true
+                },
 
-$("td:eq(2)", nRow).css("background-color", data['color']);
+            "fnRowCallback": function( nRow, data)
+            {
 
-},
-    "columns": [
+            $("td:eq(2)", nRow).css("background-color", data['color']);
+            $("td:eq(2)", nRow).css("font-size",0);
+            $("td:eq(0)", nRow).append('<i class="icon-ordenar" style="padding: 15px;"></i>');
+
+            },
+            "bPaginate": false, //Ocultar paginación
+                "columns": [
+                    {'data':'id','orderable': false},
+                    {'data':'orden','orderable': true},
+                    {'data':'titulo','orderable': true},
+                    {'data':'color','orderable': false },
+                    {'data':'operaciones','orderable': false }
+                
+                ],
+                "columnDefs": [
+            {
+                "targets": [ 0 ],
+                "visible": false,
+                "searchable": false
+            }],
+                "bServerSide": true,
+                "sAjaxSource":"{% url 'MedCongressAdmin:table_json_salas' %}",
+                "fnServerParams": function (aoData) {
+                        aoData.push( { "name": "path", "value": "{{congres.path}}" } );
+                    
+                }
+        });
+        tabla.on( 'row-reorder', function ( e, diff, edit ) {
+            
+            
+            // var resultado = 'Reordenamiento Inicio en: '+edit.triggerRow.data()['texto']+'\n';
        
-        {'data':'orden','orderable': true},
-        {'data':'titulo','orderable': true},
-        {'data':'color','orderable': false },
-        {'data':'operaciones','orderable': false }
-       
-    ],
-    "bServerSide": true,
-    "sAjaxSource":"{% url 'MedCongressAdmin:table_json_salas' %}",
-    "fnServerParams": function (aoData) {
-            aoData.push( { "name": "path", "value": "{{congres.path}}" } );
-        
-       }
-});
+            for ( var i=0; i<diff.length ; i++ ) {
+
+                var rowData = tabla.row( diff[i].node ).data();
+                console.log(rowData)
+                resultado = rowData['id']+'('+rowData['orden']+') ahora esta en posición '+
+                    diff[i].newPosition+' (antes era '+diff[i].oldPosition+')\n';
+
+                // Actualizamos en BD
+                let page=0
+                if(i>=10)
+                    page=i
+                else{
+                    page=i%10
+                }
+                console.log(page)
+                url = "{% url 'MedCongressAdmin:congres_sala_ordenar' %}";
+                $.post( url, {
+
+                    id: rowData['id'],
+
+                    pos: diff[i].newPosition+1
+
+                }).done(function( data ) {});
+            }
+     
+            // console.log( 'Resultados del Reordenamiento: \n' + resultado );
+
+            // $.notify({
+            //     icon: 'pe-7s-bell',
+            //     message: "Se actualizó correctamente la información."
+
+            // },{
+            //     type: 'success',
+            //     timer: 1000
+            // }); 
+                
+          });
         $('#atras').click(function () {
             location.href = "{% url 'MedCongressAdmin:congress_list' %}";
         });
@@ -279,54 +335,7 @@ $("td:eq(2)", nRow).css("background-color", data['color']);
         $('#th').attr('style',"width: 15%")
 
     }
-    function UpdatPosItem(id_sala){
-        swal({
-            title: "¿Estás seguro?",
-            text: "¿Desea cambiar el ordenan a esta sala?",
-            icon: "warning",
-            buttons: {
-                cancel: {
-                    text: "¡No, cancelar!",
-                    value: null,
-                    visible: true,
-                    className: "",
-                    closeModal: false,
-                },
-                confirm: {
-                    text: "¡Sí, cambiar!",
-                    value: true,
-                    visible: true,
-                    className: "",
-                    closeModal: false
-                }
-            }
-        })
-            .then((isConfirm) => {
-                if (isConfirm) {
-                    url = "{% url 'MedCongressAdmin:congres_sala_ordenar' pk=0 %}";
-                    $.post(url.replace('/0', '/' + id_sala), { 'orden': $('#orden_'+id_sala).val() }, function (data) {
+   
 
-                        if (data.success){
-                            swal({
-                                    title: '¡Actualizado!',
-                                    text: 'Se está cambiando el orden a las salas',
-                                    buttons: false,
-                                    });  
-                        location.reload()
-                        }
-                        else{
-                           
-                            swal("¡Error!", data.msj, "error");
-                      
-                        }
-                        
-                    });
-                } else {
-                    swal("Cancelado", "No se actualizó el orden a esta sala", "error");
-                    location.reload()
-                }
-            });
-        
-    }
 </script>
 {% endblock %}
