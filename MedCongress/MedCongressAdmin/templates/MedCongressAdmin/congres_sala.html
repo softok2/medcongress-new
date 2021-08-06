@@ -9,7 +9,10 @@
         font-size: 110%;
     }
 
-
+    .contact-form-image {
+    width: 144px;
+    height: 144px;
+}
     .page-link {
         padding: 10px 15px;
     }
@@ -243,12 +246,7 @@
 
                 // Actualizamos en BD
                 let page=0
-                if(i>=10)
-                    page=i
-                else{
-                    page=i%10
-                }
-                console.log(page)
+                
                 url = "{% url 'MedCongressAdmin:congres_sala_ordenar' %}";
                 $.post( url, {
 
@@ -258,18 +256,18 @@
 
                 }).done(function( data ) {});
             }
-     
-            // console.log( 'Resultados del Reordenamiento: \n' + resultado );
-
-            // $.notify({
-            //     icon: 'pe-7s-bell',
-            //     message: "Se actualizó correctamente la información."
-
-            // },{
-            //     type: 'success',
-            //     timer: 1000
-            // }); 
-                
+            swal({
+            title: "Cargando.....",
+            text: "Se está actualizando el orden de las salas ",
+           
+            buttons: {
+                visible: false,
+            },
+            imageUrl:"{% static 'MedCongressApp/images/loading.gif' %}",
+            imageClass: "contact-form-image",
+        })
+           
+        location.reload()       
           });
         $('#atras').click(function () {
             location.href = "{% url 'MedCongressAdmin:congress_list' %}";
@@ -329,12 +327,7 @@
                 }
             });
     }
-    function ShowEditar(id_sala){
-        $('#show-'+id_sala).toggle();
-        $('#edit-'+id_sala).toggle();
-        $('#th').attr('style',"width: 15%")
-
-    }
+   
    
 
 </script>
