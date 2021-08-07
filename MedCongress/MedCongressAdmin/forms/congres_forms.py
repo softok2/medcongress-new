@@ -1086,11 +1086,17 @@ class CongresoSalaForm(forms.ModelForm):
        
         imagen_home = cleaned_data.get('prueba_home', None)
         orden = cleaned_data.get('orden', None)
+        congreso=cleaned_data.get('congreso', None)
         
         if not imagen_home :
             self.add_error('prueba_home', 'Debe entrar una <b>Imagen Principal</b>')
-        if orden and orden < 1 :
-            self.add_error('orden', 'El campo <b>Orden</b> debe ser un entero positivo')
+        if orden:
+            if orden < 1 :
+                self.add_error('orden', 'El campo <b>Orden</b> debe ser un entero positivo')
+            cant_salas=Sala.objects.filter(congreso=congreso).count()
+            if orden > (cant_salas+1) :
+                self.add_error('orden', 'El campo <b>Orden</b> debe ser menor que %s'%(cant_salas+1))
+
 
 class ExportarLogsCongresoExelForm(forms.ModelForm):
     congreso= forms.ModelChoiceField(queryset=Congreso.objects.all(),label='Congreso')
