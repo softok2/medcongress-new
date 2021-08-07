@@ -240,12 +240,11 @@
             for ( var i=0; i<diff.length ; i++ ) {
 
                 var rowData = tabla.row( diff[i].node ).data();
-                console.log(rowData)
+               
                 resultado = rowData['id']+'('+rowData['orden']+') ahora esta en posición '+
                     diff[i].newPosition+' (antes era '+diff[i].oldPosition+')\n';
 
                 // Actualizamos en BD
-                let page=0
                 
                 url = "{% url 'MedCongressAdmin:congres_sala_ordenar' %}";
                 $.post( url, {
@@ -254,7 +253,10 @@
 
                     pos: diff[i].newPosition+1
 
-                }).done(function( data ) {});
+                }).done(function( data ) {
+                    
+           
+       });
             }
             swal({
             title: "Cargando.....",
@@ -266,8 +268,7 @@
             imageUrl:"{% static 'MedCongressApp/images/loading.gif' %}",
             imageClass: "contact-form-image",
         })
-           
-        location.reload()       
+            location.reload()      
           });
         $('#atras').click(function () {
             location.href = "{% url 'MedCongressAdmin:congress_list' %}";
