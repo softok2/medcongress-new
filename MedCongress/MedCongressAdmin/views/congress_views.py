@@ -2044,7 +2044,7 @@ class CongressDeletedSalaView(validarUser,DeleteView):
                 sala.delete()
                 return JsonResponse({'success':True}, safe=False)
 class CongressOrdenarSalaView(validarUser,TemplateView):
-
+    template_name= 'MedCongressAdmin/congres_sala.html' 
     def post(self, request, **kwargs):
         sala=Sala.objects.get(pk=self.request.POST.get('id'))
         sala.orden=self.request.POST.get('pos')
