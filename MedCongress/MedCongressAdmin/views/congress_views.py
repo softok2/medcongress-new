@@ -58,7 +58,7 @@ from django.db.models import Q
 class CongressListView(validarUser,ListView):
     model = Congreso
     context_object_name = 'congress'
-    template_name = 'MedCongressAdmin/congress.html'
+    template_name = 'MedCongressAdmin/congress/congress.html'
     def get_context_data(self, **kwargs):
         context=super().get_context_data(**kwargs)
         if self.request.GET.get('search'):
@@ -68,7 +68,7 @@ class CongressListView(validarUser,ListView):
 class CongressCreateView(validarUser,FormView):
     form_class = CongresoForms
     success_url = reverse_lazy('MedCongressAdmin:congress_list')
-    template_name = 'MedCongressAdmin/congres_form.html'
+    template_name = 'MedCongressAdmin/congress/congres_form.html'
 
     def form_valid(self, form):
         try:
@@ -111,6 +111,24 @@ class CongressCreateView(validarUser,FormView):
                 image_result = open('MedCongressApp/static/congreso/img_constancia/imagen_constancia_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
                 image_result.write(image_64_decode)
                 congress.foto_constancia='congreso/img_constancia/imagen_constancia_%s.png'%(nombre)
+            if self.request.POST['congreso-const_moderador']:
+                image_64_encode=self.request.POST['congreso-const_moderador']
+                campo = image_64_encode.split(",")
+                image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
+                chars = '0123456789'
+                nombre = get_random_string(5, chars)
+                image_result = open('MedCongressApp/static/congreso/img_constancia/imagen_const_moderador_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+                image_result.write(image_64_decode)
+                congress.foto_const_moderador='congreso/img_constancia/imagen_const_moderador_%s.png'%(nombre)
+            if self.request.POST['congreso-const_ponente']:
+                image_64_encode=self.request.POST['congreso-const_ponente']
+                campo = image_64_encode.split(",")
+                image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8')) 
+                chars = '0123456789'
+                nombre = get_random_string(5, chars)
+                image_result = open('MedCongressApp/static/congreso/img_constancia/imagen_const_ponente_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+                image_result.write(image_64_decode)
+                congress.foto_const_ponente='congreso/img_constancia/imagen_const_ponente_%s.png'%(nombre)
             congress.is_home=False
             congress.save()
             cant=0
@@ -147,7 +165,7 @@ class CongressCreateView(validarUser,FormView):
 class CongressUpdateView(validarUser,FormView):
     form_class = CongresoForms
     success_url = reverse_lazy('MedCongressAdmin:congress_list')
-    template_name = 'MedCongressAdmin/congres_form.html'
+    template_name = 'MedCongressAdmin/congress/congres_form.html'
 
     def get_queryset(self, **kwargs):
         return Congreso.objects.filter(pk=self.kwargs.get('pk'))
@@ -176,6 +194,10 @@ class CongressUpdateView(validarUser,FormView):
             context['imagen_meta']='/static/%s'%(self.object.meta_og_imagen)
         if self.object.foto_constancia:
             context['foto_constancia']='/static/%s'%(self.object.foto_constancia)
+        if self.object.foto_const_ponente:
+            context['foto_const_ponente']='/static/%s'%(self.object.foto_const_ponente)
+        if self.object.foto_const_moderador:
+            context['foto_const_moderador']='/static/%s'%(self.object.foto_const_moderador)    
         if self.object.imagen_home:
             context['imagen_home']=self.object.imagen_home
         return context
@@ -209,7 +231,7 @@ class CongressUpdateView(validarUser,FormView):
                     if fileObj.is_file():
                         remove('MedCongressApp/static/%s'%( update_congreso.imagen_seg))
                 congress.imagen_seg='congreso/imagen_seg_%s.png'%(nombre)
-
+            ###### Imagen Principal
             imagen_home=self.request.POST['congreso-imagen_home']
             if 'congreso/' not in imagen_home:
                 
@@ -225,6 +247,40 @@ class CongressUpdateView(validarUser,FormView):
                     if fileObj.is_file():
                         remove('MedCongressApp/static/%s'%( update_congreso.imagen_home))
                 congress.imagen_home='congreso/imagen_home_%s.png'%(nombre)
+            ###### Imagen Constancia para Moderadores
+            if self.request.POST['congreso-const_moderador']:
+                imagen_const_moderador=self.request.POST['congreso-const_moderador']
+                if 'congreso/' not in imagen_const_moderador:
+                    
+                    image_64_encode=self.request.POST['congreso-const_moderador']
+                    campo = image_64_encode.split(",")
+                    chars = '0123456789'
+                    nombre = get_random_string(5, chars)
+                    image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
+                    image_result = open('MedCongressApp/static/congreso/imagen_const_moderador_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+                    image_result.write(image_64_decode)
+                    if  update_congreso.foto_const_moderador:
+                        fileObj = Path('MedCongressApp/static/%s'%( update_congreso.foto_const_moderador))
+                        if fileObj.is_file():
+                            remove('MedCongressApp/static/%s'%( update_congreso.foto_const_moderador))
+                    congress.foto_const_moderador='congreso/imagen_const_moderador_%s.png'%(nombre)
+            ###### Imagen Constancia para Ponentes
+            if self.request.POST['congreso-const_ponente']:
+                imagen_const_ponente=self.request.POST['congreso-const_ponente']
+                if 'congreso/' not in imagen_const_ponente:
+                    
+                    image_64_encode=self.request.POST['congreso-const_ponente']
+                    campo = image_64_encode.split(",")
+                    chars = '0123456789'
+                    nombre = get_random_string(5, chars)
+                    image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
+                    image_result = open('MedCongressApp/static/congreso/imagen_const_ponente_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+                    image_result.write(image_64_decode)
+                    if  update_congreso.foto_const_ponente:
+                        fileObj = Path('MedCongressApp/static/%s'%( update_congreso.foto_const_ponente))
+                        if fileObj.is_file():
+                            remove('MedCongressApp/static/%s'%( update_congreso.foto_const_ponente))
+                    congress.foto_const_ponente='congreso/imagen_const_ponente_%s.png'%(nombre)
 
             if self.request.POST['congreso-constancia']:
                 constancia=self.request.POST['congreso-constancia']
@@ -1447,19 +1503,43 @@ class AsignarConstancias(validarUser,TemplateView):
         return context 
     def post(self, request, **kwargs):
         titulo= self.request.POST['my_congress']
+        t_user= int(self.request.POST['tipo_usuario'])
+        n_user='' 
+        folio_ini=None
+        folio_fin=None
+        folio_dis=None
+        if self.request.POST.get('folio'):
+            folio_ini=self.request.POST['folio_ini']
+            folio_fin=self.request.POST['folio_fin']
+            folio_dis=self.request.POST['folio_dis'] 
         congreso=Congreso.objects.get(pk=self.request.POST['my_congress'])
-        if congreso.foto_constancia:
-            if congreso:                                        
-                prueba=Constancia.apply_async(args=[titulo])
-                messages.warning(self.request,'Se le envió la constancia a todos los que participaron el Congreso %s'%(congreso.titulo))
-                return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list'))
-            else:
-                messages.warning(self.request,'Ese Congreso no existe')
-                return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list'))  
+        if congreso: 
+            if t_user==1:
+                n_user='Participantes'
+                if not congreso.foto_constancia:                                 
+                    messages.warning(self.request,'Error.....Ese Congreso no tiene asignada ninguna foto para la constancia del Participante')
+                    return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list'))
+            elif t_user==2:
+                n_user='Ponentes'
+                if not congreso.foto_const_ponente:                                 
+                    messages.warning(self.request,'Error.....Ese Congreso no tiene asignada ninguna foto para la constancia del Ponente')
+                    return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list'))
+            elif t_user==3:
+                n_user='Moderadores'
+                if not congreso.foto_const_moderador:                                 
+                    messages.warning(self.request,'Error.....Ese Congreso no tiene asignada ninguna foto para la constancia del Moderador')
+                    return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list'))
         else:
-                messages.warning(self.request,'Error.....Ese Congreso no tiene asignada ninguna foto para su constancia')
-                return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list')) 
+            messages.warning(self.request,'Ese Congreso no existe')
+            return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list')) 
 
+        prueba=Constancia.apply_async(args=[titulo,t_user,folio_ini,folio_fin,folio_dis])
+        respuesta=prueba.get()
+        if respuesta['success'] :
+            messages.success(self.request,respuesta['mensaje'])
+        else:
+            messages.warning(self.request,respuesta['mensaje']) 
+        return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list'))
 ########## Vista de las Programas de un Congreso #############
 
 class CongressProgramaListView(validarUser,TemplateView):
@@ -2044,7 +2124,7 @@ class CongressDeletedSalaView(validarUser,DeleteView):
                 sala.delete()
                 return JsonResponse({'success':True}, safe=False)
 class CongressOrdenarSalaView(validarUser,TemplateView):
-    template_name= 'MedCongressAdmin/congres_sala.html' 
+    
     def post(self, request, **kwargs):
         sala=Sala.objects.get(pk=self.request.POST.get('id'))
         sala.orden=self.request.POST.get('pos')

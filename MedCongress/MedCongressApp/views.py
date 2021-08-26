@@ -37,7 +37,7 @@ from .claves import ID_KEY,PRIVATE_KEY,PUBLIC_KEY,URL_API,URL_SITE,URL_PDF,PRUEB
 from .forms import UserPerfilUser,UserPerfilUserEditar,CambiarPassForm,ExtAuthenticationForm
 from MedCongressAdmin.forms.congres_forms import UsuarioForms
 from .models import (CategoriaPagoCongreso,Sala, Congreso, EspecialidadCongreso,
-                     Ponencia, Ponente, RelCongresoCategoriaPago,
+                     Ponencia, Ponente, RelCongresoCategoriaPago,ConstanciaUsuario,
                      RelCongresoUser,RelPonenciaPonente,PerfilUsuario,ImagenCongreso,Taller,RelTalleresCategoriaPago,RelTallerUser,DatosIniciales,
                      CategoriaUsuario,Bloque,Moderador,RelTallerPonente,Pais,CuestionarioPregunta,CuestionarioRespuestas,RelPonenciaVotacion,
                      PreguntasFrecuentes,Ubicacion,AvalCongreso,SocioCongreso,QuienesSomos,Ofrecemos,Footer,ImagenQuienesSomos,RelTallerVotacion,MetaPagInicio,MetaPagListCongreso,
@@ -474,7 +474,6 @@ class Perfil(TemplateView):
             constancias_taller_env.append({'taller':taller,
             'foto_constancia':constancia['foto_constancia']})
         context['constancias_taller']=constancias_taller_env
-
 
         
         # context['ponentes'] = Ponente.objects.all()
@@ -2777,7 +2776,19 @@ class PerfilConstancias(TemplateView):
             constancias_taller_env.append({'taller':taller,
             'foto_constancia':constancia['foto_constancia']})
         context['constancias_taller']=constancias_taller_env
-
+        
+        constancias_ponente_env=[]
+        constancias=ConstanciaUsuario.objects.filter(user=self.request.user,tipo_constancia='Ponente')
+        for constancia in constancias:
+            constancias_ponente_env.append({'congreso':constancia.congreso,
+            'foto_constancia':constancia.foto_constancia})
+        context['constancias_ponente']=constancias_ponente_env
+        constancias_moderador_env=[]
+        constancias=ConstanciaUsuario.objects.filter(user=self.request.user,tipo_constancia='Moderador')
+        for constancia in constancias:
+            constancias_moderador_env.append({'congreso':constancia.congreso,
+            'foto_constancia':constancia.foto_constancia})
+        context['constancias_moderador']=constancias_moderador_env
         return context
         
 

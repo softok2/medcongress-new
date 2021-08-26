@@ -24,6 +24,8 @@ class CongresForm(forms.ModelForm):
     prueba1=forms.CharField(required=False)
     imagen_home=forms.CharField(required=False,label='Imagen Principal')
     constancia=forms.CharField(required=False)
+    const_ponente=forms.CharField(required=False)
+    const_moderador=forms.CharField(required=False)
     template=forms.CharField(label='Template del Congreso',required=False)
     published=forms.BooleanField(label='Publicado',required=False)
     ver_titulo=forms.BooleanField(label='Ver Título',required=False)
@@ -36,7 +38,7 @@ class CongresForm(forms.ModelForm):
     class Meta:
         model=Congreso
         fields=['titulo','sub_titulo','fecha_inicio','published','t_congreso','especialidad','is_openpay','template','constancia','aprobado','cant_preguntas','score','streaming','meta_og_title','meta_description','meta_og_description','meta_og_type','meta_og_url',
-        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','detalles_tipo_boleto','detalles_tipo_boleto_taller','ver_titulo','vid_publicidad','prueba','prueba1','imagen_home']
+        'meta_twitter_card','meta_twitter_site','meta_twitter_creator','meta_keywords','meta_og_imagen','meta_title','detalles_tipo_boleto','detalles_tipo_boleto_taller','ver_titulo','vid_publicidad','prueba','prueba1','imagen_home','const_ponente','const_moderador']
        
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
@@ -77,7 +79,6 @@ class CongresForm(forms.ModelForm):
             imagenes = cleaned_data.get('prueba', None)
             
             imagen_seg = cleaned_data.get('prueba1', None)
-            constancia = cleaned_data.get('constancia', None)
             imagen_home = cleaned_data.get('imagen_home', None)
             
             if not imagenes :

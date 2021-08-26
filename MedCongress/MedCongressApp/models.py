@@ -291,6 +291,8 @@ class Congreso(models.Model):
     meta_title=models.CharField(max_length=50,null=True,blank=True,error_messages={
 "max_length": "El Campo <b>Metas Principales Título </b> debe tener máximo 50 caracteres"})
     foto_constancia=models.FileField(storage= FileSystemStorage( location='MedCongressApp/static/congreso/img_constancia'),null=True)
+    foto_const_ponente=models.FileField(storage= FileSystemStorage( location='MedCongressApp/static/congreso/img_constancia'),null=True)
+    foto_const_moderador=models.FileField(storage= FileSystemStorage( location='MedCongressApp/static/congreso/img_constancia'),null=True)
     aprobado=models.IntegerField(null=True)
     cant_preguntas=models.IntegerField(null=True)
     score=models.IntegerField(null=True)
@@ -306,6 +308,28 @@ class Congreso(models.Model):
 
     def __str__(self):
         return self.titulo
+    
+    def Ponentes(self):
+
+        ponencias=Ponencia.objects.filter(congreso=self)
+        ponentes_env=[]
+        for ponencia in ponencias:
+            ponencia_ponentes=RelPonenciaPonente.objects.filter(ponencia=ponencia)
+            for ponencia_ponente in ponencia_ponentes:
+                if not ponencia_ponente.ponente in ponentes_env:
+                    ponentes_env.append(ponencia_ponente.ponente)
+        return ponentes_env
+    
+    def Moderadores(self):
+
+        bloques=Bloque.objects.filter(congreso=self)
+        moderadores_env=[]
+        for bloque in bloques:
+            bloque_moderadores=RelBloqueModerador.objects.filter(bloque=bloque)
+            for bloque_moderadore in bloque_moderadores:
+                if not bloque_moderadore.moderador in moderadores_env:
+                    moderadores_env.append(bloque_moderadore.moderador)
+        return moderadores_env
 
     # def get_imagen_by_order(self):   
     #     if self.imagen_set.count():
@@ -337,6 +361,7 @@ class RelCongresoUser(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     cantidad=models.IntegerField(null=True)
     is_constancia=models.BooleanField(null=True)
+    folio_constancia=models.CharField(null=True,max_length=250)
     fecha_constancia=models.DateField(null=True)
     cuestionario=models.CharField(null=True,max_length=250)
     foto_constancia=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso/img_constancia',null=True)
@@ -1042,3 +1067,21 @@ class BecasPendientes(models.Model):
 
     def __str__(self):
         return 'Beca Pendiente del correo %s en el congreso %s'%s(self.email,self.congreso)
+
+##### Tabla Constancia por usuarios  #####
+
+class ConstanciaUsuario(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    congreso = models.ForeignKey(Congreso, on_delete=models.CASCADE)
+    folio_constancia=models.CharField(null=True,max_length=250)
+    fecha_constancia=models.DateField(null=True)
+    tipo_constancia=models.CharField(null=True,max_length=50)
+    foto_constancia=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='congreso/img_constancia',null=True)
+    
+    class Meta:
+        verbose_name='constancia - usuario'
+        unique_together = (('user','congreso','tipo_constancia'),)
+
+
+    def __str__(self):
+        return ' Constancia del usuario %s %s por haber participado como %s en el congreso " %s " ' %( self.user.first_name,self.user.last_name,self.tipo_constancia,self.congreso.titulo)

@@ -626,7 +626,8 @@
 																
 																			<div class="alert" role="alert" id="alert3">
 																			</div>
-																			<div class="modal fade " id="modal3"
+																			{% include 'MedCongressAdmin/congress/modal/congres_form_imagen.html' with modal_id='modal3' imagen_id='image3' crop_id='crop3' avatar_id='avatar3' input_id='input3' alert_id='alert3' ancho=1920 alto=1080 div='ver3' input_hidden='congreso-imagen_home'%}
+																			<!-- <div class="modal fade " id="modal3"
 																				tabindex="-1" role="dialog"
 																				aria-labelledby="modalLabel"
 																				aria-hidden="true">
@@ -661,7 +662,7 @@
 																						</div>
 																					</div>
 																				</div>
-																			</div>
+																			</div> -->
 																		</div>
 																	</div>
 																	<div class="col-sm-4 ">
@@ -703,48 +704,18 @@
 
 																			<div class="alert" role="alert" id="alert1">
 																			</div>
-																			<div class="modal fade " id="modal1"
-																				tabindex="-1" role="dialog"
-																				aria-labelledby="modalLabel"
-																				aria-hidden="true">
-																				<div class="modal-dialog "
-																					role="document">
-																					<div class="modal-content">
-																						<div class="modal-header">
-																							<h5 class="modal-title"
-																								id="modalLabel">Editar
-																								la Imagen</h5>
-																							<button type="button"
-																								class="close"
-																								data-dismiss="modal"
-																								aria-label="Close">
-																								<span
-																									aria-hidden="true">&times;</span>
-																							</button>
-																						</div>
-																						<div class="modal-body">
-																							<div class="img-container ">
-																								<img id="image1"
-																									src="https://avatars0.githubusercontent.com/u/3456749">
-																							</div>
-																						</div>
-																						<div class="modal-footer">
-																							<button type="button"
-																								class="btn btn-secondary"
-																								data-dismiss="modal">Cancel</button>
-																							<button type="button"
-																								class="btn btn-primary"
-																								id="crop1">Guardar</button>
-																						</div>
-																					</div>
-																				</div>
-																			</div>
+																			{% include 'MedCongressAdmin/congress/modal/congres_form_imagen.html' with modal_id='modal1' imagen_id='image1' crop_id='crop1' avatar_id='avatar1' input_id='input1' alert_id='alert1' ancho=1681 alto=299 div='ver' input_hidden='congreso-prueba1'%}
 																		</div>
 																	</div>
+																	
+																		
+																
+																</div>
+																<div class="row">
 																	<div class="col-sm-4 ">
 																		<div class="form-group">
 																			<label for="" >
-																				<b>Imagen Constancia <span style="font-size: 80%; color: darkgrey;"> (3625 X 2600)(>5Mb)</span></b> </label>
+																				<b>Imagen Constancia del Participante <span style="font-size: 80%; color: darkgrey;"> (3625 X 2600)(>5Mb)</span></b> </label>
 																			{%if foto_constancia%}
 																			<label class="label" data-toggle="tooltip"
 																				title="Clic para cambiar foto">
@@ -780,56 +751,101 @@
 																
 																			<div class="alert" role="alert" id="alert2">
 																			</div>
-																			<div class="modal fade " id="modal2"
-																				tabindex="-1" role="dialog"
-																				aria-labelledby="modalLabel"
-																				aria-hidden="true">
-																				<div class="modal-dialog "
-																					role="document">
-																					<div class="modal-content">
-																						<div class="modal-header">
-																							<h5 class="modal-title"
-																								id="modalLabel">Editar
-																								la Imagen</h5>
-																							<button type="button"
-																								class="close"
-																								data-dismiss="modal"
-																								aria-label="Close">
-																								<span
-																									aria-hidden="true">&times;</span>
-																							</button>
-																						</div>
-																						<div class="modal-body">
-																							<div class="img-container ">
-																								<img id="image2"
-																									src="https://avatars0.githubusercontent.com/u/3456749">
-																							</div>
-																						</div>
-																						<div class="modal-footer">
-																							<button type="button"
-																								class="btn btn-secondary"
-																								data-dismiss="modal">Cancel</button>
-																							<button type="button"
-																								class="btn btn-primary"
-																								id="crop2">Guardar</button>
-																						</div>
-																					</div>
-																				</div>
-																			</div>
+																			{% include 'MedCongressAdmin/congress/modal/congres_form_imagen.html' with modal_id='modal2' imagen_id='image2' crop_id='crop2' avatar_id='avatar2' input_id='input2' alert_id='alert2' ancho=3625 alto=2600 div='ver2' input_hidden='congreso-constancia'%}
+																			
 																		</div>
 																	</div>
-																		
+																	<div class="col-sm-4 ">
+																		<div class="form-group">
+																			<label for="" >
+																				<b>Imagen Constancia de los Ponentes <span style="font-size: 80%; color: darkgrey;"> (3625 X 2600)(>5Mb)</span></b> </label>
+																			{%if foto_const_ponente%}
+																			<label class="label" data-toggle="tooltip"
+																				title="Clic para cambiar foto">
+																				<div id="ver_foto_const_ponente"><img class="img-fluid"
+																						id="avatar_foto_const_ponente"
+																						src="{{foto_const_ponente}}"
+																						alt="avatar"></div>
+																				<input type="file" class="sr-only"
+																					id="input_foto_const_ponente" name="image_foto_const_ponente"
+																					accept="image/*">
+																				<input type="hidden"
+																					id="congreso-const_ponente"
+																					name="congreso-const_ponente"
+																					value="{{foto_const_ponente}}">
+																			</label>
 																
-																</div>
-																<div class="row">
-																	
-																	
-
+																			{% else%}
+																			<br>
+																			<label class="label" data-toggle="tooltip"
+																				title="Clic para cambiar foto">
+																				<div id="ver_foto_const_ponente"><span id="avatar_foto_const_ponente"> <i
+																							class="icon icon-add_imagen"></i></span>
+																				</div>
+																				<input type="file" class="sr-only"
+																					id="input_foto_const_ponente" name="image_foto_const_ponente"
+																					accept="image/*">
+																				<input type="hidden"
+																					id="congreso-const_ponente"
+																					name="congreso-const_ponente">
+																			</label>
+																			{%endif%}
+																
+																
+																			<div class="alert" role="alert" id="alert_foto_const_ponente">
+																			</div>
+																			{% include 'MedCongressAdmin/congress/modal/congres_form_imagen.html' with modal_id='modal_foto_const_ponente' imagen_id='image_foto_const_ponente' crop_id='crop_foto_const_ponente' avatar_id='avatar_foto_const_ponente' input_id='input_foto_const_ponente' alert_id='alert_foto_const_ponente' ancho=3625 alto=2600 div='ver_foto_const_ponente' input_hidden='congreso-const_ponente'%}
+																			
+																		</div>
+																	</div>
+																	<div class="col-sm-4 ">
+																		<div class="form-group">
+																			<label for="" >
+																				<b>Imagen Constancia de los Moderadores <span style="font-size: 80%; color: darkgrey;"> (3625 X 2600)(>5Mb)</span></b> </label>
+																			{%if foto_const_moderador%}
+																			<label class="label" data-toggle="tooltip"
+																				title="Clic para cambiar foto">
+																				<div id="ver_foto_const_moderador"><img class="img-fluid"
+																						id="avatar_foto_const_moderador"
+																						src="{{foto_const_moderador}}"
+																						alt="avatar"></div>
+																				<input type="file" class="sr-only"
+																					id="input_foto_const_moderador" name="image_foto_const_moderador"
+																					accept="image/*">
+																				<input type="hidden"
+																					id="congreso-const_moderador"
+																					name="congreso-const_moderador"
+																					value="{{foto_const_moderador}}">
+																			</label>
+																
+																			{% else%}
+																			<br>
+																			<label class="label" data-toggle="tooltip"
+																				title="Clic para cambiar foto">
+																				<div id="ver_foto_const_moderador"><span id="avatar_foto_const_moderador"> <i
+																							class="icon icon-add_imagen"></i></span>
+																				</div>
+																				<input type="file" class="sr-only"
+																					id="input_foto_const_moderador" name="image_foto_const_moderador"
+																					accept="image/*">
+																				<input type="hidden"
+																					id="congreso-const_moderador"
+																					name="congreso-const_moderador">
+																			</label>
+																			{%endif%}
+																
+																
+																			<div class="alert" role="alert" id="alert_foto_const_moderador">
+																			</div>
+																			{% include 'MedCongressAdmin/congress/modal/congres_form_imagen.html' with modal_id='modal_foto_const_moderador' imagen_id='image_foto_const_moderador' crop_id='crop_foto_const_moderador' avatar_id='avatar_foto_const_moderador' input_id='input_foto_const_moderador' alert_id='alert_foto_const_moderador' ancho=3625 alto=2600 div='ver_foto_const_moderador' input_hidden='congreso-const_moderador'%}
+																			
+																		</div>
+																	</div>
 																</div>
 
 																	</div>
 																	<div class="row">
-																		<div class="col-md-6"><label for=""> <b>Imagenes del Programa <span style="font-size: 80%; color: darkgrey;"> (1920 X 1080)(>5Mb)</span></b> </label></div>
+																		<div class="col-md-6"><label for=""> <b>Imagenes del Programa <span style="font-size: 80%; color: darkgrey;"> (1920 X 682)(>5Mb)</span></b> </label></div>
 																	</div>
 																		<div class="row" id="imagenes">
 																	{%if imagenes%}
@@ -869,8 +885,8 @@
 																					accept="image/*">
 
 																			</label>
-																		
-																			<div class="modal fade " id="modal"
+																			{% include 'MedCongressAdmin/congress/modal/congres_form_imagen.html' with modal_id='modal' imagen_id='image' crop_id='crop' avatar_id='avatar' input_id='input' alert_id='alert' ancho=1920 alto=682 div='prueba' input_hidden='congreso-prueba' varias=True%}
+																			<!-- <div class="modal fade " id="modal"
 																				tabindex="-1" role="dialog"
 																				aria-labelledby="modalLabel"
 																				aria-hidden="true">
@@ -905,7 +921,7 @@
 																						</div>
 																					</div>
 																				</div>
-																			</div>
+																			</div> -->
 
 																		</div>
 																	</div>
@@ -1078,403 +1094,7 @@ $("#congres-form").submit(function(e) { $("#loading").show(); });
 	});
 
 	var id = 0;
-	window.addEventListener('DOMContentLoaded', function () {
-		var avatar = document.getElementById('avatar');
-		var image = document.getElementById('image');
-		var input = document.getElementById('input');
-
-		var avatar1 = document.getElementById('avatar1');
-		var image1 = document.getElementById('image1');
-		var input1 = document.getElementById('input1');
-
-		var avatar2 = document.getElementById('avatar2');
-		var image2 = document.getElementById('image2');
-		var input2 = document.getElementById('input2');
-
-		var avatar3 = document.getElementById('avatar3');
-		var image3 = document.getElementById('image3');
-		var input3 = document.getElementById('input3');
-
-		var $alert = $('#alert');
-		var $modal = $('#modal');
-		var cropper;
-
-		var $alert1 = $('#alert1');
-		var $modal1 = $('#modal1');
-		var cropper1;
-
-		var $alert2 = $('#alert2');
-		var $modal2 = $('#modal2');
-		var cropper2;
-
-		var $alert3 = $('#alert3');
-		var $modal3 = $('#modal3');
-		var cropper3;
-
-		$('[data-toggle="tooltip"]').tooltip();
-
-		input.addEventListener('change', function (e) {
-			var imgsize = input.files[0].size;
-			if(imgsize > 5000000){
-				
-				$alert.show().addClass('alert-success alert-warning').text('Esta imagen supera los 5Mb.');
-			
-			return;
-			}
-					var files = e.target.files;
-			var done = function (url) {
-				input.value = '';
-				image.src = url;
-				$alert.hide();
-				$modal.modal('show');
-			};
-			var reader;
-			var file;
-			var url;
-
-			if (files && files.length > 0) {
-				file = files[0];
-
-				tipo_imagen=files[0].name.split('.');
-			if(tipo_imagen[1]!='jpg' && tipo_imagen[1]!='png' && tipo_imagen[1]!='jpeg')
-			{
-				
-				swal("Cancelado", "Solo admimite archivos .jpeg , .jpg y .png.", "error");
-				return;	
-			}
-				if (URL) {
-					done(URL.createObjectURL(file));
-				} else if (FileReader) {
-					reader = new FileReader();
-					reader.onload = function (e) {
-						done(reader.result);
-					};
-					reader.readAsDataURL(file);
-				}
-			}
-		});
-
-
-		input1.addEventListener('change', function (e) {
-			var imgsize = input1.files[0].size;
-			if(imgsize > 5000000){
-				
-				$alert1.show().addClass('alert-success alert-warning').text('Esta imagen supera los 5Mb.');
-			
-			return;
-			}
-			var files = e.target.files;
-			var done = function (url) {
-				input1.value = '';
-				image1.src = url;
-				$alert1.hide();
-				$modal1.modal('show');
-			};
-			var reader;
-			var file;
-			var url;
-
-			if (files && files.length > 0) {
-				file = files[0];
-
-				tipo_imagen=files[0].name.split('.');
-			if(tipo_imagen[1]!='jpg' && tipo_imagen[1]!='png' && tipo_imagen[1]!='jpeg')
-			{
-				
-				swal("Cancelado", "Solo admimite archivos .jpeg , .jpg y .png.", "error");
-				return;	
-			}
-				if (URL) {
-					done(URL.createObjectURL(file));
-				} else if (FileReader) {
-					reader = new FileReader();
-					reader.onload = function (e) {
-						done(reader.result);
-					};
-					reader.readAsDataURL(file);
-				}
-			}
-		});
-
-		input2.addEventListener('change', function (e) {
-			var imgsize = input2.files[0].size;
-			if(imgsize > 5000000){
-				
-				$alert2.show().addClass('alert-success alert-warning').text('Esta imagen supera los 5Mb.');
-			
-			return;
-			}
-			var files = e.target.files;
-			var done = function (url) {
-				input2.value = '';
-				image2.src = url;
-				$alert2.hide();
-				$modal2.modal('show');
-			};
-			var reader;
-			var file;
-			var url;
-
-			if (files && files.length > 0) {
-				file = files[0];
-
-				tipo_imagen=files[0].name.split('.');
-			if(tipo_imagen[1]!='jpg' && tipo_imagen[1]!='png' && tipo_imagen[1]!='jpeg')
-			{
-				
-				swal("Cancelado", "Solo admimite archivos .jpeg , .jpg y .png.", "error");
-				return;	
-			}
-				if (URL) {
-					done(URL.createObjectURL(file));
-				} else if (FileReader) {
-					reader = new FileReader();
-					reader.onload = function (e) {
-						done(reader.result);
-					};
-					reader.readAsDataURL(file);
-				}
-			}
-		});
-
-		input3.addEventListener('change', function (e) {
-			var imgsize = input3.files[0].size;
-			if(imgsize > 5000000){
-				
-				$alert3.show().addClass('alert-success alert-warning').text('Esta imagen supera los 5Mb.');
-			
-			return;
-			}
-			var files = e.target.files;
-			var done = function (url) {
-				input3.value = '';
-				image3.src = url;
-				$alert3.hide();
-				$modal3.modal('show');
-			};
-			var reader;
-			var file;
-			var url;
-
-			if (files && files.length > 0) {
-				file = files[0];
-
-				tipo_imagen=files[0].name.split('.');
-			if(tipo_imagen[1]!='jpg' && tipo_imagen[1]!='png' && tipo_imagen[1]!='jpeg')
-			{
-				
-				swal("Cancelado", "Solo admimite archivos .jpeg , .jpg y .png.", "error");
-				return;	
-			}
-				if (URL) {
-					done(URL.createObjectURL(file));
-				} else if (FileReader) {
-					reader = new FileReader();
-					reader.onload = function (e) {
-						done(reader.result);
-					};
-					reader.readAsDataURL(file);
-				}
-			}
-		});
-
-		$modal.on('shown.bs.modal', function () {
-
-
-			$('#image').width($modal.width());
-
-
-			cropper = new Cropper(image, {
-				aspectRatio: 1920 / 682,
-				viewMode: 1,
-
-
-				ready: function () {
-					//Should set crop box data first here
-					cropper.setCropBoxData(cropBoxData).setCanvasData(canvasData);
-				}
-			});
-		}).on('hidden.bs.modal', function () {
-			cropper.destroy();
-			cropper = null;
-		});
-
-
-		$modal1.on('shown.bs.modal', function () {
-
-
-			$('#image1').width($modal1.width());
-
-
-			cropper1 = new Cropper(image1, {
-				aspectRatio: 1681 / 299,
-				viewMode: 1,
-
-
-				ready: function () {
-					//Should set crop box data first here
-					cropper1.setCropBoxData(cropBoxData).setCanvasData(canvasData);
-				}
-			});
-		}).on('hidden.bs.modal', function () {
-			cropper1.destroy();
-			cropper1 = null;
-		});
-
-		$modal2.on('shown.bs.modal', function () {
-
-
-$('#image2').width($modal2.width());
-
-
-cropper2 = new Cropper(image2, {
-	aspectRatio: 3625 / 2600,
-	viewMode: 1,
-
-
-	ready: function () {
-		//Should set crop box data first here
-		cropper1.setCropBoxData(cropBoxData).setCanvasData(canvasData);
-	}
-});
-}).on('hidden.bs.modal', function () {
-cropper2.destroy();
-cropper2 = null;
-});
-
-$modal3.on('shown.bs.modal', function () {
-
-
-$('#image3').width($modal3.width());
-
-
-cropper3 = new Cropper(image3, {
-	aspectRatio: 1920 / 1080,
-	viewMode: 1,
-
-
-	ready: function () {
-		//Should set crop box data first here
-		cropper3.setCropBoxData(cropBoxData).setCanvasData(canvasData);
-	}
-});
-}).on('hidden.bs.modal', function () {
-cropper3.destroy();
-cropper3 = null;
-});
-		document.getElementById('crop').addEventListener('click', function () {
-
-			var initialAvatarURL;
-			var canvas;
-
-			$modal.modal('hide');
-
-			if (cropper) {
-				canvas = cropper.getCroppedCanvas({
-					width:  1920,
-					height: 682,
-				});
-				initialAvatarURL = avatar.src;
-				//   avatar.src = canvas.toDataURL();
-
-				$('#imagenes').prepend(`<figure class="col-sm-3 " id="` + id + `"><div class="row"><div class="col-md-12">
-															<img class="img-fluid"  src="`+ canvas.toDataURL() + `"  alt="imagen" >
-															</div>
-														
-														
-													</div>
-													<button class="btn " type="button" onclick="deleteImagen('`+ id + `')" title="Eliminar Imagen"> <i class="icon icon-eliminar"></i></button>
-													</figure>
-													`);
-
-				$("#congres-form").append("<input type='hidden' id='imagen_" + id + "' name='congreso-prueba' value='" + canvas.toDataURL() + "'>");
-				//   $("<input>").attr("type", "hidden").attr("name", "").appendTo("form").val(canvas.toDataURL()); 
-				//   $('#prueba').val(canvas.toDataURL());
-				id = id + 1;
-
-				$alert.removeClass('alert-success alert-warning');
-				$alert.show().addClass('alert-success').text('Nueva Imagen Cargada');
-
-			}
-		});
-
-		document.getElementById('crop1').addEventListener('click', function () {
-
-			var initialAvatarURL1;
-			var canvas1;
-
-			$modal1.modal('hide');
-
-			if (cropper1) {
-				canvas1 = cropper1.getCroppedCanvas({
-					width: 1681,
-					height: 299,
-				});
-				initialAvatarURL1 = avatar1.src;
-				avatar1.src = canvas1.toDataURL();
-				$('#congreso-prueba1').val(canvas1.toDataURL());
-				$('#ver').html(`<img class="img-fluid" id="avatar1" src="` + canvas1.toDataURL() + `"  alt="avatar">`);
-
-
-				$alert.removeClass('alert-success alert-warning');
-				$alert.show().addClass('alert-success').text('Nueva Imagen Cargada');
-
-			}
-		});
-
-		document.getElementById('crop2').addEventListener('click', function () {
-
-var initialAvatarURL2;
-var canvas2;
-
-$modal2.modal('hide');
-
-if (cropper2) {
-	canvas2 = cropper2.getCroppedCanvas({
-		width: 3625 ,
-		height: 2600,
-	});
-	initialAvatarURL2 = avatar2.src;
-	avatar2.src = canvas2.toDataURL();
-	$('#congreso-constancia').val(canvas2.toDataURL());
-	$('#ver2').html(`<img class="img-fluid" id="avatar2" src="` + canvas2.toDataURL() + `"  alt="avatar">`);
-
-
-	$alert.removeClass('alert-success alert-warning');
-				$alert.show().addClass('alert-success').text('Nueva Imagen Cargada');
-
-}
-});
-
-document.getElementById('crop3').addEventListener('click', function () {
-
-var initialAvatarURL3;
-var canvas3;
-
-$modal3.modal('hide');
-
-if (cropper3) {
-	canvas3 = cropper3.getCroppedCanvas({
-		width:  1920,
-		height: 1080,
-	});
-	initialAvatarURL3 = avatar3.src;
-	avatar3.src = canvas3.toDataURL();
-	$('#congreso-imagen_home').val(canvas3.toDataURL());
-	$('#ver3').html(`<img class="img-fluid" id="avatar3" src="` + canvas3.toDataURL() + `"  alt="avatar">`);
-
-
-	$alert.removeClass('alert-success alert-warning');
-	$alert.show().addClass('alert-success').text('Nueva Imagen Cargada');
-
-}
-});
-
-
-
-
-	});
-
+	
 	function deleteImagen(pk) {
 		swal({
 			title: "¿Estás seguro?",
@@ -1533,6 +1153,403 @@ function DeletedRespuesta(){
 	if($('.respuesta').length==0)
 	$('#del').attr('disabled','disabled');
 }
+
+// window.addEventListener('DOMContentLoaded', function () {
+// 		var avatar = document.getElementById('avatar');
+// 		var image = document.getElementById('image');
+// 		var input = document.getElementById('input');
+
+// 		var avatar1 = document.getElementById('avatar1');
+// 		var image1 = document.getElementById('image1');
+// 		var input1 = document.getElementById('input1');
+
+// 		var avatar2 = document.getElementById('avatar2');
+// 		var image2 = document.getElementById('image2');
+// 		var input2 = document.getElementById('input2');
+
+// 		var avatar3 = document.getElementById('avatar3');
+// 		var image3 = document.getElementById('image3');
+// 		var input3 = document.getElementById('input3');
+
+// 		var $alert = $('#alert');
+// 		var $modal = $('#modal');
+// 		var cropper;
+
+// 		var $alert1 = $('#alert1');
+// 		var $modal1 = $('#modal1');
+// 		var cropper1;
+
+// 		var $alert2 = $('#alert2');
+// 		var $modal2 = $('#modal2');
+// 		var cropper2;
+
+// 		var $alert3 = $('#alert3');
+// 		var $modal3 = $('#modal3');
+// 		var cropper3;
+
+// 		$('[data-toggle="tooltip"]').tooltip();
+
+// 		input.addEventListener('change', function (e) {
+// 			var imgsize = input.files[0].size;
+// 			if(imgsize > 5000000){
+				
+// 				$alert.show().addClass('alert-success alert-warning').text('Esta imagen supera los 5Mb.');
+			
+// 			return;
+// 			}
+// 					var files = e.target.files;
+// 			var done = function (url) {
+// 				input.value = '';
+// 				image.src = url;
+// 				$alert.hide();
+// 				$modal.modal('show');
+// 			};
+// 			var reader;
+// 			var file;
+// 			var url;
+
+// 			if (files && files.length > 0) {
+// 				file = files[0];
+
+// 				tipo_imagen=files[0].name.split('.');
+// 			if(tipo_imagen[1]!='jpg' && tipo_imagen[1]!='png' && tipo_imagen[1]!='jpeg')
+// 			{
+				
+// 				swal("Cancelado", "Solo admimite archivos .jpeg , .jpg y .png.", "error");
+// 				return;	
+// 			}
+// 				if (URL) {
+// 					done(URL.createObjectURL(file));
+// 				} else if (FileReader) {
+// 					reader = new FileReader();
+// 					reader.onload = function (e) {
+// 						done(reader.result);
+// 					};
+// 					reader.readAsDataURL(file);
+// 				}
+// 			}
+// 		});
+
+
+// 		input1.addEventListener('change', function (e) {
+// 			var imgsize = input1.files[0].size;
+// 			if(imgsize > 5000000){
+				
+// 				$alert1.show().addClass('alert-success alert-warning').text('Esta imagen supera los 5Mb.');
+			
+// 			return;
+// 			}
+// 			var files = e.target.files;
+// 			var done = function (url) {
+// 				input1.value = '';
+// 				image1.src = url;
+// 				$alert1.hide();
+// 				$modal1.modal('show');
+// 			};
+// 			var reader;
+// 			var file;
+// 			var url;
+
+// 			if (files && files.length > 0) {
+// 				file = files[0];
+
+// 				tipo_imagen=files[0].name.split('.');
+// 			if(tipo_imagen[1]!='jpg' && tipo_imagen[1]!='png' && tipo_imagen[1]!='jpeg')
+// 			{
+				
+// 				swal("Cancelado", "Solo admimite archivos .jpeg , .jpg y .png.", "error");
+// 				return;	
+// 			}
+// 				if (URL) {
+// 					done(URL.createObjectURL(file));
+// 				} else if (FileReader) {
+// 					reader = new FileReader();
+// 					reader.onload = function (e) {
+// 						done(reader.result);
+// 					};
+// 					reader.readAsDataURL(file);
+// 				}
+// 			}
+// 		});
+
+// 		input2.addEventListener('change', function (e) {
+// 			var imgsize = input2.files[0].size;
+// 			if(imgsize > 5000000){
+				
+// 				$alert2.show().addClass('alert-success alert-warning').text('Esta imagen supera los 5Mb.');
+			
+// 			return;
+// 			}
+// 			var files = e.target.files;
+// 			var done = function (url) {
+// 				input2.value = '';
+// 				image2.src = url;
+// 				$alert2.hide();
+// 				$modal2.modal('show');
+// 			};
+// 			var reader;
+// 			var file;
+// 			var url;
+
+// 			if (files && files.length > 0) {
+// 				file = files[0];
+
+// 				tipo_imagen=files[0].name.split('.');
+// 			if(tipo_imagen[1]!='jpg' && tipo_imagen[1]!='png' && tipo_imagen[1]!='jpeg')
+// 			{
+				
+// 				swal("Cancelado", "Solo admimite archivos .jpeg , .jpg y .png.", "error");
+// 				return;	
+// 			}
+// 				if (URL) {
+// 					done(URL.createObjectURL(file));
+// 				} else if (FileReader) {
+// 					reader = new FileReader();
+// 					reader.onload = function (e) {
+// 						done(reader.result);
+// 					};
+// 					reader.readAsDataURL(file);
+// 				}
+// 			}
+// 		});
+
+// 		input3.addEventListener('change', function (e) {
+// 			var imgsize = input3.files[0].size;
+// 			if(imgsize > 5000000){
+				
+// 				$alert3.show().addClass('alert-success alert-warning').text('Esta imagen supera los 5Mb.');
+			
+// 			return;
+// 			}
+// 			var files = e.target.files;
+// 			var done = function (url) {
+// 				input3.value = '';
+// 				image3.src = url;
+// 				$alert3.hide();
+// 				$modal3.modal('show');
+// 			};
+// 			var reader;
+// 			var file;
+// 			var url;
+
+// 			if (files && files.length > 0) {
+// 				file = files[0];
+
+// 				tipo_imagen=files[0].name.split('.');
+// 			if(tipo_imagen[1]!='jpg' && tipo_imagen[1]!='png' && tipo_imagen[1]!='jpeg')
+// 			{
+				
+// 				swal("Cancelado", "Solo admimite archivos .jpeg , .jpg y .png.", "error");
+// 				return;	
+// 			}
+// 				if (URL) {
+// 					done(URL.createObjectURL(file));
+// 				} else if (FileReader) {
+// 					reader = new FileReader();
+// 					reader.onload = function (e) {
+// 						done(reader.result);
+// 					};
+// 					reader.readAsDataURL(file);
+// 				}
+// 			}
+// 		});
+
+// 		$modal.on('shown.bs.modal', function () {
+
+
+// 			$('#image').width($modal.width());
+
+
+// 			cropper = new Cropper(image, {
+// 				aspectRatio: 1920 / 682,
+// 				viewMode: 1,
+
+
+// 				ready: function () {
+// 					//Should set crop box data first here
+// 					cropper.setCropBoxData(cropBoxData).setCanvasData(canvasData);
+// 				}
+// 			});
+// 		}).on('hidden.bs.modal', function () {
+// 			cropper.destroy();
+// 			cropper = null;
+// 		});
+
+
+// 		$modal1.on('shown.bs.modal', function () {
+
+
+// 			$('#image1').width($modal1.width());
+
+
+// 			cropper1 = new Cropper(image1, {
+// 				aspectRatio: 1681 / 299,
+// 				viewMode: 1,
+
+
+// 				ready: function () {
+// 					//Should set crop box data first here
+// 					cropper1.setCropBoxData(cropBoxData).setCanvasData(canvasData);
+// 				}
+// 			});
+// 		}).on('hidden.bs.modal', function () {
+// 			cropper1.destroy();
+// 			cropper1 = null;
+// 		});
+
+// 		$modal2.on('shown.bs.modal', function () {
+
+
+// $('#image2').width($modal2.width());
+
+
+// cropper2 = new Cropper(image2, {
+// 	aspectRatio: 3625 / 2600,
+// 	viewMode: 1,
+
+
+// 	ready: function () {
+// 		//Should set crop box data first here
+// 		cropper1.setCropBoxData(cropBoxData).setCanvasData(canvasData);
+// 	}
+// });
+// }).on('hidden.bs.modal', function () {
+// cropper2.destroy();
+// cropper2 = null;
+// });
+
+// $modal3.on('shown.bs.modal', function () {
+
+
+// $('#image3').width($modal3.width());
+
+
+// cropper3 = new Cropper(image3, {
+// 	aspectRatio: 1920 / 1080,
+// 	viewMode: 1,
+
+
+// 	ready: function () {
+// 		//Should set crop box data first here
+// 		cropper3.setCropBoxData(cropBoxData).setCanvasData(canvasData);
+// 	}
+// });
+// }).on('hidden.bs.modal', function () {
+// cropper3.destroy();
+// cropper3 = null;
+// });
+// 		document.getElementById('crop').addEventListener('click', function () {
+
+// 			var initialAvatarURL;
+// 			var canvas;
+
+// 			$modal.modal('hide');
+
+// 			if (cropper) {
+// 				canvas = cropper.getCroppedCanvas({
+// 					width:  1920,
+// 					height: 682,
+// 				});
+// 				initialAvatarURL = avatar.src;
+// 				//   avatar.src = canvas.toDataURL();
+
+// 				$('#imagenes').prepend(`<figure class="col-sm-3 " id="` + id + `"><div class="row"><div class="col-md-12">
+// 															<img class="img-fluid"  src="`+ canvas.toDataURL() + `"  alt="imagen" >
+// 															</div>
+														
+														
+// 													</div>
+// 													<button class="btn " type="button" onclick="deleteImagen('`+ id + `')" title="Eliminar Imagen"> <i class="icon icon-eliminar"></i></button>
+// 													</figure>
+// 													`);
+
+// 				$("#congres-form").append("<input type='hidden' id='imagen_" + id + "' name='congreso-prueba' value='" + canvas.toDataURL() + "'>");
+// 				//   $("<input>").attr("type", "hidden").attr("name", "").appendTo("form").val(canvas.toDataURL()); 
+// 				//   $('#prueba').val(canvas.toDataURL());
+// 				id = id + 1;
+
+// 				$alert.removeClass('alert-success alert-warning');
+// 				$alert.show().addClass('alert-success').text('Nueva Imagen Cargada');
+
+// 			}
+// 		});
+
+// 		document.getElementById('crop1').addEventListener('click', function () {
+
+// 			var initialAvatarURL1;
+// 			var canvas1;
+
+// 			$modal1.modal('hide');
+
+// 			if (cropper1) {
+// 				canvas1 = cropper1.getCroppedCanvas({
+// 					width: 1681,
+// 					height: 299,
+// 				});
+// 				initialAvatarURL1 = avatar1.src;
+// 				avatar1.src = canvas1.toDataURL();
+// 				$('#congreso-prueba1').val(canvas1.toDataURL());
+// 				$('#ver').html(`<img class="img-fluid" id="avatar1" src="` + canvas1.toDataURL() + `"  alt="avatar">`);
+
+
+// 				$alert.removeClass('alert-success alert-warning');
+// 				$alert.show().addClass('alert-success').text('Nueva Imagen Cargada');
+
+// 			}
+// 		});
+
+// 		document.getElementById('crop2').addEventListener('click', function () {
+
+// var initialAvatarURL2;
+// var canvas2;
+
+// $modal2.modal('hide');
+
+// if (cropper2) {
+// 	canvas2 = cropper2.getCroppedCanvas({
+// 		width: 3625 ,
+// 		height: 2600,
+// 	});
+// 	initialAvatarURL2 = avatar2.src;
+// 	avatar2.src = canvas2.toDataURL();
+// 	$('#congreso-constancia').val(canvas2.toDataURL());
+// 	$('#ver2').html(`<img class="img-fluid" id="avatar2" src="` + canvas2.toDataURL() + `"  alt="avatar">`);
+
+
+// 	$alert.removeClass('alert-success alert-warning');
+// 				$alert.show().addClass('alert-success').text('Nueva Imagen Cargada');
+
+// }
+// });
+
+// document.getElementById('crop3').addEventListener('click', function () {
+
+// var initialAvatarURL3;
+// var canvas3;
+
+// $modal3.modal('hide');
+
+// if (cropper3) {
+// 	canvas3 = cropper3.getCroppedCanvas({
+// 		width:  1920,
+// 		height: 1080,
+// 	});
+// 	initialAvatarURL3 = avatar3.src;
+// 	avatar3.src = canvas3.toDataURL();
+// 	$('#congreso-imagen_home').val(canvas3.toDataURL());
+// 	$('#ver3').html(`<img class="img-fluid" id="avatar3" src="` + canvas3.toDataURL() + `"  alt="avatar">`);
+
+
+// 	$alert.removeClass('alert-success alert-warning');
+// 	$alert.show().addClass('alert-success').text('Nueva Imagen Cargada');
+
+// }
+// });
+
+
+
+
+// 	});
 
 </script>
 {% endblock %}

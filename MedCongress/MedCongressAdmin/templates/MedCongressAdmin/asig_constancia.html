@@ -65,43 +65,84 @@
 								<strong>Guardando......</strong> 
 							</div>
 						</div>
+						{% if messages %}
+						<ul class="messages">
+							{% for message in messages %}
+							<li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+								{% endfor %}
+						</ul>
+						{% endif %}
 						<form id="country-form" method="POST">
 							{% csrf_token %}
 							<div class="form-body">
 								<div class="row">
 									<div class="col-md-6">
-										{% if messages %}
-					<ul class="messages">
-						{% for message in messages %}
-						<li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
-							{% endfor %}
-					</ul>
-					{% endif %}
 											<div class="form-group">
 												<label for=""><b>Filtre
 														Congreso</b></label>
 												<select name="my_congress" id="" class="form-control select2" required="">
-{%for congreso in congresos%}
-<option value="{{congreso.pk}}">{{congreso.titulo}}</option>
-{%endfor%}
-
-												</select>	
-												<!-- <input type="text" name="my_congress" class="form-control" required=""
-													id="id_my_congress"> -->
-
+													{%for congreso in congresos%}
+													<option value="{{congreso.pk}}">{{congreso.titulo}}</option>
+													{%endfor%}
+												</select>
 											</div>
 										
 									</div>
-								
-										
-									
+									<div class="col-md-6">
+										<div class="form-group">
+											<label for=""><b>Asignar Constancia</b></label>
+											<select name="tipo_usuario" id="" class="form-control select2" required="">
+												
+												<option value="1">Participantes</option>
+												<option value="2">Ponentes</option>
+												<option value="3">Moderadores</option>
+												
+											</select>
+										</div>
+									</div>
 								</div>
+								<div class="row">
+									<div class="col-sm-3 ">
+										<div class="form-group">
+											<label ><b>Asignar Folios</b>
+											</label>
+
+											<input type="checkbox" name="folio" class="form-control" id="id_folio" onchange="javascript:showFolio()">
+										</div>
+									</div>
+									<div class="col-sm-3 folio " style="display: none;">
+										<div class="form-group">
+											<label ><b>Diseño del Folio</b>
+											</label>
+
+											<input type="text" name="folio_dis" class="form-control" id="id_folio_dis" >
+										</div>
+									</div>
+									<div class="col-sm-3 folio " style="display: none;">
+										<div class="form-group">
+											<label ><b> Consecutivo del Folio: Del</b>
+											</label>
+
+											<input type="number" name="folio_ini" min='1' class="form-control" id="id_folio_ini" >
+										</div>
+									</div>
+									<div class="col-sm-3 folio " style="display: none;">
+										<div class="form-group">
+											<label ><b>Al</b>
+											</label>
+
+											<input type="number" name="folio_fin" min="1" class="form-control" id="id_folio_fin" >
+										</div>
+									</div>
+								</div>		
+									
+								
 							</div>
 							<div class="form-actions">
 								<div class="text-right">
 									
 							
-									<button id="save" type="submit" class="btn btn-primary">Asignar
+									<button id="save" type="button" class="btn btn-primary">Asignar
 										<i class="ft-save position-right"></i>
 									</button>
 									
@@ -120,5 +161,42 @@
 <script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-select2.js'%}"></script>
 <script>
 	$("#country-form").submit(function(e) { $("#loading").show(); });
+	
+
+	function showFolio(){
+$('.folio').toggle()
+$('#id_folio_fin').val('');
+$('#id_folio_ini').val('')
+$('#id_folio_dis').val('')
+	}	
+	
+	$('#save').click(function(e){
+	if($('#id_folio').prop('checked')){
+		if( !parseInt($('#id_folio_ini').val()) || !parseInt($('#id_folio_fin').val())){
+			swal("Cancelado", "Entre bien los Folios", "error");
+			return;
+		}
+		if($('#id_folio_fin').val()=='' || $('#id_folio_ini').val()=='' ){
+			swal("Cancelado", "Debe entrar Diseño Folio - Folio Inicio - Folio Fin.", "error");
+			return;
+		}
+		if(parseInt($('#id_folio_fin').val())<=parseInt($('#id_folio_ini').val())){
+			swal("Cancelado", "El Folio Final debe ser mayor que el Folio de Inicio.", "error");
+			return;
+		}
+		let dis=$('#id_folio_dis').val()
+		if(!dis.includes('#')){
+			swal("Cancelado", "El diseño del Folio debe contener el comodín '#' para representar los consecutivo.", "error");
+			return;
+		}
+
+	
+
+	}	
+	$("#country-form").submit();
+
+	
+	})
+	
 </script>
 {% endblock %}

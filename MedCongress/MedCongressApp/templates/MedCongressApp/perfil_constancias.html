@@ -48,31 +48,46 @@ Detalles del Perfil
 {% block contenido_perfil %}
 
 
+    {% if constancias %}
+        <div class="profile-section section-5">
 
-                <div class="profile-section section-5">
-                    <h3 class="section-5-title" style="margin-bottom: 20px;">MedCongress Constancias</h3>
-                    
-                    {% if constancias %}
-                    <h4 style="margin-top: 20px;"><b>Congreso</b> </h4>
-                        <div class="col-md-12">
-                            {%for constancia in constancias%}
-                                <span  class="nav-item"> <a class="nav-link" target="_black" href="{%static '/'%}{{constancia.foto_constancia}}">{{forloop.counter}}. {{constancia.congreso.titulo}}</a></span>
-                      
-   
-                        {%endfor%}
-                        
-                        {%endif%}
-                        {% if constancias_taller %}
-                    <h4  style="margin-top: 20px;"><b>Taller</b> </h4>
-                        <div class="col-md-12">
-                            {%for constancia in constancias_taller%}
-                                <span  class="nav-item"> <a class="nav-link" target="_black" href="{%static '/congreso/img_constancia/'%}{{constancia.foto_constancia}}">{{forloop.counter}} {{constancia.taller.titulo}}</a></span>
-                      
-   
-                        {%endfor%}
-                       
-                        {%endif%}
-                    </div>
-                </div>  
-           
-                {%endblock%}
+            <h4 style="margin-top: 20px;"><b>Constancias por Participar en Congreso</b> </h4>
+            <div class="col-md-12">
+                {%for constancia in constancias%}
+                    <span  class="nav-item"> <a class="nav-link" target="_black" href="{%static '/'%}{{constancia.foto_constancia}}">{{forloop.counter}}. {{constancia.congreso.titulo}}</a></span>
+                {%endfor%}  
+            </div>
+        </div>  
+    {%endif%}
+    {% if constancias_taller %}
+        <div class="profile-section section-5">
+            <h4 style="margin-top: 20px;"><b>Constancias por Participar en Taller</b> </h4>
+            <div class="col-md-12">
+                {%for constancia in constancias_taller%}
+                    <span  class="nav-item"> <a class="nav-link" target="_black" href="{%static '/congreso/img_constancia/'%}{{constancia.foto_constancia}}">{{forloop.counter}} {{constancia.taller.titulo}}</a></span>
+                {%endfor%}
+            </div>
+        </div>  
+    {%endif%}
+    {% if constancias_ponente %}
+    <div class="profile-section section-5">
+        <h4 style="margin-top: 20px;"><b>Constancias por ser Ponente en el Congreso</b> </h4>
+        <div class="col-md-12">
+            {%for constancia in constancias_ponente%}
+                <span  class="nav-item"> <a class="nav-link" target="_black" href="{%static '/congreso/img_constancia/'%}{{constancia.foto_constancia}}">{{forloop.counter}} {{constancia.congreso.titulo}}</a></span>
+            {%endfor%}
+        </div>
+    </div>  
+{%endif%}
+{% if constancias_moderador %}
+<div class="profile-section section-5">
+    <h4 style="margin-top: 20px;"><b>Constancias por ser Moderador en el Congreso</b> </h4>
+    <div class="col-md-12">
+        {%for constancia in constancias_moderador%}
+            <span  class="nav-item"> <a class="nav-link" target="_black" href="{%static '/congreso/img_constancia/'%}{{constancia.foto_constancia}}">{{forloop.counter}} {{constancia.congreso.titulo}}</a></span>
+        {%endfor%}
+    </div>
+</div>  
+{%endif%}
+  
+{%endblock%}
