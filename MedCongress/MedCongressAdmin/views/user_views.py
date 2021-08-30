@@ -36,14 +36,16 @@ class UsuariosListView(validarUser,ListView):
         context['especialidades']=Especialidades.objects.all().order_by('nombre')
         return context
     def post(self, request, **kwargs):
-        if self.request.POST.getlist('categoria'):
+        if self.request.POST.getlist('categoria') and self.request.POST.getlist('especialidad'):
             categorias=self.request.POST.getlist('categoria')
-            
-            if self.request.POST.getlist('especialidad'):
-                especialidades=self.request.POST.getlist('especialidad')
-                query= PerfilUsuario.objects.filter(categoria__in=categorias,especialidad__in=especialidades).order_by('categoria__nombre','especialidad__nombre')
-            else:
-                query= PerfilUsuario.objects.filter(categoria__in=categorias).order_by('categoria__nombre','especialidad__nombre')
+            especialidades=self.request.POST.getlist('especialidad')
+            query= PerfilUsuario.objects.filter(categoria__in=categorias,especialidad__in=especialidades).order_by('categoria__nombre','especialidad__nombre')
+        elif self.request.POST.getlist('especialidad'):
+            especialidades=self.request.POST.getlist('especialidad')
+            query= PerfilUsuario.objects.filter(especialidad__in=especialidades).order_by('categoria__nombre','especialidad__nombre') 
+        elif self.request.POST.getlist('categoria'):
+            categorias=self.request.POST.getlist('categoria')
+            query= PerfilUsuario.objects.filter(categoria__in=categorias).order_by('categoria__nombre','especialidad__nombre')
         else:
             query= PerfilUsuario.objects.all().order_by('categoria__nombre','especialidad__nombre')
         if query:
@@ -185,8 +187,8 @@ class UsuariosListView(validarUser,ListView):
             wb.save(response)
             return response
         else:
-            messages.warning(self.request, 'No hay Usuarios')
-            return HttpResponseRedirect(reverse_lazy('MedCongressAdmin:usuarios_list')+'?exportar=True')
+            messages.warning(self.request, 'No hay Usuarios con ese criterio de búsqueda')
+            return HttpResponseRedirect(reverse_lazy('MedCongressAdmin:usuarios_list'))
 
 class UsuarioCreateView(validarUser,FormView):
     model=User

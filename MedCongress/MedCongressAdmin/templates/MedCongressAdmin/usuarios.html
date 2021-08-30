@@ -69,7 +69,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row card-content collapse show" {%if not exportar%} style="display: none;" {%endif%} id='mostrar'>
+                    <div class="row card-content collapse show" {%if not messages%} style="display: none;" {%endif%} id='mostrar'>
                          
                                 
                       
@@ -114,14 +114,14 @@
                                     <div class="row">
                                         <div class="col-md-12">
 
-                                            <div class="col-sm-12 ">
+                                            <div class="col-sm-12 div_especialidades" >
                                                 <div class="form-group">
                                                     <label for="{{form.congreso.id_for_label }}"><b>Filtre
                                                             Categoría</b></label>
                                                             
                                                     <div >{%if categorias%}
                                                        
-                                                        <select name="categoria" class="form-control select2 select2-hidden-accessibl" multiple=""  id="categoria" tabindex="-1" aria-hidden="true">
+                                                        <select name="categoria" class="form-control select2 select2-hidden-accessibl" multiple=""  id="categorias" tabindex="-1" aria-hidden="true">
                                                           
                                                           {%for categoria in categorias%}
                                                             <option value="{{categoria.id}}" {%if categoria.activo%} selected {%endif%}>{{categoria.nombre}}</option>
@@ -136,9 +136,9 @@
 
                                                 </div>
                                             </div>
-                                            <div class="col-sm-12 " id="div_especialidades" style="display: none;">
+                                            <div class="col-sm-12  div_especialidades" id="div_especialidades" >
                                                 <div class="form-group">
-                                                    <label for="{{form.congreso.id_for_label }}"><b>Filtre
+                                                    <label for=""><b>Filtre
                                                             Especialidad</b></label>
                                                             
                                                    
@@ -170,6 +170,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                   
                                 </div>
                             </form>
                         </div>
@@ -262,15 +263,17 @@
         $("#categoria").on('change', function() {
   var val = $(this).val();
   if(val.includes('2') || val.includes('4')){
-    $('#div_especialidades').toggle();
+    $('.div_especialidades').toggle();
     $('#especialidad').select2({
-    placeholder: "Todas Las Especialidades",
+    placeholder: "Todas las Especialidades",
+    allowClear: true
+});
+$('#categorias').select2({
+    placeholder: "Todas las Categorias",
     allowClear: true
 });
   }
 
-  // te muestra un array de todos los seleccionados
-  console.log(val);
 });
 
 
@@ -369,11 +372,14 @@
     function Mostrar(){
 
 $('#mostrar').toggle();
-$('#categoria').select2({
-    placeholder: "Todas Las Categorías",
+$('#categorias').select2({
+    placeholder: "Todas las Categorías",
     allowClear: true
 });
-
+$('#especialidad').select2({
+    placeholder: "Todas las Especialidades",
+    allowClear: true
+});
  }
 </script>
 {% endblock %}
