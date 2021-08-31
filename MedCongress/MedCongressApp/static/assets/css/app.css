@@ -1705,7 +1705,7 @@ textarea:focus,
   top: 0;
   height: 100%;
   display: flex;
-  position: absolute;
+  /* position: absolute; */
   align-items: center;
   z-index: 1;
 }
