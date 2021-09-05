@@ -1,5 +1,5 @@
 {% extends 'MedCongressAdmin/base.html' %}
-{% block title %}Ponentes{% endblock %}
+{% block title %}Cuestionario{% endblock %}
 {% load static %}
 {% block styles %}
 <link rel="stylesheet" type="text/css"
@@ -24,24 +24,16 @@
 	<div class="row breadcrumbs-top">
 	  <div class="breadcrumb-wrapper col-12">
 		<ol class="breadcrumb">
-{%if congreso or congreso_bloque%}
-    <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
-    </li>
-{%endif%}
-{%if bloque%}
-            <li class="breadcrumb-item active"> <a {%if congreso_bloque%}href="{% url 'MedCongressAdmin:Congres_bloques' path=bloque.congreso.path %}"{%else%}href="{% url 'MedCongressAdmin:bloques_list' %}"{%endif%}>Bloques</a>
-            </li>
-{%endif%}   
-
-<li class="breadcrumb-item active"><a {%if congreso%}href="{% url 'MedCongressAdmin:ponencias_list' %}?congreso={{congreso.path}}"{%elif congreso_bloque%}href="{% url 'MedCongressAdmin:ponencias_list' %}?bloque={{bloque.path}}&congreso_bloque=true"{%else%}href="{% url 'MedCongressAdmin:ponencias_list' %}?bloque={{bloque.path}}"{%endif%}>Ponencias</a>
-</li>
-<li class="breadcrumb-item active">Ponentes-Ponencia
-</li>
-
-</ol>
-</div>
-</div>
-</div>
+		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+		  </li>
+		 
+		  <li class="breadcrumb-item active">Cuestionario
+		</li>
+		
+		</ol>
+	  </div>
+	</div>
+  </div>
 <section id="configuration">
     <div class="row">
         <div class="col-12">
@@ -58,12 +50,16 @@
                     <div class="row">
                         <div class="col-10">
                             <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Listado
-                                de los Ponentes de la Ponencia </h1>
-                            <h3 style="font-style: italic;">{{ponencia.titulo}}</h3>
+                                preguntas del Cuestionario</h1>
+                                {%if congreso%}
+                                <p class="card-text"><b> Congreso:</b>  {{congreso.titulo}}</p>
+                                {%else%}
+                            <p class="card-text">Mostrando todas las Preguntas del Cuestionario.</p>
+                            {%endif%}
                         </div>
                         <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
-                                <button id="add-btn" type="button" class="btn btn-success" title="Adicionar Ponente a esta ponencia" onclick="add()"
+                                <button id="add-btn" type="button" class="btn btn-success" title="Nuevo" onclick="add()"
                                     style="float:right; padding: 3px;">
                                     <i class="la la-plus"></i>
                                 </button>
@@ -82,21 +78,34 @@
                                         id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
                                         <thead>
                                             <tr role="row" style="font-size: 13px;">
-                                                <th style="width:50%">Nombre</th>
-                                                <th>Correo</th>
+                                                <th style="width:50%">Pregunta</th>
+                                                <th>Respuestas</th>
+                                                <th>Publicada</th>
+
                                                 <th style="width:5%">Operaciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for ponente in ponentes %}
+                                            {% for pregunta in preguntas %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
-                                                <td class="sorting_1">{{ ponente.ponente.user.usuario.first_name }} {{ ponente.ponente.user.usuario.last_name}}</td>
+                                                <td class="sorting_1">{{ pregunta.texto }} </td>
                                                 
-                                                <td>{{ ponente.ponente.user.usuario.email}}</td>
-                                                  <td>  <a id="del_{{ ponente.pk }}"
-                                                        href="javascript:deleteItem('{{ ponente.pk }}')"
-                                                        title="Eliminar Vínculo entre Ponente y esta Ponencia">
-                                                        <i class="icon icon-eliminar_vinculo"></i>
+                                                <td>
+                                                    {%for respuesta in pregunta.respuestas %}
+                                                    <p>{%if respuesta.is_correcta%}<b> {{respuesta.texto}} ({%if respuesta.publicada%}Publicada{%else%}No Publicada{%endif%})</b> </p>
+                                                    {%else%} 
+                                                   <p> {{respuesta.texto}}  ({%if respuesta.publicada%}Publicada{%else%}No Publicada{%endif%})</p> 
+                                                   {%endif%}
+                                                    {%endfor%}
+
+                                                </td>
+                                                <td>{%if pregunta.publicada%}Si{%else%}No{%endif%}</td>
+                                                  <td>  <a href="javascript:editItem('{{ pregunta.id }}')"
+                                                    title="Editar"><i class="icon icon-editar"></i></a> 
+                                                    <a id="del_{{ pregunta.id }}"
+                                                        href="javascript:deleteItem('{{ pregunta.id }}')"
+                                                        title="Eliminar">
+                                                        <i class="icon icon-eliminar "></i>
                                                     </a>
 
                                                    
@@ -108,8 +117,9 @@
                                         </tbody>
                                         <tfoot>
                                             <tr style="font-size: 13px;">
-                                                <th style="width:50%">Nombre</th>
-                                                <th>Correo</th>
+                                                <th style="width:50%">Pregunta</th>
+                                                <th>Respuestas</th>
+                                                <th>Publicada</th>
                                                 <th style="width:5%">Operaciones</th>
                                             </tr>
                                         </tfoot>
@@ -127,11 +137,11 @@
     <form id="swall-modal-form" method="POST" style="display: none;">
         {% csrf_token %}
     </form>
-
+    
 </div>
 {% endblock %}
 {% block scripts %}
-<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/extensions/sweetalert.min.js' %}"></script>
+
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/tables/datatable/datatables.min.js' %}"></script>
 
 <script type="text/javascript">
@@ -157,6 +167,7 @@
             "previous": "Anterior"
         }
     },
+    
  
 });
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
@@ -167,43 +178,43 @@
         });
 
         $('#add-btn').click(function () {
-
             search=$('.dataTables_filter input').val();
-
-            {%if congreso%}
-            location.href = "{% url 'MedCongressAdmin:ponecia_ponente_add' ponencia.path %}?search="+search+"&congreso={{congreso.path}}";
-            
-            {%elif bloque%}
-            {%if congreso_bloque%}
-            location.href = "{% url 'MedCongressAdmin:ponecia_ponente_add' ponencia.path %}?search="+search+"&bloque={{bloque.path}}&congreso_bloque=true";
-            {%else%}
-
-            location.href = "{% url 'MedCongressAdmin:ponecia_ponente_add' ponencia.path %}?search="+search+"&bloque={{bloque.path}}";
-            {%endif%}
-           {%else%}
-
-            location.href = "{% url 'MedCongressAdmin:ponecia_ponente_add' ponencia.path %}?search="+search+"";
-            {%endif%}
-            //location.href = "{% url 'MedCongressAdmin:ponecia_ponente_add' ponencia.path %}";
+          
+            location.href = "{% url 'MedCongressAdmin:cuestionario_pregunta_add' %}?search="+search+"&congreso={{congreso.path}}";
+           
         });
 
+        
+
         dataTable = $('.zero-configuration').DataTable();
+        {%if search%}
+        dataTable.search('{{search}}').draw();
+        {%endif%}
     });
+
+    function editItem(pk) {
+        
+            search=$('.dataTables_filter input').val(); 
+            url = "{% url 'MedCongressAdmin:cuestionario_edit' pk=0 %}";
+
+            location.href = url.replace('/0', '/' + pk)+"?search="+search;
+      
+        }
     function deleteItem(pk) {
         swal({
-            title: "Estas seguro?",
-            text: "Eliminará la relación del Ponente con esta Ponencia !!",
+            title: "¿Estás seguro?",
+            text: "¡No será capaz de recuperar este elemento!",
             icon: "warning",
             buttons: {
                 cancel: {
-                    text: "No, cancelar!",
+                    text: "¡No, cancelar!",
                     value: null,
                     visible: true,
                     className: "",
                     closeModal: false,
                 },
                 confirm: {
-                    text: "Sí, eliminarla!",
+                    text: "¡Sí, eliminarlo!",
                     value: true,
                     visible: true,
                     className: "",
@@ -213,13 +224,13 @@
         })
             .then((isConfirm) => {
                 if (isConfirm) {
-                    url = "{% url 'MedCongressAdmin:ponecia_ponente_delete' pk=0 %}";
+                    url = "{% url 'MedCongressAdmin:cuestionario_delete' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                         dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
-                        swal("Eliminado!", "Esta relación ha sido eliminada.", "success");
+                        swal("¡Eliminado!", "Este elemento ha sido eliminado.", "success");
                     });
                 } else {
-                    swal("Cancelado", "No se eliminó esta relación.", "error");
+                    swal("Cancelado", "No se eliminó este elemento.", "error");
                 }
             });
     }

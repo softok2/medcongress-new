@@ -1079,7 +1079,8 @@ class PerfilUserCreate(FormView):
 
 class ViewError404(TemplateView):
     template_name= 'MedCongressApp/404.html' 
-
+class ViewError403(TemplateView):
+    template_name= 'MedCongressApp/403.html' 
 class ViewErrorOpenpay(TemplateView):
     template_name= 'MedCongressApp/Error_openpay.html' 
 class ViewErrorRegistrar(TemplateView):

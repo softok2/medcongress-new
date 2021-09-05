@@ -100,7 +100,7 @@
     <div class="main-menu menu-fixed menu-dark menu-accordion menu-shadow" data-scroll-to-active="true">
         <div class="main-menu-content">
             <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-                
+                {%if request.user.is_staff%}
                 <li class=" nav-item"><a href="#"><i class="icon icon-disenio"></i><span class="menu-title"
                             data-i18n="nav.templates.main">Diseño</span></a>
                     <ul class="menu-content">
@@ -118,13 +118,16 @@
                         <li><a class="menu-item" href="{% url 'MedCongressAdmin:footer_list' %}"><i class="icon icon-footer" ></i>Footer</a></li>
                     </ul>
                 </li>
+                {%endif%}
                 <li class=" nav-item"><a href="#"><i class="icon icon-evento"></i><span class="menu-title"
                             data-i18n="nav.templates.main">Eventos</span></a>
                     <ul class="menu-content">
                         <li><a class="menu-item" href="{% url 'MedCongressAdmin:congress_list' %}"><i class=" icon icon-congreso"></i>Congresos</a></li>
+                        {%if request.user.is_staff%}
                         <li><a class="menu-item" href="{% url 'MedCongressAdmin:bloques_list' %}"><i class=" icon icon-block"></i> Bloques</a></li>
                         <li><a class="menu-item" href="{% url 'MedCongressAdmin:ponencias_list' %}"><i class="icon icon-ponencia"></i> Ponencias</a></li>
                         <li><a class="menu-item" href="{% url 'MedCongressAdmin:talleres_list' %}"><i class=" icon icon-taller" ></i>Talleres</a></li>
+                        {%endif%}
                         <li class=" nav-item"><a href="#"><i class="icon icon-asignar_congreso"></i><span class="menu-title"
                             data-i18n="nav.templates.main">Congreso-Usuario</span></a>
                         <ul class="menu-content">
@@ -132,9 +135,10 @@
                          <li><a class="menu-item" href="{% url 'MedCongressAdmin:asig_becas_list' %}"><i class=" icon icon-constancia-taller" ></i>Becas</a></li>
                         <li><a class="menu-item" href="{% url 'MedCongressAdmin:asig_constancia_list' %}"><i class=" icon icon-constancia" ></i>Constancias</a></li>
 
-                            
+                        
                         </ul>
                     </li>
+                    {%if request.user.is_staff%}
                     <li class=" nav-item"><a href="#"><i class="icon icon-asignar_taller"></i><span class="menu-title"
                         data-i18n="nav.templates.main">Taller-Usuario</span></a>
                     <ul class="menu-content">
@@ -145,21 +149,24 @@
                         
                     </ul>
                 </li>
+                {%endif%}
                     </ul>
                 </li>
+                {%if request.user.is_staff%}
                 <li class=" nav-item"><a href="#"><i class="icon icon-gest_usuario"></i><span class="menu-title"
                             data-i18n="nav.templates.main">Gestión de Usuarios</span></a>
                     <ul class="menu-content">
                         <li><a class="menu-item" href="{% url 'MedCongressAdmin:usuarios_list' %}"><i class="icon icon-usuario" ></i>Usuarios</a></li>
                         <li><a class="menu-item" href="{% url 'MedCongressAdmin:Ponentes_list' %}"><i class="icon icon-ponente" ></i>Ponentes</a></li>
                         <li><a class="menu-item" href="{% url 'MedCongressAdmin:Moderadores_list' %}"><i class="icon icon-moderador" ></i>Moderadores</a></li>
-                        <!-- <li><a class="menu-item" href="{% url 'MedCongressAdmin:Ver_usuarios' %}">Confirmar Usuarios</a></li>
-                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:Exportar_usuarios' %}">Exportar Usuarios</a></li>
+                        <li><a class="menu-item" href="{% url 'MedCongressAdmin:Organizadores_list' %}"><i class="icon icon-organizador" ></i>Organizador</a></li>
+                        <!-- <li><a class="menu-item" href="{% url 'MedCongressAdmin:Exportar_usuarios' %}">Exportar Usuarios</a></li>
                         <li><a class="menu-item" href="{% url 'MedCongressAdmin:Usuarios_pagaron' %}">Exportar Usuarios que han pagado Congresos</a></li>
                        
                          -->
                     </ul>
                 </li>
+               
                 <li class=" nav-item"><a href="#"><i class="icon icon-nomencladores"></i><span class="menu-title"
                             data-i18n="nav.templates.main">Nomencladores</span></a>
                     <ul class="menu-content">
@@ -202,7 +209,7 @@
 <li><a class="menu-item" href="{% url 'MedCongressAdmin:LogsUsuario' %}"><i class="icon icon-usuario" ></i>Logs por Usuarios</a></li>
 </ul>
 </li>
-
+{%endif%}
             </ul>
         </div>
     </div>

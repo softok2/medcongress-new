@@ -24,16 +24,16 @@
 	<div class="row breadcrumbs-top">
 	  <div class="breadcrumb-wrapper col-12">
 		<ol class="breadcrumb">
-{%if con or congreso_bloque%}
+{%if congreso or congreso_bloque%}
     <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
     </li>
 {%endif%}
 {%if bloque%}
-            <li class="breadcrumb-item active"> <a {%if congreso_bloque%}href="{% url 'MedCongressAdmin:Congres_bloques' path=bloque.congreso.path %}"{%else%}href="{% url 'MedCongressAdmin:bloques_list' %}"{%endif%}>Bloques</a>
+            <li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:bloques_list' %}{%if congreso_bloque%}?congreso={{bloque.congreso.path}}{%endif%}">Bloques</a>
             </li>
 {%endif%}   
 
-<li class="breadcrumb-item active"><a {%if con%}href="{% url 'MedCongressAdmin:talleres_list' %}?congreso={{con.path}}"{%elif congreso_bloque%}href="{% url 'MedCongressAdmin:talleres_list' %}?bloque={{bloque.path}}&congreso_bloque=true"{%else%}href="{% url 'MedCongressAdmin:talleres_list' %}?bloque={{bloque.path}}"{%endif%}>Talleres</a>
+<li class="breadcrumb-item active"><a {%if congreso_bloque%}href="{% url 'MedCongressAdmin:talleres_list' %}?bloque={{bloque.path}}&congreso_bloque=true"{%elif congreso%}href="{% url 'MedCongressAdmin:talleres_list' %}?congreso={{congreso.path}}"{%elif bloque%}href="{% url 'MedCongressAdmin:talleres_list' %}?bloque={{bloque.path}}"{%else%} href="{% url 'MedCongressAdmin:talleres_list' %}"{%endif%}>Talleres</a>
 </li>
 <li class="breadcrumb-item active"> Ponentes
 </li>
@@ -95,8 +95,8 @@
                                                 <td>{{ ponente.ponente.user.usuario.email}}</td>
                                                   <td>  <a id="del_{{ ponente.pk }}"
                                                         href="javascript:deleteItem('{{ ponente.pk }}')"
-                                                        title="Eliminar">
-                                                        <i class="icon icon-eliminar "></i>
+                                                        title="Eliminar Vínculo entre Ponente y este Taller">
+                                                        <i class="icon icon-eliminar_vinculo "></i>
                                                     </a>
 
                                                    
@@ -171,20 +171,18 @@
 
 search=$('.dataTables_filter input').val();
 
-{%if congreso%}
-location.href = "{% url 'MedCongressAdmin:taller_ponente_add' taller.path %}?search="+search+"&congreso={{congreso.path}}";
+get=''
+{%if congreso and bloque%}
+    get='&congreso_bloque=True'
 
 {%elif bloque%}
-{%if congreso_bloque%}
-location.href = "{% url 'MedCongressAdmin:taller_ponente_add' taller.path %}?search="+search+"&bloque={{bloque.path}}&congreso_bloque=true";
-{%else%}
-
-location.href = "{% url 'MedCongressAdmin:taller_ponente_add' taller.path %}?search="+search+"&bloque={{bloque.path}}";
+    get='&bloque=True'
+{%elif congreso%}
+    get='&congreso=True'
 {%endif%}
-{%else%}
 
-location.href = "{% url 'MedCongressAdmin:taller_ponente_add' taller.path %}?search="+search+"";
-{%endif%}
+location.href = "{% url 'MedCongressAdmin:taller_ponente_add' taller.path %}?search="+search+get+"";
+
 
 });
         dataTable = $('.zero-configuration').DataTable();

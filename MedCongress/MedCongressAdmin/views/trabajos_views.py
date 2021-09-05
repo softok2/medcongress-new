@@ -10,21 +10,23 @@ from django.urls import reverse_lazy,reverse
 from django.views.generic import ListView,CreateView,TemplateView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.edit import  DeleteView, UpdateView,FormView
-from MedCongressApp.models import TrabajosInvestigacion,Congreso
+from MedCongressApp.models import TrabajosInvestigacion,Congreso,Organizador
 from MedCongressAdmin.forms.congres_forms import CongresoTrabajoForm
-from MedCongressAdmin.apps import validarUser
+from MedCongressAdmin.apps import validarUser,validarOrganizador
 from django.http import JsonResponse
 from  MedCongressApp.claves import URL_SITE
 
 
-class TrabajosListView(validarUser,TemplateView):
-    template_name = 'MedCongressAdmin/trabajos_list.html'
+class TrabajosListView(validarOrganizador,TemplateView):
+    template_name = 'MedCongressAdmin/trabajo_investigativo/listar.html'
 
 
     def get(self, request, **kwargs):
         congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
         if congreso is None:
             return   HttpResponseRedirect(reverse('Error404'))
+        if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=congreso).exists() and not self.request.user.is_staff: 
+            return   HttpResponseRedirect(reverse('Error403'))
         return self.render_to_response(self.get_context_data())    
     def get_context_data(self, **kwargs):
         context = super(TrabajosListView, self).get_context_data(**kwargs)

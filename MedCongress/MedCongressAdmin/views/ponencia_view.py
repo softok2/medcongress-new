@@ -9,25 +9,32 @@ from django.urls import reverse_lazy,reverse
 from django.views.generic import ListView,TemplateView,FormView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from MedCongressApp.models import Ponencia,RelPonenciaPonente,Sala,Ubicacion,Congreso,Bloque,Ponente,RelPonenciaPonente
+from MedCongressApp.models import Ponencia,RelPonenciaPonente,Sala,Organizador,Ubicacion,Congreso,Bloque,Ponente,RelPonenciaPonente
 from MedCongressAdmin.forms.congres_forms import PonenciaForms,PonentePonenciaForm
 from django.utils.crypto import get_random_string
-from MedCongressAdmin.apps import validarUser
+from MedCongressAdmin.apps import validarUser,validarOrganizador
 from django.db.models import Q
 
-class PonenciaListView(validarUser,TemplateView):
+class PonenciaListView(validarOrganizador,TemplateView):
     model = Ponencia
     context_object_name = 'ponencias'
-    template_name = 'MedCongressAdmin/ponencias.html'
+    template_name = 'MedCongressAdmin/ponencia/listar.html'
     def get(self, request, **kwargs):
         if self.request.GET.get('congreso'):
             congreso=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
             if congreso is None:
                 return   HttpResponseRedirect(reverse('Error404'))
-        if self.request.GET.get('bloque'):
-            congreso=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
-            if congreso is None:
+            if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=congreso).exists() and not self.request.user.is_staff: 
+                return   HttpResponseRedirect(reverse('Error403'))
+        elif self.request.GET.get('bloque'):
+            bloque=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
+            if bloque is None:
                 return   HttpResponseRedirect(reverse('Error404'))
+            if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=bloque.congreso).exists() and not self.request.user.is_staff: 
+                return   HttpResponseRedirect(reverse('Error403')) 
+        else:
+            if not self.request.user.is_staff:
+                return   HttpResponseRedirect(reverse('Error403'))   
         return self.render_to_response(self.get_context_data())
     def get_context_data(self, **kwargs):
         context=super(PonenciaListView,self).get_context_data(**kwargs)
@@ -42,20 +49,30 @@ class PonenciaListView(validarUser,TemplateView):
             if self.request.GET.get('congreso_bloque'):
                 context['congreso_bloque']=context['bloque'].congreso
         return context
-class  PonenciaCreateView(validarUser,FormView):
+
+class  PonenciaCreateView(validarOrganizador,FormView):
     form_class = PonenciaForms
     success_url = reverse_lazy('MedCongressAdmin:ponencias_list')
-    template_name = 'MedCongressAdmin/ponencia_form.html'
+    template_name = 'MedCongressAdmin/ponencia/form.html'
 
     def get(self, request, **kwargs):
+       
         if self.request.GET.get('congreso'):
             congreso=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
             if congreso is None:
                 return   HttpResponseRedirect(reverse('Error404'))
-        if self.request.GET.get('bloque'):
-            congreso=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
-            if congreso is None:
+            if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=congreso).exists() and not self.request.user.is_staff:
+                return   HttpResponseRedirect(reverse('Error403'))
+        
+        elif self.request.GET.get('bloque'):
+            bloque=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
+            if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=bloque.congreso).exists() and not self.request.user.is_staff: 
+                return   HttpResponseRedirect(reverse('Error403'))
+            if bloque is None:
                 return   HttpResponseRedirect(reverse('Error404'))
+        else:
+            if not self.request.user.is_staff:
+                return   HttpResponseRedirect(reverse('Error403'))
         return self.render_to_response(self.get_context_data())
 
     def form_valid(self, form):
@@ -99,7 +116,7 @@ class  PonenciaCreateView(validarUser,FormView):
         except Exception as e:
             messages.warning(self.request, e)
             return super().form_invalid(form)
-
+    
     def get_context_data(self, **kwargs):
         
         context = super(PonenciaCreateView, self).get_context_data(**kwargs)
@@ -136,14 +153,14 @@ class  PonenciaCreateView(validarUser,FormView):
 
         return self.success_url   
  
-########## Vista de las Categorias de Pago de un Congreso #############
-
-class PonenciaPonenteListView(validarUser,TemplateView):
-    template_name= 'MedCongressAdmin/ponencia_ponentes.html' 
+class PonenciaPonenteListView(validarOrganizador,TemplateView):
+    template_name= 'MedCongressAdmin/ponencia/listar_ponentes.html' 
     def get(self, request, **kwargs):
         ponencia=Ponencia.objects.filter(path=self.kwargs.get('path')).first()
         if ponencia is None:
             return   HttpResponseRedirect(reverse('Error404'))
+        if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=ponencia.congreso).exists() and not self.request.user.is_staff: 
+                return   HttpResponseRedirect(reverse('Error403')) 
         return self.render_to_response(self.get_context_data())    
     def get_context_data(self, **kwargs):
         context = super(PonenciaPonenteListView, self).get_context_data(**kwargs)
@@ -151,21 +168,33 @@ class PonenciaPonenteListView(validarUser,TemplateView):
         context['ponencia']=ponencia
         context['ponentes']=RelPonenciaPonente.objects.filter(ponencia=ponencia)
         if self.request.GET.get('congreso'):
-            context['congreso']=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()   
+            context['congreso']=ponencia.congreso   
         if self.request.GET.get('bloque'):
-            context['bloque']=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
-            if self.request.GET.get('congreso_bloque'):
-                context['congreso_bloque']=context['bloque'].congreso
+            context['bloque']=ponencia.bloque
+        if self.request.GET.get('congreso_bloque'):
+            context['congreso']=ponencia.congreso
+            context['bloque']=ponencia.bloque
+            context['congreso_bloque']=context['bloque'].congreso
         return context        
 
-class  PonenciaPonenteCreateView(validarUser,CreateView):
+class  PonenciaPonenteCreateView(validarOrganizador,CreateView):
     info_sended =Ponencia()
     form_class = PonentePonenciaForm
     # success_url = reverse_lazy('MedCongressAdmin:ponencias_list')
-    template_name = 'MedCongressAdmin/ponencia_ponente_form.html'
+    template_name = 'MedCongressAdmin/ponencia/ponente_form.html'
 
     
+    def get(self, request, **kwargs):
+       
+        ponencia=Ponencia.objects.filter(path=self.kwargs.get('path')).first()
+        if ponencia is None:
+            return   HttpResponseRedirect(reverse('Error404'))
 
+        if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=ponencia.congreso).exists() and not self.request.user.is_staff: 
+            return   HttpResponseRedirect(reverse('Error403'))
+        self.object=ponencia
+        return self.render_to_response(self.get_context_data())    
+           
     def form_valid(self, form):
         ponencia=form.save(commit=False)
   
@@ -174,14 +203,14 @@ class  PonenciaPonenteCreateView(validarUser,CreateView):
 
     def get_success_url(self):
         
-        url =  reverse_lazy('MedCongressAdmin:Ponencia_ponentes',kwargs={'path': self.kwargs.get('path')} )
-        self.success_url='%s?&search=%s'%(url,self.request.GET.get('search'))
+        url =  reverse_lazy('MedCongressAdmin:Ponencia_ponentes',kwargs={'path': self.kwargs.get('path')} )+'?&search=%s'%(self.request.GET.get('search'))
+        
         if self.request.GET.get('congreso'):
-            self.success_url =  '%s?congreso=%s&search=%s'%(url,self.request.GET.get('congreso'),self.request.GET.get('search')) 
+            self.success_url =  '%s&congreso=True'%(url) 
         if self.request.GET.get('bloque'): 
-            self.success_url =  '%s?bloque=%s&search=%s'%(url,self.request.GET.get('bloque'),self.request.GET.get('search')) 
-            if self.request.GET.get('congreso_bloque'):
-                self.success_url =  '%s?bloque=%s&search=%s&congreso_bloque=true'%(url,self.request.GET.get('bloque'),self.request.GET.get('search')) 
+            self.success_url =  '%s&bloque=True'%(url) 
+        if self.request.GET.get('congreso_bloque'):
+            self.success_url =  '%s&congreso_bloque=True'%(url) 
 
         return self.success_url  
  
@@ -195,28 +224,46 @@ class  PonenciaPonenteCreateView(validarUser,CreateView):
             id.append(ponente.ponente.pk)
         ctx['ponentes']=Ponente.objects.exclude(id__in=id)
         if self.request.GET.get('congreso'):
-            ctx['congreso']=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()   
+            ctx['congreso']=pon.congreso
         if self.request.GET.get('bloque'):
-            ctx['bloque']=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
-            if self.request.GET.get('congreso_bloque'):
-                ctx['congreso_bloque']=ctx['bloque'].congreso   
+            ctx['bloque']=pon.bloque
+        if self.request.GET.get('congreso_bloque'):
+            ctx['congreso']=pon.congreso
+            ctx['bloque']=pon.bloque  
+        ctx['search']=self.request.GET.get('search')
         return ctx
 
-class PonencicaUpdateView(validarUser,FormView):
+class PonencicaUpdateView(validarOrganizador,FormView):
     form_class = PonenciaForms
     success_url = reverse_lazy('MedCongressAdmin:ponencias_list')
-    template_name = 'MedCongressAdmin/ponencia_form.html'
+    template_name = 'MedCongressAdmin/ponencia/form.html'
 
     def get(self, request, **kwargs):
+
+        ponencia=Ponencia.objects.filter(pk=self.kwargs.get('pk')).first()
+        if not ponencia:
+            return   HttpResponseRedirect(reverse('Error404'))
+        if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=ponencia.congreso).exists() and not self.request.user.is_staff:
+            return   HttpResponseRedirect(reverse('Error403')) 
         if self.request.GET.get('congreso'):
             congreso=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
             if congreso is None:
                 return   HttpResponseRedirect(reverse('Error404'))
-        if self.request.GET.get('bloque'):
-            congreso=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
-            if congreso is None:
+            if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=congreso).exists() and not self.request.user.is_staff:
+                return   HttpResponseRedirect(reverse('Error403'))
+            if not ponencia.congreso==congreso:
                 return   HttpResponseRedirect(reverse('Error404'))
+        elif self.request.GET.get('bloque'):
+            bloque=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
+            if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=bloque.congreso).exists() and not self.request.user.is_staff: 
+                return   HttpResponseRedirect(reverse('Error403'))
+            if bloque is None:
+                return   HttpResponseRedirect(reverse('Error404'))
+        else:
+            if not self.request.user.is_staff:
+                return   HttpResponseRedirect(reverse('Error403'))
         return self.render_to_response(self.get_context_data())
+
     def get_queryset(self, **kwargs):
         ponencia=Ponencia.objects.get(pk=self.kwargs.get('pk'))
         self.object=ponencia
@@ -280,7 +327,6 @@ class PonencicaUpdateView(validarUser,FormView):
             context['ponencia_t']=True
         return context 
       
-
     def get_success_url(self):
         url=reverse_lazy('MedCongressAdmin:ponencias_list')
         self.success_url='%s?&search=%s'%(url,self.request.GET.get('search'))
@@ -291,9 +337,9 @@ class PonencicaUpdateView(validarUser,FormView):
             if self.request.GET.get('congreso_bloque'):
                 self.success_url =  '%s?bloque=%s&search=%s&congreso_bloque=true'%(url,self.request.GET.get('bloque'),self.request.GET.get('search')) 
 
-        return self.success_url       
+        return self.success_url   
+      
   
-
     def form_valid(self, form):
         # try:
         if not self.request.POST.getlist('ponencia_ponente-ponente'):
@@ -347,11 +393,11 @@ class PonencicaUpdateView(validarUser,FormView):
         #     messages.warning(self.request, e)
         #     return super().form_invalid(form)
             
-class PonenciaDeletedView(validarUser,DeleteView):
+class PonenciaDeletedView(validarOrganizador,DeleteView):
     model = Ponencia
     success_url = reverse_lazy('MedCongressAdmin:ponencias_list')
 
-class PonenciaPonenteDeletedView(validarUser,DeleteView):
+class PonenciaPonenteDeletedView(validarOrganizador,DeleteView):
     model = RelPonenciaPonente
     success_url = reverse_lazy('MedCongressAdmin:ponencias_list')
    
@@ -365,8 +411,6 @@ def PonenciaBloqueDeleted(request):
         
         mimetype = "application/json"
     return HttpResponse(data, mimetype)  
-
-
 
 class vTableAsJSONPonencia(TemplateView):
     template_name = 'MedCongressAdmin/asig_congress_form.html'
@@ -462,7 +506,7 @@ class vTableAsJSONPonencia(TemplateView):
                                                         <i class="icon icon-ponente " style= "color: blue;" ></i>
                                                     </a>'''
             if request.GET.get('tipo')=='congreso':
-                ponentes=''' <a  href="'''+ reverse('MedCongressAdmin:Ponencia_ponentes',kwargs={'path':objet.path})+'''?congreso='''+request.GET.get('path')+'''"
+                ponentes=''' <a  href="'''+ reverse('MedCongressAdmin:Ponencia_ponentes',kwargs={'path':objet.path})+'''?congreso=True"
                                                         title="Ponentes">
                                                         <i class="icon icon-ponente " style= "color: blue;" ></i>
                                                     </a>'''
@@ -470,13 +514,13 @@ class vTableAsJSONPonencia(TemplateView):
                 
             if request.GET.get('tipo')=='bloque':
                 if request.GET.get('congreso_bloque'):
-                    ponentes=''' <a  href="'''+ reverse('MedCongressAdmin:Ponencia_ponentes',kwargs={'path':objet.path})+'''?bloque='''+request.GET.get('path')+'''&congreso_bloque=true"
+                    ponentes=''' <a  href="'''+ reverse('MedCongressAdmin:Ponencia_ponentes',kwargs={'path':objet.path})+'''?congreso_bloque=True"
                                                         title="Ponentes">
                                                         <i class="icon icon-ponente " style= "color: blue;" ></i>
                                                     </a>'''
                     
                 else:
-                    ponentes=''' <a  href="'''+ reverse('MedCongressAdmin:Ponencia_ponentes',kwargs={'path':objet.path})+'''?bloque='''+request.GET.get('path')+'''"
+                    ponentes=''' <a  href="'''+ reverse('MedCongressAdmin:Ponencia_ponentes',kwargs={'path':objet.path})+'''?bloque=True"
                                                         title="Ponentes">
                                                         <i class="icon icon-ponente " style= "color: blue;" ></i>
                                                     </a>'''

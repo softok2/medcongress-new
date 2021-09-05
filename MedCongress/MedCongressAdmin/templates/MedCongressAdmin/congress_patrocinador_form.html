@@ -30,7 +30,7 @@
 		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
 		  </li>
 		  
-		  <li class="breadcrumb-item active"><a href="{%url 'MedCongressAdmin:Congres_patrocinadores' path=congreso.path%}">Patrocinadores</a>
+		  <li class="breadcrumb-item active"><a href="{%url 'MedCongressAdmin:patrocinadores_list'%}?congreso={{congreso.path}}">Patrocinadores</a>
 		</li>
 		
 		{%else%}
@@ -118,7 +118,7 @@
 											<div class="text-right">
 												<a id="atras" type="button" class="btn btn-danger "
 										{%if congreso%}
-										href="{%url 'MedCongressAdmin:Congres_patrocinadores' path=congreso.path%}">Cancelar
+										href="{%url 'MedCongressAdmin:patrocinadores_list'%}?congreso={{congreso.path}}">Cancelar
 										{%else%}
 											href="{%url 'MedCongressAdmin:patrocinadores_list'%}">Cancelar
 											{%endif%}

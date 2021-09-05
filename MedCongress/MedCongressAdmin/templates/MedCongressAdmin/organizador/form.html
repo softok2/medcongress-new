@@ -1,0 +1,137 @@
+{% extends 'MedCongressAdmin/base.html' %}
+{% block title %}MedCongressAdmin | Add Organizador{% endblock %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/select2.min.css' %}">
+{% endblock %}
+{% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+			
+		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:Organizadores_list' %}{%if search%}?search={{search}}{%endif%}">Organizadores de Congresos</a>
+		  </li>
+		  
+		
+	
+		<li class="breadcrumb-item active"> Adicionar Organizador</a>
+		</li>
+		
+		</ol>
+	  </div>
+	</div>
+  </div>
+<section class="multiple-input-with-labels" id="multiple-input-with-labels">
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-header">
+					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
+						Adicionar Organizador</h1>
+					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
+					<div class="heading-elements">
+						<ul class="list-inline mb-0">
+							<li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+							<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+							
+						</ul>
+					</div>
+				</div>
+				<div class="card-content collapse show">
+					<div class="card-body">
+						{% if form.errors %}
+						{% for field in form %}
+							{% for error in field.errors %}
+								<div class="alert alert-danger">
+									<strong>{{ error|escape }}</strong>
+								</div>
+							{% endfor %}
+						{% endfor %}
+						{% for error in form.non_field_errors %}
+							<div class="alert alert-danger">
+								<strong>{{ error|escape }}</strong>
+							</div>
+						{% endfor %}
+					{% endif %}
+						<form id="country-form" method="POST">
+							{% csrf_token %}
+							<div class="form-body">
+								<div class="row">
+									<div class="col-md-12">
+										
+										<div class="col-sm-6 ">
+											<div class="form-group">
+												<label
+													for="{{form.user.id_for_label }}"><b>{{form.user.label }}</b></label>
+													
+													<div  > 
+														{{form.user}}
+													</div>
+													
+											</div>
+										</div>
+										<div class="col-sm-6 ">
+											<div class="form-group">
+												<label
+													for="{{form.congreso.id_for_label }}"><b>{{form.congreso.label }}</b></label>
+													
+													<div  > 
+														{{form.congreso}}
+													</div>
+													
+											</div>
+										</div>
+											
+											
+										</fieldset>
+										<div class="form-actions">
+											<div class="text-right">
+												<button id="atras" type="button" class="btn btn-danger ">Cancelar
+													<i class="ft-x position-right"></i>
+												</button>
+		
+												<button id="save" type="submit" class="btn btn-primary">Guardar
+													<i class="ft-save position-right"></i>
+												</button>
+												
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/forms/select/select2.full.min.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-select2.js'%}"></script>
+<link rel="stylesheet" href="{% static 'MedCongressApp/css/jquery-ui.min.css'%}">
+<script src="{% static 'MedCongressApp/js/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
+<script type="text/javascript">
+$(function() {
+	$('#id_congreso').select2({
+    placeholder: "Seleccione un Congreso",
+    allowClear: true
+});
+$('#id_user').select2({
+    placeholder: "Seleccione un Usuario",
+    allowClear: true
+});
+
+	$('#atras').click(function () {
+location.href = "{% url 'MedCongressAdmin:Organizadores_list' %}?search={{search}}";
+
+});
+
+	});
+
+
+
+</script>
+{% endblock %}

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 from .views import (Home,CongresoListView,CongresoDetail,CongresoCardForm,PerfilUserCreate,
-ViewErrorOpenpay,PagarEfectivo,ViewError404,ViewPonencia,EspecialdiadesAutocomplete,
+ViewErrorOpenpay,PagarEfectivo,ViewError404,ViewError403,ViewPonencia,EspecialdiadesAutocomplete,
 AddCart,AddCartTaller,DeletedCart,ConfCart,AvisoPrivacidad,HabilitarUser,Perfil,PagoExitoso,Email,GetPerfil,
 GetCuestionario,SetConstancia,EvaluarPonencia,Resultado_Cuestionario,Get_Constancia,VerTransaccion,GetFactura,
 ViewErrorFact,PerfilUpdateView,CambiarPass,UpdateEvaluarPonencia,UserAutocomplete,ViewErrorRegistrar,RegistroExitoso,
@@ -22,6 +22,7 @@ urlpatterns = [
     path('ponencias_sala/<str:path>', ViewPonenciasSala.as_view(), name='View_ponencias_sala'),
     
     path('error404', ViewError404.as_view(), name='Error404'),
+    path('error403', ViewError403.as_view(), name='Error403'),
     path('error_openpay', ViewErrorOpenpay.as_view(), name='Error_openpay'),
     path('error_registrar', ViewErrorRegistrar.as_view(), name='ErrorRegistrar'),
     

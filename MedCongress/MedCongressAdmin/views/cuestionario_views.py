@@ -9,16 +9,19 @@ from django.utils.crypto import get_random_string
 from django.views.generic import CreateView, ListView, TemplateView
 from django.views.generic.edit import DeleteView, FormView, UpdateView
 from MedCongressAdmin.forms.congres_forms import CuestionarioForms,PreguntaForm
-from MedCongressApp.models import CuestionarioPregunta,CuestionarioRespuestas,Congreso
-from MedCongressAdmin.apps import validarUser
+from MedCongressApp.models import CuestionarioPregunta,CuestionarioRespuestas,Congreso,Organizador
+from MedCongressAdmin.apps import validarUser,validarOrganizador
 from django.db.models import Q    
 
-class CuestionarioListView(validarUser,TemplateView):
+class CuestionarioListView(validarOrganizador,TemplateView):
   
-    template_name = 'MedCongressAdmin/cuestionarios.html'
+    template_name = 'MedCongressAdmin/cuestionario/listar.html'
     
     def get(self, request, **kwargs):
         user = get_object_or_404(Congreso,path=self.kwargs.get('path'))
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+        if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=congreso).exists() and not self.request.user.is_staff: 
+            return   HttpResponseRedirect(reverse('Error403'))
         return self.render_to_response(self.get_context_data())
 
     def get_context_data(self, **kwargs):

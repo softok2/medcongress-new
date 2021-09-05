@@ -9,7 +9,7 @@ from  MedCongressApp.models import (Congreso,Ubicacion,ImagenCongreso,TipoCongre
                                     RelTallerPonente,Bloque,DatosIniciales,RelCongresoUser,RelTallerUser,
                                     Moderador,RelBloqueModerador,ImagenCongreso,CuestionarioPregunta,CuestionarioRespuestas,
                                     MetaPagInicio,MetaPagListCongreso,PreguntasFrecuentes,RelCongresoAval, AvalCongreso,RelCongresoSocio,SocioCongreso,
-                                    Idioma,DocumentoPrograma,TrabajosInvestigacion,Sala,UserActivityLog,Especialidades)
+                                    Idioma,DocumentoPrograma,TrabajosInvestigacion,Sala,UserActivityLog,Especialidades,Organizador)
                     
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
@@ -159,13 +159,12 @@ class PonenciaForm(forms.ModelForm):
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
-
         
         self.fields['titulo'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['duracion'].widget.attrs.update({'class': 'form-control'}) 
-        self.fields['congreso'].widget.attrs.update({'class': 'form-control'})
-        self.fields['bloque'].widget.attrs.update({'class': 'form-control'})
-        self.fields['sala'].widget.attrs.update({'class': 'form-control'})    
+        self.fields['congreso'].widget.attrs.update({'class': 'form-control select2'})
+        self.fields['bloque'].widget.attrs.update({'class': 'form-control select2'})
+        self.fields['sala'].widget.attrs.update({'class': 'form-control select2'})    
         self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control'})   
         self.fields['published'].widget.attrs.update({'class': 'form-control'})  
         # self.fields['ponente'].widget.attrs.update({'class': 'form-control'})   
@@ -296,7 +295,8 @@ class PonenciaForms(MultiModelForm):
         'ubicacion':UbicacionForm,
         'ponencia_ponente':PonenciaPonenteForm,
         
-    }
+    } 
+
 
 class TallerForms(MultiModelForm):
     form_classes = {
@@ -581,7 +581,7 @@ class BloqueForms(forms.ModelForm):
         fecha = cleaned_data.get('fecha_inicio')
         imagenes = cleaned_data.get('prueba', None)
         if not imagenes :
-            self.add_error('prueba', 'Debe entrar una <b>Imagen </b> a la ponencia')
+            self.add_error('prueba', 'Debe entrar una <b>Imagen </b> al Bloque')
         if not congreso:
             self.add_error('congreso', 'Debe entrar un  <b>Congreso</b>')
             return
@@ -1130,3 +1130,26 @@ class ExportarLogsUsuarioExelForm(forms.ModelForm):
         self.fields['usuario'].widget.attrs.update({'class': 'form-control select2'}) 
         self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control','type':'date'}) 
         self.fields['fecha_fin'].widget.attrs.update({'class': 'form-control','type':'date'}) 
+
+class OrganizadorForm(forms.ModelForm):
+    user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Seleccione usuario',required=True)
+    class Meta:
+        model=Organizador
+        fields=['user','congreso']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+
+        self.fields['user'].widget.attrs.update({'class': 'select2 form-control'}) 
+        self.fields['congreso'].widget.attrs.update({'class': 'select2 form-control '}) 
+
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(OrganizadorForm, self).clean(*args, **kwargs)
+        user = cleaned_data.get('user', None)
+        congreso = cleaned_data.get('congreso', None)
+        if not user:
+            self.add_error('user', 'Debe entrar un Usuario')
+        if not congreso:
+            self.add_error('user', 'Debe entrar un Congreso')
+        if Organizador.objects.filter(user=user,congreso=congreso).exists():
+            self.add_error('user', 'Ya este usuario es Organizador de este congreso')

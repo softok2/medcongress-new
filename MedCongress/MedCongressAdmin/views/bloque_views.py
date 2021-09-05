@@ -13,43 +13,67 @@ from django.utils.crypto import get_random_string
 from django.views.generic import CreateView, ListView, TemplateView
 from django.views.generic.edit import DeleteView, FormView, UpdateView
 from MedCongressAdmin.forms.congres_forms import BloqueForms,ModeradorBloqueForm,SelectPonencia
-from MedCongressApp.models import Bloque, Congreso, Ponencia, Taller, RelBloqueModerador,Moderador
-from MedCongressAdmin.apps import validarUser
+from MedCongressApp.models import Bloque, Congreso, Ponencia, Taller, RelBloqueModerador,Moderador,Organizador
+from MedCongressAdmin.apps import validarUser,validarOrganizador
     
 
-class BloquesListView(validarUser,TemplateView):
+class BloquesListView(validarOrganizador,TemplateView):
     model = Bloque
     context_object_name = 'bloques'
-    template_name = 'MedCongressAdmin/bloques.html'
-
+    template_name = 'MedCongressAdmin/bloque/listar.html'
+    def get(self, request, **kwargs):
+        if self.request.GET.get('congreso'):
+            congreso=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
+            if congreso is None:
+                return   HttpResponseRedirect(reverse('Error404'))
+            if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=congreso).exists() and not self.request.user.is_staff: 
+                return   HttpResponseRedirect(reverse('Error403'))
+        else:
+            if not self.request.user.is_staff:
+                return   HttpResponseRedirect(reverse('Error403'))   
+        return self.render_to_response(self.get_context_data())
     def get_context_data(self, **kwargs):
         context=super().get_context_data(**kwargs)
         if self.request.GET.get('search'):
             context['search']=self.request.GET.get('search')
-        context['bloques']=Bloque.objects.all()
+        if self.request.GET.get('congreso'):
+            congreso=Congreso.objects.filter(path=self.request.GET.get('congreso')).first() 
+            context['congres'] =congreso
+            context['bloques']=Bloque.objects.filter(congreso=congreso)
+        else:
+            context['bloques']=Bloque.objects.all()
         return context
-class BloqueCreateView(validarUser,FormView):
+
+class BloqueCreateView(validarOrganizador,FormView):
     model=Bloque
     form_class = BloqueForms
     success_url = reverse_lazy('MedCongressAdmin:bloques_list')
-    template_name = 'MedCongressAdmin/bloque_form.html'
+    template_name = 'MedCongressAdmin/bloque/form.html'
 
     def get_context_data(self, **kwargs):
-        
         context = super(BloqueCreateView, self).get_context_data(**kwargs)
         if self.kwargs.get('pk'):
             context['con']=Congreso.objects.get(pk=self.kwargs.get('pk'))
         return context 
+        
+    def get(self, request, **kwargs):
+        if self.kwargs.get('pk'):
+            congreso=Congreso.objects.filter(pk=self.kwargs.get('pk')).first()
+            if not congreso:
+                return   HttpResponseRedirect(reverse('Error404'))
+            if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=congreso).exists() and not self.request.user.is_staff : 
+                return   HttpResponseRedirect(reverse('Error403'))
+        return self.render_to_response(self.get_context_data())    
     
     def get_success_url(self):
         url=''
         if self.kwargs.get('pk'):
             congreso=Congreso.objects.get(pk=self.kwargs.get('pk'))
-            url =  reverse_lazy('MedCongressAdmin:Congres_bloques',kwargs={'path': congreso.path} )
-           
+            url =  reverse_lazy('MedCongressAdmin:bloques_list')+'?congreso=%s'%(congreso.path)
+            self.success_url =  '%s&search=%s'%(url,self.request.GET.get('search'))
         else:
             url= reverse_lazy('MedCongressAdmin:bloques_list')   
-        self.success_url =  '%s?search=%s'%(url,self.request.GET.get('search'))
+            self.success_url =  '%s?search=%s'%(url,self.request.GET.get('search'))
         return self.success_url 
     def form_valid(self, form):
         
@@ -69,11 +93,14 @@ class BloqueCreateView(validarUser,FormView):
         bloque.save()
         return super(BloqueCreateView, self).form_valid(form)
 
-
-class BloqueDeletedView(validarUser,DeleteView):
+class BloqueDeletedView(validarOrganizador,DeleteView):
     model = Bloque
     success_url = reverse_lazy('MedCongressAdmin:bloques_list')
-
+    def get(self, request, **kwargs):
+        bloque=Bloque.objects.get(pk=self.kwargs.get('pk'))
+        if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=bloque.congreso).exists()and not self.request.user.is_staff : 
+            return   HttpResponseRedirect(reverse('Error403'))
+        return self.render_to_response(self.get_context_data())    
     def delete(self,request, *args, **kwargs):
             
         bloque=Bloque.objects.get(pk=self.kwargs.get('pk'))
@@ -86,13 +113,15 @@ class BloqueDeletedView(validarUser,DeleteView):
             bloque.delete()
             return JsonResponse({'success':True}, safe=False)
 
-class BloquePonenciasListView(validarUser,TemplateView):
+class BloquePonenciasListView(validarOrganizador,TemplateView):
     template_name= 'MedCongressAdmin/ponencias.html'  
 
     def get(self, request, **kwargs):
         bloque=Bloque.objects.filter(path=self.kwargs.get('path')).first()
         if bloque is None:
             return   HttpResponseRedirect(reverse('Error404'))
+        if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=bloque.congreso).exists() and not self.request.user.is_staff: 
+            return   HttpResponseRedirect(reverse('Error403'))
         return self.render_to_response(self.get_context_data())    
     def get_context_data(self, **kwargs):
         context = super(BloquePonenciasListView, self).get_context_data(**kwargs)
@@ -103,7 +132,7 @@ class BloquePonenciasListView(validarUser,TemplateView):
         context['ponencias']=Ponencia.objects.filter(bloque=bloque)
         return context
 
-class BloqueTalleresListView(validarUser,TemplateView):
+class BloqueTalleresListView(validarOrganizador,TemplateView):
     template_name= 'MedCongressAdmin/talleres.html'  
 
     def get(self, request, **kwargs):
@@ -120,10 +149,24 @@ class BloqueTalleresListView(validarUser,TemplateView):
         context['talleres']=Taller.objects.filter(bloque=bloque)
         return context
 
-class BloqueUpdateView(validarUser,UpdateView):
+class BloqueUpdateView(validarOrganizador,UpdateView):
     form_class = BloqueForms
     success_url = reverse_lazy('MedCongressAdmin:bloques_list')
-    template_name = 'MedCongressAdmin/bloque_form.html'
+    template_name = 'MedCongressAdmin/bloque/form.html'
+
+    def get(self, request, **kwargs):
+        if self.request.GET.get('congreso'):
+            bloque=Bloque.objects.filter(pk=self.kwargs.get('pk')).first()
+            self.object=bloque
+
+            if not bloque:
+                return   HttpResponseRedirect(reverse('Error404'))
+            if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=bloque.congreso).exists() and not self.request.user.is_staff : 
+                return   HttpResponseRedirect(reverse('Error403'))
+        else:
+            if not self.request.user.is_staff:
+                return   HttpResponseRedirect(reverse('Error403'))  
+        return self.render_to_response(self.get_context_data())  
 
     def get_queryset(self, **kwargs):
         return Bloque.objects.filter(pk=self.kwargs.get('pk'))
@@ -140,14 +183,11 @@ class BloqueUpdateView(validarUser,UpdateView):
 
     def get_success_url(self):
         self.objects=Bloque.objects.get(pk=self.kwargs.get('pk'))
-        url=''
+        url= reverse_lazy('MedCongressAdmin:bloques_list' )+'?search=%s'%(self.request.GET.get('search'))
         if self.request.GET.get('congreso'):
             congreso=self.objects.congreso
-            
-            url= reverse_lazy('MedCongressAdmin:Congres_bloques',kwargs={'path': congreso.path} )
-        else:
-            url=reverse_lazy('MedCongressAdmin:bloques_list')
-        self.success_url =  '%s?search=%s'%(url,self.request.GET.get('search'))
+            url+='&congreso=%s'%(congreso.path)
+        self.success_url = url 
         return self.success_url 
     
     def form_valid(self, form):
@@ -170,65 +210,8 @@ class BloqueUpdateView(validarUser,UpdateView):
             bloque.imagen='bloque/imagen_%s.png'%(nombre)
             bloque.save()
         return super(BloqueUpdateView, self).form_valid(form)    
-class BloqueModeradoresListView(validarUser,TemplateView):
-    template_name= 'MedCongressAdmin/bloque_moderadores.html' 
-    def get(self, request, **kwargs):
-        bloque=Bloque.objects.filter(path=self.kwargs.get('path')).first()
-        if bloque is None:
-            return   HttpResponseRedirect(reverse('Error404'))
-        return self.render_to_response(self.get_context_data())   
 
-    def get_context_data(self, **kwargs):
-        context = super(BloqueModeradoresListView, self).get_context_data(**kwargs)
-       
-        bloque=Bloque.objects.filter(path=self.kwargs.get('path')).first()
-        if self.request.GET.get('congreso'):
-            context['congreso']=bloque.congreso
-        context['bloque']=bloque
-        context['moderadores']=RelBloqueModerador.objects.filter(bloque=bloque)
-        if self.request.GET.get('search'):
-            context['search']=self.request.GET.get('search')
-        return context   
-
-class  BloqueModeradoresCreateView(validarUser,FormView):
-    
-    form_class = ModeradorBloqueForm
-    # success_url = reverse_lazy('MedCongressAdmin:ponencias_list')
-    template_name = 'MedCongressAdmin/bloque_moderador_form.html'
-
-    def form_valid(self, form):
-        ponencia=form.save(commit=False)
-        ponencia.save()
-        return super(BloqueModeradoresCreateView, self).form_valid(form)
-
-    def get_success_url(self):
-        url =  reverse_lazy('MedCongressAdmin:Moderadores_bloque',kwargs={'path': self.kwargs.get('path')} )
-        if self.request.GET.get('congreso'):
-            self.success_url =  '%s?search=%s&congreso=true'%(url,self.request.GET.get('search'))
-        else:
-            self.success_url =  '%s?search=%s'%(url,self.request.GET.get('search'))
-        return self.success_url
-    def get_context_data(self, **kwargs):
-        ctx = super(BloqueModeradoresCreateView, self).get_context_data(**kwargs)
-        bloq=Bloque.objects.filter(path=self.kwargs.get('path')).first()
-        if self.request.GET.get('congreso'):
-            ctx['congreso']=bloq.congreso
-        if self.request.GET.get('search'):
-            ctx['search']=self.request.GET.get('search')
-        moderadores=RelBloqueModerador.objects.filter(bloque=bloq)
-        id=[]
-
-        for ponente in moderadores:
-            id.append(ponente.moderador.pk)
-        ctx['moderadores']=Moderador.objects.exclude(id__in=id)
-        ctx['bloq'] = bloq
-        return ctx
-    def get(self, request, **kwargs):
-        bloque=Bloque.objects.filter(path=self.kwargs.get('path')).first()
-        if bloque is None:
-            return   HttpResponseRedirect(reverse('Error404'))
-        return self.render_to_response(self.get_context_data()) 
-class BloqueModeradoresDeletedView(validarUser,DeleteView):
+class BloqueModeradoresDeletedView(validarOrganizador,DeleteView):
     model = RelBloqueModerador
     success_url = reverse_lazy('MedCongressAdmin:Moderadores_list')
 

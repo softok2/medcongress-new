@@ -9,9 +9,29 @@ from django.utils.crypto import get_random_string
 from django.views.generic import CreateView, ListView, TemplateView, UpdateView
 from django.views.generic.edit import DeleteView, FormView
 from MedCongressAdmin.forms.congres_forms import PregFrecuenteForm
-from MedCongressApp.models import PreguntasFrecuentes,Congreso
-from MedCongressAdmin.apps import validarUser
+from MedCongressApp.models import PreguntasFrecuentes,Congreso,Organizador
+from MedCongressAdmin.apps import validarUser,validarOrganizador
 
+
+class PregFrecuenteListView(validarOrganizador,TemplateView):
+    template_name= 'MedCongressAdmin/pregunta_frecuente/listar.html' 
+    def get(self, request, **kwargs):
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+        if congreso is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=congreso).exists() and not self.request.user.is_staff: 
+            return   HttpResponseRedirect(reverse('Error403'))
+        return self.render_to_response(self.get_context_data()) 
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+        preguntas_env=[]
+        preguntas=PreguntasFrecuentes.objects.filter(congreso=congreso)
+        context['preguntas']=preguntas
+        context['congreso']=congreso
+       
+        return context
 
 class  PregFrecuenteCreateView(validarUser,CreateView):
     form_class =PregFrecuenteForm

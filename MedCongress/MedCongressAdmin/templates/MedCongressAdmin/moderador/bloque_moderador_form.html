@@ -31,13 +31,13 @@
 {%if congreso%}
 <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
 </li>
-<li class="breadcrumb-item"><a href="{%url 'MedCongressAdmin:Congres_bloques' congreso.path%}">Bloques</a>
+<li class="breadcrumb-item"><a href="{%url 'MedCongressAdmin:bloques_list' %}?congreso={{congreso.path}}">Bloques</a>
 </li>
 {%else%}
 <li class="breadcrumb-item"><a href="{%url 'MedCongressAdmin:bloques_list' %}">Bloques</a>
 </li>
 {%endif%}
-<li class="breadcrumb-item "><a {%if congreso%} href="{% url 'MedCongressAdmin:Moderadores_bloque' path=bloq.path %}?congreso=true"{%else%}href="{% url 'MedCongressAdmin:Moderadores_bloque' path=bloq.path %}" {%endif%}>Moderadores</a> 
+<li class="breadcrumb-item "><a {%if congreso%} href="{% url 'MedCongressAdmin:Moderadores_list' %}?bloque={{bloq.path}}&congreso={{congreso.path}}"{%else%}href="{% url 'MedCongressAdmin:Moderadores_list'%}?bloque={{bloq.path }}" {%endif%}>Moderadores</a> 
 </li>
 <li class="breadcrumb-item active"> Adicionar Moderador
 </li>

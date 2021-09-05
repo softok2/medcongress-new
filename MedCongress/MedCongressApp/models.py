@@ -1085,3 +1085,16 @@ class ConstanciaUsuario(models.Model):
 
     def __str__(self):
         return ' Constancia del usuario %s %s por haber participado como %s en el congreso " %s " ' %( self.user.first_name,self.user.last_name,self.tipo_constancia,self.congreso.titulo)
+
+##### Tabla  Organizador  #####
+
+class Organizador(models.Model):
+    user = models.ForeignKey(PerfilUsuario, on_delete=models.CASCADE)
+    congreso=models.ForeignKey(Congreso,on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        verbose_name='organizador'
+        verbose_name_plural='organizadores'
+
+    def __str__(self):
+        return '%s %s <%s> Organizador del Congreso " %s "'%(self.user.usuario.first_name,self.user.usuario.last_name,self.user.usuario.email,self.congreso.titulo)

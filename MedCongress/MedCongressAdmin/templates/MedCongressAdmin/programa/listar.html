@@ -1,5 +1,5 @@
 {% extends 'MedCongressAdmin/base.html' %}
-{% block title %}Categoria de Pagos del congreso: {{congres.titulo}}{% endblock %}
+{% block title %}Doc. del Programa del congreso: {{congres.titulo}}{% endblock %}
 {% load static %}
 {% block styles %}
 <link rel="stylesheet" type="text/css"
@@ -24,30 +24,16 @@
 	<div class="row breadcrumbs-top">
 	  <div class="breadcrumb-wrapper col-12">
 		<ol class="breadcrumb">
-{%if con or congreso_bloque%}
-    <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
-    </li>
-    <li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:talleres_list' %}?congreso={{con.path}}">Taller</a>
-    </li>
-    {%else%}
-    <li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:talleres_list' %}">Taller</a>
-    </li>
-{%endif%}
-{%if congreso_bloque%}
-
-{%endif%}
-{%if bloque%}
-            <li class="breadcrumb-item active"> <a {%if congreso_bloque%}href="{% url 'MedCongressAdmin:Congres_bloques' path=bloque.congreso.path %}"{%else%}href="{% url 'MedCongressAdmin:bloques_list' %}"{%endif%}>Bloques</a>
-            </li>
-{%endif%}   
-
-<li class="breadcrumb-item active">Categorias de Pago
-</li>
-
-</ol>
-</div>
-</div>
-</div>
+		  <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+		  </li>
+		 
+		  <li class="breadcrumb-item active"> Doc. del Programas
+		</li>
+		
+		</ol>
+	  </div>
+	</div>
+  </div>
 <section id="configuration">
     <div class="row">
         <div class="col-12">
@@ -64,12 +50,12 @@
                     <div class="row">
                         <div class="col-10">
                             <h1 class="card-title mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">Listado
-                                de las Categorías de pago del Taller </h1>
+                               de los Doc. del Programa del Congreso </h1>
                             <h3 style="font-style: italic;">{{congres.titulo}}</h3>
                         </div>
                         <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
-                                <button id="add-btn" type="button" class="btn btn-success" title="Adicionar Taller a este Congreso" onclick="add()"
+                                <button id="add-btn" type="button" class="btn btn-success" title="Adicionar Doc. del Programa a este Congreso" onclick="add()"
                                     style="float:right; padding: 3px;">
                                     <i class="la la-plus"></i>
                                 </button>
@@ -90,26 +76,30 @@
                                             <tr role="row" style="font-size: 13px;">
                                                
                                                
-                                                <th>Categoría</th>
-                                                <th>Precio</th>
-                                                <th>Moneda</th>
-                                                <th>Operaciones</th>
+                                                <th>Texto</th>
+                                                <th>Idioma</th>
+                                                <th >Operaciones</th>
                                                
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for cat_pago in cat_pagos %}
+                                            {% for programa in programas %}
                                             <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
                                                 
                                                 
-                                                <td>{{ cat_pago.categoria.nombre }}</td>
-                                                <td>${{ cat_pago.precio }}</td>
-                                                <td>{{cat_pago.moneda}}</td>
+                                                <td>{{ programa.texto }}</td>
+                                                <td>{{ programa.idioma.nombre }}</td>
+                                                
                                                 <td style="vertical-align: middle;">
-                                                    <a href="{% url 'MedCongressAdmin:taller_cat_pago_editar' path=congres.path pk=cat_pago.pk  %}"
+                                                    <a id="" target="_blank"
+                                                    href="{%static '/' %}{{ programa.documento }}"
+                                                        title="Descargar" style="margin-left: 5px;">
+                                                        <i class="icon icon-downloads" > </i>
+                                                    </a> 
+                                                    <a href="{% url 'MedCongressAdmin:congres_programa_editar' path=congres.path pk=programa.pk  %}"
                                                         title="Editar" style="margin-left: 5px;"><i class="icon-editar" style="padding: 15px;"></i></a>
-                                                    <a id="del_{{ cat_pago.pk }}"
-                                                        href="javascript:deleteItem('{{ cat_pago.pk }}')"
+                                                    <a id="del_{{ programa.pk }}"
+                                                        href="javascript:deleteItem('{{ programa.pk }}')"
                                                         title="Eliminar" style="margin-left: 5px;">
                                                         <i class="icon-eliminar" style="padding: 15px;"></i>
                                                     </a>
@@ -123,10 +113,9 @@
                                             <tr style="font-size: 13px;">
                                                
                                                
-                                                <th>Categoría</th>
-                                                <th>Precio</th>
-                                                <th>Moneda</th>
-                                                <th>Operaciones</th>
+                                                <th>Texto</th>
+                                                <th>Idioma</th>
+                                                <th >Operaciones</th>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -138,6 +127,7 @@
             </div>
         </div>
     </div>
+ 
 </section>
 <div class="swal-overlay" tabindex="-1">
     <form id="swall-modal-form" method="POST" style="display: none;">
@@ -175,6 +165,9 @@
     },
  
 });
+        $('#atras').click(function () {
+            location.href = "{% url 'MedCongressAdmin:congress_list' %}";
+        });
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({
             beforeSend: function (xhr, settings) {
@@ -183,26 +176,26 @@
         });
 
         $('#add-btn').click(function () {
-            location.href = "{% url 'MedCongressAdmin:taller_cat_pago_add' congres.path %}";
+            location.href = "{% url 'MedCongressAdmin:congres_programa_add' congres.path %}";
         });
 
         dataTable = $('.zero-configuration').DataTable();
     });
     function deleteItem(pk) {
         swal({
-            title: "Estas seguro?",
-            text: "No será capaz de recuperar este elemento!",
+            title: "¿Estás seguro?",
+            text: "¡No será capaz de recuperar este elemento!",
             icon: "warning",
             buttons: {
                 cancel: {
-                    text: "No, cancelar!",
+                    text: "¡No, cancelar!",
                     value: null,
                     visible: true,
                     className: "",
                     closeModal: false,
                 },
                 confirm: {
-                    text: "Sí, eliminarlo!",
+                    text: "¡Sí, eliminarlo!",
                     value: true,
                     visible: true,
                     className: "",
@@ -212,10 +205,10 @@
         })
             .then((isConfirm) => {
                 if (isConfirm) {
-                    url = "{% url 'MedCongressAdmin:taller_cat_pago_eliminar' pk=0 %}";
+                    url = "{% url 'MedCongressAdmin:congres_programa_eliminar' pk=0 %}";
                     $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
                         dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
-                        swal("Eliminado!", "Este elemento ha sido eliminado.", "success");
+                        swal("¡Eliminado!", "Este elemento ha sido eliminado.", "success");
                     });
                 } else {
                     swal("Cancelado", "No se eliminó este elemento.", "error");

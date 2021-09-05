@@ -40,6 +40,7 @@
                                 de congresos</h1>
                             <p class="card-text">Mostrando todos los congresos almacenados.</p>
                         </div>
+                        {%if request.user.is_staff%}
                         <div class="col-2">
                             <div style="margin-right: 45%; margin-top: 1.5rem;">
                                 <button id="add-btn" type="button" class="btn btn-success" title="Nuevo" onclick="add()"
@@ -49,6 +50,7 @@
                                 <div class="clearfix"></div>
                             </div>
                         </div>
+                        {%endif%}
                     </div>
                 </div>
                 <div class="card-content collapse show">
@@ -70,94 +72,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <!-- {% for congres in congress %}
-                                            <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
-                                                <td class="sorting_1" >{{ congres.titulo }}</td>
-                                                
-                                                <td>{{ congres.t_congreso.nombre }}</td>
-                                                <td>{{ congres.especialidad.nombre }}</td> -->
-                                                <!-- <td style="vertical-align: middle;">{%if congres.published%}Si{%else%}No{%endif%}</td>
-                                                <td style="vertical-align: middle;"> 
-                                                    <a id=""
-                                                    href="{%url 'MedCongressAdmin:Congres_bloques' congres.path%}"
-                                                    title="Bloques " style="margin-left: 5px;">
-                                                    <i class="icon-block " style=" padding:15px ;"> </i>
-                                                </a>
-                                                <a id=""
-                                                    href="{%url 'MedCongressAdmin:ponencias_list'%}?congreso={{congres.path}}"
-                                                    title="Ponencias " style="margin-left: 5px;">
-                                                    <i class="icon-ponencia " style=" padding:15px"> </i>
-                                                </a>
-                                                <a id=""
-                                                     href="{%url 'MedCongressAdmin:talleres_list'%}?congreso={{congres.path}}"
-                                                    title="Talleres " style="margin-left: 5px;">
-                                                    <i class="icon-taller " style=" padding:15px"> </i>
-                                                </a>
-                                                <a id=""
-                                                href="{%url 'MedCongressAdmin:Congres_cuestionario' congres.path %}"
-                                               title="Cuestionario " style="margin-left: 5px;">
-                                               <i class="icon-cuestionario " style=" padding:15px"> </i>
-                                           </a>
-                                           <a id=""
-                                           href="{%url 'MedCongressAdmin:Congres_programas' congres.path %}"
-                                          title="Documentos de Programa " style="margin-left: 5px;">
-                                          <i  class="icon icon-docu" > </i>
-                                      </a>
-                                          
-                                            </td>
-                                                <td style="vertical-align: middle;"><a id=""
-                                                    href="{%url 'MedCongressAdmin:Congres_imagenes' congres.path%}"
-                                                        title="Imagenes" style="margin-left: 5px;">
-                                                        <i class=" icon icon-imagen " > </i>
-                                                    </a>
-                                                    <a id=""
-                                                    href="{%url 'MedCongressAdmin:Congres_trabajos' congres.path%}"
-                                                        title="Trabajos Investigativos" style="margin-left: 5px;">
-                                                        <i class=" icon icon-inv " > </i>
-                                                    </a>  
-                                                    <a id=""
-                                                    href="{%url 'MedCongressAdmin:Congres_freg_frecuente' congres.path%}"
-                                                        title="Preguntas Frecuentes" style="margin-left: 5px;">
-                                                        <i class="icon-preguntas" style=" padding:15px"> </i>
-                                                    </a> 
-                                                    <a id=""
-                                                    href="{%url 'MedCongressAdmin:Congres_pagos' congres.path%}"
-                                                        title="Categorias de pago" style="margin-left: 5px;">
-                                                        <i class="icon-pago" style=" padding:15px"> </i>
-                                                    </a> <a id=""
-                                                    href="{%url 'MedCongressAdmin:Congres_patrocinadores' congres.path%}"
-                                                        title="Patrocinadores" style="margin-left: 5px;">
-                                                        <i class="icon-patrocinador" style=" padding:15px"> </i>
-                                                    </a>
-                                                    <a id=""
-                                                    href="{%url 'MedCongressAdmin:Congres_socios' congres.path%}"
-                                                        title="Socios" style="margin-left: 5px;">
-                                                        <i class="icon-socio" style=" padding:15px"> </i>
-                                                    </a>
-                                                    <a id="" target="_blank"
-                                                    href="{%url 'MedCongressAdmin:congress_previsualizar' congres.path%}"
-                                                        title="Previsualizar" style="margin-left: 5px;">
-                                                        <i class="icon icon-visualizar" > </i>
-                                                    </a> </td>
-                                                   
-                                                <td style="vertical-align: middle;">
-                                                    <a 
-                                                    href="javascript:editItem('{{ congres.pk }}')"
-                                                        title="Editar" style="margin-left: 5px;"><i class="icon-editar" style="padding: 15px;"></i></a>
-                                                    <a id="del_{{ congres.pk }}"
-                                                        href="javascript:deleteItem('{{ congres.pk }}')"
-                                                        title="Eliminar" style="margin-left: 5px;">
-                                                        <i class="icon-eliminar" style="padding: 15px;"></i>
-                                                    </a>
-                                                    
-                                                    
-
-                                                   
-
-                                                    
-                                                </td>
-                                            </tr> 
-                                            {% endfor %} -->
+                                            
                                         </tbody>
                                         <tfoot>
                                             <tr style="font-size: 13px;">

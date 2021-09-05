@@ -57,7 +57,6 @@ class PonenteDeletedView(validarUser,DeleteView):
                 ponente.delete()
                 return JsonResponse({'success':True}, safe=False)
 
-
 class UserPonenteCreateView(validarUser,FormView):
     model=User
     form_class = UsuarioForms

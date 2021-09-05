@@ -7,28 +7,39 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.views.defaults import page_not_found
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.http import JsonResponse,HttpResponse
+from django.http import JsonResponse,HttpResponse,HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.crypto import get_random_string
 from django.views.generic import CreateView, ListView, TemplateView
 from django.views.generic.edit import DeleteView, FormView, UpdateView
 from MedCongressAdmin.forms.nomencladores_forms import PatrocinadorForm
-from MedCongressApp.models import AvalCongreso,RelCongresoAval,Congreso
-from MedCongressAdmin.apps import validarUser
+from MedCongressApp.models import AvalCongreso,RelCongresoAval,Congreso,Organizador
+from MedCongressAdmin.apps import validarUser,validarOrganizador
 from django.db.models import Q      
     
 
-class PatrocinadorListView(validarUser,ListView):
+class PatrocinadorListView(validarOrganizador,TemplateView):
     model = AvalCongreso
     context_object_name = 'patrocinadores'
     template_name = 'nomencladores/patrocinadores/index.html'
 
     def get_context_data(self, **kwargs):
         context=super().get_context_data(**kwargs)
-        if self.kwargs.get('pk'):
-            congreso=Congreso.objects.get(pk=self.kwargs.get('pk'))
+        if self.request.GET.get('congreso'):
+            congreso=Congreso.objects.get(path=self.request.GET.get('congreso'))
             context['congreso']=congreso
         return context
+    def get(self, request, **kwargs):
+        if self.request.GET.get('congreso'):
+            congreso=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
+            if congreso is None:
+                return   HttpResponseRedirect(reverse('Error404'))
+            if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=congreso).exists() and not self.request.user.is_staff: 
+                return   HttpResponseRedirect(reverse('Error403'))
+        else:
+            if not self.request.user.is_staff:
+                return   HttpResponseRedirect(reverse('Error403'))   
+        return self.render_to_response(self.get_context_data())
 class PatrocinadorCreateView(validarUser,CreateView):
     model=AvalCongreso
     form_class = PatrocinadorForm

@@ -8,16 +8,19 @@ from django.urls import path,include
 
 from .views.country_views import (CountryCreateView, CountryDeleteView,
                                   CountryListView, CountryUpdateView)
-from .views.congress_views import (LogsCongreso,LogsUsuarios,CongressSalaCreateView,CongressDeletedSalaView,CongressSalaUpdateView,CongressSalasListView,AsignarConstanciasUsuario,GetSalas,CongressOrdenarSalaView,CongressListView,CongressCreateView,CongressUpdateView,
-                                   CongressTalleresListView,CongressPonenciasListView,CongressCategPagosListView,
-                                   CongressImagenesListView,AddPonenciaCongreso,CongressCategPagosCreateView,
-                                   CongressDeletedView,CongressBloquesListView,GetBloques,AsignarCongressListView,AsignarCongressAddViews,GetPagos,
-                                   AsignarCongressDeletedViews,CongressImagenCreateView,CongressPregFrecuenteListView,
-                                   Ver_usuarios,Ver_Exel,Exportar_usuarios,Usuarios_pagaron,CongressPatrocinadorListView,
-                                   PatrocinadorSeleccionarView,PatrocinadorSeleccionarDeleted, SocioSeleccionarView,SocioSeleccionarDeleted,CongressSocioListView,
+from .views.congress_views import (LogsCongreso,LogsUsuarios,CongressSalaCreateView,CongressDeletedSalaView,CongressSalaUpdateView,AsignarConstanciasUsuario,GetSalas,CongressListView,CongressCreateView,CongressUpdateView,
+                                   AddPonenciaCongreso,CongressCategPagosCreateView,
+                                   CongressDeletedView,GetBloques,AsignarCongressListView,AsignarCongressAddViews,GetPagos,
+                                   AsignarCongressDeletedViews,CongressImagenCreateView,
+                                   Ver_usuarios,Ver_Exel,Exportar_usuarios,Usuarios_pagaron,
+                                   PatrocinadorSeleccionarView,PatrocinadorSeleccionarDeleted, SocioSeleccionarView,SocioSeleccionarDeleted,
                                    CongresoDetail,CongressImagenDeletedView,CongressCategPagosUpdateView,CongressCategPagosDeletedView,AsignarConstancias
-                                   ,CongressProgramaUpdateView,CongressProgramaDeletedView,CongressProgramaCreateView,CongressProgramaListView,vTableAsJSONAsigCongreso,vTableAsJSONCongresos,vTableAsJSONBecaCongreso,BecasCongressListView,vTableAsJSONCongresoSalas,ExportarBecas)
-from .views.imagen_views import (ImagenCreateView)
+                                   ,CongressProgramaUpdateView,CongressProgramaDeletedView,CongressProgramaCreateView,vTableAsJSONAsigCongreso,vTableAsJSONCongresos,ExportarBecas)
+from .views.imagen_views import (ImagenCreateView,ImagenesListView)
+from .views.sala_views import (SalasListView,vTableAsJSONCongresoSalas,OrdenarSalaView)
+from .views.programa_views import (ProgramaListView)
+from .views.boleto_views import (CategPagosListView)
+from .views.beca_views import (vTableAsJSONBecaCongreso,BecasCongressListView)
 from .views.ponencia_view import (PonenciaListView, PonenciaCreateView,PonenciaPonenteListView,
                                    PonencicaUpdateView,PonenciaPonenteCreateView,PonenciaDeletedView,
                                    PonenciaPonenteDeletedView,PonenciaBloqueDeleted,vTableAsJSONPonencia)
@@ -28,7 +31,7 @@ from .views.taller_view import (TalleresListView,TallerCreateView,TallerCategPag
 from .views.ponente_view import (PonentesListView,PonentesCreateView,PonenteDeletedView,UserPonenteCreateView,vTableAsJSONPonentes)
 from .views.user_views import (UsuariosListView,UsuarioCreateView,UsuarioUpdateView,UsuarioDeletedView,vTableAsJSON)
 from .views.bloque_views import (BloquesListView,BloqueCreateView,BloqueDeletedView,BloquePonenciasListView,BloqueTalleresListView,
-                                   BloqueUpdateView,BloqueModeradoresListView,page_not_found,BloqueModeradoresCreateView,BloqueModeradoresDeletedView,
+                                   BloqueUpdateView,page_not_found,BloqueModeradoresDeletedView,
                                    PonenciaSeleccionarView)
 from .views.repositorio_view import vTableAsJSONRepositorio,DocumentosListView,DocumentoCreateView,DocumentoDeletedView
 from .views_nomencladores.genero_views import (GeneroListView,GeneroCreateView,GeneroDeletedView,GeneroUpdateView,vTableAsJSONGenero)
@@ -50,9 +53,10 @@ from .views_inicio.ofrecemos_views import (OfrecemosListView,OfrecemosCreateView
 from .views.otros_views import (OtrosListView,OtroUpdateView)
 from .views.cuestionario_views import (PreguntaCreateView,CustionarioUpdateView,CustionarioDeletedView,CuestionarioListView)
 from .views.trabajos_views import (TrabajosListView,CongressTrabajoCreateView,CongressTrabajoUpdateView,CongressTrabajoDeletedView)
-from .views.moderador_view import ModeradoresListView,ModeradorCreateView,ModeradorDeletedView,vTableAsJSONModeradores,UserModeradorCreateView
+from .views.moderador_view import ModeradoresListView,BloqueModeradoresCreateView,ModeradorCreateView,ModeradorDeletedView,vTableAsJSONModeradores,UserModeradorCreateView
+from .views.organizador_view import OrganizadorListView,vTableAsJSONOrganizadores,OrganizadorCreateView,OrganizadorDeletedView
 from .views.meta_views import MetaPagInicioView,MetaPagInicioUpdateView
-from .views.preg_frecuente_view import PregFrecuenteCreateView,PregFrecuenteUpdateView,PregFrecuenteDeletView
+from .views.preg_frecuente_view import PregFrecuenteListView,PregFrecuenteCreateView,PregFrecuenteUpdateView,PregFrecuenteDeletView
 from .views.dashboard import DashboardView
 from django.conf.urls import handler404
 
@@ -61,7 +65,7 @@ handler404= page_not_found
 app_name = 'MedCongressAdmin'
 
 urlpatterns = [
-      path('', UsuariosListView.as_view(), name='dashboard'),
+      path('', CongressListView.as_view(), name='dashboard'),
       path('pais', CountryListView.as_view(), name='country_list'),
       path('pais/adicionar', CountryCreateView.as_view(), name='country_add'),
       path('pais/adicionar/<str:param>', CountryCreateView.as_view(), name='country_add_plus'),
@@ -88,7 +92,6 @@ urlpatterns = [
       # path('asignar/congreso/eliminar/<int:pk>', AsignarCongressDeletedViews.as_view(), name='asig_congres_delete'),
       
       # Congreso-Ponencias
-      path('ponencias/congreso/<str:path>', CongressPonenciasListView.as_view(), name='Congres_ponencias'),
       path('ponencia/congreso/add/<str:path>', PonenciaCreateView.as_view(), name='ponente_ponencia_add'),
       path('ponencia/editar/<str:path>/<int:pk>', PonencicaUpdateView.as_view(), name='Edit_Congreso_ponencia'),
 
@@ -97,15 +100,14 @@ urlpatterns = [
       path('cuestionario_pregunta/congreso/add/<str:path>', PreguntaCreateView.as_view(), name='congreso_cuestionario_pregunta_add'),
 
         # Congreso-PregFrecuentes
-      path('pregunta_frecuente/congreso/<str:path>', CongressPregFrecuenteListView.as_view(), name='Congres_freg_frecuente'),
+      path('pregunta_frecuente/congreso/<str:path>',PregFrecuenteListView.as_view(), name='Congres_freg_frecuente'),
       path('pregunta_frecuente/congreso/add/<str:path>', PregFrecuenteCreateView.as_view(), name='congreso_preg_frecuente_add'),
 
       # Congreso-Talleres
-      path('talleres/congreso/<str:path>', CongressTalleresListView.as_view(), name='Congres_talleres'),
       path('taller/congreso/add/<int:pk>', TallerCreateView.as_view(), name='congreso_taller_add'),
 
       # Congreso-Bloques
-      path('bloques/congreso/<str:path>', CongressBloquesListView.as_view(), name='Congres_bloques'),
+      # path('bloques/congreso/<str:path>', CongressBloquesListView.as_view(), name='Congres_bloques'),
       path('bloque/congreso/add/<int:pk>', BloqueCreateView.as_view(), name='congres_bloque_add'),
 
       # Ponencias
@@ -150,9 +152,16 @@ urlpatterns = [
       path('moderadores', ModeradoresListView.as_view(), name='Moderadores_list'),
       path('moderador/adicionar', ModeradorCreateView.as_view(), name='moderador_add'),
       path('moderador/eliminar/<int:pk>', ModeradorDeletedView.as_view(), name='moderador_delete'),
-    path('user-moderador/adicionar', UserModeradorCreateView.as_view(), name='user_moderador_add'),
+      path('user-moderador/adicionar', UserModeradorCreateView.as_view(), name='user_moderador_add'),
+
+      # Organizadores
+      path('organizadores', OrganizadorListView.as_view(), name='Organizadores_list'),
+      path('organizadores/adicionar', OrganizadorCreateView.as_view(), name='organizador_add'),
+      path('organizador/eliminar/<int:pk>', OrganizadorDeletedView.as_view(), name='organizador_delete'),
+      # path('user-moderador/adicionar', UserModeradorCreateView.as_view(), name='user_moderador_add'),
+      
       # Bloque-Moderadores-
-      path('moderadores/bloque/<str:path>', BloqueModeradoresListView.as_view(), name='Moderadores_bloque'),
+      # path('moderadores/bloque/<str:path>', BloqueModeradoresListView.as_view(), name='Moderadores_bloque'),
       path('moderadores-bloque/adicionar/<str:path>', BloqueModeradoresCreateView.as_view(), name='bloque_moderador_add'),
       path('moderadores-bloque/eliminar/<int:pk>', BloqueModeradoresDeletedView.as_view(), name='moderador_block_delete'),
       
@@ -191,13 +200,13 @@ urlpatterns = [
       
       
       #Categorias de Pagos-Congreso
-      path('categorias_pago/congreso/<str:path>', CongressCategPagosListView.as_view(), name='Congres_pagos'),
+      path('categorias_pago/congreso/<str:path>', CategPagosListView.as_view(), name='Congres_pagos'),
       path('categorias_pago-congres/adicinar/<str:path>', CongressCategPagosCreateView.as_view(), name='congres_cat_pago_add'),
       path('categorias_pago-congres/editar/<str:path>/<int:pk>', CongressCategPagosUpdateView.as_view(), name='congres_cat_pago_editar'),
       path('categorias_pago-congres/eliminar/<int:pk>', CongressCategPagosDeletedView.as_view(), name='congres_cat_pago_eliminar'),
 
-        #Programa-Congreso
-      path('programas/congreso/<str:path>', CongressProgramaListView.as_view(), name='Congres_programas'),
+      #Programa-Congreso
+      path('programas/congreso/<str:path>',ProgramaListView.as_view(), name='Congres_programas'),
       path('programa-congres/adicinar/<str:path>', CongressProgramaCreateView.as_view(), name='congres_programa_add'),
       path('programa-congres/editar/<str:path>/<int:pk>', CongressProgramaUpdateView.as_view(), name='congres_programa_editar'),
       path('programa-congres/eliminar/<int:pk>', CongressProgramaDeletedView.as_view(), name='congres_programa_eliminar'),
@@ -205,11 +214,11 @@ urlpatterns = [
   
 
       #Sala-Congreso
-      path('salas/congreso/<str:path>', CongressSalasListView.as_view(), name='Congres_salas'),
+      path('salas/congreso/<str:path>', SalasListView.as_view(), name='Congres_salas'),
       path('sala-congres/adicinar/<str:path>', CongressSalaCreateView.as_view(), name='congres_sala_add'),
       path('sala-congres/editar/<str:path>/<int:pk>', CongressSalaUpdateView.as_view(), name='congres_sala_editar'),
       path('sala-congres/eliminar/<int:pk>', CongressDeletedSalaView.as_view(), name='congres_sala_eliminar'),
-      path('sala-congres/ordenar', CongressOrdenarSalaView.as_view(), name='congres_sala_ordenar'),
+      path('sala-congres/ordenar', OrdenarSalaView.as_view(), name='congres_sala_ordenar'),
 
       
 
@@ -217,24 +226,24 @@ urlpatterns = [
       #Categorias de Pagos-Taller
       path('categorias_pago/taller/<str:path>', TallerCategPagosListView.as_view(), name='Taller_pagos'),
       path('categoria_pago-taller/adicionar/<str:path>', TallerCategPagosCreateView.as_view(), name='taller_cat_pago_add'),
-      path('categorias_pago-taller/editar/<str:path>/<int:pk>', TallerCategPagosUpdateView.as_view(), name='taller_cat_pago_editar'),
+      path('categorias_pago-taller/editar/<int:pk>', TallerCategPagosUpdateView.as_view(), name='taller_cat_pago_editar'),
       path('categorias_pago-taller/eliminar/<int:pk>', TallerCategPagosDeletedView.as_view(), name='taller_cat_pago_eliminar'),
 
 
       #Congreso-Imagenes
-      path('imagenes/congreso/<str:path>', CongressImagenesListView.as_view(), name='Congres_imagenes'),
+      path('imagenes/congreso/<str:path>', ImagenesListView.as_view(), name='Congres_imagenes'),
       path('imagen-congreso/adicinar/<int:pk>', CongressImagenCreateView.as_view(), name='imagen_congress_add'),
         path('imagen-congreso/eliminar/<int:pk>', CongressImagenDeletedView.as_view(), name='imagen_congress_deleted'),
       
 
       #Congreso-Patrocinadores
-      path('patrocinadores/congreso/<str:path>', CongressPatrocinadorListView.as_view(), name='Congres_patrocinadores'),
+      # path('patrocinadores/congreso/<str:path>', PatrocinadorListView.as_view(), name='Congres_patrocinadores'),
       path('patrocinador-congreso/adicinar/<int:pk>', PatrocinadorCreateView.as_view(), name='patrocinadores_congress_add'),
       path('patrocinador-congreso/seleccionar/<str:path>', PatrocinadorSeleccionarView.as_view(), name='patrocinadores_congress_select'),
       path('patrocinador-congreso/deleted', PatrocinadorSeleccionarDeleted, name='congreso_patrocinador_delete'),
 
       #Congreso-Socios
-        path('socios/congreso/<str:path>', CongressSocioListView.as_view(), name='Congres_socios'),
+        path('socios/congreso/<str:path>', SocioListView.as_view(), name='Congres_socios'),
       path('socio-congreso/adicinar/<int:pk>', SocioCreateView.as_view(), name='socios_congress_add'),
       path('socio-congreso/seleccionar/<str:path>',SocioSeleccionarView.as_view(), name='socios_congress_select'),
       path('socio-congreso/deleted', SocioSeleccionarDeleted, name='congreso_socio_delete'),
@@ -407,7 +416,7 @@ urlpatterns = [
      path('pruebaTablaJsonTipoEvento', vTableAsJSONTipoEvento.as_view(), name='table_json_tipo_eventos'),
      path('pruebaTablaJsonRepositorio', vTableAsJSONRepositorio.as_view(), name='table_json_documentos'),
     path('pruebaTablaJsonCongresosSalas', vTableAsJSONCongresoSalas.as_view(), name='table_json_salas'),
-     
+     path('TablaJsonOrganizadores', vTableAsJSONOrganizadores.as_view(), name='table_json_organizadores'), 
 
 #Constancia Usuario
 path('constancia-usuario/add/<int:pk>', AsignarConstanciasUsuario.as_view(), name='constancia_usuario_add'),

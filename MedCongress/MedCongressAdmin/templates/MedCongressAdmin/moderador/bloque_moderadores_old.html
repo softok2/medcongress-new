@@ -15,7 +15,7 @@
 {%if congreso%}
 <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
 </li>
-<li class="breadcrumb-item"><a href="{%url 'MedCongressAdmin:Congres_bloques' congreso.path%}">Bloques</a>
+<li class="breadcrumb-item"><a href="{%url 'MedCongressAdmin:bloques_list' %}?congreso={{congreso.path}}">Bloques</a>
 </li>
 {%else%}
 <li class="breadcrumb-item"><a href="{%url 'MedCongressAdmin:bloques_list' %}">Bloques</a>
@@ -167,39 +167,6 @@
         dataTable.search('{{search}}').draw();
         {%endif%}
     });
-    function deleteItem(pk) {
-        swal({
-            title: "¿Estás seguro?",
-            text: "¡Eliminará la relación del Moderador con este Bloque!",
-            icon: "warning",
-            buttons: {
-                cancel: {
-                    text: "¡No, cancelar!",
-                    value: null,
-                    visible: true,
-                    className: "",
-                    closeModal: false,
-                },
-                confirm: {
-                    text: "¡Sí, eliminarla!",
-                    value: true,
-                    visible: true,
-                    className: "",
-                    closeModal: false
-                }
-            }
-        })
-            .then((isConfirm) => {
-                if (isConfirm) {
-                    url = "{% url 'MedCongressAdmin:moderador_block_delete' pk=0 %}";
-                    $.post(url.replace('/0', '/' + pk), { 'pk': pk }, function (data) {
-                        dataTable.row($('#del_' + pk).parents('tr')).remove().draw();
-                        swal("¡Eliminada!", "Esta relación ha sido eliminada.", "success");
-                    });
-                } else {
-                    swal("¡Cancelado!", "No se eliminó esta relación.", "error");
-                }
-            });
-    }
+
 </script>
 {% endblock %}
