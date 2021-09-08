@@ -96,7 +96,7 @@
                                                         title="Descargar" style="margin-left: 5px;">
                                                         <i class="icon icon-downloads" > </i>
                                                     </a> 
-                                                    <a href="{% url 'MedCongressAdmin:congres_programa_editar' path=congres.path pk=programa.pk  %}"
+                                                    <a href="{% url 'MedCongressAdmin:congres_programa_editar' pk=programa.pk  %}"
                                                         title="Editar" style="margin-left: 5px;"><i class="icon-editar" style="padding: 15px;"></i></a>
                                                     <a id="del_{{ programa.pk }}"
                                                         href="javascript:deleteItem('{{ programa.pk }}')"

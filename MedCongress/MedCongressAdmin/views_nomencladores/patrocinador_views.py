@@ -40,12 +40,22 @@ class PatrocinadorListView(validarOrganizador,TemplateView):
             if not self.request.user.is_staff:
                 return   HttpResponseRedirect(reverse('Error403'))   
         return self.render_to_response(self.get_context_data())
-class PatrocinadorCreateView(validarUser,CreateView):
+
+class PatrocinadorCreateView(validarOrganizador,CreateView):
     model=AvalCongreso
     form_class = PatrocinadorForm
     success_url = reverse_lazy('MedCongressAdmin:patrocinadores_list')
     template_name = 'nomencladores/patrocinadores/form.html'
     
+    def get(self, request, **kwargs):
+        self.object=AvalCongreso.objects.filter(pk=0).first()
+        congreso=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
+        if congreso is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=congreso).exists() and not self.request.user.is_staff: 
+            return   HttpResponseRedirect(reverse('Error403'))
+        return self.render_to_response(self.get_context_data()) 
+
     def form_valid(self, form):
         
         patrocinador=form.save(commit=False)
@@ -68,18 +78,20 @@ class PatrocinadorCreateView(validarUser,CreateView):
 
     def get_context_data(self, **kwargs):
         context=super().get_context_data(**kwargs)
-        if self.kwargs.get('pk'):
-            congreso=Congreso.objects.get(pk=self.kwargs.get('pk'))
+        if self.request.GET.get('congreso'):
+            congreso=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
             context['congreso']=congreso
         return context
 
     def get_success_url(self, **kwargs):
-        if self.kwargs.get('pk'):
-            congres=Congreso.objects.get(pk=self.kwargs.get('pk'))
-            self.success_url =  reverse_lazy('MedCongressAdmin:Congres_patrocinadores',kwargs={'path': congres.path} )
+        if self.request.GET.get('congreso'):
+            congreso=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
+            self.success_url =  reverse_lazy('MedCongressAdmin:patrocinadores_list' )+'?congreso='+congreso.path
+        else:
+            self.success_url =  reverse_lazy('MedCongressAdmin:patrocinadores_list' )
         return self.success_url
 
-class PatrocinadorDeletedView(validarUser,DeleteView):
+class PatrocinadorDeletedView(validarOrganizador,DeleteView):
     model = AvalCongreso
     success_url = reverse_lazy('MedCongressAdmin:patrocinadores_list')
 
@@ -132,6 +144,7 @@ class PatrocinadorUpdateView(validarUser,UpdateView):
             return super().form_valid(form)
         except ( TypeError,FileNotFoundError):
                 return super().form_invalid(form)
+
 class vTableAsJSONPatrocinador(TemplateView):
     template_name = 'MedCongressAdmin/asig_congress_form.html'
     

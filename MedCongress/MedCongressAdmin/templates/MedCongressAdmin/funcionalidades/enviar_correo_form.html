@@ -1,0 +1,176 @@
+{% extends 'MedCongressAdmin/base.html' %}
+{% block title %} Enviar Correo {% endblock %}
+{% load static %}
+{% block styles %}
+<style>
+	div#loading {
+    
+    display: none;
+   
+    
+	}
+	.git{
+	
+		background:    url({% static 'MedCongressApp/images/loading.gif' %}) no-repeat;
+		  width: 55px;
+		  height: 55px;             
+		margin-top:-19px;
+		background-size: 55px 55px
+
+  
+	}
+	</style>
+<link rel="stylesheet" type="text/css" href="{% static 'MedCongressAdmin/app-assets/vendors/css/forms/selects/select2.min.css' %}">
+{% endblock %}
+{% block content %}
+<div class=" col-md-6 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+		
+<li class="breadcrumb-item active"> Enviar Correo
+</li>
+
+
+</ol>
+</div>
+</div>
+</div>
+<section class="multiple-input-with-labels" id="multiple-input-with-labels">
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-header">
+					<h1 class="card-header mb-0 pb-0" style="font-size: xx-large; font-weight: bolder;">
+						Enviar Correos a usuarios de un Congreso </h1>
+						
+					<a class="heading-elements-toggle"><i class="ft-align-justify font-medium-3"></i></a>
+					<div class="heading-elements">
+						<ul class="list-inline mb-0">
+							<li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+							<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="card-content collapse show">
+					<div class="card-body">
+						<div id="loading"> 
+
+							<div class="alert round bg-primary alert-icon-left alert-arrow-left alert-dismissible mb-2" role="alert">
+								<span class="alert-icon"><i class="la git"></i></span>
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									<span aria-hidden="true">×</span>
+								</button>
+								<strong>Guardando......</strong> 
+							</div>
+						</div>
+						{% if messages %}
+						<ul class="messages">
+							{% for message in messages %}
+							<li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+								{% endfor %}
+						</ul>
+						{% endif %}
+						{% if form.errors %}
+						{% for field in form %}
+						{% for error in field.errors %}
+
+						<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">×</span>
+							</button>
+							{{ error|safe|escape }}
+						</div>
+						{% endfor %}
+						{% endfor %}
+						{% for error in form.non_field_errors %}
+						<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">×</span>
+							</button>
+							{{ error|safe|escape }}
+						</div>
+						{% endfor %}
+						{% endif %}
+						<form id="country-form" method="POST" enctype="multipart/form-data">
+							{% csrf_token %}
+							<div class="form-body">
+								<div class="row">
+									<div class=" col-md-8 offset-md-2">
+										<div class="row">
+											<div class="col-md-12">
+													<div class="form-group">
+														<label for=""><b>Filtre
+																Congreso</b></label>
+														{{form.congreso}}
+													</div>
+												
+											</div>
+										</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group">
+												<label for=""><b>{{form.asunto.label}}</b></label>
+												{{form.asunto}}
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label for=""><b>{{form.adjunto.label}}</b></label>
+												{{form.adjunto}}
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-12 ">
+											<div class="form-group">
+												<label ><b>{{form.mensaje.label}}</b>
+												</label>
+												{{form.mensaje}}
+											</div>
+										</div>
+										
+									</div>	
+									
+								</div>
+										
+									
+								
+							</div>
+							<div class="form-actions">
+								<div class="text-right">
+									
+							
+									<button id="save" type="button" class="btn btn-primary">Asignar
+										<i class="ft-save position-right"></i>
+									</button>
+									
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+</section>
+{% endblock %}
+{% block scripts %}
+
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/forms/select/select2.full.min.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-select2.js'%}"></script>
+<script src="{% static 'MedCongressAdmin/app-assets/vendors/js/editors/ckeditor/ckeditor.js'%}"></script>
+<script>
+	$("#country-form").submit(function(e) { $("#loading").show(); });
+	$('#id_congreso').select2({
+    placeholder: "Seleccione Congreso",
+    allowClear: true
+});
+$('#save').click(function(e){
+		
+	$("#country-form").submit();
+
+	
+	})
+</script>
+{% endblock %}

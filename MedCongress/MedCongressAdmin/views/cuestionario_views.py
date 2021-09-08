@@ -46,11 +46,18 @@ class CuestionarioListView(validarOrganizador,TemplateView):
         context['search']=self.request.GET.get('search')
        
         return context
-class PreguntaCreateView(validarUser,FormView):
+class PreguntaCreateView(validarOrganizador,FormView):
     form_class = PreguntaForm
     success_url = reverse_lazy('MedCongressAdmin:ponencias_list')
-    template_name = 'MedCongressAdmin/cuestionario_form.html'
+    template_name = 'MedCongressAdmin/cuestionario/form.html'
 
+    def get(self, request, **kwargs):
+        user = get_object_or_404(Congreso,path=self.request.GET.get('congreso'))
+        congreso=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
+        if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=congreso).exists() and not self.request.user.is_staff: 
+            return   HttpResponseRedirect(reverse('Error403'))
+        return self.render_to_response(self.get_context_data())
+        
     def form_valid(self, form):
         pregunta=form.save(commit=True)
         
@@ -74,12 +81,10 @@ class PreguntaCreateView(validarUser,FormView):
        
         return context
 
-class CustionarioUpdateView(validarUser,FormView):
+class CustionarioUpdateView(validarOrganizador,FormView):
     form_class = PreguntaForm
     success_url = reverse_lazy('MedCongressAdmin:ponencias_list')
-    template_name = 'MedCongressAdmin/cuestionario_form.html'
-
-
+    template_name = 'MedCongressAdmin/cuestionario/form.html'
 
     def get_context_data(self, **kwargs):
         context=super().get_context_data(**kwargs)
@@ -88,6 +93,7 @@ class CustionarioUpdateView(validarUser,FormView):
         context['congreso']=pregunta.congreso
         context['pregunta']=pregunta
         return context
+    
     def form_valid(self, form):
         
         pregunta =CuestionarioPregunta.objects.get(pk=self.request.POST['update'])   
@@ -104,6 +110,7 @@ class CustionarioUpdateView(validarUser,FormView):
             resp.save() 
             cant=cant+1  
         return super(CustionarioUpdateView, self).form_valid(form)
+    
     def get_initial(self):
         initial=super().get_initial()
         pregunta=CuestionarioPregunta.objects.get(pk=self.kwargs.get('pk'))
@@ -111,6 +118,12 @@ class CustionarioUpdateView(validarUser,FormView):
         initial['published']=pregunta.published
         return initial
 
+    def get(self, request, **kwargs):
+        user = get_object_or_404(CuestionarioPregunta,pk=self.kwargs.get('pk'))
+        if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=user.congreso).exists() and not self.request.user.is_staff: 
+            return   HttpResponseRedirect(reverse('Error403'))
+        return self.render_to_response(self.get_context_data())
+    
     def get_success_url(self):
 
         pregunta=CuestionarioPregunta.objects.get(pk=self.kwargs.get('pk'))    
@@ -118,7 +131,7 @@ class CustionarioUpdateView(validarUser,FormView):
         self.success_url =  '%s?search=%s'%(url,self.request.GET.get('search')) 
         return self.success_url 
 
-class CustionarioDeletedView(validarUser,DeleteView):
+class CustionarioDeletedView(validarOrganizador,DeleteView):
     model = CuestionarioPregunta
     success_url = reverse_lazy('MedCongressAdmin:asig_congress_list')
 

@@ -189,7 +189,7 @@
 
         $('#add-btn').click(function () {
             {%if congreso%}
-            location.href = "{% url 'MedCongressAdmin:patrocinadores_congress_add' pk=congreso.id  %}";
+            location.href = "{% url 'MedCongressAdmin:patrocinador_add' %}?congreso={{congreso.path}}";
             {%else%}
             location.href = "{% url 'MedCongressAdmin:patrocinador_add'   %}";
             {%endif%}

@@ -87,61 +87,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <!-- {% for sala in salas %}
-                                            <tr role="row" class="{% cycle 'odd' 'even' %}" style="font-size: 13px;">
-                                                
-                                                <td align="center">
-                                                    <div class="row" id="edit-{{ sala.pk }}" style="display: none;">
-                                                        <div class="col-md-8" style="
-                                                        padding-left: 0px;
-                                                        padding-right: 0px;
-                                                        margin: 0px;
-                                                    ">
-                                                        <input name="orden" type="number"  min='1' id="orden_{{ sala.pk }}" value="{{ sala.orden }}" class="form-control"></input>
-                                                        </div>
-                                                        <div class="col-md-4" style="padding-top: 10px;padding-left: 0px;">
-                                                             <a
-                                                                href="javascript:UpdatPosItem('{{ sala.pk }}')"
-                                                                title="Actualizar Posición" >
-                                                                <i class="icon icon-update" ></i>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row" id="show-{{ sala.pk }}">
-                                                        <div class="col-md-8" style="
-                                                        padding-left: 0px;
-                                                        padding-right: 0px;
-                                                        margin: 0px;
-                                                    ">
-                                                      <b>{{ sala.orden }}</b> 
-                                                       
-                                                             <a id="del_{{ sala.pk }}"
-                                                                href="javascript:ShowEditar({{ sala.pk }})"
-                                                                title="Cambiar Orden" style="margin-left: 10px;" >
-                                                                <i class="icon icon-ordenar" ></i>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                   
-                                                   
-                                                    </td>
-                                                <td>{{ sala.titulo }}</td>
-                                                <td style="background-color: {{sala.color}};padding:5px"><div ></div></td>
-                                                
-                                                <td style="vertical-align: middle;">
-                                                   
-                                                    <a href="{% url 'MedCongressAdmin:congres_sala_editar' path=congres.path pk=sala.pk  %}"
-                                                        title="Editar" style="margin-left: 5px;"><i class="icon-editar" style="padding: 15px;"></i></a>
-                                                    <a id="del_{{ sala.pk }}"
-                                                        href="javascript:deleteItem('{{ sala.pk }}')"
-                                                        title="Eliminar" style="margin-left: 5px;">
-                                                        <i class="icon-eliminar" style="padding: 15px;"></i>
-                                                    </a>
-
-                                                </td>
-                                               
-                                            </tr>
-                                            {% endfor %} -->
+                                            
                                         </tbody>
                                         <tfoot>
                                             <tr style="font-size: 13px;">

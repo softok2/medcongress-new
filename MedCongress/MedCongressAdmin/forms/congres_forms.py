@@ -70,7 +70,7 @@ class CongresForm(forms.ModelForm):
         self.fields['meta_og_imagen'].widget.attrs.update({'class': 'form-control '}) 
         self.fields['meta_title'].widget.attrs.update({'class': 'form-control'})  
         self.fields['detalles_tipo_boleto'].widget.attrs.update({'class': 'form-control ckeditor'})
-        self.fields['detalles_tipo_boleto_taller'].widget.attrs.update({'class': 'form-control ckeditor'})     
+        self.fields['detalles_tipo_boleto_taller'].widget.attrs.update({'class': 'form-control ckeditor','type':'textbox'})     
    
     
     def clean(self, *args, **kwargs):

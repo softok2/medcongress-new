@@ -63,20 +63,31 @@ class TalleresListView(validarOrganizador,TemplateView):
                 context['congreso_bloque']=True
         return context
 
-class  TallerCreateView(validarUser,FormView):
+class  TallerCreateView(validarOrganizador,FormView):
     form_class = TallerForms
     success_url = reverse_lazy('MedCongressAdmin:talleres_list')
     template_name = 'MedCongressAdmin/taller/form.html'
+
     def get(self, request, **kwargs):
+
         if self.request.GET.get('congreso'):
             congreso=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
             if congreso is None:
                 return   HttpResponseRedirect(reverse('Error404'))
-        if self.request.GET.get('bloque'):
-            congreso=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
-            if congreso is None:
+            if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=congreso).exists() and not self.request.user.is_staff:
+                return   HttpResponseRedirect(reverse('Error403'))
+        
+        elif self.request.GET.get('bloque'):
+            bloque=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
+            if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=bloque.congreso).exists() and not self.request.user.is_staff: 
+                return   HttpResponseRedirect(reverse('Error403'))
+            if bloque is None:
                 return   HttpResponseRedirect(reverse('Error404'))
+        else:
+            if not self.request.user.is_staff:
+                return   HttpResponseRedirect(reverse('Error403'))
         return self.render_to_response(self.get_context_data())
+
     def form_valid(self, form):
         if not self.request.POST.getlist('taller_ponente-ponente'):
             messages.warning(self.request, 'Debe al menos entrar un ponente')
@@ -209,22 +220,40 @@ class  TallerCategPagosCreateView(validarOrganizador,CreateView):
     def get_context_data(self, **kwargs):
         ctx = super(TallerCategPagosCreateView, self).get_context_data(**kwargs)
         pon=Taller.objects.filter(path=self.kwargs.get('path')).first()
-        ctx['cong'] = pon
+        ctx['taller'] = pon
+        if self.request.GET.get('congreso'):
+            ctx['congreso']=pon.congreso   
+        if self.request.GET.get('bloque'):
+            ctx['bloque']=pon.bloque
+        if self.request.GET.get('congreso_bloque'):
+            ctx['congreso']=pon.congreso
+            ctx['bloque']=pon.bloque
+            ctx['congreso_bloque']=True
+                
         return ctx
 
-class TallerUpdateView(validarUser,FormView):
+class TallerUpdateView(validarOrganizador,FormView):
     form_class = TallerForms
     success_url = reverse_lazy('MedCongressAdmin:talleres_list')
-    template_name = 'MedCongressAdmin/taller_form.html'
+    template_name = 'MedCongressAdmin/taller/form.html'
     def get(self, request, **kwargs):
+
         if self.request.GET.get('congreso'):
             congreso=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
             if congreso is None:
                 return   HttpResponseRedirect(reverse('Error404'))
-        if self.request.GET.get('bloque'):
-            congreso=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
-            if congreso is None:
+            if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=congreso).exists() and not self.request.user.is_staff:
+                return   HttpResponseRedirect(reverse('Error403'))
+        
+        elif self.request.GET.get('bloque'):
+            bloque=Bloque.objects.filter(path=self.request.GET.get('bloque')).first()
+            if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=bloque.congreso).exists() and not self.request.user.is_staff: 
+                return   HttpResponseRedirect(reverse('Error403'))
+            if bloque is None:
                 return   HttpResponseRedirect(reverse('Error404'))
+        else:
+            if not self.request.user.is_staff:
+                return   HttpResponseRedirect(reverse('Error403'))
         return self.render_to_response(self.get_context_data())
     def get_queryset(self, **kwargs):
         return Taller.objects.filter(pk=self.kwargs.get('pk'))
@@ -747,7 +776,15 @@ class TallerCategPagosUpdateView(validarOrganizador,UpdateView):
     def get_context_data(self, **kwargs):
         context=super().get_context_data(**kwargs)
         context['update']=True
-        context['cong'] = self.object.taller
+        context['taller'] = self.object.taller
+        if self.request.GET.get('congreso'):
+            context['congreso']=self.object.taller.congreso   
+        if self.request.GET.get('bloque'):
+            context['bloque']=self.object.taller.bloque
+        if self.request.GET.get('congreso_bloque'):
+            context['congreso']=self.object.taller.congreso
+            context['bloque']=self.object.taller.bloque
+            context['congreso_bloque']=True
 
         return context
 

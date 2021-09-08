@@ -27,7 +27,8 @@ class TrabajosListView(validarOrganizador,TemplateView):
             return   HttpResponseRedirect(reverse('Error404'))
         if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=congreso).exists() and not self.request.user.is_staff: 
             return   HttpResponseRedirect(reverse('Error403'))
-        return self.render_to_response(self.get_context_data())    
+        return self.render_to_response(self.get_context_data()) 
+
     def get_context_data(self, **kwargs):
         context = super(TrabajosListView, self).get_context_data(**kwargs)
         congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
@@ -35,11 +36,12 @@ class TrabajosListView(validarOrganizador,TemplateView):
         context['trabajos']=TrabajosInvestigacion.objects.filter(congreso=congreso)
         return context  
 
-class  CongressTrabajoCreateView(validarUser,CreateView):
+class  TrabajoCreateView(validarOrganizador,CreateView):
     info_sended =Congreso()
     form_class = CongresoTrabajoForm
     # success_url = reverse_lazy('MedCongressAdmin:ponencias_list')
-    template_name = 'MedCongressAdmin/congreso_trabajo_form.html'
+    template_name = 'MedCongressAdmin/trabajo_investigativo/form.html'
+
     def form_valid(self, form):
         congreso=form.save(commit=False)
         path=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
@@ -56,23 +58,41 @@ class  CongressTrabajoCreateView(validarUser,CreateView):
         else:
             congreso.foto='usuarios/defaulthombre.png' 
         congreso.save()
-        return super(CongressTrabajoCreateView, self).form_valid(form)
+        return super(TrabajoCreateView, self).form_valid(form)
 
     def get_success_url(self):
            self.success_url =  reverse_lazy('MedCongressAdmin:Congres_trabajos',kwargs={'path': self.kwargs.get('path')} )
            return self.success_url
 
     def get_context_data(self, **kwargs):
-        ctx = super(CongressTrabajoCreateView, self).get_context_data(**kwargs)
+        ctx = super(TrabajoCreateView, self).get_context_data(**kwargs)
         pon=Congreso.objects.filter(path=self.kwargs.get('path')).first()
         ctx['cong'] = pon
         return ctx
 
+    def get(self, request, **kwargs):
+        self.object=TrabajosInvestigacion.objects.filter(pk=0).first()
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+        if congreso is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=congreso).exists() and not self.request.user.is_staff: 
+            return   HttpResponseRedirect(reverse('Error403'))
+        return self.render_to_response(self.get_context_data())  
         
-class CongressTrabajoUpdateView(validarUser,UpdateView):
+class TrabajoUpdateView(validarOrganizador,UpdateView):
 
     form_class = CongresoTrabajoForm
-    template_name = 'MedCongressAdmin/congreso_trabajo_form.html'
+    template_name = 'MedCongressAdmin/trabajo_investigativo/form.html'
+
+    def get(self, request, **kwargs):
+        trabajo=TrabajosInvestigacion.objects.filter(pk=self.kwargs.get('pk')).first()
+        self.object=trabajo
+        if trabajo is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=trabajo.congreso).exists() and not self.request.user.is_staff: 
+            return   HttpResponseRedirect(reverse('Error403'))
+        return self.render_to_response(self.get_context_data())  
+        
 
     def get_queryset(self, **kwargs):
         return TrabajosInvestigacion.objects.filter(pk=self.kwargs.get('pk'))
@@ -101,7 +121,7 @@ class CongressTrabajoUpdateView(validarUser,UpdateView):
             congreso.foto='usuarios/defaulthombre.png'
         congreso.save()
         
-        return super(CongressTrabajoUpdateView, self).form_valid(form)
+        return super(TrabajoUpdateView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
         context=super().get_context_data(**kwargs)
@@ -109,14 +129,14 @@ class CongressTrabajoUpdateView(validarUser,UpdateView):
         trabajo=TrabajosInvestigacion.objects.get(pk=self.kwargs.get('pk'))
         context['trabajo']= trabajo
         context['foto']= trabajo.foto
-        pon=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+        pon=trabajo.congreso
         context['cong'] = pon
         return context
     def get_success_url(self):
-           self.success_url =  reverse_lazy('MedCongressAdmin:Congres_trabajos',kwargs={'path': self.kwargs.get('path')} )
+           self.success_url =  reverse_lazy('MedCongressAdmin:Congres_trabajos',kwargs={'path': self.object.congreso.path} )
            return self.success_url
     
-class CongressTrabajoDeletedView(validarUser,DeleteView):
+class TrabajoDeletedView(validarOrganizador,DeleteView):
     model = TrabajosInvestigacion
     success_url = reverse_lazy('MedCongressAdmin:cat_usuarios_list')
 

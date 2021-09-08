@@ -33,10 +33,18 @@ class PregFrecuenteListView(validarOrganizador,TemplateView):
        
         return context
 
-class  PregFrecuenteCreateView(validarUser,CreateView):
+class  PregFrecuenteCreateView(validarOrganizador,CreateView):
     form_class =PregFrecuenteForm
-    template_name = 'MedCongressAdmin/preg_frecuente_form.html'
+    template_name = 'MedCongressAdmin/pregunta_frecuente/form.html'
 
+    def get(self, request, **kwargs):
+        self.object=PreguntasFrecuentes.objects.filter(pk=0).first()
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+        if congreso is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=congreso).exists() and not self.request.user.is_staff: 
+            return   HttpResponseRedirect(reverse('Error403'))
+        return self.render_to_response(self.get_context_data())
 
     def get_success_url(self):
         if self.kwargs.get('path'):
@@ -50,9 +58,18 @@ class  PregFrecuenteCreateView(validarUser,CreateView):
        
         return context
 
-class PregFrecuenteUpdateView(validarUser,UpdateView):
+class PregFrecuenteUpdateView(validarOrganizador,UpdateView):
     form_class = PregFrecuenteForm
-    template_name = 'MedCongressAdmin/preg_frecuente_form.html'
+    template_name = 'MedCongressAdmin/pregunta_frecuente/form.html'
+
+    def get(self, request, **kwargs):
+        pregunta=PreguntasFrecuentes.objects.filter(pk=self.kwargs.get('pk')).first()
+        self.object=pregunta
+        if pregunta is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=pregunta.congreso).exists() and not self.request.user.is_staff: 
+            return   HttpResponseRedirect(reverse('Error403'))
+        return self.render_to_response(self.get_context_data())
 
     def get_queryset(self, **kwargs):
         return PreguntasFrecuentes.objects.filter(pk=self.kwargs.get('pk'))
@@ -64,34 +81,13 @@ class PregFrecuenteUpdateView(validarUser,UpdateView):
         context['update']=True
         
         return context
-    # def form_valid(self, form):
-        
-    #     pregunta =CuestionarioPregunta.objects.get(pk=self.request.POST['update'])   
-    #     pregunta.pregunta=self.request.POST['pregunta']
-    #     pregunta.published=self.request.POST['published']
-    #     pregunta.save()
-    #     CuestionarioRespuestas.objects.filter(pregunta=pregunta).delete()
-    #     cant=0
-    #     for respuesta in self.request.POST.getlist('respuesta'):
-    #         resp=CuestionarioRespuestas(pregunta=pregunta,respuesta=respuesta,published=self.request.POST.getlist('published_resp')[cant],is_correcto=self.request.POST.getlist('is_correcto')[cant])
-    #         resp.save() 
-    #         cant=cant+1  
-    #     return super(CustionarioUpdateView, self).form_valid(form)
-    # def get_initial(self):
-    #     initial=super().get_initial()
-    #     pregunta=CuestionarioPregunta.objects.get(pk=self.kwargs.get('pk'))
-    #     initial['pregunta']=pregunta.pregunta
-    #     initial['published']=pregunta.published
-    #     return initial
 
     def get_success_url(self):
-        if self.kwargs.get('pk'):
-            pregunta=PreguntasFrecuentes.objects.get(pk=self.kwargs.get('pk'))
-            
-            self.success_url =  reverse_lazy('MedCongressAdmin:Congres_freg_frecuente',kwargs={'path': pregunta.congreso.path} )
+
+        self.success_url =  reverse_lazy('MedCongressAdmin:Congres_freg_frecuente',kwargs={'path': self.object.congreso.path} )
         return self.success_url 
 
-class PregFrecuenteDeletView(validarUser,DeleteView):
+class PregFrecuenteDeletView(validarOrganizador,DeleteView):
     model = PreguntasFrecuentes
     success_url = reverse_lazy('MedCongressAdmin:asig_congress_list')
 

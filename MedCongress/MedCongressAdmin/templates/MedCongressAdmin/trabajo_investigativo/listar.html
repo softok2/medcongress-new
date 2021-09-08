@@ -96,7 +96,7 @@
                                                         title="Descargar" style="margin-left: 5px;">
                                                         <i class="icon icon-downloads" > </i>
                                                     </a> 
-                                                    <a href="{% url 'MedCongressAdmin:congres_trabajo_editar' path=congres.path pk=trabajo.pk  %}"
+                                                    <a href="{% url 'MedCongressAdmin:congres_trabajo_editar' pk=trabajo.pk  %}"
                                                         title="Editar" style="margin-left: 5px;"><i class="icon-editar" style="padding: 15px;"></i></a>
                                                     <a id="del_{{ trabajo.pk }}"
                                                         href="javascript:deleteItem('{{ trabajo.pk }}')"

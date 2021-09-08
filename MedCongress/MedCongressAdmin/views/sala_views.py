@@ -13,7 +13,7 @@ from django.http import JsonResponse
 from django.utils.crypto import get_random_string
 from django.views.generic import CreateView, ListView, TemplateView
 from django.views.generic.edit import DeleteView, FormView, UpdateView
-from MedCongressAdmin.forms.congres_forms import BloqueForms,ModeradorBloqueForm,SelectPonencia
+from MedCongressAdmin.forms.congres_forms import CongresoSalaForm
 from MedCongressApp.models import Bloque, Congreso, Ponencia, Taller, RelBloqueModerador,Moderador,Organizador,Sala
 from MedCongressAdmin.apps import validarUser,validarOrganizador
     
@@ -78,7 +78,7 @@ class vTableAsJSONCongresoSalas(TemplateView):
                             'titulo':objet.titulo,         
                             'color' : str(objet.color),
                            
-                            'operaciones' :'''  <a href="'''+ reverse('MedCongressAdmin:congres_sala_editar',kwargs={'path':request.GET.get('path'),'pk':objet.pk})+'''"
+                            'operaciones' :'''  <a href="'''+ reverse('MedCongressAdmin:congres_sala_editar',kwargs={'pk':objet.pk})+'''"
                                                         title="Editar" style="margin-left: 5px;"><i class="icon-editar" style="padding: 15px;"></i></a>
                                                     <a id="del_'''+str(objet.pk)+'''"
                                                         href="javascript:deleteItem('''+str(objet.pk)+''')"
@@ -100,138 +100,154 @@ class vTableAsJSONCongresoSalas(TemplateView):
         #Enviar
         return HttpResponse(data, mimetype)    
 
-# class  CongressSalaCreateView(validarUser,CreateView):
-#     info_sended =Congreso()
-#     form_class = CongresoSalaForm
+class  SalaCreateView(validarOrganizador,CreateView):
+    info_sended =Congreso()
+    form_class = CongresoSalaForm
    
-#     template_name = 'MedCongressAdmin/congreso_sala_form.html'
-#     def get_form_kwargs(self, *args, **kwargs):
-#         kwargs = super().get_form_kwargs(*args, **kwargs)
-#         kwargs['sala'] = False
-#         return kwargs
-#     def form_valid(self, form):
-#         congreso=form.save(commit=False)
-#         if congreso.orden:
-#             salas=Sala.objects.filter(orden__gte=congreso.orden,congreso=congreso.congreso)
-#             for sala in salas:
-#                 sala.orden=sala.orden+1
-#                 sala.save()
-#         else:
-#             congreso.orden=Sala.objects.filter(congreso=congreso.congreso).count()+1
-#         chars = '0123456789'
+    template_name = 'MedCongressAdmin/sala/form.html'
+    def get(self, request, **kwargs):
+        congreso=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+        self.object= Sala.objects.filter(pk=0).first()
+        if congreso is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=congreso).exists() and not self.request.user.is_staff: 
+            return   HttpResponseRedirect(reverse('Error403'))
+        return self.render_to_response(self.get_context_data())  
         
-#         image_64_encode=self.request.POST['prueba_home']
-#         campo = image_64_encode.split(",")
-#         nombre = get_random_string(5, chars)
-#         image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
-#         image_result = open('MedCongressApp/static/sala/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
-#         image_result.write(image_64_decode) 
-#         congreso.imagen='sala/imagen_%s.png'%(nombre)
-#         nombre = get_random_string(3, chars)
-#         path=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
-#         congreso.path=path+nombre
+    def get_form_kwargs(self, *args, **kwargs):
+        kwargs = super().get_form_kwargs(*args, **kwargs)
+        kwargs['sala'] = False
+        return kwargs
+    def form_valid(self, form):
+        congreso=form.save(commit=False)
+        if congreso.orden:
+            salas=Sala.objects.filter(orden__gte=congreso.orden,congreso=congreso.congreso)
+            for sala in salas:
+                sala.orden=sala.orden+1
+                sala.save()
+        else:
+            congreso.orden=Sala.objects.filter(congreso=congreso.congreso).count()+1
+        chars = '0123456789'
+        
+        image_64_encode=self.request.POST['prueba_home']
+        campo = image_64_encode.split(",")
+        nombre = get_random_string(5, chars)
+        image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
+        image_result = open('MedCongressApp/static/sala/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+        image_result.write(image_64_decode) 
+        congreso.imagen='sala/imagen_%s.png'%(nombre)
+        nombre = get_random_string(3, chars)
+        path=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
+        congreso.path=path+nombre
        
-#         congreso.ponencia_streamming=None
-#         congreso.save()
-#         return super(CongressSalaCreateView, self).form_valid(form)
+        congreso.ponencia_streamming=None
+        congreso.save()
+        return super(SalaCreateView, self).form_valid(form)
 
-#     def get_success_url(self):
-#            self.success_url =  reverse_lazy('MedCongressAdmin:Congres_salas',kwargs={'path': self.kwargs.get('path')} )
-#            return self.success_url
+    def get_success_url(self):
+           self.success_url =  reverse_lazy('MedCongressAdmin:Congres_salas',kwargs={'path': self.kwargs.get('path')} )
+           return self.success_url
 
-#     def get_context_data(self, **kwargs):
-#         ctx = super(CongressSalaCreateView, self).get_context_data(**kwargs)
-#         pon=Congreso.objects.filter(path=self.kwargs.get('path')).first()
-#         ctx['cong'] = pon
-#         return ctx
-# class CongressSalaUpdateView(validarUser,UpdateView):
+    def get_context_data(self, **kwargs):
+        ctx = super(SalaCreateView, self).get_context_data(**kwargs)
+        pon=Congreso.objects.filter(path=self.kwargs.get('path')).first()
+        ctx['cong'] = pon
+        return ctx
 
-#     form_class = CongresoSalaForm
-#     template_name = 'MedCongressAdmin/congreso_sala_form.html'
+class SalaUpdateView(validarOrganizador,UpdateView):
 
-#     def get_queryset(self, **kwargs):
-#         return Sala.objects.filter(pk=self.kwargs.get('pk'))
+    form_class = CongresoSalaForm
+    template_name = 'MedCongressAdmin/sala/form.html'
 
-#     def get_form_kwargs(self, *args, **kwargs):
-#         kwargs = super().get_form_kwargs(*args, **kwargs)
-#         kwargs['sala'] = Sala.objects.get(pk=self.kwargs.get('pk'))
-#         return kwargs
+    def get(self, request, **kwargs):
+        sala=Sala.objects.filter(pk=self.kwargs.get('pk')).first()
+        self.object= sala
+        if sala is None:
+            return   HttpResponseRedirect(reverse('Error404'))
+        if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=sala.congreso).exists() and not self.request.user.is_staff: 
+            return   HttpResponseRedirect(reverse('Error403'))
+        return self.render_to_response(self.get_context_data())  
+   
+    def get_queryset(self, **kwargs):
+        return Sala.objects.filter(pk=self.kwargs.get('pk'))
 
-#     def form_valid(self, form):
-#         congreso=form.save(commit=False)
-#         if not self.request.POST.get('ponencia_streamming'):
-#             congreso.ponencia_streamming=None
-#         sala_update=Sala.objects.get(pk=self.kwargs.get('pk'))
-#         chars = '0123456789'
-#         if congreso.orden:
-#             if  not Sala.objects.filter(orden=sala_update.orden,congreso=congreso.congreso).exclude(pk=self.kwargs.get('pk')).exists():
-#                 if congreso.orden <= sala_update.orden:
-#                     salas=Sala.objects.filter(orden__lt=sala_update.orden,orden__gte=congreso.orden,congreso=congreso.congreso)
-#                     for sala in salas:
-#                         sala.orden=sala.orden+1
-#                         sala.save()
-#                 else:
-#                     salas=Sala.objects.filter(orden__lte=congreso.orden,orden__gt=sala_update.orden,congreso=congreso.congreso)
-#                     for sala in salas:
-#                         sala.orden=sala.orden-1
-#                         sala.save()
+    def get_form_kwargs(self, *args, **kwargs):
+        kwargs = super().get_form_kwargs(*args, **kwargs)
+        kwargs['sala'] = Sala.objects.get(pk=self.kwargs.get('pk'))
+        return kwargs
 
-#         else:
-#             congreso.orden=sala_update.orden
+    def form_valid(self, form):
+        congreso=form.save(commit=False)
+        if not self.request.POST.get('ponencia_streamming'):
+            congreso.ponencia_streamming=None
+        sala_update=Sala.objects.get(pk=self.kwargs.get('pk'))
+        chars = '0123456789'
+        if congreso.orden:
+            if  not Sala.objects.filter(orden=sala_update.orden,congreso=congreso.congreso).exclude(pk=self.kwargs.get('pk')).exists():
+                if congreso.orden <= sala_update.orden:
+                    salas=Sala.objects.filter(orden__lt=sala_update.orden,orden__gte=congreso.orden,congreso=congreso.congreso)
+                    for sala in salas:
+                        sala.orden=sala.orden+1
+                        sala.save()
+                else:
+                    salas=Sala.objects.filter(orden__lte=congreso.orden,orden__gt=sala_update.orden,congreso=congreso.congreso)
+                    for sala in salas:
+                        sala.orden=sala.orden-1
+                        sala.save()
+
+        else:
+            congreso.orden=sala_update.orden
             
-#         imagen_prim=self.request.POST['prueba_home']
-#         if 'sala/' not in imagen_prim:
-#             image_64_encode=self.request.POST['prueba_home']
-#             campo = image_64_encode.split(",")
-#             nombre = get_random_string(5, chars)
-#             image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
-#             image_result = open('MedCongressApp/static/sala/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
-#             image_result.write(image_64_decode)
-#             if  sala_update.imagen:
-#                 fileObj = Path('MedCongressApp/static/%s'%( sala_update.imagen))
-#                 if fileObj.is_file():
-#                     remove('MedCongressApp/static/%s'%( sala_update.imagen))
-#             congreso.imagen='sala/imagen_%s.png'%(nombre)
+        imagen_prim=self.request.POST['prueba_home']
+        if 'sala/' not in imagen_prim:
+            image_64_encode=self.request.POST['prueba_home']
+            campo = image_64_encode.split(",")
+            nombre = get_random_string(5, chars)
+            image_64_decode = base64.decodestring(bytes(campo[1], encoding='utf8'))
+            image_result = open('MedCongressApp/static/sala/imagen_%s.png'%(nombre), 'wb') # create a writable image and write the decoding result
+            image_result.write(image_64_decode)
+            if  sala_update.imagen:
+                fileObj = Path('MedCongressApp/static/%s'%( sala_update.imagen))
+                if fileObj.is_file():
+                    remove('MedCongressApp/static/%s'%( sala_update.imagen))
+            congreso.imagen='sala/imagen_%s.png'%(nombre)
 
-#         if not congreso.path or congreso.path=='0':
-#             nombre = get_random_string(3, chars)
-#             path=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
-#             congreso.path=path+nombre
-#         congreso.save()
-#         return super(CongressSalaUpdateView, self).form_valid(form)
+        if not congreso.path or congreso.path=='0':
+            nombre = get_random_string(3, chars)
+            path=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
+            congreso.path=path+nombre
+        congreso.save()
+        return super(SalaUpdateView, self).form_valid(form)
 
-#     def get_context_data(self, **kwargs):
-#         context=super().get_context_data(**kwargs)
-#         context['update']=True
-#         context['sala']= Sala.objects.get(pk=self.kwargs.get('pk'))
-#         self.object = context['sala']
-        
-#         if self.object.meta_og_imagen:
-#             context['imagen_meta']='/static/%s'%(self.object.meta_og_imagen)
-        
-#         context['imagen']=context['sala'].imagen
-#         pon=Congreso.objects.filter(path=self.kwargs.get('path')).first()
-#         context['cong'] = pon
-#         return context
-#     def get_success_url(self):
-#            self.success_url =  reverse_lazy('MedCongressAdmin:Congres_salas',kwargs={'path': self.kwargs.get('path')} )
-#            return self.success_url
+    def get_context_data(self, **kwargs):
+        context=super().get_context_data(**kwargs)
+        context['update']=True
+        context['sala']= Sala.objects.get(pk=self.kwargs.get('pk'))
+        if self.object.meta_og_imagen:
+            context['imagen_meta']='/static/%s'%(self.object.meta_og_imagen)
+        context['imagen']=context['sala'].imagen
+        context['cong'] = context['sala'].congreso
+        return context
+    
+    def get_success_url(self):
+        self.success_url =  reverse_lazy('MedCongressAdmin:Congres_salas',kwargs={'path': self.object.congreso.path} )
+        return self.success_url
 
-# class CongressDeletedSalaView(validarUser,DeleteView):
-#     model = Sala
+class DeletedSalaView(validarOrganizador,DeleteView):
+    model = Sala
 
-#     def delete(self,request, *args, **kwargs):
+    def delete(self,request, *args, **kwargs):
            
-#             sala=Sala.objects.get(pk=self.kwargs.get('pk'))
-#             if Ponencia.objects.filter(sala= sala).exists():
-#                 return JsonResponse({'success':False}, safe=False)
-#             else:
-#                 salas=Sala.objects.filter(orden__gt=sala.orden,congreso=sala.congreso)
-#                 for sal in salas:
-#                     sal.orden=sal.orden-1
-#                     sal.save()
-#                 sala.delete()
-#                 return JsonResponse({'success':True}, safe=False)
+            sala=Sala.objects.get(pk=self.kwargs.get('pk'))
+            if Ponencia.objects.filter(sala= sala).exists():
+                return JsonResponse({'success':False}, safe=False)
+            else:
+                salas=Sala.objects.filter(orden__gt=sala.orden,congreso=sala.congreso)
+                for sal in salas:
+                    sal.orden=sal.orden-1
+                    sal.save()
+                sala.delete()
+                return JsonResponse({'success':True}, safe=False)
 class OrdenarSalaView(validarOrganizador,TemplateView):
     
     def post(self, request, **kwargs):

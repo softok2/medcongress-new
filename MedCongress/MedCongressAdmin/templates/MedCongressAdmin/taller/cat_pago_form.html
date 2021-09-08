@@ -4,7 +4,31 @@
 {% block styles %}
 {% endblock %}
 {% block content %}
+<div class=" col-md-12 col-12 " style="margin-top: -26px;">
+						
+	<div class="row breadcrumbs-top">
+	  <div class="breadcrumb-wrapper col-12">
+		<ol class="breadcrumb">
+            {%if congreso or congreso_bloque%}
+            <li class="breadcrumb-item"><a href="{% url 'MedCongressAdmin:congress_list' %}">Congresos</a>
+            </li>
+        {%endif%}
+        {%if bloque%}
+                    <li class="breadcrumb-item active"> <a href="{% url 'MedCongressAdmin:bloques_list' %}{%if congreso_bloque%}?congreso={{bloque.congreso.path}}{%endif%}">Bloques</a>
+                    </li>
+        {%endif%}   
+        
+        <li class="breadcrumb-item active"><a {%if congreso_bloque%}href="{% url 'MedCongressAdmin:talleres_list' %}?bloque={{bloque.path}}&congreso_bloque=true"{%elif congreso%}href="{% url 'MedCongressAdmin:talleres_list' %}?congreso={{congreso.path}}"{%elif bloque%}href="{% url 'MedCongressAdmin:talleres_list' %}?bloque={{bloque.path}}"{%else%} href="{% url 'MedCongressAdmin:talleres_list' %}"{%endif%}>Talleres</a>
+        </li>
+		<li class="breadcrumb-item active"><a {%if congreso_bloque%}href="{% url 'MedCongressAdmin:Taller_pagos' path=taller.path%}?bloque={{bloque.path}}&congreso_bloque=true"{%elif congreso%}href="{% url 'MedCongressAdmin:Taller_pagos' path=taller.path%}?congreso={{congreso.path}}"{%elif bloque%}href="{% url 'MedCongressAdmin:Taller_pagos' path=taller.path %}?bloque={{bloque.path}}"{%else%} href="{% url 'MedCongressAdmin:Taller_pagos' path=taller.path%}"{%endif%}>Categorias de Pago</a>
+        </li>
+<li class="breadcrumb-item active">{%if update%} Actualizar Categoría de Pago{%else%} Adicionar Categoría de Pago{%endif%}
+</li>
 
+</ol>
+</div>
+</div>
+</div>
 <section class="multiple-input-with-labels" id="multiple-input-with-labels">
 	<div class="row">
 		<div class="col-12">
@@ -98,7 +122,7 @@
 {% block scripts %}
 <script type="text/javascript">
 	$(document).ready(function () {
-		$("#id_taller option[value='{{cong.id}}']").attr("selected",true);
+		$("#id_taller option[value='{{taller.id}}']").attr("selected",true);
 		
 	});
 </script>
