@@ -8,19 +8,19 @@ from django.urls import path,include
 
 from .views.country_views import (CountryCreateView, CountryDeleteView,
                                   CountryListView, CountryUpdateView)
-from .views.congress_views import (LogsCongreso,LogsUsuarios,AsignarConstanciasUsuario,GetSalas,CongressListView,CongressCreateView,CongressUpdateView,
+from .views.congress_views import (LogsCongreso,AsignarConstanciasUsuario,GetSalas,CongressListView,CongressCreateView,CongressUpdateView,
                                    AddPonenciaCongreso,
                                    CongressDeletedView,GetBloques,AsignarCongressListView,AsignarCongressAddViews,GetPagos,
                                    AsignarCongressDeletedViews,
                                    Ver_usuarios,Ver_Exel,Exportar_usuarios,Usuarios_pagaron,
                                    PatrocinadorSeleccionarView,PatrocinadorSeleccionarDeleted, SocioSeleccionarView,SocioSeleccionarDeleted,
                                    CongresoDetail,CongressImagenDeletedView,AsignarConstancias
-                                   ,vTableAsJSONAsigCongreso,vTableAsJSONCongresos,ExportarBecas)
+                                   ,vTableAsJSONAsigCongreso,vTableAsJSONCongresos)
 from .views.imagen_views import (CongressImagenCreateView,ImagenesListView)
 from .views.sala_views import (SalasListView,vTableAsJSONCongresoSalas,OrdenarSalaView,SalaCreateView,SalaUpdateView,DeletedSalaView)
 from .views.programa_views import (ProgramaListView,ProgramaCreateView,ProgramaUpdateView,ProgramaDeletedView)
 from .views.boleto_views import (CategPagosListView,CongressCategPagosCreateView,CongressCategPagosUpdateView,CongressCategPagosDeletedView)
-from .views.beca_views import (vTableAsJSONBecaCongreso,BecasCongressListView)
+from .views.beca_views import (vTableAsJSONBecaCongreso,BecasCongressListView,ExportarBecas)
 from .views.ponencia_view import (PonenciaListView, PonenciaCreateView,PonenciaPonenteListView,
                                    PonencicaUpdateView,PonenciaPonenteCreateView,PonenciaDeletedView,
                                    PonenciaPonenteDeletedView,PonenciaBloqueDeleted,vTableAsJSONPonencia)
@@ -29,7 +29,7 @@ from .views.taller_view import (TalleresListView,TallerCreateView,TallerCategPag
                                    AsignarTallerAddViews,GetPagosT,AsignarTallerDeletedViews,TallerPonenteDeletedView,TallerBloqueDeleted,
                                    ReporteRelTallerUserExcel,AsignarConstanciasTaller,TallerCategPagosUpdateView,TallerCategPagosDeletedView,vTableAsJSONTaller,vTableAsJSONAsigTaller)
 from .views.ponente_view import (PonentesListView,PonentesCreateView,PonenteDeletedView,UserPonenteCreateView,vTableAsJSONPonentes)
-from .views.user_views import (UsuariosListView,UsuarioCreateView,UsuarioUpdateView,UsuarioDeletedView,vTableAsJSON)
+from .views.user_views import (LogsUsuarios,UsuariosListView,UsuarioCreateView,UsuarioUpdateView,UsuarioDeletedView,vTableAsJSON)
 from .views.bloque_views import (BloquesListView,BloqueCreateView,BloqueDeletedView,BloquePonenciasListView,BloqueTalleresListView,
                                    BloqueUpdateView,page_not_found,BloqueModeradoresDeletedView,
                                    PonenciaSeleccionarView)
@@ -81,9 +81,9 @@ urlpatterns = [
       path('congreso/previsualizar/<str:path>', CongresoDetail.as_view(), name='congress_previsualizar'),
 
       # Pagar Congresos
-      path('asignar/congreso', AsignarCongressListView.as_view(), name='asig_congress_list'),
-      path('asignar/congreso/add', AsignarCongressAddViews.as_view(), name='asignar_congress_add'),
-      path('asignar/congreso/eliminar/<int:pk>', AsignarCongressDeletedViews.as_view(), name='asig_congres_delete'),
+      path('usuarios/pagaron/congreso', AsignarCongressListView.as_view(), name='asig_congress_list'),
+      path('usuarios/pagaron/congreso/add', AsignarCongressAddViews.as_view(), name='asignar_congress_add'),
+      path('usuarios/pagaron/congreso/eliminar/<int:pk>', AsignarCongressDeletedViews.as_view(), name='asig_congres_delete'),
 
       #Becas Congreso
       

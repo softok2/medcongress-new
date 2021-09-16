@@ -621,9 +621,11 @@ class AsignarCongresoForms(forms.ModelForm):
         model=RelCongresoUser
         fields=['user','congreso','categoria_pago','is_pagado','cantidad']
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs) 
 
+        if not user.is_staff:
+            self.fields['congreso'].choices=[(None, "-----------")]+[(c.congreso.pk, c.congreso.titulo) for c in Organizador.objects.filter(user=user.perfilusuario)]
         self.fields['user'].widget.attrs.update({'class': 'select2 form-control'}) 
         self.fields['congreso'].widget.attrs.update({'class': 'select2 form-control'}) 
         self.fields['categoria_pago'].widget.attrs.update({'class': 'form-control','rows':'3'})   
@@ -858,9 +860,11 @@ class ExportarExelForm(forms.ModelForm):
     class Meta:
         model=RelCongresoUser
         fields=['congreso']
-    def __init__(self, *args, **kwargs):
+    def __init__(self,user, *args, **kwargs):
         super().__init__(*args, **kwargs) 
-
+      
+        if not user.is_staff:
+            self.fields['congreso'].choices=[(None, "-----------")]+[(c.congreso.pk, c.congreso.titulo) for c in Organizador.objects.filter(user=user.perfilusuario)]
         self.fields['congreso'].widget.attrs.update({'class': 'form-control select2'}) 
        
     # def clean(self, *args, **kwargs):
@@ -881,9 +885,8 @@ class ExportarExelUsuariosForm(forms.ModelForm):
         fields=['categoria','especialidad']
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
-
-        self.fields['categoria'].widget.attrs.update({'class': 'form-control select2'})
-        self.fields['especialidad'].widget.attrs.update({'class': 'form-control select2'})  
+        
+         
        
     # def clean(self, *args, **kwargs):
     #     cleaned_data = super(ExportarExelForm, self).clean(*args, **kwargs)
@@ -1098,6 +1101,28 @@ class CongresoSalaForm(forms.ModelForm):
             if orden > (cant_salas+1) :
                 self.add_error('orden', 'El campo <b>Orden</b> debe ser menor que %s'%(cant_salas+1))
 
+class OrganizadorForm(forms.ModelForm):
+    user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Seleccione usuario',required=True)
+    class Meta:
+        model=Organizador
+        fields=['user','congreso']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+
+        self.fields['user'].widget.attrs.update({'class': 'select2 form-control'}) 
+        self.fields['congreso'].widget.attrs.update({'class': 'select2 form-control '}) 
+
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(OrganizadorForm, self).clean(*args, **kwargs)
+        user = cleaned_data.get('user', None)
+        congreso = cleaned_data.get('congreso', None)
+        if not user:
+            self.add_error('user', 'Debe entrar un Usuario')
+        if not congreso:
+            self.add_error('user', 'Debe entrar un Congreso')
+        if Organizador.objects.filter(user=user,congreso=congreso).exists():
+            self.add_error('user', 'Ya este usuario es Organizador de este congreso')
 
 class ExportarLogsCongresoExelForm(forms.ModelForm):
     congreso= forms.ModelChoiceField(queryset=Congreso.objects.all(),label='Congreso')
@@ -1130,26 +1155,3 @@ class ExportarLogsUsuarioExelForm(forms.ModelForm):
         self.fields['usuario'].widget.attrs.update({'class': 'form-control select2'}) 
         self.fields['fecha_inicio'].widget.attrs.update({'class': 'form-control','type':'date'}) 
         self.fields['fecha_fin'].widget.attrs.update({'class': 'form-control','type':'date'}) 
-
-class OrganizadorForm(forms.ModelForm):
-    user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Seleccione usuario',required=True)
-    class Meta:
-        model=Organizador
-        fields=['user','congreso']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs) 
-
-        self.fields['user'].widget.attrs.update({'class': 'select2 form-control'}) 
-        self.fields['congreso'].widget.attrs.update({'class': 'select2 form-control '}) 
-
-    def clean(self, *args, **kwargs):
-        cleaned_data = super(OrganizadorForm, self).clean(*args, **kwargs)
-        user = cleaned_data.get('user', None)
-        congreso = cleaned_data.get('congreso', None)
-        if not user:
-            self.add_error('user', 'Debe entrar un Usuario')
-        if not congreso:
-            self.add_error('user', 'Debe entrar un Congreso')
-        if Organizador.objects.filter(user=user,congreso=congreso).exists():
-            self.add_error('user', 'Ya este usuario es Organizador de este congreso')

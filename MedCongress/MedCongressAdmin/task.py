@@ -1,5 +1,5 @@
 from celery import shared_task
-from MedCongressApp.models import ConstanciaUsuario,Congreso,RelCongresoUser,RelBloqueModerador,Bloque,Taller,RelTallerUser,User,BecasPendientes,Ponencia,RelPonenciaPonente
+from MedCongressApp.models import Organizador,ConstanciaUsuario,Congreso,RelCongresoUser,RelBloqueModerador,Bloque,Taller,RelTallerUser,User,BecasPendientes,Ponencia,RelPonenciaPonente
 from PIL import Image, ImageDraw, ImageFont
 from datetime import datetime
 from django.core.mail import EmailMessage
@@ -29,8 +29,8 @@ def Constancia(titulo,t_user,folio_ini,folio_fin,folio_dis):
                         comienzo=1500-(cont/2*19) 
                         base=Image.open('MedCongressApp/static/%s'%(congreso.foto_constancia)).convert('RGBA')
                         text=Image.new('RGBA',base.size,(255,255,255,0))
-                        #nombre_font=ImageFont.truetype('calibri.ttf',150)
-                        nombre_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 100, encoding="unic")
+                        nombre_font=ImageFont.truetype('calibri.ttf',150)
+                        # nombre_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 100, encoding="unic")
                         # cong.set_variation_by_name('Italic')
                         if folio_ini :
                             usuario.folio_constancia=folio_dis.replace('#',str(folio))
@@ -236,34 +236,11 @@ def Constanciataller(titulo):
                 usuario.save()                               
             # ////////////////
            
-#             email = EmailMessage('Constancia', '''Estimado asistente al Simposio AMCIC 2020,
-
- 
-
-# Por medio del presente, se envía la constancia de asistencia al  taller  del Simposio el cual esperamos haya sido de tu interés y agrado. Recuerda que tienes acceso a las presentaciones del simposio a través de la plataforma de MedCongress, solo tienes que ingresar a la página https://medcongress.com.mx/ y en login ingresar tu correo electrónico y tu contraseña, dentro del programa podrás elegir las ponencias de tu interés que deseas ver.
-
- 
-
-# Si tienes problemas para ingresar a la plataforma, por favor comunícate con nosotros para ayudarte a solucionar tu ingreso.
-
- 
-
-# Recibirás una encuesta de satisfacción en las próximas semanas, te agradeceremos tus comentarios.
-
- 
-
-# Nos vemos en el 2° Simposio en Ciencias de la Salud AMCIC 2021, el cual se llevará a cabo en el último trimestre del año, modalidad virtual!''', to = [usuario.user.usuario.email])
-#             email.attach_file('MedCongressApp/static/congreso/img_constancia/%s.pdf'%(nombre_img[0:50]))
-#             email.send()
-
-
-
-            # ////  
-#         return HttpResponse(Constancia.delay())
     return taller.titulo 
 @shared_task
-def AsignarBeca(exel):
+def AsignarBeca(exel,user_id):
     respuesta='ok'
+    
     for row in exel:
         
         if  not row['Congreso'] or not row['Correo']:
@@ -273,6 +250,9 @@ def AsignarBeca(exel):
         if not congreso:
             respuesta='congreso'   
             continue
+        usuario=User.objects.get(pk=user_id)
+        if not usuario.is_staff or not Organizador.objects.filter(congreso=congreso,user=usuario.perfilusuario).exists():
+            respuesta='no_permiso'
         if not re.match('^[(a-z0-9\_\-\.)]+@[(a-z0-9\_\-\.)]+\.[(a-z)]{2,15}$',correo.lower()):
             respuesta='usuario'
             continue
@@ -299,5 +279,5 @@ def AsignarBeca(exel):
         3.- una vez registrado, de clic en el siguiente enlace para acceder al congreso.
             %s/congreso/%s'''%(congreso.titulo,URL_SITE,correo,URL_SITE,congreso.path), to = [correo])
 
-            email.send()
+            # email.send()
     return respuesta   

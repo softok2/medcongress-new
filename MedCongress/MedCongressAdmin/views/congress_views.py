@@ -1,55 +1,59 @@
+import base64
 import json
-import base64 
+from datetime import datetime, timedelta
 from os import remove
-import pandas as pd
-from pandas import isnull
 from pathlib import Path
+
+import openpyxl
+import pandas as pd
 from django import forms
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.db.models import Sum
-from django.db import connections
-from datetime import datetime,timedelta
+from django.core.exceptions import RequestDataTooBig, ValidationError
 from django.core.mail import EmailMessage
-from django.core.exceptions import RequestDataTooBig,ValidationError
+from django.db import connections
+from django.db.models import Q, Sum
 from django.http import (HttpResponse, HttpResponseBadRequest,
                          HttpResponseRedirect, JsonResponse)
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.utils.crypto import get_random_string
 from django.views.generic import ListView, TemplateView
-from PIL import Image, ImageDraw, ImageFont
 from django.views.generic.edit import (CreateView, DeleteView, FormView,
                                        UpdateView)
+from MedCongressAdmin.apps import validarOrganizador, validarUser
 from MedCongressAdmin.forms.congres_forms import (AsignarCongresoForms,
+                                                  AsignarConstanciaUserForms,
                                                   CongresoCategPagoForm,
                                                   CongresoForms,
                                                   CongresoPatrocinadorForm,
-                                                  CongresoSocioForm,
+                                                  CongresoProgramaForm,
                                                   CongresoSalaForm,
+                                                  CongresoSocioForm,
                                                   ExportarExelForm,
                                                   ImagenCongForms,
-                                                  ExportarLogsCongresoExelForm,
-                                                  ExportarLogsUsuarioExelForm,
-                                                  PonenciaForms,CongresoProgramaForm,AsignarConstanciaUserForms)
+                                                  PonenciaForms,
+                                                  ExportarLogsCongresoExelForm)
+from MedCongressAdmin.task import AsignarBeca, Constancia
 from MedCongressApp.models import (AvalCongreso, Bloque, CategoriaPagoCongreso,
                                    Congreso, CuestionarioPregunta,
-                                   CuestionarioRespuestas, ImagenCongreso,
+                                   CuestionarioRespuestas, DocumentoPrograma,
+                                   ImagenCongreso, Moderador, Organizador,
                                    PerfilUsuario, Ponencia, Ponente,
                                    PreguntasFrecuentes, RelCongresoAval,
                                    RelCongresoCategoriaPago, RelCongresoSocio,
-                                   RelCongresoUser, SocioCongreso, Taller,Sala,
-                                   Ubicacion, User,Moderador,RelPonenciaPonente,RelTalleresCategoriaPago,
-                                   RelTallerUser,DocumentoPrograma,UserActivityLog,TrabajosInvestigacion,Organizador)
-import openpyxl
+                                   RelCongresoUser, RelPonenciaPonente,
+                                   RelTalleresCategoriaPago, RelTallerUser,
+                                   Sala, SocioCongreso, Taller,
+                                   TrabajosInvestigacion, Ubicacion, User,
+                                   UserActivityLog)
 from openpyxl import Workbook
-from openpyxl.styles import (Alignment, Border, Font, PatternFill, Protection,
-                             Side, NamedStyle)
-from MedCongressAdmin.apps import validarUser,validarOrganizador
-from MedCongressAdmin.task import Constancia,AsignarBeca
-from django.db.models import Q
+from openpyxl.styles import (Alignment, Border, Font, NamedStyle, PatternFill,
+                             Protection, Side)
+from pandas import isnull
+from PIL import Image, ImageDraw, ImageFont
 
-    
+
 class CongressListView(validarOrganizador,ListView):
     model = Congreso
     context_object_name = 'congress'
@@ -417,12 +421,17 @@ def GetPagos(request):
     mimetype = "application/json"
     return HttpResponse(data, mimetype)   
 
-class AsignarCongressListView(validarUser,ListView,FormView):
+class AsignarCongressListView(validarOrganizador,ListView,FormView):
     model = RelCongresoUser
     context_object_name = 'congress'
-    template_name = 'MedCongressAdmin/asignar_congreso.html'
+    template_name = 'MedCongressAdmin/congress/listar_asignar_congreso.html'
     form_class=ExportarExelForm
     
+    def get_form_kwargs(self, *args, **kwargs):
+        kwargs = super().get_form_kwargs(*args, **kwargs)
+        kwargs['user'] =self.request.user
+        return kwargs
+
     def form_valid(self, form):
         self.object_list = self.get_queryset()
         id_congreso=self.request.POST['congreso']
@@ -627,10 +636,10 @@ class AsignarCongressListView(validarUser,ListView,FormView):
             
         return context  
     
-class AsignarCongressAddViews(validarUser,FormView):
+class AsignarCongressAddViews(validarOrganizador,FormView):
     form_class = AsignarCongresoForms
     success_url = reverse_lazy('MedCongressAdmin:asig_congress_list')
-    template_name = 'MedCongressAdmin/asig_congress_form.html'
+    template_name = 'MedCongressAdmin/congress/asig_congress_form.html'
 
     def form_valid(self, form):
         congress=form.save(commit=True)
@@ -647,6 +656,7 @@ class AsignarCongressAddViews(validarUser,FormView):
             usuario=PerfilUsuario.objects.get(pk=self.kwargs.get('pk'))
             ctx['usuario'] = usuario
         return ctx 
+    
     def get_success_url(self):
         if self.request.GET.get('ponente'):
             url=reverse_lazy('MedCongressAdmin:usuarios_list') 
@@ -655,8 +665,13 @@ class AsignarCongressAddViews(validarUser,FormView):
         self.success_url='%s?search=%s'%(url,self.request.GET.get('search'))
         
         return self.success_url          
-          
-class AsignarCongressDeletedViews(validarUser,DeleteView):
+
+    def get_form_kwargs(self, *args, **kwargs):
+        kwargs = super().get_form_kwargs(*args, **kwargs)
+        kwargs['user'] =self.request.user
+        return kwargs 
+
+class AsignarCongressDeletedViews(validarOrganizador,DeleteView):
     model = RelCongresoUser
     success_url = reverse_lazy('MedCongressAdmin:asig_congress_list')
     
@@ -1172,35 +1187,21 @@ class CongresoDetail(TemplateView):
            
         return context
 
-class AsignarConstanciasUsuario(validarUser,FormView):
+class AsignarConstanciasUsuario(validarOrganizador,FormView):
+    
     form_class = AsignarConstanciaUserForms
-   
     template_name = 'MedCongressAdmin/asig_constancia_usuario.html'
 
-    # def get_queryset(self, **kwargs):
-    #     return RelCongresoUser.objects.filter(pk=self.kwargs.get('pk'))
-
-    # def get_context_data(self, **kwargs):
-    #     context=super().get_context_data(**kwargs)
-    #     context['update']=True
-    #     context['categoria']= RelCongresoCategoriaPago.objects.get(pk=self.kwargs.get('pk'))
-    #     pon=Congreso.objects.filter(path=self.kwargs.get('path')).first()
-    #     context['cong'] = pon
-    #     return context
-    
     def get_success_url(self):
         url =  reverse_lazy('MedCongressAdmin:asig_congress_list' )
         self.success_url='%s?search=%s'%(url,self.request.GET.get('search'))
         return self.success_url
 
     def form_valid(self, form):
-        
-        
         relacion=RelCongresoUser.objects.get(pk=self.kwargs.get('pk'))
         relacion.foto_constancia=self.request.FILES['foto_constancia']
         relacion.is_constancia=True
         relacion.fecha_constancia=datetime.now()
-        
         score=0
         if relacion.congreso.score:
             score=relacion.congreso.score
@@ -1233,7 +1234,13 @@ class AsignarConstancias(validarOrganizador,TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(AsignarConstancias, self).get_context_data(**kwargs)
-        congreso=Congreso.objects.all()
+        if self.request.user.is_staff:
+            congreso=Congreso.objects.all()
+        else:
+            congreso=[]
+            congresos=Organizador.objects.filter(user=self.request.user.perfilusuario)
+            for cong in congresos:
+                congreso.append(cong.congreso)
         context['congresos']=congreso
         return context
          
@@ -1285,7 +1292,18 @@ class vTableAsJSONAsigCongreso(TemplateView):
         col_name_map = ['user__usuario__first_name','user__usuario__email','congreso__titulo','cantidad','categoria_pago__nombre','is_pagado','is_constancia']
            
         #listado que muestra en dependencia de donde estes parado
-        object_list = RelCongresoUser.objects.filter(is_pagado=True)
+        if request.user.is_staff:
+            object_list = RelCongresoUser.objects.filter(is_pagado=True)
+        else:
+            congreso_orgs=Organizador.objects.filter(user=request.user.perfilusuario)
+            object_list=RelCongresoUser.objects.filter(pk=0)
+            for organizador in congreso_orgs:
+                object_list |=RelCongresoUser.objects.filter(congreso=organizador.congreso,is_pagado=True)
+
+
+
+
+
         
         #parametros 
         search_text = request.GET.get('sSearch', '').lower()# texto a buscar
@@ -1500,7 +1518,7 @@ class vTableAsJSONCongresos(TemplateView):
         mimetype = "application/json"
         #Enviar
         return HttpResponse(data, mimetype)    
-     
+
 class LogsCongreso(validarUser,FormView):
     form_class=ExportarLogsCongresoExelForm
     template_name = 'MedCongressAdmin/log_congreso_form.html'
@@ -1670,372 +1688,5 @@ class LogsCongreso(validarUser,FormView):
         response["Content-Disposition"] = "attachment; filename=LogsCongreso.xlsx"
         wb.save(response)
         return response
-          
-class LogsUsuarios(validarUser,FormView):
-    form_class=ExportarLogsUsuarioExelForm
-    template_name = 'MedCongressAdmin/log_usuario_form.html'
-    def form_valid(self, form):
-        id_usuario=self.request.POST['usuario']
-        usuario=PerfilUsuario.objects.get(pk=id_usuario)
-        if self.request.POST['fecha_fin']:
-            fecha_fin=self.request.POST['fecha_fin']
-            d_fecha_final = datetime.strptime(fecha_fin,'%Y-%m-%d') + timedelta(days=1)
-        else:
-             d_fecha_final = datetime.now() + timedelta(days=1)   
-        fecha_inicio=self.request.POST['fecha_inicio']
-        if fecha_inicio:
-            d_fecha_inicio = datetime.strptime(fecha_inicio,'%Y-%m-%d')
-            query=UserActivityLog.objects.filter(user=id_usuario,fecha__range=[d_fecha_inicio,d_fecha_final]).order_by('congreso','fecha')
-        else:
-            query=UserActivityLog.objects.filter(user=id_usuario,fecha__lt=d_fecha_final).order_by('congreso','fecha')
-        
-      
-        #Creamos el libro de trabajo
-        wb = Workbook()
-        #Definimos como nuestra hoja de trabajo, la hoja activa, por defecto la primera del libro
-        ws = wb.active
-        ws.column_dimensions['A'].width=5
-        ws.column_dimensions['B'].width=25
-        ws.column_dimensions['C'].width=20
-        ws.column_dimensions['D'].width=150
-
-        titulo = NamedStyle(name="titulo")
-        titulo.font=Font(size=12,bold=True)
-        titulo.fill=PatternFill(fill_type='solid',start_color='00CCCCFF')
-        titulo.alignment=Alignment(horizontal='center',mergeCell=True)
-        titulo.border = Border(left=Side(border_style='thin',
-                        color='FF000000'),
-                right=Side(border_style='thin',
-                        color='FF000000'),
-                top=Side(border_style='thin',
-                        color='FF000000'),
-                bottom=Side(border_style='thin',
-                            color='FF000000'),
-                diagonal=Side(border_style='thin',
-                            color='FF000000'),
-                diagonal_direction=0,
-                outline=Side(border_style='thin',
-                            color='FF000000'),
-                vertical=Side(border_style='thin',
-                            color='FF000000'),
-                horizontal=Side(border_style='thin',
-                            color='FF000000')
-            )
-
-        celdas = NamedStyle(name="celdas")
-        celdas.font=Font(size=12)
-        
-        celdas.alignment=Alignment(horizontal='general',mergeCell=True)
-        celdas.border = Border(left=Side(border_style='thin',
-                        color='FF000000'),
-                right=Side(border_style='thin',
-                        color='FF000000'),
-                top=Side(border_style='thin',
-                        color='FF000000'),
-                bottom=Side(border_style='thin',
-                            color='FF000000'),
-                diagonal=Side(border_style='thin',
-                            color='FF000000'),
-                diagonal_direction=0,
-                outline=Side(border_style='thin',
-                            color='FF000000'),
-                vertical=Side(border_style='thin',
-                            color='FF000000'),
-                horizontal=Side(border_style='thin',
-                            color='FF000000')
-            )
-        celdas_fecha = NamedStyle(name="celdas_fecha")
-        celdas_fecha.font=Font(size=12)
-        
-        celdas_fecha.alignment=Alignment(horizontal='center',mergeCell=True)
-        celdas_fecha.border = Border(left=Side(border_style='thin',
-                        color='FF000000'),
-                right=Side(border_style='thin',
-                        color='FF000000'),
-                top=Side(border_style='thin',
-                        color='FF000000'),
-                bottom=Side(border_style='thin',
-                            color='FF000000'),
-                diagonal=Side(border_style='thin',
-                            color='FF000000'),
-                diagonal_direction=0,
-                outline=Side(border_style='thin',
-                            color='FF000000'),
-                vertical=Side(border_style='thin',
-                            color='FF000000'),
-                horizontal=Side(border_style='thin',
-                            color='FF000000')
-            )
-        label = NamedStyle(name="label")
-        label.font=Font(size=12,bold=True)
-        label.alignment=Alignment(horizontal='right',mergeCell=True)
-        #En la celda B1 ponemos el texto 'REPORTE DE PERSONAS'
-        ws['A1'] = 'Logs del Usuario :'
-        ws['A1'].font = Font(size=12,bold=True)
-        ws['A1'].alignment = Alignment(mergeCell='center',horizontal='center') 
-        
-        ws['A2'] ='%s %s <<%s>>'%(usuario.usuario.first_name,usuario.usuario.last_name,usuario.usuario.email)
-        ws['A2'].font = Font(size=12,bold=True)
-        ws['A2'].alignment = Alignment(mergeCell='center',horizontal='center') 
-        
-        #Juntamos las celdas desde la B1 hasta la E1, formando una sola celda
-        ws.merge_cells('A1:F1')
-        ws.merge_cells('A2:F2')
-        #Creamos los encabezados desde la celda B3 hasta la E3
-        cont=3
-        num=1
-        id_congreso=0
-        if query:
-            for quer in query:
-                if id_congreso!=quer.congreso.pk:
-                    cont = cont + 1
-                    num=1
-                    ws.merge_cells('A%s:B%s'%(cont,cont))
-                    ws.merge_cells('C%s:D%s'%(cont,cont))
-                    ws.cell(row=cont,column=1).style=label
-                    ws['A%s'%(cont)] = 'Congreso:'
-                    ws['C%s'%(cont)] = '%s'%(quer.congreso.titulo)
-                    cont = cont + 1
-                    ws.cell(row=cont,column=1).style=titulo
-                    ws.cell(row=cont,column=2).style=titulo
-                    ws.cell(row=cont,column=3).style=titulo
-                    ws.cell(row=cont,column=4).style=titulo
-                    
-                    ws.cell(row=cont,column=1).value='No.'
-                    ws.cell(row=cont,column=2).value='Fecha' 
-                    ws.cell(row=cont,column=3).value='Tiempo (H:M:S)'
-                    ws.cell(row=cont,column=4).value='Acción'
-                    id_congreso= quer.congreso.pk   
-                
-                    cont = cont + 1
-            #Recorremos el conjunto de personas y vamos escribiendo cada uno de los datos en las celdas
-            
-                
-                ws.cell(row=cont,column=1).style=celdas_fecha
-                ws.cell(row=cont,column=1).value = num
-                ws.cell(row=cont,column=2).style=celdas_fecha
-                ws.cell(row=cont,column=2).value = quer.fecha
-                ws.cell(row=cont,column=3).style=celdas_fecha
-                tiempo=quer.tiempo.split('.')
-                ws.cell(row=cont,column=3).value =tiempo[0]
-                ws.cell(row=cont,column=4).style=celdas
-                ws.cell(row=cont,column=4).value = '  %s'%(quer.mensaje) 
-                
-                cont = cont + 1
-                num = num + 1
-        else:
-            ws.merge_cells('A%s:F%s'%(cont,cont))
-            ws.cell(row=cont,column=1).value = 'Este usuario no tiene Logs'
-        response = HttpResponse(content_type="application/ms-excel") 
-        response["Content-Disposition"] = "attachment; filename=LogsUsuario.xlsx"
-        wb.save(response)
-        return response
-        
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['search']=self.request.GET.get('search')
-    #     if self.request.GET.get('exportar'):
-    #         congreso_evn=[]
-    #         congresos= Congreso.objects.all()
-    #         activo=False
-    #         for congreso in congresos:
-    #             if congreso.path == self.request.GET.get('exportar'):
-    #                 activo=True
-    #             else:
-    #                 activo=False
-    #             congreso_evn.append({ 'id':congreso.pk,
-    #                                 'titulo':congreso.titulo,
-    #                                     'activo':activo,
-
-    #             })
-    #         context['exportar']= congreso_evn
-            
-    #     return context  
   
-class ExportarBecas(validarUser,FormView):
-    model = RelCongresoUser
-    context_object_name = 'congress'
-    template_name = 'MedCongressAdmin/becas_congreso.html'
-    form_class=ExportarExelForm
-    
-    def form_valid(self, form):
-        self.object_list = self.get_queryset()
-        id_congreso=self.request.POST['congreso']
-        query= RelCongresoUser.objects.filter(congreso=id_congreso,is_pagado=True,is_beca=True).values('user__usuario__first_name','user__usuario__last_name','user__usuario__email','user__genero__denominacion','categoria_pago__nombre','user__cel_profecional','user__categoria__nombre','user__ubicacion__direccion','user__especialidad__nombre','user__fecha_nacimiento','user__num_telefono','congreso__titulo','user__puesto').annotate(Sum('cantidad'))
-        
-        if query:
-            #Creamos el libro de trabajo
-            wb = Workbook()
-            #Definimos como nuestra hoja de trabajo, la hoja activa, por defecto la primera del libro
-            ws = wb.active
-            ws.column_dimensions['A'].width=5
-            ws.column_dimensions['B'].width=40
-            ws.column_dimensions['C'].width=40
-            ws.column_dimensions['D'].width=47
 
-            ws.column_dimensions['E'].width=20
-            ws.column_dimensions['F'].width=20
-            ws.column_dimensions['G'].width=27
-            ws.column_dimensions['H'].width=56
-            ws.column_dimensions['I'].width=20
-            ws.column_dimensions['J'].width=25
-            ws.column_dimensions['K'].width=25
-            ws.column_dimensions['L'].width=22
-            ws.column_dimensions['M'].width=50
-
-            titulo = NamedStyle(name="titulo")
-            titulo.font=Font(size=12,bold=True)
-            titulo.fill=PatternFill(fill_type='solid',start_color='00CCCCFF')
-            titulo.alignment=Alignment(horizontal='center',mergeCell=True)
-            titulo.border = Border(left=Side(border_style='thin',
-                           color='FF000000'),
-                 right=Side(border_style='thin',
-                            color='FF000000'),
-                 top=Side(border_style='thin',
-                          color='FF000000'),
-                 bottom=Side(border_style='thin',
-                             color='FF000000'),
-                 diagonal=Side(border_style='thin',
-                               color='FF000000'),
-                 diagonal_direction=0,
-                 outline=Side(border_style='thin',
-                              color='FF000000'),
-                 vertical=Side(border_style='thin',
-                               color='FF000000'),
-                 horizontal=Side(border_style='thin',
-                                color='FF000000')
-                )
-
-            celdas = NamedStyle(name="celdas")
-            celdas.font=Font(size=12)
-            
-            celdas.alignment=Alignment(horizontal='general',mergeCell=True)
-            celdas.border = Border(left=Side(border_style='thin',
-                           color='FF000000'),
-                 right=Side(border_style='thin',
-                            color='FF000000'),
-                 top=Side(border_style='thin',
-                          color='FF000000'),
-                 bottom=Side(border_style='thin',
-                             color='FF000000'),
-                 diagonal=Side(border_style='thin',
-                               color='FF000000'),
-                 diagonal_direction=0,
-                 outline=Side(border_style='thin',
-                              color='FF000000'),
-                 vertical=Side(border_style='thin',
-                               color='FF000000'),
-                 horizontal=Side(border_style='thin',
-                                color='FF000000')
-                )
-            celdas_beca = NamedStyle(name="celdas_beca")
-            celdas_beca.font=Font(size=12,color='00CCCC')
-            
-            celdas_beca.alignment=Alignment(horizontal='general',mergeCell=True)
-            celdas_beca.border = Border(left=Side(border_style='thin',
-                           color='FF000000'),
-                 right=Side(border_style='thin',
-                            color='FF000000'),
-                 top=Side(border_style='thin',
-                          color='FF000000'),
-                 bottom=Side(border_style='thin',
-                             color='FF000000'),
-                 diagonal=Side(border_style='thin',
-                               color='FF000000'),
-                 diagonal_direction=0,
-                 outline=Side(border_style='thin',
-                              color='FF000000'),
-                 vertical=Side(border_style='thin',
-                               color='FF000000'),
-                 horizontal=Side(border_style='thin',
-                                color='FF000000')
-                )
-            #En la celda B1 ponemos el texto 'REPORTE DE PERSONAS'
-            ws['A1'] = 'Usuarios que se el asignaron Becas en el Congresos :'
-            ws['A1'].font = Font(size=12,bold=True)
-            ws['A1'].alignment = Alignment(mergeCell='center',horizontal='center') 
-            
-            ws['A2'] ='" %s "'%(query[0]['congreso__titulo']) 
-            ws['A2'].font = Font(size=12,bold=True)
-            ws['A2'].alignment = Alignment(mergeCell='center',horizontal='center') 
-           
-            #Juntamos las celdas desde la B1 hasta la E1, formando una sola celda
-            ws.merge_cells('A1:F1')
-            ws.merge_cells('A2:F2')
-            #Creamos los encabezados desde la celda B3 hasta la E3
-            ws['A3'].style =titulo
-            ws['B3'].style =titulo 
-            ws['C3'].style =titulo 
-            ws['D3'].style =titulo                   
-            ws['E3'].style =titulo 
-            ws['F3'].style =titulo 
-            ws['G3'].style =titulo 
-            ws['H3'].style =titulo
-            ws['I3'].style =titulo 
-            ws['J3'].style =titulo  
-            ws['K3'].style =titulo 
-            ws['L3'].style =titulo
-            ws['M3'].style =titulo
-
-
-            ws['A3'] = 'No.'
-            ws['B3'] = 'Nombre'
-            ws['C3'] = 'Email'
-            ws['D3'] = 'Dirección'
-            ws['E3'] = 'Teléfono'
-            ws['F3'] = 'Género'
-            ws['G3'] = 'Categoría'
-            ws['H3'] = 'Especialidad'
-            ws['I3'] = 'Cédula Profecional' 
-            ws['J3'] = 'Fecha de Nacimiento' 
-            ws['K3'] = 'Categoría de Pago'  
-            ws['L3'] = 'Cantidad Comprados' 
-            ws['M3'] = 'Lugar de Trabajo'            
-            cont=4
-            
-            #Recorremos el conjunto de personas y vamos escribiendo cada uno de los datos en las celdas
-            for quer in query:
-                
-                ws.cell(row=cont,column=1).style=celdas
-                ws.cell(row=cont,column=1).value = cont-3
-                ws.cell(row=cont,column=2).style=celdas
-                ws.cell(row=cont,column=2).value ='%s %s'%(quer['user__usuario__first_name'],quer['user__usuario__last_name']) 
-                ws.cell(row=cont,column=3).style=celdas
-                ws.cell(row=cont,column=3).value = quer['user__usuario__email']
-                ws.cell(row=cont,column=4).style=celdas
-                ws.cell(row=cont,column=4).value = quer['user__ubicacion__direccion']
-                ws.cell(row=cont,column=5).style=celdas
-                ws.cell(row=cont,column=5).value = quer['user__num_telefono']
-                ws.cell(row=cont,column=6).style=celdas
-                ws.cell(row=cont,column=6).value = quer['user__genero__denominacion']
-                ws.cell(row=cont,column=7).style=celdas
-                ws.cell(row=cont,column=7).value = quer['user__categoria__nombre']
-                ws.cell(row=cont,column=8).style=celdas
-                ws.cell(row=cont,column=8).value = quer['user__especialidad__nombre']
-                ws.cell(row=cont,column=9).style=celdas
-                ws.cell(row=cont,column=9).value = quer['user__cel_profecional']
-                ws.cell(row=cont,column=10).style=celdas
-                ws.cell(row=cont,column=10).value = quer['user__fecha_nacimiento']
-                ws.cell(row=cont,column=11).style=celdas
-                ws.cell(row=cont,column=11).value = quer['categoria_pago__nombre']
-                ws.cell(row=cont,column=12).style=celdas
-                ws.cell(row=cont,column=12).value = quer['cantidad__sum']
-                ws.cell(row=cont,column=13).style=celdas
-                ws.cell(row=cont,column=13).value = quer['user__puesto']
-                cont = cont + 1
-                
-            
-            response = HttpResponse(content_type="application/ms-excel") 
-            response["Content-Disposition"] = "attachment; filename=BecasCongreso.xlsx"
-            wb.save(response)
-            return response
-        else:
-            congreso=Congreso.objects.get(pk=id_congreso)
-            messages.warning(self.request, 'Todavía ningún usuario ha comprado este congreso')
-            return HttpResponseRedirect(reverse_lazy('MedCongressAdmin:asig_becas_list')+'?exportar=%s'%(congreso.path))
-    def get_queryset(self):
-        queryset=RelCongresoUser.objects.filter(is_beca=True)
-        return queryset
-   
-    

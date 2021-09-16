@@ -1,25 +1,33 @@
-import json
-from django import forms
 import base64
+import json
 import os
-from django.conf import settings
+from datetime import datetime, timedelta
 from os import remove
 from pathlib import Path
+
+from django import forms
+from django.conf import settings
 from django.contrib import messages
-from django.shortcuts import get_object_or_404
-from django.views.defaults import page_not_found
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.http import JsonResponse,HttpResponse,HttpResponseRedirect
+from django.core.mail import EmailMessage
+from django.db.models import Q, Sum
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils.crypto import get_random_string
+from django.views.defaults import page_not_found
 from django.views.generic import CreateView, ListView, TemplateView
 from django.views.generic.edit import DeleteView, FormView, UpdateView
-from MedCongressAdmin.forms.funcionalidades_form import EnviarCorreosForms
-from MedCongressApp.models import SocioCongreso,RelCongresoSocio,Congreso,Organizador,RelCongresoUser
-from MedCongressAdmin.apps import validarUser,validarOrganizador
-from django.db.models import Q 
-from MedCongressAdmin.task import Constancia,AsignarBeca 
-from django.core.mail import EmailMessage     
+from MedCongressAdmin.apps import validarOrganizador, validarUser
+from MedCongressAdmin.forms.funcionalidades_form import (
+    EnviarCorreosForms, ExportarExelForm)
+from MedCongressAdmin.task import AsignarBeca, Constancia
+from MedCongressApp.models import (Congreso, Organizador, PerfilUsuario,
+                                   RelCongresoSocio, RelCongresoUser,
+                                   SocioCongreso, UserActivityLog)
+from openpyxl import Workbook
+from openpyxl.styles import (Alignment, Border, Font, NamedStyle, PatternFill,
+                             Protection, Side)
 
 
 class EnviarCorreos(validarOrganizador,FormView):

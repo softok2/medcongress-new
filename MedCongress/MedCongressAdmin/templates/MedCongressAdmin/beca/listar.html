@@ -374,12 +374,12 @@
         
        }
 });
-        $('form').submit(function(event) { // o el id de tu formulario
-        if($('#id_congreso').val() == '') {
-            swal("¡Cancelado!", "No existe ese congreso.", "error");
-            return false;
-        }
-    })
+    //     $('form').submit(function(event) { // o el id de tu formulario
+    //     if($('#id_congreso').val() == '') {
+    //         swal("¡Cancelado!", "No existe ese dfgdghf.", "error");
+    //         return false;
+    //     }
+    // })
         
       
        
@@ -439,9 +439,8 @@
 $('#mostrar').toggle();
 
  }
+
  function DescragarExel() {
-
-
     $.ajax({
         type: "GET",
         url: "{% url 'MedCongressAdmin:Rep_RelCongresoUser'%}",
@@ -450,7 +449,7 @@ $('#mostrar').toggle();
         },
         success: function (data) {
             if (data['succes']) {
-                swal("Cancelado", "No existe ese congreso.", "error");
+                swal("Cancelado", "No existe ese rrterte.", "error");
             }
            
                

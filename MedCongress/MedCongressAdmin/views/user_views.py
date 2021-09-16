@@ -13,7 +13,7 @@ from django.views.generic import ListView,CreateView,TemplateView
 from django.contrib.auth.mixins import UserPassesTestMixin,AccessMixin
 from django.views.generic.edit import  DeleteView, UpdateView,FormView
 from MedCongressApp.models import User,PerfilUsuario,Ubicacion,CategoriaUsuario,Especialidades
-from MedCongressAdmin.forms.congres_forms import UsuarioForms
+from MedCongressAdmin.forms.congres_forms import UsuarioForms,ExportarLogsUsuarioExelForm
 from MedCongressAdmin.apps import validarUser
 from django.db.models import Q
 from openpyxl import Workbook
@@ -378,3 +378,164 @@ class vTableAsJSON(TemplateView):
         #Enviar
         return HttpResponse(data, mimetype)    
 
+class LogsUsuarios(validarUser,FormView):
+    form_class=ExportarLogsUsuarioExelForm
+    template_name = 'MedCongressAdmin/usuario/log_form.html'
+    def form_valid(self, form):
+        id_usuario=self.request.POST['usuario']
+        usuario=PerfilUsuario.objects.get(pk=id_usuario)
+        if self.request.POST['fecha_fin']:
+            fecha_fin=self.request.POST['fecha_fin']
+            d_fecha_final = datetime.strptime(fecha_fin,'%Y-%m-%d') + timedelta(days=1)
+        else:
+             d_fecha_final = datetime.now() + timedelta(days=1)   
+        fecha_inicio=self.request.POST['fecha_inicio']
+        if fecha_inicio:
+            d_fecha_inicio = datetime.strptime(fecha_inicio,'%Y-%m-%d')
+            query=UserActivityLog.objects.filter(user=id_usuario,fecha__range=[d_fecha_inicio,d_fecha_final]).order_by('congreso','fecha')
+        else:
+            query=UserActivityLog.objects.filter(user=id_usuario,fecha__lt=d_fecha_final).order_by('congreso','fecha')
+        
+      
+        #Creamos el libro de trabajo
+        wb = Workbook()
+        #Definimos como nuestra hoja de trabajo, la hoja activa, por defecto la primera del libro
+        ws = wb.active
+        ws.column_dimensions['A'].width=5
+        ws.column_dimensions['B'].width=25
+        ws.column_dimensions['C'].width=20
+        ws.column_dimensions['D'].width=150
+
+        titulo = NamedStyle(name="titulo")
+        titulo.font=Font(size=12,bold=True)
+        titulo.fill=PatternFill(fill_type='solid',start_color='00CCCCFF')
+        titulo.alignment=Alignment(horizontal='center',mergeCell=True)
+        titulo.border = Border(left=Side(border_style='thin',
+                        color='FF000000'),
+                right=Side(border_style='thin',
+                        color='FF000000'),
+                top=Side(border_style='thin',
+                        color='FF000000'),
+                bottom=Side(border_style='thin',
+                            color='FF000000'),
+                diagonal=Side(border_style='thin',
+                            color='FF000000'),
+                diagonal_direction=0,
+                outline=Side(border_style='thin',
+                            color='FF000000'),
+                vertical=Side(border_style='thin',
+                            color='FF000000'),
+                horizontal=Side(border_style='thin',
+                            color='FF000000')
+            )
+
+        celdas = NamedStyle(name="celdas")
+        celdas.font=Font(size=12)
+        
+        celdas.alignment=Alignment(horizontal='general',mergeCell=True)
+        celdas.border = Border(left=Side(border_style='thin',
+                        color='FF000000'),
+                right=Side(border_style='thin',
+                        color='FF000000'),
+                top=Side(border_style='thin',
+                        color='FF000000'),
+                bottom=Side(border_style='thin',
+                            color='FF000000'),
+                diagonal=Side(border_style='thin',
+                            color='FF000000'),
+                diagonal_direction=0,
+                outline=Side(border_style='thin',
+                            color='FF000000'),
+                vertical=Side(border_style='thin',
+                            color='FF000000'),
+                horizontal=Side(border_style='thin',
+                            color='FF000000')
+            )
+        celdas_fecha = NamedStyle(name="celdas_fecha")
+        celdas_fecha.font=Font(size=12)
+        
+        celdas_fecha.alignment=Alignment(horizontal='center',mergeCell=True)
+        celdas_fecha.border = Border(left=Side(border_style='thin',
+                        color='FF000000'),
+                right=Side(border_style='thin',
+                        color='FF000000'),
+                top=Side(border_style='thin',
+                        color='FF000000'),
+                bottom=Side(border_style='thin',
+                            color='FF000000'),
+                diagonal=Side(border_style='thin',
+                            color='FF000000'),
+                diagonal_direction=0,
+                outline=Side(border_style='thin',
+                            color='FF000000'),
+                vertical=Side(border_style='thin',
+                            color='FF000000'),
+                horizontal=Side(border_style='thin',
+                            color='FF000000')
+            )
+        label = NamedStyle(name="label")
+        label.font=Font(size=12,bold=True)
+        label.alignment=Alignment(horizontal='right',mergeCell=True)
+        #En la celda B1 ponemos el texto 'REPORTE DE PERSONAS'
+        ws['A1'] = 'Logs del Usuario :'
+        ws['A1'].font = Font(size=12,bold=True)
+        ws['A1'].alignment = Alignment(mergeCell='center',horizontal='center') 
+        
+        ws['A2'] ='%s %s <<%s>>'%(usuario.usuario.first_name,usuario.usuario.last_name,usuario.usuario.email)
+        ws['A2'].font = Font(size=12,bold=True)
+        ws['A2'].alignment = Alignment(mergeCell='center',horizontal='center') 
+        
+        #Juntamos las celdas desde la B1 hasta la E1, formando una sola celda
+        ws.merge_cells('A1:F1')
+        ws.merge_cells('A2:F2')
+        #Creamos los encabezados desde la celda B3 hasta la E3
+        cont=3
+        num=1
+        id_congreso=0
+        if query:
+            for quer in query:
+                if id_congreso!=quer.congreso.pk:
+                    cont = cont + 1
+                    num=1
+                    ws.merge_cells('A%s:B%s'%(cont,cont))
+                    ws.merge_cells('C%s:D%s'%(cont,cont))
+                    ws.cell(row=cont,column=1).style=label
+                    ws['A%s'%(cont)] = 'Congreso:'
+                    ws['C%s'%(cont)] = '%s'%(quer.congreso.titulo)
+                    cont = cont + 1
+                    ws.cell(row=cont,column=1).style=titulo
+                    ws.cell(row=cont,column=2).style=titulo
+                    ws.cell(row=cont,column=3).style=titulo
+                    ws.cell(row=cont,column=4).style=titulo
+                    
+                    ws.cell(row=cont,column=1).value='No.'
+                    ws.cell(row=cont,column=2).value='Fecha' 
+                    ws.cell(row=cont,column=3).value='Tiempo (H:M:S)'
+                    ws.cell(row=cont,column=4).value='Acción'
+                    id_congreso= quer.congreso.pk   
+                
+                    cont = cont + 1
+            #Recorremos el conjunto de personas y vamos escribiendo cada uno de los datos en las celdas
+            
+                
+                ws.cell(row=cont,column=1).style=celdas_fecha
+                ws.cell(row=cont,column=1).value = num
+                ws.cell(row=cont,column=2).style=celdas_fecha
+                ws.cell(row=cont,column=2).value = quer.fecha
+                ws.cell(row=cont,column=3).style=celdas_fecha
+                tiempo=quer.tiempo.split('.')
+                ws.cell(row=cont,column=3).value =tiempo[0]
+                ws.cell(row=cont,column=4).style=celdas
+                ws.cell(row=cont,column=4).value = '  %s'%(quer.mensaje) 
+                
+                cont = cont + 1
+                num = num + 1
+        else:
+            ws.merge_cells('A%s:F%s'%(cont,cont))
+            ws.cell(row=cont,column=1).value = 'Este usuario no tiene Logs'
+        response = HttpResponse(content_type="application/ms-excel") 
+        response["Content-Disposition"] = "attachment; filename=LogsUsuario.xlsx"
+        wb.save(response)
+        return response
+        
+    

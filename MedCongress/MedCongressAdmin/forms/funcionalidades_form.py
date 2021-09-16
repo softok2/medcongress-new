@@ -1,6 +1,8 @@
 from django import forms
 from django.core.files.images import get_image_dimensions
-from  MedCongressApp.models import (QuienesSomos,Ofrecemos,ImagenQuienesSomos,Footer,ImagenHome,Congreso,Organizador)
+from  MedCongressApp.models import (QuienesSomos,Ofrecemos,UserActivityLog,
+                                    RelCongresoUser,ImagenQuienesSomos,Footer,
+                                    ImagenHome,Congreso,Organizador)
 
 
 class EnviarCorreosForms(forms.Form):
@@ -28,3 +30,18 @@ class EnviarCorreosForms(forms.Form):
     #     congreso = cleaned_data.get('congreso', None)
     #     if not congreso:
     #         self.add_error('congreso',"Debe seleccionar un <b> Congreso </b>"  )
+
+class ExportarExelForm(forms.ModelForm):
+    
+    congreso=forms.ModelChoiceField(queryset=Congreso.objects.all(),label='Filtrar Congreso',required=True)
+
+    class Meta:
+        model=RelCongresoUser
+        fields=['congreso']
+    def __init__(self,user, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+      
+        if not user.is_staff:
+            self.fields['congreso'].choices=[(None, "-----------")]+[(c.congreso.pk, c.congreso.titulo) for c in Organizador.objects.filter(user=user.perfilusuario)]
+        self.fields['congreso'].widget.attrs.update({'class': 'form-control select2'}) 
+       
