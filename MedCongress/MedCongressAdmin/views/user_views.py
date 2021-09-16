@@ -1,24 +1,29 @@
-from django import forms
+import base64
 import json
-import base64 
+from datetime import datetime, timedelta
 from os import remove
 from pathlib import Path
+
+from django import forms
 from django.contrib import messages
-from django.http import HttpResponseBadRequest, HttpResponseRedirect,HttpResponse
-from django.urls import reverse_lazy,reverse
-from django.shortcuts import redirect
-from django.utils.crypto import get_random_string
+from django.contrib.auth.mixins import AccessMixin, UserPassesTestMixin
 from django.core.paginator import Paginator
-from django.views.generic import ListView,CreateView,TemplateView
-from django.contrib.auth.mixins import UserPassesTestMixin,AccessMixin
-from django.views.generic.edit import  DeleteView, UpdateView,FormView
-from MedCongressApp.models import User,PerfilUsuario,Ubicacion,CategoriaUsuario,Especialidades
-from MedCongressAdmin.forms.congres_forms import UsuarioForms,ExportarLogsUsuarioExelForm
-from MedCongressAdmin.apps import validarUser
 from django.db.models import Q
+from django.http import (HttpResponse, HttpResponseBadRequest,
+                         HttpResponseRedirect)
+from django.shortcuts import redirect
+from django.urls import reverse, reverse_lazy
+from django.utils.crypto import get_random_string
+from django.views.generic import CreateView, ListView, TemplateView
+from django.views.generic.edit import DeleteView, FormView, UpdateView
+from MedCongressAdmin.apps import validarUser
+from MedCongressAdmin.forms.congres_forms import (ExportarLogsUsuarioExelForm,
+                                                  UsuarioForms)
+from MedCongressApp.models import (CategoriaUsuario, Especialidades,
+                                   PerfilUsuario, Ubicacion, User,UserActivityLog)
 from openpyxl import Workbook
-from openpyxl.styles import (Alignment, Border, Font, PatternFill, Protection,
-                             Side, NamedStyle)
+from openpyxl.styles import (Alignment, Border, Font, NamedStyle, PatternFill,
+                             Protection, Side)
 
 # from django.views import generic
   

@@ -29,8 +29,8 @@ def Constancia(titulo,t_user,folio_ini,folio_fin,folio_dis):
                         comienzo=1500-(cont/2*19) 
                         base=Image.open('MedCongressApp/static/%s'%(congreso.foto_constancia)).convert('RGBA')
                         text=Image.new('RGBA',base.size,(255,255,255,0))
-                        nombre_font=ImageFont.truetype('calibri.ttf',150)
-                        # nombre_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 100, encoding="unic")
+                        #nombre_font=ImageFont.truetype('calibri.ttf',150)
+                        nombre_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 100, encoding="unic")
                         # cong.set_variation_by_name('Italic')
                         if folio_ini :
                             usuario.folio_constancia=folio_dis.replace('#',str(folio))
@@ -251,7 +251,7 @@ def AsignarBeca(exel,user_id):
             respuesta='congreso'   
             continue
         usuario=User.objects.get(pk=user_id)
-        if not usuario.is_staff or not Organizador.objects.filter(congreso=congreso,user=usuario.perfilusuario).exists():
+        if not usuario.is_staff and not Organizador.objects.filter(congreso=congreso,user=usuario.perfilusuario).exists():
             respuesta='no_permiso'
         if not re.match('^[(a-z0-9\_\-\.)]+@[(a-z0-9\_\-\.)]+\.[(a-z)]{2,15}$',correo.lower()):
             respuesta='usuario'
@@ -279,5 +279,5 @@ def AsignarBeca(exel,user_id):
         3.- una vez registrado, de clic en el siguiente enlace para acceder al congreso.
             %s/congreso/%s'''%(congreso.titulo,URL_SITE,correo,URL_SITE,congreso.path), to = [correo])
 
-            # email.send()
+            email.send()
     return respuesta   

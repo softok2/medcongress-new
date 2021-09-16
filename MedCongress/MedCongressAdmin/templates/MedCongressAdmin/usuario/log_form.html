@@ -93,7 +93,7 @@
 								</div>
 								<div class="form-actions">
 									<div class="text-right">
-										<button id="save" type="submit" class="btn btn-primary">Exportar
+										<button id="save" type="button" class="btn btn-primary">Exportar
 											<i class="la la-file-excel-o position-right"></i>
 										</button>
 									
@@ -112,6 +112,16 @@
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/forms/select/select2.full.min.js'%}"></script>
 <script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-select2.js'%}"></script>
 <script>
-	
+	$('#save').click(function(e){
+
+if( $('#id_fecha_inicio').val() > $('#id_fecha_fin').val()){
+swal("Cancelado", "Fecha inicio debe menor o igual que fecha fin", "error");
+return;
+}
+
+$("#country-form").submit();
+
+
+})	
 </script>
 {% endblock %}

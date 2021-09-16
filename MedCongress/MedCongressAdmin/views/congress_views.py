@@ -1521,7 +1521,7 @@ class vTableAsJSONCongresos(TemplateView):
 
 class LogsCongreso(validarUser,FormView):
     form_class=ExportarLogsCongresoExelForm
-    template_name = 'MedCongressAdmin/log_congreso_form.html'
+    template_name = 'MedCongressAdmin/congress/log_form.html'
     def form_valid(self, form):
         id_congreso=self.request.POST['congreso']
         congreso= Congreso.objects.get(pk=id_congreso)
