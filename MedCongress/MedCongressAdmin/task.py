@@ -34,7 +34,8 @@ def Constancia(titulo,t_user,folio_ini,folio_fin,folio_dis):
                         # cong.set_variation_by_name('Italic')
                         if folio_ini :
                             usuario.folio_constancia=folio_dis.replace('#',str(folio))
-                            folio_font=ImageFont.truetype('calibri.ttf',100)
+                            # folio_font=ImageFont.truetype('calibri.ttf',100)
+                            folio_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 100, encoding="unic")
                             c=ImageDraw.Draw(text)
                             c.text((300,1025),str(folio_dis.replace('#',str(folio))),font=folio_font,fill=(89, 85, 85))
                             folio=folio+1
@@ -89,7 +90,8 @@ def Constancia(titulo,t_user,folio_ini,folio_fin,folio_dis):
                         text=Image.new('RGBA',base.size,(255,255,255,0))
                         # nombre_font=ImageFont.truetype('calibri.ttf',150)
                         if folio :
-                            folio_font=ImageFont.truetype('calibri.ttf',100)
+                            folio_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 100, encoding="unic")
+                            # folio_font=ImageFont.truetype('calibri.ttf',100)
                             c=ImageDraw.Draw(text)
                             c.text((300,1025),str(folio_dis.replace('#',str(folio))),font=folio_font,fill=(89, 85, 85))
                         nombre_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 100, encoding="unic")
@@ -147,7 +149,8 @@ def Constancia(titulo,t_user,folio_ini,folio_fin,folio_dis):
                         text=Image.new('RGBA',base.size,(255,255,255,0))
                         # nombre_font=ImageFont.truetype('calibri.ttf',150)
                         if folio :
-                            folio_font=ImageFont.truetype('calibri.ttf',100)
+                            # folio_font=ImageFont.truetype('calibri.ttf',100)
+                            folio_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 100, encoding="unic")
                             c=ImageDraw.Draw(text)
                             c.text((300,1025),str(folio_dis.replace('#',str(folio))),font=folio_font,fill=(89, 85, 85))
                         nombre_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 100, encoding="unic")
