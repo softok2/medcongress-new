@@ -128,9 +128,9 @@ def Constancia(titulo,t_user,folio_ini,folio_fin,folio_dis):
                         # else:
                             constancia=ConstanciaUsuario(user=ponente.user.usuario,congreso=congreso,fecha_constancia=datetime.now(),folio_constancia=folio_constancia,tipo_constancia='Ponente',foto_constancia='%s_ponente.pdf'%(nombre_img[0:50]))
                             constancia.save() 
-                        email = EmailMessage('Constancia', 'En este correo se le adjunta la constancia de haber participado como Ponente en el congreso %s.'%(congreso.titulo), to = [ponente.user.usuario.email])
-                        email.attach_file('MedCongressApp/static/congreso/img_constancia/%s_ponente.pdf'%(nombre_img[0:50]))
-                        email.send()
+                            email = EmailMessage('Constancia', 'En este correo se le adjunta la constancia de haber participado como Ponente en el congreso %s.'%(congreso.titulo), to = [ponente.user.usuario.email])
+                            email.attach_file('MedCongressApp/static/congreso/img_constancia/%s_ponente.pdf'%(nombre_img[0:50]))
+                            email.send()
                         if folio :
                             folio=folio+1
                 if folio_ini:
@@ -189,9 +189,9 @@ def Constancia(titulo,t_user,folio_ini,folio_fin,folio_dis):
                         # else:
                             constancia=ConstanciaUsuario(user=moderador.user.usuario,congreso=congreso,fecha_constancia=datetime.now(),folio_constancia=folio_constancia,tipo_constancia='Moderador',foto_constancia='%s_moderador.pdf'%(nombre_img[0:50]))
                             constancia.save() 
-                        email = EmailMessage('Constancia', 'En este correo se le adjunta la constancia de haber participado como Moderador en el congreso %s.'%(congreso.titulo), to = [moderador.user.usuario.email])
-                        email.attach_file('MedCongressApp/static/congreso/img_constancia/%s_moderador.pdf'%(nombre_img[0:50]))
-                        email.send()
+                            email = EmailMessage('Constancia', 'En este correo se le adjunta la constancia de haber participado como Moderador en el congreso %s.'%(congreso.titulo), to = [moderador.user.usuario.email])
+                            email.attach_file('MedCongressApp/static/congreso/img_constancia/%s_moderador.pdf'%(nombre_img[0:50]))
+                            email.send()
                         if folio :
                             folio=folio+1
                 if folio_ini:
