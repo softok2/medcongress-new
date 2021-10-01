@@ -11,7 +11,11 @@ def Constancia(titulo,t_user,folio_ini,folio_fin,folio_dis):
     t_user=int(t_user)
     if folio_ini:
         folio_ini=int(folio_ini)
-        folio_fin=int(folio_fin)    
+        folio_fin=int(folio_fin) 
+        for num_folio in range(folio_ini,folio_fin):
+            if RelCongresoUser.objects.filter(congreso=congreso,folio_constancia=folio_dis.replace('#',str(num_folio))).exists() or ConstanciaUsuario.objects.filter(congreso=congreso,folio_constancia=folio_dis.replace('#',str(num_folio))).exists():
+
+                return {'success':False,'mensaje':'El folio %s ya esta asignado en este congreso'%(folio_dis.replace('#',str(num_folio)))}
     folio=folio_ini
     if congreso:
         if t_user==1:
@@ -29,7 +33,7 @@ def Constancia(titulo,t_user,folio_ini,folio_fin,folio_dis):
                         comienzo=1500-(cont/2*19) 
                         base=Image.open('MedCongressApp/static/%s'%(congreso.foto_constancia)).convert('RGBA')
                         text=Image.new('RGBA',base.size,(255,255,255,0))
-                        #nombre_font=ImageFont.truetype('calibri.ttf',150)
+                        # nombre_font=ImageFont.truetype('calibri.ttf',150)
                         nombre_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 100, encoding="unic")
                         # cong.set_variation_by_name('Italic')
                         if folio_ini :
@@ -109,15 +113,15 @@ def Constancia(titulo,t_user,folio_ini,folio_fin,folio_dis):
                         folio_constancia=None
                         if folio:
                                 folio_constancia=folio_dis.replace('#',str(folio))
-                        if constancia_user:
-                            constancia_user.fecha_constancia=datetime.now()
-                            if folio:
-                                constancia_user.folio_constancia=folio_constancia
-                            else:
-                                constancia_user.folio_constancia=folio_constancia
-                            constancia_user.foto_constancia='%s_ponente.pdf'%(nombre_img[0:50])
-                            constancia_user.save()    
-                        else:
+                        if not constancia_user:
+                        #     constancia_user.fecha_constancia=datetime.now()
+                        #     if folio:
+                        #         constancia_user.folio_constancia=folio_constancia
+                        #     else:
+                        #         constancia_user.folio_constancia=folio_constancia
+                        #     constancia_user.foto_constancia='%s_ponente.pdf'%(nombre_img[0:50])
+                        #     constancia_user.save()    
+                        # else:
                             constancia=ConstanciaUsuario(user=ponente.user.usuario,congreso=congreso,fecha_constancia=datetime.now(),folio_constancia=folio_constancia,tipo_constancia='Ponente',foto_constancia='%s_ponente.pdf'%(nombre_img[0:50]))
                             constancia.save() 
                         email = EmailMessage('Constancia', 'En este correo se le adjunta la constancia de haber participado como Ponente en el congreso %s.'%(congreso.titulo), to = [ponente.user.usuario.email])
@@ -170,15 +174,15 @@ def Constancia(titulo,t_user,folio_ini,folio_fin,folio_dis):
                         folio_constancia=None
                         if folio:
                                 folio_constancia=folio_dis.replace('#',str(folio))
-                        if constancia_user:
-                            constancia_user.fecha_constancia=datetime.now()
-                            if folio:
-                                constancia_user.folio_constancia=folio_constancia
-                            else:
-                                constancia_user.folio_constancia=folio_constancia
-                            constancia_user.foto_constancia='%s_moderador.pdf'%(nombre_img[0:50])
-                            constancia_user.save()    
-                        else:
+                        if not constancia_user:
+                        #     constancia_user.fecha_constancia=datetime.now()
+                        #     if folio:
+                        #         constancia_user.folio_constancia=folio_constancia
+                        #     else:
+                        #         constancia_user.folio_constancia=folio_constancia
+                        #     constancia_user.foto_constancia='%s_moderador.pdf'%(nombre_img[0:50])
+                        #     constancia_user.save()    
+                        # else:
                             constancia=ConstanciaUsuario(user=moderador.user.usuario,congreso=congreso,fecha_constancia=datetime.now(),folio_constancia=folio_constancia,tipo_constancia='Moderador',foto_constancia='%s_moderador.pdf'%(nombre_img[0:50]))
                             constancia.save() 
                         email = EmailMessage('Constancia', 'En este correo se le adjunta la constancia de haber participado como Moderador en el congreso %s.'%(congreso.titulo), to = [moderador.user.usuario.email])
