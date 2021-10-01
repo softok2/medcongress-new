@@ -1705,6 +1705,14 @@ textarea:focus,
   top: 0;
   height: 100%;
   display: flex;
+  position: absolute;
+  align-items: center;
+  z-index: 1;
+}
+.login-register .content {
+  top: 0;
+  height: 100%;
+  display: flex;
   /* position: absolute; */
   align-items: center;
   z-index: 1;
