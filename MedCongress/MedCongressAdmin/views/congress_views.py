@@ -1275,7 +1275,7 @@ class AsignarConstancias(validarOrganizador,TemplateView):
         else:
             messages.warning(self.request,'Ese Congreso no existe')
             return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list')) 
-
+        print('envio al celery')
         prueba=Constancia.apply_async(args=[titulo,t_user,folio_ini,folio_fin,folio_dis])
         respuesta=prueba.get()
         if respuesta['success'] :

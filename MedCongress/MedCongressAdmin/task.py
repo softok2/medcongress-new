@@ -8,12 +8,16 @@ import re
 @shared_task
 def Constancia(titulo,t_user,folio_ini,folio_fin,folio_dis):
     congreso=Congreso.objects.get(pk=titulo)
+    print('congreso:%s'%(congreso))
     t_user=int(t_user)
+    print('folio_ini=%s folio_fin=%s folio_dis=%s'%(folio_ini,folio_fin,folio_dis))
     if folio_ini:
         folio_ini=int(folio_ini)
         folio_fin=int(folio_fin) 
         for num_folio in range(folio_ini,folio_fin):
+            print('folio_completo=%s '%(folio_dis.replace('#',str(num_folio))))
             if RelCongresoUser.objects.filter(congreso=congreso,folio_constancia=folio_dis.replace('#',str(num_folio))).exists() or ConstanciaUsuario.objects.filter(congreso=congreso,folio_constancia=folio_dis.replace('#',str(num_folio))).exists():
+                
                 return {'success':False,'mensaje':'El folio %s ya esta asignado en este congreso'%(folio_dis.replace('#',str(num_folio)))}
     folio=folio_ini
     if congreso:
@@ -93,6 +97,7 @@ def Constancia(titulo,t_user,folio_ini,folio_fin,folio_dis):
                         text=Image.new('RGBA',base.size,(255,255,255,0))
                         # nombre_font=ImageFont.truetype('calibri.ttf',150)
                         if folio :
+                            print('creando folio en la constancia')
                             folio_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 100, encoding="unic")
                             # folio_font=ImageFont.truetype('calibri.ttf',100)
                             c=ImageDraw.Draw(text)
