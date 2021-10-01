@@ -14,7 +14,6 @@ def Constancia(titulo,t_user,folio_ini,folio_fin,folio_dis):
         folio_fin=int(folio_fin) 
         for num_folio in range(folio_ini,folio_fin):
             if RelCongresoUser.objects.filter(congreso=congreso,folio_constancia=folio_dis.replace('#',str(num_folio))).exists() or ConstanciaUsuario.objects.filter(congreso=congreso,folio_constancia=folio_dis.replace('#',str(num_folio))).exists():
-
                 return {'success':False,'mensaje':'El folio %s ya esta asignado en este congreso'%(folio_dis.replace('#',str(num_folio)))}
     folio=folio_ini
     if congreso:
