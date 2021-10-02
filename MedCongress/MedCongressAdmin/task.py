@@ -5,6 +5,7 @@ from datetime import datetime
 from django.core.mail import EmailMessage
 from MedCongressApp.claves import URL_SITE
 import re
+from MedCongress.settings import BASE_FONT
 @shared_task
 def Constancia(titulo,t_user,folio_ini,folio_fin,folio_dis):
     congreso=Congreso.objects.get(pk=titulo)
@@ -37,12 +38,12 @@ def Constancia(titulo,t_user,folio_ini,folio_fin,folio_dis):
                         base=Image.open('MedCongressApp/static/%s'%(congreso.foto_constancia)).convert('RGBA')
                         text=Image.new('RGBA',base.size,(255,255,255,0))
                         # nombre_font=ImageFont.truetype('calibri.ttf',150)
-                        nombre_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 100, encoding="unic")
+                        nombre_font=ImageFont.truetype(BASE_FONT, 100, encoding="unic")
                         # cong.set_variation_by_name('Italic')
                         if folio_ini :
                             usuario.folio_constancia=folio_dis.replace('#',str(folio))
                             # folio_font=ImageFont.truetype('calibri.ttf',100)
-                            folio_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 100, encoding="unic")
+                            folio_font=ImageFont.truetype(BASE_FONT, 100, encoding="unic")
                             c=ImageDraw.Draw(text)
                             c.text((300,1025),str(folio_dis.replace('#',str(folio))),font=folio_font,fill=(89, 85, 85))
                             folio=folio+1
@@ -98,11 +99,11 @@ def Constancia(titulo,t_user,folio_ini,folio_fin,folio_dis):
                         # nombre_font=ImageFont.truetype('calibri.ttf',150)
                         if folio :
                             print('creando folio en la constancia')
-                            folio_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 100, encoding="unic")
+                            folio_font=ImageFont.truetype(BASE_FONT, 100, encoding="unic")
                             # folio_font=ImageFont.truetype('calibri.ttf',100)
                             c=ImageDraw.Draw(text)
                             c.text((300,1025),str(folio_dis.replace('#',str(folio))),font=folio_font,fill=(89, 85, 85))
-                        nombre_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 100, encoding="unic")
+                        nombre_font=ImageFont.truetype(BASE_FONT, 100, encoding="unic")
                         # cong.set_variation_by_name('Italic')
                         d=ImageDraw.Draw(text)
                         d.text((comienzo,1200),nombre,font=nombre_font,fill=(89, 85, 85))
@@ -131,8 +132,8 @@ def Constancia(titulo,t_user,folio_ini,folio_fin,folio_dis):
                             email = EmailMessage('Constancia', 'En este correo se le adjunta la constancia de haber participado como Ponente en el congreso %s.'%(congreso.titulo), to = [ponente.user.usuario.email])
                             email.attach_file('MedCongressApp/static/congreso/img_constancia/%s_ponente.pdf'%(nombre_img[0:50]))
                             email.send()
-                        if folio :
-                            folio=folio+1
+                            if folio :
+                                folio=folio+1
                 if folio_ini:
                     return {'success':True,'mensaje':'Se asignaron satifactoriamente todas las constancias a los Ponentes del Congreso Seleccionado. Se asignó hasta el folio %s'%(folio_constancia)}
                    
@@ -158,10 +159,10 @@ def Constancia(titulo,t_user,folio_ini,folio_fin,folio_dis):
                         # nombre_font=ImageFont.truetype('calibri.ttf',150)
                         if folio :
                             # folio_font=ImageFont.truetype('calibri.ttf',100)
-                            folio_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 100, encoding="unic")
+                            folio_font=ImageFont.truetype(BASE_FONT, 100, encoding="unic")
                             c=ImageDraw.Draw(text)
                             c.text((300,1025),str(folio_dis.replace('#',str(folio))),font=folio_font,fill=(89, 85, 85))
-                        nombre_font=ImageFont.truetype("/usr/share/fonts/dejavu/DejaVuSans.ttf", 100, encoding="unic")
+                        nombre_font=ImageFont.truetype(BASE_FONT, 100, encoding="unic")
                         # cong.set_variation_by_name('Italic')
                         d=ImageDraw.Draw(text)
                         d.text((comienzo,1200),nombre,font=nombre_font,fill=(89, 85, 85))
@@ -192,8 +193,8 @@ def Constancia(titulo,t_user,folio_ini,folio_fin,folio_dis):
                             email = EmailMessage('Constancia', 'En este correo se le adjunta la constancia de haber participado como Moderador en el congreso %s.'%(congreso.titulo), to = [moderador.user.usuario.email])
                             email.attach_file('MedCongressApp/static/congreso/img_constancia/%s_moderador.pdf'%(nombre_img[0:50]))
                             email.send()
-                        if folio :
-                            folio=folio+1
+                            if folio :
+                                folio=folio+1
                 if folio_ini:
                     return {'success':True,'mensaje':'Se asignaron satifactoriamente todas las constancias a los Moderadores del Congreso Seleccionado. Se asignó hasta el folio %s'%(folio_constancia)}
                    
