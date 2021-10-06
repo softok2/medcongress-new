@@ -13,7 +13,7 @@ from django.core.exceptions import NON_FIELD_ERRORS
 
 class CategoriaUsuario(models.Model):
     nombre=models.CharField(max_length=50,error_messages={
-"max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"},validators=[
+    "max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"},validators=[
             RegexValidator(regex=r"^[\w.,+\- ]+$", message="El Campo <b> Nombre </b> solo admite números, letras y (.,+-)" )
         ],)
     published=models.BooleanField(null=True)
@@ -31,7 +31,7 @@ class CategoriaUsuario(models.Model):
 
 class Especialidades(models.Model):
     nombre=models.CharField(max_length=50,unique=True,error_messages={
-"max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"},validators=[
+    "max_length": "El Campo <b>Nombre</b> debe tener máximo 50 caracteres"},validators=[
             RegexValidator(regex=r"^[\w.,+\- ]+$", message="El Campo <b> Nombre </b> solo admite números, letras y (.,+-)" )
         ],)
     detalle=models.TextField(null=True,blank=True)
@@ -47,7 +47,7 @@ class Especialidades(models.Model):
 
 class Pais(models.Model):
     denominacion = models.CharField(unique=True, max_length=50,error_messages={
-"max_length": "El Campo <b>Denominación</b> debe tener máximo 50 caracteres"},validators=[
+    "max_length": "El Campo <b>Denominación</b> debe tener máximo 50 caracteres"},validators=[
             RegexValidator(regex=r"^[\w.,+\- ]+$", message="El Campo <b> País </b> solo admite números, letras y (.,+-)" )
         ],)
     banderas=models.ImageField(storage= FileSystemStorage( location='MedCongressApp/static/'),upload_to='banderas',blank=True, null=True )
@@ -63,7 +63,7 @@ class Pais(models.Model):
 
 class Genero(models.Model):
     denominacion= models.CharField(max_length=20,unique=True,error_messages={
-"max_length": "El Campo <b>Denominación</b> debe tener máximo 20 caracteres"},validators=[
+    "max_length": "El Campo <b>Denominación</b> debe tener máximo 20 caracteres"},validators=[
             RegexValidator(regex=r"^[\w.,+\- ]+$", message="El Campo <b> Género </b> solo admite números, letras y (.,+-)")
         ],)
 
@@ -78,7 +78,7 @@ class Genero(models.Model):
 
 class Ubicacion(models.Model):
     direccion= models.CharField(max_length=250,error_messages={
-"max_length": "El Campo <b>Dirección</b> debe tener máximo 250 caracteres"})
+    "max_length": "El Campo <b>Dirección</b> debe tener máximo 250 caracteres"})
     latitud=models.FloatField()
     longitud=models.FloatField()
 
@@ -159,7 +159,17 @@ class PerfilUsuario(models.Model):
             return True
         else:
             return False
-    
+
+    def is_organizador(self):
+        return Organizador.objects.filter(user=self).exists()
+
+    def Congresos_Organizador(self):
+        congresos_env=[]
+        all_congresos=Organizador.objects.filter(user=self)
+        for congreso in all_congresos:
+            congresos_env.append(congreso.congreso)
+        
+        return congresos_env
 
 #### Tabla Tipo de Congresos que hay ######
 
@@ -308,9 +318,22 @@ class Congreso(models.Model):
 
     def __str__(self):
         return self.titulo
-    
-    def Ponentes(self):
 
+    def All_Participantes(self):
+        rel_cong_users=RelCongresoUser.objects.filter(congreso=self).distinct('user')
+        participantes_env=[]
+        for rel_cong_users in rel_cong_users:
+           participantes_env.append(rel_cong_users.user)
+        return participantes_env
+
+    def Participantes_sin_constancias(self):
+        rel_cong_users=RelCongresoUser.objects.filter(congreso=self).distinct('user').exclude(is_constancia=True)
+        participantes_env=[]
+        for rel_cong_users in rel_cong_users:
+           participantes_env.append(rel_cong_users.user)
+        return participantes_env
+
+    def Ponentes(self):
         ponencias=Ponencia.objects.filter(congreso=self)
         ponentes_env=[]
         for ponencia in ponencias:
@@ -319,9 +342,19 @@ class Congreso(models.Model):
                 if not ponencia_ponente.ponente in ponentes_env:
                     ponentes_env.append(ponencia_ponente.ponente)
         return ponentes_env
+
+    def Ponentes_sin_constancias(self):
+        ponencias=Ponencia.objects.filter(congreso=self)
+        ponentes_env=[]
+        for ponencia in ponencias:
+            ponencia_ponentes=RelPonenciaPonente.objects.filter(ponencia=ponencia)
+            for ponencia_ponente in ponencia_ponentes:
+                
+                if not ponencia_ponente.ponente in ponentes_env and not ConstanciaUsuario.objects.filter(congreso=self,user=ponencia_ponente.ponente.user.usuario,tipo_constancia='Ponente').exists():
+                    ponentes_env.append(ponencia_ponente.ponente)
+        return ponentes_env
     
     def Moderadores(self):
-
         bloques=Bloque.objects.filter(congreso=self)
         moderadores_env=[]
         for bloque in bloques:
@@ -330,6 +363,17 @@ class Congreso(models.Model):
                 if not bloque_moderadore.moderador in moderadores_env:
                     moderadores_env.append(bloque_moderadore.moderador)
         return moderadores_env
+
+    def Moderadores_sin_constancias(self):
+        bloques=Bloque.objects.filter(congreso=self)
+        moderadores_env=[]
+        for bloque in bloques:
+            bloque_moderadores=RelBloqueModerador.objects.filter(bloque=bloque)
+            for bloque_moderadore in bloque_moderadores:
+                if not bloque_moderadore.moderador in moderadores_env and not ConstanciaUsuario.objects.filter(congreso=self,user=bloque_moderadore.moderador.user.usuario,tipo_constancia='Moderador').exists():
+                    moderadores_env.append(bloque_moderadore.moderador)
+        return moderadores_env
+
 
     # def get_imagen_by_order(self):   
     #     if self.imagen_set.count():
@@ -1098,3 +1142,8 @@ class Organizador(models.Model):
 
     def __str__(self):
         return '%s %s <%s> Organizador del Congreso " %s "'%(self.user.usuario.first_name,self.user.usuario.last_name,self.user.usuario.email,self.congreso.titulo)
+
+    def Congresos(self):
+
+
+        return

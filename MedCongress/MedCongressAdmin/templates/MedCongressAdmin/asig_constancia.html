@@ -66,12 +66,38 @@
 							</div>
 						</div>
 						{% if messages %}
-						<ul class="messages">
+						
 							{% for message in messages %}
-							<li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
-								{% endfor %}
-						</ul>
+							<div class="alert alert-info alert-dismissible mb-2" role="alert">
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									<span aria-hidden="true">×</span>
+								</button>
+								{{ message|safe|escape }}
+							</div>
+							
+							{% endfor %}
 						{% endif %}
+						{% if form.errors %}
+						{% for field in form %}
+							{% for error in field.errors %}
+							
+								<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+										<span aria-hidden="true">×</span>
+									</button>
+									{{ error|safe|escape }}
+								</div>
+							{% endfor %}
+						{% endfor %}
+						{% for error in form.non_field_errors %}
+						<div class="alert alert-danger alert-dismissible mb-2" role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">×</span>
+							</button>
+							{{ error|safe|escape }}
+						</div>
+						{% endfor %}
+					{% endif %}
 						<form id="country-form" method="POST">
 							{% csrf_token %}
 							<div class="form-body">
@@ -80,24 +106,15 @@
 											<div class="form-group">
 												<label for=""><b>Filtre
 														Congreso</b></label>
-												<select name="my_congress" id="" class="form-control select2" required="">
-													{%for congreso in congresos%}
-													<option value="{{congreso.pk}}">{{congreso.titulo}}</option>
-													{%endfor%}
-												</select>
+												{{form.congresos}}
 											</div>
 										
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
 											<label for=""><b>Asignar Constancia</b></label>
-											<select name="tipo_usuario" id="" class="form-control select2" required="">
-												
-												<option value="1">Participantes</option>
-												<option value="2">Ponentes</option>
-												<option value="3">Moderadores</option>
-												
-											</select>
+											
+											{{form.tipo_usuario}}
 										</div>
 									</div>
 								</div>
@@ -107,7 +124,7 @@
 											<label ><b>Asignar Folios</b>
 											</label>
 
-											<input type="checkbox" name="folio" class="form-control" id="id_folio" onchange="javascript:showFolio()">
+											{{form.folio}}
 										</div>
 									</div>
 									<div class="col-sm-3 folio " style="display: none;">
@@ -115,7 +132,7 @@
 											<label ><b>Diseño del Folio</b>
 											</label>
 
-											<input type="text" name="folio_dis" class="form-control" id="id_folio_dis" >
+											{{form.folio_dis}}
 										</div>
 									</div>
 									<div class="col-sm-3 folio " style="display: none;">
@@ -123,7 +140,7 @@
 											<label ><b> Consecutivo del Folio: Del</b>
 											</label>
 
-											<input type="number" name="folio_ini" min='1' class="form-control" id="id_folio_ini" >
+											{{form.folio_ini}}
 										</div>
 									</div>
 									<div class="col-sm-3 folio " style="display: none;">
@@ -131,7 +148,7 @@
 											<label ><b>Al</b>
 											</label>
 
-											<input type="number" name="folio_fin" min="1" class="form-control" id="id_folio_fin" >
+											{{form.folio_fin}}
 										</div>
 									</div>
 								</div>		
@@ -160,6 +177,45 @@
 <script src="{% static 'MedCongressAdmin/app-assets/vendors/js/forms/select/select2.full.min.js'%}"></script>
 <script src="{% static 'MedCongressAdmin/app-assets/js/scripts/forms/select/form-select2.js'%}"></script>
 <script>
+
+$(document).ready(function () {
+	if($('#id_folio').prop('checked')){
+		$('.folio').show()
+	}
+		$("#id_congresos").select2({
+    placeholder: "Seleccione Congreso",
+	allowClear: true,
+	language: {
+
+noResults: function() {
+
+  return "No tiene Congresos con este filtro";        
+},
+searching: function() {
+
+  return "Buscando..";
+}
+}
+});
+
+$("#id_tipo_usuario").select2({
+    placeholder: "Seleccione Tipo de Usuario",
+	allowClear: true,
+	language: {
+
+noResults: function() {
+
+  return "No tiene Usuarios con este filtro";        
+},
+searching: function() {
+
+  return "Buscando..";
+}
+}
+});
+});
+
+
 	$("#country-form").submit(function(e) { $("#loading").show(); });
 	
 
@@ -180,7 +236,7 @@ $('#id_folio_dis').val('')
 			swal("Cancelado", "Debe entrar Diseño Folio - Folio Inicio - Folio Fin.", "error");
 			return;
 		}
-		if(parseInt($('#id_folio_fin').val())<=parseInt($('#id_folio_ini').val())){
+		if(parseInt($('#id_folio_fin').val())<parseInt($('#id_folio_ini').val())){
 			swal("Cancelado", "El Folio Final debe ser mayor que el Folio de Inicio.", "error");
 			return;
 		}

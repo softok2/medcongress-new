@@ -396,7 +396,7 @@ class PagoExitoso(TemplateView):
         "invoice_id": invoice_id,
         "metodo_pago": "PUE",
         "tipo_comprobante": "I"
-    }
+        }
         # return HttpResponse(json.dumps(params)) 
         headers={'Content-type': 'application/json'}
         response=requests.post(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(params),headers=headers)

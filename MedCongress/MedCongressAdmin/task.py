@@ -9,199 +9,150 @@ from MedCongress.settings import BASE_FONT
 @shared_task
 def Constancia(titulo,t_user,folio_ini,folio_fin,folio_dis):
     congreso=Congreso.objects.get(pk=titulo)
-    print('congreso:%s'%(congreso))
     t_user=int(t_user)
-    print('folio_ini=%s folio_fin=%s folio_dis=%s'%(folio_ini,folio_fin,folio_dis))
     if folio_ini:
         folio_ini=int(folio_ini)
         folio_fin=int(folio_fin) 
-        for num_folio in range(folio_ini,folio_fin):
-            print('folio_completo=%s '%(folio_dis.replace('#',str(num_folio))))
-            if RelCongresoUser.objects.filter(congreso=congreso,folio_constancia=folio_dis.replace('#',str(num_folio))).exists() or ConstanciaUsuario.objects.filter(congreso=congreso,folio_constancia=folio_dis.replace('#',str(num_folio))).exists():
-                
-                return {'success':False,'mensaje':'El folio %s ya esta asignado en este congreso'%(folio_dis.replace('#',str(num_folio)))}
     folio=folio_ini
     if congreso:
         if t_user==1:
-            rel_usuario_congreso=RelCongresoUser.objects.filter(congreso=congreso,is_pagado=True ).distinct('user')
-            if rel_usuario_congreso: 
-                folio=folio_ini
-                for usuario in rel_usuario_congreso:
-                    if (folio_ini) and rel_usuario_congreso.count()>(folio_fin-folio_ini+1):
-                        return {'success':False,'mensaje':'Hay más Participantes que Folios a asignar'}
-                    else:
-                        
-                        nombre='%s %s'%(usuario.user.usuario.first_name,usuario.user.usuario.last_name)
-                        
-                        cont=len(nombre)
-                        comienzo=1500-(cont/2*19) 
-                        base=Image.open('MedCongressApp/static/%s'%(congreso.foto_constancia)).convert('RGBA')
-                        text=Image.new('RGBA',base.size,(255,255,255,0))
-                        # nombre_font=ImageFont.truetype('calibri.ttf',150)
-                        nombre_font=ImageFont.truetype(BASE_FONT, 100, encoding="unic")
-                        # cong.set_variation_by_name('Italic')
-                        if folio_ini :
-                            usuario.folio_constancia=folio_dis.replace('#',str(folio))
-                            # folio_font=ImageFont.truetype('calibri.ttf',100)
-                            folio_font=ImageFont.truetype(BASE_FONT, 100, encoding="unic")
-                            c=ImageDraw.Draw(text)
-                            c.text((300,1025),str(folio_dis.replace('#',str(folio))),font=folio_font,fill=(89, 85, 85))
-                            folio=folio+1
-                            
-                        d=ImageDraw.Draw(text)
-                        d.text((comienzo,1200),nombre,font=nombre_font,fill=(89, 85, 85))
-                        out=Image.alpha_composite(base,text)
-                        tit=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n").replace(",","-").replace(":","-")
-                        tit_nombre=nombre.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n").replace(",","-").replace(":","-")
-                        nombre_img='constancia_%s_%s'%(tit_nombre,tit)
-                        imagen_pdf=out.convert('RGB')  
-                        imagen_pdf.save('MedCongressApp/static/congreso/img_constancia/%s_participante.pdf'%(nombre_img[0:50]))
-                        
-                        usuario.is_constancia=True
-                        usuario.foto_constancia='%s_participante.pdf'%(nombre_img[0:50])
-                        usuario.fecha_constancia=datetime.now()
-                        if not RelCongresoUser.objects.filter(congreso=congreso, user=usuario.user, is_constancia=True ).exists():
-                            score=0
-                            if congreso.score:
-                                score=congreso.score
-                            if usuario.user.score is None:
-                                usuario.user.score=score
-                            else:
-                                usuario.user.score= usuario.user.score+score
-                            usuario.user.save()
-                        usuario.save()                               
-                        # ////////////////
+            rel_usuario_congreso=RelCongresoUser.objects.filter(congreso=congreso,is_pagado=True,is_constancia=False ).distinct('user') 
+            folio=folio_ini
+            for usuario in rel_usuario_congreso:   
+                nombre='%s %s'%(usuario.user.usuario.first_name,usuario.user.usuario.last_name)
+                cont=len(nombre)
+                comienzo=1500-(cont/2*19) 
+                base=Image.open('MedCongressApp/static/%s'%(congreso.foto_constancia)).convert('RGBA')
+                text=Image.new('RGBA',base.size,(255,255,255,0))
+                # nombre_font=ImageFont.truetype('calibri.ttf',150)
+                nombre_font=ImageFont.truetype(BASE_FONT, 100, encoding="unic")
+                # cong.set_variation_by_name('Italic')
+                if folio_ini :
+                    usuario.folio_constancia=folio_dis.replace('#',str(folio))
+                    # folio_font=ImageFont.truetype('calibri.ttf',100)
+                    folio_font=ImageFont.truetype(BASE_FONT, 100, encoding="unic")
+                    c=ImageDraw.Draw(text)
+                    c.text((300,1025),str(folio_dis.replace('#',str(folio))),font=folio_font,fill=(89, 85, 85))
+                    folio=folio+1
                     
-                        email = EmailMessage('Constancia', 'En este correo se le adjunta la constancia de haber participado en el congreso %s.'%(congreso.titulo), to = [usuario.user.usuario.email])
-                        email.attach_file('MedCongressApp/static/congreso/img_constancia/%s_participante.pdf'%(nombre_img[0:50]))
-                        email.send()
-                if folio_ini:
-                    return {'success':True,'mensaje':'Se asignaron satifactoriamente todas las constancias a los Ponentes del Congreso Seleccionado. Se asignó hasta el folio %s'%(folio_dis.replace('#',str(folio-1)))}
-                    
-                else:
-                    return {'success':True,'mensaje':'Se asignaron satifactoriamente todas las constancias a los Ponentes del Congreso Seleccionado'}
-            else:
-                return {'success':False,'mensaje':'Este Congreso no tiene Participantes '}        
-        elif t_user==2:
-
-            if congreso.Ponentes(): 
-                ponentes=congreso.Ponentes()
-                if folio_ini  and len(ponentes)>(folio_fin-folio_ini+1):
-                    return {'success':False,'mensaje':'Hay más Ponentes que Folios a asignar'}
-                else:
-                    folio=folio_ini
-                    for ponente in ponentes:
-                        nombre='%s %s'%(ponente.user.usuario.first_name,ponente.user.usuario.last_name)
-                        cont=len(nombre)
-                        comienzo=1500-(cont/2*19) 
-                        base=Image.open('MedCongressApp/static/%s'%(congreso.foto_const_ponente)).convert('RGBA')
-                        text=Image.new('RGBA',base.size,(255,255,255,0))
-                        # nombre_font=ImageFont.truetype('calibri.ttf',150)
-                        if folio :
-                            print('creando folio en la constancia')
-                            folio_font=ImageFont.truetype(BASE_FONT, 100, encoding="unic")
-                            # folio_font=ImageFont.truetype('calibri.ttf',100)
-                            c=ImageDraw.Draw(text)
-                            c.text((300,1025),str(folio_dis.replace('#',str(folio))),font=folio_font,fill=(89, 85, 85))
-                        nombre_font=ImageFont.truetype(BASE_FONT, 100, encoding="unic")
-                        # cong.set_variation_by_name('Italic')
-                        d=ImageDraw.Draw(text)
-                        d.text((comienzo,1200),nombre,font=nombre_font,fill=(89, 85, 85))
-                        out=Image.alpha_composite(base,text)
-                        tit=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n").replace(",","-").replace(":","-")
-                        tit_nombre=nombre.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n").replace(",","-").replace(":","-")
-                        nombre_img='constancia_%s_%s'%(tit_nombre,tit)
-                        imagen_pdf=out.convert('RGB')  
-                        imagen_pdf.save('MedCongressApp/static/congreso/img_constancia/%s_ponente.pdf'%(nombre_img[0:50]))
-                       
-                        constancia_user=ConstanciaUsuario.objects.filter(congreso=congreso,user=ponente.user.usuario,tipo_constancia='Ponente').first()
-                        folio_constancia=None
-                        if folio:
-                                folio_constancia=folio_dis.replace('#',str(folio))
-                        if not constancia_user:
-                        #     constancia_user.fecha_constancia=datetime.now()
-                        #     if folio:
-                        #         constancia_user.folio_constancia=folio_constancia
-                        #     else:
-                        #         constancia_user.folio_constancia=folio_constancia
-                        #     constancia_user.foto_constancia='%s_ponente.pdf'%(nombre_img[0:50])
-                        #     constancia_user.save()    
-                        # else:
-                            constancia=ConstanciaUsuario(user=ponente.user.usuario,congreso=congreso,fecha_constancia=datetime.now(),folio_constancia=folio_constancia,tipo_constancia='Ponente',foto_constancia='%s_ponente.pdf'%(nombre_img[0:50]))
-                            constancia.save() 
-                            email = EmailMessage('Constancia', 'En este correo se le adjunta la constancia de haber participado como Ponente en el congreso %s.'%(congreso.titulo), to = [ponente.user.usuario.email])
-                            email.attach_file('MedCongressApp/static/congreso/img_constancia/%s_ponente.pdf'%(nombre_img[0:50]))
-                            email.send()
-                            if folio :
-                                folio=folio+1
-                if folio_ini:
-                    return {'success':True,'mensaje':'Se asignaron satifactoriamente todas las constancias a los Ponentes del Congreso Seleccionado. Se asignó hasta el folio %s'%(folio_constancia)}
-                   
-                else:
-                    return {'success':True,'mensaje':'Se asignaron satifactoriamente todas las constancias a los Ponentes del Congreso Seleccionado'}
-            else:
-                return {'success':False,'mensaje':'Este Congreso no tiene Ponentes '}
-        elif t_user==3:
-
-            if congreso.Moderadores():
+                d=ImageDraw.Draw(text)
+                d.text((comienzo,1200),nombre,font=nombre_font,fill=(89, 85, 85))
+                out=Image.alpha_composite(base,text)
+                tit=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n").replace(",","-").replace(":","-")
+                tit_nombre=nombre.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n").replace(",","-").replace(":","-")
+                nombre_img='constancia_%s_%s'%(tit_nombre,tit)
+                imagen_pdf=out.convert('RGB')  
+                imagen_pdf.save('MedCongressApp/static/congreso/img_constancia/%s_participante.pdf'%(nombre_img[0:50]))
                 
-                moderadores=congreso.Moderadores()
-                if folio_ini  and len(moderadores)>(folio_fin-folio_ini+1):
-                    return {'success':False,'mensaje':'Hay más Moderadores que Folios a asignar'}
-                else:
-                    folio=folio_ini
-                    for moderador in moderadores:
-                        nombre='%s %s'%(moderador.user.usuario.first_name,moderador.user.usuario.last_name)
-                        cont=len(nombre)
-                        comienzo=1500-(cont/2*19) 
-                        base=Image.open('MedCongressApp/static/%s'%(congreso.foto_const_moderador)).convert('RGBA')
-                        text=Image.new('RGBA',base.size,(255,255,255,0))
-                        # nombre_font=ImageFont.truetype('calibri.ttf',150)
-                        if folio :
-                            # folio_font=ImageFont.truetype('calibri.ttf',100)
-                            folio_font=ImageFont.truetype(BASE_FONT, 100, encoding="unic")
-                            c=ImageDraw.Draw(text)
-                            c.text((300,1025),str(folio_dis.replace('#',str(folio))),font=folio_font,fill=(89, 85, 85))
-                        nombre_font=ImageFont.truetype(BASE_FONT, 100, encoding="unic")
-                        # cong.set_variation_by_name('Italic')
-                        d=ImageDraw.Draw(text)
-                        d.text((comienzo,1200),nombre,font=nombre_font,fill=(89, 85, 85))
-                        
-                        
-                        out=Image.alpha_composite(base,text)
-                        tit=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n").replace(",","-").replace(":","-")
-                        tit_nombre=nombre.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n").replace(",","-").replace(":","-")
-                        nombre_img='constancia_%s_%s'%(tit_nombre,tit)
-                        imagen_pdf=out.convert('RGB')  
-                        imagen_pdf.save('MedCongressApp/static/congreso/img_constancia/%s_moderador.pdf'%(nombre_img[0:50]))
-                       
-                        constancia_user=ConstanciaUsuario.objects.filter(congreso=congreso,user=moderador.user.usuario,tipo_constancia='Moderador').first()
-                        folio_constancia=None
-                        if folio:
-                                folio_constancia=folio_dis.replace('#',str(folio))
-                        if not constancia_user:
-                        #     constancia_user.fecha_constancia=datetime.now()
-                        #     if folio:
-                        #         constancia_user.folio_constancia=folio_constancia
-                        #     else:
-                        #         constancia_user.folio_constancia=folio_constancia
-                        #     constancia_user.foto_constancia='%s_moderador.pdf'%(nombre_img[0:50])
-                        #     constancia_user.save()    
-                        # else:
-                            constancia=ConstanciaUsuario(user=moderador.user.usuario,congreso=congreso,fecha_constancia=datetime.now(),folio_constancia=folio_constancia,tipo_constancia='Moderador',foto_constancia='%s_moderador.pdf'%(nombre_img[0:50]))
-                            constancia.save() 
-                            email = EmailMessage('Constancia', 'En este correo se le adjunta la constancia de haber participado como Moderador en el congreso %s.'%(congreso.titulo), to = [moderador.user.usuario.email])
-                            email.attach_file('MedCongressApp/static/congreso/img_constancia/%s_moderador.pdf'%(nombre_img[0:50]))
-                            email.send()
-                            if folio :
-                                folio=folio+1
-                if folio_ini:
-                    return {'success':True,'mensaje':'Se asignaron satifactoriamente todas las constancias a los Moderadores del Congreso Seleccionado. Se asignó hasta el folio %s'%(folio_constancia)}
-                   
-                else:
-                    return {'success':True,'mensaje':'Se asignaron satifactoriamente todas las constancias a los Moderadores del Congreso Seleccionado'}
+                usuario.is_constancia=True
+                usuario.foto_constancia='%s_participante.pdf'%(nombre_img[0:50])
+                usuario.fecha_constancia=datetime.now()
+                if not RelCongresoUser.objects.filter(congreso=congreso, user=usuario.user, is_constancia=True ).exists():
+                    score=0
+                    if congreso.score:
+                        score=congreso.score
+                    if usuario.user.score is None:
+                        usuario.user.score=score
+                    else:
+                        usuario.user.score= usuario.user.score+score
+                    usuario.user.save()
+                usuario.save()                               
+                # ////////////////
+            
+                email = EmailMessage('Constancia', 'En este correo se le adjunta la constancia de haber participado en el congreso %s.'%(congreso.titulo), to = [usuario.user.usuario.email])
+                email.attach_file('MedCongressApp/static/congreso/img_constancia/%s_participante.pdf'%(nombre_img[0:50]))
+                email.send()
+            if folio_ini:
+                return {'success':True,'mensaje':'Se asignaron satifactoriamente todas las <b>constancias a los Participantes del Congreso Seleccionado</b>.<br> Se asignó hasta el folio <b>%s </b>'%(folio_dis.replace('#',str(folio-1)))}
+                
             else:
-                return {'success':False,'mensaje':'Este Congreso no tiene Moderadores '}
+                return {'success':True,'mensaje':'Se asignaron satifactoriamente todas las <b>constancias a los Participantes del Congreso Seleccionado</b>'}
+        
+        elif t_user==2:
+            ponentes=congreso.Ponentes_sin_constancias()
+            folio=folio_ini
+            for ponente in ponentes:
+                nombre='%s %s'%(ponente.user.usuario.first_name,ponente.user.usuario.last_name)
+                cont=len(nombre)
+                comienzo=1500-(cont/2*19) 
+                base=Image.open('MedCongressApp/static/%s'%(congreso.foto_const_ponente)).convert('RGBA')
+                text=Image.new('RGBA',base.size,(255,255,255,0))
+                # nombre_font=ImageFont.truetype('calibri.ttf',150)
+                if folio :
+                    folio_font=ImageFont.truetype(BASE_FONT, 100, encoding="unic")
+                    # folio_font=ImageFont.truetype('calibri.ttf',100)
+                    c=ImageDraw.Draw(text)
+                    c.text((300,1025),str(folio_dis.replace('#',str(folio))),font=folio_font,fill=(89, 85, 85))
+                nombre_font=ImageFont.truetype(BASE_FONT, 100, encoding="unic")
+                # cong.set_variation_by_name('Italic')
+                d=ImageDraw.Draw(text)
+                d.text((comienzo,1200),nombre,font=nombre_font,fill=(89, 85, 85))
+                out=Image.alpha_composite(base,text)
+                tit=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n").replace(",","-").replace(":","-")
+                tit_nombre=nombre.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n").replace(",","-").replace(":","-")
+                nombre_img='constancia_%s_%s'%(tit_nombre,tit)
+                imagen_pdf=out.convert('RGB')  
+                imagen_pdf.save('MedCongressApp/static/congreso/img_constancia/%s_ponente.pdf'%(nombre_img[0:50]))
+                folio_constancia=None
+                if folio:
+                    folio_constancia=folio_dis.replace('#',str(folio))
+               
+                constancia=ConstanciaUsuario(user=ponente.user.usuario,congreso=congreso,fecha_constancia=datetime.now(),folio_constancia=folio_constancia,tipo_constancia='Ponente',foto_constancia='%s_ponente.pdf'%(nombre_img[0:50]))
+                constancia.save() 
+                email = EmailMessage('Constancia', 'En este correo se le adjunta la constancia de haber participado como Ponente en el congreso %s.'%(congreso.titulo), to = [ponente.user.usuario.email])
+                email.attach_file('MedCongressApp/static/congreso/img_constancia/%s_ponente.pdf'%(nombre_img[0:50]))
+                email.send()
+                if folio :
+                    folio=folio+1
+            if folio_ini:
+                return {'success':True,'mensaje':'Se asignaron satifactoriamente todas las <b>constancias a los Ponentes del Congreso Seleccionado</b>.<br> Se asignó hasta el folio <b> %s </b>'%(folio_constancia)}
+                
+            else:
+                return {'success':True,'mensaje':'Se asignaron satifactoriamente todas las <b>constancias a los Ponentes del Congreso Seleccionado</b>.'}
+        
+        elif t_user==3:
+            moderadores=congreso.Moderadores_sin_constancias()   
+            folio=folio_ini
+            for moderador in moderadores:
+                nombre='%s %s'%(moderador.user.usuario.first_name,moderador.user.usuario.last_name)
+                cont=len(nombre)
+                comienzo=1500-(cont/2*19) 
+                base=Image.open('MedCongressApp/static/%s'%(congreso.foto_const_moderador)).convert('RGBA')
+                text=Image.new('RGBA',base.size,(255,255,255,0))
+                # nombre_font=ImageFont.truetype('calibri.ttf',150)
+                if folio :
+                    # folio_font=ImageFont.truetype('calibri.ttf',100)
+                    folio_font=ImageFont.truetype(BASE_FONT, 100, encoding="unic")
+                    c=ImageDraw.Draw(text)
+                    c.text((300,1025),str(folio_dis.replace('#',str(folio))),font=folio_font,fill=(89, 85, 85))
+                nombre_font=ImageFont.truetype(BASE_FONT, 100, encoding="unic")
+                # cong.set_variation_by_name('Italic')
+                d=ImageDraw.Draw(text)
+                d.text((comienzo,1200),nombre,font=nombre_font,fill=(89, 85, 85))
+                out=Image.alpha_composite(base,text)
+                tit=congreso.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n").replace(",","-").replace(":","-")
+                tit_nombre=nombre.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n").replace(",","-").replace(":","-")
+                nombre_img='constancia_%s_%s'%(tit_nombre,tit)
+                imagen_pdf=out.convert('RGB')  
+                imagen_pdf.save('MedCongressApp/static/congreso/img_constancia/%s_moderador.pdf'%(nombre_img[0:50]))
+                
+                constancia_user=ConstanciaUsuario.objects.filter(congreso=congreso,user=moderador.user.usuario,tipo_constancia='Moderador').first()
+                folio_constancia=None
+                if folio:
+                    folio_constancia=folio_dis.replace('#',str(folio))
+                constancia=ConstanciaUsuario(user=moderador.user.usuario,congreso=congreso,fecha_constancia=datetime.now(),folio_constancia=folio_constancia,tipo_constancia='Moderador',foto_constancia='%s_moderador.pdf'%(nombre_img[0:50]))
+                constancia.save() 
+                email = EmailMessage('Constancia', 'En este correo se le adjunta la constancia de haber participado como Moderador en el congreso %s.'%(congreso.titulo), to = [moderador.user.usuario.email])
+                email.attach_file('MedCongressApp/static/congreso/img_constancia/%s_moderador.pdf'%(nombre_img[0:50]))
+                email.send()
+                if folio :
+                    folio=folio+1
+            if folio_ini:
+                return {'success':True,'mensaje':'Se asignaron satifactoriamente todas las <b>constancias a los Moderadores del Congreso Seleccionado</b>.<br> Se asignó hasta el folio <b>%s</b>'%(folio_constancia)}
+                
+            else:
+                return {'success':True,'mensaje':'Se asignaron satifactoriamente todas las <b>constancias a los Moderadores del Congreso Seleccionado</b>'}
+            
     else:
         return  {'success':False,'mensaje':'No existe ese Congreso'} 
 

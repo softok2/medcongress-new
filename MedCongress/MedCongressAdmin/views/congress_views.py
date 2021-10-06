@@ -33,7 +33,8 @@ from MedCongressAdmin.forms.congres_forms import (AsignarCongresoForms,
                                                   ExportarExelForm,
                                                   ImagenCongForms,
                                                   PonenciaForms,
-                                                  ExportarLogsCongresoExelForm)
+                                                  ExportarLogsCongresoExelForm,
+                                                  AsignarConstanciasForm)
 from MedCongressAdmin.task import AsignarBeca, Constancia
 from MedCongressApp.models import (AvalCongreso, Bloque, CategoriaPagoCongreso,
                                    Congreso, CuestionarioPregunta,
@@ -46,7 +47,7 @@ from MedCongressApp.models import (AvalCongreso, Bloque, CategoriaPagoCongreso,
                                    RelTalleresCategoriaPago, RelTallerUser,
                                    Sala, SocioCongreso, Taller,
                                    TrabajosInvestigacion, Ubicacion, User,
-                                   UserActivityLog)
+                                   UserActivityLog,ConstanciaUsuario)
 from openpyxl import Workbook
 from openpyxl.styles import (Alignment, Border, Font, NamedStyle, PatternFill,
                              Protection, Side)
@@ -1229,60 +1230,101 @@ class AsignarConstanciasUsuario(validarOrganizador,FormView):
     #         self.success_url =  reverse_lazy('MedCongressAdmin:Congres_cuestionario',kwargs={'path': pregunta.congreso.path} )
     #     return self.success_url 
 
-class AsignarConstancias(validarOrganizador,TemplateView):
+class AsignarConstancias(validarOrganizador,FormView):
     template_name = 'MedCongressAdmin/asig_constancia.html'
+    form_class = AsignarConstanciasForm
+    success_url = reverse_lazy('MedCongressAdmin:asig_constancia_list')
 
-    def get_context_data(self, **kwargs):
-        context = super(AsignarConstancias, self).get_context_data(**kwargs)
+    def get_form_kwargs(self, *args, **kwargs):
+        kwargs = super().get_form_kwargs(*args, **kwargs)
         if self.request.user.is_staff:
-            congreso=Congreso.objects.all()
+            kwargs['user'] = False
         else:
-            congreso=[]
-            congresos=Organizador.objects.filter(user=self.request.user.perfilusuario)
-            for cong in congresos:
-                congreso.append(cong.congreso)
-        context['congresos']=congreso
-        return context
-         
-    def post(self, request, **kwargs):
-        titulo= self.request.POST['my_congress']
+            kwargs['user'] =self.request.user
+        return kwargs
+
+
+    def form_valid(self, form):
+        titulo= self.request.POST['congresos']
         t_user= int(self.request.POST['tipo_usuario'])
         n_user='' 
         folio_ini=None
         folio_fin=None
         folio_dis=None
+        congreso=Congreso.objects.get(pk=self.request.POST['congresos'])
         if self.request.POST.get('folio'):
-            folio_ini=self.request.POST['folio_ini']
-            folio_fin=self.request.POST['folio_fin']
-            folio_dis=self.request.POST['folio_dis'] 
-        congreso=Congreso.objects.get(pk=self.request.POST['my_congress'])
-        if congreso: 
-            if t_user==1:
-                n_user='Participantes'
-                if not congreso.foto_constancia:                                 
-                    messages.warning(self.request,'Error.....Ese Congreso no tiene asignada ninguna foto para la constancia del Participante')
-                    return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list'))
-            elif t_user==2:
-                n_user='Ponentes'
-                if not congreso.foto_const_ponente:                                 
-                    messages.warning(self.request,'Error.....Ese Congreso no tiene asignada ninguna foto para la constancia del Ponente')
-                    return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list'))
-            elif t_user==3:
-                n_user='Moderadores'
-                if not congreso.foto_const_moderador:                                 
-                    messages.warning(self.request,'Error.....Ese Congreso no tiene asignada ninguna foto para la constancia del Moderador')
-                    return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list'))
-        else:
-            messages.warning(self.request,'Ese Congreso no existe')
-            return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list')) 
-        print('envio al celery')
+            folio_ini=int(self.request.POST['folio_ini'])
+            folio_fin=int(self.request.POST['folio_fin'])
+            folio_dis=self.request.POST['folio_dis']
+
         prueba=Constancia.apply_async(args=[titulo,t_user,folio_ini,folio_fin,folio_dis])
         respuesta=prueba.get()
         if respuesta['success'] :
             messages.success(self.request,respuesta['mensaje'])
         else:
             messages.warning(self.request,respuesta['mensaje']) 
-        return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list'))
+        return super().form_valid(form)
+
+    # def get_context_data(self, **kwargs):
+    #     context = super(AsignarConstancias, self).get_context_data(**kwargs)
+    #     if self.request.user.is_staff:
+    #         congreso=Congreso.objects.all()
+    #     else:
+    #         congreso=[]
+    #         congresos=Organizador.objects.filter(user=self.request.user.perfilusuario)
+    #         for cong in congresos:
+    #             congreso.append(cong.congreso)
+    #     context['congresos']=congreso
+    #     return context
+         
+
+    # def post(self, request, **kwargs):
+    #     titulo= self.request.POST['my_congress']
+    #     t_user= int(self.request.POST['tipo_usuario'])
+    #     n_user='' 
+    #     folio_ini=None
+    #     folio_fin=None
+    #     folio_dis=None
+    #     congreso=Congreso.objects.get(pk=self.request.POST['my_congress'])
+    #     if congreso: 
+    #         if self.request.POST.get('folio'):
+    #             folio_ini=int(self.request.POST['folio_ini'])
+    #             folio_fin=int(self.request.POST['folio_fin'])
+    #             folio_dis=self.request.POST['folio_dis']
+    #             for num_folio in range(folio_ini,folio_fin):
+    #                 print('folio_completo=%s '%(folio_dis.replace('#',str(num_folio))))
+    #                 if RelCongresoUser.objects.filter(congreso=congreso,folio_constancia=folio_dis.replace('#',str(num_folio))).exists() or ConstanciaUsuario.objects.filter(congreso=congreso,folio_constancia=folio_dis.replace('#',str(num_folio))).exists():
+    #                     messages.warning(self.request,'El folio %s ya esta asignado en este congreso'%(folio_dis.replace('#',str(num_folio))))
+    #                     return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list'))
+                        
+    #         if t_user==1:
+    #             n_user='Participantes'
+    #             if not congreso.foto_constancia:                                 
+    #                 messages.warning(self.request,'Error.....Ese Congreso no tiene asignada ninguna foto para la constancia del Participante')
+    #                 return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list'))
+    #             if self.request.POST.get('folio'):
+
+    #         elif t_user==2:
+    #             n_user='Ponentes'
+    #             if not congreso.foto_const_ponente:                                 
+    #                 messages.warning(self.request,'Error.....Ese Congreso no tiene asignada ninguna foto para la constancia del Ponente')
+    #                 return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list'))
+    #         elif t_user==3:
+    #             n_user='Moderadores'
+    #             if not congreso.foto_const_moderador:                                 
+    #                 messages.warning(self.request,'Error.....Ese Congreso no tiene asignada ninguna foto para la constancia del Moderador')
+    #                 return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list'))
+    #     else:
+    #         messages.warning(self.request,'Ese Congreso no existe')
+    #         return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list')) 
+    #     print('envio al celery')
+    #     prueba=Constancia.apply_async(args=[titulo,t_user,folio_ini,folio_fin,folio_dis])
+    #     respuesta=prueba.get()
+    #     if respuesta['success'] :
+    #         messages.success(self.request,respuesta['mensaje'])
+    #     else:
+    #         messages.warning(self.request,respuesta['mensaje']) 
+    #     return HttpResponseRedirect(reverse('MedCongressAdmin:asig_constancia_list'))
 
 class vTableAsJSONAsigCongreso(TemplateView):
     template_name = 'MedCongressAdmin/asig_congress_form.html'
@@ -1300,11 +1342,6 @@ class vTableAsJSONAsigCongreso(TemplateView):
             for organizador in congreso_orgs:
                 object_list |=RelCongresoUser.objects.filter(congreso=organizador.congreso,is_pagado=True)
 
-
-
-
-
-        
         #parametros 
         search_text = request.GET.get('sSearch', '').lower()# texto a buscar
         start = int(request.GET.get('iDisplayStart', 0))#por donde empezar a mostrar

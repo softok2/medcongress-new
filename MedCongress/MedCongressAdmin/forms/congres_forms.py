@@ -9,13 +9,14 @@ from  MedCongressApp.models import (Congreso,Ubicacion,ImagenCongreso,TipoCongre
                                     RelTallerPonente,Bloque,DatosIniciales,RelCongresoUser,RelTallerUser,
                                     Moderador,RelBloqueModerador,ImagenCongreso,CuestionarioPregunta,CuestionarioRespuestas,
                                     MetaPagInicio,MetaPagListCongreso,PreguntasFrecuentes,RelCongresoAval, AvalCongreso,RelCongresoSocio,SocioCongreso,
-                                    Idioma,DocumentoPrograma,TrabajosInvestigacion,Sala,UserActivityLog,Especialidades,Organizador)
+                                    Idioma,DocumentoPrograma,TrabajosInvestigacion,Sala,UserActivityLog,Especialidades,Organizador,ConstanciaUsuario)
                     
 from django.contrib.auth.models import Group, User
 from betterforms.multiform import MultiModelForm
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.forms.models import ModelMultipleChoiceField   
-import re     
+import re  
+   
 class CongresForm(forms.ModelForm):
     
     is_openpay=forms.BooleanField(label='Pagar por OpenPay',required=False)
@@ -209,7 +210,6 @@ class PonenciaForm(forms.ModelForm):
         except Exception as e:
             self.add_error('error', e)
 
-
 class PonenciaPonenteForm(forms.ModelForm):
    
     ponente=forms.ModelMultipleChoiceField(queryset=Ponente.objects.all(),label='Ponente',required=True)
@@ -289,6 +289,7 @@ class TallerForm(forms.ModelForm):
                 self.add_error('fecha_inicio', 'La <b> Fecha de Inicio</b> no coincide con la del bloque que pertenece <b> %s</b> '%(bloq.fecha_inicio.date()))
         except Exception as e:
             self.add_error('fecha_inicio','Entre bien la <b>Fecha de Inicio</b>')
+
 class PonenciaForms(MultiModelForm):
     form_classes = {
         'ponencia': PonenciaForm,
@@ -296,7 +297,6 @@ class PonenciaForms(MultiModelForm):
         'ponencia_ponente':PonenciaPonenteForm,
         
     } 
-
 
 class TallerForms(MultiModelForm):
     form_classes = {
@@ -392,6 +392,7 @@ class PonenteTallerForm(forms.ModelForm):
 
         if RelTallerPonente.objects.filter(taller=taller,ponente=user).exists():
             self.add_error('ponente', 'Este taller ya tiene ese Ponente')
+
 class CongresoCategPagoForm(forms.ModelForm):
     categoria=forms.ModelChoiceField(queryset=CategoriaPagoCongreso.objects.all(),label='Categoría de Pago')
     
@@ -481,7 +482,6 @@ class UserForm(forms.ModelForm):
             self.add_error('first_name', 'El Campo <b> Nombre</b> solo admite letras ')
         if not re.match(r"^[A-Za-zñÑáéíóúÁÉÍÓÚ. ]+$",apellido):
             self.add_error('first_name', 'El Campo <b> Apellidos</b> solo admite letras ')
-
 
 class MyDateInput(forms.DateInput):
     input_type = 'date'
@@ -588,10 +588,7 @@ class BloqueForms(forms.ModelForm):
         if fecha:
             if fecha < congreso.fecha_inicio:
                 self.add_error('fecha_inicio', 'Esta <b>Fecha</b> no puede ser menor  que la <b>Fecha de inicio del Congreso ( %s )  </b>'%(congreso.fecha_inicio))
-   
-       
-        
-        
+          
 class OtrosForm(forms.ModelForm):
 
     class Meta:
@@ -609,7 +606,6 @@ class OtrosForm(forms.ModelForm):
         self.fields['afiliados'].widget.attrs.update({'class': 'form-control'})  
         self.fields['talleres'].widget.attrs.update({'class': 'form-control'})   
         self.fields['aviso_privacidad'].widget.attrs.update({'class': 'form-control ckeditor'})  
-
 
 class AsignarCongresoForms(forms.ModelForm):
     user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Correo del Usuario',required=True)
@@ -665,6 +661,7 @@ class AsignarConstanciaUserForms(forms.ModelForm):
                 self.add_error('foto_constancia',"No está <b> permitido </b> subir ese <b>tipo de archivo</b>. Es solo PDF"  )
         else:
             self.add_error('foto_constancia',"Debe subir un <b> PDF </b>"  )
+
 class AsignarTallerForms(forms.ModelForm):
     user=forms.ModelChoiceField(queryset=PerfilUsuario.objects.all(),label='Email del Usuario',required=True)
     categoria_pago=forms.ModelChoiceField(queryset=CategoriaPagoCongreso.objects.all(),label='Categoría de Pago')
@@ -720,6 +717,7 @@ class ModeradorBloqueForm(forms.ModelForm):
 
         if RelBloqueModerador.objects.filter(bloque=bloque,moderador=moderador).exists():
             self.add_error('moderador', 'Este <b>Bloque</b> ya tiene este <b>Moderador</b>')
+
 class ImagenCongForms(forms.ModelForm):
     imagen=forms.ImageField(label='Buscar Imagen',required=False)
     update=forms.BooleanField(required=False)
@@ -745,6 +743,7 @@ class ImagenCongForms(forms.ModelForm):
         else:
             if not update:
                 self.add_error('imagen',"Este campo es obligatorio mio" )
+
 class PreguntaForm(forms.ModelForm):
     congreso=forms.ModelChoiceField(queryset=Congreso.objects.all(),label='Congreso')
     published=forms.BooleanField(label='Publicada',required=False)
@@ -776,7 +775,6 @@ class RespuestasForm(forms.ModelForm):
         self.fields['respuesta'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['is_correcto'].widget.attrs.update({'class': 'form-control'}) 
         
-
 class CuestionarioForms(MultiModelForm):
     form_classes = {
         'pregunta': PreguntaForm,
@@ -852,7 +850,6 @@ class PregFrecuenteForm(forms.ModelForm):
     #     if w != 1920 or h != 1080:
     #         self.add_error('imagen',"Esta imagen tiene %s X %s pixel. Debe ser de 1920 X 1080 pixel" %(w,h) )
 
-
 class ExportarExelForm(forms.ModelForm):
     
     congreso=forms.ModelChoiceField(queryset=Congreso.objects.all(),label='Filtrar Congreso',required=True)
@@ -896,7 +893,6 @@ class ExportarExelUsuariosForm(forms.ModelForm):
     #         self.add_error('congreso','Entre un congreso ')
     #     if not RelCongresoUser.objects.filter(congreso=congreso).values('user__usuario__first_name','user__usuario__last_name','user__usuario__email','congreso__titulo','categoria_pago__nombre').annotate(Sum('cantidad')).exists():
     #         self.add_error('congreso','Entre un congreso ')
-
 
 class ExportarTallerExelForm(forms.ModelForm):
     
@@ -942,7 +938,6 @@ class CongresoPatrocinadorForm(forms.ModelForm):
         if RelCongresoAval.objects.filter(congreso=congreso,aval=aval).exists():
             self.add_error('aval', 'Este Patrocinador ya esta asociado a este Congreso')
 
-
 class CongresoSocioForm(forms.ModelForm):
     
     socio=forms.ModelChoiceField(queryset=SocioCongreso.objects.all(),required=True)
@@ -967,7 +962,6 @@ class CongresoSocioForm(forms.ModelForm):
 
         if RelCongresoSocio.objects.filter(congreso=congreso,socio=socio).exists():
             self.add_error('socio', 'Este Socio ya esta asociado a este congreso')
-
 
 class SelectPonencia(forms.Form):
     ponencia=forms.ModelChoiceField(queryset=Ponencia.objects.all(),required=False)
@@ -994,6 +988,84 @@ class SelectPonencia(forms.Form):
 
         # if RelCongresoSocio.objects.filter(congreso=congreso,socio=socio).exists():
         #     self.add_error('socio', 'Este Socio ya esta asociado a este congreso')
+
+class AsignarConstanciasForm(forms.Form):
+    T_USUARIOS = (
+                    (None,'----------'),
+                    (1,'Participante'),
+                    (2,'Ponente'),
+                    (3,'Moderador'),
+    )
+    tipo_usuario = forms.IntegerField(widget=forms.widgets.Select(choices=T_USUARIOS),required=True,error_messages={'required':'Debe seleccionar un <b>Congreso</b>'})
+    congresos=forms.ModelChoiceField(queryset=Congreso.objects.all(),required=True,error_messages={'required':'Debe seleccionar un <b>Tipo de Usuario</b>'})
+    folio=forms.BooleanField(initial=False,required=False)
+    folio_dis=forms.CharField(required=False)
+    folio_ini=forms.IntegerField(min_value=1,required=False,error_messages={'min_value':'<b>Los consecutivos del Folio </b> deben ser mayor que 1'})
+    folio_fin=forms.IntegerField(min_value=1,required=False)
+    def __init__(self,user, *args, **kwargs):
+        # self.path = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs) 
+        if user:
+            self.fields['congresos'].choices=[(None, "-----------")]+[(c.pk, c.titulo) for c in user.perfilusuario.Congresos_Organizador()]
+        # bloque=Bloque.objects.filter(path=self.path).first()
+        # ponencia=forms.ModelChoiceField(queryset=Ponencia.objects.filter(congreso=bloque.congreso))
+        self.fields['congresos'].widget.attrs.update({'class': 'form-control select2'}) 
+        self.fields['tipo_usuario'].widget.attrs.update({'class': 'form-control select2'}) 
+        self.fields['folio'].widget.attrs.update({'class': 'form-control','onchange':"javascript:showFolio()"}) 
+        self.fields['folio_dis'].widget.attrs.update({'class': 'form-control','data-toggle':"tooltip",'data-popup':"tooltip-custom", 'data-original-title':"Utilizar comodín (#) donde va el consecutivo del folio ej. Folio AA-25 sería AA-#"}) 
+        self.fields['folio_ini'].widget.attrs.update({'class': 'form-control'}) 
+        self.fields['folio_fin'].widget.attrs.update({'class': 'form-control'}) 
+
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(AsignarConstanciasForm, self).clean(*args, **kwargs)
+        folio = cleaned_data.get('folio', None)
+        congreso=cleaned_data.get('congresos', None)
+
+        tipo_usuario=cleaned_data.get('tipo_usuario', None)
+        if folio:
+            folio_ini = cleaned_data.get('folio_ini', None)
+            folio_fin = cleaned_data.get('folio_fin', None)
+            folio_dis = cleaned_data.get('folio_dis', None)
+            if folio_fin<folio_ini:
+               self.add_error('folio', 'el <b> consecutivo de inicio </b> debe ser menor que el <b> consecutivo final</b>')  
+            for num_folio in range(folio_ini,folio_fin):    
+                if RelCongresoUser.objects.filter(congreso=congreso,folio_constancia=folio_dis.replace('#',str(num_folio))).exists() or ConstanciaUsuario.objects.filter(congreso=congreso,folio_constancia=folio_dis.replace('#',str(num_folio))).exists():
+                    self.add_error('folio', 'Ya existe el folio <b>%s</b> en el Congreso seleccionado '%(folio_dis.replace('#',str(num_folio))))  
+                    return
+        if  tipo_usuario==1:
+            if len(congreso.Participantes_sin_constancias())==0:
+                self.add_error('folio', 'El <b> Congreso </b> seleccionado no tiene participantes por asignar constancia')   
+                return
+            if folio:
+                if len(congreso.Participantes_sin_constancias())!=(int(folio_fin)+1-int(folio_ini)):
+                    self.add_error('folio', 'No está en correspondencia la <b> cantidad de participantes </b>con la <b>cantidad de constancias a generar</b>.<br> Existen %s participantes sin constancias '%(len(congreso.Participantes_sin_constancias())))     
+                    return
+            if not congreso.foto_constancia:
+                self.add_error('folio', 'El <b> Congreso </b> seleccionado no tiene asignado imagen para la constancia de los participantes ')   
+        elif tipo_usuario==2:
+            if len(congreso.Ponentes_sin_constancias())==0:
+                self.add_error('folio', 'El <b> Congreso </b> seleccionado no tiene ponentes por asignar constancia')   
+                return
+            if folio:
+                if len(congreso.Ponentes_sin_constancias())!=(int(folio_fin)+1-int(folio_ini)):
+                    self.add_error('folio', 'No está en correspondencia la <b> cantidad de Ponentes </b>con la <b>cantidad de constancias a generar</b>.<br> Existen %s ponentes sin constancias '%(len(congreso.Ponentes_sin_constancias())))     
+                    return
+            if not congreso.foto_const_ponente:
+                self.add_error('folio', 'El <b> Congreso </b> seleccionado no tiene asignado imagen para la constancia de los ponentes ')
+                return
+        elif tipo_usuario==3:
+
+            if len(congreso.Moderadores_sin_constancias())==0:
+                self.add_error('folio', 'El <b> Congreso </b> seleccionado no tiene moderadores por asignar constancia')   
+                return
+            if folio:
+                if len(congreso.Moderadores_sin_constancias())!=(int(folio_fin)+1-int(folio_ini)):
+                    self.add_error('folio', 'No está en correspondencia la <b> cantidad de Moderadores </b>con la <b>cantidad de constancias a generar</b>.<br> Existen %s moderadores sin constancias '%(len(congreso.Moderadores_sin_constancias())))     
+                    return
+
+            if not congreso.foto_const_moderador:
+                self.add_error('folio', 'El <b> Congreso </b> seleccionado no tiene asignado imagen para la constancia de los moderadores ')   
+                return
 
 class CongresoProgramaForm(forms.ModelForm):
     idioma=forms.ModelChoiceField(queryset=Idioma.objects.all(),label='Idioma')
