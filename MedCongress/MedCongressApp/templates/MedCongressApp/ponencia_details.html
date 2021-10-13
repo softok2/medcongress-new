@@ -43,16 +43,27 @@
 {%block css%}
 
 <link rel="stylesheet" href="{% static 'MedCongressApp/css/bootstrap-rating.css'%}" type="text/css" media="all">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+<link href="{% static '/assets/css/star-rating.css'%}" media="all" rel="stylesheet" type="text/css"/>
+    <link href="{% static '/assets/themes/krajee-fas/theme.css'%}" media="all" rel="stylesheet" type="text/css"/>
+    <link href="{% static '/assets/themes/krajee-svg/theme.css'%}" media="all" rel="stylesheet" type="text/css"/>
+    <!--suppress JSUnresolvedLibraryURL -->
 
-<link rel="stylesheet" href="{% static 'MedCongressApp/css/font-awesome.min.css'%}" type="text/css" media="all">
-<!-- Ihover css -->
+
 <style>
 	.simply-section {
 		color: #e5e5e7 !important;
 		background-color: #39393a60 !important;
 
 	}
+	.rating-md 
+   .krajee-icon-clear{
+	display: none;
+   }
 
+   .rating-md .caption {
+	display: none;
+   }
 	.glyphicon {
 		color: #40C8F4;
 		font-size: 26px;
@@ -63,6 +74,7 @@
 		color: rgb(85, 84, 84);
 	}
 </style>
+
 {%endblock%}
 {% block contenido %}
 <section class="video-banner">
@@ -123,22 +135,29 @@
        
         </div>
             {%endfor%}
-            </div>
+			</div>
+			
             {%if ponencia.cod_video and is_pagado%}
             <div class="col-md-2">
                 {%if is_evaluado%}
 					<div id="evaluado">
 						<h6 style="margin: 0 0 15px;
-				font-size: 14px;
-				line-height: 30px;
-				text-transform: uppercase;
-				font-family: 'Gotham-Bold';
-				color: #565657;">Su evaluación fue</h6>
-
-						<input type="hidden" class="rating" id="rating_evaluado" data-readonly
-							value="{{is_evaluado}}" /> <button class="btn btn-primary" onclick="Update()"
-							title="Cambiar Votación"><i class="fa fa-refresh"></i></button>
+								font-size: 14px;
+								line-height: 30px;
+								text-transform: uppercase;
+								font-family: 'Gotham-Bold';
+								color: #565657;">Su evaluación fue
+						</h6>
+						<div class="row">
+							<div class='col-md-8'>
+								<input id="input-3" name="input-3"  data-show-caption="false" value="{{is_evaluado}}" class="rating-loading">
+							</div>	
+							<button class="btn btn-primary" onclick="Update()"
+								title="Cambiar Votación">Cambiar Evaluación</button>
+							
+						</div>
 					</div>
+				
 					<div id='sin_evaluar' style="display: none;">
 						<h6 style="margin: 0 0 15px;
 					font-size: 10px;
@@ -147,7 +166,7 @@
 					font-family: 'Gotham-Bold';
 					color: #565657;">Vuelva a Evaluar esta Ponencia</h6>
 
-						<input type="hidden" class="rating check rating-tooltip nueva" id="rating" />
+					 <input  class="rating check rating-tooltip nueva" id="rating" data-step="1" />
 					</div>
 					{%else%}
 					<div id='sin_evaluar'>
@@ -157,8 +176,8 @@
 				text-transform: uppercase;
 				font-family: 'Gotham-Bold';
 				color: #565657;">Evalue esta Ponencia</h6>
-
-						<input type="hidden" class="rating check rating-tooltip nueva" id="rating" />
+ 						
+						<input  class="rating check rating-tooltip nueva" id="rating" data-step="1" />
 					</div>
 
 					<div id="evaluado" style="display: none;">
@@ -168,14 +187,19 @@
 				text-transform: uppercase;
 				font-family: 'Gotham-Bold';
 				color: #565657;">Su evaluación fue</h6>
-
-						<input type="hidden" class="rating" id="rating_evaluado" data-readonly
-							value="{{is_evaluado}}" /> <button class="btn btn-primary" onclick="Update()"
-							title="Cambiar Votación"><i class="fa fa-refresh"></i></button>
+						<div class="row">
+							<div class='col-md-8'>
+								<input id="input-3" name="input-3"  data-show-caption="false" value="{{is_evaluado}}" class="rating-loading">
+							</div>	
+							<button class="btn btn-primary" onclick="Update()"
+								title="Cambiar Votación">Cambiar Evaluación</button>
+							
+						</div>
 					</div>
 					{%endif%}
             </div>
-            {%endif%}
+			{%endif%}
+			
         </div>
     </div>
 </section>
@@ -240,21 +264,18 @@
 {%endblock%}
 
 {% block script%}
-<script src="{% static 'MedCongressApp/js/bootstrap-rating.js' %}"></script>
+
 
 <script src="{% static 'MedCongressApp/js/plugins/simplyCountdown/simplyCountdown.min.js'%}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static '/assets/js/star-rating.js'%}" type="text/javascript"></script>
+<script src="{% static '/assets/themes/krajee-fas/theme.js'%}" type="text/javascript"></script>
+<script src="{% static '/assets/themes/krajee-svg/theme.js'%}" type="text/javascript"></script>
 <script>
-	$(document).ready(function () {
-		$('#rating').rating({
-			filled: 'glyphicon glyphicon-heart',
-			empty: 'glyphicon glyphicon-heart-empty'
-		});
-		$('#rating').rating('rate', '{{is_evaluado}}');
-		var height = $(window).height();
-		$('#div').height(height);
-	});
-
-
+$(document).ready(function(){
+	$('#input-3').rating({displayOnly: true, step: 0.5});
+	
+});
 	simplyCountdown('#countdown', {
 		year: '{{ponencia.fecha_inicio|date:"Y"}}', // required
 		month: '{{ponencia.fecha_inicio|date:"m"}}', // required
@@ -282,10 +303,10 @@
 		zeroPad: false,
 		countUp: false
 	});
+
 	$(function () {
 
 		$('input.nueva').on('change', function () {
-
 			swal({
 				title: "Le dará una Evaluación de " + $(this).val() + ' puntos a esta Ponencia',
 				text: "",
@@ -324,12 +345,12 @@
 							success: function (data) {
 								$('#sin_evaluar').hide();
 								$('#evaluado').show();
-								
-								$('#rating_evaluado').rating('rate', data.valor);
+								$('#input-3').rating('update',  data.valor);
+								$('#input-3').rating({displayOnly: true, step: 0.5});
 								
 								swal('Correcto', ' Le ha dado una evaluación de: ' + data.valor + ' puntos', 'success')
 
-								swal('Correcto', ' Ya se envio su votación', 'success')
+								
 							}
 						});
 					}
@@ -409,6 +430,7 @@
 				if (isConfirm) {
 					$('#sin_evaluar').show();
 					$('#evaluado').hide();
+					$('#rating').rating();
 					swal('Aviso', ' Ya puede evaluar de nuevo esta Ponencia', 'success')
 				}
 				else {
