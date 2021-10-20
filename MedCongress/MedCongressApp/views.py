@@ -1017,7 +1017,7 @@ class PerfilUserCreate(FormView):
         get=''
         if(self.request.GET.get('next')):
             get='?next=/view_cart'
-        plain_message = strip_tags('Usted se ha creado un usuario en MedCongress entre a esta dirección %s/habilitar_user/%s%s  para validar su cuenta en MedCongres'%(URL_SITE,secret_key,get) )
+        plain_message = strip_tags('Usted se ha creado un usuario en MedCongress entre a esta dirección   <a href="%s/habilitar_user/%s%s"> %s/habilitar_user/%s%s</a>  para validar su cuenta en MedCongres'%(URL_SITE,secret_key,get,URL_SITE,secret_key,get) )
         from_email = ''
         to = user.email
         mail.send_mail(subject, plain_message, from_email, [to])
