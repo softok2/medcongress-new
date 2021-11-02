@@ -765,7 +765,7 @@ class CongresoDetail(TemplateView):
                     else:
                         ver.append([taller,cat_pa,False])  
                 context['talleres']=ver
-                pagos = RelCongresoUser.objects.filter(user=user_perfil.pk, congreso=congreso.pk).order_by('precio')
+                pagos = RelCongresoUser.objects.filter(user=user_perfil.pk, congreso=congreso.pk,is_pagado=True).order_by('precio')
                 
                 if pagos.exists():
                     pagos_p = RelCongresoUser.objects.filter(user=user_perfil.pk, congreso=congreso.pk,is_pagado=True).order_by('precio') 
