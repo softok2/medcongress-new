@@ -1197,7 +1197,7 @@ class OrganizadorForm(forms.ModelForm):
             self.add_error('user', 'Ya este usuario es Organizador de este congreso')
 
 class ExportarLogsCongresoExelForm(forms.ModelForm):
-    congreso= forms.ModelChoiceField(queryset=Congreso.objects.all(),label='Congreso')
+    congreso= forms.ModelChoiceField(queryset=Congreso.objects.all(),label='Congreso',required=True)
     fecha_inicio=forms.DateField(required=False,label='Fecha Inicio')
     fecha_fin=forms.DateField(required=False,label='Fecha Fin')
 

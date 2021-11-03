@@ -1576,154 +1576,158 @@ class LogsCongreso(validarUser,FormView):
             
             query=UserActivityLog.objects.filter(congreso=id_congreso,fecha__lt=d_fecha_final).order_by('user','fecha')
         
-       
-        #Creamos el libro de trabajo
-        wb = Workbook()
-        #Definimos como nuestra hoja de trabajo, la hoja activa, por defecto la primera del libro
-        ws = wb.active
-        ws.column_dimensions['A'].width=5
-        ws.column_dimensions['B'].width=25
-        ws.column_dimensions['C'].width=20
-        ws.column_dimensions['D'].width=150
-        
-
-        titulo = NamedStyle(name="titulo")
-        titulo.font=Font(size=12,bold=True)
-        titulo.fill=PatternFill(fill_type='solid',start_color='00CCCCFF')
-        titulo.alignment=Alignment(horizontal='center',mergeCell=True)
-        titulo.border = Border(left=Side(border_style='thin',
-                        color='FF000000'),
-                right=Side(border_style='thin',
-                        color='FF000000'),
-                top=Side(border_style='thin',
-                        color='FF000000'),
-                bottom=Side(border_style='thin',
-                            color='FF000000'),
-                diagonal=Side(border_style='thin',
-                            color='FF000000'),
-                diagonal_direction=0,
-                outline=Side(border_style='thin',
-                            color='FF000000'),
-                vertical=Side(border_style='thin',
-                            color='FF000000'),
-                horizontal=Side(border_style='thin',
-                            color='FF000000')
-            )
-
-        celdas = NamedStyle(name="celdas")
-        celdas.font=Font(size=12)
-        
-        celdas.alignment=Alignment(horizontal='general',mergeCell=True)
-        celdas.border = Border(left=Side(border_style='thin',
-                        color='FF000000'),
-                right=Side(border_style='thin',
-                        color='FF000000'),
-                top=Side(border_style='thin',
-                        color='FF000000'),
-                bottom=Side(border_style='thin',
-                            color='FF000000'),
-                diagonal=Side(border_style='thin',
-                            color='FF000000'),
-                diagonal_direction=0,
-                outline=Side(border_style='thin',
-                            color='FF000000'),
-                vertical=Side(border_style='thin',
-                            color='FF000000'),
-                horizontal=Side(border_style='thin',
-                            color='FF000000')
-            )
-        celdas_fecha = NamedStyle(name="celdas_fecha")
-        celdas_fecha.font=Font(size=12)
-        
-        celdas_fecha.alignment=Alignment(horizontal='center',mergeCell=True)
-        celdas_fecha.border = Border(left=Side(border_style='thin',
-                        color='FF000000'),
-                right=Side(border_style='thin',
-                        color='FF000000'),
-                top=Side(border_style='thin',
-                        color='FF000000'),
-                bottom=Side(border_style='thin',
-                            color='FF000000'),
-                diagonal=Side(border_style='thin',
-                            color='FF000000'),
-                diagonal_direction=0,
-                outline=Side(border_style='thin',
-                            color='FF000000'),
-                vertical=Side(border_style='thin',
-                            color='FF000000'),
-                horizontal=Side(border_style='thin',
-                            color='FF000000')
-            )
-        label = NamedStyle(name="label")
-        label.font=Font(size=12,bold=True)
-        label.alignment=Alignment(horizontal='right',mergeCell=True)
-        #En la celda B1 ponemos el texto 'REPORTE DE PERSONAS'
-        ws['A1'] = 'Logs del Congresos :'
-        ws['A1'].font = Font(size=12,bold=True)
-        ws['A1'].alignment = Alignment(mergeCell='center',horizontal='center') 
-        
-        ws['A2'] ='" %s "'%(congreso.titulo) 
-        ws['A2'].font = Font(size=12,bold=True)
-        ws['A2'].alignment = Alignment(mergeCell='center',horizontal='center') 
-        
-        #Juntamos las celdas desde la B1 hasta la E1, formando una sola celda
-        ws.merge_cells('A1:F1')
-        ws.merge_cells('A2:F2')
-        #Creamos los encabezados desde la celda B3 hasta la E3
-        cont=3
-        num=1
-        id_user=0
         if query:
-            for quer in query:
-                if id_user!=quer.user.pk:
-                    cont = cont + 1
-                    num=1
-                    ws.merge_cells('A%s:B%s'%(cont,cont))
-                    ws.merge_cells('C%s:D%s'%(cont,cont))
-                    ws.cell(row=cont,column=1).style=label
-                    ws['A%s'%(cont)] = 'Usuario:'
-                    ws['C%s'%(cont)] = '%s %s <<%s>>'%(quer.user.usuario.first_name,quer.user.usuario.last_name,quer.user.usuario.email)
-                    cont = cont + 1
-                    ws.merge_cells('A%s:B%s'%(cont,cont))
-                    ws.merge_cells('C%s:D%s'%(cont,cont))
-                    ws.cell(row=cont,column=1).style=label
-                    ws['A%s'%(cont)] = 'Categoría:'
-                    ws['C%s'%(cont)] = '%s'%(quer.user.categoria)
-                    cont = cont + 1
-                    
-                    ws.cell(row=cont,column=1).style=titulo
-                    ws.cell(row=cont,column=2).style=titulo
-                    ws.cell(row=cont,column=3).style=titulo
-                    ws.cell(row=cont,column=4).style=titulo
-                    
-                    ws.cell(row=cont,column=1).value='No.'
-                    ws.cell(row=cont,column=2).value='Fecha' 
-                    ws.cell(row=cont,column=3).value='Tiempo (H:M:S)'
-                    ws.cell(row=cont,column=4).value='Acción'
-                    id_user= quer.user.pk   
-                
-                    cont = cont + 1
-            #Recorremos el conjunto de personas y vamos escribiendo cada uno de los datos en las celdas
+            #Creamos el libro de trabajo
+            wb = Workbook()
+            #Definimos como nuestra hoja de trabajo, la hoja activa, por defecto la primera del libro
+            ws = wb.active
+            ws.column_dimensions['A'].width=5
+            ws.column_dimensions['B'].width=25
+            ws.column_dimensions['C'].width=20
+            ws.column_dimensions['D'].width=150
             
+
+            titulo = NamedStyle(name="titulo")
+            titulo.font=Font(size=12,bold=True)
+            titulo.fill=PatternFill(fill_type='solid',start_color='00CCCCFF')
+            titulo.alignment=Alignment(horizontal='center',mergeCell=True)
+            titulo.border = Border(left=Side(border_style='thin',
+                            color='FF000000'),
+                    right=Side(border_style='thin',
+                            color='FF000000'),
+                    top=Side(border_style='thin',
+                            color='FF000000'),
+                    bottom=Side(border_style='thin',
+                                color='FF000000'),
+                    diagonal=Side(border_style='thin',
+                                color='FF000000'),
+                    diagonal_direction=0,
+                    outline=Side(border_style='thin',
+                                color='FF000000'),
+                    vertical=Side(border_style='thin',
+                                color='FF000000'),
+                    horizontal=Side(border_style='thin',
+                                color='FF000000')
+                )
+
+            celdas = NamedStyle(name="celdas")
+            celdas.font=Font(size=12)
+            
+            celdas.alignment=Alignment(horizontal='general',mergeCell=True)
+            celdas.border = Border(left=Side(border_style='thin',
+                            color='FF000000'),
+                    right=Side(border_style='thin',
+                            color='FF000000'),
+                    top=Side(border_style='thin',
+                            color='FF000000'),
+                    bottom=Side(border_style='thin',
+                                color='FF000000'),
+                    diagonal=Side(border_style='thin',
+                                color='FF000000'),
+                    diagonal_direction=0,
+                    outline=Side(border_style='thin',
+                                color='FF000000'),
+                    vertical=Side(border_style='thin',
+                                color='FF000000'),
+                    horizontal=Side(border_style='thin',
+                                color='FF000000')
+                )
+            celdas_fecha = NamedStyle(name="celdas_fecha")
+            celdas_fecha.font=Font(size=12)
+            
+            celdas_fecha.alignment=Alignment(horizontal='center',mergeCell=True)
+            celdas_fecha.border = Border(left=Side(border_style='thin',
+                            color='FF000000'),
+                    right=Side(border_style='thin',
+                            color='FF000000'),
+                    top=Side(border_style='thin',
+                            color='FF000000'),
+                    bottom=Side(border_style='thin',
+                                color='FF000000'),
+                    diagonal=Side(border_style='thin',
+                                color='FF000000'),
+                    diagonal_direction=0,
+                    outline=Side(border_style='thin',
+                                color='FF000000'),
+                    vertical=Side(border_style='thin',
+                                color='FF000000'),
+                    horizontal=Side(border_style='thin',
+                                color='FF000000')
+                )
+            label = NamedStyle(name="label")
+            label.font=Font(size=12,bold=True)
+            label.alignment=Alignment(horizontal='right',mergeCell=True)
+            #En la celda B1 ponemos el texto 'REPORTE DE PERSONAS'
+            ws['A1'] = 'Logs del Congresos :'
+            ws['A1'].font = Font(size=12,bold=True)
+            ws['A1'].alignment = Alignment(mergeCell='center',horizontal='center') 
+            
+            ws['A2'] ='" %s "'%(congreso.titulo) 
+            ws['A2'].font = Font(size=12,bold=True)
+            ws['A2'].alignment = Alignment(mergeCell='center',horizontal='center') 
+            
+            #Juntamos las celdas desde la B1 hasta la E1, formando una sola celda
+            ws.merge_cells('A1:F1')
+            ws.merge_cells('A2:F2')
+            #Creamos los encabezados desde la celda B3 hasta la E3
+            cont=3
+            num=1
+            id_user=0
+            if query:
+                for quer in query:
+                    if id_user!=quer.user.pk:
+                        cont = cont + 1
+                        num=1
+                        ws.merge_cells('A%s:B%s'%(cont,cont))
+                        ws.merge_cells('C%s:D%s'%(cont,cont))
+                        ws.cell(row=cont,column=1).style=label
+                        ws['A%s'%(cont)] = 'Usuario:'
+                        ws['C%s'%(cont)] = '%s %s <<%s>>'%(quer.user.usuario.first_name,quer.user.usuario.last_name,quer.user.usuario.email)
+                        cont = cont + 1
+                        ws.merge_cells('A%s:B%s'%(cont,cont))
+                        ws.merge_cells('C%s:D%s'%(cont,cont))
+                        ws.cell(row=cont,column=1).style=label
+                        ws['A%s'%(cont)] = 'Categoría:'
+                        ws['C%s'%(cont)] = '%s'%(quer.user.categoria)
+                        cont = cont + 1
+                        
+                        ws.cell(row=cont,column=1).style=titulo
+                        ws.cell(row=cont,column=2).style=titulo
+                        ws.cell(row=cont,column=3).style=titulo
+                        ws.cell(row=cont,column=4).style=titulo
+                        
+                        ws.cell(row=cont,column=1).value='No.'
+                        ws.cell(row=cont,column=2).value='Fecha' 
+                        ws.cell(row=cont,column=3).value='Tiempo (H:M:S)'
+                        ws.cell(row=cont,column=4).value='Acción'
+                        id_user= quer.user.pk   
+                    
+                        cont = cont + 1
+                #Recorremos el conjunto de personas y vamos escribiendo cada uno de los datos en las celdas
                 
-                ws.cell(row=cont,column=1).style=celdas_fecha
-                ws.cell(row=cont,column=1).value = num
-                ws.cell(row=cont,column=2).style=celdas_fecha
-                ws.cell(row=cont,column=2).value = quer.fecha
-                ws.cell(row=cont,column=3).style=celdas_fecha
-                tiempo=quer.tiempo.split('.')
-                ws.cell(row=cont,column=3).value =tiempo[0]
-                ws.cell(row=cont,column=4).style=celdas
-                ws.cell(row=cont,column=4).value = '  %s'%(quer.mensaje) 
-                
-                cont = cont + 1
-                num = num + 1
+                    
+                    ws.cell(row=cont,column=1).style=celdas_fecha
+                    ws.cell(row=cont,column=1).value = num
+                    ws.cell(row=cont,column=2).style=celdas_fecha
+                    ws.cell(row=cont,column=2).value = quer.fecha
+                    ws.cell(row=cont,column=3).style=celdas_fecha
+                    tiempo=quer.tiempo.split('.')
+                    ws.cell(row=cont,column=3).value =tiempo[0]
+                    ws.cell(row=cont,column=4).style=celdas
+                    ws.cell(row=cont,column=4).value = '  %s'%(quer.mensaje) 
+                    
+                    cont = cont + 1
+                    num = num + 1
+            else:
+                ws.merge_cells('A%s:F%s'%(cont,cont))
+                ws.cell(row=cont,column=1).value = 'Este congreso no tiene Logs'
+            response = HttpResponse(content_type="application/ms-excel") 
+            response["Content-Disposition"] = "attachment; filename=LogsCongreso.xlsx"
+            wb.save(response)
+            return response
+        
         else:
-            ws.merge_cells('A%s:F%s'%(cont,cont))
-            ws.cell(row=cont,column=1).value = 'Este congreso no tiene Logs'
-        response = HttpResponse(content_type="application/ms-excel") 
-        response["Content-Disposition"] = "attachment; filename=LogsCongreso.xlsx"
-        wb.save(response)
-        return response
+            messages.warning(self.request, 'No existen Logs con estos criterios de busquedas')
+            return HttpResponseRedirect(reverse('MedCongressAdmin:LogsCongreso'))
   
 

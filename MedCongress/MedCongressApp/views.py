@@ -136,7 +136,7 @@ class PagoExitoso(TemplateView):
                 pago_congreso.save()
                 ################################
                 relCongresoCategoriaPago=RelCongresoCategoriaPago.objects.filter(congreso=pago_congreso.congreso.pk,categoria=pago_congreso.categoria_pago.pk).first()
-              
+                InsertLog(pago_congreso.congreso.pk,'Confirmar_Pago_Congreso',pago_congreso.user)
                 if len(cart[1])>0:
                     cart[1].append(
                         {
@@ -180,7 +180,7 @@ class PagoExitoso(TemplateView):
             for pago_taller in pagos_taller:
                 pago_taller.is_pagado=True 
                 pago_taller.save()
-                 ################################
+                InsertLog(pago_congreso.congreso.pk,'Confirmar_Pago_Taller',pago_congreso.user)
                 relCongresoCategoriaPago=RelTalleresCategoriaPago.objects.filter(taller=pago_taller.taller.pk,categoria=pago_taller.categoria_pago.pk).first()
               
                 if len(cart[1])>0:
@@ -864,13 +864,16 @@ class CongresoCardForm(TemplateView):
                             categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
                             pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False, cantidad=cart['cantidad'])
                             pagar_congreso.save()
+                            InsertLog(cart['id_congreso'],'Solicito_Pago_Congreso_Tarjeta',user_perfil)
                         if str(cart['tipo_evento']) == 'Taller':
                             taller=Taller.objects.filter(id=cart['id_congreso']).first()
                             categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
                             pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False,cantidad=cart['cantidad'])
                             pagar_congreso.save()
+                            InsertLog(cart['id_congreso'],'Solicito_Pago_Taller_Tarjeta',user_perfil)
                     car=Cart(self.request)
                     car.clear()
+                    
                     return HttpResponseRedirect(response.json()['payment_method']['url']) 
                 else:
                     self.request.session["error_opempay"]=response.json()['description']
@@ -903,11 +906,13 @@ class CongresoCardForm(TemplateView):
                                 categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
                                 pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False, cantidad=cart['cantidad'])
                                 pagar_congreso.save()
+                                InsertLog(cart['id_congreso'],'Solicito_Pago_Congreso_Efectivo',user_perfil)
                             if str(cart['tipo_evento']) == 'Taller':
                                 taller=Taller.objects.filter(id=cart['id_congreso']).first()
                                 categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
                                 pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False,cantidad=cart['cantidad'])
                                 pagar_congreso.save()
+                                InsertLog(cart['id_congreso'],'Solicito_Pago_Taller_Efectivo',user_perfil)
                         car=Cart(self.request)
                         car.clear() 
                         return HttpResponseRedirect('https://%s/paynet-pdf/%s/%s'%(URL_PDF,ID_KEY,response_dic['payment_method']['reference']) )
@@ -957,11 +962,13 @@ class CongresoCardForm(TemplateView):
                                 categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
                                 pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False, cantidad=cart['cantidad'])
                                 pagar_congreso.save()
+                                InsertLog(cart['id_congreso'],'Solicito_Pago_Congreso_SPEI',user_perfil)
                             if str(cart['tipo_evento']) == 'Taller':
                                 taller=Taller.objects.filter(id=cart['id_congreso']).first()
                                 categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
                                 pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False,cantidad=cart['cantidad'])
                                 pagar_congreso.save()
+                                InsertLog(cart['id_congreso'],'Solicito_Pago_Taller_SPEI',user_perfil)
                         car=Cart(self.request)
                         car.clear() 
                         return HttpResponseRedirect('https://%s/spei-pdf/%s/%s'%(URL_PDF,ID_KEY,response_dic['id']) )
@@ -1302,6 +1309,7 @@ class AddCart(TemplateView):
             prueba=RelCongresoCategoriaPago.objects.filter(id=query).first()
             car=Cart(self.request)
             result=car.add_evento(relCongresoCategoriaPago=prueba,cant=cant)
+            InsertLog(prueba.congreso.pk,'Add_Congreso_Cart',request.user.perfilusuario)
             return JsonResponse({'succes':result}, safe=False)
         return TemplateResponse(request, reverse('dashboard'))
    
@@ -1318,6 +1326,7 @@ class AddCartTaller(TemplateView):
             prueba=RelTalleresCategoriaPago.objects.filter(id=query).first()
             car=Cart(self.request)
             result=car.add_taller(relTallerCategoriaPago=prueba,cant=cant)
+            InsertLog(prueba.taller.id,'Add_Taller_Cart',request.user.perfilusuario)
             return JsonResponse({'succes':result}, safe=False)
         return TemplateResponse(request, reverse('dashboard'))
 
@@ -2060,7 +2069,7 @@ def Webhook(request):
                     pago_congreso.is_pagado=True
                     pago_congreso.save() 
                     relCongresoCategoriaPago=RelCongresoCategoriaPago.objects.filter(congreso=pago_congreso.congreso.pk,categoria=pago_congreso.categoria_pago.pk).first()
-                
+                    InsertLog(pago_congreso.congreso.pk,'Confirmar_Pago_Congreso',pago_congreso.user)
                     if len(cart[1])>0:
                         cart[1].append(
                             {
@@ -2103,7 +2112,7 @@ def Webhook(request):
                     pago_taller.save()
                     ################################
                     relCongresoCategoriaPago=RelTalleresCategoriaPago.objects.filter(taller=pago_taller.taller.pk,categoria=pago_taller.categoria_pago.pk).first()
-                
+                    InsertLog(pago_taller.taller.pk,'Confirmar_Pago_Taller',pago_taller.user)
                     if len(cart[1])>0:
                         cart[1].append(
                             {
@@ -2658,6 +2667,179 @@ def InsertLog(id,tipo,usuario):
             last_log.save()
         log=UserActivityLog(congreso=congreso,mensaje=mensaje,tipo=tipo,user=usuario,fecha=today)
         log.save()
+    
+    if tipo=='Confirmar_Pago_Congreso':
+        congreso=Congreso.objects.get(pk=id)
+        
+        mensaje='Se confirmó el pago del Congreso "%s"'%(congreso.titulo)
+       
+        today = datetime.today()
+        formato2 = "%Y-%m-%d %H:%M:%S"
+        last_log=UserActivityLog.objects.filter(user=usuario).order_by('pk').last()
+        if last_log:
+            cadena2 = last_log.fecha.strftime(formato2)  
+            objeto_datetime = datetime.strptime(cadena2, formato2)
+            tiempo = today - objeto_datetime
+            last_log.tiempo=tiempo
+            last_log.save()
+        log=UserActivityLog(congreso=congreso,mensaje=mensaje,tipo=tipo,user=usuario,fecha=today)
+        log.save()
+    if tipo=='Confirmar_Pago_Taller':
+        taller=Taller.objects.get(pk=id)
+        congreso=taller.congreso
+        mensaje='Se confirmó el pago del Taller "%s" del Congreso "%s"'%(taller.titulo,congreso.titulo)
+       
+        today = datetime.today()
+        formato2 = "%Y-%m-%d %H:%M:%S"
+        last_log=UserActivityLog.objects.filter(user=usuario).order_by('pk').last()
+        if last_log:
+            cadena2 = last_log.fecha.strftime(formato2)  
+            objeto_datetime = datetime.strptime(cadena2, formato2)
+            tiempo = today - objeto_datetime
+            last_log.tiempo=tiempo
+            last_log.save()
+        log=UserActivityLog(congreso=congreso,mensaje=mensaje,tipo=tipo,user=usuario,fecha=today)
+        log.save()
+    if tipo=='Solicito_Pago_Congreso_Tarjeta':
+        congreso=Congreso.objects.get(pk=id)
+        
+        mensaje='Solicitó pago del Congreso "%s" por tarjeta'%(congreso.titulo)
+       
+        today = datetime.today()
+        formato2 = "%Y-%m-%d %H:%M:%S"
+        last_log=UserActivityLog.objects.filter(user=usuario).order_by('pk').last()
+        if last_log:
+            cadena2 = last_log.fecha.strftime(formato2)  
+            objeto_datetime = datetime.strptime(cadena2, formato2)
+            tiempo = today - objeto_datetime
+            last_log.tiempo=tiempo
+            last_log.save()
+        log=UserActivityLog(congreso=congreso,mensaje=mensaje,tipo=tipo,user=usuario,fecha=today)
+        log.save()
+    if tipo=='Solicito_Pago_Taller_Tarjeta':
+        taller=Taller.objects.get(pk=id)
+        congreso=taller.congreso
+        mensaje='Solicitó pago del Taller "%s" del Congreso "%s" por tarjeta'%(taller.titulo,congreso.titulo)
+       
+        today = datetime.today()
+        formato2 = "%Y-%m-%d %H:%M:%S"
+        last_log=UserActivityLog.objects.filter(user=usuario).order_by('pk').last()
+        if last_log:
+            cadena2 = last_log.fecha.strftime(formato2)  
+            objeto_datetime = datetime.strptime(cadena2, formato2)
+            tiempo = today - objeto_datetime
+            last_log.tiempo=tiempo
+            last_log.save()
+        log=UserActivityLog(congreso=congreso,mensaje=mensaje,tipo=tipo,user=usuario,fecha=today)
+        log.save()
+    
+    if tipo=='Add_Taller_Cart':
+        taller=Taller.objects.get(pk=id)
+        congreso=taller.congreso
+        mensaje='Se adicionó el Taller "%s" del Congreso "%s" al Carrito de compra'%(taller.titulo,congreso.titulo)
+       
+        today = datetime.today()
+        formato2 = "%Y-%m-%d %H:%M:%S"
+        last_log=UserActivityLog.objects.filter(user=usuario).order_by('pk').last()
+        if last_log:
+            cadena2 = last_log.fecha.strftime(formato2)  
+            objeto_datetime = datetime.strptime(cadena2, formato2)
+            tiempo = today - objeto_datetime
+            last_log.tiempo=tiempo
+            last_log.save()
+        log=UserActivityLog(congreso=congreso,mensaje=mensaje,tipo=tipo,user=usuario,fecha=today)
+        log.save()
+    if tipo=='Add_Congreso_Cart':
+       
+        congreso=Congreso.objects.get(pk=id)
+        
+        mensaje='Se adicionó el Congreso "%s" al carrito de Compra'%(congreso.titulo)
+       
+        today = datetime.today()
+        formato2 = "%Y-%m-%d %H:%M:%S"
+        last_log=UserActivityLog.objects.filter(user=usuario).order_by('pk').last()
+        if last_log:
+            cadena2 = last_log.fecha.strftime(formato2)  
+            objeto_datetime = datetime.strptime(cadena2, formato2)
+            tiempo = today - objeto_datetime
+            last_log.tiempo=tiempo
+            last_log.save()
+        log=UserActivityLog(congreso=congreso,mensaje=mensaje,tipo=tipo,user=usuario,fecha=today)
+        log.save()
+
+    if tipo=='Solicito_Pago_Taller_SPEI':
+        taller=Taller.objects.get(pk=id)
+        congreso=taller.congreso
+        mensaje='Solicitó pago del Taller "%s" del Congreso "%s" por SPEI'%(taller.titulo,congreso.titulo)
+       
+        today = datetime.today()
+        formato2 = "%Y-%m-%d %H:%M:%S"
+        last_log=UserActivityLog.objects.filter(user=usuario).order_by('pk').last()
+        if last_log:
+            cadena2 = last_log.fecha.strftime(formato2)  
+            objeto_datetime = datetime.strptime(cadena2, formato2)
+            tiempo = today - objeto_datetime
+            last_log.tiempo=tiempo
+            last_log.save()
+        log=UserActivityLog(congreso=congreso,mensaje=mensaje,tipo=tipo,user=usuario,fecha=today)
+        log.save()
+    if tipo=='Solicito_Pago_Congreso_SPEI':
+       
+        congreso=Congreso.objects.get(pk=id)
+        
+        mensaje='Solicitó pago del Congreso "%s" por SPEI'%(congreso.titulo)
+       
+        today = datetime.today()
+        formato2 = "%Y-%m-%d %H:%M:%S"
+        last_log=UserActivityLog.objects.filter(user=usuario).order_by('pk').last()
+        if last_log:
+            cadena2 = last_log.fecha.strftime(formato2)  
+            objeto_datetime = datetime.strptime(cadena2, formato2)
+            tiempo = today - objeto_datetime
+            last_log.tiempo=tiempo
+            last_log.save()
+        log=UserActivityLog(congreso=congreso,mensaje=mensaje,tipo=tipo,user=usuario,fecha=today)
+        log.save()
+
+    
+    if tipo=='Solicito_Pago_Taller_Efectivo':
+        taller=Taller.objects.get(pk=id)
+        congreso=taller.congreso
+        mensaje='Solicitó pago del Taller "%s" del Congreso "%s" en Efectivo'%(taller.titulo,congreso.titulo)
+       
+        today = datetime.today()
+        formato2 = "%Y-%m-%d %H:%M:%S"
+        last_log=UserActivityLog.objects.filter(user=usuario).order_by('pk').last()
+        if last_log:
+            cadena2 = last_log.fecha.strftime(formato2)  
+            objeto_datetime = datetime.strptime(cadena2, formato2)
+            tiempo = today - objeto_datetime
+            last_log.tiempo=tiempo
+            last_log.save()
+        log=UserActivityLog(congreso=congreso,mensaje=mensaje,tipo=tipo,user=usuario,fecha=today)
+        log.save()
+    if tipo=='Solicito_Pago_Congreso_Efectivo':
+       
+        congreso=Congreso.objects.get(pk=id)
+        
+        mensaje='Solicitó pago del Congreso "%s" en Efectivo'%(congreso.titulo)
+       
+        today = datetime.today()
+        formato2 = "%Y-%m-%d %H:%M:%S"
+        last_log=UserActivityLog.objects.filter(user=usuario).order_by('pk').last()
+        if last_log:
+            cadena2 = last_log.fecha.strftime(formato2)  
+            objeto_datetime = datetime.strptime(cadena2, formato2)
+            tiempo = today - objeto_datetime
+            last_log.tiempo=tiempo
+            last_log.save()
+        log=UserActivityLog(congreso=congreso,mensaje=mensaje,tipo=tipo,user=usuario,fecha=today)
+        log.save()
+
+    
+    
+    
+    
 
 
 @receiver(user_logged_out)
