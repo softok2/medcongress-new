@@ -49,11 +49,11 @@ class PatrocinadorCreateView(validarOrganizador,CreateView):
     
     def get(self, request, **kwargs):
         self.object=AvalCongreso.objects.filter(pk=0).first()
-        congreso=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
-        if congreso is None:
-            return   HttpResponseRedirect(reverse('Error404'))
-        if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=congreso).exists() and not self.request.user.is_staff: 
-            return   HttpResponseRedirect(reverse('Error403'))
+        if self.request.GET.get('congreso'):
+            congreso=Congreso.objects.filter(path=self.request.GET.get('congreso')).first()
+
+            if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=congreso).exists() and not self.request.user.is_staff: 
+                return   HttpResponseRedirect(reverse('Error403'))
         return self.render_to_response(self.get_context_data()) 
 
     def form_valid(self, form):

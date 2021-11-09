@@ -1,6 +1,6 @@
 import base64
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta,timezone
 from os import remove
 from pathlib import Path
 
@@ -395,7 +395,7 @@ class LogsUsuarios(validarUser,FormView):
             fecha_fin=self.request.POST['fecha_fin']
             d_fecha_final = datetime.strptime(fecha_fin,'%Y-%m-%d') + timedelta(days=1)
         else:
-             d_fecha_final = datetime.now() + timedelta(days=1)   
+             d_fecha_final = datetime.now(timezone.utc) + timedelta(days=1)   
         fecha_inicio=self.request.POST['fecha_inicio']
         if fecha_inicio:
             d_fecha_inicio = datetime.strptime(fecha_inicio,'%Y-%m-%d')

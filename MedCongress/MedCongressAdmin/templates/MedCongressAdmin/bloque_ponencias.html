@@ -182,7 +182,7 @@
  
 });
         $('#atras').click(function () {
-            location.href = "{%url 'MedCongressAdmin:Congres_bloques' bloque.congreso.path%}";
+            location.href = "{%url 'MedCongressAdmin:bloques_list' bloque.congreso.path%}";
         });
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         $.ajaxSetup({
