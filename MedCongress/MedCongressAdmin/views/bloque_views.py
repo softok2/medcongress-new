@@ -155,10 +155,11 @@ class BloqueUpdateView(validarOrganizador,UpdateView):
     template_name = 'MedCongressAdmin/bloque/form.html'
 
     def get(self, request, **kwargs):
+        
+       
+        bloque=Bloque.objects.filter(pk=self.kwargs.get('pk')).first()
+        self.object=bloque
         if self.request.GET.get('congreso'):
-            bloque=Bloque.objects.filter(pk=self.kwargs.get('pk')).first()
-            self.object=bloque
-
             if not bloque:
                 return   HttpResponseRedirect(reverse('Error404'))
             if not Organizador.objects.filter(user=self.request.user.perfilusuario,congreso=bloque.congreso).exists() and not self.request.user.is_staff : 
