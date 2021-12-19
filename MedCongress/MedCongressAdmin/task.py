@@ -242,5 +242,5 @@ def AsignarBeca(exel,user_id):
         3.- una vez registrado, de clic en el siguiente enlace para acceder al congreso.
             %s/congreso/%s'''%(congreso.titulo,URL_SITE,correo,URL_SITE,congreso.path), to = [correo])
 
-            email.send()
+                email.send()
     return respuesta   
