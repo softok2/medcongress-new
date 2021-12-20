@@ -224,7 +224,7 @@ def AsignarBeca(exel,user_id):
             if not RelCongresoUser.objects.filter(user=user.perfilusuario,congreso=congreso,is_beca=True).exists():
                 rel_congreso_user=RelCongresoUser(user=user.perfilusuario,congreso=congreso,is_beca=True,is_pagado=True,cantidad=1)
                 rel_congreso_user.save()
-                email = EmailMessage('Beca en MedCongress', '''Estimado(a) profesional de la salud, le informamos que se le ha asignado una beca para el %s1 .
+                email = EmailMessage('Beca en MedCongress', '''Estimado(a) profesional de la salud, le informamos que se le ha asignado: %s.
 
         1.- Para acceder tendrá que autenticarse en el siguiente enlace %s/accounts/login/?next=/congreso/%s
 
@@ -234,7 +234,7 @@ def AsignarBeca(exel,user_id):
             if not BecasPendientes.objects.filter(email=correo,congreso=congreso).exists():
                 beca_pendiente=BecasPendientes(email=correo,congreso=congreso)  
                 beca_pendiente.save()
-                email = EmailMessage('Beca en MedCongress', '''Estimado(a) profesional de la salud, le informamos que se le ha asignado una beca para el %s.
+                email = EmailMessage('Beca en MedCongress', '''Estimado(a) profesional de la salud, le informamos que se le ha asignado: %s.
         1.- Para acceder tendrá que registrarse en el siguiente enlace %s/registrarse?email=%s
 
         2.- En su perfil elija la opción “Mis Congresos” donde podrá confirmar el evento asignado
