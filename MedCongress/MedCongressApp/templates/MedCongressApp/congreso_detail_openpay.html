@@ -312,7 +312,7 @@
                                                         {%for evento in pon.eventos %}
                                                         <div class="col-md-6  mt-md-0" style="padding-top: 10px;" >
                                                             <h4 class="ponencia-name ponencia pt-3"><strong><span style="color: #909094;">{{evento.fecha_inicio|date:"H:i"}}</span>  {{evento.titulo}}</strong></h4>
-                                                            <span class="detalle d-block "><small>  {{evento.detalle}}</small></span>
+                                                            <span class="detalle d-block "><small>  {{evento.detalle|safe}}</small></span>
                                                           
                                                             <div class="row">
                                                                 {%for ponente in evento.ponentes %}
@@ -395,7 +395,7 @@
                                         </h2>
                                         <div id="collapse-{{forloop.counter}}-{{forloop.parentloop.counter}}" class="accordion-collapse collapse" aria-labelledby="heading-{{forloop.counter}}-{{forloop.parentloop.counter}}" data-bs-parent="#accordion-{{forloop.counter}}-{{forloop.parentloop.counter}}">
                                         <div class="accordion-body">
-                                            <span class="detalle d-block "><small> {{pon.detalle}}</small></span>
+                                            <span class="detalle d-block "><small> {{pon.detalle|safe}}</small></span>
                                             <div class="ponencias">
                                                
                                                 <div class="row gx-5">
@@ -702,11 +702,11 @@
                 <div class="accordion acordion-medc" id="accordion-{{forloop.counter}}">
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="heading-{{forloop.counter}}">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{forloop.counter}}" aria-expanded="true" aria-controls="collapse-{{forloop.counter}}">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{forloop.counter}}" aria-expanded="true" aria-controls="collapse-{{forloop.counter}}">
                             Taller #{{forloop.counter}}: {{taller.0.titulo}}
                         </button>
                         </h2>
-                        <div id="collapse-{{forloop.counter}}" class="accordion-collapse collapse" aria-labelledby="heading-{{forloop.counter}}" data-bs-parent="#accordion-{{forloop.counter}}">
+                        <div id="collapse-{{forloop.counter}}" class="accordion-collapse collapse show" aria-labelledby="heading-{{forloop.counter}}" data-bs-parent="#accordion-{{forloop.counter}}">
                             <div class="accordion-body">
                                 {%if taller.1 is True%}
                                 <span> No tiene establecido los precios aún </span>
