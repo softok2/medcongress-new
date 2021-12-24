@@ -147,7 +147,7 @@ class Ubicacion(forms.ModelForm):
         fields=['direccion','latitud','longitud']
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['direccion'].widget.attrs.update({'class': 'form-control','placeholder':'Ciudad de residencia', 'data-bs-toggle':'tooltip', 'data-bs-placement':'top', 'title':'Entre información de su Ciudad de Residencia y debe seleccionar la ubicación que aparece'}) 
+        self.fields['direccion'].widget.attrs.update({'class': 'form-control','placeholder':'Ciudad de residencia', 'data-bs-toggle':'tooltip', 'data-bs-placement':'top', 'title':'Escriba y seleccione su ciudad'}) 
         self.fields['longitud'].widget.attrs.update({'class': 'form-control'}) 
         self.fields['latitud'].widget.attrs.update({'class': 'form-control'}) 
     def clean(self, *args, **kwargs):
