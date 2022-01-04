@@ -28,6 +28,8 @@ from django.utils.decorators import method_decorator
 from django.views.generic import (CreateView, DetailView, FormView, ListView,
                                   TemplateView, View)
 from requests.auth import HTTPBasicAuth
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib import messages
 from django.db.models import Sum
 from django.views.generic.edit import UpdateView
 from django.contrib.auth.views import PasswordResetView,LoginView
@@ -109,6 +111,16 @@ class Home(TemplateView):
             context['imagen_home']= imagen.first().imagen
         return context
     def post(self, request, **kwargs):
+        
+        captcha_token=request.POST.get("g-recaptcha-response")
+        cap_url="https://www.google.com/recaptcha/api/siteverify"
+        cap_secret="6Ld6FyEaAAAAAGggch470Ybh9GHS1Mu3dhz9IT3P"
+        cap_data={"secret":cap_secret,"response":captcha_token}
+        cap_server_response=requests.post(url=cap_url,data=cap_data)
+        cap_json=json.loads(cap_server_response.text)
+        if cap_json['success']==False:
+            messages.success(self.request, 'Entre el Captcha para saber que eres humano')
+            return HttpResponseRedirect(reverse('Home'))
         subject = self.request.POST['asunto'] 
         plain_message = self.request.POST['Message']
         from_email = self.request.POST['email']
@@ -119,7 +131,7 @@ class Home(TemplateView):
                 subject,
                 "%s... Mensaje de %s (%s)"%(plain_message,nombre,from_email), 
                 '', # El destino.
-                ['contacto@medcongress.com.mx'],
+                ['dennis.molinetg@gmail.com'],
                 fail_silently=False,
                 )
         return HttpResponseRedirect(reverse('mensaje_exitoso'))
