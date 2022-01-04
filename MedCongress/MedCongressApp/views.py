@@ -109,6 +109,14 @@ class Home(TemplateView):
             context['imagen_home']= imagen.first().imagen
         return context
     def post(self, request, **kwargs):
+        captcha_token=request.POST.get("g-recaptcha-response")
+        cap_url="https://www.google.com/recaptcha/api/siteverify"
+        cap_secret="6Ld6FyEaAAAAAGggch470Ybh9GHS1Mu3dhz9IT3P"
+        cap_data={"secret":cap_secret,"response":captcha_token}
+        cap_server_response=requests.post(url=cap_url,data=cap_data)
+        cap_json=json.loads(cap_server_response.text)
+        if cap_json['success']==False:
+            return None
         subject = self.request.POST['asunto'] 
         plain_message = self.request.POST['Message']
         from_email = self.request.POST['email']
@@ -2539,8 +2547,6 @@ class SalaDetail(TemplateView):
            
         return context
     
-
-
 class ViewPonenciasSala(TemplateView):
     template_name= 'MedCongressApp/ponencias_sala.html' 
 
