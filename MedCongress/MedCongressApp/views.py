@@ -131,7 +131,7 @@ class Home(TemplateView):
                 subject,
                 "%s... Mensaje de %s (%s)"%(plain_message,nombre,from_email), 
                 '', # El destino.
-                ['dennis.molinetg@gmail.com'],
+                ['frankhef91@gmail.com'],
                 fail_silently=False,
                 )
         return HttpResponseRedirect(reverse('mensaje_exitoso'))
