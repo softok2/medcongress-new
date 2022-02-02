@@ -865,6 +865,36 @@ margin-left: 70px;
   
   margin-bottom: 40px;
 }
+.fa-check-edit{
+  background:  url(../img/iconos/edit.ico) no-repeat;
+  background-size: contain;
+  width: 25px;
+  height: 25px;
+  display: inline-block;
+}
+.fa-check-deleted{
+  background:  url(../img/iconos/deleted.ico) no-repeat;
+  background-size: contain;
+  width: 25px;
+  height: 25px;
+  display: inline-block;
+}
+.fa-check-acept{
+  background:  url(../img/iconos/acept.ico) no-repeat;
+  background-size: contain;
+  width: 25px;
+  height: 25px;
+  display: inline-block;
+}
+
+.fa-check-cancel{
+  background:  url(../img/iconos/cancel.ico) no-repeat;
+  background-size: contain;
+  width: 25px;
+  height: 25px;
+  display: inline-block;
+}
+
 .congreso-program .ctas-wrapper .cta,
 .sala .ctas-wrapper .cta  {
   width: 200px;
@@ -1598,11 +1628,11 @@ margin-left: 70px;
     border-top: 1px solid #4A5966;
     border-bottom: 1px solid #4A5966;
     display: grid;
-    grid-template-columns: 80% 20%;
-    grid-template-rows: 1fr 40px 75px;
+    grid-template-columns: 100%;
+    
   }
 }
-@media screen and (max-width: 992px) {
+/* @media screen and (max-width: 992px) {
   .cart-table table tbody tr td:nth-of-type(2) {
     grid-column: 1/2;
     grid-row: 1/2;
@@ -1619,15 +1649,15 @@ margin-left: 70px;
     grid-column: 1/2;
     grid-row: 3/4;
   }
-}
-@media screen and (max-width: 992px) {
+} */
+/* @media screen and (max-width: 992px) {
   .cart-table table tbody tr td:nth-of-type(7) {
     grid-column: 2/3;
     grid-row: 1/4;
     display: flex;
     align-items: center;
   }
-}
+} */
 .cart-table table th,
 .cart-table table td {
   text-align: center;
@@ -1645,11 +1675,11 @@ margin-left: 70px;
     border-bottom: 0;
   }
 }
-@media screen and (max-width: 992px) {
+/* @media screen and (max-width: 992px) {
   .cart-table table td:nth-of-type(1), .cart-table table td:nth-of-type(3), .cart-table table td:nth-of-type(6) {
     display: none;
   }
-}
+} */
 .cart-table table .acciones a {
   color: red;
 }
@@ -1723,7 +1753,7 @@ margin-left: 70px;
     grid-template-rows: 1fr 40px 40px;
   }
 }
-@media screen and (max-width: 992px) {
+/* @media screen and (max-width: 992px) {
   .checkout-table table tbody tr td:nth-of-type(2) {
     grid-column: 1/2;
     grid-row: 1/2;
@@ -1740,7 +1770,7 @@ margin-left: 70px;
     grid-column: 1/2;
     grid-row: 3/4;
   }
-}
+} */
 .checkout-table table th,
 .checkout-table table td {
   text-align: center;
