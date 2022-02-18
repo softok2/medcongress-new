@@ -1256,8 +1256,8 @@ class AsignarConstancias(validarOrganizador,FormView):
             folio_ini=int(self.request.POST['folio_ini'])
             folio_fin=int(self.request.POST['folio_fin'])
             folio_dis=self.request.POST['folio_dis']
-
         prueba=Constancia.apply_async(args=[titulo,t_user,folio_ini,folio_fin,folio_dis])
+        
         respuesta=prueba.get()
         if respuesta['success'] :
             messages.success(self.request,respuesta['mensaje'])
