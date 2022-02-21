@@ -870,13 +870,13 @@ class CongresoCardForm(TemplateView):
                         if str(cart['tipo_evento']) == 'Congreso':
                             congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
                             categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                            pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False, cantidad=cart['cantidad'])
+                            pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False, cantidad=cart['cantidad'],is_constancia=False)
                             pagar_congreso.save()
                             InsertLog(cart['id_congreso'],'Solicito_Pago_Congreso_Tarjeta',user_perfil)
                         if str(cart['tipo_evento']) == 'Taller':
                             taller=Taller.objects.filter(id=cart['id_congreso']).first()
                             categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                            pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False,cantidad=cart['cantidad'])
+                            pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False,cantidad=cart['cantidad'],is_constancia=False)
                             pagar_congreso.save()
                             InsertLog(cart['id_congreso'],'Solicito_Pago_Taller_Tarjeta',user_perfil)
                     car=Cart(self.request)
@@ -912,13 +912,13 @@ class CongresoCardForm(TemplateView):
                             if str(cart['tipo_evento']) == 'Congreso':
                                 congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
                                 categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                                pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False, cantidad=cart['cantidad'])
+                                pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False, cantidad=cart['cantidad'],is_constancia=False)
                                 pagar_congreso.save()
                                 InsertLog(cart['id_congreso'],'Solicito_Pago_Congreso_Efectivo',user_perfil)
                             if str(cart['tipo_evento']) == 'Taller':
                                 taller=Taller.objects.filter(id=cart['id_congreso']).first()
                                 categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                                pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False,cantidad=cart['cantidad'])
+                                pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False,cantidad=cart['cantidad'],is_constancia=False)
                                 pagar_congreso.save()
                                 InsertLog(cart['id_congreso'],'Solicito_Pago_Taller_Efectivo',user_perfil)
                         car=Cart(self.request)
@@ -968,13 +968,13 @@ class CongresoCardForm(TemplateView):
                             if str(cart['tipo_evento']) == 'Congreso':
                                 congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
                                 categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                                pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False, cantidad=cart['cantidad'])
+                                pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False, cantidad=cart['cantidad'],is_constancia=False)
                                 pagar_congreso.save()
                                 InsertLog(cart['id_congreso'],'Solicito_Pago_Congreso_SPEI',user_perfil)
                             if str(cart['tipo_evento']) == 'Taller':
                                 taller=Taller.objects.filter(id=cart['id_congreso']).first()
                                 categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                                pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False,cantidad=cart['cantidad'])
+                                pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False,cantidad=cart['cantidad'],is_constancia=False)
                                 pagar_congreso.save()
                                 InsertLog(cart['id_congreso'],'Solicito_Pago_Taller_SPEI',user_perfil)
                         car=Cart(self.request)
@@ -1064,7 +1064,7 @@ class PerfilUserCreate(FormView):
         if BecasPendientes.objects.filter(email=user.email).exists():
             becas_pendientes=BecasPendientes.objects.filter(email=user.email)
             for beca in becas_pendientes:
-                rel_congreso_user=RelCongresoUser(user=perfil,congreso=beca.congreso,is_beca=True,is_pagado=True,cantidad=1,is_constancia=False)
+                rel_congreso_user=RelCongresoUser(user=perfil,congreso=beca.congreso,is_beca=True,is_pagado=True,cantidad=1,is_constancia=False )
                 rel_congreso_user.save()
                 beca.delete()
           #### ver si estaba comprando
