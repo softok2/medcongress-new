@@ -1064,7 +1064,7 @@ class PerfilUserCreate(FormView):
         if BecasPendientes.objects.filter(email=user.email).exists():
             becas_pendientes=BecasPendientes.objects.filter(email=user.email)
             for beca in becas_pendientes:
-                rel_congreso_user=RelCongresoUser(user=perfil,congreso=beca.congreso,is_beca=True,is_pagado=True,cantidad=1)
+                rel_congreso_user=RelCongresoUser(user=perfil,congreso=beca.congreso,is_beca=True,is_pagado=True,cantidad=1,is_constancia=False)
                 rel_congreso_user.save()
                 beca.delete()
           #### ver si estaba comprando
