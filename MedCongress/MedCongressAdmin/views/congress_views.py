@@ -81,7 +81,7 @@ class CongressCreateView(validarUser,FormView):
             else:
                 ubicacion=form['ubicacion'].save(commit=True)
                 congress.lugar=ubicacion    
-            path=congress.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n")
+            path=congress.titulo.replace("/","").replace(" ","-").replace("?","").replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ñ","n").replace(".","")
             congress.path=path  
             
             image_64_encode=self.request.POST['congreso-prueba1']
