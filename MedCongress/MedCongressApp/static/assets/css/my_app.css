@@ -63,7 +63,7 @@ textarea:focus,
 }
 
 .ticket {
-  padding: 60px 30px 20px;
+  padding: 10px 10px 20px;
   background-color: #D6E0E8;
   display: flex;
   flex-direction: column;
@@ -80,18 +80,22 @@ textarea:focus,
 }
 .ticket .title,
 .ticket .iva {
+  display: table-cell;
   font-size: 24px;
+  text-align: center;
+  vertical-align: middle
 }
 .ticket .price {
-  font-size: 60px;
-  margin-top: 30px;
+  font-size: 30px;
+  margin-top: 0px;
   font-weight: bold;
   text-align: center;
 }
+
 .ticket .actions {
   width: 100%;
-  margin-top: 40px;
-  padding-top: 20px;
+  margin-top: 0px;
+  padding-top: 0px;
   border-top: 1px solid #4A5966;
 }
 .ticket .cta {
@@ -100,12 +104,18 @@ textarea:focus,
   font-size: 14px;
   font-weight: bold;
   border-radius: 8px;
-  padding: 20px 30px;
+  padding: 4px 13px;
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
   text-decoration: none;
   border: 1px solid #4A5966;
+  text-align: center;
+}
+.ticket .cta:hover {
+background-color: #40C8F4;
+color: #d1f2fc;
+
 }
 .ticket.destacado .price {
   color: #40C8F4;
