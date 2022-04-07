@@ -82,6 +82,7 @@ textarea:focus,
 .ticket .iva {
   display: table-cell;
   font-size: 24px;
+  margin: 30px;
   text-align: center;
   vertical-align: middle
 }
@@ -100,11 +101,12 @@ textarea:focus,
 }
 .ticket .cta {
   margin: auto;
+  margin-top: 12px;
   display: block;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: bold;
   border-radius: 8px;
-  padding: 4px 13px;
+  padding: 8px 13px;
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;

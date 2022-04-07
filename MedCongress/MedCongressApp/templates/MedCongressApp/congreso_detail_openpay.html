@@ -620,7 +620,7 @@
             <div class="row">
                 
                 
-                <div   class="{%if categorias_pago|length == 1%} offset-md-5 {%elif categorias_pago|length < 3%} offset-md-4 {% elif categorias_pago|length == 3 %}  offset-md-3{% elif categorias_pago|length == 4 %} offset-md-2 {% elif categorias_pago|length == 5 %} offset-md-1 {%endif%} col-md-2" >
+                <div   class="{%if categorias_pago|length == 1%} offset-md-5 {%elif categorias_pago|length < 3%} offset-md-3 {% elif categorias_pago|length == 3 %}  offset-md-2 {%endif%} col-md-3" >
                    
             {%endif%}
         
@@ -630,16 +630,10 @@
                     <span class="iva">IVA incluido</span>
                     <div class="actions">
                         <div class="row">
-                        <div class=" offset-md-3 col-5">
-                                <input class="form-control input-lg" type="number" value="1" min='1' step="any"  style="margin: 10px;"
-                                    id="cant_{{categoria_pago.id}}">
-                                <!-- <input class="input-qty-type" type="" name="qty" value="1"> -->
+                       
+                        
 
-                            </div>
-                        </div>
-                        <div class="row">
-
-                            <div class="col-12">
+                            <div class=" offset-md-1  col-7">
                                 {% if user.is_authenticated %}
                                    <a href="javascript:AgregarCarrito({{categoria_pago.pk}},'cant_{{categoria_pago.id}}','{{permiso}}')" class="cta"  >AGREGAR AL CARRITO</a>
                                   {%else%}  
@@ -647,7 +641,12 @@
                                    <a href="#con"  class="cta" onclick="Login({{categoria_pago.pk}},'cant_{{categoria_pago.id}}')">AGREGAR AL CARRITO</a>
                         {%endif%}
                             </div>
-                            
+                             <div class=" col-3">
+                                <input class="form-control input-lg" type="number" value="1" min='1' step="any"  style="margin: 10px;"
+                                    id="cant_{{categoria_pago.id}}">
+                                <!-- <input class="input-qty-type" type="" name="qty" value="1"> -->
+
+                        </div>
                         
                      
                     
@@ -656,12 +655,12 @@
                     </div>
                 </div>
             </div>
-                    {%if  forloop.counter|divisibleby:6%}
+                    {%if  forloop.counter|divisibleby:4%}
                 </div>
                     <div class="row">
-                        <div class=" col-md-2">
+                        <div class=" col-md-3">
                             {%else%}
-                            <div class="col-md-2 mt-md-0 mt-5">
+                            <div class="col-md-3 mt-md-0 mt-5">
                     {%endif%}
                     {%if forloop.last %}
                 </div>
