@@ -1626,6 +1626,7 @@ class GetFacturaPrueba(TemplateView):
         response=requests.get(url=url1,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
         url1='https://%s/v1/%s/invoices/v33/?id=%s'%(URL_API,ID_KEY,self.kwargs.get('invoice'))
         response_d=response.json()
+        
         if 'http_code' in response_d:
             self.request.session["error_facturacion"]= response_d['description']
             return HttpResponseRedirect(reverse('Error_facturacion'))
@@ -1636,8 +1637,9 @@ class GetFacturaPrueba(TemplateView):
         # if 'http_code' in response_di:
         #     self.request.session["error_facturacion"]= response_di['description']
         #     return HttpResponseRedirect(reverse('Error_facturacion'))
-        if response_di[0]['status']=='error':
-            self.request.session["error_facturacion"]= response_di[0]['message']
+        print(response_di)
+        if not response_di:
+            self.request.session["error_facturacion"]= 'No hay conección con OpenPay inténtelo más tarde'
             return HttpResponseRedirect(reverse('Error_facturacion'))
         # return HttpResponse(response2)
         para={
