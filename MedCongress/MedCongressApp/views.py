@@ -1643,6 +1643,7 @@ class GetFacturaPrueba(TemplateView):
 
         url1='https://%s/v1/%s/invoices/v33/?id=%s'%(URL_API,ID_KEY,self.kwargs.get('invoice'))
         headers={'Content-type': 'application/json'}
+        response_di=''
         try:
             response2=requests.get(url=url1,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
             response_di=response2.json()
@@ -1650,7 +1651,8 @@ class GetFacturaPrueba(TemplateView):
             self.request.session["error_facturacion"]= 'Problema al buscar una factura por id en openPay'
             return HttpResponseRedirect(reverse('Error_facturacion'))  
         print('mostrar factura creada')
-        print(response_d)
+        print(url1)
+        print(response_di)
         # return HttpResponse(response2)
         # if 'http_code' in response_di:
         #     self.request.session["error_facturacion"]= response_di['description']
