@@ -336,7 +336,6 @@ class PagoExitoso(TemplateView):
 
     def post(self, request, **kwargs):
 
-        print('envio por post para crear factura') 
         url='https://%s/v1/%s/invoices/v33'%(URL_API,ID_KEY)
         chars = '0123456789'
         secret_key = get_random_string(8, chars)
@@ -406,8 +405,6 @@ class PagoExitoso(TemplateView):
         "metodo_pago": "PUE",
         "tipo_comprobante": "I"
         }
-        print('parametros para crear factura')
-        print(params)
         # return HttpResponse(json.dumps(params)) 
         try:
             headers={'Content-type': 'application/json'}
@@ -416,11 +413,9 @@ class PagoExitoso(TemplateView):
             self.request.session["error_facturacion"]= 'Problema al crear la factura en Openpay'
             return HttpResponseRedirect(reverse('Error_facturacion'))  
         response_dic=response.json()
-        print('respuesta de factura creada')
-        print(response_dic)
         # return HttpResponse(response)
         if 'http_code' not in response_dic:
-            return HttpResponseRedirect(reverse('FacturaPrueba',kwargs={'invoice':invoice_id }))
+            return HttpResponseRedirect(reverse('FacturaPrueba',kwargs={'invoice':response_dic['request_id']}))
 
         else:
             self.request.session["error_facturacion"]= response_dic['description']
@@ -441,6 +436,101 @@ class PagoExitoso(TemplateView):
         # response2=requests.get(url=url2,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(para),headers=headers)
         # response_d=response2.json()
         # return HttpResponseRedirect( response_d['public_pdf_link'])
+
+@method_decorator(login_required,name='dispatch')
+class GetFacturaPrueba(TemplateView):
+    template_name= 'MedCongressApp/ver_factura.html' 
+
+    def get(self, request,**kwargs):
+
+        url1='https://%s/v1/%s/invoices/v33/'%(URL_API,ID_KEY)
+        headers={'Content-type': 'application/json'}
+        try:
+            response=requests.get(url=url1,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
+            response_d=response.json()
+        except Exception as e:
+            self.request.session["error_facturacion"]= 'Problema al buscar las facturas en openPay'
+            return HttpResponseRedirect(reverse('Error_facturacion'))  
+        
+        if 'http_code' in response_d:
+            self.request.session["error_facturacion"]= response_d['description']
+            return HttpResponseRedirect(reverse('Error_facturacion'))
+        url1='https://%s/v1/%s/invoices/v33/%s'%(URL_API,ID_KEY,response_d[0]['uuid'])
+        headers={'Content-type': 'application/json'}
+        response_di=''
+        try:
+            response2=requests.get(url=url1,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
+            response_di=response2.json()
+        except Exception as e:
+            self.request.session["error_facturacion"]= 'Problema al buscar una factura por id en openPay'
+            return HttpResponseRedirect(reverse('Error_facturacion'))  
+
+        # return HttpResponse(response2)
+        # if 'http_code' in response_di:
+        #     self.request.session["error_facturacion"]= response_di['description']
+        #     return HttpResponseRedirect(reverse('Error_facturacion'))
+        if not response_di:
+            self.request.session["error_facturacion"]= 'Problemas con la conección con Openpay. Por favor intente más tarde'
+            return HttpResponseRedirect(reverse('Error_facturacion'))
+        if response_di['status']=='error':
+            self.request.session["error_facturacion"]= response_di['message']
+            return HttpResponseRedirect(reverse('Error_facturacion'))
+        # return HttpResponse(response2)
+        para={
+            "getUrls":True
+            }
+        if 'uuid' not in response_di:
+            return HttpResponseRedirect(reverse('FacturaPrueba',kwargs={'invoice':self.kwargs.get('invoice') }))
+        
+        for cart in self.request.session["car1"][1]:
+            if str(cart['tipo_evento']) == 'Congreso':
+                congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
+                categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
+                pagar_congreso=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,congreso=congreso,categoria_pago=categoria).last()
+                pagar_congreso.uuid_factura=self.kwargs.get('invoice') 
+                pagar_congreso.save()
+            if str(cart['tipo_evento']) == 'Taller':
+                taller=Taller.objects.filter(id=cart['id_congreso']).first()
+                categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
+                pagar_congreso=RelTallerUser.objects.filter(user=self.request.user.perfilusuario,taller=taller,categoria_pago=categoria ).last()
+                pagar_congreso.uuid_factura=self.kwargs.get('invoice') 
+                pagar_congreso.save()
+        url2='https://%s/v1/%s/invoices/v33/%s/?getUrls=True'%(URL_API,ID_KEY,response_di['uuid'])
+        # return HttpResponse(url2)
+        try:
+            headers={'Content-type': 'application/json'}
+            response3=requests.get(url=url2,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(para),headers=headers)
+        except Exception as e:
+            self.request.session["error_facturacion"]= 'Problema al pedir las url(pdf y xml) de la factura en openPay'
+            return HttpResponseRedirect(reverse('Error_facturacion'))  
+        # return HttpResponse(response3)
+        response_dic=response3.json()
+        if 'http_code' in response_dic:
+            self.request.session["error_facturacion"]= response_dic['description']
+            return HttpResponseRedirect(reverse('Error_facturacion'))
+        self.factura=response_dic
+        response_xml = requests.get(response_dic['public_xml_link'])
+        with open('MedCongressApp/static/facturas/xml/%s.xml'%(self.kwargs.get('invoice') ), 'wb') as file:
+            file.write(response_xml.content)
+        response_pdf = requests.get(response_dic['public_pdf_link'], stream=True)   
+        with open('MedCongressApp/static/facturas/pdf/%s.pdf'%(self.kwargs.get('invoice') ), 'wb') as fd:
+            for chunk in response_pdf.iter_content(2000):
+                fd.write(chunk)
+
+
+# ///////////////// EMAIL
+        try:
+            email = EmailMessage('Facturas de MedCongress', 'En este correo se le adjunta la factura por la compra que ha realizado en nuestro sitio.', to = [self.request.user.email])
+            email.attach_file('MedCongressApp/static/facturas/xml/%s.xml'%(self.kwargs.get('invoice')))
+            email.attach_file('MedCongressApp/static/facturas/pdf/%s.pdf'%(self.kwargs.get('invoice')))
+            email.send()
+        except Exception as e:
+            self.request.session["error_facturacion"]= 'No se pudo enviar Email'
+            return HttpResponseRedirect(reverse('Error_facturacion'))   
+
+# /////////////
+        return HttpResponseRedirect(reverse('Factura'))
+
 
 @method_decorator(login_required,name='dispatch')   
 class Perfil(TemplateView):
@@ -890,8 +980,9 @@ class CongresoCardForm(TemplateView):
                             InsertLog(cart['id_congreso'],'Solicito_Pago_Taller_Tarjeta',user_perfil)
                     car=Cart(self.request)
                     car.clear()
-                    
-                    return HttpResponseRedirect(response.json()['payment_method']['url']) 
+                    obj =  HttpResponseRedirect(response.json()['payment_method']['url']) 
+                    obj.set_cookie('id_transaccion',response_dic['id'],expires=7*24*3600)
+                    return obj
                 else:
                     self.request.session["error_opempay"]=response.json()['description']
                     return HttpResponseRedirect(reverse('Error_openpay'))
@@ -1620,110 +1711,6 @@ class GetCuestionario(TemplateView):
 @method_decorator(login_required,name='dispatch')
 class GetFactura(TemplateView):
     template_name= 'MedCongressApp/ver_factura.html' 
-
-@method_decorator(login_required,name='dispatch')
-class GetFacturaPrueba(TemplateView):
-    template_name= 'MedCongressApp/ver_factura.html' 
-
-    def get(self, request,**kwargs):
-
-        url1='https://%s/v1/%s/invoices/v33/'%(URL_API,ID_KEY)
-        headers={'Content-type': 'application/json'}
-        try:
-            response=requests.get(url=url1,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
-            response_d=response.json()
-        except Exception as e:
-            self.request.session["error_facturacion"]= 'Problema al buscar las facturas en openPay'
-            return HttpResponseRedirect(reverse('Error_facturacion'))  
-        
-        if 'http_code' in response_d:
-            print('error en la facturacion 1')
-            self.request.session["error_facturacion"]= response_d['description']
-            return HttpResponseRedirect(reverse('Error_facturacion'))
-
-        url1='https://%s/v1/%s/invoices/v33/?id=%s'%(URL_API,ID_KEY,self.kwargs.get('invoice'))
-        headers={'Content-type': 'application/json'}
-        response_di=''
-        try:
-            response2=requests.get(url=url1,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
-            response_di=response2.json()
-        except Exception as e:
-            self.request.session["error_facturacion"]= 'Problema al buscar una factura por id en openPay'
-            return HttpResponseRedirect(reverse('Error_facturacion'))  
-        print('mostrar factura creada')
-        print(url1)
-        print(response_di)
-        # return HttpResponse(response2)
-        # if 'http_code' in response_di:
-        #     self.request.session["error_facturacion"]= response_di['description']
-        #     return HttpResponseRedirect(reverse('Error_facturacion'))
-        if not response_di:
-            print('error en la facturacion 2')
-            self.request.session["error_facturacion"]= 'Problemas con la conección con Openpay. Por favor intente más tarde'
-            return HttpResponseRedirect(reverse('Error_facturacion'))
-        if response_di[0]['status']=='error':
-            print('error en la facturacion 3')
-            self.request.session["error_facturacion"]= response_di[0]['message']
-            return HttpResponseRedirect(reverse('Error_facturacion'))
-        # return HttpResponse(response2)
-        para={
-            "getUrls":True
-            }
-        if 'uuid' not in response_di[0]:
-            return HttpResponseRedirect(reverse('FacturaPrueba',kwargs={'invoice':self.kwargs.get('invoice') }))
-        
-        for cart in self.request.session["car1"][1]:
-            if str(cart['tipo_evento']) == 'Congreso':
-                congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
-                categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                pagar_congreso=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,congreso=congreso,categoria_pago=categoria).last()
-                pagar_congreso.uuid_factura=self.kwargs.get('invoice') 
-                pagar_congreso.save()
-            if str(cart['tipo_evento']) == 'Taller':
-                taller=Taller.objects.filter(id=cart['id_congreso']).first()
-                categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                pagar_congreso=RelTallerUser.objects.filter(user=self.request.user.perfilusuario,taller=taller,categoria_pago=categoria ).last()
-                pagar_congreso.uuid_factura=self.kwargs.get('invoice') 
-                pagar_congreso.save()
-        print('se guardo la factura en la BD')
-        url2='https://%s/v1/%s/invoices/v33/%s/?getUrls=True'%(URL_API,ID_KEY,response_di[0]['uuid'])
-        # return HttpResponse(url2)
-        try:
-            headers={'Content-type': 'application/json'}
-            response3=requests.get(url=url2,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(para),headers=headers)
-        except Exception as e:
-            self.request.session["error_facturacion"]= 'Problema al pedir las url(pdf y xml) de la factura en openPay'
-            return HttpResponseRedirect(reverse('Error_facturacion'))  
-        # return HttpResponse(response3)
-        response_dic=response3.json()
-        if 'http_code' in response_dic:
-            self.request.session["error_facturacion"]= response_dic['description']
-            return HttpResponseRedirect(reverse('Error_facturacion'))
-        self.factura=response_dic
-        response_xml = requests.get(response_dic['public_xml_link'])
-        with open('MedCongressApp/static/facturas/xml/%s.xml'%(self.kwargs.get('invoice') ), 'wb') as file:
-            file.write(response_xml.content)
-        print('se guardo el XML')
-        response_pdf = requests.get(response_dic['public_pdf_link'], stream=True)   
-        with open('MedCongressApp/static/facturas/pdf/%s.pdf'%(self.kwargs.get('invoice') ), 'wb') as fd:
-            for chunk in response_pdf.iter_content(2000):
-                fd.write(chunk)
-        print('se guardo el pdf')
-
-
-# ///////////////// EMAIL
-        try:
-            email = EmailMessage('Facturas de MedCongress', 'En este correo se le adjunta la factura por la compra que ha realizado en nuestro sitio.', to = [self.request.user.email])
-            email.attach_file('MedCongressApp/static/facturas/xml/%s.xml'%(self.kwargs.get('invoice')))
-            email.attach_file('MedCongressApp/static/facturas/pdf/%s.pdf'%(self.kwargs.get('invoice')))
-            email.send()
-        except Exception as e:
-            self.request.session["error_facturacion"]= 'No se pudo enviar Email'
-            return HttpResponseRedirect(reverse('Error_facturacion'))   
-        print('se envio email')
-
-# /////////////
-        return HttpResponseRedirect(reverse('Factura'))
 
 @method_decorator(login_required,name='dispatch')
 class SetConstancia(TemplateView):

@@ -8,7 +8,16 @@
         <div class="row">
             <div class="col">
             <h2 class="section-title text-success"><strong>Su pago ha sido exitoso</strong></h2>
-            <small class="section-subtitle text-center">Le llegará un correo con la información de su compra, además, un vínculo donde deberá acceder si desea que se le emita una factura.</small>
+            <small class="section-subtitle text-center">Le llegará un correo con la información de su compra.</small>
+            </div>
+        </div>
+        <div class="row " style="margin-top: 20px;">
+            <div class="col-md-7"></div>
+                <div class="col-md-3 d-flex flex-row justify-content-end p-1" > 
+                    <p class="float-right">Si desea obtener factura click aquí</p>
+                </div>
+            <div class="col-md-2">
+                  <a  class="btn btn-primary" href="{% url 'transaccion_exitosa' %}?id_transaccion={{ request.COOKIES.id_transaccion }}">Obtener Factura </a>
             </div>
         </div>
     </div>
