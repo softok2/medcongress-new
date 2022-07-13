@@ -404,7 +404,7 @@ class RelCongresoUser(models.Model):
     num_tarjeta_tranzaccion=models.CharField(max_length=16)
     created_at = models.DateTimeField(auto_now_add=True)
     cantidad=models.IntegerField(null=True)
-    is_constancia=models.BooleanField(null=True)
+    is_constancia=models.BooleanField(null=True,default=False)
     folio_constancia=models.CharField(null=True,max_length=250)
     fecha_constancia=models.DateField(null=True)
     cuestionario=models.CharField(null=True,max_length=250)

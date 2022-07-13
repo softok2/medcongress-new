@@ -312,7 +312,7 @@
                                                         {%for evento in pon.eventos %}
                                                         <div class="col-md-6  mt-md-0" style="padding-top: 10px;" >
                                                             <h4 class="ponencia-name ponencia pt-3"><strong><span style="color: #909094;">{{evento.fecha_inicio|date:"H:i"}}</span>  {{evento.titulo}}</strong></h4>
-                                                            <span class="detalle d-block "><small>  {{evento.detalle}}</small></span>
+                                                            <span class="detalle d-block "><small>  {{evento.detalle|safe}}</small></span>
                                                           
                                                             <div class="row">
                                                                 {%for ponente in evento.ponentes %}
@@ -395,7 +395,7 @@
                                         </h2>
                                         <div id="collapse-{{forloop.counter}}-{{forloop.parentloop.counter}}" class="accordion-collapse collapse" aria-labelledby="heading-{{forloop.counter}}-{{forloop.parentloop.counter}}" data-bs-parent="#accordion-{{forloop.counter}}-{{forloop.parentloop.counter}}">
                                         <div class="accordion-body">
-                                            <span class="detalle d-block "><small> {{pon.detalle}}</small></span>
+                                            <span class="detalle d-block "><small> {{pon.detalle|safe}}</small></span>
                                             <div class="ponencias">
                                                
                                                 <div class="row gx-5">
@@ -618,19 +618,22 @@
         {%for categoria_pago in categorias_pago %}
             {%if forloop.first %}
             <div class="row">
-                <div class="offset-md-2 col-md-4">
+                
+                
+                <div   class="{%if categorias_pago|length == 1%} offset-md-5 {%elif categorias_pago|length < 3%} offset-md-3 {% elif categorias_pago|length == 3 %}  offset-md-2 {%endif%} col-md-3" >
                    
             {%endif%}
         
-                <div class="ticket">
-                    <div class="title">{{categoria_pago.categoria.nombre}}</div>
+                <div class="ticket" >
+                    <div class="title"> <div class="hijo">{{categoria_pago.categoria.nombre}}</div></div>
                     <h5 class="price">${{categoria_pago.precio|format_num}}<br> {{categoria_pago.moneda}}</h5>
-                    <span class="iva">IVA incluído</span>
+                    <span class="iva">IVA incluido</span>
                     <div class="actions">
                         <div class="row">
+                       
                         
 
-                            <div class="col-sm-8">
+                            <div class=" offset-md-1  col-7">
                                 {% if user.is_authenticated %}
                                    <a href="javascript:AgregarCarrito({{categoria_pago.pk}},'cant_{{categoria_pago.id}}','{{permiso}}')" class="cta"  >AGREGAR AL CARRITO</a>
                                   {%else%}  
@@ -638,12 +641,12 @@
                                    <a href="#con"  class="cta" onclick="Login({{categoria_pago.pk}},'cant_{{categoria_pago.id}}')">AGREGAR AL CARRITO</a>
                         {%endif%}
                             </div>
-                            <div class="col-sm-4">
-                                <input class="form-control input-lg" type="number" value="1" min='1' step="any"  style="height: 52px;"
+                             <div class=" col-3">
+                                <input class="form-control input-lg" type="number" value="1" min='1' step="any"  style="margin: 10px;"
                                     id="cant_{{categoria_pago.id}}">
                                 <!-- <input class="input-qty-type" type="" name="qty" value="1"> -->
 
-                            </div>
+                        </div>
                         
                      
                     
@@ -652,12 +655,12 @@
                     </div>
                 </div>
             </div>
-                    {%if  forloop.counter|divisibleby:2%}
+                    {%if  forloop.counter|divisibleby:4%}
                 </div>
                     <div class="row">
-                        <div class="offset-md-2 col-md-4">
+                        <div class=" col-md-3">
                             {%else%}
-                            <div class="col-md-4 mt-md-0 mt-5">
+                            <div class="col-md-3 mt-md-0 mt-5">
                     {%endif%}
                     {%if forloop.last %}
                 </div>
@@ -702,11 +705,11 @@
                 <div class="accordion acordion-medc" id="accordion-{{forloop.counter}}">
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="heading-{{forloop.counter}}">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{forloop.counter}}" aria-expanded="true" aria-controls="collapse-{{forloop.counter}}">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{forloop.counter}}" aria-expanded="true" aria-controls="collapse-{{forloop.counter}}">
                             Taller #{{forloop.counter}}: {{taller.0.titulo}}
                         </button>
                         </h2>
-                        <div id="collapse-{{forloop.counter}}" class="accordion-collapse collapse" aria-labelledby="heading-{{forloop.counter}}" data-bs-parent="#accordion-{{forloop.counter}}">
+                        <div id="collapse-{{forloop.counter}}" class="accordion-collapse collapse show" aria-labelledby="heading-{{forloop.counter}}" data-bs-parent="#accordion-{{forloop.counter}}">
                             <div class="accordion-body">
                                 {%if taller.1 is True%}
                                 <span> No tiene establecido los precios aún </span>
@@ -785,8 +788,8 @@
 
             <div class="col">
                 <div class="content py-5">
-                    <h4 class="description">CONOCE A LOS PONENTES DE ESTE CONGRESOS</h4>
-                    <p class="subdescription">Visita su perfil donde nos comparten de su experienca profesional en el campo de la Medicina.</p>
+                    <h4 class="description">CONOCE A LOS PONENTES DE ESTE CONGRESO</h4>
+                    <p class="subdescription">Visita su perfil donde nos comparten de su experiencia profesional.</p>
                     <div class="art"></div>
                 </div>
             </div>
@@ -1025,14 +1028,14 @@
             </div>
         </div>
 
-        <div class="row">
+        <!-- <div class="row">
             <div class="col">
                 <div class="content py-5">
                     <h4 class="description">CONOCE A LOS PATROCINADORES DE ESTE CONGRESOS</h4>
                     <div class="art"></div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </section>
 <section class="congreso-ponentes-secundary">
@@ -1278,7 +1281,15 @@
 {%endblock%}
 {% block script%}
 <script src="{% static 'MedCongressApp/js/bootstrap-rating.js' %}"></script>
+<script src="{% static 'assets/js/lugar.js' %}"></script>
 <script>
+     $(document).ready(function(){//ACCION CUANDO CARGUE LA PAGINA
+    // MismoTamano('ticket');
+    MismoTamano('title');
+    // MismoTamano('price');
+    // MismoTamano('actions');
+
+});
     function VerPerfil(pk) {
         $('#datos').html(` `);
         $('#logros').html(` `);
@@ -1309,7 +1320,7 @@
             
             $('#logros').html(` <div class="row event mb-3" >
                                     <div class="col">
-                                        <h5 class="name">LOGROS ACADÉMICOS</h5>
+                                        <h5 class="name">SEMBLANZA</h5>
                                             
                                         <p class="description mb-0 pt-3">`+ data.constancias+`</p>
                                             

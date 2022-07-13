@@ -140,7 +140,7 @@ class BecasCongressListView(validarOrganizador,ListView):
             rows=df.to_dict('records')
             if not rows[0]['Correo'] or not rows[0]['Congreso']:
                 raise ValidationError('Debe subir un Exel')
-            res=AsignarBeca.apply_async(args=[rows,self.request.user.pk])
+            res=AsignarBeca.delay(rows,self.request.user.pk)
             resultado=res.get()
             print(resultado)
             if resultado =='congreso':

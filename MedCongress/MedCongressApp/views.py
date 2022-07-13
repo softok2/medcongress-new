@@ -28,8 +28,6 @@ from django.utils.decorators import method_decorator
 from django.views.generic import (CreateView, DetailView, FormView, ListView,
                                   TemplateView, View)
 from requests.auth import HTTPBasicAuth
-from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib import messages
 from django.db.models import Sum
 from django.views.generic.edit import UpdateView
 from django.contrib.auth.views import PasswordResetView,LoginView
@@ -111,7 +109,6 @@ class Home(TemplateView):
             context['imagen_home']= imagen.first().imagen
         return context
     def post(self, request, **kwargs):
-        
         captcha_token=request.POST.get("g-recaptcha-response")
         cap_url="https://www.google.com/recaptcha/api/siteverify"
         cap_secret="6Ld6FyEaAAAAAGggch470Ybh9GHS1Mu3dhz9IT3P"
@@ -119,8 +116,7 @@ class Home(TemplateView):
         cap_server_response=requests.post(url=cap_url,data=cap_data)
         cap_json=json.loads(cap_server_response.text)
         if cap_json['success']==False:
-            messages.success(self.request, 'Entre el Captcha para saber que eres humano')
-            return HttpResponseRedirect(reverse('Home'))
+            return None
         subject = self.request.POST['asunto'] 
         plain_message = self.request.POST['Message']
         from_email = self.request.POST['email']
@@ -131,7 +127,7 @@ class Home(TemplateView):
                 subject,
                 "%s... Mensaje de %s (%s)"%(plain_message,nombre,from_email), 
                 '', # El destino.
-                ['frankhef91@gmail.com'],
+                ['contacto@medcongress.com.mx'],
                 fail_silently=False,
                 )
         return HttpResponseRedirect(reverse('mensaje_exitoso'))
@@ -339,7 +335,7 @@ class PagoExitoso(TemplateView):
         return context
 
     def post(self, request, **kwargs):
-        
+
         url='https://%s/v1/%s/invoices/v33'%(URL_API,ID_KEY)
         chars = '0123456789'
         secret_key = get_random_string(8, chars)
@@ -375,16 +371,101 @@ class PagoExitoso(TemplateView):
            
         pago_sin_iva= self.request.session["car1"][0]['cant']/1.16
        
-        params=  {
-        "subtotal":format(subtotal,'.2f'),
-        "total_trasladados": format(total_impustos_traslado,'.2f'),
-        "total": format(self.request.session["car1"][0]['cant'],'.2f') ,
+        # params=  {
+        # "subtotal":format(subtotal,'.2f'),
+        # "total_trasladados": format(total_impustos_traslado,'.2f'),
+        # "total": format(self.request.session["car1"][0]['cant'],'.2f') ,
+        # "tipo_de_cambio": 1,
+        # "forma_pago": "04",
+        # "hide_total_items": True,
+        # "hide_total_taxes": True,
+        # "moneda": "MXN",
+        # "conceptos": concepto,
+        # "lugar_expedicion": "76090",
+        # "observaciones": "Si desea obtener su factura por el servicio de Asistencia TAR, ingrese a la siguiente dirección:\nhttp://masistencia.emitecliente.mx/index.php/clientefacturacion/generarFactura\nSi lo desea puede ingresar a esta dirección desde nuestro portal.",
+        # "serie": "TAR",
+        # "impuestos_traslado": [
+        #     {
+        #         "impuesto": "002",
+        #         "tasa": 0.16,
+        #         "importe": format(total_impustos_traslado,'.2f'),
+        #         "tipo_factor": "Tasa"
+        #     }
+        # ],
+        # "impuestos_retencion": [],
+        # "folio": "024295",
+        #  "receptor": {
+        #         "nombre": self.request.user.first_name+' '+ self.request.user.last_name,
+        #         "rfc": self.request.POST["rfc"],
+        #         "email": self.request.user.email,
+        #         "uso_cfdi": self.request.POST["cfdi"],
+        #         "residencia_fiscal":self.request.POST["dir"]
+        #     },
+        # "invoice_id": invoice_id,
+        # "metodo_pago": "PUE",
+        # "tipo_comprobante": "I"
+        # }
+        params={
+        "subtotal": 2001.75,
+        "total_trasladados": 320.28,
+        "total": 2322.03,
         "tipo_de_cambio": 1,
         "forma_pago": "04",
         "hide_total_items": True,
         "hide_total_taxes": True,
+        "complements": {
+            "aerolineas": {
+                "tua": 233.51,
+                "otros_cargos": [
+                    {
+                        "codigo_cargo": "YQ",
+                        "descripcion_cargo": "Asistencia TAR",
+                        "importe": 51.00
+                    }
+                ]
+            }
+        },
         "moneda": "MXN",
-        "conceptos": concepto,
+        "conceptos": [
+            {
+                "clave": "78111500",
+                "clave_unidad": "E54",
+                "identificador": "6K9MVV CUAHUTEMOC BLANCO",
+                "cantidad": 1,
+                "unidad": "Viaje",
+                "descripcion": "TRANSPORTACION AEREA DE QRO A MTY",
+                "valor_unitario": 1744,
+                "importe": 1744,
+                "traslados": [
+                    {
+                        "impuesto": "002",
+                        "base": 1744,
+                        "tipo_factor": "Tasa",
+                        "tasa": 0.16,
+                        "importe": 279.04
+                    }
+                ]
+            },
+            {
+                "clave": "78111500",
+                "clave_unidad": "E54",
+                "identificador": "6K9MVV CUAHUTEMOC BLANCO",
+                "cantidad": 1,
+                "unidad": "Viaje",
+                "descripcion": "SEGURO DE CANCELACION",
+                "valor_unitario": 257.75,
+                "importe": 257.75,
+                "traslados": [
+                    {
+                        "impuesto": "002",
+                        "base": 257.75,
+                        "tipo_factor": "Tasa",
+                        "tasa": 0.16,
+                        "importe": 41.24
+                    }
+                ]
+            }
+        ],
         "lugar_expedicion": "76090",
         "observaciones": "Si desea obtener su factura por el servicio de Asistencia TAR, ingrese a la siguiente dirección:\nhttp://masistencia.emitecliente.mx/index.php/clientefacturacion/generarFactura\nSi lo desea puede ingresar a esta dirección desde nuestro portal.",
         "serie": "TAR",
@@ -392,33 +473,38 @@ class PagoExitoso(TemplateView):
             {
                 "impuesto": "002",
                 "tasa": 0.16,
-                "importe": format(total_impustos_traslado,'.2f'),
+                "importe": 320.28,
                 "tipo_factor": "Tasa"
             }
         ],
         "impuestos_retencion": [],
         "folio": "024295",
-         "receptor": {
-                "nombre": self.request.user.first_name+' '+ self.request.user.last_name,
-                "rfc": self.request.POST["rfc"],
-                "email": self.request.user.email,
-                "uso_cfdi": self.request.POST["cfdi"],
-                "residencia_fiscal":self.request.POST["dir"]
-            },
-        "invoice_id": invoice_id,
+        "receptor": {
+            "nombre": "Alberto Montellano Sandoval",
+            "rfc": "MOSA8311152G0",
+            "email": "alberto.montellano@tcpip.tech",
+            "uso_cfdi": "G03"
+        },
+        "invoice_id": "24295",
         "metodo_pago": "PUE",
         "tipo_comprobante": "I"
-        }
-        # return HttpResponse(json.dumps(params)) 
-        headers={'Content-type': 'application/json'}
-        response=requests.post(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(params),headers=headers)
+    }
+        
+        try:
+            headers={'Content-type': 'application/json'}
+            response=requests.post(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(params),headers=headers)
+        except Exception as e:
+            self.request.session["error_facturacion"]= 'Problema al crear la factura en Openpay'
+            return HttpResponseRedirect(reverse('Error_facturacion'))  
         response_dic=response.json()
+        print(response_dic)
         # return HttpResponse(response)
         if 'http_code' not in response_dic:
-            return HttpResponseRedirect(reverse('FacturaPrueba',kwargs={'invoice':invoice_id }))
+            self.request.session["error_facturacion"]= 'Le llegará a su correo la factura generada'
+            return HttpResponseRedirect(reverse('Error_facturacion'))
 
         else:
-            self.request.session["error_facturacion"]= response_dic['description']
+            self.request.session["error_facturacion"]= 'sdfsfs'
             return HttpResponseRedirect(reverse('Error_facturacion'))
         # 
 
@@ -436,6 +522,101 @@ class PagoExitoso(TemplateView):
         # response2=requests.get(url=url2,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(para),headers=headers)
         # response_d=response2.json()
         # return HttpResponseRedirect( response_d['public_pdf_link'])
+
+@method_decorator(login_required,name='dispatch')
+class GetFacturaPrueba(TemplateView):
+    template_name= 'MedCongressApp/ver_factura.html' 
+
+    def get(self, request,**kwargs):
+
+        url1='https://%s/v1/%s/invoices/v33/'%(URL_API,ID_KEY)
+        headers={'Content-type': 'application/json'}
+        try:
+            response=requests.get(url=url1,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
+            response_d=response.json()
+        except Exception as e:
+            self.request.session["error_facturacion"]= 'Problema al buscar las facturas en openPay'
+            return HttpResponseRedirect(reverse('Error_facturacion'))  
+        
+        if 'http_code' in response_d:
+            self.request.session["error_facturacion"]= response_d['description']
+            return HttpResponseRedirect(reverse('Error_facturacion'))
+        url1='https://%s/v1/%s/invoices/v33/%s'%(URL_API,ID_KEY,response_d[0]['uuid'])
+        headers={'Content-type': 'application/json'}
+        response_di=''
+        try:
+            response2=requests.get(url=url1,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
+            response_di=response2.json()
+        except Exception as e:
+            self.request.session["error_facturacion"]= 'Problema al buscar una factura por id en openPay'
+            return HttpResponseRedirect(reverse('Error_facturacion'))  
+
+        # return HttpResponse(response2)
+        # if 'http_code' in response_di:
+        #     self.request.session["error_facturacion"]= response_di['description']
+        #     return HttpResponseRedirect(reverse('Error_facturacion'))
+        if not response_di:
+            self.request.session["error_facturacion"]= 'Problemas con la conección con Openpay. Por favor intente más tarde'
+            return HttpResponseRedirect(reverse('Error_facturacion'))
+        if response_di['status']=='error':
+            self.request.session["error_facturacion"]= response_di['message']
+            return HttpResponseRedirect(reverse('Error_facturacion'))
+        # return HttpResponse(response2)
+        para={
+            "getUrls":True
+            }
+        if 'uuid' not in response_di:
+            return HttpResponseRedirect(reverse('FacturaPrueba',kwargs={'invoice':self.kwargs.get('invoice') }))
+        
+        for cart in self.request.session["car1"][1]:
+            if str(cart['tipo_evento']) == 'Congreso':
+                congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
+                categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
+                pagar_congreso=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,congreso=congreso,categoria_pago=categoria).last()
+                pagar_congreso.uuid_factura=self.kwargs.get('invoice') 
+                pagar_congreso.save()
+            if str(cart['tipo_evento']) == 'Taller':
+                taller=Taller.objects.filter(id=cart['id_congreso']).first()
+                categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
+                pagar_congreso=RelTallerUser.objects.filter(user=self.request.user.perfilusuario,taller=taller,categoria_pago=categoria ).last()
+                pagar_congreso.uuid_factura=self.kwargs.get('invoice') 
+                pagar_congreso.save()
+        url2='https://%s/v1/%s/invoices/v33/%s/?getUrls=True'%(URL_API,ID_KEY,response_di['uuid'])
+        # return HttpResponse(url2)
+        try:
+            headers={'Content-type': 'application/json'}
+            response3=requests.get(url=url2,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(para),headers=headers)
+        except Exception as e:
+            self.request.session["error_facturacion"]= 'Problema al pedir las url(pdf y xml) de la factura en openPay'
+            return HttpResponseRedirect(reverse('Error_facturacion'))  
+        # return HttpResponse(response3)
+        response_dic=response3.json()
+        if 'http_code' in response_dic:
+            self.request.session["error_facturacion"]= response_dic['description']
+            return HttpResponseRedirect(reverse('Error_facturacion'))
+        self.factura=response_dic
+        response_xml = requests.get(response_dic['public_xml_link'])
+        with open('MedCongressApp/static/facturas/xml/%s.xml'%(self.kwargs.get('invoice') ), 'wb') as file:
+            file.write(response_xml.content)
+        response_pdf = requests.get(response_dic['public_pdf_link'], stream=True)   
+        with open('MedCongressApp/static/facturas/pdf/%s.pdf'%(self.kwargs.get('invoice') ), 'wb') as fd:
+            for chunk in response_pdf.iter_content(2000):
+                fd.write(chunk)
+
+
+# ///////////////// EMAIL
+        try:
+            email = EmailMessage('Facturas de MedCongress', 'En este correo se le adjunta la factura por la compra que ha realizado en nuestro sitio.', to = [self.request.user.email])
+            email.attach_file('MedCongressApp/static/facturas/xml/%s.xml'%(self.kwargs.get('invoice')))
+            email.attach_file('MedCongressApp/static/facturas/pdf/%s.pdf'%(self.kwargs.get('invoice')))
+            email.send()
+        except Exception as e:
+            self.request.session["error_facturacion"]= 'No se pudo enviar Email'
+            return HttpResponseRedirect(reverse('Error_facturacion'))   
+
+# /////////////
+        return HttpResponseRedirect(reverse('Factura'))
+
 
 @method_decorator(login_required,name='dispatch')   
 class Perfil(TemplateView):
@@ -874,19 +1055,20 @@ class CongresoCardForm(TemplateView):
                         if str(cart['tipo_evento']) == 'Congreso':
                             congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
                             categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                            pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False, cantidad=cart['cantidad'])
+                            pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False, cantidad=cart['cantidad'],is_constancia=False)
                             pagar_congreso.save()
                             InsertLog(cart['id_congreso'],'Solicito_Pago_Congreso_Tarjeta',user_perfil)
                         if str(cart['tipo_evento']) == 'Taller':
                             taller=Taller.objects.filter(id=cart['id_congreso']).first()
                             categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                            pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False,cantidad=cart['cantidad'])
+                            pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False,cantidad=cart['cantidad'],is_constancia=False)
                             pagar_congreso.save()
                             InsertLog(cart['id_congreso'],'Solicito_Pago_Taller_Tarjeta',user_perfil)
                     car=Cart(self.request)
                     car.clear()
-                    
-                    return HttpResponseRedirect(response.json()['payment_method']['url']) 
+                    obj =  HttpResponseRedirect(response.json()['payment_method']['url']) 
+                    obj.set_cookie('id_transaccion',response_dic['id'],expires=7*24*3600)
+                    return obj
                 else:
                     self.request.session["error_opempay"]=response.json()['description']
                     return HttpResponseRedirect(reverse('Error_openpay'))
@@ -916,13 +1098,13 @@ class CongresoCardForm(TemplateView):
                             if str(cart['tipo_evento']) == 'Congreso':
                                 congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
                                 categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                                pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False, cantidad=cart['cantidad'])
+                                pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False, cantidad=cart['cantidad'],is_constancia=False)
                                 pagar_congreso.save()
                                 InsertLog(cart['id_congreso'],'Solicito_Pago_Congreso_Efectivo',user_perfil)
                             if str(cart['tipo_evento']) == 'Taller':
                                 taller=Taller.objects.filter(id=cart['id_congreso']).first()
                                 categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                                pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False,cantidad=cart['cantidad'])
+                                pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False,cantidad=cart['cantidad'],is_constancia=False)
                                 pagar_congreso.save()
                                 InsertLog(cart['id_congreso'],'Solicito_Pago_Taller_Efectivo',user_perfil)
                         car=Cart(self.request)
@@ -972,13 +1154,13 @@ class CongresoCardForm(TemplateView):
                             if str(cart['tipo_evento']) == 'Congreso':
                                 congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
                                 categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                                pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False, cantidad=cart['cantidad'])
+                                pagar_congreso=RelCongresoUser.objects.create(user=user_perfil,congreso=congreso,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False, cantidad=cart['cantidad'],is_constancia=False)
                                 pagar_congreso.save()
                                 InsertLog(cart['id_congreso'],'Solicito_Pago_Congreso_SPEI',user_perfil)
                             if str(cart['tipo_evento']) == 'Taller':
                                 taller=Taller.objects.filter(id=cart['id_congreso']).first()
                                 categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                                pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False,cantidad=cart['cantidad'])
+                                pagar_congreso=RelTallerUser.objects.create(user=user_perfil,taller=taller,categoria_pago=categoria,id_transaccion=response_dic['id'],is_pagado=False,cantidad=cart['cantidad'],is_constancia=False)
                                 pagar_congreso.save()
                                 InsertLog(cart['id_congreso'],'Solicito_Pago_Taller_SPEI',user_perfil)
                         car=Cart(self.request)
@@ -1068,7 +1250,7 @@ class PerfilUserCreate(FormView):
         if BecasPendientes.objects.filter(email=user.email).exists():
             becas_pendientes=BecasPendientes.objects.filter(email=user.email)
             for beca in becas_pendientes:
-                rel_congreso_user=RelCongresoUser(user=perfil,congreso=beca.congreso,is_beca=True,is_pagado=True,cantidad=1)
+                rel_congreso_user=RelCongresoUser(user=perfil,congreso=beca.congreso,is_beca=True,is_pagado=True,cantidad=1,is_constancia=False )
                 rel_congreso_user.save()
                 beca.delete()
           #### ver si estaba comprando
@@ -1617,82 +1799,6 @@ class GetFactura(TemplateView):
     template_name= 'MedCongressApp/ver_factura.html' 
 
 @method_decorator(login_required,name='dispatch')
-class GetFacturaPrueba(TemplateView):
-    template_name= 'MedCongressApp/ver_factura.html' 
-
-    def get(self, request,**kwargs):
-        url1='https://%s/v1/%s/invoices/v33/'%(URL_API,ID_KEY)
-        headers={'Content-type': 'application/json'}
-        response=requests.get(url=url1,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
-        url1='https://%s/v1/%s/invoices/v33/?id=%s'%(URL_API,ID_KEY,self.kwargs.get('invoice'))
-        response_d=response.json()
-        
-        if 'http_code' in response_d:
-            self.request.session["error_facturacion"]= response_d['description']
-            return HttpResponseRedirect(reverse('Error_facturacion'))
-        headers={'Content-type': 'application/json'}
-        response2=requests.get(url=url1,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
-        response_di=response2.json()
-        # return HttpResponse(response2)
-        # if 'http_code' in response_di:
-        #     self.request.session["error_facturacion"]= response_di['description']
-        #     return HttpResponseRedirect(reverse('Error_facturacion'))
-        if not response_di:
-            self.request.session["error_facturacion"]= 'Problema al conectarse con Openpay por favor inténtelo más tarde'
-
-            return HttpResponseRedirect(reverse('Error_facturacion'))
-        # return HttpResponse(response2)
-        para={
-            "getUrls":True
-            }
-        if 'uuid' not in response_di[0]:
-            return HttpResponseRedirect(reverse('FacturaPrueba',kwargs={'invoice':self.kwargs.get('invoice') }))
-        
-        for cart in self.request.session["car1"][1]:
-                if str(cart['tipo_evento']) == 'Congreso':
-                    congreso=Congreso.objects.filter(id=cart['id_congreso']).first()
-                    categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                    pagar_congreso=RelCongresoUser.objects.filter(user=self.request.user.perfilusuario,congreso=congreso,categoria_pago=categoria).last()
-                    pagar_congreso.uuid_factura=self.kwargs.get('invoice') 
-                    pagar_congreso.save()
-                if str(cart['tipo_evento']) == 'Taller':
-                    taller=Taller.objects.filter(id=cart['id_congreso']).first()
-                    categoria=CategoriaPagoCongreso.objects.filter(id=cart['id_cat_pago']).first()
-                    pagar_congreso=RelTallerUser.objects.filter(user=self.request.user.perfilusuario,taller=taller,categoria_pago=categoria ).last()
-                    pagar_congreso.uuid_factura=self.kwargs.get('invoice') 
-                    pagar_congreso.save()
-
-        url2='https://%s/v1/%s/invoices/v33/%s/?getUrls=True'%(URL_API,ID_KEY,response_di[0]['uuid'])
-        # return HttpResponse(url2)
-        headers={'Content-type': 'application/json'}
-        response3=requests.get(url=url2,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(para),headers=headers)
-        # return HttpResponse(response3)
-        response_dic=response3.json()
-        if 'http_code' in response_dic:
-            self.request.session["error_facturacion"]= response_dic['description']
-            return HttpResponseRedirect(reverse('Error_facturacion'))
-        self.factura=response_dic
-        response_xml = requests.get(response_dic['public_xml_link'])
-        with open('MedCongressApp/static/facturas/xml/%s.xml'%(self.kwargs.get('invoice') ), 'wb') as file:
-            file.write(response_xml.content)
-        response_pdf = requests.get(response_dic['public_pdf_link'], stream=True)   
-        with open('MedCongressApp/static/facturas/pdf/%s.pdf'%(self.kwargs.get('invoice') ), 'wb') as fd:
-            for chunk in response_pdf.iter_content(2000):
-                fd.write(chunk)
-
-
-# ///////////////// EMAIL
-
-        email = EmailMessage('Facturas de MedCongress', 'En este correo se le adjunta la factura por la compra que ha realizado en nuestro sitio.', to = [self.request.user.email])
-        email.attach_file('MedCongressApp/static/facturas/xml/%s.xml'%(self.kwargs.get('invoice')))
-        email.attach_file('MedCongressApp/static/facturas/pdf/%s.pdf'%(self.kwargs.get('invoice')))
-        email.send()
-
-
-# /////////////
-        return HttpResponseRedirect(reverse('Factura'))
-
-@method_decorator(login_required,name='dispatch')
 class SetConstancia(TemplateView):
 
     template_name= 'MedCongressApp/congreso_constancia.html' 
@@ -2022,47 +2128,25 @@ class Enviar(TemplateView):
         url='%s/webhook'%(URL_SITE)
         
         params= {
-    "type" : "charge.succeeded",
-    "event_date" : "2013-11-22T15:09:38-06:00",
-    "transaction" : {
-        "amount" : 2000.0,
-        "authorization" : "801585",
-        "method" : "card",
-        "operation_type" : "in",
-        "transaction_type" : "charge",
-        "card" : {
-            "type" : "debit",
-            "brand" : "mastercard",
-            "address" : {
-               "line1" : "Calle #1 Interior #2",
-               "line2" : 'Null',
-               "line3" : 'Null',
-               "state" : "Queretaro",
-               "city" : "Queretaro",
-               "postal_code" : "76040",
-               "country_code" : "MX"
-            },
-            "card_number" : "1881",
-            "holder_name" : "Card Holder",
-            "expiration_month" : "10",
-            "expiration_year" : "14",
-            "allows_charges" : True,
-            "allows_payouts" : True,
-            "creation_date" : "2013-11-22T15:09:32-06:00",
-            "bank_name" : "BBVA BANCOMER",
-            "bank_code" : "012"
-        }, 
-        'customer':{
-            'email':'dennis.molinetg@gmail.com',
-        },
-        "status" : "completed",
-        "id" : "treqtltdiu6m49x6sbdh",
-        "creation_date" : "2013-11-22T15:09:33-06:00",
-        "description" : "Description",
-        "error_message" : 'Null',
-        "order_id" : "oid_14235"
+        "type":"invoice.created",
+        "event_date":"2016-04-25T12:14:58-05:00",
+        "invoice_data":{
+            "invoice_id":"order1234",
+            "transaction_id":"trsugdmzoieges3fdgwq",
+            "creation_date":"2016-04-25T12:14:52-05:00",
+            "issue_date":"2016-04-25T00:14:54-05:00",
+            "uuid":"9E837DCC-9D91-413B-B6EA-ECDBC1AA17A1",
+            "receiver_rfc":"NIET7511116SA",
+            "total":580,
+            "subtotal":500,
+            "status":"ok",
+            "fiscal_status":"active",
+            "public_xml_link":"https://cfdi-repository.s3.amazonaws.com/TEST/OPE130906HN4/AAD990814BP7/201604/NIAM7511116SA-9E837DCC-9D91-413B-B6EA-ECDBC1AA17A1.xml?Signature=qiDHA7Zvq6lUQ8FjUS1avCwHxaE%3D&AWSAccessKeyId=AKIAIB52WRJT34BDPATQ&Expires=1461863698",
+            "public_pdf_link":"https://cfdi-repository.s3.amazonaws.com/TEST/OPE130906HN4/AAD990814BP7/201604/NIAM7511116SA-9E837DCC-9D91-413B-B6EA-ECDBC1AA17A1.pdf?Signature=ToETRkAP1FGxx78IoI8rULOvBdo%3D&AWSAccessKeyId=AKIAIB52WRJT34BDPATQ&Expires=1461863698",
+            "link_expiration_date":"2016-04-28T12:14:58-05:00",
+            "message":"Cfdi successfully generated"
+        }
     }
-}
                 
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         response=requests.post(url=url,data=json.dumps(params),headers=headers)
@@ -2177,7 +2261,45 @@ def Webhook(request):
                     to = received_json_data['transaction']['customer']['email']
                     mail.send_mail(subject, plain_message, from_email, [to],html_message=html_message)
 
+            if received_json_data['type']== "invoice.created":
+               
+                user = ''
+                pagar_congresos=RelCongresoUser.objects.filter(id_transaccion= received_json_data['invoice_data']['transaction_id'])
+               
+                for pagar_congreso in pagar_congresos:
+                    pagar_congreso.uuid_factura=received_json_data['invoice_data']['transaction_id'] 
+                    pagar_congreso.save()
+                    user=pagar_congreso.user
+                pagar_talleres=RelTallerUser.objects.filter(id_transaccion= received_json_data['invoice_data']['transaction_id'])
+                for pagar_taller in pagar_talleres:
+                    pagar_taller.uuid_factura=received_json_data['invoice_data']['transaction_id'] 
+                    pagar_taller.save()
+                    user=pagar_taller.user
+                
+                url2='https://%s/v1/%s/invoices/v33/%s/?getUrls=True'%(URL_API,ID_KEY,received_json_data['invoice_data']['uuid'])
+                    # return HttpResponse(url2)
 
+                headers={'Content-type': 'application/json'}
+                para={
+                "getUrls":True
+                }
+                response3=requests.get(url=url2,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(para),headers=headers)
+                
+                response_dic=response3.json()
+                
+                response_xml = requests.get(response_dic['public_xml_link'])
+                with open('MedCongressApp/static/facturas/xml/%s.xml'%(received_json_data['invoice_data']['invoice_id'] ), 'wb') as file:
+                    file.write(response_xml.content)
+                response_pdf = requests.get(response_dic['public_pdf_link'], stream=True)   
+                with open('MedCongressApp/static/facturas/pdf/%s.pdf'%(received_json_data['invoice_data']['invoice_id'] ), 'wb') as fd:
+                    for chunk in response_pdf.iter_content(2000):
+                        fd.write(chunk)
+                if user:
+                    email = EmailMessage('Facturas de MedCongress', 'En este correo se le adjunta la factura por la compra que ha realizado en nuestro sitio.', to = [user.usuario.email])
+                    email.attach_file('MedCongressApp/static/facturas/xml/%s.xml'%(received_json_data['invoice_data']['invoice_id']))
+                    email.attach_file('MedCongressApp/static/facturas/pdf/%s.pdf'%(received_json_data['invoice_data']['invoice_id']))
+                    email.send()
+       
             if received_json_data['type']== "verification":
                 plain_message = strip_tags('El código de verificación es:  <%s>'%(received_json_data)) 
                 subject = 'Código de verificación del Openpay'
@@ -2553,8 +2675,6 @@ class SalaDetail(TemplateView):
            
         return context
     
-
-
 class ViewPonenciasSala(TemplateView):
     template_name= 'MedCongressApp/ponencias_sala.html' 
 

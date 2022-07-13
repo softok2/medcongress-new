@@ -63,7 +63,7 @@ textarea:focus,
 }
 
 .ticket {
-  padding: 60px 30px 20px;
+  padding: 10px 10px 20px;
   background-color: #D6E0E8;
   display: flex;
   flex-direction: column;
@@ -80,32 +80,44 @@ textarea:focus,
 }
 .ticket .title,
 .ticket .iva {
+  display: table-cell;
   font-size: 24px;
+  margin: 30px;
+  text-align: center;
+  vertical-align: middle
 }
 .ticket .price {
-  font-size: 60px;
-  margin-top: 30px;
+  font-size: 30px;
+  margin-top: 0px;
   font-weight: bold;
   text-align: center;
 }
+
 .ticket .actions {
   width: 100%;
-  margin-top: 40px;
-  padding-top: 20px;
+  margin-top: 0px;
+  padding-top: 0px;
   border-top: 1px solid #4A5966;
 }
 .ticket .cta {
   margin: auto;
+  margin-top: 12px;
   display: block;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: bold;
   border-radius: 8px;
-  padding: 20px 30px;
+  padding: 8px 13px;
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
   text-decoration: none;
   border: 1px solid #4A5966;
+  text-align: center;
+}
+.ticket .cta:hover {
+background-color: #40C8F4;
+color: #d1f2fc;
+
 }
 .ticket.destacado .price {
   color: #40C8F4;
@@ -865,6 +877,36 @@ margin-left: 70px;
   
   margin-bottom: 40px;
 }
+.fa-check-edit{
+  background:  url(../img/iconos/edit.ico) no-repeat;
+  background-size: contain;
+  width: 25px;
+  height: 25px;
+  display: inline-block;
+}
+.fa-check-deleted{
+  background:  url(../img/iconos/deleted.ico) no-repeat;
+  background-size: contain;
+  width: 25px;
+  height: 25px;
+  display: inline-block;
+}
+.fa-check-acept{
+  background:  url(../img/iconos/acept.ico) no-repeat;
+  background-size: contain;
+  width: 25px;
+  height: 25px;
+  display: inline-block;
+}
+
+.fa-check-cancel{
+  background:  url(../img/iconos/cancel.ico) no-repeat;
+  background-size: contain;
+  width: 25px;
+  height: 25px;
+  display: inline-block;
+}
+
 .congreso-program .ctas-wrapper .cta,
 .sala .ctas-wrapper .cta  {
   width: 200px;
@@ -1598,11 +1640,11 @@ margin-left: 70px;
     border-top: 1px solid #4A5966;
     border-bottom: 1px solid #4A5966;
     display: grid;
-    grid-template-columns: 80% 20%;
-    grid-template-rows: 1fr 40px 75px;
+    grid-template-columns: 100%;
+    
   }
 }
-@media screen and (max-width: 992px) {
+/* @media screen and (max-width: 992px) {
   .cart-table table tbody tr td:nth-of-type(2) {
     grid-column: 1/2;
     grid-row: 1/2;
@@ -1619,15 +1661,15 @@ margin-left: 70px;
     grid-column: 1/2;
     grid-row: 3/4;
   }
-}
-@media screen and (max-width: 992px) {
+} */
+/* @media screen and (max-width: 992px) {
   .cart-table table tbody tr td:nth-of-type(7) {
     grid-column: 2/3;
     grid-row: 1/4;
     display: flex;
     align-items: center;
   }
-}
+} */
 .cart-table table th,
 .cart-table table td {
   text-align: center;
@@ -1645,11 +1687,11 @@ margin-left: 70px;
     border-bottom: 0;
   }
 }
-@media screen and (max-width: 992px) {
+/* @media screen and (max-width: 992px) {
   .cart-table table td:nth-of-type(1), .cart-table table td:nth-of-type(3), .cart-table table td:nth-of-type(6) {
     display: none;
   }
-}
+} */
 .cart-table table .acciones a {
   color: red;
 }
@@ -1723,7 +1765,7 @@ margin-left: 70px;
     grid-template-rows: 1fr 40px 40px;
   }
 }
-@media screen and (max-width: 992px) {
+/* @media screen and (max-width: 992px) {
   .checkout-table table tbody tr td:nth-of-type(2) {
     grid-column: 1/2;
     grid-row: 1/2;
@@ -1740,7 +1782,7 @@ margin-left: 70px;
     grid-column: 1/2;
     grid-row: 3/4;
   }
-}
+} */
 .checkout-table table th,
 .checkout-table table td {
   text-align: center;

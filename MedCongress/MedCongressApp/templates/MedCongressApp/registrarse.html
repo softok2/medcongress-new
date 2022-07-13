@@ -104,7 +104,12 @@ Registrarse
                         <div class="row mt-3">
                             <div class="col-md-9">
                                 <div class="col" >
-                                    {{form.ubicacion.direccion }}
+                                    {{form.ubicacion.direccion }} 
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="col">
+                                    <i class="fa fa-info-circle" style="color:gray; font-size: 20px;" data-bs-toggle="tooltip" data-bs-placement="top" title="Escriba y seleccione su ciudad"></i>
                                 </div>
                             </div>
                             <!-- <div class="col-md-3">
@@ -197,6 +202,12 @@ Registrarse
 <script>
 
 $(document).ready(function () {
+
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+return new bootstrap.Tooltip(tooltipTriggerEl)
+})
+
     FiltrarLugar('#id_ubicacion-direccion', '#id_ubicacion-longitud', '#id_ubicacion-latitud');
     $('#id_ubicacion-direccion').keypress(function () {
         $('#id_ubicacion-latitud').val('');

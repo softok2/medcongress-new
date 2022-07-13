@@ -8,6 +8,7 @@ import re
 from MedCongress.settings import BASE_FONT
 @shared_task
 def Constancia(titulo,t_user,folio_ini,folio_fin,folio_dis):
+    
     congreso=Congreso.objects.get(pk=titulo)
     t_user=int(t_user)
     if folio_ini:
@@ -15,6 +16,7 @@ def Constancia(titulo,t_user,folio_ini,folio_fin,folio_dis):
         folio_fin=int(folio_fin) 
     folio=folio_ini
     if congreso:
+        
         if t_user==1:
             rel_usuario_congreso=RelCongresoUser.objects.filter(congreso=congreso,is_pagado=True,is_constancia=False ).distinct('user') 
             folio=folio_ini
@@ -58,7 +60,7 @@ def Constancia(titulo,t_user,folio_ini,folio_fin,folio_dis):
                     usuario.user.save()
                 usuario.save()                               
                 # ////////////////
-            
+                
                 email = EmailMessage('Constancia', 'En este correo se le adjunta la constancia de haber participado en el congreso %s.'%(congreso.titulo), to = [usuario.user.usuario.email])
                 email.attach_file('MedCongressApp/static/congreso/img_constancia/%s_participante.pdf'%(nombre_img[0:50]))
                 email.send()
@@ -224,7 +226,9 @@ def AsignarBeca(exel,user_id):
             if not RelCongresoUser.objects.filter(user=user.perfilusuario,congreso=congreso,is_beca=True).exists():
                 rel_congreso_user=RelCongresoUser(user=user.perfilusuario,congreso=congreso,is_beca=True,is_pagado=True,cantidad=1)
                 rel_congreso_user.save()
-                email = EmailMessage('Beca en MedCongress', '''Estimado(a) profesional de la salud, le informamos que se le ha asignado: %s .
+
+                email = EmailMessage('Beca en MedCongress', '''Estimado(a) profesional de la salud, le informamos que se le ha asignado: %s.
+
 
         1.- Para acceder tendrá que autenticarse en el siguiente enlace %s/accounts/login/?next=/congreso/%s
 

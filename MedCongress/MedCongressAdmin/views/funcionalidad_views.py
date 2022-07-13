@@ -51,7 +51,7 @@ class EnviarCorreos(validarOrganizador,FormView):
         asunto= self.request.POST['asunto']
         mensaje= self.request.POST['mensaje']
 
-        users=RelCongresoUser.objects.filter(congreso=congreso).distinct('user')
+        users=RelCongresoUser.objects.filter(congreso=congreso,is_pagado=True).distinct('user')
         user_to=[]
         for user in users:
             user_to.append(user.user.usuario.email)
