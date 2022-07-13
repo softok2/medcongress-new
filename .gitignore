@@ -33,3 +33,4 @@ MedCongress/MedCongressApp/backends.py
 MedCongress/dump.rdb
 /MedCongress/env
 
+/MedCongress/.idea
