@@ -67,7 +67,7 @@ Detalles del Perfil
                                         <div id="flush-collapseOne_{{congreso.congreso.id}}" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
                                             <div class="accordion-body">
                                                 {%for factura in congreso.facturas%}
-                                                <div class="col-md-3">
+                                                <div class="col-12">
                                                     <a style="font-size: 10px; color: black;"  target="_black"  href="{% static '/facturas/pdf/'%}{{factura.factura}}.pdf"><b>{{factura.factura}}.pdf</b> </a>
                                                 </div>
                                                 {%endfor%}

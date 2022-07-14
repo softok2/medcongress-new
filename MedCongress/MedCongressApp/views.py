@@ -371,101 +371,16 @@ class PagoExitoso(TemplateView):
            
         pago_sin_iva= self.request.session["car1"][0]['cant']/1.16
        
-        # params=  {
-        # "subtotal":format(subtotal,'.2f'),
-        # "total_trasladados": format(total_impustos_traslado,'.2f'),
-        # "total": format(self.request.session["car1"][0]['cant'],'.2f') ,
-        # "tipo_de_cambio": 1,
-        # "forma_pago": "04",
-        # "hide_total_items": True,
-        # "hide_total_taxes": True,
-        # "moneda": "MXN",
-        # "conceptos": concepto,
-        # "lugar_expedicion": "76090",
-        # "observaciones": "Si desea obtener su factura por el servicio de Asistencia TAR, ingrese a la siguiente dirección:\nhttp://masistencia.emitecliente.mx/index.php/clientefacturacion/generarFactura\nSi lo desea puede ingresar a esta dirección desde nuestro portal.",
-        # "serie": "TAR",
-        # "impuestos_traslado": [
-        #     {
-        #         "impuesto": "002",
-        #         "tasa": 0.16,
-        #         "importe": format(total_impustos_traslado,'.2f'),
-        #         "tipo_factor": "Tasa"
-        #     }
-        # ],
-        # "impuestos_retencion": [],
-        # "folio": "024295",
-        #  "receptor": {
-        #         "nombre": self.request.user.first_name+' '+ self.request.user.last_name,
-        #         "rfc": self.request.POST["rfc"],
-        #         "email": self.request.user.email,
-        #         "uso_cfdi": self.request.POST["cfdi"],
-        #         "residencia_fiscal":self.request.POST["dir"]
-        #     },
-        # "invoice_id": invoice_id,
-        # "metodo_pago": "PUE",
-        # "tipo_comprobante": "I"
-        # }
-        params={
-        "subtotal": 2001.75,
-        "total_trasladados": 320.28,
-        "total": 2322.03,
+        params=  {
+        "subtotal":format(subtotal,'.2f'),
+        "total_trasladados": format(total_impustos_traslado,'.2f'),
+        "total": format(self.request.session["car1"][0]['cant'],'.2f') ,
         "tipo_de_cambio": 1,
         "forma_pago": "04",
         "hide_total_items": True,
         "hide_total_taxes": True,
-        "complements": {
-            "aerolineas": {
-                "tua": 233.51,
-                "otros_cargos": [
-                    {
-                        "codigo_cargo": "YQ",
-                        "descripcion_cargo": "Asistencia TAR",
-                        "importe": 51.00
-                    }
-                ]
-            }
-        },
         "moneda": "MXN",
-        "conceptos": [
-            {
-                "clave": "78111500",
-                "clave_unidad": "E54",
-                "identificador": "6K9MVV CUAHUTEMOC BLANCO",
-                "cantidad": 1,
-                "unidad": "Viaje",
-                "descripcion": "TRANSPORTACION AEREA DE QRO A MTY",
-                "valor_unitario": 1744,
-                "importe": 1744,
-                "traslados": [
-                    {
-                        "impuesto": "002",
-                        "base": 1744,
-                        "tipo_factor": "Tasa",
-                        "tasa": 0.16,
-                        "importe": 279.04
-                    }
-                ]
-            },
-            {
-                "clave": "78111500",
-                "clave_unidad": "E54",
-                "identificador": "6K9MVV CUAHUTEMOC BLANCO",
-                "cantidad": 1,
-                "unidad": "Viaje",
-                "descripcion": "SEGURO DE CANCELACION",
-                "valor_unitario": 257.75,
-                "importe": 257.75,
-                "traslados": [
-                    {
-                        "impuesto": "002",
-                        "base": 257.75,
-                        "tipo_factor": "Tasa",
-                        "tasa": 0.16,
-                        "importe": 41.24
-                    }
-                ]
-            }
-        ],
+        "conceptos": concepto,
         "lugar_expedicion": "76090",
         "observaciones": "Si desea obtener su factura por el servicio de Asistencia TAR, ingrese a la siguiente dirección:\nhttp://masistencia.emitecliente.mx/index.php/clientefacturacion/generarFactura\nSi lo desea puede ingresar a esta dirección desde nuestro portal.",
         "serie": "TAR",
@@ -473,23 +388,25 @@ class PagoExitoso(TemplateView):
             {
                 "impuesto": "002",
                 "tasa": 0.16,
-                "importe": 320.28,
+                "importe": format(total_impustos_traslado,'.2f'),
                 "tipo_factor": "Tasa"
             }
         ],
         "impuestos_retencion": [],
         "folio": "024295",
-        "receptor": {
-            "nombre": "Alberto Montellano Sandoval",
-            "rfc": "MOSA8311152G0",
-            "email": "alberto.montellano@tcpip.tech",
-            "uso_cfdi": "G03"
-        },
-        "invoice_id": "24295",
+         "receptor": {
+                "nombre": self.request.user.first_name+' '+ self.request.user.last_name,
+                "rfc": self.request.POST["rfc"],
+                "email": self.request.user.email,
+                "uso_cfdi": self.request.POST["cfdi"],
+                "residencia_fiscal":self.request.POST["dir"]
+            },
+        "invoice_id": invoice_id,
         "metodo_pago": "PUE",
-        "tipo_comprobante": "I"
-    }
-        
+        "tipo_comprobante": "I",
+        'openpay_transaction_id':self.request.GET.get('id_transaccion'),
+        }
+    
         try:
             headers={'Content-type': 'application/json'}
             response=requests.post(url=url,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),data=json.dumps(params),headers=headers)
@@ -497,14 +414,22 @@ class PagoExitoso(TemplateView):
             self.request.session["error_facturacion"]= 'Problema al crear la factura en Openpay'
             return HttpResponseRedirect(reverse('Error_facturacion'))  
         response_dic=response.json()
+        
+        url1='https://%s/v1/%s/invoices/v33/'%(URL_API,ID_KEY)
+        headers={'Content-type': 'application/json'}
+        response=requests.get(url=url1,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
+        response_d=response.json()
         print(response_dic)
+        print(response_d)
         # return HttpResponse(response)
         if 'http_code' not in response_dic:
-            self.request.session["error_facturacion"]= 'Le llegará a su correo la factura generada'
+            self.request.session["error_facturacion"]=None
+            self.request.session["success_facturacion"]= 'Le llegará a su correo la dicha factura'
             return HttpResponseRedirect(reverse('Error_facturacion'))
 
         else:
-            self.request.session["error_facturacion"]= 'sdfsfs'
+            self.request.session["success_facturacion"]=None
+            self.request.session["error_facturacion"]= response_dic['description']
             return HttpResponseRedirect(reverse('Error_facturacion'))
         # 
 
@@ -2131,14 +2056,14 @@ class Enviar(TemplateView):
         "type":"invoice.created",
         "event_date":"2016-04-25T12:14:58-05:00",
         "invoice_data":{
-            "invoice_id":"order1234",
-            "transaction_id":"trsugdmzoieges3fdgwq",
+            "invoice_id":"2022-7-14_70200389",
+            "transaction_id":"trawfm5dpbtmrrdq6wdi",
             "creation_date":"2016-04-25T12:14:52-05:00",
             "issue_date":"2016-04-25T00:14:54-05:00",
-            "uuid":"9E837DCC-9D91-413B-B6EA-ECDBC1AA17A1",
-            "receiver_rfc":"NIET7511116SA",
-            "total":580,
-            "subtotal":500,
+            "uuid":"B39698CB-D6C1-431C-BFF7-F3AEA97FE66B",
+            "receiver_rfc":"MOSA8311152G0",
+            "total":500.0,
+            "subtotal":431.03,
             "status":"ok",
             "fiscal_status":"active",
             "public_xml_link":"https://cfdi-repository.s3.amazonaws.com/TEST/OPE130906HN4/AAD990814BP7/201604/NIAM7511116SA-9E837DCC-9D91-413B-B6EA-ECDBC1AA17A1.xml?Signature=qiDHA7Zvq6lUQ8FjUS1avCwHxaE%3D&AWSAccessKeyId=AKIAIB52WRJT34BDPATQ&Expires=1461863698",
@@ -2267,12 +2192,12 @@ def Webhook(request):
                 pagar_congresos=RelCongresoUser.objects.filter(id_transaccion= received_json_data['invoice_data']['transaction_id'])
                
                 for pagar_congreso in pagar_congresos:
-                    pagar_congreso.uuid_factura=received_json_data['invoice_data']['transaction_id'] 
+                    pagar_congreso.uuid_factura=received_json_data['invoice_data']['uuid'] 
                     pagar_congreso.save()
                     user=pagar_congreso.user
                 pagar_talleres=RelTallerUser.objects.filter(id_transaccion= received_json_data['invoice_data']['transaction_id'])
                 for pagar_taller in pagar_talleres:
-                    pagar_taller.uuid_factura=received_json_data['invoice_data']['transaction_id'] 
+                    pagar_taller.uuid_factura=received_json_data['invoice_data']['uuid'] 
                     pagar_taller.save()
                     user=pagar_taller.user
                 
@@ -2288,16 +2213,16 @@ def Webhook(request):
                 response_dic=response3.json()
                 
                 response_xml = requests.get(response_dic['public_xml_link'])
-                with open('MedCongressApp/static/facturas/xml/%s.xml'%(received_json_data['invoice_data']['invoice_id'] ), 'wb') as file:
+                with open('MedCongressApp/static/facturas/xml/%s.xml'%(received_json_data['invoice_data']['uuid'] ), 'wb') as file:
                     file.write(response_xml.content)
                 response_pdf = requests.get(response_dic['public_pdf_link'], stream=True)   
-                with open('MedCongressApp/static/facturas/pdf/%s.pdf'%(received_json_data['invoice_data']['invoice_id'] ), 'wb') as fd:
+                with open('MedCongressApp/static/facturas/pdf/%s.pdf'%(received_json_data['invoice_data']['uuid'] ), 'wb') as fd:
                     for chunk in response_pdf.iter_content(2000):
                         fd.write(chunk)
                 if user:
                     email = EmailMessage('Facturas de MedCongress', 'En este correo se le adjunta la factura por la compra que ha realizado en nuestro sitio.', to = [user.usuario.email])
-                    email.attach_file('MedCongressApp/static/facturas/xml/%s.xml'%(received_json_data['invoice_data']['invoice_id']))
-                    email.attach_file('MedCongressApp/static/facturas/pdf/%s.pdf'%(received_json_data['invoice_data']['invoice_id']))
+                    email.attach_file('MedCongressApp/static/facturas/xml/%s.xml'%(received_json_data['invoice_data']['uuid']))
+                    email.attach_file('MedCongressApp/static/facturas/pdf/%s.pdf'%(received_json_data['invoice_data']['uuid']))
                     email.send()
        
             if received_json_data['type']== "verification":

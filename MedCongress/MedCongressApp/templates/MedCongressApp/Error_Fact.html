@@ -7,9 +7,15 @@
     <div class="container">
         <div class="row">
             <div class="col">
+                {%if request.session.error_facturacion%}
             <h2 class="section-title text-danger"><strong class="text-center d-block">Error!</strong></h2>
             <h2 class="section-title text-danger"><strong class="text-center d-block">¡Oops A ocurrido un error relacionado con la facturación !</strong></h2>
             <small class="section-subtitle text-center d-block">{{request.session.error_facturacion}}</small>
+            {%endif%}
+            {%if request.session.success_facturacion%}
+            <h2 class="section-title text-success"><strong class="text-center d-block">¡ Se ha generado una Factura !</strong></h2>
+            <small class="section-subtitle text-center d-block">{{request.session.success_facturacion}}</small>
+            {%endif%}
             </div>
         </div>
     </div>
