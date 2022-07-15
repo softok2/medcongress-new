@@ -419,12 +419,10 @@ class PagoExitoso(TemplateView):
         headers={'Content-type': 'application/json'}
         response=requests.get(url=url1,auth=HTTPBasicAuth('%s:'%(PRIVATE_KEY), ''),headers=headers)
         response_d=response.json()
-        print(response_dic)
-        print(response_d)
         # return HttpResponse(response)
         if 'http_code' not in response_dic:
             self.request.session["error_facturacion"]=None
-            self.request.session["success_facturacion"]= 'Le llegará a su correo la dicha factura'
+            self.request.session["success_facturacion"]= 'Le llegará a su correo la factura'
             return HttpResponseRedirect(reverse('Error_facturacion'))
 
         else:
@@ -2056,11 +2054,11 @@ class Enviar(TemplateView):
         "type":"invoice.created",
         "event_date":"2016-04-25T12:14:58-05:00",
         "invoice_data":{
-            "invoice_id":"2022-7-14_70200389",
-            "transaction_id":"trawfm5dpbtmrrdq6wdi",
+            "invoice_id":"2022-7-14_19680398",
+            "transaction_id":"trbija2dh43bvo9vztoe",
             "creation_date":"2016-04-25T12:14:52-05:00",
             "issue_date":"2016-04-25T00:14:54-05:00",
-            "uuid":"B39698CB-D6C1-431C-BFF7-F3AEA97FE66B",
+            "uuid":"6D924E88-7BFB-45A6-8DCC-2E80B2C97863",
             "receiver_rfc":"MOSA8311152G0",
             "total":500.0,
             "subtotal":431.03,
